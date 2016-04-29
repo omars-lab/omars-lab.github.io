@@ -6,7 +6,7 @@ layout: post
 
 How ya doing?
 
-{% highlight pygments monokai %}
+{% highlight python monokai %}
 
 print "Hello World"
 
