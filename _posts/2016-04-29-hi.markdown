@@ -4,3 +4,10 @@ title: HI
 layout: post
 ---
 Hello World!
+
+
+{% highlight pygments %}
+
+print "Hello World"
+
+{% endhighlight %}
