@@ -3,6 +3,9 @@ published: true
 title: HI
 layout: post
 ---
+
+How ya doing?
+
 {% highlight pygments monokai %}
 
 print "Hello World"
