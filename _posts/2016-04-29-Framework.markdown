@@ -12,6 +12,24 @@ An example of all the blogging tools I currently have set up
 print "Hello World"
 ```
 
+# Flow Chart
+<div id="flowchart_diagram"></div>
+<script>
+  var diagram = flowchart.parse(
+    "st=>start: Start:>http://www.google.com[blank]" + "\n" +
+    "e=>end:>http://www.google.com" + "\n" +
+    "op1=>operation: My Operation" + "\n" +
+    "sub1=>subroutine: My Subroutine" + "\n" +
+    "cond=>condition: Yes" + "\n" +
+    "or No?:>http://www.google.com" + "\n" +
+    "io=>inputoutput: catch something..."" + "\n" +
+    "st->op1->cond" + "\n" +
+    "cond(yes)->io->e" + "\n" +
+    "cond(no)->sub1(right)->op1" + "\n"
+  );
+  diagram.drawSVG('flowchart_diagram');
+</script>
+
 # Sequence Diagram
 <div id="sequence_diagram"></div>
 <script>
