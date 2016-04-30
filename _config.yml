@@ -1,6 +1,6 @@
 excerpt_separator: ""
 highlighter: rouge
-pygments: 
+pygments: false
 markdown: kramdown
 url: http://mr-uuid.github.io/blog/
 name: First Blog
