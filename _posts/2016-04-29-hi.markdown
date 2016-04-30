@@ -6,6 +6,6 @@ layout: post
 
 How ya doing?
 
-```
+```python
 print "Hello World"
 ```
