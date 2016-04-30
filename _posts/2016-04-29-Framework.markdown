@@ -12,6 +12,13 @@ An example of all the blogging tools I currently have set up
 print "Hello World"
 ```
 
+# Sequence Diagram
+<div id="sequence_diagram"></div>
+<script>
+  var diagram = Diagram.parse("A->B: Message");
+  diagram.drawSVG("sequence_diagram", {theme: 'hand'});
+</script>
+
 # Embedded Gists
 {% gist 5555251 %}
 
