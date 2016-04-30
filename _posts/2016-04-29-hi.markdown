@@ -10,7 +10,6 @@ How ya doing?
 print "Hello World"
 ```
 
-<iframe width="800" height="800" src="https://my.mindnode.com/hUeMkB8zxTG87BXHyJJWziGRgXTxyrTNqrk7yjYw#182.5,-539.9,2" frameborder="0"></iframe>
+<div class="youtube" id="29MAL8pJImQ"></div>
 
-
-
+<!--<iframe width="800" height="800" src="https://my.mindnode.com/hUeMkB8zxTG87BXHyJJWziGRgXTxyrTNqrk7yjYw#182.5,-539.9,2" frameborder="0"></iframe>-->
