@@ -4,7 +4,7 @@ title: Framework
 layout: post
 ---
 
-An example of all the blogging tools I currently have set up  
+An example of all the blogging tools I can currently use in each of the blog posts:
 
 
 # Code Blocks
