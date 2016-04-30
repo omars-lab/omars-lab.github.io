@@ -2,7 +2,7 @@ excerpt_separator: ""
 highlighter: rouge
 pygments: 
 markdown: kramdown
-url: http://mr-uuid.github.io/blog
+url: http://mr-uuid.github.io/blog/
 name: First Blog
 description: "My first blog!"
 author: Omar Eid
