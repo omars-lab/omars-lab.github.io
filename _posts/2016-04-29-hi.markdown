@@ -9,3 +9,10 @@ How ya doing?
 ```python
 print "Hello World"
 ```
+
+{% include mycomponent.html %}
+
+<iframe width="800" height="800" src="https://my.mindnode.com/hUeMkB8zxTG87BXHyJJWziGRgXTxyrTNqrk7yjYw#182.5,-539.9,2" frameborder="0" allowfullscreen></iframe>
+
+
+
