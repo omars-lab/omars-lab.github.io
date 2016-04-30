@@ -22,7 +22,7 @@ print "Hello World"
     "sub1=>subroutine: My Subroutine" + "\n" +
     "cond=>condition: Yes" + "\n" +
     "or No?:>http://www.google.com" + "\n" +
-    "io=>inputoutput: catch something..."" + "\n" +
+    "io=>inputoutput: catch something..." + "\n" +
     "st->op1->cond" + "\n" +
     "cond(yes)->io->e" + "\n" +
     "cond(no)->sub1(right)->op1"
