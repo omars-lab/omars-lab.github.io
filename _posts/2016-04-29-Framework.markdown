@@ -25,3 +25,4 @@ print "Hello World"
 <div class="mindnode" id="hUeMkB8zxTG87BXHyJJWziGRgXTxyrTNqrk7yjYw"></div>
 
 # Embedded HTML
+<div><p align="center"><iframe width="800" height="800" src="/me.html" frameborder="0" allowfullscreen></iframe></p></div>
