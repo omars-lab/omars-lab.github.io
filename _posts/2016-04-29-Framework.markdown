@@ -25,7 +25,7 @@ print "Hello World"
     "io=>inputoutput: catch something..."" + "\n" +
     "st->op1->cond" + "\n" +
     "cond(yes)->io->e" + "\n" +
-    "cond(no)->sub1(right)->op1" + "\n"
+    "cond(no)->sub1(right)->op1"
   );
   diagram.drawSVG('flowchart_diagram');
 </script>
