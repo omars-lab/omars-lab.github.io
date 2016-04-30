@@ -1,10 +1,10 @@
 excerpt_separator: ""
 highlighter: rouge
-pygments: 
+pygments: false
 markdown: kramdown
-url: http://mr-uuid.github.io
-name: Awesome
-description: My awesome new site
+url: http://mr-uuid.github.io/
+name: OmeemO
+description: My first blog
 author: Omar Eid
 avatar: http://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=120&d=mm&r=g
 ga_domain: 
