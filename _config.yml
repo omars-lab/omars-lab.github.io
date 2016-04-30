@@ -2,7 +2,7 @@ excerpt_separator: ""
 highlighter: rouge
 pygments: false
 markdown: kramdown
-url: http://mr-uuid.github.io/blog/
+url: http://mr-uuid.github.io/
 name: OmeemO
 description: My first blog
 author: Omar Eid
