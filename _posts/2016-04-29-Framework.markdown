@@ -51,3 +51,5 @@ print "Hello World"
 
 # Embedded HTML
 <div><p align="center"><iframe width="800" height="800" src="/me.html" frameborder="0" allowfullscreen></iframe></p></div>
+
+<div><img src="https://cognitivescale.atlassian.net/wiki/download/attachments/66322557/Macy%27s%20Architecture%20Components.png?api=v2"></img></div>
