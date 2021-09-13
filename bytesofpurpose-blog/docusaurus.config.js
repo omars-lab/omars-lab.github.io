@@ -22,13 +22,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/main/bytesofpurpose-blog/',
+          editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/omars-lab/omars-lab.github.io/edit/main/bytesofpurpose-blog/blog/',
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
