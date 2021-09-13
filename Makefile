@@ -24,4 +24,4 @@ serve:
 
 deploy:
 	# Publishes the website to GitHub pages.
-	( cd ${SITEROOT} && USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=master yarn deploy )
+	( cd ${SITEROOT} && USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy )
