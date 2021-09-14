@@ -22,7 +22,14 @@ export const Highlight = ({children, color}) => (
     }}
     onClick={() => {
       // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
-      ga('send', 'event', 'vote', 'voted-for-blog', 'building-vcode-plugin', 'building-vcode-plugin');
+      // ga('send', 'event', 'vote', 'voted-for-blog', 'building-vcode-plugin', 'building-vcode-plugin');
+      
+      // https://developers.google.com/analytics/devguides/collection/gtagjs/events
+      gtag('event', 'voted-for-blogpost', {
+        'event_category': 'feature-request',
+        'event_label': 'vote',
+        'value': 'building-vcode-plugin'
+      });
     }}>
     {children}
   </span>
