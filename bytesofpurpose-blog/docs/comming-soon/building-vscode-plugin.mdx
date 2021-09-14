@@ -1,0 +1,31 @@
+---
+sidebar_position: 1
+title: Building VSCode Plugins
+---
+
+# Building VSCode Plugins
+
+:::tip Vote
+
+If you want me to write up a blog post on this topic, please click the vote button below!
+
+:::
+
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '20px',
+      color: '#fff',
+      padding: '10px',
+      cursor: 'pointer',
+    }}
+    onClick={() => {
+      // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+      ga('send', 'event', 'vote', 'voted-for-blog', 'building-vcode-plugin', 'building-vcode-plugin');
+    }}>
+    {children}
+  </span>
+);
+
+<Highlight color="#25c2a0">Vote!</Highlight>
