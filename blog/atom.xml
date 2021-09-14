@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.bytesofpurpose.com/blog</id>
-    <title>BytesOfPurpose Blog</title>
+    <title>Bytes of Purpose Blog</title>
     <updated>2021-09-13T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.bytesofpurpose.com/blog"/>
-    <subtitle>BytesOfPurpose Blog</subtitle>
+    <subtitle>Bytes of Purpose Blog</subtitle>
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Docusaurus Tools]]></title>
