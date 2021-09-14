@@ -1,39 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
     <channel>
-        <title>My Site Blog</title>
+        <title>BytesOfPurpose Blog</title>
         <link>https://blog.bytesofpurpose.com/blog</link>
-        <description>My Site Blog</description>
-        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 GMT</lastBuildDate>
+        <description>BytesOfPurpose Blog</description>
+        <lastBuildDate>Mon, 13 Sep 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
-            <title><![CDATA[Welcome]]></title>
-            <link>https://blog.bytesofpurpose.com/blog/welcome</link>
-            <guid>welcome</guid>
-            <pubDate>Thu, 26 Aug 2021 00:00:00 GMT</pubDate>
-            <description><![CDATA[Docusaurus blogging features are powered by the blog plugin.]]></description>
+            <title><![CDATA[Docusaurus Tools]]></title>
+            <link>https://blog.bytesofpurpose.com/blog/tools</link>
+            <guid>tools</guid>
+            <pubDate>Mon, 13 Sep 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[Exploring the built in tools docusaurus exposes ...]]></description>
         </item>
         <item>
-            <title><![CDATA[MDX Blog Post]]></title>
-            <link>https://blog.bytesofpurpose.com/blog/mdx-blog-post</link>
-            <guid>mdx-blog-post</guid>
-            <pubDate>Sun, 01 Aug 2021 00:00:00 GMT</pubDate>
-            <description><![CDATA[Blog posts support Docusaurus Markdown features, such as MDX.]]></description>
-        </item>
-        <item>
-            <title><![CDATA[Long Blog Post]]></title>
-            <link>https://blog.bytesofpurpose.com/blog/long-blog-post</link>
-            <guid>long-blog-post</guid>
-            <pubDate>Wed, 29 May 2019 00:00:00 GMT</pubDate>
-            <description><![CDATA[This is the summary of a very long blog post,]]></description>
-        </item>
-        <item>
-            <title><![CDATA[First Blog Post]]></title>
-            <link>https://blog.bytesofpurpose.com/blog/first-blog-post</link>
-            <guid>first-blog-post</guid>
-            <pubDate>Tue, 28 May 2019 00:00:00 GMT</pubDate>
-            <description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet]]></description>
+            <title><![CDATA[Hello World]]></title>
+            <link>https://blog.bytesofpurpose.com/blog/hello-world</link>
+            <guid>hello-world</guid>
+            <pubDate>Thu, 12 Sep 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[It aint a blog without a hello world post!]]></description>
         </item>
     </channel>
 </rss>
