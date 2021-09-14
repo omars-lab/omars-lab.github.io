@@ -41,22 +41,22 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       ],
     ],
 
-    plugins: [
-      '@docusaurus/plugin-google-analytics',
-      // '@docusaurus/plugin-google-gtag',
-      [
-        '@docusaurus/plugin-sitemap',
-        {
-          changefreq: 'weekly',
-          priority: 0.5,
-          trailingSlash: false,
-        },
-      ],
-    ],
+    // plugins: [
+    //   [
+    //     '@docusaurus/plugin-sitemap',
+    //     {
+    //       changefreq: 'weekly',
+    //       priority: 0.5,
+    //     },
+    //   ],
+    // ],
 
-    themeConfig: (
+    themeConfig: 
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
       ({
+        googleAnalytics: {
+          trackingID: 'G-79YSEH7T7X'
+        },
         navbar: {
           title: 'BytesOfPurpose',
           logo: {
@@ -140,15 +140,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           theme: lightCodeTheme,
           darkTheme: darkCodeTheme,
         },
-        /** @docusaurus/plugin-google-analytics */
-        googleAnalytics: {
-          trackingID: 'G-79YSEH7T7X'
-        },
-        /** @docusaurus/plugin-google-gtag */
-        // gtag: {
-        //   trackingID: 'G-79YSEH7T7X'
-        // },
-      })
-    ),
+      }),
   }
 );
