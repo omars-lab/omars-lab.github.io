@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (
   module.exports = {
-    title: 'BytesOfPurpose',
+    title: 'Bytes of Purpose',
     tagline: 'Purpose code, one byte at a time.',
     url: 'https://blog.bytesofpurpose.com',
     baseUrl: '/',
