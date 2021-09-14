@@ -54,7 +54,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     themeConfig: 
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
       ({
-        googleAnalytics: {
+        gtag: {
           trackingID: 'G-79YSEH7T7X'
         },
         navbar: {
