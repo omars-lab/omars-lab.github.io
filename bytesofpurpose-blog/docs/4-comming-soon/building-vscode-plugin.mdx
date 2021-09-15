@@ -12,10 +12,11 @@ If you want me to write up a blog post on this topic, please click the vote butt
 :::
 
 export const Highlight = ({children, color}) => (
-  <span
+  <button
     style={{
       backgroundColor: color,
-      borderRadius: '20px',
+      borderRadius: '25px',
+      borderColor: '#ffa',
       color: '#fff',
       padding: '10px',
       cursor: 'pointer',
@@ -28,11 +29,11 @@ export const Highlight = ({children, color}) => (
       gtag('event', 'voted-for-blogpost', {
         'event_category': 'feature-request',
         'event_label': 'vote',
-        'value': 'building-vcode-plugin'
+        'value': window.location.pathname.split("/").pop()
       });
     }}>
     {children}
-  </span>
+  </button>
 );
 
 <Highlight color="#25c2a0">Vote!</Highlight>

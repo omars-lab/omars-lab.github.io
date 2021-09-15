@@ -23,11 +23,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         (
           {
             docs: {
+	            remarkPlugins: [require('mdx-mermaid')],
               sidebarPath: require.resolve('./sidebars.js'),
               // Please change this to your repo.
               editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
             },
             blog: {
+	            remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
               // Please change this to your repo.
               editUrl:
@@ -41,15 +43,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       ],
     ],
 
-    // plugins: [
-    //   [
-    //     '@docusaurus/plugin-sitemap',
-    //     {
-    //       changefreq: 'weekly',
-    //       priority: 0.5,
-    //     },
-    //   ],
-    // ],
+    plugins: [
+      // [
+      //   '@docusaurus/plugin-sitemap',
+      //   {
+      //     changefreq: 'weekly',
+      //     priority: 0.5,
+      //   },
+      // ],
+    ],
 
     themeConfig: 
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */

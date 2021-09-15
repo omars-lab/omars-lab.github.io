@@ -1,0 +1,48 @@
+---
+sidebar_position: 2
+title: Discovering Search Terms
+---
+
+# Discovering Search Terms
+
+:::tip Have you ever wondered
+- What terms are people searching for?
+- What terms should I tag my document with with it gets the most search results?
+
+If you have, this blog post is for you!
+:::: 
+  
+- https://trends.google.com/trends/explore?q=vscode%20plugin&geo=US
+
+:::tip Vote
+
+If you want me to write up a blog post on this topic, please click the vote button below!
+
+:::
+
+export const Highlight = ({children, color}) => (
+  <button
+    style={{
+      backgroundColor: color,
+      borderRadius: '25px',
+      borderColor: '#ffa',
+      color: '#fff',
+      padding: '10px',
+      cursor: 'pointer',
+    }}
+    onClick={() => {
+      // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+      // ga('send', 'event', 'vote', 'voted-for-blog', 'building-vcode-plugin', 'building-vcode-plugin');
+      
+      // https://developers.google.com/analytics/devguides/collection/gtagjs/events
+      gtag('event', 'voted-for-blogpost', {
+        'event_category': 'feature-request',
+        'event_label': 'vote',
+        'value': window.location.pathname.split("/").pop()
+      });
+    }}>
+    {children}
+  </button>
+);
+
+<Highlight color="#25c2a0">Vote!</Highlight>

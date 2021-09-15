@@ -18,7 +18,7 @@ build:
 	# Bundles your website into static files for production.
 	( cd ${SITEROOT} && yarn build )
 
-serve:
+serve: build
 	# Serves the built website locally.
 	( cd ${SITEROOT} && yarn serve )
 
