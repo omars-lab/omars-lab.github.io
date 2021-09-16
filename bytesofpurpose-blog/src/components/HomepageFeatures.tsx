@@ -6,48 +6,57 @@
  */
 import React from 'react';
 import clsx from 'clsx';
+import Link from '@docusaurus/Link';
 import styles from './HomepageFeatures.module.css';
 
 type FeatureItem = {
   title: string;
   image: string;
+  to: string;
+  buttonText: string;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Browse Engineering Docs',
     image: '/img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Browse all sorts of engineering artifacts, from sequence diagrams, roadmaps, code snippets, 
+        app templates, shortcuts, scripts, etc. 
       </>
     ),
+    to: "/docs/intro",
+    buttonText: "Docs"
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Browse Blog Posts',
     image: '/img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Browse through some entertaining blog posts, discover what you can do with technology, 
+        gain a few ideas, and provide feedback!
       </>
     ),
+    to: "/blog",
+    buttonText: "Blog"
   },
   {
-    title: 'Powered by React',
+    title: 'Peak Underneath the Hood',
     image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        This site was made leveraging a variety of tools. To learn more about all the gears that are 
+        chruning behind the sceens, see here.
       </>
     ),
+    to: "/docs/roadmap",
+    buttonText: "Blueprint"
   },
 ];
 
-function Feature({title, image, description}: FeatureItem) {
+function Feature({title, image, description, to, buttonText}: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -56,6 +65,11 @@ function Feature({title, image, description}: FeatureItem) {
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
         <p>{description}</p>
+        <Link
+            className="button button--secondary button--lg"
+            to={to}>
+            {buttonText}
+          </Link>
       </div>
     </div>
   );

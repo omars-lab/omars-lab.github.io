@@ -1,4 +1,5 @@
 ---
+slug: tools
 sidebar_position: 2
 title: Doc Tools
 ---
