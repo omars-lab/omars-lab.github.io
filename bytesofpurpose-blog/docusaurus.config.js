@@ -77,61 +77,48 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               position: 'left'
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/omars-lab/omars-lab.github.io',
+              label: 'Support',
+              href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
               position: 'right',
-            },
-            {
-              label: 'LinkedIn',
-              href: 'https://www.linkedin.com/in/oeid/',
-              position: 'right',
-            },
-            {
-              label: 'Portfolio',
-              href: 'https://www.bytesofpurpose.com',
-              position: 'right',
-            },
+
+            }
           ],
         },
         footer: {
           style: 'dark',
           links: [
             {
-              title: 'Links',
+              title: 'Contact',
               items: [
-                {
-                  label: 'Docs',
-                  to: '/docs/intro',
-                },
-              ],
-            },
-            {
-              title: 'Community',
-              items: [
-                {
-                  label: 'Stack Overflow',
-                  href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-                },
-                {
-                  label: 'Discord',
-                  href: 'https://discordapp.com/invite/docusaurus',
-                },
-                {
-                  label: 'Twitter',
-                  href: 'https://twitter.com/docusaurus',
-                },
-              ],
-            },
-            {
-              title: 'More',
-              items: [
-                {
-                  label: 'Blog',
-                  to: '/blog',
-                },
                 {
                   label: 'GitHub',
                   href: 'https://github.com/omars-lab/omars-lab.github.io',
+                  position: 'right',
+                },
+                {
+                  label: 'LinkedIn',
+                  href: 'https://www.linkedin.com/in/oeid/',
+                  position: 'right',
+                },
+                {
+                  label: 'Email',
+                  href: 'mailto:contact@bytesofpurpose.com',
+                  position: 'right',
+                },
+                {
+                  label: 'Support',
+                  href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
+                  position: 'right',
+                },
+              ]
+            },
+            {
+              title: 'Other Works',
+              items: [
+                {
+                  label: 'Portfolio',
+                  href: 'https://www.bytesofpurpose.com',
+                  position: 'right',
                 },
               ],
             },
