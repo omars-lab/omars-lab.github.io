@@ -10,6 +10,19 @@ title: Roadmap / Blueprint
     - [x] Use these constructs to import / construct blog!! @done(2021-09-15T22:23:32-05:00)
         - https://docusaurus.io/docs/next/markdown-features/react 
 
+# Productivity
+- [ ] Add to the frontmatter the local development link to see this page ... and the remote link other people see!
+- [ ] Nice to See my initiatives / habits / etc as a private blog post ... 
+- [ ] Add link to the blog post to edit it locally with glue!
+
+## Desgin
+- [ ] Add Mechanics to highligt dates like spacey!
+- [ ] Add icons into blogs!
+- [ ] Make the vote button and support button more appealing , inviting!
+
+# Analyzing 
+- [ ] Make sure things are properly setup to track in google analytics ...
+
 ## Sections
 - [ ] What sections should I have in the blog?
     - [ ] Have an architecture section!
@@ -18,34 +31,21 @@ title: Roadmap / Blueprint
     - [ ] Have an initiatives section?
     - [ ] Have an blueprints/roadmap section?
 
-## Posts
-- [ ] How do I rank these posts?
-    - What should I have blog posts about?
-        - Cool things i've done?
-        - Things I want to learn about?
-- [ ] What posts should I have?
-    - [ ] My first Mac shortcuy
-    - [ ] My first terminal app
-    - [ ] My first xcallback habdler
-    - [ ] My first vscode plugin
-    - [ ] My first brew tap
-    - [ ] How to push / emit notifications to Iphone over command line ...
-    - [ ] setting up s3 bucket over https
-    - [ ] Creating iPhone Shortcut ...
-    - [ ] Add a blog post for Making LaMetric API
-    - [ ] Making x-callback app
-    - [ ] Should I have a post about google analytics?
-        - [ ] Use the API above ... 
-        - [ ] https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f
-
-## Mechanics
-- [x] Add a import/templating ability to include button on all pages! @done(2021-09-15T22:29:31-05:00)
-- [x] Make sure I can track usage in google analytics! @done(2021-09-15T22:29:53-05:00)
-- [ ] Add a page dedicated to voting with tiles ...
-- [ ] Add a support me button!
-    - [ ] https://www.paypal.com/donate/buttons
-    - [ ] Change the email ... to be related to the site ...
-- [ ] Need to add the ability of having plantuml diagmras, mind maps , etc ...
+## Blog Mechanics
+- [ ] I need to be able to leverage reusable components across blog pages ...
+    - [x] Add a import/templating ability to include button on all pages! @done(2021-09-15T22:29:31-05:00)
+- [ ] I need to see how people are engaging with the blog!
+    - [x] Make sure I can track usage in google analytics! @done(2021-09-15T22:29:53-05:00)
+- [ ] I should seek peoples inputs when prioritizing blog posts ...
+    - [ ] Add a page dedicated to voting with tiles ...
+    - [ ] I need to make clear what blog posts are comming soon and which ones are to be ..
+- [ ] I should give people the option of supporting me!
+    - [ ] Add a support me button!
+        - [ ] https://www.paypal.com/donate/buttons
+        - [ ] Change the email ... to be related to the site ...
+- [ ] I need the ability of having plantuml diagmras, mind maps , etc ...
+    - [ ] Add a plantuml button!
+        - https://github.com/webgears/remarkable-plantuml
 
 ## Decisions
 * [x] Should I add my todos into the blog for public consumption??? @done(2021-09-15 22:16 PM)

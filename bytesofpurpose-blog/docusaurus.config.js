@@ -23,7 +23,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         (
           {
             docs: {
-	            remarkPlugins: [require('mdx-mermaid')],
+	            remarkPlugins: [
+                require('mdx-mermaid'),
+                // in package.json: "remarkable-plantuml": "^1.1.0",
+                // (md) => {
+                //   require('remarkable-plantuml')(md, {base_path: './static'});
+                // }
+              ],
               sidebarPath: require.resolve('./sidebars.js'),
               // Please change this to your repo.
               editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
@@ -31,9 +37,24 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             blog: {
 	            remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
-              // Please change this to your repo.
               editUrl:
                 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/blog/',
+            },
+            pages: {
+              path: 'src/pages',
+              routeBasePath: '/',
+              include: ['**/*.{js,jsx,ts,tsx,md,mdx}'],
+              exclude: [
+                '**/_*.{js,jsx,ts,tsx,md,mdx}',
+                '**/_*/**',
+                '**/*.test.{js,jsx,ts,tsx}',
+                '**/__tests__/**',
+              ],
+              mdxPageComponent: '@theme/MDXPage',
+              remarkPlugins: [require('mdx-mermaid')],
+              rehypePlugins: [],
+              beforeDefaultRemarkPlugins: [],
+              beforeDefaultRehypePlugins: [],
             },
             theme: {
               customCss: require.resolve('./src/css/custom.css'),
@@ -51,6 +72,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       //     priority: 0.5,
       //   },
       // ],
+      
     ],
 
     themeConfig: 
@@ -72,8 +94,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               position: 'left',
             },
             {
-              label: 'Blog', 
+              label: 'Posts', 
               to: '/blog', 
+              position: 'left'
+            },
+            {
+              label: 'Ideas', 
+              type: 'doc', docId: 'comming-soon/future-posts',
               position: 'left'
             },
             {
