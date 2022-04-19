@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[535],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Docusaurus Tools","permalink":"/blog/tools"},{"title":"Hello World","permalink":"/blog/hello-world"}]}')}}]);
