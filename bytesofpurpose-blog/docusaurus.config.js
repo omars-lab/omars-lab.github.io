@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 (
   module.exports = {
     title: 'Bytes of Purpose',
-    tagline: 'Purpose code, one byte at a time.',
+    tagline: 'Purposeful code, one byte at a time.',
     url: 'https://blog.bytesofpurpose.com',
     baseUrl: '/',
     onBrokenLinks: 'throw',
@@ -59,6 +59,17 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             theme: {
               customCss: require.resolve('./src/css/custom.css'),
             },
+            // gtag: {
+            //   trackingID: 'G-79YSEH7T7X'
+            // },
+            gtag: {
+              trackingID: 'G-79YSEH7T7X',
+              anonymizeIP: false,
+            },
+            // googleAnalytics: {
+            //   trackingID: 'G-79YSEH7T7X',
+            //   anonymizeIP: true,
+            // },
           }
         ),
       ],
@@ -72,15 +83,20 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       //     priority: 0.5,
       //   },
       // ],
-      
+      // [
+      //   '@docusaurus/plugin-google-analytics',
+      //   {
+      //     trackingID: 'G-79YSEH7T7X',
+      //     anonymizeIP: false,
+      //   },
+      // ],
     ],
 
+    themes: ['@docusaurus/theme-live-codeblock'],
+    
     themeConfig: 
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
       ({
-        gtag: {
-          trackingID: 'G-79YSEH7T7X'
-        },
         navbar: {
           title: 'BytesOfPurpose',
           logo: {
@@ -90,7 +106,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           items: [
             {
               label: 'Docs',
-              type: 'doc', docId: 'intro',
+              type: 'doc', docId: 'structure',
               position: 'left',
             },
             {
@@ -100,7 +116,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             },
             {
               label: 'Ideas', 
-              type: 'doc', docId: 'comming-soon/future-posts',
+              type: 'doc', docId: 'comming-soon/overview',
               position: 'left'
             },
             {
@@ -150,7 +166,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               ],
             },
           ],
-          copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+          copyright: `Copyright © ${new Date().getFullYear()} BytesOfPurpose, Inc. Built with Docusaurus.`,
         },
         prism: {
           theme: lightCodeTheme,
