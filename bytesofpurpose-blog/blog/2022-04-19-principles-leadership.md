@@ -1,3 +1,11 @@
+---
+slug: principles-leadership
+title: 'Principles: Leadership'
+authors: [oeid]
+tags: []
+draft: true
+---
+
 * Diagree & Commit - until you learn something new ...
 * What are some examples of disagree and commit ...
 

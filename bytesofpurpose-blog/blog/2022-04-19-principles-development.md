@@ -1,6 +1,6 @@
 ---
-slug: building-lametric-compatible-apis
-title: Building LaMetric Compatible APIs
+slug: principles-development
+title: 'Principles: Development'
 authors: [oeid]
 tags: []
 draft: true

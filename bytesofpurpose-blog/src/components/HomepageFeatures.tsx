@@ -51,7 +51,7 @@ const FeatureList: FeatureItem[] = [
         chruning behind the sceens, see here.
       </>
     ),
-    to: "/docs/roadmap",
+    to: "/docs/under-construction/roadmap",
     buttonText: "Blueprint"
   },
 ];
