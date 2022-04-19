@@ -1,4 +1,12 @@
 ---
+slug: mechanics-terminal-hyperlinks
+title: 'Mechanics: Terminal Hyperlinks'
+authors: [oeid]
+tags: []
+draft: true
+---
+
+---
 epic: https://sacred-patterns.atlassian.net/browse/THREAD-10
 summary: 'Blogging/Post: Terminal Hyperlinks'
 task: https://sacred-patterns.atlassian.net/browse/THREAD-35

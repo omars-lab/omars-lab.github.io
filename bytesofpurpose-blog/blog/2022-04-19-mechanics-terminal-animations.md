@@ -1,4 +1,12 @@
 ---
+slug: mechanics-terminal-animations
+title: 'Mechanics: Terminal Animations'
+authors: [oeid]
+tags: []
+draft: true
+---
+
+---
 epic: https://sacred-patterns.atlassian.net/browse/THREAD-10
 summary: 'Blogging/Post: Terminal Animations'
 task: https://sacred-patterns.atlassian.net/browse/THREAD-34
