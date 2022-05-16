@@ -4,6 +4,7 @@ title: 'Principles: Development'
 authors: [oeid]
 tags: []
 draft: true
+date: 2022-04-19T10:00
 ---
 
 * [ ] I need a development principles blog ...

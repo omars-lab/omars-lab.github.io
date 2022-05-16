@@ -4,6 +4,7 @@ title: Building LaMetric Compatible APIs
 authors: [oeid]
 tags: []
 draft: true
+date: 2021-09-15T10:00
 ---
 
 # Post Idea: Building LaMetric Compatible APIs

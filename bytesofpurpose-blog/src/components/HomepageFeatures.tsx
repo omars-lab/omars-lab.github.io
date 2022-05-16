@@ -20,7 +20,8 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: 'Browse Engineering Docs',
-    image: '/img/undraw_docusaurus_mountain.svg',
+    image: '/img/artifacts.svg',
+    // image: '/img/undraw_docusaurus_mountain.svg',
     description: (
       <>
         Browse all sorts of engineering artifacts, from sequence diagrams, roadmaps, code snippets, 
@@ -32,7 +33,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Browse Blog Posts',
-    image: '/img/undraw_docusaurus_tree.svg',
+    image: '/img/posts.svg',
+    // image: '/img/undraw_docusaurus_tree.svg',
     description: (
       <>
         Browse through some entertaining blog posts, discover what you can do with technology, 
@@ -44,7 +46,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Peak Underneath the Hood',
-    image: '/img/undraw_docusaurus_react.svg',
+    image: '/img/engine.svg',
+    // image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
         This site was made leveraging a variety of tools. To learn more about all the gears that are 

@@ -4,13 +4,11 @@ title: 'Mechanics: Documentation'
 authors: [oeid]
 tags: []
 draft: true
----
-
----
 epic: https://sacred-patterns.atlassian.net/browse/THREAD-10
 summary: 'Blogging/Post: Documentation Mechanics'
 task: https://sacred-patterns.atlassian.net/browse/THREAD-37
 xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/blog-post-documention-mechanics.md:1
+date: 2022-04-19T10:00
 ---
 
 * [ ] Add the different "mechanics" I use ... 
