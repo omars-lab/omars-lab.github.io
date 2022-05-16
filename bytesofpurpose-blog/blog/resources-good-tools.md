@@ -4,6 +4,7 @@ title: 'Resources: Good Tools'
 authors: [oeid]
 tags: []
 draft: true
+date: 2022-04-19T10:00
 ---
 
 * [ ] I need to have a blog post with resources ... common resources like the noun project

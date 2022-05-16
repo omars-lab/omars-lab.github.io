@@ -101,7 +101,9 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           title: 'BytesOfPurpose',
           logo: {
             alt: 'BytesOfPurpose Logo',
+            // https://docusaurus.io/docs/api/themes/configuration
             src: 'img/logo.svg',
+            srcDark: 'img/logo_dark.svg',
           },
           items: [
             {
@@ -120,11 +122,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               position: 'left'
             },
             {
-              label: 'Support',
-              href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
+              // label: 'Support',
+              type: 'html',
+              value: '<a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></img></div><b class="navbar__title text--truncate">Support</b></a>',
+              // href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
               position: 'right',
-
             }
+            
           ],
         },
         footer: {

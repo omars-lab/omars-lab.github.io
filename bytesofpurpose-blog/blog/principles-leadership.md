@@ -4,6 +4,7 @@ title: 'Principles: Leadership'
 authors: [oeid]
 tags: []
 draft: true
+date: 2022-04-19T10:00
 ---
 
 * Diagree & Commit - until you learn something new ...

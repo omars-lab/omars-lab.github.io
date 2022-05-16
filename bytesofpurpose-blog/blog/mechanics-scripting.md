@@ -4,13 +4,11 @@ title: 'Mechanics: Scripting'
 authors: [oeid]
 tags: []
 draft: true
----
-
----
 epic: https://sacred-patterns.atlassian.net/browse/THREAD-10
 summary: 'Blogging/Post: Scripting Mechanics'
 task: https://sacred-patterns.atlassian.net/browse/THREAD-53
 xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/blog-post-scripting-mechanics.md:1
+date: 2022-04-19T10:00
 ---
 
 # Secret Management

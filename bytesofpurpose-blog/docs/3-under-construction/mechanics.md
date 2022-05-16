@@ -21,3 +21,12 @@ title: Mechanics
         - https://github.com/webgears/remarkable-plantuml
 
 - [ ] Similar to ```mermaid ... i need a ```tasks ...
+
+- [x] Add a table mechanic where I can leverage MDX to insert content ... so the markdown tables don't get unmaintainable ... @done(2022-05-15 12:46 PM)
+	- https://mdxjs.com/docs/getting-started/
+
+- [x] Figure out how to add image / custom html to navbar item @done(2022-05-15T13:58:04-05:00)
+	- https://docusaurus.io/docs/api/themes/configuration#navbar-with-custom-html
+
+- [x] Figure out how to five headers in md files custom ids ... @done(2022-05-15T13:58:03-05:00)
+	- https://docusaurus.io/docs/markdown-features/toc

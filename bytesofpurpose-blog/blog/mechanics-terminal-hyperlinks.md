@@ -4,13 +4,11 @@ title: 'Mechanics: Terminal Hyperlinks'
 authors: [oeid]
 tags: []
 draft: true
----
-
----
 epic: https://sacred-patterns.atlassian.net/browse/THREAD-10
 summary: 'Blogging/Post: Terminal Hyperlinks'
 task: https://sacred-patterns.atlassian.net/browse/THREAD-35
 xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/blog-post-terminal-hyperlinks.md:1
+date: 2022-04-19T10:00
 ---
 
 * [ ] Add real world examples to the blog!
