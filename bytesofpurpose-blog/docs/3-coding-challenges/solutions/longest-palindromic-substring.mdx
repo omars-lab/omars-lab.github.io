@@ -1,0 +1,114 @@
+---
+slug: longest-palindromic-substring
+title: Longest Palindromic Substring
+---
+
+
+# Problem
+```
+Example 1:
+
+Input: s = "babad"
+Output: "bab"
+Explanation: "aba" is also a valid answer.
+Example 2:
+
+Input: s = "cbbd"
+Output: "bb"
+ 
+
+Constraints:
+
+1 <= s.length <= 1000
+s consist of only digits and English letters.
+
+```
+
+# Solutions
+
+
+## Brute Force Solution
+
+<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-285&embed-host=share" allowfullscreen></iframe>
+
+
+```py title="brute_force.py"
+def is_palindrome(sub: str) -> bool:
+    return sub == sub[::-1]
+
+class Solution(object):
+  def longestPalindrome(self, s):
+    """
+    :type s: str
+    :rtype: str
+    """
+    longest = ""
+    n = len(s)
+    for i in range(n):
+      for j in range(i + 1, n + 1):  # `j` is exclusive
+        substring = s[i:j]
+        longer_than_longest = len(substring) > len(longest)
+        if is_palindrome(substring) and longer_than_longest:
+          longest = substring
+    return longest
+```
+
+## Recursive Solution
+<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-284&embed-host=share" allowfullscreen></iframe>
+
+```py title="recursive.py"
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if not s:
+            return ""
+        elif "".join(list(reversed(s))) == s:
+            return s
+        left_longest = self.longestPalindrome(s[:len(s)-1])
+        right_longest = self.longestPalindrome(s[1:])
+        if len(left_longest) > len(right_longest):
+            return left_longest
+        else:
+            return right_longest
+```
+
+
+## Optimal Solution
+
+<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=2-473&embed-host=share" allowfullscreen></iframe>
+
+```py title="optimal.py"
+def expand_around_center(s, left, right):
+    while left >= 0 and right < len(s) and s[left] == s[right]:
+        left -= 1
+        right += 1
+    return s[left + 1:right]
+
+class Solution(object):
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        longest = ""
+        for i in range(len(s)):
+            # Odd-length palindrome
+            palindrome1 = expand_around_center(s, i, i)
+            # Even-length palindrome
+            palindrome2 = expand_around_center(s, i, i + 1)
+            
+            # Update the longest palindrome if necessary
+            if len(palindrome1) > len(longest):
+                longest = palindrome1
+            if len(palindrome2) > len(longest):
+                longest = palindrome2
+
+        return longest
+```
+
+# References
+* [Leetcode Link](https://leetcode.com/problems/longest-palindromic-substring/description/?envType=problem-list-v2&envId=dynamic-programming)
+* [Figma Diagram](https://www.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-2&t=JNVkmhU4Nf1fWKFu-4)

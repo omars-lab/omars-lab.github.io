@@ -1,0 +1,16 @@
+---
+slug: http-to-xcallback
+title: 'HTTP(s) to x-call-back'
+description: What are all the different mechanics I use when documenting things?
+authors: [oeid]
+tags: []
+draft: true
+date: 2022-04-19T10:00
+---
+
+# Links to Local Callbacks
+* [ ] Opening local files from links in Jira ...
+* [ ] x-callbacks...
+	* [ ] Markdown links ...
+* [ ] Using HTTP rewrite to open local files 
+* [ ] HTTP urls in Jira/Blog → xcallbacks to open local urls ..

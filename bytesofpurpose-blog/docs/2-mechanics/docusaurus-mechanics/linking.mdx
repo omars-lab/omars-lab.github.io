@@ -1,0 +1,29 @@
+---
+slug: mechanics-docusaurus-linking
+title: 'Linking Posts'
+description: What are all the different documentation mechanics docusaurus exposes?
+authors: [oeid]
+tags: [docusaurus, tools]
+date: 2025-01-30T10:00
+---
+
+
+https://docusaurus.io/docs/markdown-features/links
+
+All point to the same file ...
+* works
+    * using file location
+        * [❌⛓️‍💥](/2-mechanics/docusaurus-mechanics/start-here.mdx)
+        * [❌⛓️‍💥](start-here.mdx)
+    * using final url path / slug ...
+        * [✅🔗](./docusaurus-mechanics)
+* Don't work
+    * [❌⛓️‍💥](./start-here)
+    * [❌⛓️‍💥](./docs/start-here.mdx)
+    * [❌⛓️‍💥](./docs/start-here)
+    * [❌⛓️‍💥](./docusaurus-mechanics)
+    * [❌⛓️‍💥](./docs/docusaurus-mechanics.mdx)
+    * [❌⛓️‍💥](./docs/docusaurus-mechanics)
+    * [❌⛓️‍💥](./mechanics/mechanics-docusaurus)
+    * [❌⛓️‍💥](./docs/mechanics/mechanics-docusaurus)
+    * [❌⛓️‍💥](./docs/mechanics-docusaurus)
