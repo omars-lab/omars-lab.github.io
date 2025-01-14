@@ -15,7 +15,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
     projectName: 'omars-lab.github.io', // Usually your repo name.
     trailingSlash: false,
-
+    staticDirectories: ['static'],
     presets: [
       [
         '@docusaurus/preset-classic',
@@ -35,6 +35,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
             },
             blog: {
+              blogSidebarTitle: 'Posts (Newest🔝)',
+              blogSidebarCount: 'ALL',
 	            remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
               editUrl:
@@ -108,7 +110,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           items: [
             {
               label: 'Docs',
-              type: 'doc', docId: 'structure',
+              type: 'doc', docId: 'welcome',
               position: 'left',
             },
             {
@@ -116,11 +118,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               to: '/blog', 
               position: 'left'
             },
-            {
-              label: 'Ideas', 
-              type: 'doc', docId: 'comming-soon/overview',
-              position: 'left'
-            },
+            // {
+            //   label: 'Ideas', 
+            //   to: '/blog/process-blog-post-ideation', 
+            //   position: 'left'
+            // },
             {
               // label: 'Support',
               type: 'html',

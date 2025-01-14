@@ -26,3 +26,30 @@
 html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+/* 
+ * https://github.com/facebook/docusaurus/issues/4083
+ * https://github.com/facebook/docusaurus/issues/2577
+ * https://github.com/facebook/docusaurus/issues/3955
+ */
+
+/* Container */
+#__docusaurus > div.main-wrapper > div {
+  margin: 0 5%;
+  --ifm-container-width-xl: 90%;
+}
+
+/* Left Bar */
+#__docusaurus > div.main-wrapper > div > div > aside {
+  --ifm-col-width: 15%;
+}
+
+/* Content */
+#__docusaurus > div.main-wrapper > div > div > main {
+  --ifm-col-width: 70%;
+}
+
+/* Right Bar */
+#__docusaurus > div.main-wrapper > div > div > div {
+  --ifm-col-width: 15%;
+}
