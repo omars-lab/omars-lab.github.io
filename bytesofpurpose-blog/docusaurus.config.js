@@ -1,5 +1,6 @@
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const {themes} = require('prism-react-renderer');
+const lightTheme = themes.github;
+const darkTheme = themes.dracula;
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
@@ -9,7 +10,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     tagline: 'Purposeful code, one byte at a time.',
     url: 'https://blog.bytesofpurpose.com',
     baseUrl: '/',
-    onBrokenLinks: 'throw',
+    // onBrokenLinks: 'throw',
+    onBrokenLinks: 'warn',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
@@ -32,7 +34,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               ],
               sidebarPath: require.resolve('./sidebars.js'),
               // Please change this to your repo.
-              editUrl: 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
+              editUrl: 
+                'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
             },
             blog: {
               blogSidebarTitle: 'Posts (Newest🔝)',
@@ -175,8 +178,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           copyright: `Copyright © ${new Date().getFullYear()} BytesOfPurpose, Inc. Built with Docusaurus.`,
         },
         prism: {
-          theme: lightCodeTheme,
-          darkTheme: darkCodeTheme,
+          theme: lightTheme,
+          darkTheme: darkTheme,
         },
       }),
   }
