@@ -5,12 +5,18 @@ SITEROOT := ${MAKEFILE_DIR}/${SITENAME}
 
 install:
 	# https://docusaurus.io/docs/installation
-	(npm list -g --depth=0 | sed -E 's/(├|└)── //g' | grep -q yarn) || npm install -g yarn
+	((npm list -g --depth=0 | sed -E 's/(├|└)── //g' | grep -q yarn) || which yarn) || npm install -g yarn
 	( cd ${SITEROOT} && yarn install )
 	
-
 init-site:
 	test -d ${SITEROOT} || npx @docusaurus/init@latest init ${SITENAME} classic --typescript
+
+check:
+	( cd ${SITEROOT} && npx docusaurus-mdx-checker )
+
+clean:
+	( cd ${SITEROOT} && yarn clear )
+	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
 start:
 	# Starts the development server.
