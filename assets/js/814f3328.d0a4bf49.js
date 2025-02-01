@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[7472],{5513:s=>{s.exports=JSON.parse('{"title":"Posts (Newest\ud83d\udd1d)","items":[{"title":"Docs vs Blog Posts","permalink":"/blog/docs-vs-blog-posts","unlisted":false,"date":"2025-01-31T00:00:00.000Z"}]}')}}]);

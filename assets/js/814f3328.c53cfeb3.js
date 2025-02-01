@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[535],{45641:function(e){e.exports=JSON.parse('{"title":"Posts (Newest\ud83d\udd1d)","items":[{"title":"JQ Mechanics","permalink":"/blog/mechanics-jq"}]}')}}]);
