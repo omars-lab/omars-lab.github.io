@@ -28,7 +28,7 @@ const FeatureList: FeatureItem[] = [
         app templates, shortcuts, scripts, etc. 
       </>
     ),
-    to: "/docs/intro",
+    to: "/docs/welcome/intro",
     buttonText: "Docs"
   },
   {
