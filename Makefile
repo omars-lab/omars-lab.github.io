@@ -8,6 +8,11 @@ install:
 	((npm list -g --depth=0 | sed -E 's/(├|└)── //g' | grep -q yarn) || which yarn) || npm install -g yarn
 	( cd ${SITEROOT} && yarn install )
 	
+add:
+	( cd ${SITEROOT} && yarn add @docusaurus/plugin-svgr )
+	true
+
+
 init-site:
 	test -d ${SITEROOT} || npx @docusaurus/init@latest init ${SITENAME} classic --typescript
 
@@ -19,7 +24,7 @@ clean:
 	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
 start:
-	# Starts the development server.
+	# Starts the development server, includes drafts and monitors and auto deploys updates
 	( cd ${SITEROOT} && yarn start )
 
 build:

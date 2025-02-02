@@ -2,7 +2,9 @@
 slug: longest-palindromic-substring
 title: Longest Palindromic Substring
 ---
-
+import BruteForceSvg from '/img/coding-challenges/longest-palindromic-substring/brute-force.svg';
+import ExpandAroundCenterSvg from '/img/coding-challenges/longest-palindromic-substring/expand-around-center.svg';
+import RecursiveSvg from '/img/coding-challenges/longest-palindromic-substring/recursive.svg';
 
 # Problem
 ```
@@ -21,7 +23,6 @@ Constraints:
 
 1 <= s.length <= 1000
 s consist of only digits and English letters.
-
 ```
 
 # Solutions
@@ -29,8 +30,11 @@ s consist of only digits and English letters.
 
 ## Brute Force Solution
 
-<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-285&embed-host=share" allowfullscreen></iframe>
+<BruteForceSvg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" className="bruteForce" />;
 
+```
+<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-285&embed-host=share" allowfullscreen></iframe>
+```
 
 ```py title="brute_force.py"
 def is_palindrome(sub: str) -> bool:
@@ -54,7 +58,12 @@ class Solution(object):
 ```
 
 ## Recursive Solution
+
+<RecursiveSvg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" className="recursive" />;
+
+```
 <iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=1-284&embed-host=share" allowfullscreen></iframe>
+```
 
 ```py title="recursive.py"
 class Solution(object):
@@ -78,7 +87,11 @@ class Solution(object):
 
 ## Optimal Solution
 
+<ExpandAroundCenterSvg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" className="expandAroundCenter" />;
+
+```
 <iframe style={{border: "1px solid rgba(0, 0, 0, 0.1);"}} width="800" height="450" src="https://embed.figma.com/board/dCF18hQlJfjflkf9p7MWga/Coding-Challenges?node-id=2-473&embed-host=share" allowfullscreen></iframe>
+```
 
 ```py title="optimal.py"
 def expand_around_center(s, left, right):

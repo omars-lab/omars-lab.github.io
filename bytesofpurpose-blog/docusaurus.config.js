@@ -113,7 +113,7 @@ const darkTheme = themes.dracula;
           items: [
             {
               label: 'Docs',
-              type: 'doc', docId: 'welcome',
+              type: 'doc', docId: 'welcome/README',
               position: 'left',
             },
             {
