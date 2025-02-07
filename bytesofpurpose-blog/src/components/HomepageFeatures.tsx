@@ -42,20 +42,19 @@ const FeatureList: FeatureItem[] = [
       </>
     ),
     to: "/blog",
-    buttonText: "Blog"
+    buttonText: "Blog Posts"
   },
   {
-    title: 'Peak Underneath the Hood',
+    title: 'Browse Designs',
     image: '/img/engine.svg',
     // image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
-        This site was made leveraging a variety of tools. To learn more about all the gears that are 
-        chruning behind the sceens, see here.
+        Peak underneath the hood and browse various designs including the design for this site. 
       </>
     ),
-    to: "/docs/designs/blog-design",
-    buttonText: "Blueprint"
+    to: "/designs/blog-design",
+    buttonText: "Designs"
   },
 ];
 

@@ -81,6 +81,31 @@ const darkTheme = themes.dracula;
     ],
 
     plugins: [
+      // https://docusaurus.io/docs/blog#multiple-blogs
+      [
+        '@docusaurus/plugin-content-blog',
+        {
+          /**
+           * Required for any multi-instance plugin
+           */
+          id: 'designs',
+          /**
+           * URL route for the blog section of your site.
+           * *DO NOT* include a trailing slash.
+           */
+          routeBasePath: 'designs',
+          /**
+           * Path to data on filesystem relative to site dir.
+           */
+          path: './designs',
+          blogSidebarTitle: 'Posts (Newest🔝)',
+          blogSidebarCount: 'ALL',
+          remarkPlugins: [require('mdx-mermaid')],
+          showReadingTime: true,
+          editUrl:
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/designs/',
+        },
+      ],
       // [
       //   '@docusaurus/plugin-sitemap',
       //   {
@@ -95,6 +120,7 @@ const darkTheme = themes.dracula;
       //     anonymizeIP: false,
       //   },
       // ],
+      
     ],
 
     themes: ['@docusaurus/theme-live-codeblock'],
@@ -119,6 +145,11 @@ const darkTheme = themes.dracula;
             {
               label: 'Posts', 
               to: '/blog', 
+              position: 'left'
+            },
+            {
+              label: 'Designs', 
+              to: '/designs', 
               position: 'left'
             },
             // {

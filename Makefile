@@ -9,9 +9,9 @@ install:
 	( cd ${SITEROOT} && yarn install )
 	
 add:
-	( cd ${SITEROOT} && yarn add @docusaurus/plugin-svgr )
+	# ( cd ${SITEROOT} && yarn add @docusaurus/plugin-svgr )
+	( cd ${SITEROOT} && yarn add react-gist )
 	true
-
 
 init-site:
 	test -d ${SITEROOT} || npx @docusaurus/init@latest init ${SITENAME} classic --typescript
