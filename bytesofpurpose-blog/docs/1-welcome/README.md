@@ -6,9 +6,9 @@ title: Welcome
 
 # Welcome
 
+
 Contains blog strcuture
 Contains what I expect from you as a reader ...
-
 
 You'll find a whole bunch of docs that you can navigate between in the left pane. 
 
@@ -19,7 +19,6 @@ If something about it annoys you, there is an edit button to jump right into the
 
 I have a section of of future ideas that you can vote on ...
 I have a section of actual posts ...
-
 
 # Ideation Process
 * All my blog post ideas should be checked into the repo ...
