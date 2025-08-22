@@ -2,11 +2,33 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.bytesofpurpose.com/blog</id>
     <title>Bytes of Purpose Blog</title>
-    <updated>2025-01-31T00:00:00.000Z</updated>
+    <updated>2025-03-07T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.bytesofpurpose.com/blog"/>
     <subtitle>Bytes of Purpose Blog</subtitle>
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Understanding the Diff Between DFS and BFS]]></title>
+        <id>https://blog.bytesofpurpose.com/blog/2025/03/07/DFS-vs-BFS</id>
+        <link href="https://blog.bytesofpurpose.com/blog/2025/03/07/DFS-vs-BFS"/>
+        <updated>2025-03-07T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[https://leetcode.com/problem-list/breadth-first-search/]]></summary>
+        <content type="html"><![CDATA[<p><a href="https://leetcode.com/problem-list/breadth-first-search/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problem-list/breadth-first-search/</a>
+<a href="https://leetcode.com/problem-list/depth-first-search/" target="_blank" rel="noopener noreferrer">https://leetcode.com/problem-list/depth-first-search/</a></p>
+<h1>What is the difference in the questions?</h1>
+<p>How do you know DFS is the optimal solution for a graph problem bs BFS?</p>
+<p>BFS useful to compare two different trees:
+<a href="https://leetcode.com/problems/same-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/same-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a>
+<a href="https://leetcode.com/problems/symmetric-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/symmetric-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a>
+BFS useful to group tree nodes by level
+<a href="https://leetcode.com/problems/binary-tree-level-order-traversal/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/binary-tree-level-order-traversal/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a>
+BFS useful for "level order traversal"<br>
+<a href="https://leetcode.com/problems/binary-tree-level-order-traversal-ii/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/binary-tree-level-order-traversal-ii/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a></p>
+<p>Both can be used to find the number of levels in a tree
+<a href="https://leetcode.com/problems/maximum-depth-of-binary-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/maximum-depth-of-binary-tree/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a></p>
+<h1>Solve This One</h1>
+<p><a href="https://leetcode.com/problems/word-ladder/description/?envType=problem-list-v2&amp;envId=breadth-first-search" target="_blank" rel="noopener noreferrer">https://leetcode.com/problems/word-ladder/description/?envType=problem-list-v2&amp;envId=breadth-first-search</a></p>]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Docs vs Blog Posts]]></title>
         <id>https://blog.bytesofpurpose.com/blog/docs-vs-blog-posts</id>
