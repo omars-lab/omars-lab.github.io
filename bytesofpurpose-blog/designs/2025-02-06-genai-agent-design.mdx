@@ -1,0 +1,223 @@
+---
+slug: genai-agent-design
+sidebar_position: 1
+title: GenAI Agent Design
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+## Prioritization / Motivation
+* Most important thing is going to be genai in the future .. 
+* I want to build something mimmally myself ...
+
+## Requirements
+* As an engineer, I should demonstrate my ability to construct agentic applications with LLMs.
+* As an engineer, I should demonstrate the ability to leverage vector dbs to power a RAG for an LLM.
+* Non functionals - this should serve as a sample design ...
+* Non functionals - I should use this as an opportunity to ramp up on vector dbs ...
+* I want my personal-gen-ai-agents to be examples for eventually joining or starting my own gen ai startup
+* implement my own rag ...
+* Design an LLM + RAG + Vector Db Applications 
+
+## Use Cases
+<Tabs>
+  <TabItem value="note-companion" label="Note Companion">
+    * GenAI as a personal note taking companion ... 
+    * GenAI agent focused on organizing notes ...
+    * Suggests commands to clean up notes ... 
+    * Suggests moving ideas ... 
+    * Discovers static ideas ... 
+    * Groups hyperlinks ... 
+  </TabItem>
+  <TabItem value="blog-companion" label="Blog Companion">
+    * Use Case: Blog Author
+      * I should give chatgpt instructions to ignore slugs, etc
+    * Can I have it review blog posts / core essence and write the post on my behlaf? 
+    * Append a section at the end of every post to help the LLM generate content?
+    * Docusaurus llm plugin?
+    * I should make agentic setup to help me weite blog posts ...
+    * Use genai to write blog posts ...
+    * Similar to blogs, I should add a prompts blog with all my genai prompts + scripts to call chatgpt api
+      * I should make a welcome-to-prompts 
+    * Auto create blog posts form essence
+      * I should have an offline script call and convert ... outside the blog directory structure for api key security 
+    * I shouldn't need to move my notes around and organize them ... GenAI should be able to do it for me ... or at least tag a note ... 
+  	* If it mis-tags it ... I should be able to explain why it tagged it wrong ...
+  </TabItem>
+  <TabItem value="team-docs-companion" label="Team Doc Companion">
+    * GenAI as a dev documentation companion ...
+    * "Having a note taker on the team"
+    * Team can collaboratively curate notes ... campanion organizes them, cleans them up, etc ...
+    * Goes from notes / words to a puml diagram ... 
+    * Collaborative Note Taking ...
+      * There is a whole genAI use case on changing how people take notes ...
+        * 5 people talked about the same meeting in different ways ...
+        * Can we find contradictions 
+        * Can we find important things that everyone covered 
+        * Things only 1 person covered ...
+      * People might be afraid to use to not make them look stupid ... 
+      * Impact
+        * Helps cut through the ambiguity ... 
+  </TabItem>
+</Tabs>
+
+## Secondary Use Cases
+<Tabs>
+  <TabItem value="interview-companion" label="Interview Companion">
+    * Companion to help you prepare for an interview ... or hold one ...
+    * What interview questions should I ask people?
+    * What make you special, how are you different than your peers
+    * Are you self aware
+    * What tech questions should I ask?
+    * How would you solve it
+    * How would you write an X document ...
+    * What examples would you include in it?
+    * What points would you make in it?
+    * Whats its outline?
+    * What questions would it answer?
+  </TabItem>
+  <TabItem value="financial-companion" label="Financial Companion">
+    * Another agent - analyze financial data / see how much I am spending in different categories ... for different occasions ... etc ...
+    * Use the LLM to help build an LLM based app ...
+  </TabItem>
+  <TabItem value="rap-companion" label="Rap Companion">
+  * [ ] Genai music use voice of football players + deep introspective questions - as a song ....
+	  * Use voice of soccer players
+	  * What were you doing when you were 16 ... [Link](https://www.instagram.com/reel/DFVb_9aNW29/?igsh=MW1maXM5NHlha2V6NA==)
+  * https://www.vocalize.fm/signin
+  </TabItem>
+  <TabItem value="teaching-companion" label="Teaching Companion">
+    Gen AI to educate ... what are your gaps ... what content should you see ... what concepts must you learn
+  * [ ] What is your strategy of distributing info?
+  * [ ] Instead of finding info ... how does info find you ...
+  </TabItem>
+  <TabItem value="other" label="Other">
+  * Are there any agentic use cases that come to mind?
+    * Vetting a business?
+    * Interview preparer?
+  </TabItem>
+</Tabs>
+
+
+## Todos
+- [ ] Figure out proper use case for agent ...
+
+## High Level Design
+
+<iframe style={{border: "1px solid rgba(0, 0, 0, 0.1)"}} width="800" height="450" src="https://embed.figma.com/board/MpeIiTZuJGpsBNHltua5xN/Tech-Designs?node-id=0-1&embed-host=share" allowfullscreen></iframe>
+
+
+## Components
+* Is there a sample chat interface I can build / tinker with? 
+
+## Essence 
+* ...
+
+## Approach
+* iterative enhancements 
+* Can I run the genAI on my m1 Mac .... 
+	* Free in that case ...
+* I just need to get started in the GenAI space 
+* Use GenAI to develop a GenAI agent
+  * Using q to craft docker compose files 
+    * https://community.aws/tags/q-bits
+    * https://community.aws/content/2r4vEadauMFkO032h02mVeCfWS1/q-bits-streamlining-docker-compose-with-amazon-q-developer
+
+## Resources
+
+<Tabs>
+  <TabItem value="vector-dbs" label="Vector DBs">
+    * https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/
+    * https://aws.amazon.com/opensearch-service/serverless-vector-engine/
+    * https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html
+    * https://opensearch.org/platform/search/vector-database.html
+    * https://opensearch.org/docs/latest/search-plugins/vector-search/
+    * https://opensearch.org/docs/latest/getting-started/quickstart/
+    * https://playground.opensearch.org/app/home#/
+  </TabItem>
+  <TabItem value="aws-offerings" label="AWS Offerings">
+    * What GenAI related services does AWS offer?
+    * https://aws.amazon.com/blogs/database/the-role-of-vector-datastores-in-generative-ai-applications/
+    * https://aws.amazon.com/opensearch-service/serverless-vector-engine/
+    * https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html
+    * https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/
+    * https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/
+  </TabItem>
+  <TabItem value="docker-compose" label="Docker Compose">
+    ```
+    version: "3.8"
+    services:
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports:
+          - "6333:6333"
+
+      rag-app:
+        build: .
+        ports:
+          - "8000:8000"
+        depends_on:
+          - qdrant
+    ```
+  </TabItem>
+</Tabs>
+
+
+
+<Tabs>
+  <TabItem value="amazon-q" label="Amazon Q">
+    * https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html
+    * https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/
+  </TabItem>
+  <TabItem value="running-locally" label="Running Locally">
+    * [How to run LLM locally with ollama | Python example](https://www.youtube.com/watch?v=IcBnE6J2gpk)
+    * https://semaphoreci.com/blog/local-llm
+    * https://www.amazon.science/blog/lightweight-llm-for-converting-text-to-structured-data
+  </TabItem>
+  <TabItem value="genai-agents" label="GenAI Agents">
+    * https://huggingface.co/spaces
+    * https://huggingface.co/google-research-datasets
+    * https://huggingface.co/datasets/google-research-datasets/natural_questions/viewer/default/train?p=1
+    * https://huggingface.co/learn/agents-course/unit0/introduction
+    * https://huggingface.co/docs/transformers/en/agents
+    * https://huggingface.co/docs/transformers/en/llm_tutorial
+    * https://www.aimon.ai/posts/deep-dive-into-agentic-llm-frameworks
+    * https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-5-multi-agent-collaboration/
+  </TabItem>
+  <TabItem value="rags" label="RAGs">
+    * https://www.google.com/search?q=course+build+rag+app+vector+db+docker-compose&num=10&sca_esv=a46735a6b9ec06aa&pws=0&sxsrf=AHTn8zphZFXvMrr3L9QmU3WwfWLSHHM9bw%3A1738897076103&ei=tHalZ_OFBpO3wN4PlKCBoQE&ved=0ahUKEwjzr5a0yLCLAxWTG9AFHRRQIBQQ4dUDCBI&uact=5&oq=course+build+rag+app+vector+db+docker-compose&gs_lp=Egxnd3Mtd2l6LXNlcnAiLWNvdXJzZSBidWlsZCByYWcgYXBwIHZlY3RvciBkYiBkb2NrZXItY29tcG9zZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKABSJEPUPQBWLAOcAF4AZABAJgBzAGgAbwLqgEGMTMuMS4xuAEDyAEA-AEBmAIQoALgC8ICChAAGLADGNYEGEfCAgUQIRirApgDAIgGAZAGCJIHBjExLjQuMaAHtEA&sclient=gws-wiz-serp
+    * https://www.google.com/search?num=10&sca_esv=a46735a6b9ec06aa&pws=0&udm=7&sxsrf=AHTn8zoSSP3fG8TYCVyu449HSsM51Ed54Q:1738897080539&q=course+build+rag+app+vector+db+docker-compose&sa=X&ved=2ahUKEwjZjqW2yLCLAxWf8MkDHV1ZDZQQ8ccDegQIDxAH&biw=1792&bih=974&dpr=2
+    * https://community.openai.com/t/tutorial-a-step-by-step-guide-on-rag-using-surrealdb/701653
+    * https://forums.developer.nvidia.com/t/dli-course-building-rag-agents-for-llms-building-the-container-for-the-course-setup/306533
+    * https://qdrant.tech/documentation/quickstart/
+    * https://python.langchain.com/docs/how_to/
+    * https://arize.com/blog/understanding-agentic-rag/
+  </TabItem>
+  <TabItem value="youtube-videos" label="Youtube Videos">
+  * [Build a Python Event-driven Serverless App with Amazon CodeWhisperer | Amazon Web Services](https://www.youtube.com/watch?v=8vkHLnhIFGA)
+  * [Amazon Q Developer - Your generative AI-powered assistant for work | Amazon Web Services](https://www.youtube.com/watch?v=_1HbJeoij6g)
+  </TabItem>
+  <TabItem value="other-genai-stuff" label="Other GenAI Stuff">
+  * Can I make a simple Mac app ... with apple intelligence ?
+    * https://support.apple.com/guide/mac-help/use-chatgpt-with-apple-intelligence-mchlfc5cf131/15.0/mac/15.0
+  * https://github.com/anthropics/anthropic-quickstarts/blob/main/computer-use-demo/README.md
+  * [Deep Dive into LLMs like ChatGPT](https://youtu.be/7xTGNNLPyMI?si=rH1Cm3OUCNOG9_Ft)
+  * https://qdrant.tech/
+  </TabItem>
+</Tabs>
+
+
+# Patterns
+* What are the different components involved in an GenAI Based architecture ...
+	* https://martinfowler.com/articles/exploring-gen-ai.html
+	* https://martinfowler.com/articles/gen-ai-patterns/
+
+# Options
+
+## Vector Databases 
+
+* What are various vector database offerings?
+
+https://opensearch.org/platform/search/vector-database.html
+https://opensearch.org/docs/latest/search-plugins/vector-search/

@@ -1,0 +1,132 @@
+---
+slug: mx-docx-embedd-figma
+title: Embedded Figma Diagrams
+description: How can one embed a Figma Diagram into Docusaurus Documentation?
+authors: [oeid]
+tags: [docusaurus, figma, embedding]
+date: 2025-01-30T10:00
+---
+
+# Embedding Figma Diagrams in Docusaurus
+
+This guide shows you how to embed Figma diagrams and designs directly into your Docusaurus documentation using iframes.
+
+## Step 1: Get the Embed Code from Figma
+
+1. Open your Figma file or design
+2. Click the **Share** button in the top right corner
+3. In the share dialog, click **Copy embed code**
+4. Figma will provide you with an HTML iframe code
+
+**Example embed code from Figma:**
+```html
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://embed.figma.com/board/reFUj3lFudhquKldnUw9dL/The-Habit-Board?node-id=171-458&embed-host=share" allowfullscreen></iframe>
+```
+
+## Step 2: Convert to JSX for Docusaurus
+
+Since Docusaurus uses JSX, you need to convert the HTML attributes to JSX format:
+
+**Key changes:**
+- `style="..."` becomes `style={{ ... }}`
+- `allowfullscreen` becomes `allowFullScreen`
+- CSS properties use camelCase
+
+**Converted JSX code:**
+```jsx
+<iframe 
+  style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }} 
+  width="800" 
+  height="450" 
+  src="https://embed.figma.com/board/reFUj3lFudhquKldnUw9dL/The-Habit-Board?node-id=171-458&embed-host=share" 
+  allowFullScreen
+/>
+```
+
+## Step 3: Add to Your MDX File
+
+Simply paste the converted JSX code directly into your `.mdx` file:
+
+```mdx
+# My Documentation
+
+Here's the design for our habit tracking system:
+
+<iframe 
+  style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }} 
+  width="800" 
+  height="450" 
+  src="https://embed.figma.com/board/reFUj3lFudhquKldnUw9dL/The-Habit-Board?node-id=171-458&embed-host=share" 
+  allowFullScreen
+/>
+
+This diagram shows the user flow for creating new habits.
+```
+
+## Example: Embedded Figma Diagram
+
+Here's an example of an embedded Figma diagram:
+
+<iframe 
+  style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }} 
+  width="800" 
+  height="450" 
+  src="https://embed.figma.com/board/reFUj3lFudhquKldnUw9dL/The-Habit-Board?node-id=171-458&embed-host=share" 
+  allowFullScreen
+/>
+
+## Customization Options
+
+### Adjust Size
+You can modify the `width` and `height` attributes to fit your content:
+
+```jsx
+<iframe 
+  style={{ border: "1px solid rgba(0, 0, 0, 0.1)" }} 
+  width="100%" 
+  height="600" 
+  src="your-figma-url" 
+  allowFullScreen
+/>
+```
+
+### Remove Border
+To remove the border, simply omit the style attribute:
+
+```jsx
+<iframe 
+  width="800" 
+  height="450" 
+  src="your-figma-url" 
+  allowFullScreen
+/>
+```
+
+### Custom Styling
+You can add custom CSS properties:
+
+```jsx
+<iframe 
+  style={{ 
+    border: "2px solid #007acc",
+    borderRadius: "8px",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+  }} 
+  width="800" 
+  height="450" 
+  src="your-figma-url" 
+  allowFullScreen
+/>
+```
+
+## Tips
+
+- **Responsive Design**: Use percentage widths for responsive layouts
+- **Loading**: Figma embeds may take a moment to load
+- **Permissions**: Ensure your Figma file is set to allow embedding
+- **Node IDs**: The `node-id` parameter in the URL allows you to embed specific frames or components
+
+## Resources
+
+- [Figma Embed Documentation](https://www.figma.com/developers/embed#example-file-embed)
+- [Docusaurus MDX Guide](https://docusaurus.io/docs/markdown-features/react)

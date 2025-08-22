@@ -1,0 +1,185 @@
+---
+slug: mx-docx-embedd-gist
+title: Embedded GitHub Gists
+description: How can one embedd a GitHub Gist into a docusaurus blog post?
+authors: [oeid]
+tags: [docusaurus, github, gist, embedding, code]
+date: 2025-01-30T10:00
+---
+
+import Gist from 'react-gist';
+
+# Embedding GitHub Gists in Docusaurus
+
+This guide shows you how to embed GitHub Gists in your Docusaurus documentation using the `react-gist` package.
+
+## What are GitHub Gists?
+
+GitHub Gists are a way to share code snippets, notes, and other text-based content. They're perfect for:
+- **Code examples** that you want to keep updated
+- **Configuration files** that might change over time
+- **Snippets** that you want to share across multiple projects
+- **Documentation** that benefits from version control
+
+## Installation
+
+First, install the `react-gist` package:
+
+```bash
+npm install react-gist
+# or
+yarn add react-gist
+```
+
+## Basic Usage
+
+### Step 1: Import the Component
+
+At the top of your MDX file, import the Gist component:
+
+```jsx
+import Gist from 'react-gist';
+```
+
+### Step 2: Embed a Gist
+
+Use the component with the Gist ID:
+
+```jsx
+<Gist id="5555251" />
+```
+
+### Example: Embedded Gist
+
+<Gist id="5555251" />
+
+## Finding the Gist ID
+
+The Gist ID is the number in the URL of your GitHub Gist:
+
+```
+https://gist.github.com/username/5555251
+                                 ^^^^^^^^
+                                 This is the ID
+```
+
+## Advanced Options
+
+### Specify a File
+
+If your Gist has multiple files, you can specify which one to display:
+
+```jsx
+<Gist id="5555251" file="example.js" />
+```
+
+### Custom Styling
+
+You can add custom CSS classes:
+
+```jsx
+<Gist id="5555251" className="myCustomGist" />
+```
+
+### Hide Line Numbers
+
+```jsx
+<Gist id="5555251" hideLineNumbers={true} />
+```
+
+### Show Only Specific Lines
+
+```jsx
+<Gist id="5555251" startLine={10} endLine={20} />
+```
+
+## Multiple Gists in One File
+
+You can embed multiple Gists in the same document:
+
+```jsx
+import Gist from 'react-gist';
+
+# My Documentation
+
+Here's the main function:
+
+<Gist id="5555251" />
+
+And here's the configuration:
+
+<Gist id="1234567" file="config.json" />
+```
+
+## Styling Gists
+
+### Using CSS Classes
+
+```css
+.myCustomGist {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.myCustomGist .gist-meta {
+  background-color: #f6f8fa;
+  border-top: 1px solid #e1e4e8;
+}
+```
+
+### Responsive Design
+
+```css
+@media (max-width: 768px) {
+  .gist {
+    font-size: 12px;
+  }
+  
+  .gist .gist-file {
+    margin: 10px 0;
+  }
+}
+```
+
+## Best Practices
+
+1. **Keep Gists Updated**: Since Gists are live, ensure your code examples stay current
+2. **Use Descriptive Names**: Name your Gist files clearly for better organization
+3. **Include Comments**: Add helpful comments in your Gist code
+4. **Test Responsiveness**: Ensure Gists display well on mobile devices
+5. **Consider File Size**: Very large Gists may impact page load times
+
+## Troubleshooting
+
+### Gist Not Loading
+- Check that the Gist ID is correct
+- Ensure the Gist is public (or you have proper access)
+- Verify your internet connection
+
+### Styling Issues
+- Check for CSS conflicts with your theme
+- Ensure custom styles have proper specificity
+- Test in different browsers
+
+### Performance
+- Consider lazy loading for multiple Gists
+- Monitor page load times with embedded Gists
+
+## Alternative: Inline Code
+
+For simple code snippets, consider using Docusaurus's built-in code blocks instead:
+
+````markdown
+```javascript
+function example() {
+  console.log('Hello, World!');
+}
+```
+````
+
+## Resources
+
+- [GitHub Gists Documentation](https://docs.github.com/en/rest/gists)
+- [react-gist Package](https://www.npmjs.com/package/react-gist)
+- [Docusaurus Code Blocks](https://docusaurus.io/docs/markdown-features/code-blocks)
