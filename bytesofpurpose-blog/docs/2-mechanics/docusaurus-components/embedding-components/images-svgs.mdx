@@ -1,0 +1,328 @@
+---
+slug: mx-docx-embedd-svg
+title: Embedded SVGs
+description: How to embed and use SVG files in your Docusaurus documentation
+authors: [oeid]
+tags: [docusaurus, svg, embedding, assets]
+date: 2025-01-30T10:00
+---
+
+import BruteForceSvg from '/img/coding-challenges/longest-palindromic-substring/brute-force.svg';
+
+# Embedding SVGs in Docusaurus
+
+This guide shows you how to embed SVG files in your Docusaurus documentation, including responsive SVGs and importing them as React components.
+
+## Use Cases
+
+SVGs are ideal for:
+- **Diagrams and charts** that need to scale perfectly
+- **Icons and logos** that should remain crisp at any size
+- **Complex visualizations** that would be too large as Figma embeds
+- **Mobile-friendly content** (SVGs work better than multiple Figma embeds on mobile)
+
+## Method 1: Import as React Component
+
+Docusaurus supports importing SVGs directly as React components, which is the recommended approach.
+
+### Step 1: Place Your SVG File
+
+Put your SVG file in the `static/img/` directory:
+
+```
+static/
+  img/
+    my-diagram.svg
+```
+
+### Step 2: Import and Use
+
+```jsx
+import MyDiagram from '/img/my-diagram.svg';
+
+// In your MDX file
+<MyDiagram 
+  preserveAspectRatio="xMidYMid meet" 
+  width="100%" 
+  height="100%" 
+  className="myDiagram" 
+/>
+```
+
+### Example: Responsive SVG
+
+```jsx
+import BruteForceSvg from '/img/coding-challenges/longest-palindromic-substring/brute-force.svg';
+
+<BruteForceSvg 
+  preserveAspectRatio="xMidYMid meet" 
+  width="100%" 
+  height="100%" 
+  className="bruteForce" 
+/>
+```
+
+<BruteForceSvg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" className="bruteForce" />
+
+## Method 2: Inline SVG
+
+For simple SVGs, you can embed them directly in your MDX:
+
+```jsx
+<svg width="100" height="100" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="3" fill="red" />
+</svg>
+```
+
+## Method 3: Using Markdown Image Syntax
+
+For basic SVG display:
+
+```markdown
+![Alt text](/img/my-diagram.svg)
+```
+
+## Method 4: SVG with Hyperlinks
+
+You can wrap SVGs in anchor tags to make them clickable:
+
+```jsx
+<a href="https://example.com" target="_blank" rel="noopener noreferrer">
+  <MySvg 
+    preserveAspectRatio="xMidYMid meet" 
+    width="200" 
+    height="100" 
+    className="clickableSvg" 
+  />
+</a>
+```
+
+### Example: Clickable SVG
+
+<a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer">
+  <BruteForceSvg 
+    preserveAspectRatio="xMidYMid meet" 
+    width="200" 
+    height="100" 
+    className="clickableSvg" 
+  />
+</a>
+
+## Method 5: Interactive SVG with Internal Links
+
+You can add clickable elements directly within the SVG using `<a>` tags:
+
+```jsx
+<svg width="300" height="200" viewBox="0 0 300 200">
+  <a href="https://example.com" target="_blank">
+    <rect x="50" y="50" width="100" height="50" fill="blue" />
+    <text x="100" y="80" textAnchor="middle" fill="white">Click Me</text>
+  </a>
+  <a href="https://github.com" target="_blank">
+    <circle cx="200" cy="75" r="25" fill="green" />
+    <text x="200" y="80" textAnchor="middle" fill="white">GitHub</text>
+  </a>
+</svg>
+```
+
+### Example: Interactive SVG with Clickable Shapes
+
+<svg width="300" height="200" viewBox="0 0 300 200">
+  <a href="https://docusaurus.io" target="_blank" rel="noopener noreferrer">
+    <rect x="50" y="50" width="100" height="50" fill="#2e8555" rx="5" />
+    <text x="100" y="80" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">Docusaurus</text>
+  </a>
+  <a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer">
+    <circle cx="200" cy="75" r="25" fill="#24292e" />
+    <text x="200" y="80" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">GitHub</text>
+  </a>
+  <a href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
+    <polygon points="250,50 270,90 230,90" fill="#61dafb" />
+    <text x="250" y="85" textAnchor="middle" fill="black" fontSize="8" fontWeight="bold">React</text>
+  </a>
+</svg>
+
+## Making SVGs Responsive
+
+To ensure your SVGs scale properly across different screen sizes:
+
+### Key Properties
+
+- **`preserveAspectRatio="xMidYMid meet"`**: Maintains aspect ratio and centers the SVG
+- **`width="100%"`**: Makes the SVG responsive to container width
+- **`height="100%"`**: Allows height to scale proportionally
+- **`viewBox`**: Defines the coordinate system (should be in your SVG file)
+
+### Example Responsive SVG
+
+```jsx
+<MySvg 
+  preserveAspectRatio="xMidYMid meet"
+  width="100%"
+  height="auto"
+  style={{ maxWidth: '800px' }}
+/>
+```
+
+## Converting Figma/FigJam to SVG
+
+### From Figma Design Files
+
+1. Select the elements you want to export
+2. Right-click and choose **Export**
+3. Select **SVG** format
+4. Download and place in your `static/img/` directory
+
+### From FigJam Boards
+
+1. Copy elements to a Figma design file
+2. Select the elements
+3. Export as SVG following the [Figma export guide](https://help.figma.com/hc/en-us/articles/4407699832855-Export-your-FigJam-board)
+
+## File Path Conventions
+
+When importing SVGs, you can reference them relative to the `static/` folder:
+
+```jsx
+// These are equivalent:
+import Svg1 from '/img/my-svg.svg';
+import Svg2 from '/static/img/my-svg.svg';
+```
+
+
+
+## Styling SVGs
+
+### Using CSS Classes
+
+```jsx
+<MySvg className="myCustomClass" />
+```
+
+```css
+.myCustomClass {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.2s ease;
+}
+
+.myCustomClass:hover {
+  transform: scale(1.05);
+}
+```
+
+### Inline Styles
+
+```jsx
+<MySvg 
+  style={{ 
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    padding: '16px'
+  }} 
+/>
+```
+
+### Styling Clickable SVGs
+
+```css
+.clickableSvg {
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.clickableSvg:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+```
+
+### Styling Interactive SVG Elements
+
+```css
+svg a:hover rect {
+  fill: #3b8c6a;
+  transition: fill 0.2s ease;
+}
+
+svg a:hover circle {
+  fill: #444;
+  transition: fill 0.2s ease;
+}
+
+svg a:hover polygon {
+  fill: #7dd8fc;
+  transition: fill 0.2s ease;
+}
+```
+
+### Advanced Styling Techniques
+
+#### Drop Shadows and Filters
+
+```css
+.svgWithShadow {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.svgWithGlow {
+  filter: drop-shadow(0 0 10px rgba(0, 123, 255, 0.5));
+}
+```
+
+#### Animations
+
+```css
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.animatedSvg {
+  animation: pulse 2s infinite;
+}
+```
+
+#### Responsive Styling
+
+```css
+@media (max-width: 768px) {
+  .responsiveSvg {
+    max-width: 100%;
+    height: auto;
+  }
+}
+```
+
+## Best Practices
+
+1. **Optimize SVGs**: Use tools like SVGO to reduce file size
+2. **Use meaningful class names**: Makes styling easier
+3. **Test on mobile**: Ensure SVGs scale properly on small screens
+4. **Consider accessibility**: Add `alt` text or `aria-label` when appropriate
+5. **Cache busting**: Docusaurus handles this automatically for imported SVGs
+
+## Troubleshooting
+
+### SVG Not Displaying
+- Check file path is correct
+- Ensure SVG file is valid
+- Verify import statement syntax
+
+### SVG Not Responsive
+- Add `preserveAspectRatio` attribute
+- Use percentage widths
+- Check `viewBox` attribute in SVG file
+
+### Styling Not Applied
+- Ensure CSS classes are properly defined
+- Check for CSS specificity conflicts
+- Verify className spelling
+
+## References
+
+- [Docusaurus SVG Support](https://docusaurus.io/docs/markdown-features/assets#inline-svgs)
+- [SVGR (SVG to React)](https://github.com/gregberge/svgr)
+- [Docusaurus Assets Documentation](https://docusaurus.io/docs/markdown-features/assets)
+- [SVG Responsive Design](https://stackoverflow.com/questions/3120739/resizing-svg-in-html)
+- [SVG Optimization](https://svgbox.net/blog/crop-svg-image/)

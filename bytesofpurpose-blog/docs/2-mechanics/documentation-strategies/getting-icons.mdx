@@ -1,0 +1,55 @@
+---
+slug: getting-icons
+title: 'Getting Icons'
+description: 'How to find and use icons for documentation, favicons, and diagrams'
+authors: [oeid]
+tags: [icons, favicons, design, documentation]
+draft: true
+date: 2025-02-15T10:00
+---
+
+# Getting Icons
+
+This guide covers how to find and use icons for various documentation needs.
+
+## Use Cases
+
+- **Favicons**: Website icons and brand representation
+- **Blog Icons**: Visual elements for blog posts and articles
+- **Diagram Icons**: Icons for architecture diagrams and flowcharts
+
+## Google Favicon Service
+
+Google provides a simple way to get favicons for any domain:
+
+### Basic Usage
+```
+https://www.google.com/s2/favicons?sz=256&domain=figma.com
+```
+
+### Size Options
+- 64px: `https://www.google.com/s2/favicons?sz=64&domain=noteplan.co`
+- 128px: `https://www.google.com/s2/favicons?sz=128&domain=noteplan.co`
+- 256px: `https://www.google.com/s2/favicons?sz=256&domain=noteplan.co`
+- 512px: `https://www.google.com/s2/favicons?sz=512&domain=noteplan.co`
+
+### Notes
+- If the requested size doesn't exist, it falls back to the default favicon
+- Example: `https://www.google.com/s2/favicons?sz=512&domain=docusaurus.io`
+- **Subdomain limitation**: Subdomains return the main domain's favicon
+  - `https://www.google.com/s2/favicons?sz=64&domain=paper.dropbox.com` returns Dropbox's favicon, not Paper's
+
+## Icon Resources
+
+### Architecture Icons
+- [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)
+
+### Design Tools
+- [Brainboard Icons](https://www.brainboard.co/pricing)
+
+## Implementation Tips
+
+1. **Cache Icons**: Store frequently used icons locally to avoid external dependencies
+2. **Fallback Strategy**: Always provide fallback icons for when external services are unavailable
+3. **Size Optimization**: Use appropriate sizes to balance quality and performance
+4. **CDN Usage**: Consider using a CDN for better performance when serving multiple icons
