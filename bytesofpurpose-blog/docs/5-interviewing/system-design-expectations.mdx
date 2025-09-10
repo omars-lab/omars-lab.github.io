@@ -1,60 +1,154 @@
 ---
 slug: system-design-expectations
 sidebar_position: 2
-title: 'System Design Expectations'
+title: 'System Design Interview Expectations'
+description: 'Key questions and decision points interviewers evaluate in system design discussions'
+authors: [oeid]
+tags: [interviewing, system-design, architecture, technical-interview]
 ---
 
-:::tip Purpose
-* What verbs should you use when ansewring a system design questions?
-* What topics are you expected to cover in response to a system design question?
-* Need to abstract the engineering "verbs" and system design decision points from designing data intensive applications
-* What language should one use when discussing the right database to choose/use?
-* What are the key words to say during an interview?
-* Consolidate things to mention during a technical interview ...
-:::
+# System Design Interview Expectations
 
-* [ ] What are the main decision points?
-	* db choice
-	* data model choice
-	* api design
+This guide consolidates the key questions and decision points that interviewers evaluate during system design discussions. Use these as a framework to ensure you cover all critical aspects.
 
-# Topics
+## Database Selection & Data Modeling
 
-## Choosing the right database
-	* [ ] Transactions or Not?
-	* [ ] Acid or not?
-	* [ ] Consistency Reqs?
-	* [ ] Atomicisity reqs?
-	* [ ] Partition-able?
+### Database Choice Questions
+- **What database type fits your use case?** (SQL vs NoSQL vs specialized)
+- **Do you need ACID compliance?** What level of consistency is required?
+- **What are your transaction requirements?** Do you need distributed transactions?
+- **How will you handle data partitioning?** Can your data be easily sharded?
+- **What are your read vs write patterns?** (Read-heavy, write-heavy, balanced)
+- **What's your data growth rate?** How will the database scale over time?
 
-## Choosing a data model
-	* [ ] Understanding Access Patterns
+### Data Model Design Questions
+- **What are your primary access patterns?** How will users query the data?
+- **How often does your data structure change?** Do you need schema flexibility?
+- **Is your data structured, semi-structured, or unstructured?**
+- **What relationships exist between entities?** How will you model them?
+- **What are your indexing requirements?** Which fields need fast lookups?
 
-## Making system design decisions
-* [ ] Designing for scale
-	* [ ] Deciding on partitions
-* [ ] Designing for latency
-* [ ] Designing for security
-* [ ] Designing for redundancy
-* [ ] Designing for reuse
-	* Any pre-exiting systems I can integrate with ...
-* [ ] Adhering to legal constraints
-	* What databases is your company licensed to use?
-* [ ] Understanding implications between UX and sytem
+## System Architecture & Scalability
 
-## Questions to Address
-How often does the structure of the data change?
-Do you need every acid principle?
-What is the happy path?
-What is the critical path
-Is the data structured? Semi steuctured?
+### Scaling Decisions
+- **How will you handle horizontal vs vertical scaling?**
+- **What's your partitioning strategy?** How will you distribute data?
+- **How will you handle load balancing?** What's your traffic distribution approach?
+- **What's your caching strategy?** Where and what should you cache?
+- **How will you handle database connections?** Connection pooling strategy?
 
-## Dataflow
-- [ ] pushing vs pulling 
-	- [ ] Does producer need to publish to multiple consumers ...?
-- [ ] append log vs not
-	- [ ] When to use one?
+### Performance & Latency
+- **What are your latency requirements?** P50, P95, P99 targets?
+- **Where are your bottlenecks likely to be?** How will you identify and address them?
+- **What's your throughput requirement?** Requests per second?
+- **How will you handle peak vs average load?** What's your capacity planning?
 
-## Metrics
-* Goal Metrics? 
-* AB Test?
+## Data Flow & Communication
+
+### Data Movement Patterns
+- **Push vs Pull architecture?** When does each make sense?
+- **Do you need real-time vs batch processing?**
+- **What's your event-driven architecture strategy?**
+- **How will you handle data consistency across services?**
+- **What's your message queue strategy?** (Kafka, RabbitMQ, etc.)
+
+### API Design Questions
+- **What's your API design philosophy?** REST, GraphQL, gRPC?
+- **How will you handle API versioning?**
+- **What's your rate limiting strategy?**
+- **How will you handle authentication and authorization?**
+- **What's your error handling and retry strategy?**
+
+## Reliability & Fault Tolerance
+
+### Availability & Redundancy
+- **What's your availability target?** (99.9%, 99.99%, etc.)
+- **How will you handle single points of failure?**
+- **What's your disaster recovery strategy?**
+- **How will you handle data backup and recovery?**
+- **What's your circuit breaker strategy?**
+
+### Monitoring & Observability
+- **What metrics will you track?** Business and technical KPIs?
+- **How will you handle logging and tracing?**
+- **What's your alerting strategy?**
+- **How will you debug issues in production?**
+- **What's your A/B testing strategy?**
+
+## Security & Compliance
+
+### Security Considerations
+- **How will you handle data encryption?** At rest and in transit?
+- **What's your authentication strategy?** OAuth, JWT, etc.?
+- **How will you handle authorization?** Role-based access control?
+- **What's your data privacy strategy?** GDPR, CCPA compliance?
+- **How will you handle security audits and penetration testing?**
+
+### Legal & Compliance
+- **What databases is your company licensed to use?**
+- **What are your data retention requirements?**
+- **How will you handle data sovereignty requirements?**
+- **What compliance standards must you meet?** (SOC2, HIPAA, etc.)
+
+## Integration & Reusability
+
+### System Integration
+- **What existing systems can you integrate with?**
+- **How will you handle third-party dependencies?**
+- **What's your API gateway strategy?**
+- **How will you handle service discovery?**
+- **What's your data migration strategy?**
+
+### Code Reuse & Maintainability
+- **How will you ensure code reusability?**
+- **What's your microservices vs monolith decision?**
+- **How will you handle configuration management?**
+- **What's your deployment strategy?** Blue-green, canary, etc.?
+
+## User Experience & Business Impact
+
+### UX Considerations
+- **How do your technical decisions impact user experience?**
+- **What's your error message strategy?**
+- **How will you handle offline scenarios?**
+- **What's your progressive enhancement strategy?**
+- **How will you handle internationalization?**
+
+### Business Metrics
+- **What are your key business metrics?** How will you measure success?
+- **What's your cost optimization strategy?**
+- **How will you handle business continuity?**
+- **What's your time-to-market requirement?**
+- **How will you handle feature flags and gradual rollouts?**
+
+## Critical Path Analysis
+
+### Happy Path vs Edge Cases
+- **What's the happy path for your system?**
+- **What are the critical failure scenarios?**
+- **How will you handle edge cases and error conditions?**
+- **What's your graceful degradation strategy?**
+- **How will you handle data corruption or inconsistencies?**
+
+### Risk Assessment
+- **What are the biggest risks in your design?**
+- **How will you mitigate these risks?**
+- **What's your rollback strategy?**
+- **How will you handle unexpected load spikes?**
+- **What's your incident response plan?**
+
+## Interview Communication Tips
+
+### Language & Terminology
+- **Use precise technical language** when discussing trade-offs
+- **Explain your reasoning** for each design decision
+- **Acknowledge trade-offs** and explain your choices
+- **Ask clarifying questions** before making assumptions
+- **Use concrete examples** to illustrate your points
+
+### Problem-Solving Approach
+- **Start with requirements clarification**
+- **Break down complex problems** into manageable pieces
+- **Consider multiple approaches** before settling on one
+- **Discuss trade-offs** openly and honestly
+- **Be prepared to iterate** on your design based on feedback
