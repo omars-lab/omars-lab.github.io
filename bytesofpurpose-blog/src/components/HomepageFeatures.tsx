@@ -19,20 +19,21 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Browse Engineering Docs',
+    // The title is what gets ingested into SEO ...
+    title: 'Software Engineering Docs',
     image: '/img/artifacts.svg',
     // image: '/img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Browse all sorts of engineering artifacts, from sequence diagrams, roadmaps, code snippets, 
-        app templates, shortcuts, scripts, etc. 
+        Explore real world engineering artifacts. Examples include sequence diagrams, roadmaps, code snippets, 
+        automations, scripts, etc. 
       </>
     ),
     to: "/docs/welcome/intro",
     buttonText: "Docs"
   },
   {
-    title: 'Browse Blog Posts',
+    title: 'Software Blog Posts',
     image: '/img/posts.svg',
     // image: '/img/undraw_docusaurus_tree.svg',
     description: (
@@ -45,12 +46,12 @@ const FeatureList: FeatureItem[] = [
     buttonText: "Blog Posts"
   },
   {
-    title: 'Browse Designs',
+    title: 'System Designs and Architecture',
     image: '/img/engine.svg',
     // image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Peak underneath the hood and browse various designs including the design for this site. 
+        Peak underneath the hood and browse various designs including the design for this very site. 
       </>
     ),
     to: "/designs/blog-design",

@@ -1,32 +1,93 @@
 ---
 slug: intro
 sidebar_position: 1
-title: Welcome
-description: 'Welcome to my blog! This is a place where I share my thoughts and learnings.'
+title: Welcome to Bytes of Purpose
+description: 'A developer blog focused on coding challenges, development tools, and technical insights. Explore algorithms, local development setup, and practical programming guides.'
 authors: [oeid]
-tags: []
+tags: [welcome, introduction, developer-blog]
 ---
 
-# Welcome
+# Welcome to Bytes of Purpose
 
+Welcome to my developer blog! This is a place where I share my thoughts, learnings, and practical insights about programming, development tools, and problem-solving techniques.
 
-Contains blog strcuture
-Contains what I expect from you as a reader ...
+## What You'll Find Here
 
-You'll find a whole bunch of docs that you can navigate between in the left pane. 
+You'll find a comprehensive collection of documentation and blog posts that you can navigate using the sidebar. The content is organized into several key areas:
 
-If you found a doc useful, please let me know by hitting the thumbs up button! 
-If something about it annoys you, there is an edit button to jump right into the source!
+### 📚 Documentation Sections
+- **[Mechanics](/docs/mechanics/)** - Technical implementation details and tools
+- **[Coding Challenges](/docs/coding-challenges/)** - Algorithm problems and solutions
+- **[Development](/docs/development/)** - Setup guides and development workflows
+- **[Interviewing](/docs/interviewing/)** - Technical interview preparation
+- **[Deep Dives](/docs/deep-dives/)** - In-depth technical explorations
 
-# Structure 
+### 📝 Blog Posts
+- **[Latest Posts](/blog/)** - Recent thoughts and experiences
+- **[Design Posts](/designs/)** - Design decisions and architectural insights
 
-I have a section of of future ideas that you can vote on ...
-I have a section of actual posts ...
+## Content Philosophy
 
-# Ideation Process
-* All my blog post ideas should be checked into the repo ...
-* I should put sneak peaks / topic / incomplete posts ... with the content I seek ... and see which pages get the most views to hellp proiritze
-* I need to scrub posts / ensure they have generall infomation - no work stuff, no passwords, no spelling mistakes, etc ...
+This blog follows a structured approach to content creation:
 
+### Documentation vs Blog Posts
+I maintain a clear distinction between [documentation and blog posts](/blog/docs-vs-blog-posts):
+- **Documentation** provides durable, reference material for solving specific problems
+- **Blog posts** capture experiences, lessons learned, and evolving perspectives
 
-How do I capture commands I frequently run?
+### Quality Standards
+- All content is thoroughly reviewed for accuracy and clarity
+- Code examples are tested and working
+- Links are verified and maintained
+- Content is regularly updated to reflect current best practices
+
+## How to Navigate
+
+- **Use the sidebar** to explore different sections
+- **Search functionality** helps you find specific topics quickly
+- **Tags** allow you to filter content by topic
+- **Related posts** suggest additional reading
+
+## Getting the Most Value
+
+### For Readers
+- **Thumbs up** useful content to help me understand what's most valuable
+- **Edit button** lets you suggest improvements directly
+- **Share** content that helps your team or community
+
+### For Contributors
+- All content is open source and welcomes contributions
+- Use the edit links to propose improvements
+- Check the [ideation process](#blog-post-ideation-process) for contributing new ideas
+
+## Content Structure
+
+### Blog Post Ideation Process
+I maintain a transparent content creation process:
+
+1. **Idea Collection** - All blog post ideas are tracked in the repository
+2. **Sneak Peaks** - Incomplete posts are published as drafts to gauge interest
+3. **View Analytics** - Popular topics get prioritized for completion
+4. **Quality Review** - All content is scrubbed for accuracy, removing work-specific information and ensuring proper formatting
+
+### Future Content
+I have a section of future ideas that you can vote on, helping me prioritize what content would be most valuable to create next.
+
+## Technical Focus Areas
+
+This blog covers several key technical areas:
+
+- **Algorithm Problem Solving** - Including [DFS vs BFS comparisons](/blog/dfs-vs-bfs) and coding challenge solutions
+- **Local Development Setup** - From [running LLMs locally](/docs/deep-dives/running-llms-locally) to development environment configuration
+- **Development Tools** - Docusaurus setup, VS Code plugins, and productivity tools
+- **Technical Interviewing** - System design expectations and problem-solving frameworks
+
+## Stay Connected
+
+- **GitHub** - [View the source code](https://github.com/omars-lab/omars-lab.github.io)
+- **LinkedIn** - [Connect professionally](https://www.linkedin.com/in/oeid/)
+- **Email** - [contact@bytesofpurpose.com](mailto:contact@bytesofpurpose.com)
+
+---
+
+*Ready to explore? Start with the [Mechanics section](/docs/mechanics/) for technical implementation details, or check out the [latest blog posts](/blog/) for recent insights and experiences.*
