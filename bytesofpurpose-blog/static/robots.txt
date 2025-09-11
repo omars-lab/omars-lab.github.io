@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://blog.bytesofpurpose.com/sitemap.xml
+
+# Disallow certain paths
+Disallow: /tags/
+Disallow: /search/

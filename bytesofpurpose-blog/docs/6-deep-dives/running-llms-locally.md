@@ -4,7 +4,7 @@ title: Running LLMs Locally
 description: How do I run an LLM locally?
 authors: [oeid]
 tags: [llm, local, ollama, lmstudio]
-draft: true
+draft: false
 ---
 
 # Running LLMs Locally
