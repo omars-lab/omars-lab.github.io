@@ -38,3 +38,6 @@ serve: build
 deploy:
 	# Publishes the website to GitHub pages.
 	( cd ${SITEROOT} && USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy )
+
+fix-frontmatter:
+	gemini --approval-mode auto_edit --allowed-tools Edit,WriteFile -p "Follow the instructions in @./bytesofpurpose-blog/prompts/fix-frontmatter.md"
