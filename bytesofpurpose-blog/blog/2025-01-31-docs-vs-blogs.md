@@ -5,6 +5,7 @@ slug: docs-vs-blog-posts
 authors: [oeid]
 tags: []
 image: /img/versus.jpg
+draft: true
 ---
 
 * what are the principles of a good blog post?

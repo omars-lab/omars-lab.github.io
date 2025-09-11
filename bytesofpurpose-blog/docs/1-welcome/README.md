@@ -2,6 +2,9 @@
 slug: intro
 sidebar_position: 1
 title: Welcome
+description: 'Welcome to my blog! This is a place where I share my thoughts and learnings.'
+authors: [oeid]
+tags: []
 ---
 
 # Welcome

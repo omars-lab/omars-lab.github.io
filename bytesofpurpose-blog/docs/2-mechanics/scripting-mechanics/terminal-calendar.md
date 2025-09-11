@@ -1,3 +1,11 @@
+---
+slug: terminal-calendar
+title: Terminal Calendar
+description: 'How to print a calendar in the terminal with x-callbacks.'
+authors: [oeid]
+tags: [terminal, calendar, x-callback]
+draft: true
+---
 
 # Calendar with x-callbacks
 ```py
