@@ -1,0 +1,39 @@
+---
+summary: "Tagging"
+task: https://sacred-patterns.atlassian.net/browse/THREAD-86
+---
+
+
+* [ ] I have abstract roles that span other roles / other roles inherit from ... I need special hashtags to these roles to link the too ... things like skill building - #skill++ #24/7
+
+
+# Autoexpanding Special Tags
+
+- [ ] When it comes to tagging categories of work, how will I do these?
+	- [ ] Can I auto tag stuff?
+
+
+# Task Management
+* [ ] Similar to `expand-today`, I should have a >this-week tag and expand it once a week ...
+* [x] Make script to move things to today ... @done(2022-04-05 10:21 PM)
+* [ ] To do the sed task today moving thingy ... I almost need to transform all subtasks ... into one line with the main task ...
+	* [ ] But this way ... I wouldn't be handling subtasks appropriately ...
+	* [ ] today needs to be at the top level ... 
+* [ ] I need to write a script to keep on repeating this ... until ...#repeat(until=date)
+	* [ ] Don't pre-create ... create every day based on when I login in / cron runs!
+	* [ ] Can use the sed in place ... ignore lines that already have today ... and replace those with a repeat less than ..
+* [ ] Script to freshen any old tasks! Sed >date with fresher date! >2021-10-26 
+* [ ] I should make a script to auto expand >2022-01-12 with the date ... in note files ...
+	* [ ] if its in calendar files ... it should expand and move to today ...
+	* [ ] Or should I have a "backlog" file ... with all the things to do .... 
+		* [ ] But I naturally mark put stuff I need to do today in the today file ...
+		* [ ] Can I auto tag the date ... based on file ..?
+* [ ] Should I go back to a shell command to track todos / edit Noteplan through shell commands ...?
+* [ ] I need repeat/ constant functionality ... to repeat daily tasks 
+- [ ] I need archive functionality ... that knows how to move bigger notes into the daily files ... but if I change name ... daily file name changes too!
+* [ ] for today mover, I should tally older dates and agg by 5 ... and keep oldest dates
+* [ ] I don't want the expand-today script to run every day ...
+	* [ ] I only want it to run when I use note plan ...
+	* [ ] Should make an Xxcallback to w/ shortcuts to open note plan .... But before doing so ... it should run the script!
+
+* [ ] Figure out how to tally older days when moving things over to today ... >today >2022-04-04 >2022-03-31 >2022-03-12 >2022-03-11
