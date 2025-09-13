@@ -1,0 +1,112 @@
+# 🏡250203👨🏻‍💻 Implement Redirector Script
+
+# Use Cases 
+* Redirect vscode URLs
+* Redirect ia writer urls 
+* Redirect glue urls
+* Redirect noteplan URLs
+* Make "go link" feature but as plugin ..
+* Create tiny Urls ..
+* This plugin should ideally be my URL helper ...
+
+* Update to using dynamic rules to set todays date ... 
+	* noteplan://x-callback-url/openNote?filename=20250215.txt
+	* https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest#code-examples
+	* Persisting state 
+		* https://developer.chrome.com/docs/extensions/get-started/tutorial/service-worker-events#step-4
+	* Updating rules based on what I type in search bar
+		* Typing refreshes rules asyncly ...
+		* https://developer.chrome.com/docs/extensions/get-started/tutorial/service-worker-events#step-5
+
+# --------
+# Inspiration
+https://golinks.io/pricing.php
+# -------------
+# Implemention Options
+## Tampermonkey Script
+
+## Chrome Plugin
+* Do I need to do this as a chrome plugin???
+https://github.com/omars-lab/extension-chrome-glue
+
+# Migrating existing plugin
+https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3
+https://github.com/bendavis78/chrome-extension-redirector/tree/master
+https://developer.chrome.com/docs/extensions/reference/manifest#minimal-manifest
+https://bendavis78.github.io/chrome-extension-redirector/
+https://developer.chrome.com/docs/extensions/reference/api/webRequest#handle-auth
+https://developer.chrome.com/docs/extensions/reference/manifest#register-a-content-script
+https://developer.chrome.com/docs/extensions/reference/manifest/sandbox
+https://stackoverflow.com/questions/71964934/error-loading-chrome-extension-insecure-csp-value-in-directive-script-src
+https://developer.chrome.com/docs/extensions/develop/migrate#remotely-hosted-code
+
+
+# Popup UX
+* [ ] Show most used in the html popup ...
+
+# additional resource
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#nonces
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Cross-Origin_Resource_Policy
+https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/object
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/embed
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors
+
+
+## AI Extension 
+* [ ] Chrome plugin to auto manage groups ... based on content of pgages ... with gene ...
+	* [ ] https://developer.chrome.com/docs/ai/client-side
+
+
+## Hooking Up Analytics
+https://developer.chrome.com/docs/extensions/how-to/integrate/google-analytics-4
+
+# Using Google Built In Rules
+https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest
+https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest#property-RuleCondition-urlFilter
+
+## Redirector Replacement - Tamper Monkey
+* implement my own redirection logic ....
+	* https://www.reddit.com/r/userscripts/comments/1bjwpv2/userscript_to_rewrite_url_on_click/
+	* Tamper monkey script custom redirector ...
+	* https://github.com/einaregilsson/Redirector
+	* https://einaregilsson.com/redirector/
+
+# Glue Redirecting
+* [ ] Figure out how to do glue redirecting
+	* Google indexes favicons
+		* https://www.google.com/s2/favicons
+	* https://www.dropbox.com/scl/fi/rs85oyzmlh9btq8uc0819/Mechanic-Requestly-Tampermonkey.paper?rlkey=qzk0oa4qlb8os1zlw21u8k4xi&dl=0
+	* https://wiki.greasespot.net/Metadata_Block#.40run-at
+	* https://stackoverflow.com/questions/39346747/tampermonkey-script-run-before-page-load
+		* Includes mutation observer 
+
+
+## Typescript Chrome Plugins
+https://github.com/chibat/chrome-extension-typescript-starter
+https://github.com/GoogleChrome/chrome-types
+https://github.com/GoogleChrome/chrome-types/wiki
+https://github.com/alxgmpr/chrome-typescript-boilerplate/tree/main
+https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#types
+
+
+
+chrome://extensions/
+
+* [x] Leverage the omnibox api for chrome ... @done(2025-02-16 09:50 PM)
+	* https://developer.chrome.com/docs/extensions/reference/api/omnibox
+	* https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples/omnibox
+	* https://github.com/GoogleChrome/chrome-extensions-samples/tree/main/api-samples
+	* https://stackoverflow.com/questions/1091945/what-characters-do-i-need-to-escape-in-xml-documents/1091953#1091953
+
+* [x] Await storage @done(2025-02-16 09:50 PM)
+	* https://developer.chrome.com/docs/extensions/develop/migrate/api-calls
+	* https://developer.chrome.com/docs/extensions/reference/api/storage
+	* https://gist.github.com/sumitpore/47439fcd86696a71bf083ede8bbd5466
+	* https://notes.dt.in.th/20210122T221126Z3124#:~:text=addListener%20does%20not%20support%20async,will%20show%20up%20in%20chrome.
+	* https://www.google.com/search?q=promise+timeout&pws=0
+
+## Chrome Plugin 
+* [x] Work on the chrome redirection plugin: vscode://file/Users/omareid/Workspace/git/extension-chrome-glue/README.md:10:118 @done(2025-02-15 11:35 PM)
