@@ -1,0 +1,47 @@
+# Definitions
+
+/role
+     Overview
+
+/role
+	Activity
+	Skill
+		Acvtivity
+		SKill
+
+--------------------------------------------------------------------------------
+
+A role involves a set of skills and activities
+A skill is composed of many different activities and possibly simpler skills
+	Complex skills can be broken down into simpler skills and activities
+	Simple skills involve a set of activities
+A workflow involves multiple roles working in unison
+
+--------------------------------------------------------------------------------
+
+Role <role/overview>
+	skillset
+	activity-set
+
+Skill <role>/<skill>/overview
+	sub-skills
+	activities
+	parentSkill 
+
+- [ ] Dont recursively expand things ...
+	- [ ] Categorize each file individually ...
+	- [ ] Then group stuff at the end!
+
+/role/hat
+     /hat/overview. ...
+     /hat/complex-activity/overview
+     /hat/complex-activity/simple-activity
+     /hat/complex-activity/complex-activity
+     /hat/complex-activity/complex-activity/overview
+     /hat/simple-activity/
+
+- https://www.quora.com/What-are-the-different-between-roles-and-skill-sets-needed-for-a-project
+- https://www.staffsquared.com/blog/the-difference-between-knowledge-skills-and-abilities/#:~:text=The%20difference%20between%20a%20'skill,whilst%20skills%20are%20learned%20behaviours.&text=Ability%20and%20knowledge%20combine%20to%20create%20skills%20that%20can%20be%20used.
+- https://medium.com/@hamre_erik/breaking-down-a-skill-and-practicing-effectively-7f5b3693b5bc
+
+--------------------------------------------------------------------------------
