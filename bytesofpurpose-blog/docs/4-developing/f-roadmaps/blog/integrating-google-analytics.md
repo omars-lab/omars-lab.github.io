@@ -1,0 +1,4 @@
+- [ ] Add google analytics to my site!
+	- [ ] https://support.google.com/analytics/answer/1008015?hl=en
+	- [ ] https://analytics.google.com/analytics/web/provision/?authuser=0#/a195952157p270847816/admin/streams/promo
+	- [ ] https://analytics.google.com/analytics/web/?authuser=0#/a195952157p270847816/admin/streams/table/
