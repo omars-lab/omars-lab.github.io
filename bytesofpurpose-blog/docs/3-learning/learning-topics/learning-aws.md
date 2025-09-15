@@ -1,3 +1,12 @@
+---
+slug: learning-aws
+title: Learning AWS
+description: 'Learning goals and plan for AWS services, serverless architectures, and cloud development.'
+authors: [oeid]
+tags: [aws, learning, cloud, serverless, architecture]
+draft: true
+---
+
 # Learning Goals
  * Learn about AWS service ...
 

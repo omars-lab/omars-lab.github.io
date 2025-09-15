@@ -10,19 +10,23 @@ slug: '<unique-id-short-code>'
 title: '<Frontend Title>'
 description: '<1 sentance description>'
 authors: [oeid]
-tags: []
+tags: [...]
+date: '<date>'
 ---
 
-Note that the slug should be a unique id that no other blog posts share.
-For the description, attempt to identify the core question that the blog post addresses and use it as the description. If its simpler to summarize without describing in a question format, then use the simple description.
-Add tags as needed.
-Do not attempt to edit the content of the blog post itself. If the content is rought, feel free to add a `draft: true` attribute to the front matter with a section at the bottom of the post describing enhancements that should be made to the post prior to publishing it / removing it from draft mode.
+### Frontmatter Attributes
+
+* `slug` should be a unique id that no other blog posts share. Note that the slug will be part of the URL and should be sensible.
+* `title` should be the primary title we show at the begining of the blog post
+* for the `description`, attempt to identify the core question that the blog post addresses and use it as the description. If its simpler to summarize without describing in a question format, then use the simple description.
+* Do not attempt to edit the content of the blog post itself. If the content is rought, feel free to add a `draft: true` attribute to the front matter. If you do mark a post as a draft when crafting the front matter, esnure there is a section at the bottom of the blog post summarizing the enhancements that should be made to the post prior to publishing it / removing it from draft mode. Ensure the suggestions are structured as mardown todos: `- [ ]` with the date of the suggestion appended to the end of each todo, example: `>2025-01-01`
+* `tags` should be a list of seo friendly terms explorers can use to find this blog post when using search engines. Example: `[development, process, workflow, ideation, roadmap]`
+* `date` should be the date in which this blog post is concieved. If there are todos in this blog post with dates, attempt to use the earliest date within the post as the conception date. The date should be in the following format: `2022-04-19T10:00` where the date and time without seconds are kept.
 
 
 ## Docs Front Matter
 
 Follow the same instructions as the Blog Front Matter, but instead of looking in `bytesofpurpose-blog/blog`, look in `bytesofpurpose-blog/docs`.
-
 
 ## Important!
 * Don't delete any files!

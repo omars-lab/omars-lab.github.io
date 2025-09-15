@@ -1,3 +1,12 @@
+---
+slug: learning-topics
+title: Learning Topics
+description: 'What do I want to learn more about? What do I want to tinker with? What do I want to discover?'
+authors: [oeid]
+tags: [learning, exploring, tinkering, experimenting, documentation, pitfalls]
+draft: true
+---
+
 # Learning / Exploring / Tinkering / Experimenting
 
 What do I want to learn more about?

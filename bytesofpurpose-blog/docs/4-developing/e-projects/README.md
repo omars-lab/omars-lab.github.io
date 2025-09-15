@@ -1,5 +1,17 @@
+---
+slug: projects
+title: Projects
+description: 'What ideas can I immediately work on? Which ones have a proper plan in place?'
+authors: [oeid]
+tags: [projects, blueprints, development, execution, tools, apps]
+draft: true
+---
+
+# Projects
 # Blueprints
 i.e Top Down Tech Development
+
+Projects with blueprints, designs, and proper execution structure.
 
 * Once I prioritize an initiative ... It turns into a project that I actually work on ...
     * Projects will generally have blueprints / designs ...

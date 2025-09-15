@@ -1,3 +1,12 @@
+---
+slug: unorganized-tool-script-development-ideas
+title: Unorganized Tool and Script Development Ideas
+description: 'A collection of productivity scripts and tool development ideas for automation and workflow improvement.'
+authors: [oeid]
+tags: [tools, scripts, productivity, automation, development]
+draft: true
+---
+
 # [#Implementing] [#Tools]
 
 ## Productivity Scripts

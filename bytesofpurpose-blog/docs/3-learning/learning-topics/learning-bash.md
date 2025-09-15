@@ -1,6 +1,14 @@
+---
+slug: learning-bash
+title: Learning Bash
+description: 'Bash learnings, profile setup, and terminal configuration for improved shell productivity.'
+authors: [oeid]
+tags: [bash, terminal, shell, productivity, configuration]
+draft: true
+---
 
 # Bash Learnings
-- Bash Regex’s: https://7thzero.com/blog/bash-101-part-5-regular-expressions-in-conditional-statements
+- Bash Regex's: https://7thzero.com/blog/bash-101-part-5-regular-expressions-in-conditional-statements
 
 # Bash Profile
 - brew install bash-completion
