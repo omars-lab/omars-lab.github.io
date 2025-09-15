@@ -16,11 +16,11 @@ Welcome to my developer blog! This is a place where I share my thoughts, learnin
 You'll find a comprehensive collection of documentation and blog posts that you can navigate using the sidebar. The content is organized into several key areas:
 
 ### 📚 Documentation Sections
-- **[Mechanics](/docs/mechanics/)** - Technical implementation details and tools
-- **[Coding Challenges](/docs/coding-challenges/)** - Algorithm problems and solutions
-- **[Development](/docs/development/)** - Setup guides and development workflows
-- **[Interviewing](/docs/interviewing/)** - Technical interview preparation
-- **[Deep Dives](/docs/deep-dives/)** - In-depth technical explorations
+- **[Mechanics](/docs/mechanics)** - Technical implementation details and tools
+- **[Coding Challenges](/docs/learning/coding-challenges)** - Algorithm problems and solutions
+- **[Development](/docs/development)** - Setup guides and development workflows
+- **[Interviewing](/docs/interviewing)** - Technical interview preparation
+- **[Deep Dives](/docs/research)** - In-depth technical explorations
 
 ### 📝 Blog Posts
 - **[Latest Posts](/blog/)** - Recent thoughts and experiences
@@ -78,7 +78,7 @@ I have a section of future ideas that you can vote on, helping me prioritize wha
 This blog covers several key technical areas:
 
 - **Algorithm Problem Solving** - Including [DFS vs BFS comparisons](/blog/dfs-vs-bfs) and coding challenge solutions
-- **Local Development Setup** - From [running LLMs locally](/docs/deep-dives/running-llms-locally) to development environment configuration
+- **Local Development Setup** - From [running LLMs locally](/docs/research/running-llms-locally) to development environment configuration
 - **Development Tools** - Docusaurus setup, VS Code plugins, and productivity tools
 - **Technical Interviewing** - System design expectations and problem-solving frameworks
 
