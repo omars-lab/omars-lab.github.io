@@ -1,3 +1,12 @@
+---
+slug: experiments
+title: Experiments
+description: 'Small, focused experiments for learning and building solid development plans.'
+authors: [oeid]
+tags: [experiments, tinkering, learning, proof-of-concepts, exploration]
+draft: true
+---
+
 # Experiments
 
 Includes things I am tinkering with.

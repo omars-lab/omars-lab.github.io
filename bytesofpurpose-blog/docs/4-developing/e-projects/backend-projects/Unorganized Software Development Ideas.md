@@ -1,3 +1,12 @@
+---
+slug: unorganized-software-development-ideas
+title: Unorganized Software Development Ideas
+description: 'What stuff do I want to make? A collection of software development ideas and projects.'
+authors: [oeid]
+tags: [software-development, ideas, projects, scripts, organization]
+draft: true
+---
+
 # [#Developing] Software
 - i.e Projects
 - i.e Building
