@@ -1,22 +1,16 @@
 ---
-category: tool
-content:
-  md5: 85990bc1b5f834db960f1203323bbcb6
-glue: https://glue/blueprints/#id.tool.mdcat
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-36
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-44
-priorities:
-  - I need to cat markdowns with links
-summary: Catting Markdown Links
-tag: '#id.tool.mdcat'
-trello:
-  card: https://trello.com/c/q1PtRO1N
-  done: false
-  id: 63c8c885f92ad70404a558ce
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-markdown-catter
+title: Develop a Markdown Catter
+description: 'Building a command-line tool to display markdown files with terminal links and color-coded output.'
+authors: [oeid]
+tags: [markdown, terminal, links, color-coding, cli, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to cat markdowns with links
+  
 * [ ] Make a tool to cat a markdown with links to stdout with terminal links
 * Make a command line tool to cat markdown!
 

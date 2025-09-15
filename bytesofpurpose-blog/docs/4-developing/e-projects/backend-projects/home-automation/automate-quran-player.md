@@ -1,22 +1,17 @@
 ---
-category: automation
-content:
-  md5: ba714d3fe157e77dedb1b70d593e24f9
-glue: https://glue/blueprints/#id.automate.quran
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-17
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-51
-priorities:
-  - I need to automate the playing of quran in our home
-summary: Automating Quran
-tag: '#id.automate.quran'
-trello:
-  card: https://trello.com/c/dx7iHJr3
-  done: false
-  id: 63c8c9095e562000dd6ec2ea
-  list: 63c43d5498733701c29d3a12
+slug: automate-quran-player
+title: Automate Quran Player
+description: 'Automating Quran playback in the home using smart speakers and containerized applications.'
+authors: [oeid]
+tags: [quran, automation, smart-speakers, home-automation, islamic, containers, development]
+date: 2021-10-25T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to automate the playing of quran in our home
+
+  
 * [ ] Can I get speakers to play quran automatically?
 
 # Automating Quran

@@ -1,8 +1,11 @@
 ---
-id: projecting-types
-type: idea
-yields: 
-	- script
+slug: tinker-type-projections
+title: Tinker Type Projections
+description: 'Experimenting with type projection systems and building type-based operations for ETL processes.'
+authors: [oeid]
+tags: [types, projections, etl, programming, experiments, learning]
+date: 2017-03-01T10:00
+draft: true
 ---
 
 # Experiment: Projecting Types

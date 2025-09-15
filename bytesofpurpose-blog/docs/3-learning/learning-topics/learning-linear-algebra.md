@@ -1,9 +1,11 @@
 ---
-id: learning-about-linear-algebra
-type: idea
-yields: 
-	- software
-	- notebook
+slug: learning-linear-algebra
+title: Learning Linear Algebra
+description: 'Learning goals and resources for linear algebra fundamentals and machine learning basics.'
+authors: [oeid]
+tags: [linear-algebra, machine-learning, mathematics, learning, notebook]
+date: 2019-03-28T10:00
+draft: true
 ---
 
 # Learning about Linear Algebra (and ML Basics)

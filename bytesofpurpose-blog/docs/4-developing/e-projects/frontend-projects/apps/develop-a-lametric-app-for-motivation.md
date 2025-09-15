@@ -1,22 +1,17 @@
 ---
-category: app
-content:
-  md5: 231a18ff0cf1834965657dee74569172
-glue: https://glue/blueprints/#id.app.motivator
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-19
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-20
-priorities:
+slug: develop-a-lametric-app-for-motivation
+title: Develop a LaMetric App for Motivation
+description: 'Building a LaMetric clock app to display motivational quotes with AWS Lambda, DynamoDB, and OAuth integration.'
+authors: [oeid]
+tags: [lametric, motivation, quotes, aws, lambda, dynamodb, oauth, cognito, development]
+date: 2021-11-06T10:00
+draft: true
+---
+
+# Priorities
   - I need to customize my lametric
   - I need to motivate myself
-summary: Developing My LaMetric Motivation App
-tag: '#id.app.motivator'
-trello:
-  card: https://trello.com/c/g8wP96mE
-  done: false
-  id: 63c8c9045e3d5101bd833f10
-  list: 63c43d5498733701c29d3a12
----
+
 
 * [ ] Can the la metric do arabic?
 

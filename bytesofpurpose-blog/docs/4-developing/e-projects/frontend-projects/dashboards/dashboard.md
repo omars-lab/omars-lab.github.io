@@ -1,28 +1,22 @@
 ---
-tag: '#id.dashboard'
-summary: Developing My Dashboard
-category: tools
-priorities:
-  - I need to track finances / monthly expenses in a dashboard ...
-  - I need to track my productivity in a dashboard ...
+slug: dashboard
+title: Dashboard
+description: 'Developing a comprehensive personal dashboard for tracking finances, productivity, habits, and business metrics with monitoring and alerting.'
+authors: [oeid]
+tags: [dashboard, metrics, monitoring, finances, productivity, habits, cloudwatch, prometheus, development]
+date: 2023-01-03T10:00
+draft: true
+---
+
+
+# Priorities
+  - I need to track finances / monthly expenses in a dashboard ...  
+  - I need to track my productivity in a dashboard ...  
   - I need to monitor my asset allocation ...
   - I need to track my habits ...
-  - I need a tool that shows how productive i've been across work days ... almost
-    like a calendar like dashboard ...
+    - I need a tool that shows how productive i've been across work days ... almost like a calendar like dashboard ...
   - I need to track progress towards starting my own business
   - I need to merge my credit card info and track expenses...
-content:
-  md5: e1611ae2be2d6ae8f6b8eaca1aa6d983
-trello:
-  card: https://trello.com/c/5c7pmhLs
-  done: false
-  id: 63c81c1fcd04cf03f9db0d64
-  list: 63c43d5498733701c29d3a12
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-74
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/tool-dashboard.md:1
-glue: https://glue/blueprints/#id.dashboard
----
 
 # Dashboard
 	

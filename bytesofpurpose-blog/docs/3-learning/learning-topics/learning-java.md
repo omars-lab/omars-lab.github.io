@@ -1,8 +1,11 @@
 ---
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-27
-summary: 'Learning/Learn: Java'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-28
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/learning-java.md:1
+slug: learning-java
+title: Learning Java
+description: 'Learning goals and resources for Java programming, frameworks, and best practices.'
+authors: [oeid]
+tags: [java, programming, frameworks, learning, best-practices]
+date: 2021-09-06T10:00
+draft: true
 ---
 
 * [ ] Watch relevant java brains tutorials!

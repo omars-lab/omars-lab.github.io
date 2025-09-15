@@ -1,1 +1,11 @@
+---
+slug: learning-python
+title: Learning Python
+description: 'Learning goals and resources for Python programming and development.'
+authors: [oeid]
+tags: [python, programming, learning, development]
+date: 2025-01-01T10:00
+draft: true
+---
+
 - https://docs.python.org/3/library/site.html

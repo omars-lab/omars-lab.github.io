@@ -1,22 +1,16 @@
 ---
-category: shortcut
-content:
-  md5: 174c22d29fadb715a979d39e0479e593
-glue: https://glue/blueprints/#id.shortcut.iphone
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-22
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-40
-priorities:
-  - I need to develop my iphone shortcuts
-summary: Developing iPhone Shortcuts
-tag: '#id.shortcut.iphone'
-trello:
-  card: https://trello.com/c/VYkh82S4
-  done: false
-  id: 63c8c8ec9e642e0355810b27
-  list: 63c43d5498733701c29d3a12
+slug: develop-shortcuts
+title: Develop Shortcuts
+description: 'Developing iPhone and macOS shortcuts for automation, note-taking, and productivity workflows.'
+authors: [oeid]
+tags: [shortcuts, iphone, macos, automation, noteplan, productivity, development]
+date: 2021-08-29T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to develop my iphone shortcuts
+  
 # ---------------------------
 
 # Iphone Shortcuts 

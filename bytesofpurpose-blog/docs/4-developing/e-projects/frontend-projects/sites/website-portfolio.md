@@ -1,22 +1,18 @@
 ---
-category: website
-content:
-  md5: 5cb211d2d7775edb419d63c2fb1f8f7f
-glue: https://glue/blueprints/#id.website.portfolio
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-31
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-38
-priorities:
-  - I need a portfolio website
-summary: Developing Portfolio
-tag: '#id.website.portfolio'
-trello:
-  card: https://trello.com/c/bQ0QWHNJ
-  done: false
-  id: 63c8c8ff60c17802dbc1d128
-  list: 63c43d5498733701c29d3a12
+slug: website-portfolio
+title: Website Portfolio
+description: 'Developing a comprehensive portfolio website with React, AWS deployment, and automated CI/CD pipeline.'
+authors: [oeid]
+tags: [portfolio, website, react, aws, deployment, ci-cd, development]
+date: 2021-04-06T10:00
+draft: true
 ---
 
+
+# Priorities
+  - I need a portfolio website
+
+  
 # Portfolio
 
 portfolio - add employment timeline ...

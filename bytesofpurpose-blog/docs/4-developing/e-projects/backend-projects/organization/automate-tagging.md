@@ -1,20 +1,15 @@
 ---
-category: automation
-content:
-  md5: 381545f47a566b5efe37d28aadc0b720
-glue: https://glue/blueprints/#id.automate.tagging
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-67
-priorities:
-  - I need to automate auto tagging things ...
-summary: Automating Tagging
-tag: '#id.automate.tagging'
-trello:
-  card: https://trello.com/c/kqs4wWkV
-  done: false
-  id: 63c8c8e250c66300eb7a5ccc
-  list: 63c43d5498733701c29d3a12
+slug: automate-tagging
+title: Automate Tagging
+description: 'Automating the tagging process for notes with automatic ID assignment, hashtag generation, and note ingestion workflows.'
+authors: [oeid]
+tags: [tagging, automation, notes, hashtags, noteplan, ingestion, development]
+date: 2022-04-04T10:00
+draft: true
 ---
+
+# Priorities
+  - I need to automate auto tagging things ...
 
 # Tagging 
 * [ ] can I auto tag stuff 

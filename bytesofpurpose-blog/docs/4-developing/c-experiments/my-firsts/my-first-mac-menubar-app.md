@@ -1,12 +1,11 @@
 ---
-content:
-  md5: d41d8cd98f00b204e9800998ecf8427e
-glue: ''
-trello:
-  card: https://trello.com/c/UASqsfNc
-  done: false
-  id: 63c8c8e51e19040089f5dfe0
-  list: 63c43d5498733701c29d3a12
+slug: my-first-mac-menubar-app
+title: My First Mac Menu Bar App
+description: 'Learning to create a macOS menu bar application with NotePlan task integration.'
+authors: [oeid]
+tags: [macos, menu-bar, app, noteplan, swift, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
 # Menu Bar App

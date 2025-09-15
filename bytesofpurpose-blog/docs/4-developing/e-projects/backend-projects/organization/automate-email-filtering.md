@@ -1,3 +1,13 @@
+---
+slug: automate-email-filtering
+title: Automate Email Filtering
+description: 'Automating email filtering and organization using Yahoo Mail filters and Tampermonkey scripts.'
+authors: [oeid]
+tags: [email, automation, filtering, yahoo-mail, tampermonkey, organization, productivity]
+date: 2025-01-01T10:00
+draft: true
+---
+
 # a8n: Email Automation
 * [ ] add yahoo email inbox analytics to find the most recurring domain - scroll with selenium
 mail-app-component-container

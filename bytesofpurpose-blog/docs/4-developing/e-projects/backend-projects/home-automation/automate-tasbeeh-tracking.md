@@ -1,20 +1,17 @@
 ---
-category: tool
-content:
-  md5: 63b2b31b50fa99410058f7e0cdbda799
-glue: https://glue/blueprints/#id.tool.smartclicker
-priorities:
-  - I need a smart clicker
-summary: Tracking Clicks
-tag: '#id.tool.smartclicker'
-trello:
-  card: https://trello.com/c/6Qt1K5rA
-  done: false
-  id: 63c8c8ce62e6da01fd98a098
-  list: 63c43d5498733701c29d3a12
+slug: automate-tasbeeh-tracking
+title: Automate Tasbeeh Tracking
+description: 'Project to develop a smart clicker system for tracking tasbeeh using home automation and IoT devices.'
+authors: [oeid]
+tags: [home-automation, iot, tasbeeh, tracking, smart-clicker, home-assistant]
+date: 2022-04-12T10:00
+draft: true
 ---
 
+
 Tasbeeh Tracker ...
+# Priorities
+  - I need a smart clicker
 
 * [ ] Idea - for smart clicking - ml app that listens to when a pen is clicked - every day tools can become "smart"
 	* [ ] https://towardsdatascience.com/detecting-sounds-with-deep-learning-ed9a41909da0

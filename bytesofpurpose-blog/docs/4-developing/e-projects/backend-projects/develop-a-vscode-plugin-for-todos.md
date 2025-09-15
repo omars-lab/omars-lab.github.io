@@ -1,22 +1,16 @@
 ---
-category: plugin
-content:
-  md5: 2ad81d2688b8803a3f3a546d7497bf58
-glue: https://glue/blueprints/#id.plugin.vscode
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-41
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-42
-priorities:
-  - I need to develop my vscode plugins
-summary: Developing Vscode Plugins
-tag: '#id.plugin.vscode'
-trello:
-  card: https://trello.com/c/rXJT6Ft5
-  done: false
-  id: 63c8c8fac5113800b39ea78e
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-vscode-plugin-for-todos
+title: Develop a VSCode Plugin for Todos
+description: 'Building a VSCode extension called Flavorful Tasks for managing todos with keyboard shortcuts and automation features.'
+authors: [oeid]
+tags: [vscode, plugin, extension, todos, tasks, automation, productivity, development]
+date: 2021-09-07T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to develop my vscode plugins
+  
 # Flavorful Tasks
 
 - [ ] Make it such that tasks in comments `# - [ ]` are properly delt with too!

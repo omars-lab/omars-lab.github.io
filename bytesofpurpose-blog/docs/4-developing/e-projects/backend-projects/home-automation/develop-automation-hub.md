@@ -1,19 +1,18 @@
 ---
-category: automation
-content:
-  md5: be3060e776777c1f1caba040daeefd77
-glue: https://glue/blueprints/#id.automate.home
-priorities:
-  - I need to automate aspects of our home.
-summary: Automating Our Home
-tag: '#id.automate.home'
-trello:
-  card: https://trello.com/c/Q83GmrRa
-  done: false
-  id: 63c8c8d7063fb302832974d6
-  list: 63c43d5498733701c29d3a12
+slug: develop-automation-hub
+title: Develop Automation Hub
+description: 'Building a comprehensive home automation hub using Home Assistant, Flic buttons, and smart device integration.'
+authors: [oeid]
+tags: [home-automation, home-assistant, flic, smart-devices, hub, development]
+date: 2022-04-14T10:00
+draft: true
 ---
 
+
+# Priorities
+  - I need to automate aspects of our home.
+
+  
 # Home Automation Hub
 
 - [ ] Make scripts for each of the buttons ...

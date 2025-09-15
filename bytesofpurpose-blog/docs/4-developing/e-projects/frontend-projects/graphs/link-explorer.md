@@ -1,13 +1,18 @@
 ---
-tag: '#id.link-explorer'
-summary: Developing a tool to analyze my links.
-category: tools
-priorities:
-  - I need to track the development of each of my habits!
-glue: https://glue/blueprints/#id.link-explorer
+slug: link-explorer
+title: Link Explorer
+description: 'Developing a tool to analyze and visualize links using Neo4j graph database and network analysis techniques.'
+authors: [oeid]
+tags: [links, neo4j, graph-database, network-analysis, visualization, development]
+date: 2023-07-11T10:00
+draft: true
 ---
 
+# Priorities
 
+  - I need to track the development of each of my habits!
+
+  
 # [#Analyzing] Links
 
 - [ ] Autogenerating mindnode file ...

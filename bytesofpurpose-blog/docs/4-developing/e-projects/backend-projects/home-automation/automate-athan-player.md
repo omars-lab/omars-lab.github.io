@@ -1,22 +1,18 @@
 ---
-category: automation
-content:
-  md5: c6874acae3f037657aa4156ed01618b7
-glue: https://glue/blueprints/#id.automate.athan
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-17
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-21
-priorities:
-  - I need to automate the athan playing in our home
-summary: Automating Athan
-tag: '#id.automate.athan'
-trello:
-  card: https://trello.com/c/TtwjKN7v
-  done: false
-  id: 63c8c879f1d1570405bcaf0a
-  list: 63c43d5498733701c29d3a12
+slug: automate-athan-player
+title: Automate Athan Player
+description: 'Automating Athan (Islamic call to prayer) playback using smart speakers and home automation systems.'
+authors: [oeid]
+tags: [athan, automation, smart-speakers, home-automation, islamic, scheduling, development]
+date: 2021-05-02T10:00
+draft: true
 ---
 
+
+# Priorities
+  - I need to automate the athan playing in our home
+
+  
 * [ ] How do I get the Athan Automator to work on windows?
 * [ ] Decrease athan volume upstairs ... >2021-08-17 
 

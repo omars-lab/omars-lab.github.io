@@ -1,11 +1,17 @@
 ---
-tag: '#id.app.calendar'
-summary: Developing My Calendar
-category: app
-priorities:
-  - I need to make sure I am using my different apps ... glue
+slug: develop-an-initiative-calendar-app
+title: Develop an Initiative Calendar App
+description: 'Building a calendar application to organize initiatives and replace NotePlan limitations.'
+authors: [oeid]
+tags: [calendar, app, initiatives, organization, productivity, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to make sure I am using my different apps ... glue
+
+  
 # Calendar
 - [ ] Make calendar (web) app to organize my initiatives ... 
 	- [ ] NotePlan too limiting!

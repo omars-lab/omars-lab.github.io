@@ -1,4 +1,17 @@
 
+---
+slug: develop-a-mind-map-generator
+title: Develop a Mind Map Generator
+description: 'Building a tool to automatically generate mind maps from notes using AI categorization and graph visualization.'
+authors: [oeid]
+tags: [mind-map, generator, ai, categorization, notes, visualization, development]
+date: 2023-06-26T10:00
+draft: true
+---
+
+# Priorities
+- I need to automate the generation of mind maps from my notes
+
 - [ ] Can I use genai to auto categorize my notes ...
 
 # Autogenerating Activity Mind Map

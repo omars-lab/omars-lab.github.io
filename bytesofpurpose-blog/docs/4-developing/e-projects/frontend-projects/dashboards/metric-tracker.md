@@ -1,14 +1,11 @@
 ---
-category: tool
-priorities:
-  - I need to naturally track as many metrics as I can automatically, without actively thinking to track myself
-summary: Tracking Metrics
-tag: '#id.tool.metrictracker'
-trello:
-  card: https://trello.com/c/onWFBAFp
-  done: false
-  id: 63c8c8d951606a02d2584859
-  list: 63c43d5498733701c29d3a12
+slug: metric-tracker
+title: Metric Tracker
+description: 'Developing tools to automatically track personal metrics including prayer times and habit monitoring.'
+authors: [oeid]
+tags: [metrics, tracking, apple-watch, prayer, habits, automation, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
 * [ ] idea - apple watch app to track prayer

@@ -1,8 +1,11 @@
 ---
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-13
-summary: 'Examples/Example: Sockets'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-14
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/example-timeouts.md:1
+slug: tinker-timeouts
+title: Tinker Timeouts
+description: 'Experimenting with different timeout patterns in web applications and socket connections.'
+authors: [oeid]
+tags: [timeouts, sockets, spring-boot, networking, experiments, learning]
+date: 2021-09-26T10:00
+draft: true
 ---
 
 * [x] Start the timeout example @done(2021-09-26 12:04 AM)

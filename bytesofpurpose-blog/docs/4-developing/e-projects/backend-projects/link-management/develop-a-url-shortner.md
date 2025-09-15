@@ -1,21 +1,16 @@
 ---
-category: tool
-content:
-  md5: bb773271b3cf58d9d8e9b44facd1e9a2
-glue: https://glue/blueprints/#id.tool.url-shortner
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-77
-priorities:
-  - I need a URL shortener
-summary: Shortening URLs
-tag: '#id.tool.url-shortner'
-trello:
-  card: https://trello.com/c/AQYS5SbP
-  done: false
-  id: 63c8c8db120c13003a5cd35b
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-url-shortner
+title: Develop a URL Shortener
+description: 'Building a custom URL shortener that integrates with glue links and xcallback URLs for cross-platform navigation.'
+authors: [oeid]
+tags: [url-shortener, glue, xcallback, links, navigation, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
+# Priorities
+  - I need a URL shortener
+  
 * [ ] implement my own url shortener that uses glue ...
 	* [ ] Figures out the right xcallback / app / directory per machine ... 
 
