@@ -1,3 +1,13 @@
+---
+slug: learning-frontend-webpack
+title: Learning Frontend Webpack
+description: 'Learning goals and resources for Webpack bundling, configuration, and build optimization.'
+authors: [oeid]
+tags: [webpack, frontend, bundling, build-tools, learning]
+date: 2025-01-01T10:00
+draft: true
+---
+
 # Learning Webpack
 
 - [x] Learn how to use webpack ...

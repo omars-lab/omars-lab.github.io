@@ -1,21 +1,16 @@
 ---
-category: automation
-content:
-  md5: e04422d907de6e4aa02edf657c81033f
-glue: https://glue/blueprints/#id.automate.notes
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-66
-priorities:
-  - I need to automate my backups
-summary: Automating Backups
-tag: '#id.automate.notes'
-trello:
-  card: https://trello.com/c/6pxyfGR2
-  done: false
-  id: 63c8c8de80eaf80232e9650f
-  list: 63c43d5498733701c29d3a12
+slug: automate-backups
+title: Automate Backups
+description: 'Automating backup processes for NotePlan and other data using rsync and git-like synchronization.'
+authors: [oeid]
+tags: [backups, automation, noteplan, rsync, synchronization, development]
+date: 2025-01-01T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to automate my backups
+  
 # Automating Backups 
 * [ ] make and automate backup noteplan script
 

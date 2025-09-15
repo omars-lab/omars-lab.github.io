@@ -1,22 +1,16 @@
 ---
-category: automation
-content:
-  md5: cd7dbf2f8f6c5fbc2f1ef3d71977cf89
-glue: https://glue/blueprints/#id.automate.kanban
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-17
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-18
-priorities:
-  - I need to automate my kanban board population / syncing
-  - I need to organize my initiatives and manage them as cards!
-summary: Automating Kanban
-tag: '#id.automate.kanban'
-trello:
-  card: https://trello.com/c/yrQVSuj8
-  done: false
-  id: 63c8c8fd8ac766004817488f
-  list: 63c43d5498733701c29d3a12
+slug: build-a-kanban-board
+title: Build a Kanban Board
+description: 'Building and automating a Kanban board for organizing initiatives and managing project cards with Jira integration.'
+authors: [oeid]
+tags: [kanban, jira, trello, automation, project-management, productivity, development]
+date: 2022-04-05T10:00
+draft: true
 ---
+
+# Priorities
+*   - I need to automate my kanban board population / syncing
+*   - I need to organize my initiatives and manage them as cards!
 
 
 * Should I automate this? 

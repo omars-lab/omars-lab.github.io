@@ -1,19 +1,15 @@
 ---
-category: tool
-content:
-  md5: e50caf1ca0a8c4a9b5364fcc4fa1286a
-glue: https://glue/blueprints/#id.glue
-priorities:
-  - I need a easy way to take make links that take me straight to apps in a loose
-    way
-summary: Glueing Links
-tag: '#id.glue'
-trello:
-  card: https://trello.com/c/edm4fTFc
-  done: false
-  id: 63c8c8c94948ef01b780870f
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-xcallback-link-hopping-tools-glue
+title: Develop a XCallback Link Hopping Tools Glue
+description: 'Building a glue system for managing xcallback URLs and cross-app navigation with custom resolving functions.'
+authors: [oeid]
+tags: [glue, xcallback, links, navigation, cross-app, automation, development]
+date: 2023-01-09T10:00
+draft: true
 ---
+
+# Priorities
+  - I need a easy way to take make links that take me straight to apps in a loose way
 
 # Glue
 

@@ -1,20 +1,16 @@
 ---
-category: plugin
-content:
-  md5: c2bbcf05eaf4feb1463eb563c6aa1d30
-glue: https://glue/blueprints/#id.plugin.brew
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-69
-priorities:
-  - I need to develop my brew plugins
-summary: Developing Brew Plugins
-tag: '#id.plugin.brew'
-trello:
-  card: https://trello.com/c/b6RuaDnR
-  done: false
-  id: 63c8c8ee09a989005eb94b0e
-  list: 63c43d5498733701c29d3a12
+slug: develop-brew-plugins-for-workspace
+title: Develop Brew Plugins for Workspace
+description: 'Creating Homebrew formulas and packages for workspace setup, vim plugins, and automation scripts.'
+authors: [oeid]
+tags: [brew, homebrew, formulas, packages, workspace, vim, automation, development]
+date: 2022-04-04T10:00
+draft: true
 ---
+
+# Priorities
+  - I need to develop my brew plugins
+  
 
 * [ ] Make a brew package with all my vim plugins!!
 * [ ] Make another brew package with my brew setup!

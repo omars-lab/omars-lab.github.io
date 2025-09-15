@@ -1,22 +1,17 @@
 ---
-category: tool
-content:
-  md5: c9ea7485ead94088843a259e01d4a293
-glue: https://glue/blueprints/#id.tool.mycli
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-36
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-49
-priorities:
-  - I need my own CLI
-summary: Developing My CLI
-tag: '#id.tool.mycli'
-trello:
-  card: https://trello.com/c/hI4I5OFl
-  done: false
-  id: 63c8c86f26741101107685ee
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-task-management-cli
+title: Develop a Task Management CLI
+description: 'Building a personal CLI tool for task management, validation, and productivity analysis with role-based organization.'
+authors: [oeid]
+tags: [cli, task-management, validation, productivity, roles, automation, development]
+date: 2022-04-12T10:00
+draft: true
 ---
 
+# Priorities
+  - I need my own CLI
+
+  
 I need a personal cli to round up all the common operations I need to better document/manage me ...
 - [ ] The reason I keep on comming back to my cli is it helps ...
 	- establish my own personal structure ...

@@ -1,18 +1,15 @@
 ---
-category: tool
-content:
-  md5: ee104b0d3225d4c2dfd53b4f76044582
-glue: https://glue/blueprints/#id.tool.note-explorer
-priorities:
-  - I need my own note explorer
-summary: Exploring My Notes
-tag: '#id.tool.note-explorer'
-trello:
-  card: https://trello.com/c/s9MqDwMx
-  done: false
-  id: 63c8c8e9f2e06700c1457134
-  list: 63c43d5498733701c29d3a12
+slug: note-explore-er
+title: Note Explore-er
+description: 'Building a tool to traverse and explore notes with dependency visualization and fuzzy search capabilities.'
+authors: [oeid]
+tags: [notes, explorer, dependencies, fuzzy-search, mind-node, plantuml, development]
+date: 2025-01-01T10:00
+draft: true
 ---
+
+# Priorities
+  - I need my own note explorer
 
 - I need a tool that will help me traverse through all my notes ... and allows me to see the dependencies of each ...
 

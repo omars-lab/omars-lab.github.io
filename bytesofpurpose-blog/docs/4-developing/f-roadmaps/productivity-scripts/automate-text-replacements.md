@@ -1,19 +1,16 @@
 ---
-category: automation
-content:
-  md5: 65530b40c54534c4ecc0d0aea56d0050
-glue: https://glue/blueprints/#id.automate.textexpansion
-priorities:
-  - I need to automate the expansion of various shortcuts / text snippets
-summary: Automating Text Expansion
-tag: '#id.automate.textexpansion'
-trello:
-  card: https://trello.com/c/isTbEwab
-  done: false
-  id: 63c8c8f176cfe50257bf7531
-  list: 63c43d5498733701c29d3a12
+slug: automate-text-replacements
+title: Automate Text Replacements
+description: 'Automating text expansion and shortcut management across devices with iCloud synchronization.'
+authors: [oeid]
+tags: [text-expansion, shortcuts, automation, icloud, productivity, development]
+date: 2022-04-02T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to automate the expansion of various shortcuts / text snippets
+  
 * [x] iCloud text replacements are being updated … make sure only one laptop runs the shortcut updating stuff … for >2022-01-16 … @done(2022-04-02 11:16 PM)
 
 # Log Rotation

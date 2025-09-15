@@ -1,21 +1,17 @@
 ---
-category: website
-content:
-  md5: c9f91cd936e17f464caef5a2ea4892f1
-glue: https://glue/blueprints/#id.website.blog
-jira:
-  epic: https://sacred-patterns.atlassian.net/browse/THREAD-31
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-32
-priorities:
-  - I need my own blog
-summary: Developing Blog
-tag: '#id.website.blog'
-trello:
-  card: https://trello.com/c/fZKX2hB0
-  done: false
-  id: 63c8c907aa41550097d406a0
-  list: 63c43d5498733701c29d3a12
+slug: website-blog
+title: Website Blog
+description: 'Developing a Docusaurus-based blog with automation tools, voting features, and content integration.'
+authors: [oeid]
+tags: [blog, docusaurus, automation, voting, content, development]
+date: 2021-09-13T10:00
+draft: true
 ---
+
+# Priorities
+  - I need my own blog
+
+  
 
 # Blog
 

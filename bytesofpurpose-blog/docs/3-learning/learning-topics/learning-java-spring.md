@@ -1,8 +1,11 @@
 ---
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-27
-summary: 'Learning/Learn: Spring'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-29
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/learning-spring.md:1
+slug: learning-java-spring
+title: Learning Java Spring
+description: 'Learning goals and resources for Java Spring framework, dependency injection, and microservices.'
+authors: [oeid]
+tags: [java, spring, dependency-injection, microservices, learning]
+date: 2021-08-30T10:00
+draft: true
 ---
 
 * [ ] Watch relevant java brains tutorials!

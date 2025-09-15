@@ -1,19 +1,17 @@
 ---
-category: tools
-content:
-  md5: b8447985308ad3eec25e4e765f99562a
-glue: https://glue/blueprints/#id.adoption.tracker
-priorities:
-  - I need to make sure I am using my different apps ... glue ...
-summary: Developing My Adoption Tracker
-tag: '#id.adoption.tracker'
-trello:
-  card: https://trello.com/c/5KF7ARZZ
-  done: false
-  id: 63c8c8f838cc3a00f80f847a
-  list: 63c43d5498733701c29d3a12
+slug: adoption-tracker
+title: Adoption Tracker
+description: 'Developing tools to track app usage, script usage, and file modification metrics for productivity analysis.'
+authors: [oeid]
+tags: [adoption, tracking, metrics, app-usage, productivity, analysis, development]
+date: 2020-02-10T10:00
+draft: true
 ---
 
+# Priorities
+  - I need to make sure I am using my different apps ... glue ...
+
+  
 # Adoption Tracker
 
 

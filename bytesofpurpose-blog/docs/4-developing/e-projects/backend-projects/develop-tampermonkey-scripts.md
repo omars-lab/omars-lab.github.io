@@ -1,21 +1,18 @@
 ---
-category: plugin
-content:
-  md5: 2f87289ad384f482cf1b2a653e6b1ab2
-glue: https://glue/blueprints/#id.plugin.tampermonkey
-jira:
-  task: https://sacred-patterns.atlassian.net/browse/THREAD-70
-priorities:
-  - I need to develop my tampermonkey plugins
-summary: Developing Tampermonkey Plugins
-tag: '#id.plugin.tampermonkey'
-trello:
-  card: https://trello.com/c/F253HkCj
-  done: false
-  id: 63c8c8c4ab71600370b5b7dc
-  list: 63c43d5498733701c29d3a12
+slug: develop-tampermonkey-scripts
+title: Develop Tampermonkey Scripts
+description: 'Developing Tampermonkey browser extension scripts for web automation and productivity enhancement.'
+authors: [oeid]
+tags: [tampermonkey, browser-extension, automation, javascript, productivity, development]
+date: 2022-04-14T10:00
+draft: true
 ---
 
+
+# Priorities
+  - I need to develop my tampermonkey plugins
+
+  
 # Tampermonkey 
 * [ ] Should I have my own tampermonkey to mark a video as watched ... article as read!??
 	* [ ] Should this automatically mark #goodread todos as done??

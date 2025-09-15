@@ -1,9 +1,11 @@
 ---
-alias: Tinkering/React
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-15
-status: '**backlog** -> todo -> doing|paused -> done'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-64
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/tinker-react.md:1
+slug: converting-to-react
+title: Converting to React
+description: 'Roadmap for converting portfolio and blog to React with unit tests and advanced concepts.'
+authors: [oeid]
+tags: [react, portfolio, blog, conversion, roadmap, development]
+date: 2021-11-03T10:00
+draft: true
 ---
 
 # Tinkering with React

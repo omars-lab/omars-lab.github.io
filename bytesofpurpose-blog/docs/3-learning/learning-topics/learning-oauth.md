@@ -1,8 +1,11 @@
 ---
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-27
-summary: 'Learning/Learn: OAuth'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-30
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/learning-oauth.md:1
+slug: learning-oauth
+title: Learning OAuth
+description: 'Learning goals and resources for OAuth authentication protocols and implementation patterns.'
+authors: [oeid]
+tags: [oauth, authentication, security, learning, protocols]
+date: 2025-01-01T10:00
+draft: true
 ---
 
 https://www.yippeecode.com/topics/aws-cognito-oauth-2-authorization-code-flow/

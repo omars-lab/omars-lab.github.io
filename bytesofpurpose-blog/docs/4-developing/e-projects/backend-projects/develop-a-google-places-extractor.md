@@ -1,18 +1,11 @@
 ---
-category: tool
-content:
-  md5: cfcf908354e441f539fb19775ae36407
-glue: https://glue/blueprints/#id.tool.places
-priorities:
-  - I need a tool to help me rally all the places I want to goto ... in google maps
-    ...
-summary: Consolidating Places
-tag: '#id.tool.places'
-trello:
-  card: https://trello.com/c/onWFBAFp
-  done: false
-  id: 63c8c8d951606a02d2584859
-  list: 63c43d5498733701c29d3a12
+slug: develop-a-google-places-extractor
+title: Develop a Google Places Extractor
+description: 'Building a tool to extract and organize places from Google Maps and Instagram into Google Sheets.'
+authors: [oeid]
+tags: [google-places, google-maps, instagram, google-sheets, data-extraction, development]
+date: 2020-02-10T10:00
+draft: true
 ---
 
 - [ ] Tap into google places api … >2020-02-10

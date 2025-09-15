@@ -1,8 +1,11 @@
 ---
-epic: https://sacred-patterns.atlassian.net/browse/THREAD-27
-summary: 'Learning/Learn: Java'
-task: https://sacred-patterns.atlassian.net/browse/THREAD-28
-xcallback: vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/learning-software.md:1
+slug: learning-software
+title: Learning Software
+description: 'Learning goals and resources for software development best practices, architecture, and scaling.'
+authors: [oeid]
+tags: [software-development, architecture, best-practices, learning, scaling]
+date: 2021-09-07T10:00
+draft: true
 ---
 
 # Learning Software
