@@ -4,7 +4,7 @@ title: Research
 description: 'Deep dives into technical topics and research areas.'
 authors: [oeid]
 tags: [research, deep-dives, technical, exploration]
-draft: true
+draft: false
 ---
 
 # Deep Dives
