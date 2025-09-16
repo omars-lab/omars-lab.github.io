@@ -10,12 +10,6 @@ draft: false
 
 # Embedding Mermaid Diagram
 
-:::tip Mechanic 
-Mermaid Charts -> https://github.com/sjwall/mdx-mermaid
-:::
-
-import Mermaid from '@theme/Mermaid';
-
 ```mermaid
 graph TD;
     A-->B;
@@ -24,4 +18,18 @@ graph TD;
     C-->D;
 ```
 
-* [ ] Look into: github.com/sjwall/mdx-mermaid/blob/main/src/mdxast-mermaid.ts #2022-04-20
+```
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+<details>
+    <summary>References...</summary>
+    * [ ] Look into: 
+        * https://docusaurus.io/docs/markdown-features/diagrams#installation
+        * Mermaid Charts -> https://github.com/sjwall/mdx-mermaid
+        * github.com/sjwall/mdx-mermaid/blob/main/src/mdxast-mermaid.ts #2022-04-20
+</details>
