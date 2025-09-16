@@ -18,6 +18,9 @@ const darkTheme = themes.dracula;
     projectName: 'omars-lab.github.io', // Usually your repo name.
     trailingSlash: false,
     staticDirectories: ['static'],
+    markdown: {
+      mermaid: true,
+    },
     presets: [
       [
         '@docusaurus/preset-classic',
@@ -25,13 +28,13 @@ const darkTheme = themes.dracula;
         (
           {
             docs: {
-	            remarkPlugins: [
-                require('mdx-mermaid'),
+	            // remarkPlugins: [
+              //   require('mdx-mermaid'),
                 // in package.json: "remarkable-plantuml": "^1.1.0",
                 // (md) => {
                 //   require('remarkable-plantuml')(md, {base_path: './static'});
                 // }
-              ],
+              // ],
               sidebarPath: require.resolve('./sidebars.js'),
               // Please change this to your repo.
               editUrl: 
@@ -40,7 +43,7 @@ const darkTheme = themes.dracula;
             blog: {
               blogSidebarTitle: 'Posts (Newest🔝)',
               blogSidebarCount: 'ALL',
-	            remarkPlugins: [require('mdx-mermaid')],
+	            // remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
               editUrl:
                 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/blog/',
@@ -56,7 +59,7 @@ const darkTheme = themes.dracula;
                 '**/__tests__/**',
               ],
               mdxPageComponent: '@theme/MDXPage',
-              remarkPlugins: [require('mdx-mermaid')],
+              // remarkPlugins: [require('mdx-mermaid')],
               rehypePlugins: [],
               beforeDefaultRemarkPlugins: [],
               beforeDefaultRehypePlugins: [],
@@ -100,7 +103,7 @@ const darkTheme = themes.dracula;
           path: './designs',
           blogSidebarTitle: 'Posts (Newest🔝)',
           blogSidebarCount: 'ALL',
-          remarkPlugins: [require('mdx-mermaid')],
+          // remarkPlugins: [require('mdx-mermaid')],
           showReadingTime: true,
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/designs/',
@@ -109,8 +112,10 @@ const darkTheme = themes.dracula;
       
     ],
 
-    themes: ['@docusaurus/theme-live-codeblock'],
-    
+    themes: [
+      '@docusaurus/theme-live-codeblock',
+      '@docusaurus/theme-mermaid'
+    ],
     themeConfig: 
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
       ({
