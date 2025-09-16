@@ -51,7 +51,8 @@ const FeatureList: FeatureItem[] = [
     // image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Peak underneath the hood and browse various designs including the design for this very site. 
+        Peak underneath the hood and browse various designs including agentic system design, 
+        the design for this very site, and more! 
       </>
     ),
     to: "/designs/blog-design",
