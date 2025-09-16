@@ -108,3 +108,9 @@ I want to see what it will take to change what google says about my website(s). 
     * https://developers.google.com/search/docs/appearance/visual-elements-gallery
     * https://developers.google.com/search/docs/appearance/snippet#meta-descriptions
     * https://developers.google.com/search/docs/appearance/structured-data/profile-page
+
+
+# Motviation
+* [ ] I should do a proof of concept updating the auto generated response for my website
+* [ ] https://www.semrush.com/blog/google-sge/
+* [ ] https://www.google.com/search?q=what+os+the+bytesofpurose+website+about&client=safari&sca_esv=e126eb4d051b0442&hl=en-us&sxsrf=AE3TifMpUO3LnC7qts8f_hKbt0pWSR06Cg%3A1757513541156&ei=RYfBaPmwCfunmtkPifmssQ0&oq=what+os+the+bytesofpurose+website+about&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIid3aGF0IG9zIHRoZSBieXRlc29mcHVyb3NlIHdlYnNpdGUgYWJvdXQyBxAhGKABGAoyBxAhGKABGApI-AlQtAdY_AhwA3gBkAEAmAGLAaABiwGqAQMwLjG4AQPIAQD4AQGYAgSgApwBwgIKEAAYsAMY1gQYR8ICDRAAGLADGNYEGEcYyQPCAg4QABiABBiwAxiSAxiKBZgDAOIDBRIBMSBAiAYBkAYIkgcDMy4xoAerA7IHAzAuMbgHjgHCBwUwLjEuM8gHDg&sclient=mobile-gws-wiz-serp
