@@ -1,6 +1,6 @@
 ---
 slug: terminology-blog
-title: 'Terminology - Blog'
+title: '🪪 Blog Terms'
 description: 'Definitions and distinctions between functions, mechanics, techniques, and strategies in blog development'
 authors: [oeid]
 tags: [terminology, definitions, blog, mechanics, techniques, strategies]
