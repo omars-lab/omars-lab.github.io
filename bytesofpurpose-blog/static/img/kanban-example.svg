@@ -1,0 +1,155 @@
+<svg width="2781" height="1623" viewBox="0 0 2781 1623" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Column Backgrounds (Back Layer) -->
+<rect y="118" width="536" height="1504" rx="6" fill="#E3F2FD"/>
+<rect x="568" y="118" width="536" height="1504" rx="6" fill="#FFF3E0"/>
+<rect x="1136" y="118" width="536" height="1504" rx="6" fill="#E8F5E8"/>
+<rect x="1695" y="118" width="536" height="1504" rx="6" fill="#FCE4EC"/>
+<rect x="2254" y="118" width="536" height="1504" rx="6" fill="#F3E5F5"/>
+
+<!-- Column Headers (Middle Layer) -->
+<rect width="536" height="228" rx="6" fill="#1976D2"/>
+<rect x="568" width="536" height="228" rx="6" fill="#F57C00"/>
+<rect x="1136" width="536" height="228" rx="6" fill="#388E3C"/>
+<rect x="1695" width="536" height="228" rx="6" fill="#C2185B"/>
+<rect x="2254" width="536" height="228" rx="6" fill="#7B1FA2"/>
+
+<!-- Column Titles (Middle Layer) -->
+<text x="268" y="140" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">BACKLOG</text>
+<text x="836" y="140" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">IN PROGRESS</text>
+<text x="1404" y="140" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">REVIEW</text>
+<text x="1963" y="140" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">TESTING</text>
+<text x="2522" y="140" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">DONE</text>
+
+<!-- Task Cards (Front Layer) -->
+<defs>
+<filter id="filter0_ddd_2013_253" x="0" y="0" width="3000" height="2000" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2.5"/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.02 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2013_253"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="5"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_2013_253" result="effect2_dropShadow_2013_253"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="8"/>
+<feGaussianBlur stdDeviation="5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="effect2_dropShadow_2013_253" result="effect3_dropShadow_2013_253"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow_2013_253" result="shape"/>
+</filter>
+</defs>
+
+<!-- BACKLOG TASKS (sorted by priority: High, Medium, Low) -->
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(60 317)" fill="#A8DAFF"/>
+<text x="80" y="350" fill="#333" font-family="Arial" font-size="16" font-weight="bold">User Authentication</text>
+<text x="80" y="375" fill="#666" font-family="Arial" font-size="14">Implement OAuth2 login with Google and GitHub</text>
+<text x="80" y="520" fill="#999" font-family="Arial" font-size="12">High Priority • 5 days</text>
+<circle cx="450" cy="340" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(60 600)" fill="#A8DAFF"/>
+<text x="80" y="633" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Database Schema</text>
+<text x="80" y="658" fill="#666" font-family="Arial" font-size="14">Design user profiles and project tables</text>
+<text x="80" y="803" fill="#999" font-family="Arial" font-size="12">Medium Priority • 3 days</text>
+<circle cx="450" cy="623" r="8" fill="#FF9800"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(60 883)" fill="#A8DAFF"/>
+<text x="80" y="916" fill="#333" font-family="Arial" font-size="16" font-weight="bold">UI Design</text>
+<text x="80" y="941" fill="#666" font-family="Arial" font-size="14">Create wireframes and mockups</text>
+<text x="80" y="1086" fill="#999" font-family="Arial" font-size="12">Low Priority • 2 days</text>
+<circle cx="450" cy="906" r="8" fill="#CCCCCC"/>
+</g>
+
+<!-- IN PROGRESS TASKS (sorted by priority: High, High, Medium) -->
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(614 317)" fill="#FFD3A8"/>
+<text x="634" y="350" fill="#333" font-family="Arial" font-size="16" font-weight="bold">API Endpoints</text>
+<text x="634" y="375" fill="#666" font-family="Arial" font-size="14">Create REST API for user management</text>
+<text x="634" y="520" fill="#999" font-family="Arial" font-size="12">High Priority • 4 days</text>
+<circle cx="1004" cy="340" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(614 600)" fill="#FFD3A8"/>
+<text x="634" y="633" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Database Migration</text>
+<text x="634" y="658" fill="#666" font-family="Arial" font-size="14">Migrate existing data to new schema</text>
+<text x="634" y="803" fill="#999" font-family="Arial" font-size="12">High Priority • 2 days</text>
+<circle cx="1004" cy="623" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(614 883)" fill="#FFD3A8"/>
+<text x="634" y="916" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Frontend Components</text>
+<text x="634" y="941" fill="#666" font-family="Arial" font-size="14">Build dashboard UI with React</text>
+<text x="634" y="1086" fill="#999" font-family="Arial" font-size="12">Medium Priority • 6 days</text>
+<circle cx="1004" cy="906" r="8" fill="#FF9800"/>
+</g>
+
+<!-- REVIEW TASKS (sorted by priority: High, Low) -->
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(1192 317)" fill="#B3EFBD"/>
+<text x="1212" y="350" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Code Review</text>
+<text x="1212" y="375" fill="#666" font-family="Arial" font-size="14">Review authentication middleware changes</text>
+<text x="1212" y="520" fill="#999" font-family="Arial" font-size="12">High Priority • 1 day</text>
+<circle cx="1582" cy="340" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(1192 600)" fill="#B3EFBD"/>
+<text x="1212" y="633" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Documentation</text>
+<text x="1212" y="658" fill="#666" font-family="Arial" font-size="14">Update API docs for new endpoints</text>
+<text x="1212" y="803" fill="#999" font-family="Arial" font-size="12">Low Priority • 2 days</text>
+<circle cx="1582" cy="623" r="8" fill="#CCCCCC"/>
+</g>
+
+<!-- TESTING TASKS (sorted by priority: High, Medium) -->
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(1751 317)" fill="#FFAFA3"/>
+<text x="1771" y="350" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Unit Tests</text>
+<text x="1771" y="375" fill="#666" font-family="Arial" font-size="14">Write tests for user service</text>
+<text x="1771" y="520" fill="#999" font-family="Arial" font-size="12">High Priority • 3 days</text>
+<circle cx="2141" cy="340" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(1751 600)" fill="#FFAFA3"/>
+<text x="1771" y="633" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Integration Tests</text>
+<text x="1771" y="658" fill="#666" font-family="Arial" font-size="14">Test API endpoints with test data</text>
+<text x="1771" y="803" fill="#999" font-family="Arial" font-size="12">Medium Priority • 4 days</text>
+<circle cx="2141" cy="623" r="8" fill="#FF9800"/>
+</g>
+
+<!-- DONE TASKS (sorted by priority: High, High, Medium) -->
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(2302 317)" fill="#D3BDFF"/>
+<text x="2322" y="350" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Project Setup</text>
+<text x="2322" y="375" fill="#666" font-family="Arial" font-size="14">Initialize project structure and config</text>
+<text x="2322" y="520" fill="#999" font-family="Arial" font-size="12">High Priority • 2 days</text>
+<circle cx="2692" cy="340" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(2302 600)" fill="#D3BDFF"/>
+<text x="2322" y="633" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Deployment Pipeline</text>
+<text x="2322" y="658" fill="#666" font-family="Arial" font-size="14">CI/CD setup with GitHub Actions</text>
+<text x="2322" y="803" fill="#999" font-family="Arial" font-size="12">High Priority • 3 days</text>
+<circle cx="2692" cy="623" r="8" fill="#FF0000"/>
+</g>
+
+<g filter="url(#filter0_ddd_2013_253)">
+<rect width="416" height="240" transform="translate(2302 883)" fill="#D3BDFF"/>
+<text x="2322" y="916" fill="#333" font-family="Arial" font-size="16" font-weight="bold">Environment Setup</text>
+<text x="2322" y="941" fill="#666" font-family="Arial" font-size="14">Configure dev, staging and production envs</text>
+<text x="2322" y="1086" fill="#999" font-family="Arial" font-size="12">Medium Priority • 1 day</text>
+<circle cx="2692" cy="906" r="8" fill="#FF9800"/>
+</g>
+
+</svg>

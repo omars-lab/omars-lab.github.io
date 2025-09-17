@@ -1,0 +1,359 @@
+---
+slug: mx-docx-embedd-kanban-customization
+title: Custom Kanban Board Creation with SVG
+description: How to create and embed custom kanban boards using SVG templates and structured prompts
+authors: [oeid]
+tags: [docusaurus, svg, kanban, project-management, customization]
+date: 2025-01-31T10:00
+---
+
+# Creating Custom Kanban Boards with SVG Templates
+
+This guide demonstrates how to create professional, customized kanban boards using SVG templates and structured prompts. We'll show you how to use our kanban customization prompt to generate personalized project management boards that can be embedded directly into your documentation.
+
+## Overview
+
+Kanban boards are powerful visual tools for project management, but creating them from scratch can be time-consuming. Our approach uses a structured SVG template combined with a comprehensive prompt to generate professional-looking boards quickly and consistently.
+
+## The Template-Based Approach
+
+### Base SVG Template
+
+We start with a well-structured SVG template (`kanban-structure.svg`) that provides:
+
+- **5-column layout** with distinct color themes
+- **Post-it note style cards** with drop shadows
+- **Professional typography** and spacing
+- **Responsive design** that scales properly
+
+### Structured Customization Prompt
+
+Our comprehensive prompt (`customize-kanban-board.md`) guides you through:
+
+- **Column configuration** (names, colors, themes)
+- **Task card creation** with proper formatting
+- **Priority system** with Jira-style labels
+- **Visual hierarchy** and sorting rules
+
+## Example: Software Development Workflow
+
+Let's see how this works in practice with a software development project:
+
+### Customized Kanban Board
+
+Here's our example kanban board showing a realistic software development workflow:
+
+import KanbanExample from '@site/static/img/kanban-example.svg';
+
+<div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+  <KanbanExample style={{ width: '100%', height: 'auto' }} />
+</div>
+
+### Board Structure
+
+**Column Configuration:**
+- **BACKLOG** (Blue theme) - New tasks waiting to be started
+- **IN PROGRESS** (Orange theme) - Tasks currently being worked on  
+- **REVIEW** (Green theme) - Tasks ready for code review
+- **TESTING** (Pink theme) - Tasks being tested
+- **DONE** (Purple theme) - Completed tasks
+
+**Task Distribution:**
+- **BACKLOG**: 3 tasks (User Authentication, Database Schema, UI Design)
+- **IN PROGRESS**: 3 tasks (API Endpoints, Database Migration, Frontend Components)
+- **REVIEW**: 2 tasks (Code Review, Documentation)
+- **TESTING**: 2 tasks (Unit Tests, Integration Tests)
+- **DONE**: 3 tasks (Project Setup, Deployment Pipeline, Environment Setup)
+
+## Key Features Implemented
+
+### 1. Jira-Style Priority System
+
+Each card includes:
+- **Priority labels**: "High Priority • 5 days"
+- **Color-coded dots**: Red (High), Orange (Medium), Light Grey (Low)
+- **Bottom-left positioning** for priority information
+
+### 2. Professional Formatting
+
+- **Single-line descriptions** without unnecessary breaks
+- **Consistent typography** with proper hierarchy
+- **Post-it note aesthetics** with drop shadows
+- **Color-coded columns** for visual organization
+
+### 3. Priority-Based Sorting
+
+Cards within each column are sorted by priority:
+1. High Priority (top)
+2. Medium Priority (middle)  
+3. Low Priority (bottom)
+
+## How to Use the Customization Prompt
+
+### Step 1: Access the Prompt
+
+The customization prompt is located at:
+```
+/prompts/customize-kanban-board.md
+```
+
+### Step 2: Follow the Structured Guide
+
+The prompt provides:
+
+1. **SVG Structure Understanding** - Layer ordering and technical details
+2. **Step-by-Step Customization** - Column and card configuration
+3. **Content Requirements** - What information to include
+4. **Best Practices** - Design principles and guidelines
+5. **Troubleshooting** - Common issues and solutions
+
+### Step 3: Customize Your Content
+
+Replace the example content with your own:
+
+- **Column names** for your workflow
+- **Task titles** and descriptions
+- **Priority levels** and time estimates
+- **Color schemes** that match your brand
+
+### Step 4: Generate Your SVG
+
+Use the prompt to create your customized kanban board SVG file.
+
+## Example: Using the Prompt with GenAI
+
+Here's an example of how you could use our customization prompt with a GenAI agent to generate the kanban board shown above:
+
+### Sample Prompt for GenAI
+
+```
+I need you to create a custom kanban board SVG using the template and guidelines provided in the prompt at /prompts/customize-kanban-board.md.
+
+Please create a software development workflow kanban board with the following specifications:
+
+**Column Configuration:**
+- Column 1: BACKLOG (Blue theme)
+- Column 2: IN PROGRESS (Orange theme)  
+- Column 3: REVIEW (Green theme)
+- Column 4: TESTING (Pink theme)
+- Column 5: DONE (Purple theme)
+
+**Task Cards to Include:**
+
+**BACKLOG Column (3 cards, sorted by priority):**
+1. User Authentication - High Priority - 5 days
+   Description: "Implement OAuth2 login with Google and GitHub"
+
+2. Database Schema - Medium Priority - 3 days
+   Description: "Design user profiles and project tables"
+
+3. UI Design - Low Priority - 2 days
+   Description: "Create wireframes and mockups"
+
+**IN PROGRESS Column (3 cards, sorted by priority):**
+1. API Endpoints - High Priority - 4 days
+   Description: "Create REST API for user management"
+
+2. Database Migration - High Priority - 2 days
+   Description: "Migrate existing data to new schema"
+
+3. Frontend Components - Medium Priority - 6 days
+   Description: "Build dashboard UI with React"
+
+**REVIEW Column (2 cards, sorted by priority):**
+1. Code Review - High Priority - 1 day
+   Description: "Review authentication middleware changes"
+
+2. Documentation - Low Priority - 2 days
+   Description: "Update API docs for new endpoints"
+
+**TESTING Column (2 cards, sorted by priority):**
+1. Unit Tests - High Priority - 3 days
+   Description: "Write tests for user service"
+
+2. Integration Tests - Medium Priority - 4 days
+   Description: "Test API endpoints with test data"
+
+**DONE Column (3 cards, sorted by priority):**
+1. Project Setup - High Priority - 2 days
+   Description: "Initialize project structure and config"
+
+2. Deployment Pipeline - High Priority - 3 days
+   Description: "CI/CD setup with GitHub Actions"
+
+3. Environment Setup - Medium Priority - 1 day
+   Description: "Configure dev, staging and production envs"
+
+**Requirements:**
+- Follow the exact layer structure specified in the prompt
+- Use Jira-style priority labels ("High Priority • X days")
+- Apply the correct color scheme for priority dots (Red/Orange/Grey)
+- Ensure all text fits within card boundaries
+- Sort cards by priority within each column (High → Medium → Low)
+- Use the post-it note format with proper drop shadows
+- Position priority/estimate information in bottom left corner
+
+Please generate the complete SVG code following all the technical specifications in the customization prompt.
+```
+
+### What This Prompt Achieves
+
+This example prompt demonstrates:
+
+1. **Clear reference** to our customization guide
+2. **Specific content requirements** for each column and card
+3. **Detailed formatting instructions** following our best practices
+4. **Technical specifications** for proper implementation
+5. **Quality requirements** for the final output
+
+### Expected Output
+
+The GenAI agent should generate:
+- **Complete SVG code** with proper layer structure
+- **All 13 task cards** distributed across 5 columns
+- **Correct priority sorting** within each column
+- **Professional formatting** with Jira-style labels
+- **Proper color coding** and visual hierarchy
+- **Responsive design** that scales appropriately
+
+This approach ensures consistent, high-quality results while leveraging the structured guidance we've developed.
+
+## Embedding in Documentation
+
+### Method 1: Direct SVG Import (Recommended)
+
+```jsx
+import MyKanbanBoard from '@site/static/img/my-kanban-board.svg';
+
+<div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+  <MyKanbanBoard style={{ width: '100%', height: 'auto' }} />
+</div>
+```
+
+### Method 2: Image Reference with Sizing
+
+```jsx
+<img 
+  src="/img/my-kanban-board.svg" 
+  alt="My Custom Kanban Board" 
+  style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
+/>
+```
+
+### Method 3: Inline SVG with Responsive Sizing
+
+For maximum control, you can embed the SVG code directly:
+
+```jsx
+<div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+  <svg 
+    width="100%" 
+    height="auto" 
+    viewBox="0 0 2781 1623"
+    style={{ maxWidth: '800px' }}
+  >
+    {/* Your customized kanban board SVG content */}
+  </svg>
+</div>
+```
+
+### Method 4: Fixed Dimensions (Alternative)
+
+If you prefer fixed dimensions:
+
+```jsx
+<MyKanbanBoard style={{ width: '800px', height: '460px' }} />
+```
+
+## Best Practices
+
+### Content Guidelines
+
+1. **Keep titles concise** (2-4 words, ~25 characters max)
+2. **Use single-line descriptions** (~45 characters max)
+3. **Provide realistic time estimates**
+4. **Use clear, actionable language**
+
+### Design Principles
+
+1. **Maintain consistency** in color schemes
+2. **Sort by priority** within each column
+3. **Ensure text fits** within card boundaries
+4. **Use appropriate granularity** for tasks
+
+### Technical Considerations
+
+1. **Follow layer structure** (backgrounds → headers → cards)
+2. **Use expanded filter regions** to prevent clipping
+3. **Verify text positioning** within card boundaries
+4. **Test rendering** in different contexts
+
+## Advanced Customization
+
+### Custom Color Schemes
+
+You can modify the color palette to match your brand:
+
+```xml
+<!-- Custom column backgrounds -->
+<rect y="118" width="536" height="1504" rx="6" fill="#YOUR_COLOR_1"/>
+<rect x="568" y="118" width="536" height="1504" rx="6" fill="#YOUR_COLOR_2"/>
+<!-- ... more columns -->
+```
+
+### Additional Columns
+
+To add more columns, adjust the positioning:
+
+```xml
+<!-- Column 6 (if needed) -->
+<rect x="2810" y="118" width="536" height="1504" rx="6" fill="#YOUR_COLOR_6"/>
+<rect x="2810" width="536" height="228" rx="6" fill="#YOUR_HEADER_COLOR_6"/>
+```
+
+### Custom Priority Levels
+
+You can extend the priority system:
+
+```xml
+<!-- Custom priority colors -->
+<circle cx="450" cy="340" r="8" fill="#YOUR_PRIORITY_COLOR"/>
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Cards not visible**: Check layer order and filter region
+2. **Text overflow**: Reduce text length or adjust positioning  
+3. **Color issues**: Verify hex color codes
+4. **Alignment problems**: Check coordinate positioning
+
+### Validation Checklist
+
+- [ ] All columns have at least one card
+- [ ] Cards are sorted by priority within each column
+- [ ] Text fits within card boundaries
+- [ ] Priority colors match the specified scheme
+- [ ] Layer structure is correct
+- [ ] Filter region covers entire SVG area
+
+## Conclusion
+
+Using structured prompts with SVG templates provides a powerful way to create professional kanban boards quickly and consistently. The combination of:
+
+- **Comprehensive guidance** through detailed prompts
+- **Technical specifications** for proper implementation
+- **Best practices** for content and design
+- **Troubleshooting support** for common issues
+
+Makes it easy to generate customized project management tools that integrate seamlessly into your documentation.
+
+## Next Steps
+
+1. **Try the prompt** with your own project data
+2. **Experiment with color schemes** to match your brand
+3. **Create multiple boards** for different project types
+4. **Share your customizations** with your team
+
+The template-based approach scales well and ensures consistency across all your project management documentation.
