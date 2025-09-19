@@ -1,1 +1,0 @@
-Readmes in the bytesofpurpose-blog/docs directory should focus on indexing / summarizing the content of the folder they are in and providing links to the subfolders / sub blog posts
