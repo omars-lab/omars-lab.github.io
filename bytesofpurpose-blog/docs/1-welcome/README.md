@@ -17,9 +17,9 @@ You'll find a comprehensive collection of documentation and blog posts that you 
 
 ### 📚 Documentation Sections
 - **[Techniques](/docs/techniques/mechanics)** - Technical implementation details and tools
-- **[Coding Challenges](/docs/interviewing/coding-challenges/coding-challenges)** - Algorithm problems and solutions
+- **[Coding Challenges](/docs/skills/solving-coding-challenges/coding-challenges)** - Algorithm problems and solutions
 - **[Development](/docs/developing/development)** - Setup guides and development workflows
-- **[Interviewing](/docs/interviewing/interviewing)** - Technical interview preparation
+- **[Interviewing](/docs/skills/interviewing)** - Technical interview preparation
 - **[Deep Dives](/docs/developing/research/research)** - In-depth technical explorations
 
 ### 📝 Blog Posts
