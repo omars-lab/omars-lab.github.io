@@ -1,0 +1,1 @@
+* https://www.jointaro.com/lesson/FPV1gp0rpXcTUZaIkHGF/efficiency-tips-for-engineers-from-an-ai-researcherstanford-phdex-meta-engineer/
