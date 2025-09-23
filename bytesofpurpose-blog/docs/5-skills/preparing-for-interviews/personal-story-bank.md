@@ -62,7 +62,6 @@ Each story follows the STAR method:
 **Example Question**: "Tell me about a time you worked backwards from a customer problem — how did you solve it?"
 
 
-
 <details>
 <summary>📖 Story: Amazon Agentic AI Customer Service Chatbot - Driver Feedback Automation (Click to expand)</summary>
 
@@ -99,6 +98,41 @@ Each story follows the STAR method:
   - Increased actionability of driver feedback requests by over 300%!
   - Successfully deployed the feature to production with measurable customer impact
   - Established a scalable framework for future AI-powered customer service automation
+
+</details>
+
+<details>
+<summary>📖 Story: Customer Search Journey Analysis and Mission Abandonment Strategy (Click to expand)</summary>
+
+- **Situation**: 
+  - Amazon's customer search experiences lacked proper measurement of customer mission success
+  - The team was measuring success at the search level rather than understanding customer mission abandonment
+  - There was no comprehensive strategy for measuring how experiments impacted customer mission completion
+  - The L8 director needed a clear understanding of customer success measurement at the mission level
+  - Over 150 historical experiments existed but lacked proper customer-centric evaluation metrics
+
+- **Task**: 
+  - I needed to analyze customer search journeys to understand mission abandonment patterns
+  - I had to define a strategy to properly measure Amazon customer mission abandonment
+  - I needed to present findings to the L8 director with clear recommendations
+  - I had to analyze over 150 historical experiments to evaluate proposed metrics
+  - I needed to propose a comprehensive measurement plan for customer mission success
+
+- **Action**: 
+  - I conducted deep dives into analyzing customer search journeys and abandonment patterns
+  - I analyzed over 150 historical experiments to evaluate the effectiveness of proposed metrics
+  - I developed a comprehensive understanding of customer mission vs. search-level success
+  - I created a detailed document outlining the importance of measuring customer success at the mission level
+  - I presented findings to the L8 director, facilitating key understanding of customer measurement strategy
+  - I proposed a comprehensive measurement plan that established foundational strategy for the team
+  - I outlined how the team should analyze the impact of their experiments on Amazon's customers
+
+- **Result**: 
+  - Successfully presented the L8 director with a document that facilitated key understanding
+  - Established the importance of measuring customer success at the mission level rather than search level
+  - Created a comprehensive measurement plan that became the foundational strategy for the team
+  - Enabled the team to properly analyze the impact of their experiments on Amazon's customers
+  - Transformed the team's approach from search-level to mission-level customer success measurement
 
 </details>
 
@@ -250,6 +284,42 @@ Each story follows the STAR method:
 </details>
 
 <details>
+<summary>📖 Story: Merchandised Collections Search Widget Experiment Analysis (Click to expand)</summary>
+
+- **Situation**: 
+  - We conducted our first experiment in merchandised collections to evaluate the effectiveness of our search widget
+  - The experiment was not a big financial success, but we needed to understand why
+  - The team needed to learn from the experiment's shortcomings to improve future iterations
+  - There was pressure to move on quickly, but I recognized the importance of thorough analysis
+  - We needed to identify specific issues that could be addressed in the next round of experimentation
+
+- **Task**: 
+  - I needed to analyze the experiment results despite the lack of financial success
+  - I had to propose through data what could have been going wrong with the search widget
+  - I needed to identify specific issues that could become cornerstones for future experimentation
+  - I had to own the outcome by providing actionable insights for improvement
+  - I needed to ensure the team learned from the experiment's shortcomings
+
+- **Action**: 
+  - I conducted thorough analysis of the merchandised collections search widget experiment data
+  - I identified and proposed over 4 specific issues that were impacting the widget's effectiveness
+  - I analyzed the occurrences of co-mingled widgets that could lead customers to believe the widget was an ad
+  - I identified the drop in ESCI (Enhanced Search and Catalog Intelligence) selection quality
+  - I analyzed the constraints enforced by Amazon's search infrastructure that were limiting effectiveness
+  - I presented data-driven insights to the team about what went wrong and why
+  - I proposed specific improvements that could be tested in the next round of experimentation
+
+- **Result**: 
+  - Successfully identified over 4 key issues that became cornerstones for the next round of experimentation
+  - Provided data-driven analysis of co-mingled widget occurrences and their impact on customer perception
+  - Identified ESCI selection quality issues and Amazon search infrastructure constraints
+  - Enabled the team to learn from the experiment's shortcomings rather than just moving on
+  - Established a foundation for improved experimentation strategy in future iterations
+  - Demonstrated ownership of outcomes by providing actionable insights for improvement
+
+</details>
+
+<details>
 <summary>📖 Story: Redshift Cluster Optimization - $2.5M Annual Savings (Click to expand)</summary>
 
 - **Situation**: 
@@ -340,7 +410,7 @@ Each story follows the STAR method:
   - Successfully delivered CFS in 3 phases, each completed within 3 weeks
   - No major defects reported by QA and received ORR bar raiser approval
   - CFS consistently handled 260 TPS for 30 minutes with 100% availability during gameday
-  - Successfully transferred ownership to Panini team without issues
+  - Successfully transferred ownership to our Madrid Team without issues
   - The service became a critical component enabling end-to-end Cicada checkout experience
 
 </details>
@@ -754,6 +824,22 @@ Each story follows the STAR method:
 # - Document rationale for story placement and prioritization decisions
 # - Remove any stories that are generic or lack specific technical/business context
 # - Never add fabricated stories - only use real, authentic experiences
+#
+# RECENT_ITERATIONS_AND_IMPROVEMENTS:
+# - Story Refinement: Moved Buy Button story from Customer Obsession to Insist on the Highest Standards
+# - Story Focus: Reframed Buy Button story to emphasize quality standards and pushing back against inadequate designs
+# - Name Anonymization: Replaced specific SDE names with "An SDE" for professional interview use
+# - Story Positioning: Moved Amazon AI Chatbot story to be the primary Customer Obsession example
+# - Story Organization: Reorganized stories to better align with leadership principle themes
+# - Content Enhancement: Added emphasis on refusing to compromise quality and establishing precedents
+# - Professional Standards: Ensured all stories are interview-ready with appropriate confidentiality
+#
+# ITERATION_PATTERNS:
+# - Story Movement: Stories can be moved between leadership principles based on primary focus
+# - Focus Refinement: Stories can be reframed to emphasize different aspects (customer vs. quality vs. delivery)
+# - Anonymization: Specific names should be replaced with generic roles for interview use
+# - Theme Alignment: Stories should clearly demonstrate the specific leadership principle they represent
+# - Quality Emphasis: Stories should emphasize high standards, pushback, and refusal to compromise
 #
 # UPDATE_FREQUENCY: As new experiences occur or when stories need refinement
 ```
