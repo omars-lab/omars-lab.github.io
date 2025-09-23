@@ -27,7 +27,7 @@ The goal is to transform personal experiences into compelling, structured storie
 
 ### Leadership Principle Stories
 1. [Customer Obsession](#1-customer-obsession)
-2. [Have Backbone; Disagree and Commit](#2-have-backbone-disagree-and-commit)
+2. [Bias for Action](#2-bias-for-action)
 3. [Invent and Simplify](#3-invent-and-simplify)
 4. [Deliver Results](#4-deliver-results)
 5. [Dive Deep](#5-dive-deep)
@@ -37,9 +37,9 @@ The goal is to transform personal experiences into compelling, structured storie
 9. [Hire and Develop the Best](#9-hire-and-develop-the-best)
 10. [Insist on the Highest Standards](#10-insist-on-the-highest-standards)
 11. [Think Big](#11-think-big)
-12. [Bias for Action](#12-bias-for-action)
-13. [Frugality](#13-frugality)
-14. [Earn Trust](#14-earn-trust)
+12. [Have Backbone; Disagree and Commit](#12-have-backbone-disagree-and-commit)
+13. [Earn Trust](#13-earn-trust)
+14. [Frugality](#14-frugality)
 
 ### Additional Resources
 - [Story Bank Usage Guidelines](#story-bank-usage-guidelines)
@@ -61,37 +61,49 @@ Each story follows the STAR method:
 
 **Example Question**: "Tell me about a time you worked backwards from a customer problem — how did you solve it?"
 
+
+
 <details>
-<summary>📖 Story: Buy Button Customer Experience Gap (Click to expand)</summary>
+<summary>📖 Story: Amazon Agentic AI Customer Service Chatbot - Driver Feedback Automation (Click to expand)</summary>
 
 - **Situation**: 
-  - I was implementing backend logic for buy button clicks on Cicada experiences (DP, SED, Gallery)
-  - Upon inspecting Figma designs, I noticed there were no experiences dedicated for buy button errors
-  - Customers would be redirected to generic "500"/ops page with no specialized feedback about what went wrong
-  - This created a frustrating experience when customers raced to purchase collections but inventory depleted
+  - Amazon's customer service was receiving over 1.3 million annual contacts related to driver feedback issues
+  - These inquiries created significant operational overhead and customer wait times
+  - Customer service associates were overwhelmed with predictable, repetitive driver-related concerns
+  - The existing chatbot couldn't understand driver-specific contexts or provide appropriate resolutions
+  - Customers were experiencing long wait times and inconsistent service quality for driver feedback issues
 
 - **Task**: 
-  - I needed to identify and address this customer experience gap before launch
-  - I had to work with Product and UX to surface appropriate error messages to customers
-  - I needed to ensure customers received clear feedback about purchase issues
+  - I needed to design and implement a new feature in Amazon's Agentic AI Customer Service Chatbot Stack
+  - I had to enable the chatbot to autonomously address driver feedback concerns without human escalation
+  - I needed to work backwards from customer experience mocks to design the holistic end-to-end experience
+  - I had to design proper experiments to measure customer adoption and impact
+  - I needed to lead the integration of ML capabilities with customer service workflows
 
 - **Action**: 
-  - I consulted both Product and UX regarding the need to surface additional buy button errors
-  - I mapped out 5 specific scenarios where surfacing errors in PSP would be problematic
-  - I pushed for addressing these issues prior to launch and worked with Sr. PM and UX engineer
-  - I led implementation of backend components while SDE I worked on frontend experience
-  - I ensured Buy button API redirects to pages associated with individual error scenarios
+  - I led the end-to-end design and implementation, working backwards from customer experience mocks
+  - I designed comprehensive experiments to measure customer adoption, satisfaction, and operational impact
+  - I extended the agentic stack's intent detection capabilities to recognize driver-related concerns
+  - I curated and validated ground truth datasets from thousands of historical customer interactions
+  - I enhanced the RAG (Retrieval-Augmented Generation) system to access driver-specific knowledge bases
+  - I modified response generation capabilities to provide contextually appropriate resolutions
+  - I implemented feedback loops to continuously improve response quality
+  - I worked with domain experts to validate response appropriateness across different customer segments
+  - I implemented rigorous A/B testing frameworks to measure impact and ensure quality
+  - I addressed bias in training data to ensure fair treatment across all customer segments
+  - I collaborated closely with ML engineers, product managers, and customer service teams
 
 - **Result**: 
-  - We successfully implemented dedicated error pages for 5 specific buy button error scenarios
-  - The collaborative effort to improve CX was appreciated by the Cicada UX team
-  - Customers now receive clear, actionable feedback instead of generic error pages
-  - This prevented customer frustration during high-demand collection drops
+  - Reduced customer service associate contacts by over 75% for driver-related concerns!
+  - Eliminated over 1 million annual contacts, significantly reducing operational overhead!
+  - Increased actionability of driver feedback requests by over 300%!
+  - Successfully deployed the feature to production with measurable customer impact
+  - Established a scalable framework for future AI-powered customer service automation
 
 </details>
 
 <details>
-<summary>📖 Story: Profile-of-One Cross-Team Alignment and Vision Creation (Click to expand)</summary>
+<summary>📖 Story: Profile-of-One Cross-Team Alignment and Customer-Driven Development (Click to expand)</summary>
 
 - **Situation**: 
   - At CognitiveScale, different teams had completely misaligned visions for core platform feature "Profile-of-One"
@@ -99,11 +111,13 @@ Each story follows the STAR method:
   - Engineering had no idea how to approach developing AI tooling
   - Sales was selling capabilities that didn't exist yet to customers
   - There was no unified product vision, and each team operated in isolation with conflicting priorities
+  - Meanwhile, a Fortune 500 ex-CEO customer was looking for technology to help them deeply understand their customers
 
 - **Task**: 
   - I needed to create a coherent technical vision that could bridge gaps between sales promises, product desires, and engineering capabilities
   - I had to align 10+ different teams: Executive, Sales, Marketing, Product, Design, Platform Engineering, AI/ML, QA, Technical Writing, Training, Support, and Delivery
   - I needed to manage customer expectations since features had already been sold but didn't exist
+  - As the inventor of Profile-of-One, I was responsible for listening closely to customer hardships and distilling functionality we could add to our platform
 
 - **Action**: 
   - I invented and defined the complete technical vision for Profile-of-One after weeks of analyzing customer needs and technical feasibility
@@ -112,6 +126,10 @@ Each story follows the STAR method:
   - I worked hand-in-hand with design team, providing direct feedback to ensure UX aligned with technical capabilities
   - I collaborated closely with engineering teams, mentoring them on AI/ML concepts and providing guidance on data modeling and algorithms
   - I worked extensively with solution engineering to create compelling proof-of-concepts for customers
+  - I led daily standups with the Fortune 500 customer to understand their evolving needs
+  - I conducted design thinking workshops with the customer to map their requirements
+  - I engaged them with multiple rounds of feedback and iteration, delivering new functionality on a weekly basis
+  - I conducted personalized training sessions showing them how to apply our technology to their specific problems
   - I balanced vision with realistic technical capabilities while keeping customer value at the center
 
 - **Result**: 
@@ -119,73 +137,47 @@ Each story follows the STAR method:
   - Successfully delivered and integrated the feature across multiple customer implementations
   - Created a shared vision that all teams could rally around, transforming chaos into coordinated effort
   - Prevented customer churn during development period by managing expectations effectively
+  - We closed multiple deals with the Fortune 500 customer, generating significant revenue
+  - We built a strong, symbiotic relationship that benefits both parties
   - Established Profile-of-One as a core differentiator that continues to attract prospect customers
 
 </details>
 
+### 2. Bias for Action
+
+**Example Question**: "Tell me about a time you had to make a quick decision with limited information."
+
 <details>
-<summary>📖 Story: Profile-of-One Technology Development (Click to expand)</summary>
+<summary>📖 Story: Log4j Security Vulnerability Response (Click to expand)</summary>
 
 - **Situation**: 
-  - Ex-CEO of a Fortune 500 company was looking for technology to help them deeply understand their customers
-  - They were interested in Profile-of-One technology I invented alongside our CTO and Principal ML Engineer
-  - The customer had specific challenges with customer segmentation and personalization
+  - CVE-2021-44228 (Log4j security vulnerability) was discovered during my oncall shift
+  - I received a Sev 2 to update every single MBarq version set utilizing impacted Log4j versions
+  - This was a time-sensitive security issue that needed immediate action for customer safety
+  - The vulnerability could potentially allow remote code execution
 
 - **Task**: 
-  - As the inventor of Profile-of-One, I was responsible for listening closely to customer hardships and distilling functionality we could add to our platform
-  - I needed to ensure the technology would solve their specific customer understanding challenges
+  - I needed to coordinate the work across the entire MBarq team immediately
+  - I had to ensure all impacted version sets were updated within hours, not days
+  - I needed to maintain system stability while applying critical security patches
 
 - **Action**: 
-  - I led daily standups with the customer to understand their evolving needs
-  - I conducted design thinking workshops with the customer to map their requirements
-  - I engaged them with multiple rounds of feedback and iteration
-  - I provided them with beta access to the latest features
-  - I delivered new functionality on a weekly basis based on their feedback
-  - I conducted personalized training sessions showing them how to apply our technology to their specific problems
+  - I immediately rallied the team together to address this critical security issue
+  - I created a Quip sheet to inventory all version sets across MBarq
+  - I identified which version sets were impacted by the CVE
+  - I delegated the updates of version sets across various MBarq subject matter experts
+  - I coordinated the effort to ensure all updates happened in parallel
+  - I maintained clear communication throughout the process
 
 - **Result**: 
-  - We were able to harden and battle-test our Profile-of-One technology
-  - The technology continues to distinguish our AI platform in the market and attract prospect customers
-  - We closed multiple deals with the customer, generating significant revenue
-  - We built a strong, symbiotic relationship that benefits both parties
+  - All MBarq version sets were updated with the latest Log4j version within 36 hours
+  - We successfully mitigated the security risk without any customer impact
+  - The rapid response demonstrated our team's ability to handle critical security incidents
+  - This incident improved our security response processes and team coordination
 
 </details>
-
-### 2. Have Backbone; Disagree and Commit
-
-**Example Question**: "Describe a time when you disagreed with your manager."
-
 
 ### 3. Invent and Simplify
-
-**Example Question**: "Give a specific example where you drove adoption for your vision and explain how you knew it had been adopted by others."
-
-<details>
-<summary>📖 Story: Profile-of-One Standardization (Click to expand)</summary>
-
-- **Situation**: 
-  - I had been working on many solutions across different projects
-  - I found a repeating theme of insights, feedback, and evolving profiles
-  - We kept solving the same problem in different ways across teams
-
-- **Task**: 
-  - I needed to take ownership of this problem and convince leadership to dedicate resources to tackle it systematically
-  - I had to demonstrate the value of standardizing our approach
-
-- **Action**: 
-  - I developed proof-of-concepts to show technology leaders where great reuse potential lay
-  - I showcased how much time and code could be saved if we standardized our approach to generating insights, feedback, and profiles
-  - I presented clear metrics on the duplication of effort across teams
-  - I created a unified framework that could be adopted by all teams
-
-- **Result**: 
-  - We developed components used by every team within the company
-  - We standardized the definition of "Insights" within the company, which was previously one of the most ambiguous terms
-  - The standardized approach reduced development time and improved consistency across products
-
-</details>
-
-### 4. Deliver Results
 
 **Example Question**: "Give me an example of a time when you were able to deliver an important project under a tight deadline."
 
@@ -220,6 +212,71 @@ Each story follows the STAR method:
 
 </details>
 
+
+### 4. Deliver Results
+
+**Example Question**: "Give me an example of a time when you were able to deliver an important project under a tight deadline."
+
+<details>
+<summary>📖 Story: CFS S-Team Goal Secret Project Delivery (Click to expand)</summary>
+
+- **Situation**: 
+  - I was responsible for delivering Cicada Fulfillment Service (CFS) as part of an S-Team Goal Secret project
+  - This was a central system that needed to integrate with multiple teams across Amazon
+  - We had aggressive timelines and complex technical requirements for a critical business initiative
+  - The system required extensive cross-team alignment and coordination
+
+- **Task**: 
+  - I needed to design, lead the development of, and drive alignment for this central CFS system
+  - I had to coordinate with 10+ teams across Amazon to ensure successful integration
+  - I needed to deliver the project on time while maintaining high quality standards
+  - I had to manage complex technical dependencies and cross-team coordination
+
+- **Action**: 
+  - I designed the overall architecture and technical approach for the CFS system
+  - I led the development effort across multiple phases, coordinating with 6 SDEs
+  - I drove alignment with numerous teams across Amazon to ensure successful integration
+  - I managed complex technical dependencies and cross-team coordination
+  - I implemented rigorous quality standards and testing processes
+  - I coordinated with multiple stakeholders to ensure project success
+
+- **Result**: 
+  - Successfully delivered CFS in 3 phases, each completed within 3 weeks
+  - No major defects were reported by QA, demonstrating high code quality
+  - Successfully integrated with multiple teams across Amazon
+  - Delivered the S-Team Goal Secret project on time and within scope
+  - Established CFS as a critical component of Amazon's fulfillment infrastructure
+
+</details>
+
+<details>
+<summary>📖 Story: Redshift Cluster Optimization - $2.5M Annual Savings (Click to expand)</summary>
+
+- **Situation**: 
+  - MBarq team's Redshift cluster was experiencing data freshness issues and high operational costs
+  - The cluster was oversized and inefficient, wasting resources on competing read/write operations
+  - We needed to solve the data freshness problem while reducing costs
+  - The cluster was consuming significant budget with poor performance
+
+- **Task**: 
+  - I needed to optimize the cluster architecture to reduce costs while improving performance
+  - I had to solve the data freshness issues without increasing operational expenses
+  - I needed to demonstrate that we could do more with less infrastructure
+
+- **Action**: 
+  - I root caused the issue and identified resource competition between writes and reads/vacuuming
+  - I proposed splitting the multi-purpose cluster into producer and consumer clusters
+  - I leveraged Redshift data sharing feature to keep clusters in sync efficiently
+  - I optimized the cluster size by separating write and read workloads
+  - I established monitoring to measure the cost and performance improvements
+
+- **Result**: 
+  - Reduced total Redshift cluster size by 36%, contributing to $2.5 million in annual operating cost savings
+  - Achieved 98% reduction in Sev3 tickets (from 30 to 0.5 tickets per month)
+  - Improved cluster freshness SLA from 90% to 99.77% compliance
+  - Demonstrated that better architecture leads to both cost savings and improved performance
+
+</details>
 
 ### 5. Dive Deep
 
@@ -366,7 +423,7 @@ Each story follows the STAR method:
 
 - **Situation**: 
   - I was leading the development of Cicada Fulfillment Service (CFS) with a team of 6 SDEs
-  - The team included 2 SDE I and 3 SDE II engineers who needed to ramp up on CFS
+  - The team included engineers who needed to ramp up on complex fulfillment domain knowledge
   - We had aggressive timelines and complex technical requirements
   - The team needed to understand fulfillment workflows, DiCE integrations, and distributed systems
 
@@ -374,6 +431,7 @@ Each story follows the STAR method:
   - I needed to mentor and ramp up the team on CFS while maintaining delivery timelines
   - I had to ensure everyone understood the complex fulfillment domain
   - I needed to provide guidance on best development practices and code quality
+  - I had to develop the team's technical skills and domain expertise
 
 - **Action**: 
   - I scheduled weekly meetings with engineers to sync on status, blockers, and best practices
@@ -382,13 +440,14 @@ Each story follows the STAR method:
   - I organized ad-hoc sync sessions to ramp up new team members on CFS
   - I shared learning resources and established clear development practices
   - I guided engineers through complex integration patterns and error handling scenarios
+  - I mentored team members on distributed systems architecture and fulfillment workflows
 
 - **Result**: 
-  - All engineers successfully onboarded to CFS and delivered on their commitments
-  - Jose (SDE II) was able to receive alignment with Panini team on Revoke workflow ownership
-  - The team delivered CFS in 3 phases, each completed within 3 weeks
-  - No major defects were reported by QA, demonstrating high code quality
-  - The team gained deep expertise in fulfillment systems and distributed architecture
+  - All engineers successfully onboarded to CFS and delivered on their commitments.
+  - Guided SDEs on the team in receiving alignment from our Madrid Team on workflow ownership and handoff.
+  - The team gained deep expertise in fulfillment systems and distributed architecture.
+  - Team members developed strong technical skills and domain knowledge
+  - Established a culture of knowledge sharing and continuous learning
 
 </details>
 
@@ -396,6 +455,39 @@ Each story follows the STAR method:
 ### 10. Insist on the Highest Standards
 
 **Example Question**: "Tell me about a time when you had to make a decision between standards and delivery."
+
+<details>
+<summary>📖 Story: Buy Button Quality Standards and Customer Experience (Click to expand)</summary>
+
+- **Situation**: 
+  - I was implementing backend logic for buy button clicks on Cicada experiences (DP, SED, Gallery)
+  - Upon inspecting Figma designs, I noticed there were no experiences dedicated for buy button errors
+  - The current design would redirect customers to generic "500"/ops pages with no specialized feedback
+  - This represented a significant quality gap that would create poor customer experiences during high-demand scenarios
+
+- **Task**: 
+  - I needed to insist on higher quality standards for customer experience before launch
+  - I had to push back against the current design approach that didn't meet quality expectations
+  - I needed to ensure we delivered a product that met the highest standards for customer experience
+  - I had to balance quality requirements with launch timeline pressures
+
+- **Action**: 
+  - I identified and documented 5 specific scenarios where the current error handling approach was inadequate
+  - I pushed back on the current design, insisting that generic error pages were not acceptable quality
+  - I consulted with Product and UX to advocate for higher standards in error handling
+  - I worked with Sr. PM and UX engineer to redesign the error experience to meet quality standards
+  - I led implementation of backend components while an SDE worked on frontend experience
+  - I ensured Buy button API redirects to pages associated with individual error scenarios
+  - I refused to compromise on quality, even when it meant additional development work
+
+- **Result**: 
+  - Successfully implemented dedicated error pages for 5 specific buy button error scenarios
+  - Raised the quality bar for customer experience standards across the team
+  - Customers now receive clear, actionable feedback instead of generic error pages
+  - Prevented customer frustration during high-demand collection drops
+  - Established a precedent for insisting on high quality standards before launch
+
+</details>
 
 
 ### 11. Think Big
@@ -410,21 +502,26 @@ Each story follows the STAR method:
   - Product wanted to "make it sexy" without technical vision, engineering didn't know how to build AI tooling
   - Sales was selling non-existent capabilities to customers, creating a chaotic situation
   - There was no unified product vision, and 10+ teams were operating in isolation with conflicting priorities
+  - Initially, others didn't see the full potential of the approach, and the concept was ahead of its time
 
 - **Task**: 
   - I needed to create a bold technical vision that could unite all stakeholders
   - I had to bridge the gap between sales promises, product desires, and engineering capabilities
   - I needed to transform a chaotic situation into a coordinated effort that delivered real business value
   - I had to manage customer expectations for features that had been sold but didn't exist
+  - I needed to communicate the vision clearly and build support despite initial skepticism
 
 - **Action**: 
   - I invented and defined the complete technical vision for Profile-of-One after weeks of analysis
   - I implemented a working proof-of-concept that demonstrated core AI personalization capabilities
+  - I created clear visualizations and examples of the technology's potential
   - I pitched the vision directly to CTO and Chief Science Officer, presenting technical approach and business impact
   - I worked across 10+ teams: Executive, Sales, Marketing, Product, Design, Engineering, AI/ML, QA, Technical Writing, Training, Support, and Delivery
   - I provided direct feedback to design team to ensure UX aligned with technical capabilities
   - I mentored engineering teams on AI/ML concepts and provided guidance on data modeling and algorithms
   - I created compelling proof-of-concepts for customers to prevent churn during development
+  - I presented the vision to different audiences with tailored messaging, connecting it to business outcomes and customer value
+  - I persisted in advocating for the vision despite initial skepticism
 
 - **Result**: 
   - Profile-of-One became the company's primary market differentiator, leading to significant increase in customer inquiries and adoption
@@ -432,6 +529,8 @@ Each story follows the STAR method:
   - Created a shared vision that all teams could rally around, transforming chaos into coordinated effort
   - Prevented customer churn by managing expectations effectively during development period
   - Established Profile-of-One as a core differentiator that continues to attract prospect customers
+  - The vision was eventually adopted and expanded across multiple teams
+  - It enabled new approaches to customer understanding and personalization
 
 </details>
 
@@ -467,102 +566,12 @@ Each story follows the STAR method:
 
 </details>
 
-<details>
-<summary>📖 Story: Profile-of-One Vision (Click to expand)</summary>
+### 12. Have Backbone; Disagree and Commit
 
-- **Situation**: 
-  - I had a vision for Profile-of-One technology that would revolutionize customer understanding
-  - Initially, others didn't see the full potential of the approach
-  - The concept was ahead of its time and required significant investment
-
-- **Task**: 
-  - I needed to communicate the vision clearly and build support
-  - I had to demonstrate how this would transform our approach to customer insights
-
-- **Action**: 
-  - I created clear visualizations and examples of the technology's potential
-  - I built prototypes to demonstrate the concept
-  - I presented the vision to different audiences with tailored messaging
-  - I connected the vision to business outcomes and customer value
-  - I persisted in advocating for the vision despite initial skepticism
-
-- **Result**: 
-  - The Profile-of-One technology became a core differentiator for the company
-  - It enabled new approaches to customer understanding and personalization
-  - The vision was eventually adopted and expanded across multiple teams
-
-</details>
-
-### 12. Bias for Action
-
-**Example Question**: "Tell me about a time you had to make a quick decision with limited information."
-
-<details>
-<summary>📖 Story: Log4j Security Vulnerability Response (Click to expand)</summary>
-
-- **Situation**: 
-  - CVE-2021-44228 (Log4j security vulnerability) was discovered during my oncall shift
-  - I received a Sev 2 to update every single MBarq version set utilizing impacted Log4j versions
-  - This was a time-sensitive security issue that needed immediate action for customer safety
-  - The vulnerability could potentially allow remote code execution
-
-- **Task**: 
-  - I needed to coordinate the work across the entire MBarq team immediately
-  - I had to ensure all impacted version sets were updated within hours, not days
-  - I needed to maintain system stability while applying critical security patches
-
-- **Action**: 
-  - I immediately rallied the team together to address this critical security issue
-  - I created a Quip sheet to inventory all version sets across MBarq
-  - I identified which version sets were impacted by the CVE
-  - I delegated the updates of version sets across various MBarq subject matter experts
-  - I coordinated the effort to ensure all updates happened in parallel
-  - I maintained clear communication throughout the process
-
-- **Result**: 
-  - All MBarq version sets were updated with the latest Log4j version within 36 hours
-  - We successfully mitigated the security risk without any customer impact
-  - The rapid response demonstrated our team's ability to handle critical security incidents
-  - This incident improved our security response processes and team coordination
-
-</details>
+**Example Question**: "Describe a time when you disagreed with your manager."
 
 
-### 13. Frugality
-
-**Example Question**: "Tell me about a time you accomplished more with less."
-
-<details>
-<summary>📖 Story: Redshift Cluster Cost Optimization - $2.5M Annual Savings (Click to expand)</summary>
-
-- **Situation**: 
-  - MBarq team's Redshift cluster was experiencing data freshness issues and high operational costs
-  - The cluster was oversized and inefficient, wasting resources on competing read/write operations
-  - We needed to solve the data freshness problem while reducing costs
-  - The cluster was consuming significant budget with poor performance
-
-- **Task**: 
-  - I needed to optimize the cluster architecture to reduce costs while improving performance
-  - I had to solve the data freshness issues without increasing operational expenses
-  - I needed to demonstrate that we could do more with less infrastructure
-
-- **Action**: 
-  - I root caused the issue and identified resource competition between writes and reads/vacuuming
-  - I proposed splitting the multi-purpose cluster into producer and consumer clusters
-  - I leveraged Redshift data sharing feature to keep clusters in sync efficiently
-  - I optimized the cluster size by separating write and read workloads
-  - I established monitoring to measure the cost and performance improvements
-
-- **Result**: 
-  - Reduced total Redshift cluster size by 36%, contributing to $2.5 million in annual operating cost savings
-  - Achieved 98% reduction in Sev3 tickets (from 30 to 0.5 tickets per month)
-  - Improved cluster freshness SLA from 90% to 99.77% compliance
-  - Demonstrated that better architecture leads to both cost savings and improved performance
-
-</details>
-
-
-### 14. Earn Trust
+### 13. Earn Trust
 
 **Example Question**: "Tell me about a time that you were delivered poor feedback."
 
@@ -593,8 +602,40 @@ Each story follows the STAR method:
   - We successfully rebuilt trust with the Radian customer
   - The thoroughness of our methodology helped win back their confidence
   - We successfully processed the customer's backlog and opened doors to 4 additional opportunities
-  - The customer became a strong advocate for our services
-  - We established a long-term partnership based on trust and mutual respect
+
+</details>
+
+
+### 14. Frugality
+
+**Example Question**: "Tell me about a time you accomplished more with less."
+
+<details>
+<summary>📖 Story: Redshift Cluster Cost Optimization - $2.5M Annual Savings (Click to expand)</summary>
+
+- **Situation**: 
+  - MBarq team's Redshift cluster was experiencing data freshness issues and high operational costs
+  - The cluster was oversized and inefficient, wasting resources on competing read/write operations
+  - We needed to solve the data freshness problem while reducing costs
+  - The cluster was consuming significant budget with poor performance
+
+- **Task**: 
+  - I needed to optimize the cluster architecture to reduce costs while improving performance
+  - I had to solve the data freshness issues without increasing operational expenses
+  - I needed to demonstrate that we could do more with less infrastructure
+
+- **Action**: 
+  - I root caused the issue and identified resource competition between writes and reads/vacuuming
+  - I proposed splitting the multi-purpose cluster into producer and consumer clusters
+  - I leveraged Redshift data sharing feature to keep clusters in sync efficiently
+  - I optimized the cluster size by separating write and read workloads
+  - I established monitoring to measure the cost and performance improvements
+
+- **Result**: 
+  - Reduced total Redshift cluster size by 36%, contributing to $2.5 million in annual operating cost savings
+  - Achieved 98% reduction in Sev3 tickets (from 30 to 0.5 tickets per month)
+  - Improved cluster freshness SLA from 90% to 99.77% compliance
+  - Demonstrated that better architecture leads to both cost savings and improved performance
 
 </details>
 
