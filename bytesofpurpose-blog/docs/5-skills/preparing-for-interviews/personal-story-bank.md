@@ -1,10 +1,11 @@
 ---
 slug: 'personal-story-bank'
-title: 'Personal Story Bank for Leadership Interviews'
+title: 'Personal Story Bank'
 description: 'A comprehensive collection of personal experiences structured using the STAR method to demonstrate leadership principles in interviews'
 authors: [oeid]
 tags: [interviewing, leadership, stories, star-method, preparation, behavioral-questions]
 date: '2025-01-31T10:00'
+sidebar_position: 7
 draft: false
 ---
 

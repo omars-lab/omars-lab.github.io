@@ -1,12 +1,34 @@
 ---
 slug: 'leadership-principles-companies-look-for'
-title: 'Understanding Leadership Principles'
+title: 'Leadership Principles'
 description: 'A comprehensive guide to the leadership principles companies actually evaluate, why they matter, and how to demonstrate them in interviews'
 authors: [oeid]
 tags: [leadership, interviewing, career, management, principles]
 date: '2025-01-31T10:00'
+sidebar_position: 4
 draft: false
 ---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<style>{`
+  .tabs-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    border: 1px solid #e9ecef;
+  }
+  
+  .tabs-container .tabs {
+    background-color: transparent;
+  }
+  
+  .tabs-container .tabItem {
+    background-color: transparent;
+  }
+`}</style>
 
 # Understanding Leadership Principles: Beyond the Job Description
 
@@ -38,10 +60,12 @@ Leadership principles aren't just nice-to-have qualities—they're directly tied
 
 ## Core Leadership Principles Companies Evaluate
 
-### 1. Ownership
+<div className="tabs-container">
+<Tabs>
+<TabItem value="think-like-owner" label="Think Like an Owner" default>
 
 **What Companies Look For:**
-Leaders who take responsibility for outcomes, think long-term, and act in the company's best interest beyond their immediate scope.
+Leaders who act like owners of the business, taking full responsibility for outcomes and thinking beyond their immediate role to drive company success.
 
 **Why It Matters:**
 - **Business Impact**: Owners drive results without constant oversight, reducing management overhead
@@ -70,10 +94,12 @@ Leaders who take responsibility for outcomes, think long-term, and act in the co
 - "Give me an example of when you went above and beyond your role to achieve a better outcome"
 - "Tell me about a time you took responsibility for a failure and what you learned from it"
 
-### 2. Customer Obsession
+</TabItem>
+
+<TabItem value="obsess-customers" label="Obsess Over Customers">
 
 **What Companies Look For:**
-Leaders who start with customer needs and work backwards, prioritizing customer trust and satisfaction over internal convenience.
+Leaders who are genuinely obsessed with understanding and serving customers, making decisions that prioritize customer value over internal convenience.
 
 **Why It Matters:**
 - **Revenue Growth**: Customer-obsessed leaders drive repeat business and referrals
@@ -102,10 +128,12 @@ Leaders who start with customer needs and work backwards, prioritizing customer 
 - "Give me an example of how you've used customer data to make a business decision"
 - "Tell me about a time you had to advocate for a customer need that wasn't popular internally"
 
-### 3. Invent and Simplify
+</TabItem>
+
+<TabItem value="invent-simplify" label="Invent Relentlessly, Simplify Everything">
 
 **What Companies Look For:**
-Leaders who drive innovation, seek new ideas from everywhere, and find ways to simplify complex problems.
+Leaders who are relentless innovators, constantly seeking better ways to solve problems and making the complex simple for everyone.
 
 **Why It Matters:**
 - **Competitive Advantage**: Innovation creates differentiation and market leadership
@@ -134,10 +162,12 @@ Leaders who drive innovation, seek new ideas from everywhere, and find ways to s
 - "Give me an example of when you brought an idea from outside your industry"
 - "Tell me about a time you had to convince others to try a new approach"
 
-### 4. Learn and Be Curious
+</TabItem>
+
+<TabItem value="stay-curious" label="Stay Insatiably Curious">
 
 **What Companies Look For:**
-Leaders who continuously seek to improve themselves, explore new possibilities, and adapt to changing circumstances.
+Leaders who are insatiably curious, always learning and growing, and who create environments where others can do the same.
 
 **Why It Matters:**
 - **Adaptability**: Curious leaders can navigate change and uncertainty
@@ -166,10 +196,12 @@ Leaders who continuously seek to improve themselves, explore new possibilities, 
 - "Give me an example of how you've helped others learn and grow"
 - "Tell me about a time you failed and what you learned from it"
 
-### 5. Deliver Results
+</TabItem>
+
+<TabItem value="obsess-results" label="Obsess Over Results">
 
 **What Companies Look For:**
-Leaders who focus on key business inputs, deliver quality outcomes on time, and overcome obstacles to achieve goals.
+Leaders who are obsessed with outcomes, relentlessly focused on delivering high-quality results that drive business success.
 
 **Why It Matters:**
 - **Business Performance**: Results-driven leaders directly impact company metrics
@@ -198,10 +230,12 @@ Leaders who focus on key business inputs, deliver quality outcomes on time, and 
 - "Give me an example of how you've improved a key business metric"
 - "Tell me about a time you had to make trade-offs between speed and quality"
 
-### 6. Are Right, A Lot
+</TabItem>
+
+<TabItem value="make-right-calls" label="Make the Right Calls">
 
 **What Companies Look For:**
-Leaders with strong judgment, good instincts, and the ability to make good decisions with incomplete information.
+Leaders with exceptional judgment who consistently make the right calls, even when information is incomplete or circumstances are uncertain.
 
 **Why It Matters:**
 - **Decision Quality**: Good judgment leads to better business outcomes
@@ -230,10 +264,12 @@ Leaders with strong judgment, good instincts, and the ability to make good decis
 - "Give me an example of when you had to trust your instincts over the data"
 - "Tell me about a time you had to make a quick decision that had significant consequences"
 
-### 7. Earn Trust
+</TabItem>
+
+<TabItem value="build-trust" label="Build Deep Trust">
 
 **What Companies Look For:**
-Leaders who listen attentively, speak candidly, treat others respectfully, and are self-critical when appropriate.
+Leaders who build deep trust through authentic communication, genuine respect for others, and unwavering integrity in all interactions.
 
 **Why It Matters:**
 - **Team Performance**: Trust enables better collaboration and communication
@@ -262,10 +298,12 @@ Leaders who listen attentively, speak candidly, treat others respectfully, and a
 - "Give me an example of when you had to have a difficult conversation with a colleague"
 - "Tell me about a time you had to rebuild trust after a mistake"
 
-### 8. Dive Deep
+</TabItem>
+
+<TabItem value="operate-every-level" label="Operate at Every Level">
 
 **What Companies Look For:**
-Leaders who operate at all levels, stay connected to details, and are skeptical when metrics and anecdotes differ.
+Leaders who are comfortable operating at every level, maintaining deep understanding of details while seeing the bigger picture.
 
 **Why It Matters:**
 - **Quality Control**: Deep understanding prevents problems from being overlooked
@@ -294,10 +332,12 @@ Leaders who operate at all levels, stay connected to details, and are skeptical 
 - "Give me an example of when you had to get involved in work you normally delegate"
 - "Tell me about a time you found an important insight by asking detailed questions"
 
-### 9. Have Backbone; Disagree and Commit
+</TabItem>
+
+<TabItem value="challenge-commit" label="Challenge Respectfully, Commit Fully">
 
 **What Companies Look For:**
-Leaders who respectfully challenge decisions when they disagree, have conviction, and commit fully once decisions are made.
+Leaders with the courage to challenge decisions when they disagree, but the discipline to commit fully once a decision is made.
 
 **Why It Matters:**
 - **Decision Quality**: Constructive disagreement leads to better decisions
@@ -326,10 +366,12 @@ Leaders who respectfully challenge decisions when they disagree, have conviction
 - "Give me an example of when you had to stand up for what you believed was right"
 - "Tell me about a time you had to have a difficult conversation about a decision"
 
-### 10. Bias for Action
+</TabItem>
+
+<TabItem value="prefer-action" label="Prefer Action Over Analysis">
 
 **What Companies Look For:**
-Leaders who value speed in business, make decisions quickly when appropriate, and take calculated risks.
+Leaders who prefer action over analysis, making decisions quickly and taking calculated risks to drive progress and learning.
 
 **Why It Matters:**
 - **Competitive Advantage**: Speed often beats perfection in fast-moving markets
@@ -357,6 +399,132 @@ Leaders who value speed in business, make decisions quickly when appropriate, an
 - "Describe a situation where you took a calculated risk"
 - "Give me an example of when you had to choose between speed and perfection"
 - "Tell me about a time you had to act before you had all the information you wanted"
+
+</TabItem>
+</Tabs>
+</div>
+
+## The Natural Friction Between Leadership Principles
+
+One of the most sophisticated aspects of leadership evaluation is understanding how these principles create natural tensions. Companies don't want leaders who blindly follow one principle at the expense of others—they want leaders who can navigate these tensions intelligently.
+
+### Key Friction Points
+
+<div className="tabs-container">
+<Tabs>
+<TabItem value="standards-vs-results" label="High Standards vs. Obsess Over Results" default>
+**The Tension:** Maintaining high quality standards while meeting aggressive deadlines and business objectives.
+
+**Healthy Balance:**
+- Sets clear quality thresholds that align with business needs
+- Makes informed trade-offs between perfection and progress
+- Communicates quality expectations transparently to stakeholders
+- Delivers results that meet both quality and timeline requirements
+
+**Unhealthy Extremes:**
+- **Perfectionism Paralysis:** Never ships because nothing is "good enough"
+- **Quality Compromise:** Sacrifices quality to hit arbitrary deadlines
+- **Silent Suffering:** Doesn't communicate trade-offs, leading to misaligned expectations
+
+**Interview Example:** "Tell me about a time you had to balance quality with speed. How did you decide what was acceptable?"
+
+</TabItem>
+
+<TabItem value="customers-vs-business" label="Obsess Over Customers vs. Business Viability">
+**The Tension:** Prioritizing customer needs while ensuring business sustainability and profitability.
+
+**Healthy Balance:**
+- Understands customer value in business context
+- Makes decisions that serve customers while maintaining business health
+- Communicates business constraints to customers transparently
+- Finds creative solutions that satisfy both customer and business needs
+
+**Unhealthy Extremes:**
+- **Customer Servitude:** Agrees to everything customers want regardless of business impact
+- **Business Tunnel Vision:** Ignores customer needs in favor of internal metrics
+- **Hidden Agendas:** Doesn't communicate business realities to customers
+
+**Interview Example:** "Describe a time when customer demands conflicted with business constraints. How did you handle it?"
+
+</TabItem>
+
+<TabItem value="action-vs-judgment" label="Prefer Action Over Analysis vs. Make the Right Calls">
+**The Tension:** Moving quickly while ensuring decisions are sound and well-reasoned.
+
+**Healthy Balance:**
+- Gathers enough information to make informed decisions quickly
+- Uses experience and intuition to accelerate decision-making
+- Takes calculated risks with clear reasoning
+- Learns from action and adjusts course as needed
+
+**Unhealthy Extremes:**
+- **Analysis Paralysis:** Over-analyzes every decision, missing opportunities
+- **Reckless Action:** Makes decisions without sufficient consideration
+- **Inflexible Execution:** Doesn't adjust course when new information emerges
+
+**Interview Example:** "Tell me about a time you had to make a quick decision with limited information. How did you ensure it was the right call?"
+
+</TabItem>
+
+<TabItem value="challenge-vs-trust" label="Challenge Respectfully, Commit Fully vs. Build Deep Trust">
+**The Tension:** Challenging decisions and standing up for beliefs while maintaining relationships and trust.
+
+**Healthy Balance:**
+- Challenges decisions respectfully with data and reasoning
+- Separates disagreement from personal attacks
+- Commits fully to decisions once made, even if initially disagreed
+- Builds trust through consistent behavior and clear communication
+
+**Unhealthy Extremes:**
+- **Destructive Disagreement:** Challenges everything aggressively, damaging relationships
+- **Silent Compliance:** Never challenges decisions to avoid conflict
+- **Inconsistent Commitment:** Doesn't fully support decisions they disagreed with
+
+**Interview Example:** "Describe a time you had to disagree with a decision while maintaining a good relationship with the decision-maker."
+
+</TabItem>
+
+<TabItem value="operate-vs-action" label="Operate at Every Level vs. Prefer Action Over Analysis">
+**The Tension:** Understanding details thoroughly while maintaining momentum and speed.
+
+**Healthy Balance:**
+- Dives deep on critical details that impact outcomes
+- Delegates appropriately while staying connected to key information
+- Balances thoroughness with speed based on context and risk
+- Uses deep understanding to make faster, better decisions
+
+**Unhealthy Extremes:**
+- **Micromanagement:** Gets lost in details, slowing down the entire team
+- **Surface-Level Leadership:** Stays too high-level, missing critical information
+- **Inconsistent Depth:** Dives deep randomly without clear criteria
+
+**Interview Example:** "Tell me about a time you had to balance getting into details with keeping things moving quickly."
+
+</TabItem>
+</Tabs>
+</div>
+
+### How Companies Evaluate Friction Navigation
+
+Companies look for evidence that candidates can:
+
+1. **Recognize Tensions:** Understand when principles conflict
+2. **Make Informed Trade-offs:** Explain reasoning behind difficult decisions
+3. **Communicate Clearly:** Help others understand the balance being struck
+4. **Learn and Adapt:** Adjust approach based on outcomes and feedback
+5. **Maintain Relationships:** Navigate tensions without damaging trust
+
+### Preparing for Friction Questions
+
+When preparing your stories, consider:
+
+- **Multiple Stakeholders:** How did you balance different needs and perspectives?
+- **Time Pressure:** How did you make quality decisions under constraints?
+- **Resource Limitations:** How did you achieve results with limited resources?
+- **Conflicting Priorities:** How did you prioritize when everything seemed important?
+- **Uncertainty:** How did you act decisively when information was incomplete?
+
+----- 
 
 ## Preparing Your Leadership Stories
 
@@ -387,6 +555,8 @@ Companies often ask follow-up questions to dig deeper:
 - "How did others react to your approach?"
 - "What was the long-term impact?"
 
+----- 
+
 ## Red Flags That Signal Weak Leadership
 
 Be aware of these patterns that companies watch for:
@@ -397,6 +567,8 @@ Be aware of these patterns that companies watch for:
 - **People-pleasing**: Making decisions based on popularity rather than what's right
 - **Micromanagement**: Inability to delegate or trust others
 - **Inconsistency**: Saying one thing but doing another
+
+----- 
 
 ## Conclusion
 

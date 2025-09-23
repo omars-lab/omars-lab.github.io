@@ -1,6 +1,6 @@
 ---
 slug: 'pre-meditating-responses-for-leadership-questions'
-title: 'Pre-Meditating Leadership Interview Responses'
+title: 'Leadership Interview Prep'
 description: 'A strategic guide for preparing compelling answers to leadership questions using the STAR method and core leadership principles'
 authors: [oeid]
 tags: [interviewing, leadership, star-method, preparation, behavioral-questions]
