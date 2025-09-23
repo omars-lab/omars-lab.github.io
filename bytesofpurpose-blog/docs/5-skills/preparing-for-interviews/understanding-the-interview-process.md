@@ -1,10 +1,11 @@
 ---
 slug: 'understanding-the-interview-process'
-title: 'Understanding the Interview Process'
+title: 'Interview Process'
 description: 'A comprehensive guide to understanding how technical interviews are structured, what to expect, and how to navigate different interview phases effectively'
 authors: [oeid]
 tags: [interviewing, process, structure, preparation, navigation]
 date: '2025-01-31T10:00'
+sidebar_position: 2
 draft: false
 ---
 

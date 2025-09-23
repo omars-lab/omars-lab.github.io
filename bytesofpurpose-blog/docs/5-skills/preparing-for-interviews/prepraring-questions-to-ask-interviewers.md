@@ -5,6 +5,7 @@ description: 'A comprehensive guide to preparing strategic questions that help y
 authors: [oeid]
 tags: [interviewing, career, questions, evaluation, strategy]
 date: '2025-01-31T10:00'
+sidebar_position: 9
 draft: false
 ---
 

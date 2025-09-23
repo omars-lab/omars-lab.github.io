@@ -1,10 +1,11 @@
 ---
 slug: 'preparing-responses-for-tech-questions'
-title: 'Preparing Responses for Technical Questions'
+title: 'Technical Interview Prep'
 description: 'A strategic guide for preparing methodical answers to technical interview questions with systematic problem-solving approaches'
 authors: [oeid]
 tags: [interviewing, technical, coding, problem-solving, preparation, algorithms]
 date: '2025-01-31T10:00'
+sidebar_position: 10
 draft: false
 ---
 

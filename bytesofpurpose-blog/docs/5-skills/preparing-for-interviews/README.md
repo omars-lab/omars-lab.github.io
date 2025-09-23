@@ -5,6 +5,7 @@ description: 'A systematic approach to preparing for technical and behavioral in
 authors: [oeid]
 tags: [interviewing, preparation, leadership, technical, behavioral]
 date: '2025-09-22T10:00'
+sidebar_position: 1
 draft: false
 ---
 
@@ -37,18 +38,21 @@ Interview preparation is not just about memorizing answers—it's about developi
 Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
-- [ ] **Read [Understanding the Interview Process](understanding-the-interview-process.md)** - Learn the overall interview flow and what to expect
-- [ ] **Study [Understanding Desirable Leadership Skills](understanding-desireable-leadership-skills.md)** - Master the 14 Amazon Leadership Principles and what interviewers look for
-- [ ] **Review [Understanding Desirable Problem-Solving Skills](understanding-desireable-problem-solving-skills.md)** - Learn the technical evaluation criteria
+- [ ] **Read [Interview Process](understanding-the-interview-process.md)** - Learn the overall interview flow and what to expect
+- [ ] **Study [SDE Skill Differences](understanding-differences-in-skills.mdx)** - Understand the differences between SDE levels and expectations
+- [ ] **Review [Leadership Principles](understanding-desireable-leadership-skills.md)** - Master the 10 core leadership principles and what interviewers look for
+- [ ] **Study [Technical Skills Evaluation](understanding-desireable-tech-skills.md)** - Learn the technical evaluation criteria
+- [ ] **Review [Soft Skills Evaluation](understanding-desireable-soft-skills.md)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
 - [ ] **Build your [Personal Story Bank](personal-story-bank.md)** - Develop 2-3 STAR stories for each leadership principle
-- [ ] **Practice [Preparing Responses for Leadership Questions](preparing-responses-for-leadership-questions.md)** - Master the behavioral interview format
-- [ ] **Prepare [Questions to Ask Interviewers](prepraring-questions-to-ask-interviewers.md)** - Develop thoughtful questions that demonstrate your interest
+- [ ] **Practice [Leadership Interview Prep](preparing-responses-for-leadership-questions.md)** - Master the behavioral interview format
+- [ ] **Prepare [Interviewing the Interviewer](prepraring-questions-to-ask-interviewers.md)** - Develop thoughtful questions that demonstrate your interest
 
 ### Phase 3: Technical Preparation
-- [ ] **Master [Preparing Responses for Tech Questions](preparing-responses-for-tech-questions.md)** - Practice the 4-step problem-solving approach
-- [ ] **Study [System Design Expectations](understanding-expectations-for-system-design-questions.mdx)** - Learn how to approach architecture and design questions
+- [ ] **Master [Preparing for Coding Questions](preparing-for-coding-questions.mdx)** - Learn systematic approach to coding problems and algorithms
+- [ ] **Study [Technical Skills Evaluation](understanding-desireable-tech-skills.md)** - Understand what companies evaluate in technical interviews
+- [ ] **Study [Preparing for System Design Questions](preparing-for-system-design-questions.mdx)** - Learn how to approach architecture and design questions
 
 ### Phase 4: Practice and Refinement
 - [ ] **Practice telling your stories** - Time yourself to ensure 2-3 minute responses
@@ -57,20 +61,22 @@ Follow this systematic approach to maximize your interview success:
 
 ## Key Success Factors
 
-✅ **Start Early**: Begin preparation at least 2-3 weeks before interviews
-✅ **Practice Out Loud**: Verbal practice is essential for natural delivery
-✅ **Use Specific Examples**: Include metrics, outcomes, and quantifiable results
-✅ **Stay Authentic**: Use real experiences, don't fabricate details
-✅ **Prepare for Follow-ups**: Anticipate clarifying questions and deeper dives
+* ✅ **Start Early**: Begin preparation at least 2-3 weeks before interviews
+* ✅ **Practice Out Loud**: Verbal practice is essential for natural delivery
+* ✅ **Use Specific Examples**: Include metrics, outcomes, and quantifiable results
+* ✅ **Stay Authentic**: Use real experiences, don't fabricate details
+* ✅ **Prepare for Follow-ups**: Anticipate clarifying questions and deeper dives
 
 ## Quick Reference
 
 | Interview Type | Key Focus | Preparation Priority |
 |---|---|---|
 | **Behavioral** | Leadership principles, STAR stories | Personal Story Bank |
-| **Technical** | Problem-solving, coding skills | Tech Questions Guide |
-| **System Design** | Architecture, scalability | System Design Guide |
-| **Cultural Fit** | Values alignment, questions | Questions to Ask Guide |
+| **Coding** | Algorithms, data structures, problem-solving | Preparing for Coding Questions |
+| **Technical** | Problem-solving, coding skills | Technical Skills Evaluation |
+| **Soft Skills** | Stakeholder management, ambiguity, decision-making | Soft Skills Evaluation |
+| **System Design** | Architecture, scalability | Preparing for System Design Questions |
+| **Cultural Fit** | Values alignment, questions | Interviewing the Interviewer |
 
 <details>
 <summary>🤖 AI Metadata (Click to expand)</summary>
@@ -86,28 +92,53 @@ Follow this systematic approach to maximize your interview success:
 # 4. VERIFY_CHANGES: Ensure all referenced documents exist and links are accurate
 # 5. MAINTAIN_FORMAT: Preserve the blog post structure, checklist format, and table layout
 #
+# CURRENT_DIRECTORY_FILES:
+# Position 1: README.md (Complete Interview Preparation Guide) - Main guide and overview
+# Position 2: understanding-the-interview-process.md (Interview Process) - Foundation phase
+# Position 3: understanding-differences-in-skills.mdx (SDE Skill Differences) - Foundation phase
+# Position 4: understanding-desireable-leadership-skills.md (Leadership Principles) - Foundation phase
+# Position 5: understanding-desireable-problem-solving-skills.md (Technical Skills Evaluation) - Foundation phase
+# Position 6: understanding-desireable-soft-skills.md (Soft Skills Evaluation) - Foundation phase
+# Position 7: personal-story-bank.md (Personal Story Bank) - Story development phase
+# Position 8: preparing-responses-for-leadership-questions.md (Leadership Interview Prep) - Story development phase
+# Position 9: prepraring-questions-to-ask-interviewers.md (Interviewing the Interviewer) - Story development phase
+# Position 10: preparing-for-coding-questions.mdx (Preparing for Coding Questions) - Technical preparation phase
+# Position 11: preparing-responses-for-tech-questions.md (Technical Interview Prep) - Technical preparation phase
+# Position 12: preparing-for-system-design-questions.mdx (Preparing for System Design Questions) - Technical preparation phase
+#
+# CHRONOLOGICAL_ORDER_LOGIC:
+# Phase 1 (Foundation): Positions 2-6 - Understanding what interviewers expect
+# Phase 2 (Story Development): Positions 7-9 - Building and practicing responses
+# Phase 3 (Technical Preparation): Positions 10-12 - Mastering technical skills
+# Phase 4 (Practice): No specific documents - General practice and refinement
+#
 # CONTENT_PATTERNS:
 # - Phase-based preparation approach with clear progression
 # - Checkbox format for actionable preparation steps
 # - Quick reference table for different interview types
 # - Links to specific documents in the same folder
+# - Sidebar positions match chronological preparation order
 #
 # DATA_SOURCES:
 # - /docs/5-skills/preparing-for-interviews/ folder contents
 # - Individual document titles and purposes
 # - Interview preparation best practices and frameworks
+# - Sidebar position assignments for logical flow
 #
 # UPDATE_TRIGGERS:
 # - New documents added to the preparing-for-interviews folder
 # - Significant changes to existing preparation documents
 # - Updates to interview preparation methodologies or frameworks
 # - Changes to leadership principles or technical evaluation criteria
+# - Modifications to sidebar positions or document order
 #
 # FORMATTING_RULES:
 # - Maintain the 4-phase preparation structure
-# - Keep checklist items in logical order
+# - Keep checklist items in logical order matching sidebar positions
 # - Preserve the quick reference table format
 # - Use consistent markdown formatting for links and emphasis
+# - Update CURRENT_DIRECTORY_FILES when files are added/removed/reordered
+# - Maintain CHRONOLOGICAL_ORDER_LOGIC when updating positions
 #
 # EVALUATION_CRITERIA:
 # 1. COMPREHENSIVENESS: Does the guide cover all available preparation documents?
@@ -115,6 +146,7 @@ Follow this systematic approach to maximize your interview success:
 # 3. ACTIONABILITY: Are all checklist items specific and actionable?
 # 4. ACCURACY: Are all links and references current and accurate?
 # 5. USABILITY: Is the guide easy to follow and implement?
+# 6. POSITION_CONSISTENCY: Do sidebar positions match the preparation flow?
 #
 # CONTENT_FEEDBACK_LOOP:
 # - Evaluate guide completeness against available documents
@@ -122,8 +154,9 @@ Follow this systematic approach to maximize your interview success:
 # - Prioritize updates based on new content additions
 # - Ensure preparation sequence remains logical and effective
 # - Update evaluation criteria based on interview preparation best practices
+# - Verify sidebar positions align with chronological preparation order
 #
-# UPDATE_FREQUENCY: When new documents are added or existing documents are significantly modified
+# UPDATE_FREQUENCY: When new documents are added, existing documents are significantly modified, or sidebar positions change
 ```
 
 </details>
