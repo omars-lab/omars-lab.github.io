@@ -1,0 +1,170 @@
+---
+slug: card
+title: 'Card'
+description: 'Learn how to create beautiful, interactive cards in Docusaurus using custom React components and MDX integration.'
+authors: [oeid]
+tags: [docusaurus, react, cards, components, mdx, tutorial]
+date: 2025-01-15T10:00
+---
+
+https://docusaurus.community/knowledge/component-library/new/Card/
+
+  <Card shadow='tl'>
+    <CardHeader>
+      <h3>Lorem Ipsum</h3>
+    </CardHeader>
+    <CardBody>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.
+    </CardBody>
+    <CardFooter>
+      <button className='button button--secondary button--block'>See All</button>
+    </CardFooter>
+  </Card>
+
+----
+----
+----
+<Card>
+    <CardHeader style={{ backgroundColor: '#205d3b' , color:'black'}}>
+      <div className='avatar avatar--vertical'>
+        <img
+          className='avatar__photo avatar__photo--xl'
+          src='https://avatars.githubusercontent.com/u/97809069?v=4'
+        />
+        <div className='avatar__intro'>
+          <div className='avatar__name'>Docux (@Juniors017)</div>
+          <small className='avatar__subtitle'>
+            humble contributor on:
+            <a style={{ color:'white'}}  href='https://docusaurus.community/'>docusaurus.community</a>
+          </small>
+        </div>
+      </div>
+    </CardHeader>
+    <CardBody
+      style={{ backgroundColor: 'black' , color:'silver'}}
+      className='padding-vert--md'
+      textAlign='center'
+      transform='uppercase'
+    >
+      <h3>Docux Card component</h3>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.
+    </CardBody> 
+    <CardFooter style={{ backgroundColor: '#205d3b' , color:'black'}} className='text--center'> 
+      <div className='button-group button-group--block'>
+        <button className='button button--secondary'>Like</button>
+        <button className='button button--secondary'>Comment</button>
+        <button className='button button--secondary'>Share</button>
+      </div>
+    </CardFooter> 
+  </Card>
+----
+----
+----
+
+    <Card>
+    <CardHeader
+      className='padding-top--lg'
+      style={{ backgroundColor: 'rgb(33 126 209)' , color:'black'}}
+    >
+      <div className='avatar avatar--vertical'>
+        <img
+          className='avatar__photo avatar__photo--xl' 
+          src='https://avatars.githubusercontent.com/u/97809069?v=4'
+        />
+        <div className='avatar__intro'>
+          <div className='avatar__name'>Docux (@Juniors017)</div>
+          <small className='avatar__subtitle'>
+            humble contributor on:
+            <a style={{ color:'white'}} href='https://docusaurus.community/'>docusaurus.community</a>
+          </small>
+        </div>
+      </div>
+    </CardHeader>
+    <CardImage
+      style={{ backgroundColor: 'rgb(33 126 209)' , color:'black'}}
+      cardImageUrl='https://img.freepik.com/vecteurs-libre/dino-mignon-jouant-illustration-icone-vecteur-dessin-anime-planche-roulettes-concept-icone-sport-animal-isole_138676-7099.jpg?size=626&ext=jpg&ga=GA1.1.1416347011.1716591654&semt=sph'
+    />
+    <CardBody
+      style={{ backgroundColor: 'white' , color:'#8f600b'}}
+      className='padding-vert--md'
+      textAlign='center'
+      transform='uppercase'
+    >
+      <h3>Docux Card component</h3>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.
+    </CardBody>  
+    <CardFooter
+      style={{ backgroundColor: '#2887bf' , color:'black'}}
+      className='text--center'
+    >
+      <div className='button-group button-group--block'>
+        <button className='button button--secondary'>Like</button>
+        <button className='button button--secondary'>Comment</button>
+        <button className='button button--secondary'>Share</button>
+      </div>
+    </CardFooter> 
+  </Card>
+
+----
+----
+----
+    <Card>
+    <CardImage
+      cardImageUrl='https://img.freepik.com/vecteurs-libre/dino-triceratops-mignon-illustration-icone-vecteur-dessin-anime-camera-technologie-animale-isolee-plat_138676-6762.jpg?size=626&ext=jpg&ga=GA1.1.1416347011.1716591654&semt=sph'
+    />
+    <CardFooter style={{ backgroundColor: '#e37c77' , color:'black'}} className='text--center'> 
+      <div className='button-group button-group--block'>
+        <button className='button button--success'>Like</button>
+        <button className='button button--warning'>Comment</button>
+        <button className='button button--danger'>Share</button>
+      </div>
+    </CardFooter> 
+  </Card>
+
+----
+----
+----
+    <Card>
+    <CardImage
+      cardImageUrl='https://img.freepik.com/vecteurs-libre/dinosaure-mignon-qui-s-etend-icone-vecteur-dessin-anime-illustration-concept-icone-sport-animal-isole-plat_138676-9213.jpg?size=626&ext=jpg&ga=GA1.1.1416347011.1716591654&semt=sph'
+    />
+    <CardFooter style={{ backgroundColor: 'white' , color:'black'}} className='text--center'> 
+      <div className='avatar'>
+        <img
+          className='avatar__photo avatar__photo--xs' 
+          src='https://avatars.githubusercontent.com/u/97809069?v=4'
+        />
+        <div className='avatar__intro'>
+          <div className='avatar__name'>Docux humble contributor</div>
+        </div>
+      </div>
+    </CardFooter> 
+  </Card>
+
+----
+----
+----
+
+<Card shadow='tl'>
+    <CardBody
+      style={{ backgroundColor: 'white' , color:'black'}}
+      className='padding-vert--md' 
+      transform='uppercase'
+    >
+      The Infima CSS framework provides a set of utility class names that can be used to style cards in Docusaurus. This article will cover how to create a reusable card component for your Docusaurus site that can be customized with different colors and sizes.
+    </CardBody>
+    <CardFooter style={{ backgroundColor: 'red' , color:'black'}}> 
+      <div className='avatar padding-top--md'>
+        <img
+          className='avatar__photo'
+          src='https://avatars.githubusercontent.com/u/97809069?v=4'
+        />
+        <div className='avatar__intro'>
+          <div className='avatar__name'>Docux (@Juniors017)</div>
+            <small className='avatar__subtitle'>
+              humble contributor
+            </small>
+        </div>
+      </div>
+    </CardFooter> 
+  </Card>
