@@ -8,6 +8,10 @@ date: '2025-09-27T10:00'
 draft: false
 ---
 
+I wanted to document my problem solving approach; thus I made this post.
+
+<!-- truncate -->
+
 # My Approach to Problem-Solving
 
 This post outlines my systematic approach to tackling complex challenges, demonstrating how I navigate ambiguity, make thoughtful technical decisions, and create meaningful impact through collaborative problem-solving.
