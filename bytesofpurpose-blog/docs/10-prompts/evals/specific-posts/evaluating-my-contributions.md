@@ -66,7 +66,7 @@ draft: false
 
 ## Combined Process
 
-This rubric should be used in combination with the [general blog evaluation criteria](./general-blog-evaluation.md) to ensure both content quality and professional impact are properly assessed.
+This rubric should be used in combination with the [general blog evaluation criteria](../all-posts/general-blog-evaluation.md) to ensure both content quality and professional impact are properly assessed.
 
 ## Quality Threshold
 

@@ -8,6 +8,10 @@ date: '2025-09-25T22:51'
 draft: false
 ---
 
+I wanted to consolidate what it means for a tech company to establish "culture"; thus I made this post.
+
+<!-- truncate -->
+
 # Tech Company Culture: How Size Shapes Values
 
 Tech companies develop distinct cultural values based on their size, structure, and operational model. Understanding these differences is crucial for anyone working in tech, whether you're choosing where to work or building your own company culture.

@@ -7,14 +7,15 @@
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: rgb(37, 99, 235);
-  --ifm-color-primary-darker: rgb(30, 64, 175);
-  --ifm-color-primary-darkest: rgb(30, 64, 175);
-  --ifm-color-primary-light: rgb(59, 130, 246);
-  --ifm-color-primary-lighter: rgb(96, 165, 250);
-  --ifm-color-primary-lightest: rgb(147, 197, 253);
+  --ifm-color-primary-dark: #1554e0;
+  --ifm-color-primary-darker: #1350d4;
+  --ifm-color-primary-darkest: #1042ae;
+  --ifm-color-primary-light: #3e75ed;
+  --ifm-color-primary-lighter: #4a7eee;
+  --ifm-color-primary-lightest: #7098f2;
   --ifm-code-font-size: 95%;
 }
+
 
 .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.1);
@@ -53,4 +54,23 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 /* Right Bar */
 #__docusaurus > div.main-wrapper > div > div > div {
   --ifm-col-width: 22.5%;
+}
+
+@media screen and (max-width: 996px) {
+  /* In mobile view, reduce margin */
+  #__docusaurus > div.main-wrapper > div {
+    margin: 0% 1%;
+    --ifm-container-width: 99%;
+    --ifm-container-width-xl: 99%;
+  }
+
+  /** In mobile view, have content area take 100% width */
+  #__docusaurus > div.main-wrapper > div > div > main {
+    --ifm-col-width: 100%;
+  }
+
+  /** In mobile view, turn off the side bar */
+  #__docusaurus > div.main-wrapper > div > div > div {
+    display: none;
+  }
 }
