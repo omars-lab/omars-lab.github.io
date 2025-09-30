@@ -35,21 +35,22 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 
 /* Container */
 #__docusaurus > div.main-wrapper > div {
-  margin: 0 5%;
-  --ifm-container-width-xl: 90%;
+  margin: 0% 2.5%;
+  --ifm-container-width: 97.5%;
+  --ifm-container-width-xl: 97.5%;
 }
 
 /* Left Bar */
 #__docusaurus > div.main-wrapper > div > div > aside {
-  --ifm-col-width: 15%;
+  --ifm-col-width: 17.5%;
 }
 
 /* Content */
 #__docusaurus > div.main-wrapper > div > div > main {
-  --ifm-col-width: 70%;
+  --ifm-col-width: 60%;
 }
 
 /* Right Bar */
 #__docusaurus > div.main-wrapper > div > div > div {
-  --ifm-col-width: 15%;
+  --ifm-col-width: 22.5%;
 }
