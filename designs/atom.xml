@@ -9,16 +9,17 @@
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[GenAI Agent Design]]></title>
-        <id>https://blog.bytesofpurpose.com/designs/genai-agent-design</id>
-        <link href="https://blog.bytesofpurpose.com/designs/genai-agent-design"/>
+        <id>https://blog.bytesofpurpose.com/designs/design-genai-agent</id>
+        <link href="https://blog.bytesofpurpose.com/designs/design-genai-agent"/>
         <updated>2025-02-06T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Prioritization / Motivation]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="prioritization--motivation">Prioritization / Motivation<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#prioritization--motivation" class="hash-link" aria-label="Direct link to Prioritization / Motivation" title="Direct link to Prioritization / Motivation">​</a></h2>
+        <summary type="html"><![CDATA[I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.]]></summary>
+        <content type="html"><![CDATA[<p>I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="prioritization--motivation">Prioritization / Motivation<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#prioritization--motivation" class="hash-link" aria-label="Direct link to Prioritization / Motivation" title="Direct link to Prioritization / Motivation" translate="no">​</a></h2>
 <ul>
 <li>Most important thing is going to be genai in the future ..</li>
 <li>I want to build something mimmally myself ...</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="requirements">Requirements<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="requirements">Requirements<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" translate="no">​</a></h2>
 <ul>
 <li>As an engineer, I should demonstrate my ability to construct agentic applications with LLMs.</li>
 <li>As an engineer, I should demonstrate the ability to leverage vector dbs to power a RAG for an LLM.</li>
@@ -28,8 +29,8 @@
 <li>implement my own rag ...</li>
 <li>Design an LLM + RAG + Vector Db Applications</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="use-cases">Use Cases<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#use-cases" class="hash-link" aria-label="Direct link to Use Cases" title="Direct link to Use Cases">​</a></h2>
-<div class="tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Note Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Blog Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Team Doc Companion</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="use-cases">Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#use-cases" class="hash-link" aria-label="Direct link to Use Cases" title="Direct link to Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Note Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Blog Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Team Doc Companion</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li>GenAI as a personal note taking companion ...</li>
 <li>GenAI agent focused on organizing notes ...</li>
 <li>Suggests commands to clean up notes ...</li>
@@ -83,8 +84,8 @@
 </ul>
 </li>
 </ul></div></div></div>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="secondary-use-cases">Secondary Use Cases<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#secondary-use-cases" class="hash-link" aria-label="Direct link to Secondary Use Cases" title="Direct link to Secondary Use Cases">​</a></h2>
-<div class="tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Interview Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Financial Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Rap Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Teaching Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="secondary-use-cases">Secondary Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#secondary-use-cases" class="hash-link" aria-label="Direct link to Secondary Use Cases" title="Direct link to Secondary Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Interview Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Financial Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Rap Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Teaching Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li>Companion to help you prepare for an interview ... or hold one ...</li>
 <li>What interview questions should I ask people?</li>
 <li>What make you special, how are you different than your peers</li>
@@ -118,21 +119,21 @@
 </ul>
 </li>
 </ul></div></div></div>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="todos">Todos<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#todos" class="hash-link" aria-label="Direct link to Todos" title="Direct link to Todos">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="todos">Todos<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#todos" class="hash-link" aria-label="Direct link to Todos" title="Direct link to Todos" translate="no">​</a></h2>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Figure out proper use case for agent ...</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="high-level-design">High Level Design<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#high-level-design" class="hash-link" aria-label="Direct link to High Level Design" title="Direct link to High Level Design">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="high-level-design">High Level Design<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#high-level-design" class="hash-link" aria-label="Direct link to High Level Design" title="Direct link to High Level Design" translate="no">​</a></h2>
 <iframe style="border:1px solid rgba(0, 0, 0, 0.1)" width="800" height="450" src="https://embed.figma.com/board/MpeIiTZuJGpsBNHltua5xN/Tech-Designs?node-id=0-1&amp;embed-host=share"></iframe>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="components">Components<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#components" class="hash-link" aria-label="Direct link to Components" title="Direct link to Components">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="components">Components<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#components" class="hash-link" aria-label="Direct link to Components" title="Direct link to Components" translate="no">​</a></h2>
 <ul>
 <li>Is there a sample chat interface I can build / tinker with?</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="essence">Essence<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#essence" class="hash-link" aria-label="Direct link to Essence" title="Direct link to Essence">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="essence">Essence<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#essence" class="hash-link" aria-label="Direct link to Essence" title="Direct link to Essence" translate="no">​</a></h2>
 <ul>
 <li>...</li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="approach">Approach<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#approach" class="hash-link" aria-label="Direct link to Approach" title="Direct link to Approach">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="approach">Approach<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#approach" class="hash-link" aria-label="Direct link to Approach" title="Direct link to Approach" translate="no">​</a></h2>
 <ul>
 <li>iterative enhancements</li>
 <li>Can I run the genAI on my m1 Mac ....<!-- -->
@@ -152,8 +153,8 @@
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="resources">Resources<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#resources" class="hash-link" aria-label="Direct link to Resources" title="Direct link to Resources">​</a></h2>
-<div class="tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Vector DBs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">AWS Offerings</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Docker Compose</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="resources">Resources<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#resources" class="hash-link" aria-label="Direct link to Resources" title="Direct link to Resources" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Vector DBs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">AWS Offerings</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Docker Compose</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
 <li><a href="https://aws.amazon.com/opensearch-service/serverless-vector-engine/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/opensearch-service/serverless-vector-engine/</a></li>
 <li><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html</a></li>
@@ -169,7 +170,7 @@
 <li><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
 <li><a href="https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/</a></li>
 </ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">version: "3.8"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">services:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  qdrant:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    image: qdrant/qdrant:latest</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - "6333:6333"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  rag-app:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    build: .</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - "8000:8000"</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    depends_on:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - qdrant</span><br></span></code></pre></div></div></div></div></div>
-<div class="tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Amazon Q</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Running Locally</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">GenAI Agents</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAGs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Youtube Videos</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other GenAI Stuff</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Amazon Q</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Running Locally</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">GenAI Agents</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAGs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Youtube Videos</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other GenAI Stuff</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li><a href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html</a></li>
 <li><a href="https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/</a></li>
 </ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
@@ -216,31 +217,11 @@
 </li>
 </ul>
 <h1>Options</h1>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-databases">Vector Databases<a href="https://blog.bytesofpurpose.com/designs/genai-agent-design#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-databases">Vector Databases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases" translate="no">​</a></h2>
 <ul>
 <li>What are various vector database offerings?</li>
 </ul>
 <p><a href="https://opensearch.org/platform/search/vector-database.html" target="_blank" rel="noopener noreferrer">https://opensearch.org/platform/search/vector-database.html</a>
 <a href="https://opensearch.org/docs/latest/search-plugins/vector-search/" target="_blank" rel="noopener noreferrer">https://opensearch.org/docs/latest/search-plugins/vector-search/</a></p>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Blog Design]]></title>
-        <id>https://blog.bytesofpurpose.com/designs/blog-design</id>
-        <link href="https://blog.bytesofpurpose.com/designs/blog-design"/>
-        <updated>2025-01-01T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[https://github.com/omars-lab/omars-lab.github.io]]></summary>
-        <content type="html"><![CDATA[<p><a href="https://github.com/omars-lab/omars-lab.github.io" target="_blank" rel="noopener noreferrer">https://github.com/omars-lab/omars-lab.github.io</a></p>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Framework]]></title>
-        <id>https://blog.bytesofpurpose.com/designs/framework</id>
-        <link href="https://blog.bytesofpurpose.com/designs/framework"/>
-        <updated>2016-04-29T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Is my new content doc worthy, blog post worthy, or neither?]]></summary>
-        <content type="html"><![CDATA[<p>An example of all the blogging tools I can currently use in each of the blog posts:</p>]]></content>
-        <author>
-            <name>Omar Eid</name>
-            <uri>https://github.com/omars-lab</uri>
-        </author>
     </entry>
 </feed>

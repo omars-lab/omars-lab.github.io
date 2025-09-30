@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[8947],{56600:e=>{e.exports=JSON.parse('{"authors":[{"name":"Omar Eid","title":"Senior Software Engineer & Entrepreneur","url":"https://github.com/omars-lab","imageURL":"https://github.com/omars-lab.png","key":"oeid","page":null,"count":6}]}')}}]);

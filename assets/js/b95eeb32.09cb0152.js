@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[160],{56577:e=>{e.exports=JSON.parse('{"title":"Posts (Newest\ud83d\udd1d)","items":[{"title":"GenAI Agent Design","permalink":"/designs/design-genai-agent","unlisted":false,"date":"2025-02-06T00:00:00.000Z"}]}')}}]);

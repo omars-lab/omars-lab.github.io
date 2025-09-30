@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-designs" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.1">
+<title data-rh="true">GenAI Agent Design | Bytes of Purpose</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" name="twitter:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" property="og:url" content="https://blog.bytesofpurpose.com/designs/design-genai-agent"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="twitter:site" content="@rythome"><meta data-rh="true" name="twitter:creator" content="@rythome"><meta data-rh="true" property="og:site_name" content="Bytes of Purpose"><meta data-rh="true" property="og:locale" content="en_US"><meta data-rh="true" property="og:title" content="GenAI Agent Design | Bytes of Purpose"><meta data-rh="true" name="description" content="I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post."><meta data-rh="true" property="og:description" content="I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post."><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2025-02-06T00:00:00.000Z"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://blog.bytesofpurpose.com/designs/design-genai-agent"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/designs/design-genai-agent" hreflang="en"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/designs/design-genai-agent" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://blog.bytesofpurpose.com/designs/design-genai-agent","mainEntityOfPage":"https://blog.bytesofpurpose.com/designs/design-genai-agent","url":"https://blog.bytesofpurpose.com/designs/design-genai-agent","headline":"GenAI Agent Design","name":"GenAI Agent Design","description":"I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.","datePublished":"2025-02-06T00:00:00.000Z","author":[],"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://blog.bytesofpurpose.com/designs","name":"Blog"}}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Bytes of Purpose Atom Feed">
+
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79YSEH7T7X"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-79YSEH7T7X",{})</script>
+
+
+
+<link rel="alternate" type="application/rss+xml" href="/designs/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.610cf375.css">
+<script src="/assets/js/runtime~main.10c80032.js" defer="defer"></script>
+<script src="/assets/js/main.6b4206ee.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><link rel="preload" as="image" href="/img/logo_dark.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo_dark.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">BytesOfPurpose</b></a><a class="navbar__item navbar__link" href="/docs/welcome/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Posts</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/designs">Designs</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item"><a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></div><b class="navbar__title text--truncate">Buy Me a Coffee?</b></a></div><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class="row"><aside class="col col--3"><nav class="sidebar_re4s thin-scrollbar" aria-label="Blog recent posts navigation"><div class="sidebarItemTitle_pO2u margin-bottom--md">Posts (Newest🔝)</div><div role="group"><h3 class="yearGroupHeading_rMGB">2025</h3><ul class="sidebarItemList_Yudw clean-list"><li class="sidebarItem__DBe"><a aria-current="page" class="sidebarItemLink_mo7H sidebarItemLinkActive_I1ZP" href="/designs/design-genai-agent">GenAI Agent Design</a></li></ul></div></nav></aside><main class="col col--7"><article class=""><header><h1 class="title_f1Hy">GenAI Agent Design</h1><div class="container_mt6G margin-vert--md"><time datetime="2025-02-06T00:00:00.000Z">February 6, 2025</time> · <!-- -->7 min read</div></header><div id="__blog-post-container" class="markdown"><p>I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="prioritization--motivation">Prioritization / Motivation<a href="#prioritization--motivation" class="hash-link" aria-label="Direct link to Prioritization / Motivation" title="Direct link to Prioritization / Motivation" translate="no">​</a></h2>
+<ul>
+<li>Most important thing is going to be genai in the future ..</li>
+<li>I want to build something mimmally myself ...</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="requirements">Requirements<a href="#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" translate="no">​</a></h2>
+<ul>
+<li>As an engineer, I should demonstrate my ability to construct agentic applications with LLMs.</li>
+<li>As an engineer, I should demonstrate the ability to leverage vector dbs to power a RAG for an LLM.</li>
+<li>Non functionals - this should serve as a sample design ...</li>
+<li>Non functionals - I should use this as an opportunity to ramp up on vector dbs ...</li>
+<li>I want my personal-gen-ai-agents to be examples for eventually joining or starting my own gen ai startup</li>
+<li>implement my own rag ...</li>
+<li>Design an LLM + RAG + Vector Db Applications</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="use-cases">Use Cases<a href="#use-cases" class="hash-link" aria-label="Direct link to Use Cases" title="Direct link to Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Note Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Blog Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Team Doc Companion</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<li>GenAI as a personal note taking companion ...</li>
+<li>GenAI agent focused on organizing notes ...</li>
+<li>Suggests commands to clean up notes ...</li>
+<li>Suggests moving ideas ...</li>
+<li>Discovers static ideas ...</li>
+<li>Groups hyperlinks ...</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>Use Case: Blog Author<!-- -->
+<ul>
+<li>I should give chatgpt instructions to ignore slugs, etc</li>
+</ul>
+</li>
+<li>Can I have it review blog posts / core essence and write the post on my behlaf?</li>
+<li>Append a section at the end of every post to help the LLM generate content?</li>
+<li>Docusaurus llm plugin?</li>
+<li>I should make agentic setup to help me weite blog posts ...</li>
+<li>Use genai to write blog posts ...</li>
+<li>Similar to blogs, I should add a prompts blog with all my genai prompts + scripts to call chatgpt api<!-- -->
+<ul>
+<li>I should make a welcome-to-prompts</li>
+</ul>
+</li>
+<li>Auto create blog posts form essence<!-- -->
+<ul>
+<li>I should have an offline script call and convert ... outside the blog directory structure for api key security</li>
+</ul>
+</li>
+<li>I shouldn&#x27;t need to move my notes around and organize them ... GenAI should be able to do it for me ... or at least tag a note ...</li>
+<li>If it mis-tags it ... I should be able to explain why it tagged it wrong ...</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>GenAI as a dev documentation companion ...</li>
+<li>&quot;Having a note taker on the team&quot;</li>
+<li>Team can collaboratively curate notes ... campanion organizes them, cleans them up, etc ...</li>
+<li>Goes from notes / words to a puml diagram ...</li>
+<li>Collaborative Note Taking ...<!-- -->
+<ul>
+<li>There is a whole genAI use case on changing how people take notes ...<!-- -->
+<ul>
+<li>5 people talked about the same meeting in different ways ...</li>
+<li>Can we find contradictions</li>
+<li>Can we find important things that everyone covered</li>
+<li>Things only 1 person covered ...</li>
+</ul>
+</li>
+<li>People might be afraid to use to not make them look stupid ...</li>
+<li>Impact<!-- -->
+<ul>
+<li>Helps cut through the ambiguity ...</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="secondary-use-cases">Secondary Use Cases<a href="#secondary-use-cases" class="hash-link" aria-label="Direct link to Secondary Use Cases" title="Direct link to Secondary Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Interview Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Financial Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Rap Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Teaching Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<li>Companion to help you prepare for an interview ... or hold one ...</li>
+<li>What interview questions should I ask people?</li>
+<li>What make you special, how are you different than your peers</li>
+<li>Are you self aware</li>
+<li>What tech questions should I ask?</li>
+<li>How would you solve it</li>
+<li>How would you write an X document ...</li>
+<li>What examples would you include in it?</li>
+<li>What points would you make in it?</li>
+<li>Whats its outline?</li>
+<li>What questions would it answer?</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>Another agent - analyze financial data / see how much I am spending in different categories ... for different occasions ... etc ...</li>
+<li>Use the LLM to help build an LLM based app ...</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Genai music use voice of football players + deep introspective questions - as a song ....<!-- -->
+<ul>
+<li>Use voice of soccer players</li>
+<li>What were you doing when you were 16 ... <a href="https://www.instagram.com/reel/DFVb_9aNW29/?igsh=MW1maXM5NHlha2V6NA==" target="_blank" rel="noopener noreferrer">Link</a></li>
+</ul>
+</li>
+<li><a href="https://www.vocalize.fm/signin" target="_blank" rel="noopener noreferrer">https://www.vocalize.fm/signin</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p>Gen AI to educate ... what are your gaps ... what content should you see ... what concepts must you learn</p><ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->What is your strategy of distributing info?</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Instead of finding info ... how does info find you ...</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>Are there any agentic use cases that come to mind?<!-- -->
+<ul>
+<li>Vetting a business?</li>
+<li>Interview preparer?</li>
+</ul>
+</li>
+</ul></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="todos">Todos<a href="#todos" class="hash-link" aria-label="Direct link to Todos" title="Direct link to Todos" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Figure out proper use case for agent ...</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="high-level-design">High Level Design<a href="#high-level-design" class="hash-link" aria-label="Direct link to High Level Design" title="Direct link to High Level Design" translate="no">​</a></h2>
+<iframe style="border:1px solid rgba(0, 0, 0, 0.1)" width="800" height="450" src="https://embed.figma.com/board/MpeIiTZuJGpsBNHltua5xN/Tech-Designs?node-id=0-1&amp;embed-host=share"></iframe>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="components">Components<a href="#components" class="hash-link" aria-label="Direct link to Components" title="Direct link to Components" translate="no">​</a></h2>
+<ul>
+<li>Is there a sample chat interface I can build / tinker with?</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="essence">Essence<a href="#essence" class="hash-link" aria-label="Direct link to Essence" title="Direct link to Essence" translate="no">​</a></h2>
+<ul>
+<li>...</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="approach">Approach<a href="#approach" class="hash-link" aria-label="Direct link to Approach" title="Direct link to Approach" translate="no">​</a></h2>
+<ul>
+<li>iterative enhancements</li>
+<li>Can I run the genAI on my m1 Mac ....<!-- -->
+<ul>
+<li>Free in that case ...</li>
+</ul>
+</li>
+<li>I just need to get started in the GenAI space</li>
+<li>Use GenAI to develop a GenAI agent<!-- -->
+<ul>
+<li>Using q to craft docker compose files<!-- -->
+<ul>
+<li><a href="https://community.aws/tags/q-bits" target="_blank" rel="noopener noreferrer">https://community.aws/tags/q-bits</a></li>
+<li><a href="https://community.aws/content/2r4vEadauMFkO032h02mVeCfWS1/q-bits-streamlining-docker-compose-with-amazon-q-developer" target="_blank" rel="noopener noreferrer">https://community.aws/content/2r4vEadauMFkO032h02mVeCfWS1/q-bits-streamlining-docker-compose-with-amazon-q-developer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="resources">Resources<a href="#resources" class="hash-link" aria-label="Direct link to Resources" title="Direct link to Resources" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Vector DBs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">AWS Offerings</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Docker Compose</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
+<li><a href="https://aws.amazon.com/opensearch-service/serverless-vector-engine/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/opensearch-service/serverless-vector-engine/</a></li>
+<li><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html</a></li>
+<li><a href="https://opensearch.org/platform/search/vector-database.html" target="_blank" rel="noopener noreferrer">https://opensearch.org/platform/search/vector-database.html</a></li>
+<li><a href="https://opensearch.org/docs/latest/search-plugins/vector-search/" target="_blank" rel="noopener noreferrer">https://opensearch.org/docs/latest/search-plugins/vector-search/</a></li>
+<li><a href="https://opensearch.org/docs/latest/getting-started/quickstart/" target="_blank" rel="noopener noreferrer">https://opensearch.org/docs/latest/getting-started/quickstart/</a></li>
+<li><a href="https://playground.opensearch.org/app/home#/" target="_blank" rel="noopener noreferrer">https://playground.opensearch.org/app/home#/</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>What GenAI related services does AWS offer?</li>
+<li><a href="https://aws.amazon.com/blogs/database/the-role-of-vector-datastores-in-generative-ai-applications/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/database/the-role-of-vector-datastores-in-generative-ai-applications/</a></li>
+<li><a href="https://aws.amazon.com/opensearch-service/serverless-vector-engine/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/opensearch-service/serverless-vector-engine/</a></li>
+<li><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">version: &quot;3.8&quot;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">services:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  qdrant:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    image: qdrant/qdrant:latest</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - &quot;6333:6333&quot;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  rag-app:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    build: .</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - &quot;8000:8000&quot;</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    depends_on:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      - qdrant</span><br></span></code></pre></div></div></div></div></div>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Amazon Q</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Running Locally</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">GenAI Agents</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAGs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Youtube Videos</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other GenAI Stuff</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<li><a href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html</a></li>
+<li><a href="https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li><a href="https://www.youtube.com/watch?v=IcBnE6J2gpk" target="_blank" rel="noopener noreferrer">How to run LLM locally with ollama | Python example</a></li>
+<li><a href="https://semaphoreci.com/blog/local-llm" target="_blank" rel="noopener noreferrer">https://semaphoreci.com/blog/local-llm</a></li>
+<li><a href="https://www.amazon.science/blog/lightweight-llm-for-converting-text-to-structured-data" target="_blank" rel="noopener noreferrer">https://www.amazon.science/blog/lightweight-llm-for-converting-text-to-structured-data</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li><a href="https://huggingface.co/spaces" target="_blank" rel="noopener noreferrer">https://huggingface.co/spaces</a></li>
+<li><a href="https://huggingface.co/google-research-datasets" target="_blank" rel="noopener noreferrer">https://huggingface.co/google-research-datasets</a></li>
+<li><a href="https://huggingface.co/datasets/google-research-datasets/natural_questions/viewer/default/train?p=1" target="_blank" rel="noopener noreferrer">https://huggingface.co/datasets/google-research-datasets/natural_questions/viewer/default/train?p=1</a></li>
+<li><a href="https://huggingface.co/learn/agents-course/unit0/introduction" target="_blank" rel="noopener noreferrer">https://huggingface.co/learn/agents-course/unit0/introduction</a></li>
+<li><a href="https://huggingface.co/docs/transformers/en/agents" target="_blank" rel="noopener noreferrer">https://huggingface.co/docs/transformers/en/agents</a></li>
+<li><a href="https://huggingface.co/docs/transformers/en/llm_tutorial" target="_blank" rel="noopener noreferrer">https://huggingface.co/docs/transformers/en/llm_tutorial</a></li>
+<li><a href="https://www.aimon.ai/posts/deep-dive-into-agentic-llm-frameworks" target="_blank" rel="noopener noreferrer">https://www.aimon.ai/posts/deep-dive-into-agentic-llm-frameworks</a></li>
+<li><a href="https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-5-multi-agent-collaboration/" target="_blank" rel="noopener noreferrer">https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-5-multi-agent-collaboration/</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li><a href="https://www.google.com/search?q=course+build+rag+app+vector+db+docker-compose&amp;num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;sxsrf=AHTn8zphZFXvMrr3L9QmU3WwfWLSHHM9bw%3A1738897076103&amp;ei=tHalZ_OFBpO3wN4PlKCBoQE&amp;ved=0ahUKEwjzr5a0yLCLAxWTG9AFHRRQIBQQ4dUDCBI&amp;uact=5&amp;oq=course+build+rag+app+vector+db+docker-compose&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiLWNvdXJzZSBidWlsZCByYWcgYXBwIHZlY3RvciBkYiBkb2NrZXItY29tcG9zZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKABSJEPUPQBWLAOcAF4AZABAJgBzAGgAbwLqgEGMTMuMS4xuAEDyAEA-AEBmAIQoALgC8ICChAAGLADGNYEGEfCAgUQIRirApgDAIgGAZAGCJIHBjExLjQuMaAHtEA&amp;sclient=gws-wiz-serp" target="_blank" rel="noopener noreferrer">https://www.google.com/search?q=course+build+rag+app+vector+db+docker-compose&amp;num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;sxsrf=AHTn8zphZFXvMrr3L9QmU3WwfWLSHHM9bw%3A1738897076103&amp;ei=tHalZ_OFBpO3wN4PlKCBoQE&amp;ved=0ahUKEwjzr5a0yLCLAxWTG9AFHRRQIBQQ4dUDCBI&amp;uact=5&amp;oq=course+build+rag+app+vector+db+docker-compose&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiLWNvdXJzZSBidWlsZCByYWcgYXBwIHZlY3RvciBkYiBkb2NrZXItY29tcG9zZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKABSJEPUPQBWLAOcAF4AZABAJgBzAGgAbwLqgEGMTMuMS4xuAEDyAEA-AEBmAIQoALgC8ICChAAGLADGNYEGEfCAgUQIRirApgDAIgGAZAGCJIHBjExLjQuMaAHtEA&amp;sclient=gws-wiz-serp</a></li>
+<li><a href="https://www.google.com/search?num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;udm=7&amp;sxsrf=AHTn8zoSSP3fG8TYCVyu449HSsM51Ed54Q:1738897080539&amp;q=course+build+rag+app+vector+db+docker-compose&amp;sa=X&amp;ved=2ahUKEwjZjqW2yLCLAxWf8MkDHV1ZDZQQ8ccDegQIDxAH&amp;biw=1792&amp;bih=974&amp;dpr=2" target="_blank" rel="noopener noreferrer">https://www.google.com/search?num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;udm=7&amp;sxsrf=AHTn8zoSSP3fG8TYCVyu449HSsM51Ed54Q:1738897080539&amp;q=course+build+rag+app+vector+db+docker-compose&amp;sa=X&amp;ved=2ahUKEwjZjqW2yLCLAxWf8MkDHV1ZDZQQ8ccDegQIDxAH&amp;biw=1792&amp;bih=974&amp;dpr=2</a></li>
+<li><a href="https://community.openai.com/t/tutorial-a-step-by-step-guide-on-rag-using-surrealdb/701653" target="_blank" rel="noopener noreferrer">https://community.openai.com/t/tutorial-a-step-by-step-guide-on-rag-using-surrealdb/701653</a></li>
+<li><a href="https://forums.developer.nvidia.com/t/dli-course-building-rag-agents-for-llms-building-the-container-for-the-course-setup/306533" target="_blank" rel="noopener noreferrer">https://forums.developer.nvidia.com/t/dli-course-building-rag-agents-for-llms-building-the-container-for-the-course-setup/306533</a></li>
+<li><a href="https://qdrant.tech/documentation/quickstart/" target="_blank" rel="noopener noreferrer">https://qdrant.tech/documentation/quickstart/</a></li>
+<li><a href="https://python.langchain.com/docs/how_to/" target="_blank" rel="noopener noreferrer">https://python.langchain.com/docs/how_to/</a></li>
+<li><a href="https://arize.com/blog/understanding-agentic-rag/" target="_blank" rel="noopener noreferrer">https://arize.com/blog/understanding-agentic-rag/</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li><a href="https://www.youtube.com/watch?v=8vkHLnhIFGA" target="_blank" rel="noopener noreferrer">Build a Python Event-driven Serverless App with Amazon CodeWhisperer | Amazon Web Services</a></li>
+<li><a href="https://www.youtube.com/watch?v=_1HbJeoij6g" target="_blank" rel="noopener noreferrer">Amazon Q Developer - Your generative AI-powered assistant for work | Amazon Web Services</a></li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li>Can I make a simple Mac app ... with apple intelligence ?<!-- -->
+<ul>
+<li><a href="https://support.apple.com/guide/mac-help/use-chatgpt-with-apple-intelligence-mchlfc5cf131/15.0/mac/15.0" target="_blank" rel="noopener noreferrer">https://support.apple.com/guide/mac-help/use-chatgpt-with-apple-intelligence-mchlfc5cf131/15.0/mac/15.0</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/anthropics/anthropic-quickstarts/blob/main/computer-use-demo/README.md" target="_blank" rel="noopener noreferrer">https://github.com/anthropics/anthropic-quickstarts/blob/main/computer-use-demo/README.md</a></li>
+<li><a href="https://youtu.be/7xTGNNLPyMI?si=rH1Cm3OUCNOG9_Ft" target="_blank" rel="noopener noreferrer">Deep Dive into LLMs like ChatGPT</a></li>
+<li><a href="https://qdrant.tech/" target="_blank" rel="noopener noreferrer">https://qdrant.tech/</a></li>
+</ul></div></div></div>
+<h1>Patterns</h1>
+<ul>
+<li>What are the different components involved in an GenAI Based architecture ...<!-- -->
+<ul>
+<li><a href="https://martinfowler.com/articles/exploring-gen-ai.html" target="_blank" rel="noopener noreferrer">https://martinfowler.com/articles/exploring-gen-ai.html</a></li>
+<li><a href="https://martinfowler.com/articles/gen-ai-patterns/" target="_blank" rel="noopener noreferrer">https://martinfowler.com/articles/gen-ai-patterns/</a></li>
+</ul>
+</li>
+</ul>
+<h1>Options</h1>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="vector-databases">Vector Databases<a href="#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases" translate="no">​</a></h2>
+<ul>
+<li>What are various vector database offerings?</li>
+</ul>
+<p><a href="https://opensearch.org/platform/search/vector-database.html" target="_blank" rel="noopener noreferrer">https://opensearch.org/platform/search/vector-database.html</a>
+<a href="https://opensearch.org/docs/latest/search-plugins/vector-search/" target="_blank" rel="noopener noreferrer">https://opensearch.org/docs/latest/search-plugins/vector-search/</a></p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><a href="https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/designs/designs/2025-02-06-genai-agent-design.mdx" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#prioritization--motivation" class="table-of-contents__link toc-highlight">Prioritization / Motivation</a></li><li><a href="#requirements" class="table-of-contents__link toc-highlight">Requirements</a></li><li><a href="#use-cases" class="table-of-contents__link toc-highlight">Use Cases</a></li><li><a href="#secondary-use-cases" class="table-of-contents__link toc-highlight">Secondary Use Cases</a></li><li><a href="#todos" class="table-of-contents__link toc-highlight">Todos</a></li><li><a href="#high-level-design" class="table-of-contents__link toc-highlight">High Level Design</a></li><li><a href="#components" class="table-of-contents__link toc-highlight">Components</a></li><li><a href="#essence" class="table-of-contents__link toc-highlight">Essence</a></li><li><a href="#approach" class="table-of-contents__link toc-highlight">Approach</a></li><li><a href="#resources" class="table-of-contents__link toc-highlight">Resources</a></li><li><a href="#vector-databases" class="table-of-contents__link toc-highlight">Vector Databases</a></li></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contact</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/omars-lab/omars-lab.github.io" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.linkedin.com/in/oeid/" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:contact@rythome.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Email<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amp;amount=1&amp;no_recurring=0&amp;item_name=Support+a+Developer&amp;currency_code=USD" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Other Works</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.bytesofpurpose.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Portfolio<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.bytesofpurpose.com/resume.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Resume<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 BytesOfPurpose, Inc. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
