@@ -11,6 +11,70 @@ draft: false
 
 # Docs vs Blog Posts: When to Choose Each Format
 
+---
+
+<details>
+<summary>🤖 AI Metadata (Click to expand)</summary>
+
+```yaml
+# AI METADATA - DO NOT REMOVE OR MODIFY
+# AI_UPDATE_INSTRUCTIONS:
+# This blog post has a corresponding evaluation rubric that should be referenced for enhancement suggestions.
+# When editing this post, AI should read the rubric and provide specific improvement suggestions.
+#
+# 1. SCAN_SOURCES: Read the evaluation rubric at /docs/10-prompts/evals/specific-posts/evaluating-docs-vs-blogs.md
+# 2. EVALUATE_CONTENT: Check current blog post content against rubric criteria
+# 3. IDENTIFY_GAPS: Find areas where criteria are not met or could be improved
+# 4. SUGGEST_ENHANCEMENTS: Provide specific suggestions for improvement based on rubric criteria
+# 5. MAINTAIN_FOCUS: Keep suggestions focused on content strategy and format selection
+# 6. PRESERVE_STRUCTURE: Maintain blog post structure while suggesting improvements
+#
+# EVALUATION_RUBRIC:
+# - File: /docs/10-prompts/evals/specific-posts/evaluating-docs-vs-blogs.md
+# - Focus: Content strategy and format selection
+# - Criteria: Specific evaluation points for content strategy demonstration
+# - Quality Threshold: Varies by rubric (typically 80%+ criteria met)
+#
+# RUBRIC_READING_INSTRUCTIONS:
+# 1. Read the evaluation rubric completely
+# 2. Understand the specific criteria for this blog post
+# 3. Check each criterion against current content
+# 4. Identify which criteria are met and which need improvement
+# 5. Provide specific suggestions for meeting unmet criteria
+#
+# ENHANCEMENT_SUGGESTIONS:
+# - Content Strategy: Clear format selection criteria, decision framework, use cases
+# - Format Comparison: Detailed differences, advantages, disadvantages, examples
+# - Decision Framework: Systematic approach, criteria, decision points, guidelines
+# - Practical Examples: Real scenarios, format selection, rationale, outcomes
+# - Audience Consideration: Target audience, content goals, format alignment
+#
+# SUGGESTION_FORMAT:
+# - Be specific about what content to add or improve
+# - Reference the exact rubric criteria being addressed
+# - Provide concrete examples of how to meet the criteria
+# - Suggest specific sections or areas to enhance
+# - Maintain the blog post's informative and practical voice
+#
+# UPDATE_TRIGGERS:
+# - Blog post content changes
+# - New content added to the blog post
+# - Existing content modified or removed
+# - Blog post structure changes
+# - Focus on content strategy and format selection
+#
+# FORMATTING_RULES:
+# - Maintain consistent blog post structure
+# - Keep informative and practical tone
+# - Focus on actionable content strategy guidance
+# - Include specific examples and decision frameworks
+# - Demonstrate clear format selection criteria
+#
+# UPDATE_FREQUENCY: Every time the blog post is modified or this metadata is accessed
+```
+
+</details>
+
 As a developer creating content, one of the most important decisions you'll make is whether your new content should be a blog post or documentation. Understanding the differences between these formats will help you create more effective content and better serve your audience.
 
 ## The Core Difference

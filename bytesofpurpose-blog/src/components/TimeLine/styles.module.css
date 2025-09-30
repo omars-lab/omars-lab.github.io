@@ -2,95 +2,93 @@
 .timeline {
     position: relative;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 auto 60px auto;
   }
   
 .timeline::after {
   content: '';
   position: absolute;
-  width: 6px;
-  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  width: 4px;
+  background: var(--ifm-color-primary);
   top: 0;
   bottom: 0;
   left: 50%;
-  margin-left: -3px;
-  border-radius: 3px;
+  margin-left: -2px;
+  border-radius: 2px;
 }
   
   /* item around content */
   .timeline__item {
-    padding: 10px 40px;
+    padding: 10px 20px;
     position: relative;
     background-color: inherit;
-    width: 50%;
+    width: 45%;
+    margin-bottom: -20px;
   }
   
 /* The circles on the timeline */
 .timeline__item::after {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  right: -13px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 4px solid #ffffff;
+  width: 16px;
+  height: 16px;
+  right: -10px;
+  background: var(--ifm-color-primary);
+  border: 3px solid var(--ifm-background-color);
   top: 15px;
   border-radius: 50%;
   z-index: 1;
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
   
   /* Place the item to the left */
   .timeline__item--left {
-    left: 0;
+    left: 5%;
+    text-align: right;
+    margin-top: 10px;
   }
   
   /* Place the item to the right */
   .timeline__item--right {
     left: 50%;
+    text-align: left;
+    margin-top: 0px;
   }
   
-/* Add arrows to the left item (pointing right) */
-.timeline__item--left::before {
-  content: "";
-  height: 0;
-  position: absolute;
-  top: 22px;
-  width: 0;
-  z-index: 1;
-  right: 30px;
-  border: medium solid #667eea;
-  border-width: 10px 0 10px 10px;
-  border-color: transparent transparent transparent #667eea;
-}
-
-/* Add arrows to the right item (pointing left) */
-.timeline__item--right::before {
-  content: "";
-  height: 0;
-  position: absolute;
-  top: 22px;
-  width: 0;
-  z-index: 1;
-  left: 30px;
-  border: medium solid #667eea;
-  border-width: 10px 10px 10px 0;
-  border-color: transparent #667eea transparent transparent;
-}
+/* Arrows removed */
   
   /* Fix the circle for items on the right side */
   .timeline__item--right::after {
-    left: -13px;
+    left: -10px;
   }
   
 /* The actual content */
 .timeline__content {
-  padding: 24px 32px;
-  background: #ffffff;
+  padding: 12px 20px;
+  background: var(--ifm-background-color);
   position: relative;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  width: 100%;
+  max-width: none;
+  min-height: auto;
+  margin-top: 16px;
+  font-size: 0.9em;
+  line-height: 1.4;
+  z-index: 2;
+}
+
+/* Links within timeline content */
+.timeline__content a {
+  color: var(--ifm-color-primary);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.timeline__content a:hover {
+  color: var(--ifm-color-primary-dark);
+  text-decoration: underline;
 }
   
   

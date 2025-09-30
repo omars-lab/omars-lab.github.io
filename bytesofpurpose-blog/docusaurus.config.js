@@ -216,6 +216,13 @@ const darkTheme = themes.dracula;
           {property: 'og:site_name', content: 'Bytes of Purpose'},
           {property: 'og:locale', content: 'en_US'},
         ],
+        mermaid: {
+          options: {
+            theme: 'forest',
+            fontFamily: "Trebuchet MS, Verdana, Arial, Sans-Serif",
+            htmlLabels: true,
+          },
+        },
         image: 'img/logo.svg',
       }),
   }
