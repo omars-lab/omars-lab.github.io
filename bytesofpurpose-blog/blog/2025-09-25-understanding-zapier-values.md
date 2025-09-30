@@ -1,6 +1,6 @@
 ---
 slug: understanding-zapier-values
-title: "Understanding Zapier's Culture"
+title: "⚡ Zapier's Values"
 description: "An analysis of Zapier's five core values and what they teach us about building effective remote-first teams and customer-focused organizations."
 authors: [oeid]
 tags: [company-culture, remote-work, values, leadership, team-building]

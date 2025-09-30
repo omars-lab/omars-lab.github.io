@@ -1,6 +1,6 @@
 ---
 slug: my-approach
-title: "My Approach to Problem-Solving"
+title: "🧠 My Approach"
 description: "A comprehensive overview of my systematic approach to navigating ambiguity, making technical decisions, and creating meaningful impact through collaborative problem-solving."
 authors: [oeid]
 tags: [problem-solving, methodology, ambiguity, decision-making, impact, collaboration]
