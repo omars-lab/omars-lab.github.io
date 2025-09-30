@@ -41,7 +41,7 @@ const darkTheme = themes.dracula;
                 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
             },
             blog: {
-              blogSidebarTitle: 'Posts (Newest🔝)',
+              blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
 	            // remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
@@ -101,7 +101,7 @@ const darkTheme = themes.dracula;
            * Path to data on filesystem relative to site dir.
            */
           path: './designs',
-          blogSidebarTitle: 'Posts (Newest🔝)',
+          blogSidebarTitle: 'Posts',
           blogSidebarCount: 'ALL',
           // remarkPlugins: [require('mdx-mermaid')],
           showReadingTime: true,
