@@ -1,5 +1,10 @@
 oeid:
   name: Omar Eid
-  title: Senior Software Engineer & Entrepreneur
+  title: Software Engineer
   url: https://github.com/omars-lab
   image_url: https://github.com/omars-lab.png
+cursor:
+  name: Cursor
+  title: GenAI Agent
+  url: https://github.com/cursor
+  image_url: https://github.com/cursor.png

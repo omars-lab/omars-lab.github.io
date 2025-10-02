@@ -2,7 +2,6 @@
 slug: docs-vs-blog-posts
 title: '📝 Docs vs Blogs'
 description: 'Learn the key differences between documentation and blog posts to make better content decisions for your developer blog.'
-authors: [oeid]
 tags: [content-strategy, blogging, documentation, writing]
 date: 2025-01-31T10:00
 image: /img/versus.jpg

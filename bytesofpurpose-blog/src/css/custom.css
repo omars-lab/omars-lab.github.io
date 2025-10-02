@@ -56,6 +56,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   --ifm-col-width: 22.5%;
 }
 
+/* Mobile view */
 @media screen and (max-width: 996px) {
   /* In mobile view, reduce margin */
   #__docusaurus > div.main-wrapper > div {
@@ -74,3 +75,6 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     display: none;
   }
 }
+
+
+
