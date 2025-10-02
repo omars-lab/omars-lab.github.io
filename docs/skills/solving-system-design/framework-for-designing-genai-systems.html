@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-skills/solving-system-design/designing-genai-systems" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.1">
+<title data-rh="true">Designing GenAI Systems: Complete Decision Framework | Bytes of Purpose</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" name="twitter:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" property="og:url" content="https://blog.bytesofpurpose.com/docs/skills/solving-system-design/framework-for-designing-genai-systems"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="twitter:site" content="@rythome"><meta data-rh="true" name="twitter:creator" content="@rythome"><meta data-rh="true" property="og:type" content="website"><meta data-rh="true" property="og:site_name" content="Bytes of Purpose"><meta data-rh="true" property="og:locale" content="en_US"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Designing GenAI Systems: Complete Decision Framework | Bytes of Purpose"><meta data-rh="true" name="description" content="A comprehensive guide to making all the key design decisions for GenAI systems, from simple to complex, organized by importance and difficulty"><meta data-rh="true" property="og:description" content="A comprehensive guide to making all the key design decisions for GenAI systems, from simple to complex, organized by importance and difficulty"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://blog.bytesofpurpose.com/docs/skills/solving-system-design/framework-for-designing-genai-systems"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/docs/skills/solving-system-design/framework-for-designing-genai-systems" hreflang="en"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/docs/skills/solving-system-design/framework-for-designing-genai-systems" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"🍳 Skills","item":"https://blog.bytesofpurpose.com/docs/skills/interviewing"},{"@type":"ListItem","position":2,"name":"Designing GenAI Systems: Complete Decision Framework","item":"https://blog.bytesofpurpose.com/docs/skills/solving-system-design/framework-for-designing-genai-systems"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Bytes of Purpose Atom Feed">
+
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79YSEH7T7X"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-79YSEH7T7X",{})</script>
+
+
+
+<link rel="alternate" type="application/rss+xml" href="/designs/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.610cf375.css">
+<script src="/assets/js/runtime~main.aa3c0443.js" defer="defer"></script>
+<script src="/assets/js/main.f345e4d8.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><link rel="preload" as="image" href="/img/logo_dark.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo_dark.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">BytesOfPurpose</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/welcome/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Posts</a><a class="navbar__item navbar__link" href="/designs">Designs</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item"><a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></div><b class="navbar__title text--truncate">Buy Me a Coffee?</b></a></div><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/welcome/intro"><span title="👋 Welcome" class="linkLabel_WmDU">👋 Welcome</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/developing/development"><span title="🚀 Development" class="categoryLinkLabel_W154">🚀 Development</span></a><button aria-label="Expand sidebar category &#x27;🚀 Development&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/habits/habits-automating"><span title="🎯 Habits" class="categoryLinkLabel_W154">🎯 Habits</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--active" href="/docs/skills/interviewing"><span title="🍳 Skills" class="categoryLinkLabel_W154">🍳 Skills</span></a><button aria-label="Collapse sidebar category &#x27;🍳 Skills&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul class="menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/skills/preparing-for-interviews/interview-preparation-guide"><span title="📝 Preparing for Interviews" class="categoryLinkLabel_W154">📝 Preparing for Interviews</span></a><button aria-label="Expand sidebar category &#x27;📝 Preparing for Interviews&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" tabindex="0" href="/docs/skills/solving-system-design/framework-for-designing-genai-systems"><span title="⚙️ Designing Systems" class="categoryLinkLabel_W154">⚙️ Designing Systems</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/skills/solving-system-design/framework-for-designing-genai-systems"><span title="Designing GenAI Systems: Complete Decision Framework" class="linkLabel_WmDU">Designing GenAI Systems: Complete Decision Framework</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/preparing-genai-systems-for-production"><span title="Preparing GenAI Systems for Production" class="linkLabel_WmDU">Preparing GenAI Systems for Production</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/approach-in-building-systems"><span title="🔧 My Approach to Building Systems" class="linkLabel_WmDU">🔧 My Approach to Building Systems</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/poc-to-production-execution-plan"><span title="🚀 POC to Production: Complete Execution Plan for GenAI Systems" class="linkLabel_WmDU">🚀 POC to Production: Complete Execution Plan for GenAI Systems</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/capabilities-of-agentic-systems"><span title="🤖 What Agentic AI Systems Can Actually Do" class="linkLabel_WmDU">🤖 What Agentic AI Systems Can Actually Do</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/enterprise-customer-support-agent"><span title="🏢 Enterprise Customer Support Agent: A Complete Architecture" class="linkLabel_WmDU">🏢 Enterprise Customer Support Agent: A Complete Architecture</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/skills/solving-system-design/ai-financial-advisory-system"><span title="💰 AI-Powered Financial Advisory System: Enterprise Architecture" class="linkLabel_WmDU">💰 AI-Powered Financial Advisory System: Enterprise Architecture</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" tabindex="0" href="/docs/skills/solving-coding-challenges/coding-challenges"><span title="💻 Solving Coding Challenges" class="categoryLinkLabel_W154">💻 Solving Coding Challenges</span></a><button aria-label="Expand sidebar category &#x27;💻 Solving Coding Challenges&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/processes/my-personal-execution-process"><span title="⚙️ Processes" class="categoryLinkLabel_W154">⚙️ Processes</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/techniques/mechanics"><span title="🔧 Techniques" class="categoryLinkLabel_W154">🔧 Techniques</span></a><button aria-label="Expand sidebar category &#x27;🔧 Techniques&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/craftsmanship/tips"><span title="🧰 Craftsmanship" class="categoryLinkLabel_W154">🧰 Craftsmanship</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/definitions/emojis-for-activities"><span title="📖 Definitions" class="categoryLinkLabel_W154">📖 Definitions</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/prompts"><span title="📝 Prompts" class="categoryLinkLabel_W154">📝 Prompts</span></a><button aria-label="Expand sidebar category &#x27;📝 Prompts&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/docs/skills/interviewing"><span>🍳 Skills</span></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">⚙️ Designing Systems</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Designing GenAI Systems: Complete Decision Framework</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Designing GenAI Systems: Complete Decision Framework</h1></header>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="core-questions">Core Questions<a href="#core-questions" class="hash-link" aria-label="Direct link to Core Questions" title="Direct link to Core Questions" translate="no">​</a></h2>
+<p><strong>Foundation Decisions (Start Here):</strong></p>
+<ul>
+<li>Should I use RAG or direct prompting for my use case?</li>
+<li>Should I enable memory on my agent? Short-term or long-term?</li>
+<li>Should I fine-tune an LLM or just use prompt engineering?</li>
+<li>What model should I choose for my use case?</li>
+</ul>
+<p><strong>Architecture Decisions (Next Level):</strong></p>
+<ul>
+<li>Should I have a single agent or decompose into multiple agents?</li>
+<li>Should I use a vector database or traditional search?</li>
+<li>Should I implement evaluation before or after deployment?</li>
+<li>How should my agents communicate and collaborate?</li>
+</ul>
+<p><strong>Advanced Decisions (Complex Systems):</strong></p>
+<ul>
+<li>Should I use specialized vector databases or general-purpose ones?</li>
+<li>Should I implement real-time or batch processing?</li>
+<li>What runtime environment should I choose?</li>
+<li>How should I handle agent communication and coordination?</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="when-to-use-this-guide">When to Use This Guide<a href="#when-to-use-this-guide" class="hash-link" aria-label="Direct link to When to Use This Guide" title="Direct link to When to Use This Guide" translate="no">​</a></h2>
+<ul>
+<li>You understand GenAI fundamentals and need to make design decisions</li>
+<li>You&#x27;re building GenAI systems of any complexity</li>
+<li>You need guidance on architectural trade-offs</li>
+<li>You want to avoid common design mistakes</li>
+<li>You&#x27;re scaling from simple to complex systems</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="agentic-system-architecture-overview">Agentic System Architecture Overview<a href="#agentic-system-architecture-overview" class="hash-link" aria-label="Direct link to Agentic System Architecture Overview" title="Direct link to Agentic System Architecture Overview" translate="no">​</a></h2>
+<!-- -->
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="shape-legend">Shape Legend<a href="#shape-legend" class="hash-link" aria-label="Direct link to Shape Legend" title="Direct link to Shape Legend" translate="no">​</a></h3>
+<table><thead><tr><th>Shape</th><th>Symbol</th><th>Meaning</th><th>Examples</th></tr></thead><tbody><tr><td><strong>Diamond</strong></td><td><code>{{}}</code></td><td>Decision/Control Nodes</td><td>AGENT, HUMAN, GUARDRAILS, OTHER AGENTS</td></tr><tr><td><strong>Subroutine</strong></td><td><code>[[]]</code></td><td>External Services/Protocols</td><td>FOUNDATION MODEL, MCP Protocol, APIs, Knowledge Base</td></tr><tr><td><strong>Cylinder</strong></td><td><code>[()]</code></td><td>Data Storage</td><td>MEMORY, DATABASES, VECTOR DATABASE</td></tr><tr><td><strong>Hexagon</strong></td><td><code>{}</code></td><td>Process/Action Nodes</td><td>TOOLS, EXTERNAL APIs</td></tr><tr><td><strong>File</strong></td><td><code>[[]]</code></td><td>Documents/Files</td><td>PROMPT, DOCUMENT STORE</td></tr></tbody></table>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="design-decision-framework">Design Decision Framework<a href="#design-decision-framework" class="hash-link" aria-label="Direct link to Design Decision Framework" title="Direct link to Design Decision Framework" translate="no">​</a></h2>
+<p>This framework provides the <strong>right level of detail</strong> for making GenAI system design decisions. Each decision point includes:</p>
+<ul>
+<li><strong>Clear alternatives</strong> with tabbed options for easy comparison</li>
+<li><strong>When to choose</strong> each option with specific criteria</li>
+<li><strong>Implementation guidance</strong> without overwhelming technical details</li>
+<li><strong>Trade-offs</strong> to help you make informed decisions</li>
+<li><strong>Decision factors</strong> that matter most for your use case</li>
+</ul>
+<p>The framework focuses on <strong>architectural decisions</strong> rather than implementation details, giving you the information you need to make the right choices without getting lost in technical minutiae.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-critical-success-factors">🎯 Critical Success Factors<a href="#-critical-success-factors" class="hash-link" aria-label="Direct link to 🎯 Critical Success Factors" title="Direct link to 🎯 Critical Success Factors" translate="no">​</a></h2>
+<p><strong>Before diving into architectural decisions, understand that these three elements are the most important to get right in any agentic system:</strong></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="1-prompt-engineering--design">1. <strong>Prompt Engineering &amp; Design</strong><a href="#1-prompt-engineering--design" class="hash-link" aria-label="Direct link to 1-prompt-engineering--design" title="Direct link to 1-prompt-engineering--design" translate="no">​</a></h3>
+<ul>
+<li><strong>Why it matters</strong>: Prompts are the interface between users and your AI system - they determine what the system understands and how it responds</li>
+<li><strong>What to focus on</strong>: Clear instructions, context setting, few-shot examples, output formatting, and edge case handling</li>
+<li><strong>Common mistakes</strong>: Vague prompts, missing context, poor examples, inconsistent formatting</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="2-feedback-loops--learning">2. <strong>Feedback Loops &amp; Learning</strong><a href="#2-feedback-loops--learning" class="hash-link" aria-label="Direct link to 2-feedback-loops--learning" title="Direct link to 2-feedback-loops--learning" translate="no">​</a></h3>
+<ul>
+<li><strong>Why it matters</strong>: Systems that can learn and improve from interactions become more valuable over time</li>
+<li><strong>What to focus on</strong>: User feedback collection, performance monitoring, automatic retraining, and continuous improvement</li>
+<li><strong>Common mistakes</strong>: No feedback mechanism, ignoring user signals, static systems that don&#x27;t evolve</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="3-success-metrics--evaluation">3. <strong>Success Metrics &amp; Evaluation</strong><a href="#3-success-metrics--evaluation" class="hash-link" aria-label="Direct link to 3-success-metrics--evaluation" title="Direct link to 3-success-metrics--evaluation" translate="no">​</a></h3>
+<ul>
+<li><strong>Why it matters</strong>: Without proper measurement, you can&#x27;t know if your system is working or how to improve it</li>
+<li><strong>What to focus on</strong>: Task completion rates, user satisfaction, response quality, system reliability, and business impact</li>
+<li><strong>Common mistakes</strong>: No metrics, wrong metrics, infrequent evaluation, ignoring qualitative feedback</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="4-tools--integrations">4. <strong>Tools &amp; Integrations</strong><a href="#4-tools--integrations" class="hash-link" aria-label="Direct link to 4-tools--integrations" title="Direct link to 4-tools--integrations" translate="no">​</a></h3>
+<ul>
+<li><strong>Why it matters</strong>: Tools are how your agents interact with the world - they determine what your system can actually do and how well it can do it</li>
+<li><strong>What to focus on</strong>: Tool selection, API reliability, error handling, data quality, and integration complexity</li>
+<li><strong>Common mistakes</strong>: Poor tool selection, unreliable APIs, no error handling, complex integrations, ignoring tool limitations</li>
+</ul>
+<blockquote>
+<p><strong>💡 Pro Tip</strong>: Spend 40% of your development time on these four areas. They have the highest impact on system success and user satisfaction.</p>
+</blockquote>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="decision-priorities">Decision Priorities<a href="#decision-priorities" class="hash-link" aria-label="Direct link to Decision Priorities" title="Direct link to Decision Priorities" translate="no">​</a></h2>
+<p><strong>Start with these decisions in order of importance:</strong></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-foundation-decisions-must-get-right-first">🎯 <strong>Foundation Decisions</strong> (Must Get Right First)<a href="#-foundation-decisions-must-get-right-first" class="hash-link" aria-label="Direct link to -foundation-decisions-must-get-right-first" title="Direct link to -foundation-decisions-must-get-right-first" translate="no">​</a></h3>
+<p>These decisions have the highest impact on system success and are hardest to change later:</p>
+<ol>
+<li><strong>Knowledge Integration</strong> - Determines your system&#x27;s intelligence foundation</li>
+<li><strong>Model Selection</strong> - Affects performance, cost, and capabilities</li>
+<li><strong>Memory Strategy</strong> - Shapes user experience and system behavior</li>
+<li><strong>Evaluation Strategy</strong> - Determines how you measure and improve success</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="️-architecture-decisions-build-on-foundation">🏗️ <strong>Architecture Decisions</strong> (Build on Foundation)<a href="#️-architecture-decisions-build-on-foundation" class="hash-link" aria-label="Direct link to ️-architecture-decisions-build-on-foundation" title="Direct link to ️-architecture-decisions-build-on-foundation" translate="no">​</a></h3>
+<p>These decisions shape your system&#x27;s structure and scalability:</p>
+<ol start="5">
+<li><strong>Single vs. Multi-Agent</strong> - Determines system complexity and capabilities</li>
+<li><strong>Fine-tuning vs. Prompt Engineering</strong> - Affects development speed and performance</li>
+<li><strong>Agent Communication</strong> - Critical for multi-agent coordination</li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-advanced-decisions-optimize-for-scale">⚡ <strong>Advanced Decisions</strong> (Optimize for Scale)<a href="#-advanced-decisions-optimize-for-scale" class="hash-link" aria-label="Direct link to -advanced-decisions-optimize-for-scale" title="Direct link to -advanced-decisions-optimize-for-scale" translate="no">​</a></h3>
+<p>These decisions optimize performance and handle complexity:</p>
+<ol start="8">
+<li><strong>Vector Database Strategy</strong> - Affects search performance and cost</li>
+<li><strong>Processing Strategy</strong> - Determines user experience and infrastructure needs</li>
+<li><strong>Runtime Environment</strong> - Affects deployment, security, and operations</li>
+</ol>
+<blockquote>
+<p><strong>💡 Quick Start</strong>: If you&#x27;re building your first system, focus on decisions 1-4. Add decisions 5-7 as you scale. Consider decisions 8-10 for production systems with high scale or complexity requirements.</p>
+</blockquote>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="decisions-youll-need-to-make">Decisions You&#x27;ll Need To Make<a href="#decisions-youll-need-to-make" class="hash-link" aria-label="Direct link to Decisions You&#x27;ll Need To Make" title="Direct link to Decisions You&#x27;ll Need To Make" translate="no">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-knowledge-infusion">Deciding on Knowledge Infusion<a href="#deciding-on-knowledge-infusion" class="hash-link" aria-label="Direct link to Deciding on Knowledge Infusion" title="Direct link to Deciding on Knowledge Infusion" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Knowledge Embedded in Prompts</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAG (Retrieval Augmented Generation)</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Knowledge Base with MCP</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Knowledge integration is the foundation of your GenAI system&#x27;s intelligence. The approach you choose directly impacts accuracy, cost, complexity, and user experience. Getting this wrong can lead to hallucination, poor performance, or over-engineered solutions.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What type of knowledge does my system need?</strong> (General vs. domain-specific, static vs. dynamic)</li>
+<li><strong>How accurate do responses need to be?</strong> (Can tolerate some hallucination vs. need citations and sources)</li>
+<li><strong>What&#x27;s my infrastructure complexity tolerance?</strong> (Simple setup vs. can handle vector databases)</li>
+<li><strong>How often does my knowledge change?</strong> (Static content vs. frequently updated information)</li>
+<li><strong>What&#x27;s my latency requirement?</strong> (Real-time responses vs. can tolerate retrieval delays)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for knowledge integration:</strong></p><ol>
+<li>
+<p><strong>Assess your knowledge requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify what type of knowledge your system needs (general vs. domain-specific)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if knowledge changes frequently or is relatively static</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate the volume and complexity of your knowledge base</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider if you need citations and source attribution</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your latency requirements (real-time vs. can tolerate delays)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your infrastructure complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your budget for knowledge management</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your team&#x27;s technical capabilities</li>
+</ul>
+</li>
+<li>
+<p><strong>Test and validate your approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create a small proof of concept with sample data</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Measure response accuracy and relevance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test with edge cases and difficult queries</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Validate that the approach meets your quality standards</li>
+</ul>
+</li>
+<li>
+<p><strong>Plan for production</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your knowledge update and maintenance process</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for monitoring and quality assurance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider backup and disaster recovery</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Document your knowledge management procedures</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Embed knowledge directly in prompts using few-shot learning and prompt engineering techniques.</p><p><strong>Choose when</strong>:</p><ul>
+<li>You have general knowledge requirements</li>
+<li>You need fast, low-latency responses</li>
+<li>You want to minimize infrastructure complexity</li>
+<li>You&#x27;re working with well-known, stable information</li>
+<li>You have limited domain-specific data</li>
+</ul><p><strong>Implementation approach</strong>:</p><ul>
+<li>Design effective prompts with examples</li>
+<li>Use few-shot learning techniques</li>
+<li>Implement prompt templates</li>
+<li>Set up response validation</li>
+<li>Configure model parameters</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Simple implementation</li>
+<li>Low latency</li>
+<li>No additional infrastructure</li>
+<li>Easy to iterate and test</li>
+<li>Cost-effective for simple use cases</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Limited to model&#x27;s training data</li>
+<li>Potential for hallucination</li>
+<li>Less control over information accuracy</li>
+<li>May not handle domain-specific queries well</li>
+<li>Limited ability to provide citations</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Retrieve relevant information from a knowledge base and use it to augment model responses.</p><p><strong>Choose when</strong>:</p><ul>
+<li>You have large amounts of domain-specific knowledge</li>
+<li>You need to answer questions about specific documents or data</li>
+<li>You want to provide citations and sources</li>
+<li>You need to handle dynamic or frequently updated information</li>
+<li>You want to reduce hallucination and improve accuracy</li>
+</ul><p><strong>Implementation approach</strong>:</p><ul>
+<li>Set up vector database (OpenSearch, Pinecone, etc.)</li>
+<li>Create knowledge base with your documents</li>
+<li>Implement retrieval pipeline</li>
+<li>Configure embedding model</li>
+<li>Set up response generation with context</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Access to specific, up-to-date information</li>
+<li>Reduced hallucination</li>
+<li>Source attribution and citations</li>
+<li>Better handling of domain-specific queries</li>
+<li>Scalable knowledge management</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Additional infrastructure complexity</li>
+<li>Latency overhead for retrieval</li>
+<li>Need for good chunking and embedding strategies</li>
+<li>Ongoing maintenance of knowledge base</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Intelligent integration between language models and enterprise knowledge bases using MCP for enhanced discovery and retrieval.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Knowledge Base Discovery:</strong> Resource for identifying available knowledge bases</li>
+<li><strong>Natural Language Querying:</strong> Tool for semantic search across knowledge bases</li>
+<li><strong>Reranking Capabilities:</strong> Enhanced relevance using language models</li>
+<li><strong>Metadata Integration:</strong> Leveraging document metadata for better filtering</li>
+</ul><p><strong>Integration Components:</strong></p><ul>
+<li><strong>Data Source Configuration:</strong> S3 bucket integration for document storage</li>
+<li><strong>Document Processing:</strong> Automated text extraction and chunking</li>
+<li><strong>Vector Embedding:</strong> Titan Embeddings V2 for semantic search</li>
+<li><strong>Retrieval System:</strong> OpenSearch Serverless for vector similarity search</li>
+<li><strong>MCP Integration:</strong> Standardized protocol for agent-tool communication</li>
+</ul><p><strong>Supported Document Types:</strong></p><ul>
+<li><strong>Text Files:</strong> .txt, .md, .html formats</li>
+<li><strong>Office Documents:</strong> .doc, .docx, .csv, .xls, .xlsx</li>
+<li><strong>PDF Documents:</strong> Multi-page PDF processing</li>
+<li><strong>Structured Data:</strong> JSON and other structured formats</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Intelligent Discovery:</strong> AI can discover and use appropriate knowledge bases</li>
+<li><strong>Enhanced Relevance:</strong> Reranking improves search result quality</li>
+<li><strong>Flexible Querying:</strong> Natural language queries without complex search parameters</li>
+<li><strong>Metadata Utilization:</strong> Leverages document structure for better results</li>
+</ul><p><strong>Workflow Components:</strong></p><ul>
+<li><strong>Data Ingestion:</strong> Automated document processing and indexing</li>
+<li><strong>Vector Generation:</strong> Embedding creation for semantic search</li>
+<li><strong>Query Processing:</strong> Natural language query understanding</li>
+<li><strong>Response Generation:</strong> Contextual answer synthesis</li>
+<li><strong>MCP Communication:</strong> Standardized agent-tool interactions</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Use MCP resource for knowledge base discovery</li>
+<li>Implement natural language query tools</li>
+<li>Configure reranking for improved relevance</li>
+<li>Set up metadata-based filtering</li>
+</ul><p><strong>Production Components:</strong></p><ul>
+<li><strong>Monitoring Setup:</strong> Performance and usage tracking</li>
+<li><strong>Scaling Configuration:</strong> Auto-scaling based on demand</li>
+<li><strong>Security Implementation:</strong> Data encryption and access controls</li>
+<li><strong>Backup and Recovery:</strong> Data protection and disaster recovery</li>
+</ul><p><strong>Operational Considerations:</strong></p><ul>
+<li><strong>Performance Monitoring:</strong> Query latency and throughput tracking</li>
+<li><strong>Cost Optimization:</strong> Resource usage and cost management</li>
+<li><strong>Security Compliance:</strong> Data privacy and regulatory requirements</li>
+<li><strong>Maintenance Procedures:</strong> Regular updates and system health checks</li>
+</ul><p><strong>Quality Assurance:</strong></p><ul>
+<li><strong>Testing Framework:</strong> Automated testing for RAG components</li>
+<li><strong>Performance Benchmarking:</strong> Response quality and speed assessment</li>
+<li><strong>User Feedback Integration:</strong> Continuous improvement based on usage</li>
+<li><strong>A/B Testing:</strong> Model and configuration comparison</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Document format and processing requirements</li>
+<li>Vector embedding model selection</li>
+<li>Search and retrieval optimization</li>
+<li>Response quality and accuracy needs</li>
+<li>Production scale and user requirements</li>
+<li>Compliance and security needs</li>
+<li>Monitoring and observability requirements</li>
+<li>Maintenance and operational capabilities</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-memory-strategy">Deciding on Memory Strategy<a href="#deciding-on-memory-strategy" class="hash-link" aria-label="Direct link to Deciding on Memory Strategy" title="Direct link to Deciding on Memory Strategy" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">No Memory</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Short-term Memory</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Long-term Memory</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Memory strategy determines how your system handles context, personalization, and user experience continuity. The wrong choice can lead to frustrating user experiences, privacy violations, or unnecessary complexity.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>Do users expect the system to remember them?</strong> (Personalized experience vs. anonymous interactions)</li>
+<li><strong>How important is conversation context?</strong> (Each query independent vs. building on previous interactions)</li>
+<li><strong>What are my privacy requirements?</strong> (No data retention vs. user consent for memory)</li>
+<li><strong>How complex should the user experience be?</strong> (Simple stateless vs. rich contextual interactions)</li>
+<li><strong>What&#x27;s my operational complexity tolerance?</strong> (Simple deployment vs. managing user data)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for memory strategy:</strong></p><ol>
+<li>
+<p><strong>Analyze your user experience requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if users expect personalized experiences</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess the importance of conversation context continuity</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate if you need cross-session learning and adaptation</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider user privacy expectations and consent requirements</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your technical constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your data storage and management capabilities</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your privacy and compliance requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your operational complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your team&#x27;s expertise with memory systems</li>
+</ul>
+</li>
+<li>
+<p><strong>Design your memory architecture</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define what information needs to be remembered (conversation history, user preferences, facts)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan your data retention and deletion policies</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your memory retrieval and context injection strategy</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for memory performance and scalability</li>
+</ul>
+</li>
+<li>
+<p><strong>Test and validate your approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create test scenarios with different memory requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Validate that memory enhances rather than complicates user experience</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test memory performance under load</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Ensure compliance with privacy regulations</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose no memory when</strong>:</p><ul>
+<li>Each conversation is independent</li>
+<li>You don&#x27;t need personalization</li>
+<li>You want the simplest implementation</li>
+<li>Privacy is a major concern</li>
+<li>You&#x27;re building stateless services</li>
+</ul><p><strong>Trade-offs</strong>:</p><ul>
+<li>✅ Simple to implement</li>
+<li>✅ No privacy concerns</li>
+<li>❌ No personalization</li>
+<li>❌ No conversation context</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose short-term memory when</strong>:</p><ul>
+<li>You need conversation context</li>
+<li>You want to maintain session state</li>
+<li>You need to reference previous messages</li>
+<li>You&#x27;re building conversational interfaces</li>
+</ul><p><strong>Implementation</strong>:</p><ul>
+<li>Store conversation history in session</li>
+<li>Use conversation context in prompts</li>
+<li>Implement session management</li>
+<li>Plan for session cleanup</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose long-term memory when</strong>:</p><ul>
+<li>You need user personalization</li>
+<li>You want to learn from past interactions</li>
+<li>You need cross-session continuity</li>
+<li>You&#x27;re building persistent AI assistants</li>
+</ul><p><strong>Implementation</strong>:</p><ul>
+<li>Set up user-specific data storage</li>
+<li>Implement semantic fact extraction</li>
+<li>Design memory retrieval systems</li>
+<li>Plan for data privacy and retention</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-fine-tuning-vs-prompt-engineering">Deciding on Fine-tuning vs. Prompt Engineering<a href="#deciding-on-fine-tuning-vs-prompt-engineering" class="hash-link" aria-label="Direct link to Deciding on Fine-tuning vs. Prompt Engineering" title="Direct link to Deciding on Fine-tuning vs. Prompt Engineering" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Prompt Engineering</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Fine-tuning</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+This choice determines your model&#x27;s performance, development speed, and ongoing costs. The wrong approach can lead to poor accuracy, excessive costs, or unnecessary complexity that delays your time to market.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>How domain-specific are my requirements?</strong> (General tasks vs. specialized domain knowledge)</li>
+<li><strong>What&#x27;s my data situation?</strong> (Limited examples vs. large labeled datasets)</li>
+<li><strong>What&#x27;s my performance requirement?</strong> (Good enough vs. optimal accuracy)</li>
+<li><strong>What&#x27;s my time to market constraint?</strong> (Quick prototype vs. can invest in training)</li>
+<li><strong>What&#x27;s my budget for model customization?</strong> (Prompt engineering costs vs. fine-tuning infrastructure)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for model strategy:</strong></p><ol>
+<li>
+<p><strong>Assess your domain and data requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate how domain-specific your use case is (general vs. specialized knowledge)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess the quality and quantity of your training data</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if you have sufficient labeled examples for fine-tuning</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider if your domain knowledge changes frequently</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your performance and cost constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your accuracy and quality requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your latency and throughput needs</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your budget for model customization and inference</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your time-to-market constraints</li>
+</ul>
+</li>
+<li>
+<p><strong>Test and compare approaches</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Start with prompt engineering to establish baseline performance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create a small fine-tuning experiment with your data</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Compare performance, cost, and complexity of both approaches</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test with edge cases and difficult scenarios</li>
+</ul>
+</li>
+<li>
+<p><strong>Plan for production and maintenance</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your model update and retraining process</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for monitoring model performance and drift</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your team&#x27;s expertise with each approach</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for long-term maintenance and evolution</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose prompt engineering when</strong>:</p><ul>
+<li>You have limited training data</li>
+<li>You need quick iteration and fast time-to-market</li>
+<li>You want to avoid training costs and infrastructure complexity</li>
+<li>You&#x27;re building general-purpose systems</li>
+<li>You need to change behavior frequently</li>
+<li>You&#x27;re prototyping or building MVPs</li>
+</ul><p><strong>Best practices</strong>:</p><ul>
+<li>Use few-shot examples with high-quality demonstrations</li>
+<li>Implement prompt templates for consistency</li>
+<li>Test different prompt variations systematically</li>
+<li>Monitor prompt performance and user feedback</li>
+<li>Use chain-of-thought prompting for complex reasoning</li>
+<li>Implement prompt versioning and A/B testing</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Fast to implement and iterate</li>
+<li>No additional infrastructure costs</li>
+<li>Easy to update and modify</li>
+<li>Works with any pre-trained model</li>
+<li>No data preparation required</li>
+</ul><p><strong>Limitations</strong>:</p><ul>
+<li>Limited by model&#x27;s training data</li>
+<li>May not handle domain-specific tasks well</li>
+<li>Performance depends on prompt quality</li>
+<li>Limited control over model behavior</li>
+<li>May require extensive prompt engineering</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose fine-tuning when</strong>:</p><ul>
+<li>You have domain-specific data and requirements</li>
+<li>You need specialized behavior for your use case</li>
+<li>You have sufficient high-quality training data (1000+ examples)</li>
+<li>You need consistent, reliable performance</li>
+<li>You&#x27;re building production systems with specific requirements</li>
+<li>Prompt engineering isn&#x27;t achieving desired results</li>
+</ul><p><strong>Fine-tuning approaches</strong>:</p><ul>
+<li><strong>Full Fine-tuning</strong>: Complete model retraining (highest performance, most expensive)</li>
+<li><strong>LoRA (Low-Rank Adaptation)</strong>: Efficient fine-tuning with reduced parameters</li>
+<li><strong>QLoRA</strong>: Quantized LoRA for memory efficiency</li>
+<li><strong>Adapter Layers</strong>: Add specialized layers to existing models</li>
+</ul><p><strong>Implementation considerations</strong>:</p><ul>
+<li><strong>Data Quality</strong>: Prepare high-quality, diverse training data</li>
+<li><strong>Data Volume</strong>: Ensure sufficient examples (1000+ for good results)</li>
+<li><strong>Evaluation</strong>: Set up comprehensive evaluation metrics and validation</li>
+<li><strong>Infrastructure</strong>: Plan for training compute and storage requirements</li>
+<li><strong>Versioning</strong>: Implement model versioning and rollback strategies</li>
+<li><strong>Monitoring</strong>: Track model performance and drift in production</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Specialized performance for your domain</li>
+<li>Consistent behavior across similar inputs</li>
+<li>Better handling of domain-specific terminology</li>
+<li>Reduced prompt engineering requirements</li>
+<li>Higher accuracy for specialized tasks</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Requires significant training data</li>
+<li>Higher infrastructure and compute costs</li>
+<li>Longer development and iteration cycles</li>
+<li>Need for ongoing model maintenance</li>
+<li>Potential for overfitting to training data</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-automated-vs-human-model-evaluation">Deciding on Automated vs. Human Model Evaluation<a href="#deciding-on-automated-vs-human-model-evaluation" class="hash-link" aria-label="Direct link to Deciding on Automated vs. Human Model Evaluation" title="Direct link to Deciding on Automated vs. Human Model Evaluation" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Automated Model Evaluation</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Human Model Evaluation</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Evaluation strategy determines how you measure success, catch issues, and ensure quality. The wrong approach can lead to undetected problems, slow feedback loops, or evaluation bottlenecks that slow down development.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>How do I define success for my system?</strong> (Objective metrics vs. subjective quality)</li>
+<li><strong>What&#x27;s my evaluation volume?</strong> (Few test cases vs. large-scale testing)</li>
+<li><strong>How fast do I need feedback?</strong> (Real-time evaluation vs. can wait for human review)</li>
+<li><strong>What&#x27;s my quality tolerance?</strong> (Good enough vs. must be perfect)</li>
+<li><strong>What&#x27;s my evaluation budget?</strong> (Automated costs vs. human evaluation costs)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for evaluation strategy:</strong></p><ol>
+<li>
+<p><strong>Define your success metrics</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify what &quot;good&quot; means for your specific use case</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if you need objective metrics or subjective quality assessment</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your minimum acceptable performance thresholds</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider both accuracy and user experience metrics</li>
+</ul>
+</li>
+<li>
+<p><strong>Assess your evaluation capacity and constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your evaluation volume (few test cases vs. large-scale testing)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your budget for evaluation (automated costs vs. human evaluation costs)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your team&#x27;s expertise with evaluation frameworks</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your timeline for evaluation feedback</li>
+</ul>
+</li>
+<li>
+<p><strong>Design your evaluation framework</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create test datasets that represent your use cases</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design evaluation metrics that align with your success criteria</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for both automated and human evaluation where appropriate</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Establish evaluation processes and workflows</li>
+</ul>
+</li>
+<li>
+<p><strong>Implement and validate your approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Start with automated evaluation for objective metrics</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Add human evaluation for subjective quality assessment</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test your evaluation framework with known good/bad examples</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for continuous evaluation and monitoring</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Systematic evaluation of foundation models using predefined metrics and automated assessment.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Built-in Datasets:</strong> Curated datasets for specific tasks (summarization, Q&amp;A, classification)</li>
+<li><strong>Predefined Metrics:</strong> Accuracy, robustness, toxicity, and task-specific measures</li>
+<li><strong>Automated Assessment:</strong> No manual intervention required for evaluation</li>
+<li><strong>Comparative Analysis:</strong> Side-by-side model performance comparison</li>
+</ul><p><strong>Evaluation Tasks:</strong></p><ul>
+<li><strong>Content Summarization:</strong> Automatic summarization quality assessment</li>
+<li><strong>Question Answering:</strong> Accuracy and relevance evaluation</li>
+<li><strong>Text Classification:</strong> Categorization performance measurement</li>
+<li><strong>Text Generation:</strong> Quality and coherence assessment</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Use JSON Lines format for custom datasets</li>
+<li>Leverage built-in evaluation metrics for standard tasks</li>
+<li>Implement automated evaluation workflows</li>
+<li>Generate comprehensive evaluation reports</li>
+</ul><p><strong>Decision Factors:</strong></p><ul>
+<li>Task-specific evaluation requirements</li>
+<li>Dataset availability and quality</li>
+<li>Evaluation metric relevance</li>
+<li>Automation vs. manual assessment needs</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Incorporate human judgment for subjective and custom evaluation metrics.</p><p><strong>Evaluation Types:</strong></p><ul>
+<li><strong>Custom Metrics:</strong> Relevance, style, brand voice alignment</li>
+<li><strong>Subjective Assessment:</strong> Friendliness, creativity, appropriateness</li>
+<li><strong>Domain Expertise:</strong> Specialized knowledge evaluation</li>
+<li><strong>Brand Alignment:</strong> Consistency with organizational voice</li>
+</ul><p><strong>Team Options:</strong></p><ul>
+<li><strong>Internal Teams:</strong> Use existing organizational reviewers</li>
+<li><strong>AWS Managed Teams:</strong> Leverage AWS expert evaluation services</li>
+<li><strong>Hybrid Approach:</strong> Combine internal and external evaluation</li>
+</ul><p><strong>Workflow Components:</strong></p><ul>
+<li><strong>Dataset Preparation:</strong> Format data for human evaluation</li>
+<li><strong>Reviewer Setup:</strong> Configure evaluation teams and criteria</li>
+<li><strong>Evaluation Execution:</strong> Systematic human assessment process</li>
+<li><strong>Report Generation:</strong> Comprehensive evaluation results</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Evaluation team selection (internal vs. managed)</li>
+<li>Custom metric definition and weighting</li>
+<li>Evaluation scale and timeline requirements</li>
+<li>Cost vs. quality trade-offs</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-agent-runtime-environment">Deciding on Agent Runtime Environment<a href="#deciding-on-agent-runtime-environment" class="hash-link" aria-label="Direct link to Deciding on Agent Runtime Environment" title="Direct link to Deciding on Agent Runtime Environment" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">AWS Service Integration</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Azure Cloud Services</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Local Data Center</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Hybrid Cloud</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Your runtime environment determines scalability, security, compliance, and operational complexity. The wrong choice can lead to performance bottlenecks, security vulnerabilities, or compliance issues that are expensive to fix later.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What are my compliance requirements?</strong> (Data residency, industry regulations, security standards)</li>
+<li><strong>What&#x27;s my scale requirement?</strong> (Small team vs. enterprise-scale deployment)</li>
+<li><strong>What&#x27;s my operational complexity tolerance?</strong> (Managed services vs. custom infrastructure)</li>
+<li><strong>What&#x27;s my budget for infrastructure?</strong> (Cloud costs vs. on-premises investment)</li>
+<li><strong>What&#x27;s my integration requirement?</strong> (Standalone vs. integrated with existing systems)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for runtime environment:</strong></p><ol>
+<li>
+<p><strong>Assess your compliance and security requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify data residency and sovereignty requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine industry-specific compliance needs (HIPAA, SOC 2, PCI DSS)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your security and access control requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your audit and logging needs</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your scale and performance needs</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your expected user load and growth projections</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your latency and throughput requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your availability and uptime needs</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your global distribution requirements</li>
+</ul>
+</li>
+<li>
+<p><strong>Assess your operational capabilities</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your team&#x27;s expertise with different cloud platforms</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your operational complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your budget for infrastructure and operations</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your integration with existing systems</li>
+</ul>
+</li>
+<li>
+<p><strong>Plan for production deployment</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your deployment and scaling strategy</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for monitoring, logging, and observability</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider disaster recovery and backup strategies</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for cost optimization and resource management</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Seamless integration between MCP and AWS services, particularly Amazon Bedrock, for enterprise-scale AI applications.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Bedrock Converse API Integration:</strong> Tool use capabilities for external data access</li>
+<li><strong>AWS Service Connectivity:</strong> Direct access to S3, DynamoDB, RDS, CloudWatch, and Knowledge Bases</li>
+<li><strong>Security Boundary Respect:</strong> Consistent access control through existing AWS mechanisms</li>
+<li><strong>Unified Access Pattern:</strong> Standardized interface regardless of underlying service architecture</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Enterprise Integration:</strong> Leverages existing AWS infrastructure and security</li>
+<li><strong>Reduced Development Overhead:</strong> No custom connectors for each data source</li>
+<li><strong>Consistent Security:</strong> Uses established AWS IAM and access controls</li>
+<li><strong>Scalable Architecture:</strong> Aligns with AWS best practices</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>AWS service integration requirements</li>
+<li>Security and compliance needs</li>
+<li>Development team AWS expertise</li>
+<li>Production deployment and scaling requirements</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Deploy agentic systems on Microsoft Azure with integrated AI services and enterprise-grade security.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Azure OpenAI Integration:</strong> Direct access to GPT models and Azure AI services</li>
+<li><strong>Azure Cognitive Services:</strong> Pre-built AI capabilities for vision, speech, and language</li>
+<li><strong>Azure Functions:</strong> Serverless execution for agent workflows</li>
+<li><strong>Azure Active Directory:</strong> Enterprise identity and access management</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Microsoft Ecosystem:</strong> Seamless integration with Office 365 and Microsoft tools</li>
+<li><strong>Enterprise Security:</strong> Advanced threat protection and compliance features</li>
+<li><strong>Hybrid Cloud:</strong> Support for on-premises and cloud deployments</li>
+<li><strong>Cost Optimization:</strong> Pay-per-use pricing with reserved capacity options</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Microsoft ecosystem integration requirements</li>
+<li>Enterprise security and compliance needs</li>
+<li>Hybrid cloud deployment scenarios</li>
+<li>Cost optimization and resource management</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Deploy agentic systems in on-premises data centers for maximum control, security, and compliance.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>On-Premises Infrastructure:</strong> Full control over hardware and network configuration</li>
+<li><strong>Private AI Models:</strong> Deploy open-source models locally for complete data privacy</li>
+<li><strong>Custom Security:</strong> Implement organization-specific security policies</li>
+<li><strong>Air-Gapped Deployment:</strong> Complete isolation from external networks</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Complete Control:</strong> Full ownership of infrastructure and data</li>
+<li><strong>Maximum Security:</strong> No data leaves the organization&#x27;s network</li>
+<li><strong>Compliance:</strong> Meet strict regulatory requirements for data sovereignty</li>
+<li><strong>Customization:</strong> Tailor infrastructure to specific organizational needs</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Regulatory compliance and data sovereignty requirements</li>
+<li>Security and privacy concerns</li>
+<li>Infrastructure management capabilities</li>
+<li>Cost and resource availability</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Combine on-premises infrastructure with cloud services for optimal flexibility and security.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Hybrid Architecture:</strong> On-premises for sensitive data, cloud for scalability</li>
+<li><strong>Data Classification:</strong> Route data based on sensitivity and compliance requirements</li>
+<li><strong>Unified Management:</strong> Single pane of glass for hybrid infrastructure</li>
+<li><strong>Flexible Scaling:</strong> Cloud bursting for peak workloads</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Flexibility:</strong> Choose optimal environment for each workload</li>
+<li><strong>Security:</strong> Keep sensitive data on-premises while leveraging cloud scale</li>
+<li><strong>Cost Optimization:</strong> Balance between capital and operational expenses</li>
+<li><strong>Compliance:</strong> Meet diverse regulatory requirements across regions</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Data sensitivity and classification requirements</li>
+<li>Regulatory compliance across multiple jurisdictions</li>
+<li>Cost optimization and resource utilization</li>
+<li>Operational complexity and management overhead</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-model-selection">Deciding on Model Selection<a href="#deciding-on-model-selection" class="hash-link" aria-label="Direct link to Deciding on Model Selection" title="Direct link to Deciding on Model Selection" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Claude (Anthropic)</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">GPT-4 (OpenAI)</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Open Source Models</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Model selection directly impacts your system&#x27;s performance, cost, and user experience. The wrong model can lead to poor accuracy, excessive costs, or performance bottlenecks that are difficult to fix later.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What are my performance requirements?</strong> (Accuracy, latency, throughput needs)</li>
+<li><strong>What&#x27;s my budget for model inference?</strong> (Cost per token, monthly budget)</li>
+<li><strong>How complex are my tasks?</strong> (Simple Q&amp;A vs. complex reasoning and analysis)</li>
+<li><strong>What&#x27;s my scale requirement?</strong> (Low volume vs. high-throughput production)</li>
+<li><strong>What are my compliance needs?</strong> (Data privacy, model transparency, audit requirements)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for model selection:</strong></p><ol>
+<li>
+<p><strong>Define your requirements and constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify your specific use cases and task types</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your performance thresholds (accuracy, latency, throughput)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your budget constraints for inference and training</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your compliance and security requirements</li>
+</ul>
+</li>
+<li>
+<p><strong>Research and compare available models</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify models that match your use case (general vs. specialized)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Compare model capabilities, strengths, and limitations</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate cost structures and pricing models</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider model availability and access requirements</li>
+</ul>
+</li>
+<li>
+<p><strong>Design and run evaluation experiments</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create test datasets that represent your use cases</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Set up automated evaluation for objective metrics</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Add human evaluation for subjective quality assessment</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Compare models side-by-side with the same test cases</li>
+</ul>
+</li>
+<li>
+<p><strong>Plan for production deployment</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess model serving and scaling requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for model monitoring and performance tracking</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider model update and retraining processes</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design fallback and backup strategies</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Advanced language model optimized for complex reasoning, analysis, and safety.</p><p><strong>Choose when</strong>:</p><ul>
+<li>You need high-quality reasoning and analysis</li>
+<li>You&#x27;re building applications that require careful, thoughtful responses</li>
+<li>You need strong safety and alignment features</li>
+<li>You&#x27;re working with complex, multi-step tasks</li>
+<li>You prioritize response quality over speed</li>
+</ul><p><strong>Key Strengths</strong>:</p><ul>
+<li><strong>Advanced Reasoning:</strong> Excellent at complex analysis and problem-solving</li>
+<li><strong>Safety Features:</strong> Built-in safety and alignment considerations</li>
+<li><strong>Code Generation:</strong> Strong capabilities for programming tasks</li>
+<li><strong>Long Context:</strong> Large context window for complex documents</li>
+<li><strong>Consistency:</strong> Reliable, high-quality responses</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Higher cost per token compared to some alternatives</li>
+<li>May be slower for simple, high-volume tasks</li>
+<li>Limited fine-tuning options compared to open-source models</li>
+<li>Requires API access and usage monitoring</li>
+</ul><p><strong>Best Use Cases</strong>:</p><ul>
+<li>Complex analysis and research tasks</li>
+<li>Code generation and programming assistance</li>
+<li>Content creation requiring high quality</li>
+<li>Applications where safety and alignment are critical</li>
+<li>Multi-step reasoning and problem-solving</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Versatile language model with broad capabilities and strong performance across many tasks.</p><p><strong>Choose when</strong>:</p><ul>
+<li>You need a well-rounded model for diverse tasks</li>
+<li>You want strong performance across multiple domains</li>
+<li>You need good code generation capabilities</li>
+<li>You&#x27;re building general-purpose applications</li>
+<li>You want a proven, widely-adopted model</li>
+</ul><p><strong>Key Strengths</strong>:</p><ul>
+<li><strong>Versatility:</strong> Strong performance across many different tasks</li>
+<li><strong>Code Generation:</strong> Excellent programming capabilities</li>
+<li><strong>Creativity:</strong> Good at creative writing and brainstorming</li>
+<li><strong>Ecosystem:</strong> Large community and tool ecosystem</li>
+<li><strong>Reliability:</strong> Well-tested and widely used</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>API rate limits and usage restrictions</li>
+<li>Cost can be high for high-volume applications</li>
+<li>Limited transparency about model details</li>
+<li>May require prompt engineering for optimal results</li>
+</ul><p><strong>Best Use Cases</strong>:</p><ul>
+<li>General-purpose chatbots and assistants</li>
+<li>Content creation and writing tasks</li>
+<li>Code generation and programming help</li>
+<li>Educational and tutoring applications</li>
+<li>Creative writing and brainstorming</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Self-hosted models that provide full control and customization capabilities.</p><p><strong>Choose when</strong>:</p><ul>
+<li>You need full control over model deployment and data</li>
+<li>You have specific compliance or security requirements</li>
+<li>You want to customize or fine-tune models extensively</li>
+<li>You&#x27;re building applications with unique requirements</li>
+<li>You want to avoid vendor lock-in</li>
+</ul><p><strong>Key Strengths</strong>:</p><ul>
+<li><strong>Full Control:</strong> Complete control over deployment and data</li>
+<li><strong>Customization:</strong> Ability to fine-tune and modify models</li>
+<li><strong>Cost Control:</strong> Predictable costs without per-token pricing</li>
+<li><strong>Privacy:</strong> Data never leaves your infrastructure</li>
+<li><strong>Flexibility:</strong> Can optimize for specific use cases</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Requires significant infrastructure and expertise</li>
+<li>Higher upfront costs for hardware and setup</li>
+<li>Need to manage model updates and maintenance</li>
+<li>May require more prompt engineering and optimization</li>
+<li>Limited to your team&#x27;s technical capabilities</li>
+</ul><p><strong>Best Use Cases</strong>:</p><ul>
+<li>Applications with strict data privacy requirements</li>
+<li>High-volume applications where cost control is critical</li>
+<li>Custom use cases requiring model modification</li>
+<li>Compliance-heavy industries (healthcare, finance)</li>
+<li>Research and experimentation projects</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-vector-database-strategy">Deciding on Vector Database Strategy<a href="#deciding-on-vector-database-strategy" class="hash-link" aria-label="Direct link to Deciding on Vector Database Strategy" title="Direct link to Deciding on Vector Database Strategy" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">General-Purpose Vector DB</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Specialized Vector DB</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Vector database choice directly impacts search performance, cost, and scalability. The wrong choice can lead to slow queries, expensive infrastructure, or scalability bottlenecks that are difficult to fix later.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What&#x27;s my scale requirement?</strong> (Small datasets vs. millions of vectors)</li>
+<li><strong>What&#x27;s my performance need?</strong> (Fast queries vs. cost optimization)</li>
+<li><strong>What&#x27;s my operational complexity tolerance?</strong> (Managed services vs. self-hosted)</li>
+<li><strong>What&#x27;s my budget for vector storage?</strong> (Pay-per-use vs. fixed costs)</li>
+<li><strong>What are my integration requirements?</strong> (Simple setup vs. custom optimization)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for vector database strategy:</strong></p><ol>
+<li>
+<p><strong>Assess your scale and performance requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Estimate your current and future vector count</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your query latency and throughput requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your data update frequency and patterns</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your concurrent user load</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your operational capabilities</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your team&#x27;s expertise with vector databases</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your operational complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your budget for managed vs. self-hosted solutions</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your integration with existing infrastructure</li>
+</ul>
+</li>
+<li>
+<p><strong>Compare database options</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test query performance with your data and use cases</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate cost models and pricing structures</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess ease of setup, maintenance, and scaling</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider vendor lock-in and migration options</li>
+</ul>
+</li>
+<li>
+<p><strong>Plan for production deployment</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your data ingestion and indexing strategy</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for monitoring, backup, and disaster recovery</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider data privacy and security requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for cost optimization and resource management</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose general-purpose when</strong>:</p><ul>
+<li>You have moderate scale requirements (&lt; 100M vectors)</li>
+<li>You want managed services and ease of use</li>
+<li>You need quick setup and deployment</li>
+<li>You have standard use cases</li>
+</ul><p><strong>Options</strong>:</p><ul>
+<li><strong>Pinecone</strong>: Managed vector database service</li>
+<li><strong>Weaviate</strong>: Open-source with managed options</li>
+<li><strong>Chroma</strong>: Lightweight, easy to deploy</li>
+<li><strong>Qdrant</strong>: High-performance, self-hosted</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Easy to set up and use</li>
+<li>Managed infrastructure</li>
+<li>Good documentation and support</li>
+<li>Standard APIs and integrations</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose specialized when</strong>:</p><ul>
+<li>You have large-scale requirements (&gt; 100M vectors)</li>
+<li>You need custom optimization</li>
+<li>You have specific performance requirements</li>
+<li>You need cost optimization</li>
+</ul><p><strong>Implementation patterns</strong>:</p><ul>
+<li><strong>Scalable Vector Database</strong>: LanceDB with S3 storage</li>
+<li><strong>Data Bucketing</strong>: Split large datasets (200M vectors per bucket)</li>
+<li><strong>Parallel Indexing</strong>: Index multiple buckets simultaneously</li>
+<li><strong>Serverless Querying</strong>: Lambda functions for on-demand searches</li>
+</ul><p><strong>Optimization techniques</strong>:</p><ul>
+<li><strong>Index Configuration</strong>: Tune IVF-PQ parameters</li>
+<li><strong>Batch Processing</strong>: Handle large query batches</li>
+<li><strong>Storage Optimization</strong>: Use storage-optimized instances</li>
+<li><strong>Query Aggregation</strong>: Merge results from multiple splits</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-real-time-vs-batch-processing">Deciding on Real-time vs. Batch Processing<a href="#deciding-on-real-time-vs-batch-processing" class="hash-link" aria-label="Direct link to Deciding on Real-time vs. Batch Processing" title="Direct link to Deciding on Real-time vs. Batch Processing" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Real-time Processing</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Batch Processing</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Processing strategy determines user experience, system complexity, and infrastructure costs. The wrong choice can lead to poor user experience, unnecessary complexity, or excessive costs.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What&#x27;s my user experience requirement?</strong> (Immediate responses vs. can wait for results)</li>
+<li><strong>What&#x27;s my data volume?</strong> (Small real-time vs. large batch processing)</li>
+<li><strong>What&#x27;s my cost tolerance?</strong> (Real-time infrastructure vs. batch efficiency)</li>
+<li><strong>What&#x27;s my complexity tolerance?</strong> (Simple batch vs. complex real-time systems)</li>
+<li><strong>What are my latency requirements?</strong> (Sub-second vs. minutes/hours acceptable)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for processing strategy:</strong></p><ol>
+<li>
+<p><strong>Analyze your use case requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if users need immediate responses or can wait</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your data volume and processing complexity</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your accuracy vs. speed trade-offs</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your user interaction patterns</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your infrastructure and cost constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your budget for real-time vs. batch infrastructure</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your operational complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your team&#x27;s expertise with different processing patterns</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your scaling requirements</li>
+</ul>
+</li>
+<li>
+<p><strong>Design your processing architecture</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan your data ingestion and processing pipelines</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design your result storage and retrieval mechanisms</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for error handling and failure recovery</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your monitoring and observability needs</li>
+</ul>
+</li>
+<li>
+<p><strong>Test and validate your approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create test scenarios with realistic data volumes</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Validate that your approach meets user experience requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test performance under different load conditions</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Ensure your system can handle edge cases and failures</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose real-time when</strong>:</p><ul>
+<li>Users need immediate responses</li>
+<li>You have interactive applications</li>
+<li>You need to process streaming data</li>
+<li>You&#x27;re building conversational interfaces</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Immediate user feedback</li>
+<li>Interactive user experience</li>
+<li>Real-time insights and monitoring</li>
+<li>Responsive applications</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Higher infrastructure costs</li>
+<li>More complex system architecture</li>
+<li>Requires robust error handling</li>
+<li>May need caching and optimization</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose batch when</strong>:</p><ul>
+<li>Users can wait for results</li>
+<li>You have large data volumes</li>
+<li>You need cost-effective processing</li>
+<li>You&#x27;re doing analysis and reporting</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Cost-effective for large volumes</li>
+<li>Simpler system architecture</li>
+<li>Better resource utilization</li>
+<li>Easier to optimize and tune</li>
+</ul><p><strong>Considerations</strong>:</p><ul>
+<li>Delayed results</li>
+<li>Less interactive user experience</li>
+<li>May need result storage and retrieval</li>
+<li>Requires scheduling and orchestration</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-single-agent-vs-multi-agent">Deciding on Single Agent vs. Multi-Agent<a href="#deciding-on-single-agent-vs-multi-agent" class="hash-link" aria-label="Direct link to Deciding on Single Agent vs. Multi-Agent" title="Direct link to Deciding on Single Agent vs. Multi-Agent" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Single Agent</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Multi-Agent</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Agent architecture fundamentally shapes your system&#x27;s capabilities, complexity, and scalability. The wrong choice can lead to over-engineered solutions, performance bottlenecks, or limited functionality that doesn&#x27;t meet user needs.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>How complex are the tasks I need to solve?</strong> (Simple single-purpose vs. complex multi-step workflows)</li>
+<li><strong>Do I need specialized expertise?</strong> (General-purpose agent vs. domain-specific specialists)</li>
+<li><strong>What&#x27;s my scalability requirement?</strong> (Single user vs. multiple concurrent users with different needs)</li>
+<li><strong>How important is fault tolerance?</strong> (Single point of failure vs. distributed resilience)</li>
+<li><strong>What&#x27;s my development complexity tolerance?</strong> (Simple single agent vs. complex coordination logic)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for agent architecture:</strong></p><ol>
+<li>
+<p><strong>Analyze your problem complexity</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Map out all the tasks your system needs to perform</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify if tasks require specialized expertise or can be handled generically</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess if you need parallel processing or sequential workflows</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if tasks are independent or interdependent</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your scalability and reliability needs</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your expected user load and concurrent usage patterns</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your fault tolerance requirements (single point of failure vs. distributed resilience)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider if you need to scale different capabilities independently</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for system growth and evolution</li>
+</ul>
+</li>
+<li>
+<p><strong>Assess your development and operational capabilities</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your team&#x27;s expertise with agent coordination and communication</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine your development timeline and complexity tolerance</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your debugging and monitoring capabilities</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your operational overhead tolerance</li>
+</ul>
+</li>
+<li>
+<p><strong>Design and test your architecture</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create a detailed system architecture diagram</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design agent communication protocols and data flow</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for agent failure scenarios and recovery</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test the architecture with realistic scenarios and edge cases</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose single agent when</strong>:</p><ul>
+<li>Your problem is well-defined and focused</li>
+<li>You want the simplest architecture</li>
+<li>You don&#x27;t need specialized capabilities</li>
+<li>You&#x27;re building a proof of concept</li>
+<li>You have limited resources</li>
+</ul><p><strong>Benefits</strong>:</p><ul>
+<li>Simple to implement and debug</li>
+<li>Easier to maintain</li>
+<li>Lower complexity</li>
+<li>Faster development</li>
+</ul><p><strong>Limitations</strong>:</p><ul>
+<li>Limited specialization</li>
+<li>Harder to scale</li>
+<li>Single point of failure</li>
+<li>Less modular</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Choose multi-agent when</strong>:</p><ul>
+<li>You have distinct problem domains requiring specialized expertise</li>
+<li>You need to handle complex, multi-faceted problems</li>
+<li>You want better fault tolerance and redundancy</li>
+<li>You&#x27;re building complex workflows with multiple steps</li>
+<li>You need to scale across different capabilities</li>
+</ul><p><strong>Pros</strong>:</p><ul>
+<li><strong>Domain Expertise</strong>: Specialized agents for specific areas</li>
+<li><strong>Scalability</strong>: Handle complex problems beyond single agent capabilities</li>
+<li><strong>Fault Tolerance</strong>: System continues if individual agents fail</li>
+<li><strong>Flexibility</strong>: Dynamic agent composition based on needs</li>
+<li><strong>Variable Autonomy</strong>: Different agents can have different autonomy levels (fully automated, supervised, collaborative, advisory)</li>
+<li><strong>Risk Management</strong>: High-risk tasks can use supervised agents, low-risk tasks can be fully automated</li>
+</ul><p><strong>Cons</strong>:</p><ul>
+<li><strong>Complexity</strong>: More complex to design, implement, and debug</li>
+<li><strong>Coordination Overhead</strong>: Need communication protocols and orchestration</li>
+<li><strong>Development Time</strong>: Longer development and testing cycles</li>
+<li><strong>Resource Requirements</strong>: More infrastructure and computational resources</li>
+<li><strong>Failure Points</strong>: Multiple agents mean more potential failure points</li>
+</ul><p><strong>Architecture Patterns</strong>:</p><ul>
+<li><strong>Supervisor Pattern</strong>: Central coordinator managing sub-agents</li>
+<li><strong>Peer-to-Peer</strong>: Agents communicate directly with each other</li>
+<li><strong>Hierarchical</strong>: Multi-level agent organization with clear reporting</li>
+<li><strong>Workflow-based</strong>: Agents orchestrated by workflow engine</li>
+<li><strong>Swarm Intelligence</strong>: Decentralized agents with emergent behavior</li>
+</ul><p><strong>Key Implementation Decisions</strong>:</p><ul>
+<li><strong>Communication</strong>: Stateless vs. stateful, real-time vs. asynchronous</li>
+<li><strong>Security</strong>: OAuth for enterprise vs. basic authentication</li>
+<li><strong>Coordination</strong>: Supervisor patterns vs. peer-to-peer collaboration</li>
+<li><strong>Autonomy Levels</strong>: Risk-based autonomy assignment per agent</li>
+<li><strong>Agent Discovery</strong>: How agents find and register with each other</li>
+<li><strong>Data Sharing</strong>: How agents share information and context</li>
+<li><strong>Failure Handling</strong>: How the system handles agent failures and recovery</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-agent-communication-and-collaboration">Deciding on Agent Communication and Collaboration<a href="#deciding-on-agent-communication-and-collaboration" class="hash-link" aria-label="Direct link to Deciding on Agent Communication and Collaboration" title="Direct link to Deciding on Agent Communication and Collaboration" translate="no">​</a></h3>
+<blockquote>
+<p><strong>Note:</strong> This section only applies if you chose to implement a multi-agent system in the previous section. If you selected a single agent, you can skip this section.</p>
+</blockquote>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Human-Agent Collaboration</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Agent-to-Agent Communication</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Swarm Intelligence</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Federated Agent Networks</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Calling Agents through MCP</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Communication and collaboration patterns determine how your agents work together and with humans. The wrong approach can lead to coordination failures, inefficient workflows, or poor user experiences that undermine the value of your multi-agent system.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>How do my agents need to coordinate?</strong> (Independent tasks vs. complex workflows requiring coordination)</li>
+<li><strong>What&#x27;s my human involvement requirement?</strong> (Fully autonomous vs. human oversight and collaboration)</li>
+<li><strong>How complex are my workflows?</strong> (Simple sequential tasks vs. complex multi-step processes)</li>
+<li><strong>What&#x27;s my failure tolerance?</strong> (Can handle agent failures vs. need robust coordination)</li>
+<li><strong>What&#x27;s my user experience goal?</strong> (Seamless automation vs. transparent human-AI collaboration)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for agent communication and collaboration:</strong></p><ol>
+<li>
+<p><strong>Analyze your workflow requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Map out all the tasks and decision points in your workflows</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify which tasks can be automated vs. require human oversight</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine if tasks are independent or interdependent</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess the complexity of coordination needed between agents</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your human involvement needs</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Determine where human judgment and oversight are required</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your users&#x27; comfort level with autonomous vs. collaborative systems</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your regulatory and compliance requirements for human oversight</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for human feedback and intervention mechanisms</li>
+</ul>
+</li>
+<li>
+<p><strong>Design your communication architecture</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define how agents will share information and coordinate actions</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for error handling and failure recovery between agents</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design human-AI interaction patterns and interfaces</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider security and access control for agent communications</li>
+</ul>
+</li>
+<li>
+<p><strong>Test and validate your approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create test scenarios with different coordination requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Validate that human-AI collaboration enhances rather than complicates workflows</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test failure scenarios and recovery mechanisms</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Ensure the system meets your reliability and user experience goals</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Design agents that augment human intelligence by working with us rather than replacing us, focusing on collaborative intelligence and cognitive augmentation.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Collaborative Intelligence:</strong> Agents that enhance human thinking rather than replace it</li>
+<li><strong>Cognitive Augmentation:</strong> Offload repetitive tasks to free up human cognitive bandwidth</li>
+<li><strong>Collective Subconscious:</strong> Agents as background processors for routine work</li>
+<li><strong>Human-Agent Co-evolution:</strong> Reciprocal elevation of human and agent capabilities</li>
+<li><strong>Context-Aware Interaction:</strong> Agents that understand and adapt to human goals</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Enhanced Human Agency:</strong> Maintains human control while augmenting capabilities</li>
+<li><strong>Cognitive Liberation:</strong> Frees humans from digital drudgery to focus on higher-level thinking</li>
+<li><strong>Collaborative Learning:</strong> Agents learn from human expertise and redistribute skills</li>
+<li><strong>Scalable Intelligence:</strong> Collective knowledge sharing across teams and domains</li>
+</ul><p><strong>Design Principles:</strong></p><ul>
+<li><strong>Human-Centric Design:</strong> Align agents with human cognition and workflows</li>
+<li><strong>Reliability First:</strong> Focus on reliable atomic interactions before complex tasks</li>
+<li><strong>Flexible Integration:</strong> Deterministic scaffolding with probabilistic model calls</li>
+<li><strong>Contextual Adaptation:</strong> Agents that understand and respond to changing contexts</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Start with reliable atomic interactions (clicking, typing, form filling)</li>
+<li>Build deterministic scaffolding with probabilistic model calls</li>
+<li>Create workflows that evolve in complexity over time</li>
+<li>Measure both agent capabilities and human productivity improvements</li>
+<li>Design for human-agent co-evolution and skill sharing</li>
+</ul><p><strong>Use Case Examples:</strong></p><ul>
+<li><strong>Form Automation:</strong> Reliable form filling to reduce repetitive data entry</li>
+<li><strong>Knowledge Transfer:</strong> Agents that learn and share expertise across teams</li>
+<li><strong>Cognitive Offloading:</strong> Background processing of routine digital tasks</li>
+<li><strong>Collaborative Problem Solving:</strong> Human-agent teams tackling complex challenges</li>
+<li><strong>Skill Redistribution:</strong> Agents that learn and teach human skills</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Human-agent interaction design and collaboration models</li>
+<li>Cognitive load distribution and task automation levels</li>
+<li>Learning and adaptation requirements</li>
+<li>Team collaboration and knowledge sharing needs</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Build small, focused agents that interact with each other rather than monolithic systems, enabling autonomous agents to communicate, coordinate, and collaborate to accomplish complex multi-agent tasks.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Inter-Agent Messaging:</strong> Structured communication protocols between agents</li>
+<li><strong>Task Coordination:</strong> Distributed task assignment and workload balancing</li>
+<li><strong>Shared Memory:</strong> Common knowledge base accessible to all agents</li>
+<li><strong>Conflict Resolution:</strong> Mechanisms for handling conflicting agent decisions</li>
+<li><strong>Hierarchical Organization:</strong> Agent roles and responsibilities in multi-agent systems</li>
+<li><strong>Modular Architecture:</strong> Small, focused agents with clear separation of concerns</li>
+<li><strong>Supervisor-Sub Agent Pattern:</strong> Supervisor agents set application tone and define functionality usage</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Scalable Coordination:</strong> Handle complex tasks beyond single agent capabilities</li>
+<li><strong>Specialized Expertise:</strong> Different agents with domain-specific knowledge</li>
+<li><strong>Fault Tolerance:</strong> System continues functioning if individual agents fail</li>
+<li><strong>Parallel Processing:</strong> Multiple agents working simultaneously on different aspects</li>
+<li><strong>Improved Modularity:</strong> Better maintainability and testing capabilities</li>
+<li><strong>Flexibility:</strong> Use different foundation models for specific tasks</li>
+<li><strong>Enhanced Scalability:</strong> Easy to add or remove agents as needed</li>
+<li><strong>Clear Separation:</strong> Distinct concerns and permissions for each agent</li>
+</ul><p><strong>Communication Patterns:</strong></p><ul>
+<li><strong>Broadcast Messaging:</strong> One-to-many communication for announcements</li>
+<li><strong>Direct Messaging:</strong> Point-to-point communication for specific tasks</li>
+<li><strong>Shared Workspace:</strong> Common environment where agents can observe and interact</li>
+<li><strong>Event-Driven:</strong> Agents respond to events and state changes</li>
+<li><strong>Request-Response:</strong> Formal protocols for task delegation and results</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Define clear agent roles and responsibilities</li>
+<li>Implement robust communication protocols</li>
+<li>Establish shared memory and knowledge bases</li>
+<li>Create conflict resolution mechanisms</li>
+<li>Monitor and optimize agent coordination</li>
+<li><strong>Supervisor-Sub Agent Pattern:</strong> Supervisor agents set application tone and define functionality usage</li>
+<li><strong>Domain-Specific Agents:</strong> Sub-agents handle specific domains (e.g., meetings, knowledge retrieval)</li>
+<li><strong>Reusable Components:</strong> Build components that can be shared across multiple agents</li>
+<li><strong>Clear Separation:</strong> Maintain distinct concerns and permissions for each agent</li>
+</ul><p><strong>Use Case Examples:</strong></p><ul>
+<li><strong>Multi-Domain Research:</strong> Agents specializing in different research areas</li>
+<li><strong>Complex Problem Solving:</strong> Breaking down problems across specialized agents</li>
+<li><strong>Workflow Orchestration:</strong> Coordinating multi-step business processes</li>
+<li><strong>Resource Management:</strong> Agents managing different aspects of system resources</li>
+<li><strong>Quality Assurance:</strong> Agents reviewing and validating each other&#x27;s work</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Agent specialization and role definition requirements</li>
+<li>Communication protocol complexity and reliability needs</li>
+<li>Coordination and conflict resolution mechanisms</li>
+<li>Scalability and fault tolerance requirements</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Deploy multiple simple agents that work together to achieve complex emergent behaviors through collective intelligence.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Emergent Behavior:</strong> Complex outcomes from simple agent interactions</li>
+<li><strong>Decentralized Control:</strong> No central coordinator, agents make local decisions</li>
+<li><strong>Collective Problem Solving:</strong> Swarm intelligence for optimization and search</li>
+<li><strong>Adaptive Coordination:</strong> Agents adjust behavior based on swarm feedback</li>
+<li><strong>Scalable Architecture:</strong> Add or remove agents without system redesign</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Resilience:</strong> System continues functioning with agent failures</li>
+<li><strong>Scalability:</strong> Easy to scale by adding more agents</li>
+<li><strong>Flexibility:</strong> Agents can adapt to changing conditions</li>
+<li><strong>Efficiency:</strong> Parallel processing across multiple agents</li>
+</ul><p><strong>Swarm Behaviors:</strong></p><ul>
+<li><strong>Flocking:</strong> Agents move together in coordinated patterns</li>
+<li><strong>Foraging:</strong> Agents search and collect resources efficiently</li>
+<li><strong>Optimization:</strong> Swarm algorithms for finding optimal solutions</li>
+<li><strong>Consensus Building:</strong> Agents reach agreement through local interactions</li>
+<li><strong>Task Allocation:</strong> Dynamic assignment of tasks to available agents</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Design simple agent behaviors with local rules</li>
+<li>Implement swarm communication protocols</li>
+<li>Create feedback mechanisms for collective learning</li>
+<li>Establish emergence detection and monitoring</li>
+<li>Optimize swarm parameters for specific tasks</li>
+</ul><p><strong>Use Case Examples:</strong></p><ul>
+<li><strong>Resource Optimization:</strong> Swarm agents optimizing resource allocation</li>
+<li><strong>Search and Discovery:</strong> Multiple agents exploring solution spaces</li>
+<li><strong>Load Balancing:</strong> Agents distributing workload across systems</li>
+<li><strong>Environmental Monitoring:</strong> Swarm agents tracking and responding to changes</li>
+<li><strong>Collaborative Filtering:</strong> Agents working together to identify patterns</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Swarm size and agent complexity requirements</li>
+<li>Emergent behavior design and monitoring needs</li>
+<li>Communication overhead and coordination costs</li>
+<li>Task complexity and optimization requirements</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Connect distributed agents across different organizations, systems, or domains to share capabilities and collaborate on complex tasks.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Cross-Organizational Agents:</strong> Agents from different entities working together</li>
+<li><strong>Federated Identity:</strong> Secure authentication across organizational boundaries</li>
+<li><strong>Capability Sharing:</strong> Agents exposing and consuming services from each other</li>
+<li><strong>Trust Networks:</strong> Establishing trust relationships between agent systems</li>
+<li><strong>Interoperability Standards:</strong> Common protocols for agent communication</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Capability Aggregation:</strong> Combine specialized agents from different organizations</li>
+<li><strong>Resource Sharing:</strong> Access to distributed resources and expertise</li>
+<li><strong>Innovation Acceleration:</strong> Cross-pollination of ideas and approaches</li>
+<li><strong>Cost Optimization:</strong> Share expensive specialized capabilities</li>
+</ul><p><strong>Federation Models:</strong></p><ul>
+<li><strong>Peer-to-Peer:</strong> Direct agent-to-agent communication</li>
+<li><strong>Hub-and-Spoke:</strong> Central coordinator managing distributed agents</li>
+<li><strong>Hierarchical:</strong> Multi-level federation with different trust levels</li>
+<li><strong>Market-Based:</strong> Agents trading capabilities and services</li>
+<li><strong>Consortium:</strong> Formal agreements between organizations for agent collaboration</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Establish federation governance and standards</li>
+<li>Implement secure cross-organizational authentication</li>
+<li>Create capability discovery and registration systems</li>
+<li>Develop trust and reputation mechanisms</li>
+<li>Monitor and audit federated agent interactions</li>
+</ul><p><strong>Use Case Examples:</strong></p><ul>
+<li><strong>Supply Chain Coordination:</strong> Agents from different companies coordinating logistics</li>
+<li><strong>Research Collaboration:</strong> Academic and industry agents sharing research capabilities</li>
+<li><strong>Emergency Response:</strong> Government and NGO agents coordinating disaster response</li>
+<li><strong>Financial Services:</strong> Banks and fintech agents collaborating on transactions</li>
+<li><strong>Healthcare Networks:</strong> Medical agents sharing patient care capabilities</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Federation governance and trust requirements</li>
+<li>Security and privacy across organizational boundaries</li>
+<li>Capability sharing and interoperability standards</li>
+<li>Legal and regulatory compliance needs</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Integrate MCP servers with Amazon Bedrock Agents using inline agents and action groups for enhanced agent capabilities.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Inline Agent SDK:</strong> Streamlined agent creation and invocation</li>
+<li><strong>MCP Client Integration:</strong> Direct access to MCP server tools</li>
+<li><strong>Action Group Configuration:</strong> Grouping multiple MCP clients</li>
+<li><strong>Return Control Flow:</strong> Seamless tool execution and response handling</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Standardized Integration:</strong> Consistent access to diverse data sources</li>
+<li><strong>Reduced Development Overhead:</strong> No custom connectors for each integration</li>
+<li><strong>Enhanced Agent Capabilities:</strong> Access to specialized tools and data sources</li>
+<li><strong>Scalable Architecture:</strong> Easy addition of new MCP servers</li>
+</ul><p><strong>Implementation Strategy:</strong></p><ul>
+<li>Use InlineAgent SDK for agent creation</li>
+<li>Configure MCP clients with server parameters</li>
+<li>Group MCP clients into action groups</li>
+<li>Implement return control for tool execution</li>
+</ul><p><strong>Use Case Examples:</strong></p><ul>
+<li><strong>AWS Cost Analysis:</strong> Connect to Cost Explorer and CloudWatch for spend insights</li>
+<li><strong>Multi-Data Source Agents:</strong> Integrate with Knowledge Bases, SQLite, and filesystem</li>
+<li><strong>Developer Productivity:</strong> Slack and GitHub integration for development workflows</li>
+<li><strong>ML Experiment Tracking:</strong> Comet ML integration for experiment management</li>
+</ul><p><strong>Choose when</strong>:</p><ul>
+<li>You need agents to access multiple external data sources</li>
+<li>You want standardized tool integration</li>
+<li>You&#x27;re building complex workflows with diverse data needs</li>
+<li>You need to scale agent capabilities across different domains</li>
+<li>You want to leverage existing MCP server ecosystem</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Agent complexity and tool requirements</li>
+<li>MCP server selection and configuration</li>
+<li>Development team expertise with MCP protocol</li>
+<li>Production deployment and scaling needs</li>
+</ul></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="deciding-on-tool-integration-and-agent-capabilities">Deciding on Tool Integration and Agent Capabilities<a href="#deciding-on-tool-integration-and-agent-capabilities" class="hash-link" aria-label="Direct link to Deciding on Tool Integration and Agent Capabilities" title="Direct link to Deciding on Tool Integration and Agent Capabilities" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Why</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">How</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Model Context Protocol (MCP)</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Direct API Integration</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Embedded Tools</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Hybrid Integration</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>Why this decision matters:</strong>
+Tool integration determines what your agents can actually do in the real world. The wrong approach can lead to limited functionality, complex integrations, or security vulnerabilities that prevent your agents from delivering value.</p><p><strong>Key questions to ask yourself:</strong></p><ol>
+<li><strong>What external systems do my agents need to interact with?</strong> (APIs, databases, file systems, third-party services)</li>
+<li><strong>How complex are my integration requirements?</strong> (Simple API calls vs. complex multi-step workflows)</li>
+<li><strong>What&#x27;s my security and compliance tolerance?</strong> (Basic authentication vs. enterprise-grade security)</li>
+<li><strong>How important is standardization vs. customization?</strong> (Standard protocols vs. custom integrations)</li>
+<li><strong>What&#x27;s my team&#x27;s expertise with different integration approaches?</strong> (MCP vs. custom connectors vs. API wrappers)</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Due diligence checklist for tool integration:</strong></p><ol>
+<li>
+<p><strong>Assess your integration requirements</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Map all external systems your agents need to access</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Identify data types and access patterns (read, write, real-time, batch)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate security and compliance requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess integration complexity and maintenance needs</li>
+</ul>
+</li>
+<li>
+<p><strong>Evaluate your technical constraints</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Review your team&#x27;s expertise with different integration approaches</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your infrastructure and deployment capabilities</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your development timeline and resource constraints</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Evaluate your monitoring and debugging capabilities</li>
+</ul>
+</li>
+<li>
+<p><strong>Analyze your scalability and performance needs</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Define your expected usage patterns and volume</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Assess your performance and latency requirements</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider your scaling and growth projections</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for system evolution and new integrations</li>
+</ul>
+</li>
+<li>
+<p><strong>Design and test your integration approach</strong></p>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create integration architecture diagrams</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Design security and access control mechanisms</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Plan for error handling and failure scenarios</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Test integrations with realistic data and scenarios</li>
+</ul>
+</li>
+</ol></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Standardized protocol for AI systems to communicate with external data sources, tools, and services, solving the M×N integration problem.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>MCP Clients:</strong> AI applications that need access to external data</li>
+<li><strong>MCP Servers:</strong> Standardized interfaces to specific data sources</li>
+<li><strong>Three Primitives:</strong> Tools (functions), Resources (data), and Prompts (templates)</li>
+<li><strong>Client-Server Architecture:</strong> Supports both local and remote implementations</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Reduced Complexity:</strong> Transforms M×N integration problem into M+N solution</li>
+<li><strong>Standardized Access:</strong> Universal language for AI-data connections</li>
+<li><strong>Security Integration:</strong> Leverages existing AWS security mechanisms (IAM)</li>
+<li><strong>Scalable Design:</strong> Works across local development and enterprise deployments</li>
+</ul><p><strong>Choose when</strong>:</p><ul>
+<li>You need standardized access to multiple data sources</li>
+<li>You want to leverage existing MCP server ecosystem</li>
+<li>You&#x27;re building complex multi-tool workflows</li>
+<li>You need both local and remote tool access</li>
+<li>You want to reduce integration maintenance overhead</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Local vs. remote MCP server deployment</li>
+<li>Security and access control requirements</li>
+<li>Integration complexity and maintenance needs</li>
+<li>Team expertise with protocol implementations</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Agents directly call external APIs and services using custom connectors and wrappers.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>API Clients:</strong> Direct HTTP/gRPC clients for external services</li>
+<li><strong>Authentication Handlers:</strong> OAuth, API keys, and credential management</li>
+<li><strong>Data Transformers:</strong> Convert between agent and external system formats</li>
+<li><strong>Error Handlers:</strong> Retry logic, circuit breakers, and fallback mechanisms</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Direct Control:</strong> Full control over integration behavior</li>
+<li><strong>Performance:</strong> Optimized for specific use cases</li>
+<li><strong>Customization:</strong> Tailored to specific business requirements</li>
+<li><strong>Debugging:</strong> Easier to trace and debug issues</li>
+</ul><p><strong>Choose when</strong>:</p><ul>
+<li>You need highly customized integration behavior</li>
+<li>You&#x27;re integrating with proprietary or legacy systems</li>
+<li>You require specific performance optimizations</li>
+<li>You have complex data transformation needs</li>
+<li>You want full control over error handling and retry logic</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>API complexity and authentication requirements</li>
+<li>Data transformation and format conversion needs</li>
+<li>Performance and latency optimization requirements</li>
+<li>Team expertise with API integration patterns</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Tools and capabilities are built directly into the agent system as embedded functions and services.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>Internal Functions:</strong> Built-in capabilities within the agent framework</li>
+<li><strong>Local Services:</strong> Microservices running in the same environment</li>
+<li><strong>Database Connectors:</strong> Direct database access and query capabilities</li>
+<li><strong>File System Access:</strong> Local and network file system operations</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Low Latency:</strong> No network calls for internal operations</li>
+<li><strong>High Security:</strong> No external network exposure</li>
+<li><strong>Simple Deployment:</strong> Everything in one system</li>
+<li><strong>Easy Debugging:</strong> All code in one codebase</li>
+</ul><p><strong>Choose when</strong>:</p><ul>
+<li>You need maximum performance and low latency</li>
+<li>You&#x27;re working with sensitive data requiring high security</li>
+<li>You have simple, well-defined tool requirements</li>
+<li>You want to minimize external dependencies</li>
+<li>You&#x27;re building proof-of-concept or prototype systems</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Performance and latency requirements</li>
+<li>Security and data sensitivity needs</li>
+<li>Tool complexity and maintenance requirements</li>
+<li>System scalability and growth projections</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Core Concept:</strong> Combine multiple integration approaches based on specific tool requirements and constraints.</p><p><strong>Key Components:</strong></p><ul>
+<li><strong>MCP for Standard Tools:</strong> Use MCP for common, standardized integrations</li>
+<li><strong>Direct APIs for Custom:</strong> Direct integration for specialized systems</li>
+<li><strong>Embedded for Critical:</strong> Built-in tools for performance-critical operations</li>
+<li><strong>Gateway Pattern:</strong> Centralized routing and management of different integration types</li>
+</ul><p><strong>Architecture Benefits:</strong></p><ul>
+<li><strong>Flexibility:</strong> Choose the best approach for each tool</li>
+<li><strong>Performance:</strong> Optimize critical paths while maintaining flexibility</li>
+<li><strong>Maintainability:</strong> Standardize where possible, customize where needed</li>
+<li><strong>Scalability:</strong> Scale different integration types independently</li>
+</ul><p><strong>Choose when</strong>:</p><ul>
+<li>You have diverse integration requirements</li>
+<li>You need to balance performance, security, and flexibility</li>
+<li>You&#x27;re building enterprise systems with complex needs</li>
+<li>You want to optimize for both development speed and production performance</li>
+<li>You&#x27;re evolving from simple to complex systems</li>
+</ul><p><strong>Decision Points:</strong></p><ul>
+<li>Tool categorization and integration strategy mapping</li>
+<li>Performance vs. flexibility trade-offs</li>
+<li>Development and maintenance resource allocation</li>
+<li>System evolution and migration planning</li>
+</ul></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="common-pitfalls">Common Pitfalls<a href="#common-pitfalls" class="hash-link" aria-label="Direct link to Common Pitfalls" title="Direct link to Common Pitfalls" translate="no">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="design-mistakes">Design Mistakes<a href="#design-mistakes" class="hash-link" aria-label="Direct link to Design Mistakes" title="Direct link to Design Mistakes" translate="no">​</a></h3>
+<ul>
+<li><strong>Over-engineering</strong>: Starting with complex patterns when simple ones suffice</li>
+<li><strong>Under-evaluating</strong>: Not setting up proper testing and evaluation</li>
+<li><strong>Ignoring costs</strong>: Not considering API costs and infrastructure needs</li>
+<li><strong>Poor prompt design</strong>: Not investing time in prompt engineering</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="technical-mistakes">Technical Mistakes<a href="#technical-mistakes" class="hash-link" aria-label="Direct link to Technical Mistakes" title="Direct link to Technical Mistakes" translate="no">​</a></h3>
+<ul>
+<li><strong>No error handling</strong>: Not planning for API failures and timeouts</li>
+<li><strong>Poor data quality</strong>: Using low-quality training or context data</li>
+<li><strong>Security oversights</strong>: Not implementing proper input validation</li>
+<li><strong>Scalability issues</strong>: Not planning for increased load</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="key-takeaways">Key Takeaways<a href="#key-takeaways" class="hash-link" aria-label="Direct link to Key Takeaways" title="Direct link to Key Takeaways" translate="no">​</a></h2>
+<ol>
+<li><strong>Start Simple</strong>: Begin with basic prompting before adding complexity</li>
+<li><strong>Data is King</strong>: Good data makes good AI</li>
+<li><strong>Standards Help</strong>: Use standards like MCP to make connections easier</li>
+<li><strong>Feedback Loops Matter</strong>: Agentic control is about giving up control to the agent! Let it iterate but make sure it has a clear feedback loop!</li>
+<li><strong>Test Everything</strong>: AI can be wrong, so always test and measure!</li>
+</ol>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<p>Ready to implement your GenAI system? Here&#x27;s your action plan:</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="immediate-actions">Immediate Actions<a href="#immediate-actions" class="hash-link" aria-label="Direct link to Immediate Actions" title="Direct link to Immediate Actions" translate="no">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <strong>Evaluate your current architecture</strong>: Assess your existing system against the decision framework in this guide</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <strong>Implement systematic evaluation</strong>: Set up automated model evaluation starting with basic metrics</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <strong>Design a proof of concept</strong>: Create a simple system using the patterns outlined, focusing on clear responsibilities</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <strong>Establish infrastructure practices</strong>: Implement IaC deployment patterns for your GenAI systems</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="advanced-learning">Advanced Learning<a href="#advanced-learning" class="hash-link" aria-label="Direct link to Advanced Learning" title="Direct link to Advanced Learning" translate="no">​</a></h3>
+<ul>
+<li><a href="/docs/skills/solving-system-design/preparing-genai-systems-for-production">Preparing GenAI Systems for Production</a> for production readiness</li>
+<li><a href="/docs/skills/solving-system-design/understanding-the-fundamentals-of-genai">Understanding GenAI Fundamentals</a> for foundational concepts</li>
+<li><a href="/docs/skills/solving-system-design/understanding-intermediate-genai-concepts">Understanding Intermediate GenAI Concepts</a> for advanced patterns</li>
+</ul>
+<details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>🤖 AI Metadata (Click to expand)</summary><div><div class="collapsibleContent_i85q"><div class="language-yaml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-yaml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic"># AI METADATA - DO NOT REMOVE OR MODIFY</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># AI_UPDATE_INSTRUCTIONS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># This document should be updated when new GenAI architectural patterns emerge,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># AWS services are updated, or industry best practices change significantly.</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 1. SCAN_SOURCES: Monitor AWS blogs, Anthropic engineering posts, Martin Fowler articles,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#    and GitHub repositories for new architectural patterns and best practices</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 2. EXTRACT_DATA: Extract new patterns, decision factors, implementation strategies,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#    and architectural trade-offs from authoritative sources</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 3. UPDATE_CONTENT: Add new patterns to appropriate sections, update decision factors,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#    and ensure all examples remain current and relevant</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 4. VERIFY_CHANGES: Cross-reference new content with multiple sources and ensure</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#    consistency with existing patterns and decision frameworks</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 5. MAINTAIN_FORMAT: Preserve the structured format with clear pattern descriptions,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#    decision factors, and implementation strategies</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># CONTENT_MERGE_STATUS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Simple and Complex Systems: Merged into single comprehensive decision framework</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Priority: Organized by importance and difficulty (Foundation → Architecture → Advanced)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Complete Coverage: All major GenAI system design decisions in one document</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Quick Start Guidance: Clear progression from simple to complex decisions</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># CONTENT_PATTERNS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Pattern Name: Core Concept, Key Components, Architecture Benefits, Implementation Strategy, Decision Factors</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Framework: When to use, trade-offs, implementation considerations</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Architecture Benefits: Scalability, maintainability, performance, cost considerations</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Real-World Example: Comprehensive enterprise customer support system with PlantUML diagram</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Framework Principles: Right level of detail, clear alternatives, architectural focus</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># BLOG_STRUCTURE_REQUIREMENTS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Frontmatter: slug, title, description, authors, tags, date, draft status</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Import Statements: Tabs, TabItem from @theme for interactive content</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Core Questions: List of key questions the guide answers</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - When to Use: Clear guidance on when to use this specific guide</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Tabbed Decision Framework: All major decisions in tabbed format for easy comparison</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Implementation Guidance: Practical steps and considerations</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Common Pitfalls: Mistakes to avoid with specific examples</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Next Steps: Clear progression to related guides</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Action Items: Specific, measurable next steps for readers</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - AI Metadata: Comprehensive metadata for future AI updates</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># DATA_SOURCES:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - AWS Blog Posts: /prompts/research/research-genai-arch-patterns.md (comprehensive research completed)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Anthropic Engineering: Claude Code best practices and agentic patterns</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Industry Standards: Martin Fowler GenAI patterns and architectural principles</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Additional Resources: MCP protocols, Nova Act, AgentCore, vector databases, LLM experimentation</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># RESEARCH_STATUS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Primary Sources: All AWS blog posts researched and documented</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Additional Sources: All discovered resources researched and integrated</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Real-World Example: Enterprise customer support system with full architecture</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Components Section: Comprehensive GenAI components and their roles documented</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Blog Post Structure: Adheres to /prompts/author/blog-post-structure.md</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Framework Consolidation: All &quot;Deciding on...&quot; sections moved to centralized Decision Framework</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Autonomy Gradient Integration: Multi-agent pros enhanced with variable autonomy and risk management</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Section Restructuring: Removed standalone patterns, integrated into decision tabs</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Framework Guidance: Added right level of detail guidance and decision framework principles</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># CONTENT_SECTIONS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 1. Core Architectural Patterns (Direct Prompting, RAG, Agentic, Multi-Agent)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 2. Vector Database and Storage Patterns (LanceDB, OpenSearch, caching strategies)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 3. LLM Experimentation and MLOps Patterns (MLflow, SageMaker, evaluation frameworks)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 4. Foundation Model Evaluation Patterns (automated evaluation, benchmarking)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 5. End-to-End RAG Solution Patterns (Infrastructure as Code, knowledge bases)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 6. Model Deployment and Serving Patterns (SageMaker JumpStart, CDK deployment)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 7. Model Context Protocol (MCP) Patterns (universal integration, Bedrock agents)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 8. GenAI Components and Their Roles (comprehensive component analysis)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># 9. Real-World Example: Enterprise Customer Support Agent System</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># DECISION_FRAMEWORK_PRINCIPLES:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Right Level of Detail: Architectural decisions, not implementation minutiae</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Clear Alternatives: Tabbed options for easy comparison</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - When to Choose: Specific criteria for each option</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Implementation Guidance: Sufficient detail without overwhelming</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Trade-offs: Informed decision-making factors</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Factors: Most important criteria for each use case</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Architectural Focus: Strategic decisions over technical details</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># WHY_TAB_GUIDANCE:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Default First Tab: Every tabbed decision section must start with a &quot;Why&quot; tab as default</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Why This Decision Matters: Explain the importance and consequences of the decision</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Key Questions Format: Provide 5 key questions users should ask themselves</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Question Structure: &quot;What/How/When/Where/Why&quot; format with clear alternatives in parentheses</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Impact: Explain what happens if they get this decision wrong</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Context Setting: Help users understand the stakes before diving into options</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Examples of Why Content:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Knowledge Integration: &quot;Foundation of system intelligence, impacts accuracy, cost, complexity&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Memory Strategy: &quot;Determines context handling, personalization, user experience continuity&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Agent Architecture: &quot;Shapes system capabilities, complexity, and scalability&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Model Strategy: &quot;Determines performance, development speed, and ongoing costs&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Evaluation Strategy: &quot;Determines success measurement, issue detection, quality assurance&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Runtime Environment: &quot;Determines scalability, security, compliance, operational complexity&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># HOW_TAB_GUIDANCE:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Second Tab: Every tabbed decision section must have a &quot;How&quot; tab as the second tab</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Due Diligence Checklist: Provide a structured checklist for making the decision</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Checklist Format: 4 main categories with specific actionable items</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Categories: Requirements Analysis, Constraints Evaluation, Testing/Validation, Production Planning</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Actionable Items: Use checkbox format with specific, measurable tasks</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Process: Guide users through the systematic process of arriving at the right decision</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Examples of How Content:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Knowledge Integration: &quot;Assess knowledge requirements, evaluate constraints, test approach, plan production&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Memory Strategy: &quot;Analyze UX requirements, evaluate constraints, design architecture, test validation&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Agent Architecture: &quot;Analyze problem complexity, evaluate scalability needs, assess capabilities, design/test&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Model Strategy: &quot;Assess domain requirements, evaluate constraints, test approaches, plan production&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Evaluation Strategy: &quot;Define success metrics, assess capacity, design framework, implement/validate&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#   - Runtime Environment: &quot;Assess compliance needs, evaluate scale requirements, assess capabilities, plan deployment&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># REAL_WORLD_EXAMPLE:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use Case: Enterprise customer support platform for 10,000+ concurrent users</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Architecture: Complete PlantUML diagram with AWS sprites</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Decision Factors: Foundation model selection, agent architecture, memory management</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Scale Analysis: Performance metrics, bottlenecks, scaling opportunities</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Cost Analysis: Monthly cost breakdown and optimization strategies</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Security: Compliance features (GDPR, SOC 2, PCI DSS, HIPAA)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Monitoring: Comprehensive observability and alerting strategy</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># UPDATE_TRIGGERS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - New AWS Bedrock features or services are released</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Significant changes to Anthropic Claude capabilities or best practices</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Major updates to industry-standard GenAI architectural patterns</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - New research papers or case studies on GenAI system architecture</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Updates to MCP protocol or agent interoperability standards</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># PLANTUML_DIAGRAM_MAINTENANCE:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - AWS Icons: Use correct include paths from /prompts/author/plantuml-diagram.md</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Version Control: Always use AWS Icons v20.0+ for latest compatibility</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include Syntax: Use !include AWSPuml/... not !includeurl for AWS icons</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Common Fixes: SimpleStorageService.puml, SageMaker.puml, APIGateway.puml paths</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Validation: Always check SVG content for &quot;Cannot open URL&quot; errors</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Tab Structure: Diagram tab first (default), then PlantUML code tab</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Static Files: Save corrected SVGs to /bytesofpurpose-blog/static/img/</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Blog Integration: Use proper MDX syntax with &lt;Tabs&gt; and &lt;TabItem&gt; components</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Iteration Process: Read SVG errors → Fix include paths → Regenerate → Validate</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># FORMATTING_RULES:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Maintain consistent pattern structure: Core Concept → Key Components → Benefits → Implementation → Decision Factors</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use bullet points for lists and decision factors</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include specific examples and use cases for each pattern</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Preserve the &quot;I need to...&quot; format in the Purpose section</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include PlantUML diagrams for complex architectures</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Document real-world examples with comprehensive analysis</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use tabbed structure for PlantUML diagrams (diagram first, code second)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># MERMAID_DIAGRAM_GUIDANCE:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use flowchart TB for architecture diagrams with proper shape semantics</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Diamond {{}} for decision/control nodes (AGENT, HUMAN, GUARDRAILS, OTHER AGENTS)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Subroutine [[]] for external services/protocols (FOUNDATION MODEL, MCP, APIs, Knowledge Base)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Cylinder [()] for data storage (MEMORY, DATABASES, VECTOR DATABASE)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Hexagon {} for process/action nodes (TOOLS, EXTERNAL APIs)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - File [[]] for documents/files (PROMPT, DOCUMENT STORE)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include clickable links using click syntax: click A href &quot;#section&quot; &quot;tooltip&quot;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Add shape legend below diagram explaining each shape type and meaning</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use subgraphs to group related components logically</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Show clear flow relationships between components</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include MCP servers in integration layer to show protocol implementation</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Show human involvement and multi-agent coordination clearly</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Make diagram interactive with links to relevant decision sections</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># ARCHITECTURE_DIAGRAM_REQUIREMENTS:</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - High-level overview of agentic system components</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Clear visual representation of relationships and flows</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Interactive navigation to decision sections</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Semantic shapes that match component functions</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Logical grouping of related components</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Show both single-agent and multi-agent scenarios</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Include human involvement patterns</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Demonstrate MCP integration architecture</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Provide shape legend for clarity</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># - Use professional, clean visual design</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># UPDATE_FREQUENCY: Quarterly review, immediate updates for major AWS/Anthropic releases</span><br></span></code></pre></div></div></div></div></details></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-tags-row"><div class="col"><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/genai">genai</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/design">design</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/decisions">decisions</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/architecture">architecture</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/framework">framework</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/system-design">system-design</a></li></ul></div></div><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/docs/5-skills/solving-system-design/designing-genai-systems.mdx" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/skills/preparing-for-interviews/pre-meditating-responses-for-leadership-questions"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Leadership Interview Prep</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/skills/solving-system-design/preparing-genai-systems-for-production"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Preparing GenAI Systems for Production</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#core-questions" class="table-of-contents__link toc-highlight">Core Questions</a></li><li><a href="#when-to-use-this-guide" class="table-of-contents__link toc-highlight">When to Use This Guide</a></li><li><a href="#agentic-system-architecture-overview" class="table-of-contents__link toc-highlight">Agentic System Architecture Overview</a><ul><li><a href="#shape-legend" class="table-of-contents__link toc-highlight">Shape Legend</a></li></ul></li><li><a href="#design-decision-framework" class="table-of-contents__link toc-highlight">Design Decision Framework</a></li><li><a href="#-critical-success-factors" class="table-of-contents__link toc-highlight">🎯 Critical Success Factors</a><ul><li><a href="#1-prompt-engineering--design" class="table-of-contents__link toc-highlight">1. <strong>Prompt Engineering &amp; Design</strong></a></li><li><a href="#2-feedback-loops--learning" class="table-of-contents__link toc-highlight">2. <strong>Feedback Loops &amp; Learning</strong></a></li><li><a href="#3-success-metrics--evaluation" class="table-of-contents__link toc-highlight">3. <strong>Success Metrics &amp; Evaluation</strong></a></li><li><a href="#4-tools--integrations" class="table-of-contents__link toc-highlight">4. <strong>Tools &amp; Integrations</strong></a></li></ul></li><li><a href="#decision-priorities" class="table-of-contents__link toc-highlight">Decision Priorities</a><ul><li><a href="#-foundation-decisions-must-get-right-first" class="table-of-contents__link toc-highlight">🎯 <strong>Foundation Decisions</strong> (Must Get Right First)</a></li><li><a href="#️-architecture-decisions-build-on-foundation" class="table-of-contents__link toc-highlight">🏗️ <strong>Architecture Decisions</strong> (Build on Foundation)</a></li><li><a href="#-advanced-decisions-optimize-for-scale" class="table-of-contents__link toc-highlight">⚡ <strong>Advanced Decisions</strong> (Optimize for Scale)</a></li></ul></li><li><a href="#decisions-youll-need-to-make" class="table-of-contents__link toc-highlight">Decisions You&#39;ll Need To Make</a><ul><li><a href="#deciding-on-knowledge-infusion" class="table-of-contents__link toc-highlight">Deciding on Knowledge Infusion</a></li><li><a href="#deciding-on-memory-strategy" class="table-of-contents__link toc-highlight">Deciding on Memory Strategy</a></li><li><a href="#deciding-on-fine-tuning-vs-prompt-engineering" class="table-of-contents__link toc-highlight">Deciding on Fine-tuning vs. Prompt Engineering</a></li><li><a href="#deciding-on-automated-vs-human-model-evaluation" class="table-of-contents__link toc-highlight">Deciding on Automated vs. Human Model Evaluation</a></li><li><a href="#deciding-on-agent-runtime-environment" class="table-of-contents__link toc-highlight">Deciding on Agent Runtime Environment</a></li><li><a href="#deciding-on-model-selection" class="table-of-contents__link toc-highlight">Deciding on Model Selection</a></li><li><a href="#deciding-on-vector-database-strategy" class="table-of-contents__link toc-highlight">Deciding on Vector Database Strategy</a></li><li><a href="#deciding-on-real-time-vs-batch-processing" class="table-of-contents__link toc-highlight">Deciding on Real-time vs. Batch Processing</a></li><li><a href="#deciding-on-single-agent-vs-multi-agent" class="table-of-contents__link toc-highlight">Deciding on Single Agent vs. Multi-Agent</a></li><li><a href="#deciding-on-agent-communication-and-collaboration" class="table-of-contents__link toc-highlight">Deciding on Agent Communication and Collaboration</a></li><li><a href="#deciding-on-tool-integration-and-agent-capabilities" class="table-of-contents__link toc-highlight">Deciding on Tool Integration and Agent Capabilities</a></li></ul></li><li><a href="#common-pitfalls" class="table-of-contents__link toc-highlight">Common Pitfalls</a><ul><li><a href="#design-mistakes" class="table-of-contents__link toc-highlight">Design Mistakes</a></li><li><a href="#technical-mistakes" class="table-of-contents__link toc-highlight">Technical Mistakes</a></li></ul></li><li><a href="#key-takeaways" class="table-of-contents__link toc-highlight">Key Takeaways</a></li><li><a href="#next-steps" class="table-of-contents__link toc-highlight">Next Steps</a><ul><li><a href="#immediate-actions" class="table-of-contents__link toc-highlight">Immediate Actions</a></li><li><a href="#advanced-learning" class="table-of-contents__link toc-highlight">Advanced Learning</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contact</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/omars-lab/omars-lab.github.io" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.linkedin.com/in/oeid/" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:contact@rythome.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Email<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amp;amount=1&amp;no_recurring=0&amp;item_name=Support+a+Developer&amp;currency_code=USD" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Other Works</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.bytesofpurpose.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Portfolio<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.bytesofpurpose.com/resume.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Resume<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 BytesOfPurpose, Inc. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
