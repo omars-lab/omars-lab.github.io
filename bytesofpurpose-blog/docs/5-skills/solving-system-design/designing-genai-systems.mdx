@@ -1,303 +1,659 @@
 ---
-slug: 'designing-genai-systems-architectural-patterns'
-title: 'Designing GenAI Systems'
-description: 'A comprehensive guide to architectural patterns and decision points for designing agentic AI systems'
+slug: 'framework-for-designing-genai-systems'
+title: 'Designing GenAI Systems: Complete Decision Framework'
+description: 'A comprehensive guide to making all the key design decisions for GenAI systems, from simple to complex, organized by importance and difficulty'
 authors: [oeid]
-tags: [genai, architecture, patterns, agents, ai-systems]
-date: '2025-01-31T15:30'
+tags: [genai, design, decisions, architecture, framework, system-design]
+date: '2025-09-30T10:00'
 draft: false
+sidebar_position: 3
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Designing GenAI Systems: Architectural Patterns and Decision Points
+# Designing GenAI Systems: Complete Decision Framework
 
-A comprehensive guide to architectural patterns and decision points for designing agentic AI systems, based on extensive research of industry best practices and real-world implementations.
+## Core Questions
 
-## Purpose
+**Foundation Decisions (Start Here):**
+- Should I use RAG or direct prompting for my use case?
+- Should I enable memory on my agent? Short-term or long-term?
+- Should I fine-tune an LLM or just use prompt engineering?
+- What model should I choose for my use case?
 
-This guide was created to address four critical needs:
+**Architecture Decisions (Next Level):**
+- Should I have a single agent or decompose into multiple agents?
+- Should I use a vector database or traditional search?
+- Should I implement evaluation before or after deployment?
+- How should my agents communicate and collaborate?
 
-- **I need to understand GenAI architectural patterns**: Learn the core patterns for building agentic AI systems including RAG, multi-agent architectures, and workflow orchestration
-- **I need to make informed architectural decisions**: Understand when to use specific patterns, their trade-offs, and decision factors for different use cases
-- **I need to implement production-ready systems**: Apply proven patterns for model deployment, evaluation, and infrastructure management
-- **I need to scale AI systems effectively**: Design systems that can handle growth, maintain performance, and adapt to changing requirements
+**Advanced Decisions (Complex Systems):**
+- Should I use specialized vector databases or general-purpose ones?
+- Should I implement real-time or batch processing?
+- What runtime environment should I choose?
+- How should I handle agent communication and coordination?
 
-The goal is to transform architectural uncertainty into confident decision-making through structured patterns and clear guidance.
+## When to Use This Guide
 
-## Core Architectural Patterns
+- You understand GenAI fundamentals and need to make design decisions
+- You're building GenAI systems of any complexity
+- You need guidance on architectural trade-offs
+- You want to avoid common design mistakes
+- You're scaling from simple to complex systems
 
-### 1. Direct Prompting Pattern
-**When to use:** Simple use cases where the foundation model's training data is sufficient.
+## Agentic System Architecture Overview
 
-**Limitations:**
-- Constrained by training data cutoff
-- No access to real-time or specific organizational data
-- Security and hallucination concerns
-- Overconfident responses even with weak knowledge
+```mermaid
+flowchart TB
+    subgraph "Agentic System Architecture"
+        subgraph "Core Agent"
+            A{{"AGENT"}}
+            FM[["FOUNDATION MODEL"]]
+            P[["PROMPT"]]
+        end
+        
+        subgraph "Capabilities"
+            T{"TOOLS"}
+            M[("MEMORY")]
+            E[["EVALUATION"]]
+            G{{"GUARDRAILS"}}
+        end
+        
+        subgraph "Integration Layer"
+            MCP[["MCP Protocol"]]
+            MCP_SERVER[("MCP Servers")]
+            API{"EXTERNAL APIs"}
+            DB[("DATABASES")]
+            FS[["FILE SYSTEMS"]]
+        end
+        
+        subgraph "Knowledge & Data"
+            KB[["KNOWLEDGE BASE"]]
+            VD[("VECTOR DATABASE")]
+            DS[["DOCUMENT STORE"]]
+        end
+        
+        subgraph "Human Interaction"
+            H{{"HUMAN"}}
+        end
+        
+        subgraph "Multi-Agent Coordination"
+            A2{{"OTHER AGENTS"}}
+        end
+    end
+    
+    %% Core flows
+    A --> FM
+    A --> P
+    A --> T
+    A --> M
+    A --> E
+    A --> G
+    
+    %% Integration flows
+    A --> MCP
+    MCP --> MCP_SERVER
+    MCP_SERVER --> T
+    T --> API
+    T --> DB
+    T --> FS
+    
+    %% Knowledge flows
+    M --> KB
+    KB --> VD
+    KB --> DS
+    
+    %% Human interaction
+    H --> A
+    H --> E
+    
+    %% Multi-agent coordination
+    A --> A2
+    A2 --> A
+    
+    %% Clickable links
+    click A href "#deciding-on-single-agent-vs-multi-agent" "Agent architecture decisions"
+    click FM href "#deciding-on-model-selection" "Model selection decisions"
+    click P href "#critical-success-factors" "Prompt engineering guidance"
+    click T href "#deciding-on-tool-integration-and-agent-capabilities" "Tool integration decisions"
+    click M href "#deciding-on-memory-strategy" "Memory management decisions"
+    click E href "#deciding-on-automated-vs-human-model-evaluation" "Evaluation strategy decisions"
+    click G href "#deciding-on-agent-runtime-environment" "Runtime and security decisions"
+    click MCP href "#deciding-on-tool-integration-and-agent-capabilities" "MCP integration decisions"
+    click MCP_SERVER href "#deciding-on-tool-integration-and-agent-capabilities" "MCP server implementation decisions"
+    click API href "#deciding-on-tool-integration-and-agent-capabilities" "API integration decisions"
+    click DB href "#deciding-on-tool-integration-and-agent-capabilities" "Database integration decisions"
+    click FS href "#deciding-on-tool-integration-and-agent-capabilities" "File system integration decisions"
+    click KB href "#deciding-on-knowledge-infusion" "Knowledge base decisions"
+    click VD href "#deciding-on-vector-database-strategy" "Vector database decisions"
+    click DS href "#deciding-on-knowledge-infusion" "Document store decisions"
+    click H href "#deciding-on-agent-communication-and-collaboration" "Human collaboration decisions"
+    click A2 href "#deciding-on-agent-communication-and-collaboration" "Multi-agent coordination decisions"
+```
 
-**Decision Point:** Use only for proof-of-concepts or when users can treat responses with healthy skepticism.
+### Shape Legend
 
-### 2. Retrieval Augmented Generation (RAG) Pattern
-**Core Concept:** Retrieve relevant document fragments and include them when prompting the LLM.
+| Shape | Symbol | Meaning | Examples |
+|-------|--------|---------|----------|
+| **Diamond** | `{{}}` | Decision/Control Nodes | AGENT, HUMAN, GUARDRAILS, OTHER AGENTS |
+| **Subroutine** | `[[]]` | External Services/Protocols | FOUNDATION MODEL, MCP Protocol, APIs, Knowledge Base |
+| **Cylinder** | `[()]` | Data Storage | MEMORY, DATABASES, VECTOR DATABASE |
+| **Hexagon** | `{}` | Process/Action Nodes | TOOLS, EXTERNAL APIs |
+| **File** | `[[]]` | Documents/Files | PROMPT, DOCUMENT STORE |
 
-**Architecture Components:**
-- Document chunking and embedding generation
-- Vector database for semantic search
-- RAG prompt template for context injection
-- Knowledge base integration
 
-**When to use:**
-- Processing rapidly changing data (news, stock prices, medical research)
-- Enhancing factuality and reducing hallucinations
-- Leveraging organizational knowledge bases
-- Mitigating training data biases
+## Design Decision Framework
 
-**Decision Factors:**
-- Data freshness requirements
-- Knowledge base size and complexity
-- Response accuracy needs
-- Cost vs. fine-tuning trade-offs
+This framework provides the **right level of detail** for making GenAI system design decisions. Each decision point includes:
 
-### 3. Multi-Agent Architecture Pattern
-**Core Concept:** Build small, focused agents that interact with each other rather than monolithic systems.
+- **Clear alternatives** with tabbed options for easy comparison
+- **When to choose** each option with specific criteria
+- **Implementation guidance** without overwhelming technical details
+- **Trade-offs** to help you make informed decisions
+- **Decision factors** that matter most for your use case
 
-**Benefits:**
-- Improved modularity and maintainability
-- Easier testing and debugging
-- Flexibility to use different FMs for specific tasks
-- Enhanced scalability and extensibility
+The framework focuses on **architectural decisions** rather than implementation details, giving you the information you need to make the right choices without getting lost in technical minutiae.
 
-**Implementation Strategy:**
-- Supervisor agents set application tone and define functionality usage
-- Sub-agents handle specific domains (e.g., meetings, knowledge retrieval)
-- Reusable components across multiple agents
-- Clear separation of concerns and permissions
+## 🎯 Critical Success Factors
 
-### 4. Evaluation and Testing Framework
-**Core Components:**
-- **Evals:** Systematic evaluation of LLM responses across scenarios
-- **Ground Truth Data:** High-quality reference interactions
-- **Automated Testing:** Continuous evaluation in build pipelines
-- **Human Evaluation:** Qualitative assessment of responses
+**Before diving into architectural decisions, understand that these three elements are the most important to get right in any agentic system:**
 
-**Key Metrics:**
-- Response accuracy vs. ground truth
-- Task completion rate
-- Latency and response time
-- Conversation efficiency and engagement
-- Conversation coherence
+### 1. **Prompt Engineering & Design**
+- **Why it matters**: Prompts are the interface between users and your AI system - they determine what the system understands and how it responds
+- **What to focus on**: Clear instructions, context setting, few-shot examples, output formatting, and edge case handling
+- **Common mistakes**: Vague prompts, missing context, poor examples, inconsistent formatting
 
-**Decision Points:**
-- Evaluation frequency (pre-deployment vs. continuous)
-- Automated vs. human evaluation balance
-- Metric thresholds and performance baselines
-- A/B testing strategies for agent versions
+### 2. **Feedback Loops & Learning**
+- **Why it matters**: Systems that can learn and improve from interactions become more valuable over time
+- **What to focus on**: User feedback collection, performance monitoring, automatic retraining, and continuous improvement
+- **Common mistakes**: No feedback mechanism, ignoring user signals, static systems that don't evolve
 
-### 5. Infrastructure as Code (IaC) Pattern
-**Implementation:**
-- Use CloudFormation, AWS CDK, or Terraform
-- Reusable components (guardrails, knowledge bases, action groups)
-- Version control and deployment automation
-- Environment consistency
+### 3. **Success Metrics & Evaluation**
+- **Why it matters**: Without proper measurement, you can't know if your system is working or how to improve it
+- **What to focus on**: Task completion rates, user satisfaction, response quality, system reliability, and business impact
+- **Common mistakes**: No metrics, wrong metrics, infrequent evaluation, ignoring qualitative feedback
 
-**Benefits:**
-- Repeatable deployments
-- Component reusability
-- Infrastructure versioning
-- Automated testing pipelines
+### 4. **Tools & Integrations**
+- **Why it matters**: Tools are how your agents interact with the world - they determine what your system can actually do and how well it can do it
+- **What to focus on**: Tool selection, API reliability, error handling, data quality, and integration complexity
+- **Common mistakes**: Poor tool selection, unreliable APIs, no error handling, complex integrations, ignoring tool limitations
 
-### 6. Security and Access Control Patterns
-**Identity Management:**
-- AgentCore Identity for secure access to AWS services
-- OAuth 2.0 integration for third-party tools
-- Fine-grained permissions based on user context
-- Secure token vault for credential management
+> **💡 Pro Tip**: Spend 40% of your development time on these four areas. They have the highest impact on system success and user satisfaction.
 
-**Guardrails Implementation:**
-- Input guardrails for malicious prompt detection
-- Output guardrails for content filtering
-- LLM-based guardrails for complex rule enforcement
-- Embedding-based guardrails for semantic similarity
-- Rule-based guardrails for PII protection
+## Decision Priorities
 
-**Decision Factors:**
-- User trust level and access restrictions
-- Compliance requirements
-- Cost vs. security trade-offs
-- Integration complexity
+**Start with these decisions in order of importance:**
 
-### 7. Observability and Monitoring Pattern
-**Core Components:**
-- **Traces:** Step-by-step execution visualization
-- **Metrics:** Performance, latency, error rates
-- **Logging:** Comprehensive audit trails
-- **Dashboards:** Real-time system health monitoring
+### 🎯 **Foundation Decisions** (Must Get Right First)
+These decisions have the highest impact on system success and are hardest to change later:
 
-**Implementation:**
-- OpenTelemetry integration
-- CloudWatch Application Signals
-- Custom scoring and trajectory inspection
-- Component-level latency breakdown
+1. **Knowledge Integration** - Determines your system's intelligence foundation
+2. **Model Selection** - Affects performance, cost, and capabilities
+3. **Memory Strategy** - Shapes user experience and system behavior
+4. **Evaluation Strategy** - Determines how you measure and improve success
 
-### 8. Memory Management Pattern
-**Short-term Memory:**
-- Session context persistence
-- Conversation history maintenance
-- Real-time context retrieval
+### 🏗️ **Architecture Decisions** (Build on Foundation)
+These decisions shape your system's structure and scalability:
 
-**Long-term Memory:**
-- User preference learning
-- Semantic fact extraction
-- Cross-session personalization
-- Namespace-based data segmentation
+5. **Single vs. Multi-Agent** - Determines system complexity and capabilities
+6. **Fine-tuning vs. Prompt Engineering** - Affects development speed and performance
+7. **Agent Communication** - Critical for multi-agent coordination
 
-**Decision Points:**
-- Memory retention policies
-- Privacy and data protection
-- Performance vs. context richness
-- Memory strategy selection
+### ⚡ **Advanced Decisions** (Optimize for Scale)
+These decisions optimize performance and handle complexity:
 
-## Vector Database and Storage Patterns
+8. **Vector Database Strategy** - Affects search performance and cost
+9. **Processing Strategy** - Determines user experience and infrastructure needs
+10. **Runtime Environment** - Affects deployment, security, and operations
 
-### 1. Scalable Vector Database Pattern
-**Core Concept:** Build high-performance vector databases that can scale to billions of vectors using cost-effective storage solutions.
+> **💡 Quick Start**: If you're building your first system, focus on decisions 1-4. Add decisions 5-7 as you scale. Consider decisions 8-10 for production systems with high scale or complexity requirements.
+
+## Decisions You'll Need To Make
+
+### Deciding on Knowledge Infusion
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Knowledge integration is the foundation of your GenAI system's intelligence. The approach you choose directly impacts accuracy, cost, complexity, and user experience. Getting this wrong can lead to hallucination, poor performance, or over-engineered solutions.
+
+**Key questions to ask yourself:**
+1. **What type of knowledge does my system need?** (General vs. domain-specific, static vs. dynamic)
+2. **How accurate do responses need to be?** (Can tolerate some hallucination vs. need citations and sources)
+3. **What's my infrastructure complexity tolerance?** (Simple setup vs. can handle vector databases)
+4. **How often does my knowledge change?** (Static content vs. frequently updated information)
+5. **What's my latency requirement?** (Real-time responses vs. can tolerate retrieval delays)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for knowledge integration:**
+
+1. **Assess your knowledge requirements**
+   - [ ] Identify what type of knowledge your system needs (general vs. domain-specific)
+   - [ ] Determine if knowledge changes frequently or is relatively static
+   - [ ] Evaluate the volume and complexity of your knowledge base
+   - [ ] Consider if you need citations and source attribution
+
+2. **Evaluate your constraints**
+   - [ ] Define your latency requirements (real-time vs. can tolerate delays)
+   - [ ] Assess your infrastructure complexity tolerance
+   - [ ] Determine your budget for knowledge management
+   - [ ] Consider your team's technical capabilities
+
+3. **Test and validate your approach**
+   - [ ] Create a small proof of concept with sample data
+   - [ ] Measure response accuracy and relevance
+   - [ ] Test with edge cases and difficult queries
+   - [ ] Validate that the approach meets your quality standards
+
+4. **Plan for production**
+   - [ ] Design your knowledge update and maintenance process
+   - [ ] Plan for monitoring and quality assurance
+   - [ ] Consider backup and disaster recovery
+   - [ ] Document your knowledge management procedures
+
+</TabItem>
+<TabItem value="embedded" label="Knowledge Embedded in Prompts">
+
+**Core Concept:** Embed knowledge directly in prompts using few-shot learning and prompt engineering techniques.
+
+**Choose when**:
+- You have general knowledge requirements
+- You need fast, low-latency responses
+- You want to minimize infrastructure complexity
+- You're working with well-known, stable information
+- You have limited domain-specific data
+
+**Implementation approach**:
+- Design effective prompts with examples
+- Use few-shot learning techniques
+- Implement prompt templates
+- Set up response validation
+- Configure model parameters
+
+**Benefits**:
+- Simple implementation
+- Low latency
+- No additional infrastructure
+- Easy to iterate and test
+- Cost-effective for simple use cases
+
+**Considerations**:
+- Limited to model's training data
+- Potential for hallucination
+- Less control over information accuracy
+- May not handle domain-specific queries well
+- Limited ability to provide citations
+
+</TabItem>
+<TabItem value="rag" label="RAG (Retrieval Augmented Generation)">
+
+**Core Concept:** Retrieve relevant information from a knowledge base and use it to augment model responses.
+
+**Choose when**:
+- You have large amounts of domain-specific knowledge
+- You need to answer questions about specific documents or data
+- You want to provide citations and sources
+- You need to handle dynamic or frequently updated information
+- You want to reduce hallucination and improve accuracy
+
+**Implementation approach**:
+- Set up vector database (OpenSearch, Pinecone, etc.)
+- Create knowledge base with your documents
+- Implement retrieval pipeline
+- Configure embedding model
+- Set up response generation with context
+
+**Benefits**:
+- Access to specific, up-to-date information
+- Reduced hallucination
+- Source attribution and citations
+- Better handling of domain-specific queries
+- Scalable knowledge management
+
+**Considerations**:
+- Additional infrastructure complexity
+- Latency overhead for retrieval
+- Need for good chunking and embedding strategies
+- Ongoing maintenance of knowledge base
+
+</TabItem>
+<TabItem value="mcp" label="Knowledge Base with MCP">
+
+**Core Concept:** Intelligent integration between language models and enterprise knowledge bases using MCP for enhanced discovery and retrieval.
 
 **Key Components:**
-- **LanceDB Integration:** File-based vector database compatible with S3 storage
-- **Data Bucketing:** Split large datasets into manageable chunks (200M vectors per bucket)
-- **Parallel Indexing:** Index multiple buckets simultaneously for faster processing
-- **Serverless Querying:** Use Lambda functions for on-demand vector searches
+- **Knowledge Base Discovery:** Resource for identifying available knowledge bases
+- **Natural Language Querying:** Tool for semantic search across knowledge bases
+- **Reranking Capabilities:** Enhanced relevance using language models
+- **Metadata Integration:** Leveraging document metadata for better filtering
+
+**Integration Components:**
+- **Data Source Configuration:** S3 bucket integration for document storage
+- **Document Processing:** Automated text extraction and chunking
+- **Vector Embedding:** Titan Embeddings V2 for semantic search
+- **Retrieval System:** OpenSearch Serverless for vector similarity search
+- **MCP Integration:** Standardized protocol for agent-tool communication
+
+**Supported Document Types:**
+- **Text Files:** .txt, .md, .html formats
+- **Office Documents:** .doc, .docx, .csv, .xls, .xlsx
+- **PDF Documents:** Multi-page PDF processing
+- **Structured Data:** JSON and other structured formats
 
 **Architecture Benefits:**
-- **Cost Efficiency:** Store vectors on S3 instead of expensive persistent storage
-- **Scalability:** Handle billions of vectors with parallel processing
-- **Performance:** Fast approximate nearest neighbor (ANN) searches
-- **Serverless:** No continuously running servers required
+- **Intelligent Discovery:** AI can discover and use appropriate knowledge bases
+- **Enhanced Relevance:** Reranking improves search result quality
+- **Flexible Querying:** Natural language queries without complex search parameters
+- **Metadata Utilization:** Leverages document structure for better results
+
+**Workflow Components:**
+- **Data Ingestion:** Automated document processing and indexing
+- **Vector Generation:** Embedding creation for semantic search
+- **Query Processing:** Natural language query understanding
+- **Response Generation:** Contextual answer synthesis
+- **MCP Communication:** Standardized agent-tool interactions
 
 **Implementation Strategy:**
-- Use protein language models (pLMs) for biological embeddings
-- Implement best-fit bin packing for optimal bucket sizing
-- Create IVF-PQ indexes with cosine distance for fast searches
-- Use Step Functions for orchestrating parallel queries
+- Use MCP resource for knowledge base discovery
+- Implement natural language query tools
+- Configure reranking for improved relevance
+- Set up metadata-based filtering
 
-**Decision Factors:**
-- Dataset size and vector dimensions
-- Query latency requirements
-- Cost optimization needs
-- Parallel processing capabilities
+**Production Components:**
+- **Monitoring Setup:** Performance and usage tracking
+- **Scaling Configuration:** Auto-scaling based on demand
+- **Security Implementation:** Data encryption and access controls
+- **Backup and Recovery:** Data protection and disaster recovery
 
-### 2. Vector Database Optimization Pattern
-**Core Concept:** Optimize vector database performance through strategic indexing and query optimization.
-
-**Optimization Techniques:**
-- **Index Configuration:** Tune IVF-PQ parameters (partitions, sub-vectors)
-- **Batch Processing:** Handle large query batches efficiently
-- **Storage Optimization:** Use storage-optimized instances (i4i family)
-- **Query Aggregation:** Merge results from multiple database splits
-
-**Performance Considerations:**
-- **Indexing Time:** Balance between index quality and build time
-- **Query Latency:** Optimize for single queries vs. batch queries
-- **Storage Costs:** Balance between query performance and storage footprint
-- **Concurrency:** Handle multiple concurrent queries efficiently
-
-**Decision Points:**
-- Database split sizes (200M vectors optimal for most use cases)
-- Index parameters based on vector dimensions
-- Query optimization strategies for different workloads
-- Cost vs. performance trade-offs
-
-## LLM Experimentation and MLOps Patterns
-
-### 1. Scalable LLM Experimentation Pattern
-**Core Concept:** Build systematic experimentation workflows for LLM customization using MLOps best practices.
-
-**Key Components:**
-- **MLflow Integration:** Track experiments, models, and metadata
-- **SageMaker Pipelines:** Orchestrate complex experimentation workflows
-- **Parameter Tracking:** Log hyperparameters, datasets, and evaluation metrics
-- **Model Versioning:** Systematic model registry and deployment
-
-**Architecture Benefits:**
-- **Reproducibility:** Complete experiment tracking and versioning
-- **Scalability:** Run multiple experiments in parallel
-- **Comparison:** Systematic model performance comparison
-- **Deployment:** Seamless model deployment pipeline
-
-**Implementation Strategy:**
-- Use MLflow for experiment tracking and model registry
-- Implement SageMaker Pipelines for workflow orchestration
-- Track datasets, hyperparameters, and evaluation metrics
-- Use LoRA (Low-Rank Adaptation) for efficient fine-tuning
-- Implement automated model evaluation and selection
-
-**Decision Factors:**
-- Experiment complexity and scale requirements
-- Model customization needs (fine-tuning vs. prompt engineering)
-- Evaluation metrics and comparison requirements
-- Deployment and production readiness needs
-
-### 2. LLM Fine-tuning Pipeline Pattern
-**Core Concept:** Systematic approach to fine-tuning LLMs with proper evaluation and deployment.
-
-**Pipeline Components:**
-- **Data Preparation:** Dataset loading, preprocessing, and validation
-- **Model Fine-tuning:** LoRA-based parameter-efficient fine-tuning
-- **Model Evaluation:** Comprehensive performance assessment
-- **Model Registration:** Version control and metadata tracking
-- **Model Deployment:** Production-ready model serving
-
-**Fine-tuning Techniques:**
-- **LoRA (Low-Rank Adaptation):** Efficient fine-tuning with reduced parameters
-- **PEFT (Parameter-Efficient Fine-Tuning):** Minimal parameter updates
-- **Full Fine-tuning:** Complete model parameter updates
-- **Selective Layer Fine-tuning:** Targeted layer optimization
-
-**Evaluation Framework:**
-- **Built-in Metrics:** Exact match, token count, toxicity scores
-- **Readability Metrics:** Flesch-Kincaid grade level, ARI grade level
-- **Custom Metrics:** Domain-specific evaluation criteria
-- **Comparative Analysis:** Performance vs. base model comparison
-
-**Decision Points:**
-- Fine-tuning approach selection (LoRA vs. full fine-tuning)
-- Evaluation metric prioritization
-- Model selection criteria
-- Deployment strategy and infrastructure requirements
-
-### 3. MLOps for LLM Pattern
-**Core Concept:** Apply MLOps principles to LLM development and deployment lifecycle.
-
-**MLOps Components:**
-- **Experiment Tracking:** MLflow integration for comprehensive logging
-- **Model Registry:** Centralized model versioning and metadata
-- **Pipeline Orchestration:** SageMaker Pipelines for workflow automation
-- **Model Deployment:** Automated deployment with ModelBuilder
-- **Monitoring:** Performance tracking and drift detection
-
-**Workflow Automation:**
-- **Data Pipeline:** Automated data preparation and validation
-- **Training Pipeline:** Orchestrated fine-tuning workflows
-- **Evaluation Pipeline:** Systematic model assessment
-- **Deployment Pipeline:** Automated model serving setup
+**Operational Considerations:**
+- **Performance Monitoring:** Query latency and throughput tracking
+- **Cost Optimization:** Resource usage and cost management
+- **Security Compliance:** Data privacy and regulatory requirements
+- **Maintenance Procedures:** Regular updates and system health checks
 
 **Quality Assurance:**
-- **Model Validation:** Comprehensive testing and evaluation
-- **Performance Monitoring:** Continuous model performance tracking
-- **A/B Testing:** Model comparison in production
-- **Rollback Capabilities:** Safe model version management
+- **Testing Framework:** Automated testing for RAG components
+- **Performance Benchmarking:** Response quality and speed assessment
+- **User Feedback Integration:** Continuous improvement based on usage
+- **A/B Testing:** Model and configuration comparison
 
-**Decision Factors:**
-- MLOps maturity level and requirements
-- Model complexity and experimentation needs
-- Production deployment requirements
-- Team expertise and tooling preferences
+**Decision Points:**
+- Document format and processing requirements
+- Vector embedding model selection
+- Search and retrieval optimization
+- Response quality and accuracy needs
+- Production scale and user requirements
+- Compliance and security needs
+- Monitoring and observability requirements
+- Maintenance and operational capabilities
 
-## Foundation Model Evaluation Patterns
+</TabItem>
+</Tabs>
 
-### 1. Automated Model Evaluation Pattern
+### Deciding on Memory Strategy
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Memory strategy determines how your system handles context, personalization, and user experience continuity. The wrong choice can lead to frustrating user experiences, privacy violations, or unnecessary complexity.
+
+**Key questions to ask yourself:**
+1. **Do users expect the system to remember them?** (Personalized experience vs. anonymous interactions)
+2. **How important is conversation context?** (Each query independent vs. building on previous interactions)
+3. **What are my privacy requirements?** (No data retention vs. user consent for memory)
+4. **How complex should the user experience be?** (Simple stateless vs. rich contextual interactions)
+5. **What's my operational complexity tolerance?** (Simple deployment vs. managing user data)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for memory strategy:**
+
+1. **Analyze your user experience requirements**
+   - [ ] Determine if users expect personalized experiences
+   - [ ] Assess the importance of conversation context continuity
+   - [ ] Evaluate if you need cross-session learning and adaptation
+   - [ ] Consider user privacy expectations and consent requirements
+
+2. **Evaluate your technical constraints**
+   - [ ] Assess your data storage and management capabilities
+   - [ ] Determine your privacy and compliance requirements
+   - [ ] Evaluate your operational complexity tolerance
+   - [ ] Consider your team's expertise with memory systems
+
+3. **Design your memory architecture**
+   - [ ] Define what information needs to be remembered (conversation history, user preferences, facts)
+   - [ ] Plan your data retention and deletion policies
+   - [ ] Design your memory retrieval and context injection strategy
+   - [ ] Plan for memory performance and scalability
+
+4. **Test and validate your approach**
+   - [ ] Create test scenarios with different memory requirements
+   - [ ] Validate that memory enhances rather than complicates user experience
+   - [ ] Test memory performance under load
+   - [ ] Ensure compliance with privacy regulations
+
+</TabItem>
+<TabItem value="no-memory" label="No Memory">
+
+**Choose no memory when**:
+- Each conversation is independent
+- You don't need personalization
+- You want the simplest implementation
+- Privacy is a major concern
+- You're building stateless services
+
+**Trade-offs**:
+- ✅ Simple to implement
+- ✅ No privacy concerns
+- ❌ No personalization
+- ❌ No conversation context
+
+</TabItem>
+<TabItem value="short-term" label="Short-term Memory">
+
+**Choose short-term memory when**:
+- You need conversation context
+- You want to maintain session state
+- You need to reference previous messages
+- You're building conversational interfaces
+
+**Implementation**:
+- Store conversation history in session
+- Use conversation context in prompts
+- Implement session management
+- Plan for session cleanup
+
+</TabItem>
+<TabItem value="long-term" label="Long-term Memory">
+
+**Choose long-term memory when**:
+- You need user personalization
+- You want to learn from past interactions
+- You need cross-session continuity
+- You're building persistent AI assistants
+
+**Implementation**:
+- Set up user-specific data storage
+- Implement semantic fact extraction
+- Design memory retrieval systems
+- Plan for data privacy and retention
+
+</TabItem>
+</Tabs>
+
+
+### Deciding on Fine-tuning vs. Prompt Engineering
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+This choice determines your model's performance, development speed, and ongoing costs. The wrong approach can lead to poor accuracy, excessive costs, or unnecessary complexity that delays your time to market.
+
+**Key questions to ask yourself:**
+1. **How domain-specific are my requirements?** (General tasks vs. specialized domain knowledge)
+2. **What's my data situation?** (Limited examples vs. large labeled datasets)
+3. **What's my performance requirement?** (Good enough vs. optimal accuracy)
+4. **What's my time to market constraint?** (Quick prototype vs. can invest in training)
+5. **What's my budget for model customization?** (Prompt engineering costs vs. fine-tuning infrastructure)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for model strategy:**
+
+1. **Assess your domain and data requirements**
+   - [ ] Evaluate how domain-specific your use case is (general vs. specialized knowledge)
+   - [ ] Assess the quality and quantity of your training data
+   - [ ] Determine if you have sufficient labeled examples for fine-tuning
+   - [ ] Consider if your domain knowledge changes frequently
+
+2. **Evaluate your performance and cost constraints**
+   - [ ] Define your accuracy and quality requirements
+   - [ ] Assess your latency and throughput needs
+   - [ ] Determine your budget for model customization and inference
+   - [ ] Consider your time-to-market constraints
+
+3. **Test and compare approaches**
+   - [ ] Start with prompt engineering to establish baseline performance
+   - [ ] Create a small fine-tuning experiment with your data
+   - [ ] Compare performance, cost, and complexity of both approaches
+   - [ ] Test with edge cases and difficult scenarios
+
+4. **Plan for production and maintenance**
+   - [ ] Design your model update and retraining process
+   - [ ] Plan for monitoring model performance and drift
+   - [ ] Consider your team's expertise with each approach
+   - [ ] Plan for long-term maintenance and evolution
+
+</TabItem>
+<TabItem value="prompting" label="Prompt Engineering">
+
+**Choose prompt engineering when**:
+- You have limited training data
+- You need quick iteration and fast time-to-market
+- You want to avoid training costs and infrastructure complexity
+- You're building general-purpose systems
+- You need to change behavior frequently
+- You're prototyping or building MVPs
+
+**Best practices**:
+- Use few-shot examples with high-quality demonstrations
+- Implement prompt templates for consistency
+- Test different prompt variations systematically
+- Monitor prompt performance and user feedback
+- Use chain-of-thought prompting for complex reasoning
+- Implement prompt versioning and A/B testing
+
+**Benefits**:
+- Fast to implement and iterate
+- No additional infrastructure costs
+- Easy to update and modify
+- Works with any pre-trained model
+- No data preparation required
+
+**Limitations**:
+- Limited by model's training data
+- May not handle domain-specific tasks well
+- Performance depends on prompt quality
+- Limited control over model behavior
+- May require extensive prompt engineering
+
+</TabItem>
+<TabItem value="finetuning" label="Fine-tuning">
+
+**Choose fine-tuning when**:
+- You have domain-specific data and requirements
+- You need specialized behavior for your use case
+- You have sufficient high-quality training data (1000+ examples)
+- You need consistent, reliable performance
+- You're building production systems with specific requirements
+- Prompt engineering isn't achieving desired results
+
+**Fine-tuning approaches**:
+- **Full Fine-tuning**: Complete model retraining (highest performance, most expensive)
+- **LoRA (Low-Rank Adaptation)**: Efficient fine-tuning with reduced parameters
+- **QLoRA**: Quantized LoRA for memory efficiency
+- **Adapter Layers**: Add specialized layers to existing models
+
+**Implementation considerations**:
+- **Data Quality**: Prepare high-quality, diverse training data
+- **Data Volume**: Ensure sufficient examples (1000+ for good results)
+- **Evaluation**: Set up comprehensive evaluation metrics and validation
+- **Infrastructure**: Plan for training compute and storage requirements
+- **Versioning**: Implement model versioning and rollback strategies
+- **Monitoring**: Track model performance and drift in production
+
+**Benefits**:
+- Specialized performance for your domain
+- Consistent behavior across similar inputs
+- Better handling of domain-specific terminology
+- Reduced prompt engineering requirements
+- Higher accuracy for specialized tasks
+
+**Considerations**:
+- Requires significant training data
+- Higher infrastructure and compute costs
+- Longer development and iteration cycles
+- Need for ongoing model maintenance
+- Potential for overfitting to training data
+
+</TabItem>
+</Tabs>
+
+### Deciding on Automated vs. Human Model Evaluation
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Evaluation strategy determines how you measure success, catch issues, and ensure quality. The wrong approach can lead to undetected problems, slow feedback loops, or evaluation bottlenecks that slow down development.
+
+**Key questions to ask yourself:**
+1. **How do I define success for my system?** (Objective metrics vs. subjective quality)
+2. **What's my evaluation volume?** (Few test cases vs. large-scale testing)
+3. **How fast do I need feedback?** (Real-time evaluation vs. can wait for human review)
+4. **What's my quality tolerance?** (Good enough vs. must be perfect)
+5. **What's my evaluation budget?** (Automated costs vs. human evaluation costs)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for evaluation strategy:**
+
+1. **Define your success metrics**
+   - [ ] Identify what "good" means for your specific use case
+   - [ ] Determine if you need objective metrics or subjective quality assessment
+   - [ ] Define your minimum acceptable performance thresholds
+   - [ ] Consider both accuracy and user experience metrics
+
+2. **Assess your evaluation capacity and constraints**
+   - [ ] Determine your evaluation volume (few test cases vs. large-scale testing)
+   - [ ] Assess your budget for evaluation (automated costs vs. human evaluation costs)
+   - [ ] Evaluate your team's expertise with evaluation frameworks
+   - [ ] Consider your timeline for evaluation feedback
+
+3. **Design your evaluation framework**
+   - [ ] Create test datasets that represent your use cases
+   - [ ] Design evaluation metrics that align with your success criteria
+   - [ ] Plan for both automated and human evaluation where appropriate
+   - [ ] Establish evaluation processes and workflows
+
+4. **Implement and validate your approach**
+   - [ ] Start with automated evaluation for objective metrics
+   - [ ] Add human evaluation for subjective quality assessment
+   - [ ] Test your evaluation framework with known good/bad examples
+   - [ ] Plan for continuous evaluation and monitoring
+
+</TabItem>
+<TabItem value="automated" label="Automated Model Evaluation">
+
 **Core Concept:** Systematic evaluation of foundation models using predefined metrics and automated assessment.
 
 **Key Components:**
@@ -324,7 +680,9 @@ The goal is to transform architectural uncertainty into confident decision-makin
 - Evaluation metric relevance
 - Automation vs. manual assessment needs
 
-### 2. Human Model Evaluation Pattern
+</TabItem>
+<TabItem value="human" label="Human Model Evaluation">
+
 **Core Concept:** Incorporate human judgment for subjective and custom evaluation metrics.
 
 **Evaluation Types:**
@@ -350,300 +708,57 @@ The goal is to transform architectural uncertainty into confident decision-makin
 - Evaluation scale and timeline requirements
 - Cost vs. quality trade-offs
 
-### 3. Model Selection and Comparison Pattern
-**Core Concept:** Systematic approach to selecting the best foundation model for specific use cases.
+</TabItem>
+</Tabs>
 
-**Selection Criteria:**
-- **Performance Metrics:** Task-specific accuracy and quality measures
-- **Cost Analysis:** Token usage and inference costs
-- **Latency Requirements:** Response time and throughput needs
-- **Capability Assessment:** Model strengths and limitations
 
-**Comparison Framework:**
-- **Side-by-side Evaluation:** Direct model performance comparison
-- **Use Case Alignment:** Match model capabilities to requirements
-- **Cost-Benefit Analysis:** Performance vs. cost optimization
-- **Scalability Assessment:** Production readiness evaluation
+### Deciding on Agent Runtime Environment
 
-**Decision Framework:**
-- **Task Requirements:** Define specific use case needs
-- **Performance Thresholds:** Set minimum acceptable metrics
-- **Budget Constraints:** Consider cost implications
-- **Future Scalability:** Plan for growth and evolution
+<Tabs>
+<TabItem value="why" label="Why" default>
 
-**Implementation Strategy:**
-- Start with automated evaluation for objective metrics
-- Add human evaluation for subjective criteria
-- Implement A/B testing for production validation
-- Establish continuous evaluation processes
+**Why this decision matters:**
+Your runtime environment determines scalability, security, compliance, and operational complexity. The wrong choice can lead to performance bottlenecks, security vulnerabilities, or compliance issues that are expensive to fix later.
 
-**Decision Factors:**
-- Use case complexity and requirements
-- Evaluation budget and timeline
-- Team expertise and evaluation capabilities
-- Production deployment timeline
+**Key questions to ask yourself:**
+1. **What are my compliance requirements?** (Data residency, industry regulations, security standards)
+2. **What's my scale requirement?** (Small team vs. enterprise-scale deployment)
+3. **What's my operational complexity tolerance?** (Managed services vs. custom infrastructure)
+4. **What's my budget for infrastructure?** (Cloud costs vs. on-premises investment)
+5. **What's my integration requirement?** (Standalone vs. integrated with existing systems)
 
-## End-to-End RAG Solution Patterns
+</TabItem>
+<TabItem value="how" label="How">
 
-### 1. Infrastructure as Code RAG Pattern
-**Core Concept:** Automated deployment of complete RAG solutions using Infrastructure as Code (IaC) principles.
+**Due diligence checklist for runtime environment:**
 
-**Key Components:**
-- **AWS CDK Integration:** Programmatic infrastructure deployment
-- **Knowledge Base Setup:** Automated Bedrock knowledge base creation
-- **Vector Store Configuration:** OpenSearch Serverless integration
-- **IAM Role Management:** Secure access control setup
+1. **Assess your compliance and security requirements**
+   - [ ] Identify data residency and sovereignty requirements
+   - [ ] Determine industry-specific compliance needs (HIPAA, SOC 2, PCI DSS)
+   - [ ] Assess your security and access control requirements
+   - [ ] Consider your audit and logging needs
 
-**Architecture Benefits:**
-- **Automation:** Eliminates manual configuration errors
-- **Reproducibility:** Consistent deployment across environments
-- **Scalability:** Easy infrastructure scaling and modification
-- **Maintainability:** Version-controlled infrastructure changes
+2. **Evaluate your scale and performance needs**
+   - [ ] Define your expected user load and growth projections
+   - [ ] Assess your latency and throughput requirements
+   - [ ] Determine your availability and uptime needs
+   - [ ] Consider your global distribution requirements
 
-**Implementation Strategy:**
-- Use AWS CDK for infrastructure definition
-- Implement multi-stack deployment (roles, vector store, knowledge base)
-- Configure automated data ingestion workflows
-- Set up monitoring and logging infrastructure
+3. **Assess your operational capabilities**
+   - [ ] Evaluate your team's expertise with different cloud platforms
+   - [ ] Determine your operational complexity tolerance
+   - [ ] Assess your budget for infrastructure and operations
+   - [ ] Consider your integration with existing systems
 
-**Deployment Sequence:**
-1. **Role Stack:** IAM roles and permissions
-2. **Vector Store Stack:** OpenSearch Serverless collection and index
-3. **Knowledge Base Stack:** Bedrock knowledge base and data source
+4. **Plan for production deployment**
+   - [ ] Design your deployment and scaling strategy
+   - [ ] Plan for monitoring, logging, and observability
+   - [ ] Consider disaster recovery and backup strategies
+   - [ ] Plan for cost optimization and resource management
 
-**Decision Factors:**
-- Infrastructure complexity and requirements
-- Team expertise with IaC tools
-- Deployment frequency and automation needs
-- Multi-environment support requirements
+</TabItem>
+<TabItem value="aws" label="AWS Service Integration">
 
-### 2. Knowledge Base Integration Pattern
-**Core Concept:** Seamless integration of document data with foundation models for intelligent question answering.
-
-**Integration Components:**
-- **Data Source Configuration:** S3 bucket integration for document storage
-- **Document Processing:** Automated text extraction and chunking
-- **Vector Embedding:** Titan Embeddings V2 for semantic search
-- **Retrieval System:** OpenSearch Serverless for vector similarity search
-
-**Supported Document Types:**
-- **Text Files:** .txt, .md, .html formats
-- **Office Documents:** .doc, .docx, .csv, .xls, .xlsx
-- **PDF Documents:** Multi-page PDF processing
-- **Structured Data:** JSON and other structured formats
-
-**Workflow Components:**
-- **Data Ingestion:** Automated document processing and indexing
-- **Vector Generation:** Embedding creation for semantic search
-- **Query Processing:** Natural language query understanding
-- **Response Generation:** Contextual answer synthesis
-
-**Decision Points:**
-- Document format and processing requirements
-- Vector embedding model selection
-- Search and retrieval optimization
-- Response quality and accuracy needs
-
-### 3. Production RAG Deployment Pattern
-**Core Concept:** Production-ready RAG system deployment with monitoring, scaling, and maintenance capabilities.
-
-**Production Components:**
-- **Monitoring Setup:** Performance and usage tracking
-- **Scaling Configuration:** Auto-scaling based on demand
-- **Security Implementation:** Data encryption and access controls
-- **Backup and Recovery:** Data protection and disaster recovery
-
-**Operational Considerations:**
-- **Performance Monitoring:** Query latency and throughput tracking
-- **Cost Optimization:** Resource usage and cost management
-- **Security Compliance:** Data privacy and regulatory requirements
-- **Maintenance Procedures:** Regular updates and system health checks
-
-**Quality Assurance:**
-- **Testing Framework:** Automated testing for RAG components
-- **Performance Benchmarking:** Response quality and speed assessment
-- **User Feedback Integration:** Continuous improvement based on usage
-- **A/B Testing:** Model and configuration comparison
-
-**Decision Factors:**
-- Production scale and user requirements
-- Compliance and security needs
-- Monitoring and observability requirements
-- Maintenance and operational capabilities
-
-## Model Deployment and Serving Patterns
-
-### 1. SageMaker JumpStart Deployment Pattern
-**Core Concept:** Rapid deployment of foundation models using pre-built SageMaker JumpStart solutions.
-
-**Key Components:**
-- **Pre-built Models:** Access to hundreds of pre-trained models
-- **One-Click Deployment:** Simplified model deployment process
-- **Customization Support:** Fine-tuning and customization capabilities
-- **Production Ready:** Built-in monitoring and scaling features
-
-**Deployment Benefits:**
-- **Speed:** Rapid model deployment and testing
-- **Cost Efficiency:** Optimized infrastructure for model serving
-- **Scalability:** Automatic scaling based on demand
-- **Security:** Built-in security and compliance features
-
-**Implementation Strategy:**
-- Use SageMaker JumpStart for model selection
-- Configure deployment parameters and endpoints
-- Set up monitoring and logging
-- Implement custom inference logic if needed
-
-**Decision Factors:**
-- Model requirements and performance needs
-- Deployment timeline and complexity
-- Customization and fine-tuning requirements
-- Production scale and cost considerations
-
-### 2. Multi-Agent Collaboration Pattern
-**Core Concept:** Deploy multiple specialized agents that collaborate to achieve complex goals.
-
-**Architecture Components:**
-- **Specialized Agents:** Domain-specific AI agents
-- **Coordination Layer:** Agent communication and orchestration
-- **Shared Knowledge Base:** Common information repository
-- **Workflow Engine:** Task distribution and management
-
-**Collaboration Benefits:**
-- **Domain Expertise:** Deep specialization in specific areas
-- **Scalability:** Handle complex, multi-faceted problems
-- **Fault Tolerance:** Redundancy and error handling
-- **Flexibility:** Dynamic agent composition based on needs
-
-**Implementation Strategy:**
-- Design agent communication protocols
-- Implement coordination mechanisms
-- Set up shared knowledge management
-- Create workflow orchestration system
-
-**Decision Points:**
-- Agent specialization requirements
-- Coordination complexity and overhead
-- Communication protocols and standards
-- Workflow orchestration needs
-
-### 3. Autonomy Gradient Pattern
-**Core Concept:** Implement variable levels of agent independence based on context and risk tolerance.
-
-**Autonomy Levels:**
-- **Fully Automated:** Complete agent autonomy
-- **Supervised:** Human oversight and approval
-- **Collaborative:** Human-agent partnership
-- **Advisory:** Agent provides recommendations only
-
-**Implementation Components:**
-- **Risk Assessment Engine:** Real-time risk evaluation
-- **Authority Management:** Dynamic permission assignment
-- **Handoff Mechanisms:** Seamless human-agent transitions
-- **Monitoring System:** Continuous autonomy level tracking
-
-**Decision Framework:**
-- **Risk Tolerance:** Define acceptable risk levels
-- **User Preferences:** Customize autonomy settings
-- **Context Awareness:** Adapt to different situations
-- **Performance Metrics:** Measure autonomy effectiveness
-
-**Decision Factors:**
-- Risk tolerance and compliance requirements
-- User experience and control preferences
-- System complexity and maintenance needs
-- Performance and efficiency requirements
-
-### 4. Infrastructure as Code Model Deployment Pattern
-**Core Concept:** Deploy generative AI models using Infrastructure as Code with AWS CDK for reproducible and scalable deployments.
-
-**Key Components:**
-- **Multi-Stack Architecture:** Separate stacks for VPC, web application, and model endpoints
-- **Model Endpoint Management:** SageMaker endpoints with parameter store integration
-- **Web Application Integration:** Streamlit-based UI with API Gateway and Lambda
-- **Container Orchestration:** ECS Fargate for scalable web application hosting
-
-**Deployment Benefits:**
-- **Reproducibility:** Consistent deployments across environments
-- **Scalability:** Easy infrastructure scaling and modification
-- **Cost Management:** Optimized resource allocation and cleanup
-- **Maintenance:** Version-controlled infrastructure changes
-
-**Implementation Strategy:**
-- Use AWS CDK for infrastructure definition
-- Implement multi-stack deployment (VPC, web app, model endpoints)
-- Configure automated model endpoint creation
-- Set up monitoring and parameter management
-
-**Stack Architecture:**
-1. **VPC Network Stack:** Network infrastructure with public/private subnets
-2. **Web Application Stack:** ECS Fargate service with load balancer
-3. **Model Endpoint Stacks:** SageMaker endpoints for different model types
-4. **Parameter Management:** Systems Manager for configuration storage
-
-**Decision Factors:**
-- Infrastructure complexity and requirements
-- Model deployment and scaling needs
-- Cost optimization and resource management
-- Team expertise with IaC tools
-
-### 5. Agentic Coding Workflow Pattern
-**Core Concept:** Implement systematic workflows for AI-assisted coding using agentic tools and best practices.
-
-**Key Components:**
-- **CLAUDE.md Configuration:** Project-specific context and guidelines
-- **Tool Allowlist Management:** Customized permissions for safe automation
-- **Multi-Agent Workflows:** Parallel Claude instances for verification
-- **Custom Slash Commands:** Reusable workflow templates
-
-**Workflow Patterns:**
-- **Explore, Plan, Code, Commit:** Systematic approach to complex problems
-- **Test-Driven Development:** Write tests first, then implementation
-- **Visual Iteration:** Screenshot-based UI development
-- **Codebase Q&A:** Onboarding and exploration workflows
-
-**Implementation Strategy:**
-- Create CLAUDE.md files for project context
-- Configure tool permissions and allowlists
-- Implement custom slash commands for repeated workflows
-- Use multi-Claude workflows for verification
-
-**Best Practices:**
-- **Specific Instructions:** Clear, detailed prompts for better results
-- **Visual Context:** Use images and screenshots for UI development
-- **Course Correction:** Active collaboration and early feedback
-- **Context Management:** Use /clear to maintain focused context
-
-**Decision Factors:**
-- Team coding practices and preferences
-- Project complexity and development needs
-- Automation vs. supervision requirements
-- Tool integration and workflow optimization
-
-## Model Context Protocol (MCP) Patterns
-
-### 1. Universal Integration Pattern
-**Core Concept:** Standardized protocol for AI systems to communicate with external data sources, tools, and services, solving the M×N integration problem.
-
-**Key Components:**
-- **MCP Clients:** AI applications that need access to external data
-- **MCP Servers:** Standardized interfaces to specific data sources
-- **Three Primitives:** Tools (functions), Resources (data), and Prompts (templates)
-- **Client-Server Architecture:** Supports both local and remote implementations
-
-**Architecture Benefits:**
-- **Reduced Complexity:** Transforms M×N integration problem into M+N solution
-- **Standardized Access:** Universal language for AI-data connections
-- **Security Integration:** Leverages existing AWS security mechanisms (IAM)
-- **Scalable Design:** Works across local development and enterprise deployments
-
-**Decision Points:**
-- Local vs. remote MCP server deployment
-- Security and access control requirements
-- Integration complexity and maintenance needs
-- Team expertise with protocol implementations
-
-### 2. AWS Service Integration Pattern
 **Core Concept:** Seamless integration between MCP and AWS services, particularly Amazon Bedrock, for enterprise-scale AI applications.
 
 **Key Components:**
@@ -664,191 +779,560 @@ The goal is to transform architectural uncertainty into confident decision-makin
 - Development team AWS expertise
 - Production deployment and scaling requirements
 
-### 3. Knowledge Base Integration Pattern
-**Core Concept:** Intelligent integration between language models and enterprise knowledge bases using MCP for enhanced discovery and retrieval.
+</TabItem>
+<TabItem value="azure" label="Azure Cloud Services">
+
+**Core Concept:** Deploy agentic systems on Microsoft Azure with integrated AI services and enterprise-grade security.
 
 **Key Components:**
-- **Knowledge Base Discovery:** Resource for identifying available knowledge bases
-- **Natural Language Querying:** Tool for semantic search across knowledge bases
-- **Reranking Capabilities:** Enhanced relevance using language models
-- **Metadata Integration:** Leveraging document metadata for better filtering
+- **Azure OpenAI Integration:** Direct access to GPT models and Azure AI services
+- **Azure Cognitive Services:** Pre-built AI capabilities for vision, speech, and language
+- **Azure Functions:** Serverless execution for agent workflows
+- **Azure Active Directory:** Enterprise identity and access management
 
 **Architecture Benefits:**
-- **Intelligent Discovery:** AI can discover and use appropriate knowledge bases
-- **Enhanced Relevance:** Reranking improves search result quality
-- **Flexible Querying:** Natural language queries without complex search parameters
-- **Metadata Utilization:** Leverages document structure for better results
-
-**Implementation Strategy:**
-- Use MCP resource for knowledge base discovery
-- Implement natural language query tools
-- Configure reranking for improved relevance
-- Set up metadata-based filtering
+- **Microsoft Ecosystem:** Seamless integration with Office 365 and Microsoft tools
+- **Enterprise Security:** Advanced threat protection and compliance features
+- **Hybrid Cloud:** Support for on-premises and cloud deployments
+- **Cost Optimization:** Pay-per-use pricing with reserved capacity options
 
 **Decision Points:**
-- Knowledge base complexity and structure
-- Query performance and relevance requirements
-- Metadata utilization and filtering needs
-- Reranking model selection and configuration
+- Microsoft ecosystem integration requirements
+- Enterprise security and compliance needs
+- Hybrid cloud deployment scenarios
+- Cost optimization and resource management
 
-### 4. Bedrock Agents MCP Integration Pattern
-**Core Concept:** Integrate MCP servers with Amazon Bedrock Agents using inline agents and action groups for enhanced agent capabilities.
+</TabItem>
+<TabItem value="local" label="Local Data Center">
+
+**Core Concept:** Deploy agentic systems in on-premises data centers for maximum control, security, and compliance.
 
 **Key Components:**
-- **Inline Agent SDK:** Streamlined agent creation and invocation
-- **MCP Client Integration:** Direct access to MCP server tools
-- **Action Group Configuration:** Grouping multiple MCP clients
-- **Return Control Flow:** Seamless tool execution and response handling
+- **On-Premises Infrastructure:** Full control over hardware and network configuration
+- **Private AI Models:** Deploy open-source models locally for complete data privacy
+- **Custom Security:** Implement organization-specific security policies
+- **Air-Gapped Deployment:** Complete isolation from external networks
 
 **Architecture Benefits:**
-- **Standardized Integration:** Consistent access to diverse data sources
-- **Reduced Development Overhead:** No custom connectors for each integration
-- **Enhanced Agent Capabilities:** Access to specialized tools and data sources
-- **Scalable Architecture:** Easy addition of new MCP servers
-
-**Implementation Strategy:**
-- Use InlineAgent SDK for agent creation
-- Configure MCP clients with server parameters
-- Group MCP clients into action groups
-- Implement return control for tool execution
-
-**Use Case Examples:**
-- **AWS Cost Analysis:** Connect to Cost Explorer and CloudWatch for spend insights
-- **Multi-Data Source Agents:** Integrate with Knowledge Bases, SQLite, and filesystem
-- **Developer Productivity:** Slack and GitHub integration for development workflows
-- **ML Experiment Tracking:** Comet ML integration for experiment management
+- **Complete Control:** Full ownership of infrastructure and data
+- **Maximum Security:** No data leaves the organization's network
+- **Compliance:** Meet strict regulatory requirements for data sovereignty
+- **Customization:** Tailor infrastructure to specific organizational needs
 
 **Decision Points:**
-- Agent complexity and tool requirements
-- MCP server selection and configuration
-- Development team expertise with MCP protocol
-- Production deployment and scaling needs
+- Regulatory compliance and data sovereignty requirements
+- Security and privacy concerns
+- Infrastructure management capabilities
+- Cost and resource availability
 
-### 5. Inter-Agent Communication Pattern
-**Core Concept:** Enable agents to communicate and collaborate with each other using MCP as a standardized protocol for agent-to-agent interactions.
+</TabItem>
+<TabItem value="hybrid" label="Hybrid Cloud">
+
+**Core Concept:** Combine on-premises infrastructure with cloud services for optimal flexibility and security.
 
 **Key Components:**
-- **Streamable HTTP Transport:** Flexible communication patterns (stateless, stateful, streaming)
-- **Capability Discovery:** Agents negotiate and discover each other's capabilities
-- **Context Sharing:** Resources, prompts, and LLM sharing between agents
-- **Security Framework:** OAuth 2.0/2.1 authentication and authorization
-- **Tool/Agent Skills:** Agents expose capabilities as tools to other agents
+- **Hybrid Architecture:** On-premises for sensitive data, cloud for scalability
+- **Data Classification:** Route data based on sensitivity and compliance requirements
+- **Unified Management:** Single pane of glass for hybrid infrastructure
+- **Flexible Scaling:** Cloud bursting for peak workloads
 
 **Architecture Benefits:**
-- **Microservice-like Architecture:** Decoupled agents with standardized communication
-- **Dynamic Capability Discovery:** Agents can discover and leverage evolving skillsets
-- **Flexible Communication:** Support for various interaction patterns and use cases
-- **Enterprise Security:** Built-in authentication and authorization mechanisms
-
-**Communication Patterns:**
-- **Stateless Request/Response:** Simple one-off interactions
-- **Stateful Sessions:** Persistent context across multiple exchanges
-- **Real-time Streaming:** Server-Sent Events for continuous updates
-- **Asynchronous Communication:** Long-running operations with status checks
-
-**Implementation Strategy:**
-- Expose agents as MCP servers with tool capabilities
-- Use MCP clients for agent-to-agent communication
-- Implement capability discovery and negotiation
-- Set up secure authentication and authorization
-
-**Use Case Examples:**
-- **HR Agent + Employee Info Agent:** Collaborative employee data management
-- **Multi-Agent Workflows:** Complex tasks requiring multiple specialized agents
-- **Agent Marketplaces:** Discoverable and composable agent capabilities
-- **Enterprise Integration:** Agents working with existing business systems
+- **Flexibility:** Choose optimal environment for each workload
+- **Security:** Keep sensitive data on-premises while leveraging cloud scale
+- **Cost Optimization:** Balance between capital and operational expenses
+- **Compliance:** Meet diverse regulatory requirements across regions
 
 **Decision Points:**
-- Agent collaboration complexity and requirements
-- Communication pattern selection (stateless vs. stateful)
-- Security and authentication needs
-- Development team expertise with MCP and agent frameworks
+- Data sensitivity and classification requirements
+- Regulatory compliance across multiple jurisdictions
+- Cost optimization and resource utilization
+- Operational complexity and management overhead
 
-### 6. IDE-Integrated Agent Development Pattern
-**Core Concept:** Streamline agent development by integrating AI agent creation directly into IDEs with natural language generation and modular testing capabilities.
+</TabItem>
+</Tabs>
 
-**Key Components:**
-- **IDE Integration:** Direct integration with VS Code, Cursor, and Kiro
-- **Natural Language Generation:** Describe workflows in natural language to generate scripts
-- **Notebook-Style Builder:** Modular cell-based editing for complex workflows
-- **Live Testing:** Integrated browser testing with step-by-step debugging
-- **Template System:** Predefined automation scenarios for common tasks
 
-**Architecture Benefits:**
-- **Unified Development Experience:** No context switching between coding and testing
-- **Rapid Prototyping:** Natural language to working agent scripts
-- **Modular Development:** Test and debug individual workflow steps
-- **Production Ready:** Local testing with real-world conditions
+### Deciding on Model Selection
 
-**Development Workflow:**
-- **Ask Mode:** Describe tasks in natural language to generate automation scripts
-- **Edit Mode:** Refine and customize generated scripts before execution
-- **Agent Mode:** Run, monitor, and interact with AI agents performing workflows
-- **Context Integration:** Provide relevant documents, instructions, and MCP resources
+<Tabs>
+<TabItem value="why" label="Why" default>
 
-**Template Categories:**
-- **Shopping Automation:** Online shopping tasks (searching, comparing, purchasing)
-- **Data Extraction:** Automated data extraction from web sources
-- **Search Operations:** Information gathering and search automation
-- **QA Testing:** Quality assurance and testing workflow automation
-- **Form Filling:** Automated form completion and data entry
+**Why this decision matters:**
+Model selection directly impacts your system's performance, cost, and user experience. The wrong model can lead to poor accuracy, excessive costs, or performance bottlenecks that are difficult to fix later.
 
-**Implementation Strategy:**
-- Install IDE extension and configure API keys
-- Use natural language to describe automation requirements
-- Customize generated scripts with modular cell editing
-- Test workflows with integrated browser automation
-- Deploy production-ready agent scripts
+**Key questions to ask yourself:**
+1. **What are my performance requirements?** (Accuracy, latency, throughput needs)
+2. **What's my budget for model inference?** (Cost per token, monthly budget)
+3. **How complex are my tasks?** (Simple Q&A vs. complex reasoning and analysis)
+4. **What's my scale requirement?** (Low volume vs. high-throughput production)
+5. **What are my compliance needs?** (Data privacy, model transparency, audit requirements)
 
-**Decision Points:**
-- IDE preference and development environment
-- Automation complexity and workflow requirements
-- Testing and debugging needs
-- Production deployment and scaling requirements
+</TabItem>
+<TabItem value="how" label="How">
 
-### 7. Browser Automation Agent Pattern
-**Core Concept:** Build reliable agents that can perform actions within web browsers using specialized AI models trained for web interaction tasks.
+**Due diligence checklist for model selection:**
 
-**Key Components:**
-- **Nova Act Model:** Specialized AI model trained for browser automation tasks
-- **Atomic Commands:** Reliable building blocks for complex workflows
-- **Python Integration:** Interleave code for testing, debugging, and parallelization
-- **API Integration:** Combine browser automation with API calls for enhanced reliability
-- **Playwright Integration:** Direct browser manipulation for sensitive operations
+1. **Define your requirements and constraints**
+   - [ ] Identify your specific use cases and task types
+   - [ ] Define your performance thresholds (accuracy, latency, throughput)
+   - [ ] Determine your budget constraints for inference and training
+   - [ ] Assess your compliance and security requirements
 
-**Architecture Benefits:**
-- **High Reliability:** >90% accuracy on complex web interactions (date picking, dropdowns, popups)
-- **Composable Workflows:** Break down complex tasks into reliable atomic commands
-- **Flexible Integration:** Combine browser automation with APIs and direct manipulation
-- **Production Ready:** Headless mode and API integration for scalable deployment
+2. **Research and compare available models**
+   - [ ] Identify models that match your use case (general vs. specialized)
+   - [ ] Compare model capabilities, strengths, and limitations
+   - [ ] Evaluate cost structures and pricing models
+   - [ ] Consider model availability and access requirements
 
-**Performance Characteristics:**
-- **ScreenSpot Web Text:** 93.9% accuracy on textual element interactions
-- **ScreenSpot Web Icon:** 87.9% accuracy on visual element interactions
-- **GroundUI Web:** 80.5% accuracy on general UI element understanding
-- **Cross-Environment Transfer:** Success in novel environments without specific training
+3. **Design and run evaluation experiments**
+   - [ ] Create test datasets that represent your use cases
+   - [ ] Set up automated evaluation for objective metrics
+   - [ ] Add human evaluation for subjective quality assessment
+   - [ ] Compare models side-by-side with the same test cases
 
-**Implementation Strategy:**
-- Use Nova Act SDK for browser automation tasks
-- Break complex workflows into atomic commands
-- Integrate Python code for testing and parallelization
-- Combine with APIs for enhanced reliability
-- Deploy as headless agents or scheduled workflows
+4. **Plan for production deployment**
+   - [ ] Assess model serving and scaling requirements
+   - [ ] Plan for model monitoring and performance tracking
+   - [ ] Consider model update and retraining processes
+   - [ ] Design fallback and backup strategies
 
-**Use Case Examples:**
-- **Form Automation:** Submit out-of-office requests and calendar holds
-- **E-commerce Tasks:** Automated shopping and checkout processes
-- **Data Collection:** Extract information from web sources
-- **Scheduled Workflows:** Automated recurring tasks (e.g., weekly meal ordering)
-- **Cross-Platform Integration:** Navigate web interfaces when APIs are unavailable
+</TabItem>
+<TabItem value="claude" label="Claude (Anthropic)">
 
-**Decision Points:**
-- Browser automation complexity and reliability requirements
-- Integration with existing APIs and systems
-- Workflow scheduling and automation needs
-- Cross-environment compatibility requirements
+**Core Concept:** Advanced language model optimized for complex reasoning, analysis, and safety.
 
-### 8. Human-Agent Collaboration Pattern
+**Choose when**:
+- You need high-quality reasoning and analysis
+- You're building applications that require careful, thoughtful responses
+- You need strong safety and alignment features
+- You're working with complex, multi-step tasks
+- You prioritize response quality over speed
+
+**Key Strengths**:
+- **Advanced Reasoning:** Excellent at complex analysis and problem-solving
+- **Safety Features:** Built-in safety and alignment considerations
+- **Code Generation:** Strong capabilities for programming tasks
+- **Long Context:** Large context window for complex documents
+- **Consistency:** Reliable, high-quality responses
+
+**Considerations**:
+- Higher cost per token compared to some alternatives
+- May be slower for simple, high-volume tasks
+- Limited fine-tuning options compared to open-source models
+- Requires API access and usage monitoring
+
+**Best Use Cases**:
+- Complex analysis and research tasks
+- Code generation and programming assistance
+- Content creation requiring high quality
+- Applications where safety and alignment are critical
+- Multi-step reasoning and problem-solving
+
+</TabItem>
+<TabItem value="gpt" label="GPT-4 (OpenAI)">
+
+**Core Concept:** Versatile language model with broad capabilities and strong performance across many tasks.
+
+**Choose when**:
+- You need a well-rounded model for diverse tasks
+- You want strong performance across multiple domains
+- You need good code generation capabilities
+- You're building general-purpose applications
+- You want a proven, widely-adopted model
+
+**Key Strengths**:
+- **Versatility:** Strong performance across many different tasks
+- **Code Generation:** Excellent programming capabilities
+- **Creativity:** Good at creative writing and brainstorming
+- **Ecosystem:** Large community and tool ecosystem
+- **Reliability:** Well-tested and widely used
+
+**Considerations**:
+- API rate limits and usage restrictions
+- Cost can be high for high-volume applications
+- Limited transparency about model details
+- May require prompt engineering for optimal results
+
+**Best Use Cases**:
+- General-purpose chatbots and assistants
+- Content creation and writing tasks
+- Code generation and programming help
+- Educational and tutoring applications
+- Creative writing and brainstorming
+
+</TabItem>
+<TabItem value="open-source" label="Open Source Models">
+
+**Core Concept:** Self-hosted models that provide full control and customization capabilities.
+
+**Choose when**:
+- You need full control over model deployment and data
+- You have specific compliance or security requirements
+- You want to customize or fine-tune models extensively
+- You're building applications with unique requirements
+- You want to avoid vendor lock-in
+
+**Key Strengths**:
+- **Full Control:** Complete control over deployment and data
+- **Customization:** Ability to fine-tune and modify models
+- **Cost Control:** Predictable costs without per-token pricing
+- **Privacy:** Data never leaves your infrastructure
+- **Flexibility:** Can optimize for specific use cases
+
+**Considerations**:
+- Requires significant infrastructure and expertise
+- Higher upfront costs for hardware and setup
+- Need to manage model updates and maintenance
+- May require more prompt engineering and optimization
+- Limited to your team's technical capabilities
+
+**Best Use Cases**:
+- Applications with strict data privacy requirements
+- High-volume applications where cost control is critical
+- Custom use cases requiring model modification
+- Compliance-heavy industries (healthcare, finance)
+- Research and experimentation projects
+
+</TabItem>
+</Tabs>
+
+### Deciding on Vector Database Strategy
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Vector database choice directly impacts search performance, cost, and scalability. The wrong choice can lead to slow queries, expensive infrastructure, or scalability bottlenecks that are difficult to fix later.
+
+**Key questions to ask yourself:**
+1. **What's my scale requirement?** (Small datasets vs. millions of vectors)
+2. **What's my performance need?** (Fast queries vs. cost optimization)
+3. **What's my operational complexity tolerance?** (Managed services vs. self-hosted)
+4. **What's my budget for vector storage?** (Pay-per-use vs. fixed costs)
+5. **What are my integration requirements?** (Simple setup vs. custom optimization)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for vector database strategy:**
+
+1. **Assess your scale and performance requirements**
+   - [ ] Estimate your current and future vector count
+   - [ ] Define your query latency and throughput requirements
+   - [ ] Determine your data update frequency and patterns
+   - [ ] Assess your concurrent user load
+
+2. **Evaluate your operational capabilities**
+   - [ ] Assess your team's expertise with vector databases
+   - [ ] Determine your operational complexity tolerance
+   - [ ] Evaluate your budget for managed vs. self-hosted solutions
+   - [ ] Consider your integration with existing infrastructure
+
+3. **Compare database options**
+   - [ ] Test query performance with your data and use cases
+   - [ ] Evaluate cost models and pricing structures
+   - [ ] Assess ease of setup, maintenance, and scaling
+   - [ ] Consider vendor lock-in and migration options
+
+4. **Plan for production deployment**
+   - [ ] Design your data ingestion and indexing strategy
+   - [ ] Plan for monitoring, backup, and disaster recovery
+   - [ ] Consider data privacy and security requirements
+   - [ ] Plan for cost optimization and resource management
+
+</TabItem>
+<TabItem value="general" label="General-Purpose Vector DB">
+
+**Choose general-purpose when**:
+- You have moderate scale requirements (< 100M vectors)
+- You want managed services and ease of use
+- You need quick setup and deployment
+- You have standard use cases
+
+**Options**:
+- **Pinecone**: Managed vector database service
+- **Weaviate**: Open-source with managed options
+- **Chroma**: Lightweight, easy to deploy
+- **Qdrant**: High-performance, self-hosted
+
+**Benefits**:
+- Easy to set up and use
+- Managed infrastructure
+- Good documentation and support
+- Standard APIs and integrations
+
+</TabItem>
+<TabItem value="specialized" label="Specialized Vector DB">
+
+**Choose specialized when**:
+- You have large-scale requirements (> 100M vectors)
+- You need custom optimization
+- You have specific performance requirements
+- You need cost optimization
+
+**Implementation patterns**:
+- **Scalable Vector Database**: LanceDB with S3 storage
+- **Data Bucketing**: Split large datasets (200M vectors per bucket)
+- **Parallel Indexing**: Index multiple buckets simultaneously
+- **Serverless Querying**: Lambda functions for on-demand searches
+
+**Optimization techniques**:
+- **Index Configuration**: Tune IVF-PQ parameters
+- **Batch Processing**: Handle large query batches
+- **Storage Optimization**: Use storage-optimized instances
+- **Query Aggregation**: Merge results from multiple splits
+
+</TabItem>
+</Tabs>
+
+### Deciding on Real-time vs. Batch Processing
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Processing strategy determines user experience, system complexity, and infrastructure costs. The wrong choice can lead to poor user experience, unnecessary complexity, or excessive costs.
+
+**Key questions to ask yourself:**
+1. **What's my user experience requirement?** (Immediate responses vs. can wait for results)
+2. **What's my data volume?** (Small real-time vs. large batch processing)
+3. **What's my cost tolerance?** (Real-time infrastructure vs. batch efficiency)
+4. **What's my complexity tolerance?** (Simple batch vs. complex real-time systems)
+5. **What are my latency requirements?** (Sub-second vs. minutes/hours acceptable)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for processing strategy:**
+
+1. **Analyze your use case requirements**
+   - [ ] Determine if users need immediate responses or can wait
+   - [ ] Assess your data volume and processing complexity
+   - [ ] Evaluate your accuracy vs. speed trade-offs
+   - [ ] Consider your user interaction patterns
+
+2. **Evaluate your infrastructure and cost constraints**
+   - [ ] Assess your budget for real-time vs. batch infrastructure
+   - [ ] Determine your operational complexity tolerance
+   - [ ] Evaluate your team's expertise with different processing patterns
+   - [ ] Consider your scaling requirements
+
+3. **Design your processing architecture**
+   - [ ] Plan your data ingestion and processing pipelines
+   - [ ] Design your result storage and retrieval mechanisms
+   - [ ] Plan for error handling and failure recovery
+   - [ ] Consider your monitoring and observability needs
+
+4. **Test and validate your approach**
+   - [ ] Create test scenarios with realistic data volumes
+   - [ ] Validate that your approach meets user experience requirements
+   - [ ] Test performance under different load conditions
+   - [ ] Ensure your system can handle edge cases and failures
+
+</TabItem>
+<TabItem value="realtime" label="Real-time Processing">
+
+**Choose real-time when**:
+- Users need immediate responses
+- You have interactive applications
+- You need to process streaming data
+- You're building conversational interfaces
+
+**Benefits**:
+- Immediate user feedback
+- Interactive user experience
+- Real-time insights and monitoring
+- Responsive applications
+
+**Considerations**:
+- Higher infrastructure costs
+- More complex system architecture
+- Requires robust error handling
+- May need caching and optimization
+
+</TabItem>
+<TabItem value="batch" label="Batch Processing">
+
+**Choose batch when**:
+- Users can wait for results
+- You have large data volumes
+- You need cost-effective processing
+- You're doing analysis and reporting
+
+**Benefits**:
+- Cost-effective for large volumes
+- Simpler system architecture
+- Better resource utilization
+- Easier to optimize and tune
+
+**Considerations**:
+- Delayed results
+- Less interactive user experience
+- May need result storage and retrieval
+- Requires scheduling and orchestration
+
+</TabItem>
+</Tabs>
+
+### Deciding on Single Agent vs. Multi-Agent
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Agent architecture fundamentally shapes your system's capabilities, complexity, and scalability. The wrong choice can lead to over-engineered solutions, performance bottlenecks, or limited functionality that doesn't meet user needs.
+
+**Key questions to ask yourself:**
+1. **How complex are the tasks I need to solve?** (Simple single-purpose vs. complex multi-step workflows)
+2. **Do I need specialized expertise?** (General-purpose agent vs. domain-specific specialists)
+3. **What's my scalability requirement?** (Single user vs. multiple concurrent users with different needs)
+4. **How important is fault tolerance?** (Single point of failure vs. distributed resilience)
+5. **What's my development complexity tolerance?** (Simple single agent vs. complex coordination logic)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for agent architecture:**
+
+1. **Analyze your problem complexity**
+   - [ ] Map out all the tasks your system needs to perform
+   - [ ] Identify if tasks require specialized expertise or can be handled generically
+   - [ ] Assess if you need parallel processing or sequential workflows
+   - [ ] Determine if tasks are independent or interdependent
+
+2. **Evaluate your scalability and reliability needs**
+   - [ ] Define your expected user load and concurrent usage patterns
+   - [ ] Assess your fault tolerance requirements (single point of failure vs. distributed resilience)
+   - [ ] Consider if you need to scale different capabilities independently
+   - [ ] Plan for system growth and evolution
+
+3. **Assess your development and operational capabilities**
+   - [ ] Evaluate your team's expertise with agent coordination and communication
+   - [ ] Determine your development timeline and complexity tolerance
+   - [ ] Assess your debugging and monitoring capabilities
+   - [ ] Consider your operational overhead tolerance
+
+4. **Design and test your architecture**
+   - [ ] Create a detailed system architecture diagram
+   - [ ] Design agent communication protocols and data flow
+   - [ ] Plan for agent failure scenarios and recovery
+   - [ ] Test the architecture with realistic scenarios and edge cases
+
+</TabItem>
+<TabItem value="single" label="Single Agent">
+
+**Choose single agent when**:
+- Your problem is well-defined and focused
+- You want the simplest architecture
+- You don't need specialized capabilities
+- You're building a proof of concept
+- You have limited resources
+
+**Benefits**:
+- Simple to implement and debug
+- Easier to maintain
+- Lower complexity
+- Faster development
+
+**Limitations**:
+- Limited specialization
+- Harder to scale
+- Single point of failure
+- Less modular
+
+</TabItem>
+<TabItem value="multi" label="Multi-Agent">
+
+**Choose multi-agent when**:
+- You have distinct problem domains requiring specialized expertise
+- You need to handle complex, multi-faceted problems
+- You want better fault tolerance and redundancy
+- You're building complex workflows with multiple steps
+- You need to scale across different capabilities
+
+**Pros**:
+- **Domain Expertise**: Specialized agents for specific areas
+- **Scalability**: Handle complex problems beyond single agent capabilities
+- **Fault Tolerance**: System continues if individual agents fail
+- **Flexibility**: Dynamic agent composition based on needs
+- **Variable Autonomy**: Different agents can have different autonomy levels (fully automated, supervised, collaborative, advisory)
+- **Risk Management**: High-risk tasks can use supervised agents, low-risk tasks can be fully automated
+
+**Cons**:
+- **Complexity**: More complex to design, implement, and debug
+- **Coordination Overhead**: Need communication protocols and orchestration
+- **Development Time**: Longer development and testing cycles
+- **Resource Requirements**: More infrastructure and computational resources
+- **Failure Points**: Multiple agents mean more potential failure points
+
+**Architecture Patterns**:
+- **Supervisor Pattern**: Central coordinator managing sub-agents
+- **Peer-to-Peer**: Agents communicate directly with each other
+- **Hierarchical**: Multi-level agent organization with clear reporting
+- **Workflow-based**: Agents orchestrated by workflow engine
+- **Swarm Intelligence**: Decentralized agents with emergent behavior
+
+**Key Implementation Decisions**:
+- **Communication**: Stateless vs. stateful, real-time vs. asynchronous
+- **Security**: OAuth for enterprise vs. basic authentication
+- **Coordination**: Supervisor patterns vs. peer-to-peer collaboration
+- **Autonomy Levels**: Risk-based autonomy assignment per agent
+- **Agent Discovery**: How agents find and register with each other
+- **Data Sharing**: How agents share information and context
+- **Failure Handling**: How the system handles agent failures and recovery
+
+</TabItem>
+</Tabs>
+
+### Deciding on Agent Communication and Collaboration
+
+> **Note:** This section only applies if you chose to implement a multi-agent system in the previous section. If you selected a single agent, you can skip this section.
+
+<Tabs>
+<TabItem value="why" label="Why" default>
+
+**Why this decision matters:**
+Communication and collaboration patterns determine how your agents work together and with humans. The wrong approach can lead to coordination failures, inefficient workflows, or poor user experiences that undermine the value of your multi-agent system.
+
+**Key questions to ask yourself:**
+1. **How do my agents need to coordinate?** (Independent tasks vs. complex workflows requiring coordination)
+2. **What's my human involvement requirement?** (Fully autonomous vs. human oversight and collaboration)
+3. **How complex are my workflows?** (Simple sequential tasks vs. complex multi-step processes)
+4. **What's my failure tolerance?** (Can handle agent failures vs. need robust coordination)
+5. **What's my user experience goal?** (Seamless automation vs. transparent human-AI collaboration)
+
+</TabItem>
+<TabItem value="how" label="How">
+
+**Due diligence checklist for agent communication and collaboration:**
+
+1. **Analyze your workflow requirements**
+   - [ ] Map out all the tasks and decision points in your workflows
+   - [ ] Identify which tasks can be automated vs. require human oversight
+   - [ ] Determine if tasks are independent or interdependent
+   - [ ] Assess the complexity of coordination needed between agents
+
+2. **Evaluate your human involvement needs**
+   - [ ] Determine where human judgment and oversight are required
+   - [ ] Assess your users' comfort level with autonomous vs. collaborative systems
+   - [ ] Consider your regulatory and compliance requirements for human oversight
+   - [ ] Plan for human feedback and intervention mechanisms
+
+3. **Design your communication architecture**
+   - [ ] Define how agents will share information and coordinate actions
+   - [ ] Plan for error handling and failure recovery between agents
+   - [ ] Design human-AI interaction patterns and interfaces
+   - [ ] Consider security and access control for agent communications
+
+4. **Test and validate your approach**
+   - [ ] Create test scenarios with different coordination requirements
+   - [ ] Validate that human-AI collaboration enhances rather than complicates workflows
+   - [ ] Test failure scenarios and recovery mechanisms
+   - [ ] Ensure the system meets your reliability and user experience goals
+
+</TabItem>
+<TabItem value="human-agent" label="Human-Agent Collaboration">
+
 **Core Concept:** Design agents that augment human intelligence by working with us rather than replacing us, focusing on collaborative intelligence and cognitive augmentation.
 
 **Key Components:**
@@ -890,1014 +1374,401 @@ The goal is to transform architectural uncertainty into confident decision-makin
 - Learning and adaptation requirements
 - Team collaboration and knowledge sharing needs
 
-### 9. Production Agent Deployment Pattern
-**Core Concept:** Transform proof-of-concept agents into production-ready systems using comprehensive AgentCore services for enterprise-grade deployment.
+</TabItem>
+<TabItem value="agent-agent" label="Agent-to-Agent Communication">
+
+**Core Concept:** Build small, focused agents that interact with each other rather than monolithic systems, enabling autonomous agents to communicate, coordinate, and collaborate to accomplish complex multi-agent tasks.
 
 **Key Components:**
-- **AgentCore Runtime:** Secure, scalable agent deployment with automatic scaling
-- **AgentCore Memory:** Persistent memory for conversation continuity and personalization
-- **AgentCore Gateway:** Centralized tool management with MCP protocol support
-- **AgentCore Identity:** Enterprise-grade authentication and authorization
-- **AgentCore Observability:** Comprehensive monitoring and debugging capabilities
+- **Inter-Agent Messaging:** Structured communication protocols between agents
+- **Task Coordination:** Distributed task assignment and workload balancing
+- **Shared Memory:** Common knowledge base accessible to all agents
+- **Conflict Resolution:** Mechanisms for handling conflicting agent decisions
+- **Hierarchical Organization:** Agent roles and responsibilities in multi-agent systems
+- **Modular Architecture:** Small, focused agents with clear separation of concerns
+- **Supervisor-Sub Agent Pattern:** Supervisor agents set application tone and define functionality usage
 
 **Architecture Benefits:**
-- **Enterprise Security:** OAuth 2.0/2.1 authentication with JWT token validation
-- **Session Isolation:** Automatic session management for multiple concurrent users
-- **Tool Centralization:** Reusable tools across different agents and teams
-- **Production Monitoring:** Real-time observability with CloudWatch integration
-- **Minimal Code Changes:** Transform local agents to production with minimal modifications
+- **Scalable Coordination:** Handle complex tasks beyond single agent capabilities
+- **Specialized Expertise:** Different agents with domain-specific knowledge
+- **Fault Tolerance:** System continues functioning if individual agents fail
+- **Parallel Processing:** Multiple agents working simultaneously on different aspects
+- **Improved Modularity:** Better maintainability and testing capabilities
+- **Flexibility:** Use different foundation models for specific tasks
+- **Enhanced Scalability:** Easy to add or remove agents as needed
+- **Clear Separation:** Distinct concerns and permissions for each agent
 
-**Deployment Journey:**
-1. **Proof of Concept:** Local agent with embedded tools and basic functionality
-2. **Memory Integration:** Add persistent memory for conversation continuity
-3. **Tool Centralization:** Move tools to AgentCore Gateway with MCP protocol
-4. **Security Implementation:** Add authentication and authorization controls
-5. **Production Deployment:** Deploy to AgentCore Runtime with observability
-6. **User Interface:** Create customer-facing web interface with secure access
+**Communication Patterns:**
+- **Broadcast Messaging:** One-to-many communication for announcements
+- **Direct Messaging:** Point-to-point communication for specific tasks
+- **Shared Workspace:** Common environment where agents can observe and interact
+- **Event-Driven:** Agents respond to events and state changes
+- **Request-Response:** Formal protocols for task delegation and results
 
 **Implementation Strategy:**
-- Start with local agent prototype using Strands Agents or similar framework
-- Add AgentCore Memory for conversation persistence and personalization
-- Centralize tools using AgentCore Gateway with MCP protocol
-- Implement security with AgentCore Identity and OAuth authentication
-- Deploy to AgentCore Runtime with automatic scaling and monitoring
-- Create customer-facing UI with secure session management
+- Define clear agent roles and responsibilities
+- Implement robust communication protocols
+- Establish shared memory and knowledge bases
+- Create conflict resolution mechanisms
+- Monitor and optimize agent coordination
+- **Supervisor-Sub Agent Pattern:** Supervisor agents set application tone and define functionality usage
+- **Domain-Specific Agents:** Sub-agents handle specific domains (e.g., meetings, knowledge retrieval)
+- **Reusable Components:** Build components that can be shared across multiple agents
+- **Clear Separation:** Maintain distinct concerns and permissions for each agent
 
 **Use Case Examples:**
-- **Customer Support Agents:** Multi-turn conversations with persistent memory
-- **Enterprise Tool Sharing:** Centralized tools accessible across different agents
-- **Secure Agent Deployment:** Production-ready agents with enterprise security
-- **Multi-User Systems:** Concurrent user support with session isolation
-- **Observable Agents:** Comprehensive monitoring and debugging capabilities
+- **Multi-Domain Research:** Agents specializing in different research areas
+- **Complex Problem Solving:** Breaking down problems across specialized agents
+- **Workflow Orchestration:** Coordinating multi-step business processes
+- **Resource Management:** Agents managing different aspects of system resources
+- **Quality Assurance:** Agents reviewing and validating each other's work
 
 **Decision Points:**
-- Production scale and user requirements
-- Security and compliance needs
-- Tool sharing and reusability requirements
-- Monitoring and observability needs
-- Development team expertise with AgentCore services
+- Agent specialization and role definition requirements
+- Communication protocol complexity and reliability needs
+- Coordination and conflict resolution mechanisms
+- Scalability and fault tolerance requirements
+
+</TabItem>
+<TabItem value="swarm" label="Swarm Intelligence">
+
+**Core Concept:** Deploy multiple simple agents that work together to achieve complex emergent behaviors through collective intelligence.
+
+**Key Components:**
+- **Emergent Behavior:** Complex outcomes from simple agent interactions
+- **Decentralized Control:** No central coordinator, agents make local decisions
+- **Collective Problem Solving:** Swarm intelligence for optimization and search
+- **Adaptive Coordination:** Agents adjust behavior based on swarm feedback
+- **Scalable Architecture:** Add or remove agents without system redesign
+
+**Architecture Benefits:**
+- **Resilience:** System continues functioning with agent failures
+- **Scalability:** Easy to scale by adding more agents
+- **Flexibility:** Agents can adapt to changing conditions
+- **Efficiency:** Parallel processing across multiple agents
+
+**Swarm Behaviors:**
+- **Flocking:** Agents move together in coordinated patterns
+- **Foraging:** Agents search and collect resources efficiently
+- **Optimization:** Swarm algorithms for finding optimal solutions
+- **Consensus Building:** Agents reach agreement through local interactions
+- **Task Allocation:** Dynamic assignment of tasks to available agents
 
-## GenAI Components and Their Roles
-
-### Core Components
-
-#### 1. Foundation Models (FMs)
-**Role:** The brain of GenAI systems - large language models that understand and generate human-like text.
-
-**Key Characteristics:**
-- **Training Data:** Trained on massive datasets (trillions of tokens)
-- **Capabilities:** Text generation, reasoning, code generation, conversation
-- **Examples:** Claude, GPT-4, Llama, Amazon Nova, Amazon Titan
-
-**Decision Factors:**
-- **Performance vs. Cost:** Balance between model capabilities and inference costs
-- **Use Case Alignment:** Match model strengths to specific requirements
-- **Latency Requirements:** Response time needs for real-time applications
-- **Context Window:** Size of input/output context for complex tasks
-
-#### 2. Vector Databases
-**Role:** Store and retrieve embeddings for semantic search and RAG applications.
-
-**Key Characteristics:**
-- **Embedding Storage:** High-dimensional vector storage and indexing
-- **Similarity Search:** Fast approximate nearest neighbor (ANN) search
-- **Scalability:** Handle millions to billions of vectors efficiently
-
-**Examples:**
-- **OpenSearch Serverless:** AWS-managed vector search
-- **LanceDB:** File-based vector database with S3 integration
-- **Pinecone:** Managed vector database service
-- **Weaviate:** Open-source vector database
-
-**Decision Factors:**
-- **Scale Requirements:** Vector count and query volume
-- **Performance Needs:** Search latency and throughput
-- **Cost Considerations:** Storage and compute costs
-- **Integration Complexity:** Ease of integration with existing systems
-
-#### 3. Knowledge Bases
-**Role:** Structured repositories of domain-specific information for RAG applications.
-
-**Key Characteristics:**
-- **Document Processing:** Automated ingestion and chunking
-- **Vector Generation:** Embedding creation for semantic search
-- **Retrieval System:** Context-aware information retrieval
-
-**Examples:**
-- **Amazon Bedrock Knowledge Bases:** Managed RAG solution
-- **Custom Knowledge Bases:** Domain-specific information repositories
-- **Document Stores:** S3, SharePoint, Confluence integration
-
-**Decision Factors:**
-- **Data Sources:** Types and formats of source documents
-- **Update Frequency:** How often knowledge needs refreshing
-- **Search Quality:** Relevance and accuracy requirements
-- **Maintenance Overhead:** Ongoing content management needs
-
-### Agent Components
-
-#### 4. Agent Frameworks
-**Role:** Provide the infrastructure and tools for building autonomous AI agents.
-
-**Key Characteristics:**
-- **Tool Integration:** Connect agents to external systems and APIs
-- **Memory Management:** Persistent conversation and context storage
-- **Workflow Orchestration:** Multi-step task execution and coordination
-
-**Examples:**
-- **Strands Agents:** Open-source agent framework with AWS integration
-- **LangGraph:** Stateful agent workflows with graph-based execution
-- **CrewAI:** Multi-agent collaboration framework
-- **LlamaIndex:** Data framework for LLM applications
-
-**Decision Factors:**
-- **Complexity Requirements:** Single vs. multi-agent architectures
-- **Integration Needs:** Tool and system connectivity requirements
-- **Development Speed:** Time to market and prototyping needs
-- **Community Support:** Documentation and community resources
-
-#### 5. Tool Systems
-**Role:** Enable agents to interact with external systems, APIs, and data sources.
-
-**Key Characteristics:**
-- **API Integration:** Connect to external services and databases
-- **Function Calling:** Execute specific actions and retrieve data
-- **Security:** Secure access control and authentication
-
-**Examples:**
-- **MCP Servers:** Model Context Protocol for standardized tool access
-- **Lambda Functions:** Serverless compute for custom tool logic
-- **REST APIs:** Standard web service integration
-- **Database Connectors:** Direct database access and querying
-
-**Decision Factors:**
-- **Tool Complexity:** Simple vs. complex tool requirements
-- **Security Needs:** Access control and data protection
-- **Reusability:** Tool sharing across multiple agents
-- **Maintenance Overhead:** Ongoing tool management and updates
-
-### Infrastructure Components
-
-#### 6. Model Serving Infrastructure
-**Role:** Provide scalable, reliable infrastructure for running foundation models in production.
-
-**Key Characteristics:**
-- **Auto-scaling:** Automatic scaling based on demand
-- **Load Balancing:** Distribute requests across multiple model instances
-- **Monitoring:** Performance and health monitoring
-
-**Examples:**
-- **Amazon Bedrock:** Managed foundation model service
-- **SageMaker Endpoints:** Custom model deployment
-- **Azure OpenAI Service:** Managed OpenAI model access
-- **Google Vertex AI:** Google Cloud model serving
-
-**Decision Factors:**
-- **Model Selection:** Available models and capabilities
-- **Cost Optimization:** Pay-per-use vs. dedicated instances
-- **Latency Requirements:** Response time needs
-- **Compliance Needs:** Data residency and security requirements
-
-#### 7. Memory Systems
-**Role:** Provide persistent storage for agent conversations, context, and learning.
-
-**Key Characteristics:**
-- **Session Management:** Maintain conversation context across interactions
-- **Long-term Memory:** Persistent storage of user preferences and facts
-- **Context Retrieval:** Intelligent context selection and injection
-
-**Examples:**
-- **AgentCore Memory:** AWS-managed agent memory service
-- **Redis:** In-memory data store for session management
-- **DynamoDB:** NoSQL database for persistent storage
-- **Custom Memory Systems:** Domain-specific memory implementations
-
-**Decision Factors:**
-- **Memory Complexity:** Short-term vs. long-term memory needs
-- **Privacy Requirements:** Data protection and user consent
-- **Performance Needs:** Memory access speed and latency
-- **Scalability:** Multi-user and multi-agent support
-
-### Security and Compliance Components
-
-#### 8. Authentication and Authorization
-**Role:** Secure access control for agents, tools, and data.
-
-**Key Characteristics:**
-- **Identity Management:** User and service identity verification
-- **Access Control:** Fine-grained permissions and role-based access
-- **Audit Logging:** Comprehensive access and action logging
-
-**Examples:**
-- **OAuth 2.0/2.1:** Standard authentication protocol
-- **JWT Tokens:** Secure token-based authentication
-- **AWS IAM:** Identity and access management
-- **AgentCore Identity:** Specialized agent authentication
-
-**Decision Factors:**
-- **Security Requirements:** Compliance and data protection needs
-- **User Experience:** Authentication flow complexity
-- **Integration Complexity:** Existing identity system compatibility
-- **Audit Needs:** Logging and compliance requirements
-
-#### 9. Guardrails and Safety Systems
-**Role:** Ensure safe, appropriate, and compliant agent behavior.
-
-**Key Characteristics:**
-- **Content Filtering:** Detect and prevent harmful content
-- **Input Validation:** Sanitize and validate user inputs
-- **Output Monitoring:** Monitor and filter agent responses
-
-**Examples:**
-- **Amazon Bedrock Guardrails:** Built-in safety controls
-- **NeMo Guardrails:** NVIDIA's safety framework
-- **Custom Guardrails:** Domain-specific safety rules
-- **Third-party Safety APIs:** External safety services
-
-**Decision Factors:**
-- **Risk Tolerance:** Safety vs. functionality trade-offs
-- **Compliance Requirements:** Regulatory and policy needs
-- **Customization Needs:** Domain-specific safety requirements
-- **Performance Impact:** Safety check latency and overhead
-
-### Development and Operations Components
-
-#### 10. Development Tools
-**Role:** Accelerate agent development and testing.
-
-**Key Characteristics:**
-- **IDE Integration:** Seamless development experience
-- **Testing Frameworks:** Automated testing and validation
-- **Debugging Tools:** Agent behavior analysis and troubleshooting
-
-**Examples:**
-- **Nova Act IDE Extension:** Browser automation development
-- **Agent Evaluation Frameworks:** Systematic agent testing
-- **Debugging Tools:** Agent behavior analysis
-- **Development SDKs:** Language-specific development kits
-
-**Decision Factors:**
-- **Development Speed:** Time to market requirements
-- **Team Expertise:** Developer skill levels and preferences
-- **Testing Needs:** Quality assurance and validation requirements
-- **Integration Complexity:** Tool compatibility and setup
-
-#### 11. Monitoring and Observability
-**Role:** Provide visibility into agent performance, behavior, and system health.
-
-**Key Characteristics:**
-- **Performance Metrics:** Latency, throughput, and error rates
-- **Behavior Analysis:** Agent decision-making and tool usage
-- **System Health:** Infrastructure and service monitoring
-
-**Examples:**
-- **AgentCore Observability:** AWS-managed agent monitoring
-- **CloudWatch:** AWS monitoring and logging
-- **Custom Dashboards:** Business-specific metrics and KPIs
-- **Third-party Tools:** External monitoring and analytics
-
-**Decision Factors:**
-- **Monitoring Depth:** Basic vs. comprehensive observability
-- **Alerting Needs:** Real-time issue detection and notification
-- **Compliance Requirements:** Audit and reporting needs
-- **Cost Considerations:** Monitoring tool costs and complexity
-
-### Component Relationships and Overlaps
-
-#### Similar Components with Different Roles:
-
-**Vector Databases vs. Knowledge Bases:**
-- **Vector Databases:** Focus on storage and retrieval of embeddings
-- **Knowledge Bases:** Include document processing, chunking, and retrieval logic
-- **Overlap:** Both handle semantic search, but knowledge bases are more comprehensive
-
-**Agent Frameworks vs. Tool Systems:**
-- **Agent Frameworks:** Provide the overall agent infrastructure and orchestration
-- **Tool Systems:** Focus specifically on external system integration
-- **Overlap:** Both handle agent capabilities, but frameworks are broader
-
-**Memory Systems vs. Knowledge Bases:**
-- **Memory Systems:** Store conversation context and user preferences
-- **Knowledge Bases:** Store domain knowledge and factual information
-- **Overlap:** Both provide context to agents, but for different purposes
-
-**Model Serving vs. Agent Frameworks:**
-- **Model Serving:** Focus on running foundation models efficiently
-- **Agent Frameworks:** Provide agent-specific capabilities and orchestration
-- **Overlap:** Both handle model execution, but frameworks add agent-specific features
-
-## Advanced RAG Patterns
-
-### 1. Hybrid Retriever Pattern
-**Concept:** Combine semantic search with keyword-based search (TF/IDF, BM25).
-
-**Benefits:**
-- Improved retrieval accuracy
-- Faster search performance
-- Better handling of exact term matches
-- Reduced false negatives
-
-**Implementation:**
-- Dual indexing (vector + text)
-- Result aggregation and deduplication
-- Configurable search weights
-
-### 2. Query Rewriting Pattern
-**Concept:** Use LLM to generate multiple query variations for better retrieval.
-
-**Benefits:**
-- Improved recall for ambiguous queries
-- Better handling of domain-specific terminology
-- Enhanced search coverage
-
-**Trade-offs:**
-- Additional LLM calls and latency
-- Increased computational costs
-- Need for evaluation of improvement
-
-### 3. Reranker Pattern
-**Concept:** Rank retrieved documents by relevance before sending to LLM.
-
-**Benefits:**
-- Improved response quality
-- Reduced context bloat
-- Better handling of "Lost in the Middle" problem
-
-**Implementation:**
-- Cross-encoder models for ranking
-- User preference integration
-- Configurable result filtering
-
-## Production Deployment Patterns
-
-### 1. Crawl-Walk-Run Methodology
 **Implementation Strategy:**
-- **Crawl:** Internal applications with controlled user base
-- **Walk:** Limited external user testing
-- **Run:** Full production deployment with multi-agent collaboration
+- Design simple agent behaviors with local rules
+- Implement swarm communication protocols
+- Create feedback mechanisms for collective learning
+- Establish emergence detection and monitoring
+- Optimize swarm parameters for specific tasks
 
-**Benefits:**
-- Risk mitigation
-- Gradual capability building
-- User feedback incorporation
-- Performance validation
+**Use Case Examples:**
+- **Resource Optimization:** Swarm agents optimizing resource allocation
+- **Search and Discovery:** Multiple agents exploring solution spaces
+- **Load Balancing:** Agents distributing workload across systems
+- **Environmental Monitoring:** Swarm agents tracking and responding to changes
+- **Collaborative Filtering:** Agents working together to identify patterns
 
-### 2. AgentCore Runtime Pattern
-**Core Services:**
-- **Runtime:** Serverless environments with session isolation
-- **Memory:** Session and long-term memory management
-- **Observability:** Enhanced monitoring and debugging
-- **Identity:** Secure access to AWS and third-party services
-- **Gateway:** API transformation and tool integration
-- **Browser:** Managed web automation
-- **Code Interpreter:** Isolated code execution
-
-**Benefits:**
-- Enterprise-grade security and compliance
-- Simplified infrastructure management
-- Built-in observability and monitoring
-- Framework-agnostic deployment
-
-## Decision Framework
-
-### 1. System Complexity Assessment
-- **Simple:** Direct prompting with basic guardrails
-- **Medium:** RAG with hybrid retrieval and evaluation
-- **Complex:** Multi-agent architecture with advanced memory and security
-
-### 2. Data Requirements Analysis
-- **Static Knowledge:** RAG with knowledge bases
-- **Real-time Data:** API integrations and live data sources
-- **Historical Context:** Long-term memory and session management
-
-### 3. Security and Compliance Needs
-- **Public Access:** Comprehensive guardrails and identity management
-- **Internal Use:** Basic security with logging and monitoring
-- **Enterprise:** Full AgentCore suite with advanced security
-
-### 4. Performance and Scale Requirements
-- **Low Volume:** Simple deployment with basic monitoring
-- **Medium Volume:** Optimized RAG with caching and evaluation
-- **High Volume:** Multi-agent architecture with advanced observability
-
-## Key Decision Points
-
-1. **Model Selection:** Balance between cost, latency, and accuracy
-2. **Architecture Complexity:** Start simple, add complexity as needed
-3. **Security Requirements:** Match guardrails to user trust level
-4. **Evaluation Strategy:** Continuous vs. periodic assessment
-5. **Infrastructure Approach:** Build vs. buy (AgentCore) decision
-6. **Memory Strategy:** Short-term vs. long-term memory needs
-7. **Integration Approach:** API-first vs. framework-specific
-
-## Conclusion
-
-Designing effective GenAI systems requires careful consideration of multiple architectural patterns and decision points. The key is to start with simple patterns and gradually add complexity based on specific requirements, always maintaining a focus on evaluation, security, and user experience.
-
-The patterns outlined here provide a comprehensive framework for making informed architectural decisions when building agentic AI systems, from simple chatbots to complex multi-agent workflows.
-
-## Action Items
-
-This section contains specific action items that readers can take to enhance their understanding or apply the concepts from this post:
-
-- [ ] **Evaluate your current GenAI architecture**: Assess your existing system against the patterns outlined in this guide, identifying areas for improvement and potential architectural debt
-- [ ] **Implement a systematic evaluation framework**: Set up automated model evaluation using the patterns described, starting with basic metrics and expanding to comprehensive assessment
-- [ ] **Design a multi-agent proof of concept**: Create a simple multi-agent system using the collaboration patterns outlined, focusing on clear agent responsibilities and communication protocols
-- [ ] **Establish infrastructure as code practices**: Implement IaC deployment patterns for your GenAI systems, starting with basic CDK templates and expanding to full production workflows
-
-**Implementation Notes:**
-- Each action item should be specific and measurable
-- Include expected outcomes or deliverables
-- Consider different skill levels (beginner, intermediate, advanced)
-- Provide context for why each action item is valuable
-
-## Real-World Example: Enterprise Customer Support Agent System
-
-### Use Case: Intelligent Customer Support Platform
-
-**Scenario:** A large e-commerce company needs to deploy an intelligent customer support system that can handle 10,000+ concurrent users, provide personalized assistance, and integrate with multiple business systems while maintaining enterprise-grade security and compliance.
-
-### System Architecture
-
-<Tabs>
-<TabItem value="svg" label="Rendered Diagram" default>
-
-![Customer Support Architecture](/img/customer-support-architecture.svg)
+**Decision Points:**
+- Swarm size and agent complexity requirements
+- Emergent behavior design and monitoring needs
+- Communication overhead and coordination costs
+- Task complexity and optimization requirements
 
 </TabItem>
-<TabItem value="plantuml" label="PlantUML Code">
+<TabItem value="federated" label="Federated Agent Networks">
 
-```plantuml
-@startuml
-!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v20.0/dist
-!include AWSPuml/AWSCommon.puml
-!include AWSPuml/NetworkingContentDelivery/APIGateway.puml
-!include AWSPuml/Compute/Lambda.puml
-!include AWSPuml/Database/DynamoDB.puml
-!include AWSPuml/ArtificialIntelligence/Bedrock.puml
-!include AWSPuml/Storage/SimpleStorageService.puml
+**Core Concept:** Connect distributed agents across different organizations, systems, or domains to share capabilities and collaborate on complex tasks.
 
-title Enterprise Customer Support Agent System Architecture
+**Key Components:**
+- **Cross-Organizational Agents:** Agents from different entities working together
+- **Federated Identity:** Secure authentication across organizational boundaries
+- **Capability Sharing:** Agents exposing and consuming services from each other
+- **Trust Networks:** Establishing trust relationships between agent systems
+- **Interoperability Standards:** Common protocols for agent communication
 
-actor "Customer" as customer
-actor "Support Agent" as agent
-actor "System Admin" as admin
+**Architecture Benefits:**
+- **Capability Aggregation:** Combine specialized agents from different organizations
+- **Resource Sharing:** Access to distributed resources and expertise
+- **Innovation Acceleration:** Cross-pollination of ideas and approaches
+- **Cost Optimization:** Share expensive specialized capabilities
 
-rectangle "Frontend Layer" {
-  component "Web Application" as webapp
-  component "Mobile App" as mobile
-  component "Admin Dashboard" as dashboard
-}
+**Federation Models:**
+- **Peer-to-Peer:** Direct agent-to-agent communication
+- **Hub-and-Spoke:** Central coordinator managing distributed agents
+- **Hierarchical:** Multi-level federation with different trust levels
+- **Market-Based:** Agents trading capabilities and services
+- **Consortium:** Formal agreements between organizations for agent collaboration
 
-rectangle "API Gateway Layer" {
-  APIGateway(api, "API Gateway", "RESTful API")
-  component "Amazon Cognito" as cognito
-}
+**Implementation Strategy:**
+- Establish federation governance and standards
+- Implement secure cross-organizational authentication
+- Create capability discovery and registration systems
+- Develop trust and reputation mechanisms
+- Monitor and audit federated agent interactions
 
-rectangle "Agent Core Services" {
-  Bedrock(bedrock, "Amazon Bedrock", "Foundation Models")
-  Lambda(agent_runtime, "Agent Runtime", "Lambda Functions")
-  DynamoDB(memory, "Agent Memory", "DynamoDB")
-  component "Session Cache" as session
-}
+**Use Case Examples:**
+- **Supply Chain Coordination:** Agents from different companies coordinating logistics
+- **Research Collaboration:** Academic and industry agents sharing research capabilities
+- **Emergency Response:** Government and NGO agents coordinating disaster response
+- **Financial Services:** Banks and fintech agents collaborating on transactions
+- **Healthcare Networks:** Medical agents sharing patient care capabilities
 
-rectangle "Tool Integration Layer" {
-  Lambda(order_tool, "Order Management", "Lambda")
-  Lambda(inventory_tool, "Inventory System", "Lambda")
-  Lambda(payment_tool, "Payment Processing", "Lambda")
-  Lambda(crm_tool, "CRM Integration", "Lambda")
-}
+**Decision Points:**
+- Federation governance and trust requirements
+- Security and privacy across organizational boundaries
+- Capability sharing and interoperability standards
+- Legal and regulatory compliance needs
 
-rectangle "Knowledge Layer" {
-  component "Vector Database" as vector_db
-  SimpleStorageService(knowledge_base, "Knowledge Base", "S3")
-  Lambda(document_processor, "Document Processor", "Lambda")
-}
+</TabItem>
+<TabItem value="mcp-agents" label="Calling Agents through MCP">
 
-rectangle "Monitoring & Observability" {
-  component "CloudWatch" as monitoring
-  component "Step Functions" as workflow
-  component "EventBridge" as events
-}
+**Core Concept:** Integrate MCP servers with Amazon Bedrock Agents using inline agents and action groups for enhanced agent capabilities.
 
-rectangle "External Systems" {
-  component "ERP System" as erp
-  component "Payment Gateway" as payment
-  component "Inventory System" as inventory
-  component "CRM System" as crm
-}
+**Key Components:**
+- **Inline Agent SDK:** Streamlined agent creation and invocation
+- **MCP Client Integration:** Direct access to MCP server tools
+- **Action Group Configuration:** Grouping multiple MCP clients
+- **Return Control Flow:** Seamless tool execution and response handling
 
-' User interactions
-customer --> webapp : "Web Interface"
-customer --> mobile : "Mobile App"
-agent --> dashboard : "Admin Interface"
-admin --> dashboard : "System Management"
+**Architecture Benefits:**
+- **Standardized Integration:** Consistent access to diverse data sources
+- **Reduced Development Overhead:** No custom connectors for each integration
+- **Enhanced Agent Capabilities:** Access to specialized tools and data sources
+- **Scalable Architecture:** Easy addition of new MCP servers
 
-' Frontend to API
-webapp --> api : "HTTPS"
-mobile --> api : "HTTPS"
-dashboard --> api : "HTTPS"
+**Implementation Strategy:**
+- Use InlineAgent SDK for agent creation
+- Configure MCP clients with server parameters
+- Group MCP clients into action groups
+- Implement return control for tool execution
 
-' API Gateway routing
-api --> cognito : "Authentication"
-api --> agent_runtime : "Agent Requests"
+**Use Case Examples:**
+- **AWS Cost Analysis:** Connect to Cost Explorer and CloudWatch for spend insights
+- **Multi-Data Source Agents:** Integrate with Knowledge Bases, SQLite, and filesystem
+- **Developer Productivity:** Slack and GitHub integration for development workflows
+- **ML Experiment Tracking:** Comet ML integration for experiment management
 
-' Agent Core interactions
-agent_runtime --> bedrock : "LLM Processing"
-agent_runtime --> memory : "State Management"
-agent_runtime --> session : "Session Data"
+**Choose when**:
+- You need agents to access multiple external data sources
+- You want standardized tool integration
+- You're building complex workflows with diverse data needs
+- You need to scale agent capabilities across different domains
+- You want to leverage existing MCP server ecosystem
 
-' Tool integrations
-agent_runtime --> order_tool : "Order Operations"
-agent_runtime --> inventory_tool : "Inventory Check"
-agent_runtime --> payment_tool : "Payment Processing"
-agent_runtime --> crm_tool : "Customer Data"
-
-' External system connections
-order_tool --> erp : "Order Sync"
-payment_tool --> payment : "Payment API"
-inventory_tool --> inventory : "Stock Check"
-crm_tool --> crm : "Customer Records"
-
-' Knowledge base connections
-document_processor --> knowledge_base : "Store Documents"
-document_processor --> vector_db : "Vector Index"
-agent_runtime --> vector_db : "Semantic Search"
-
-' Monitoring connections
-agent_runtime --> monitoring : "Metrics & Logs"
-agent_runtime --> workflow : "Orchestration"
-workflow --> events : "Event Processing"
-
-@enduml
-```
+**Decision Points:**
+- Agent complexity and tool requirements
+- MCP server selection and configuration
+- Development team expertise with MCP protocol
+- Production deployment and scaling needs
 
 </TabItem>
 </Tabs>
 
-### Key Decision Factors
-
-#### 1. **Foundation Model Selection**
-**Decision:** Claude 3.5 Sonnet via Amazon Bedrock
-**Rationale:**
-- **Performance:** Superior reasoning and conversation capabilities
-- **Cost:** Pay-per-use model suitable for variable workloads
-- **Compliance:** AWS-native service with enterprise security
-- **Latency:** Sub-2 second response times for real-time chat
-
-#### 2. **Agent Architecture Pattern**
-**Decision:** Multi-Agent Architecture with Specialized Agents
-**Rationale:**
-- **Order Support Agent:** Handles order inquiries, returns, and modifications
-- **Technical Support Agent:** Troubleshoots product issues and provides solutions
-- **Billing Agent:** Manages payment and billing inquiries
-- **General Agent:** Routes complex queries to appropriate specialists
-
-#### 3. **Memory Management Strategy**
-**Decision:** Hybrid Memory System
-**Components:**
-- **Short-term Memory:** Redis for session context (30-minute TTL)
-- **Long-term Memory:** DynamoDB for customer preferences and history
-- **Knowledge Memory:** OpenSearch for product and policy information
-
-#### 4. **Tool Integration Approach**
-**Decision:** MCP-based Tool System with Lambda Functions
-**Rationale:**
-- **Standardization:** Model Context Protocol for consistent tool access
-- **Security:** Lambda functions with IAM roles for secure API access
-- **Scalability:** Serverless functions auto-scale with demand
-- **Maintainability:** Centralized tool management and versioning
-
-#### 5. **Knowledge Base Architecture**
-**Decision:** Multi-source Knowledge Integration
-**Components:**
-- **Product Catalog:** Real-time inventory and pricing data
-- **Policy Documents:** Return policies, shipping terms, warranty information
-- **FAQ Database:** Common questions and automated responses
-- **Troubleshooting Guides:** Technical solutions and step-by-step instructions
-
-### System Capabilities and Scale
-
-#### **Current Scale Capacity:**
-- **Concurrent Users:** 10,000+ simultaneous conversations
-- **Daily Interactions:** 500,000+ customer interactions
-- **Response Time:** Less than 2 seconds average response time
-- **Availability:** 99.9% uptime with multi-AZ deployment
-- **Languages:** 15+ languages supported with real-time translation
-
-#### **Performance Metrics:**
-- **Throughput:** 1,000 requests per second peak capacity
-- **Memory Usage:** 50GB Redis cache, 100GB DynamoDB storage
-- **Vector Database:** 10M+ embeddings with sub-100ms search time
-- **Tool Response:** Less than 500ms average tool execution time
-
-### Potential Bottlenecks and Solutions
-
-#### 1. **Foundation Model Latency**
-**Bottleneck:** High-traffic periods causing model response delays
-**Solutions:**
-- **Model Caching:** Cache common responses for frequent queries
-- **Load Balancing:** Distribute requests across multiple model endpoints
-- **Response Streaming:** Stream partial responses to improve perceived latency
-- **Fallback Models:** Use faster, lighter models for simple queries
-
-#### 2. **Vector Database Performance**
-**Bottleneck:** Search latency increases with knowledge base size
-**Solutions:**
-- **Index Optimization:** Tune vector indexes for faster similarity search
-- **Caching Layer:** Cache frequent search results in Redis
-- **Sharding:** Distribute vectors across multiple OpenSearch clusters
-- **Hybrid Search:** Combine vector and keyword search for better performance
-
-#### 3. **Tool Integration Latency**
-**Bottleneck:** External API calls causing response delays
-**Solutions:**
-- **Async Processing:** Handle non-critical operations asynchronously
-- **Circuit Breakers:** Implement fallback responses for failing services
-- **Connection Pooling:** Reuse connections to external systems
-- **Parallel Execution:** Execute multiple tool calls simultaneously
-
-#### 4. **Memory Management**
-**Bottleneck:** Memory storage and retrieval performance
-**Solutions:**
-- **Memory Compression:** Compress stored conversations and context
-- **Intelligent Retrieval:** Use semantic search for relevant memory retrieval
-- **Memory Pruning:** Automatically remove outdated or irrelevant memories
-- **Distributed Caching:** Use distributed cache for frequently accessed data
-
-### Scaling Opportunities
-
-#### **Horizontal Scaling:**
-- **Multi-Region Deployment:** Deploy across multiple AWS regions
-- **Auto-scaling Groups:** Automatically scale Lambda functions and containers
-- **Database Sharding:** Partition data across multiple database instances
-- **CDN Integration:** Use CloudFront for global content delivery
-
-#### **Vertical Scaling:**
-- **Model Optimization:** Fine-tune models for specific use cases
-- **Hardware Acceleration:** Use GPU instances for model inference
-- **Memory Optimization:** Implement more efficient memory storage
-- **Caching Strategies:** Add multiple layers of caching
-
-#### **Advanced Scaling Strategies:**
-- **Predictive Scaling:** Use ML to predict traffic patterns
-- **Edge Computing:** Deploy agents closer to users
-- **Hybrid Cloud:** Extend to on-premises infrastructure
-- **Microservices:** Break down monolithic components
-
-### Cost Optimization
-
-#### **Current Monthly Costs (Estimated):**
-- **Bedrock API Calls:** $15,000 (based on 500K daily interactions)
-- **Lambda Functions:** $2,000 (compute and memory costs)
-- **DynamoDB:** $1,500 (storage and read/write capacity)
-- **OpenSearch:** $3,000 (cluster and storage costs)
-- **Redis Cache:** $800 (ElastiCache cluster)
-- **Total:** ~$22,300/month
-
-#### **Cost Optimization Strategies:**
-- **Reserved Capacity:** Use reserved instances for predictable workloads
-- **Spot Instances:** Use spot instances for non-critical processing
-- **Data Lifecycle:** Implement data archiving and deletion policies
-- **Model Selection:** Use appropriate model sizes for different tasks
-
-### Security and Compliance
-
-#### **Security Measures:**
-- **Authentication:** Multi-factor authentication via Cognito
-- **Authorization:** Role-based access control with IAM
-- **Data Encryption:** End-to-end encryption for all data
-- **Audit Logging:** Comprehensive logging for compliance
-- **Network Security:** VPC with private subnets and security groups
-
-#### **Compliance Features:**
-- **GDPR Compliance:** Data anonymization and deletion capabilities
-- **SOC 2:** Security controls and monitoring
-- **PCI DSS:** Payment data protection for billing inquiries
-- **HIPAA:** Healthcare data protection for health-related products
-
-### Monitoring and Observability
-
-#### **Key Metrics:**
-- **Agent Performance:** Response accuracy, tool usage, conversation success
-- **System Health:** Latency, throughput, error rates, availability
-- **Business Metrics:** Customer satisfaction, resolution time, escalation rate
-- **Cost Metrics:** Resource utilization, cost per interaction, ROI
-
-#### **Alerting Strategy:**
-- **Critical Alerts:** System downtime, security breaches, data loss
-- **Performance Alerts:** High latency, low throughput, error spikes
-- **Business Alerts:** Low satisfaction scores, high escalation rates
-- **Cost Alerts:** Unusual spending patterns, budget thresholds
-
-This comprehensive example demonstrates how to build a production-ready GenAI agentic system that can handle enterprise-scale requirements while maintaining performance, security, and cost-effectiveness. The architecture showcases the integration of multiple AWS services and follows the architectural patterns outlined in this guide.
-
-## Advanced Example: AI-Powered Financial Advisory System
-
-### Use Case: Intelligent Investment Management Platform
-
-**Scenario:** A leading financial services company needs to deploy an AI-powered investment advisory system that can provide personalized financial advice, portfolio management, and risk assessment for 50,000+ high-net-worth clients while maintaining regulatory compliance and real-time market data integration.
-
-### System Architecture
+### Deciding on Tool Integration and Agent Capabilities
 
 <Tabs>
-<TabItem value="svg" label="Rendered Diagram" default>
+<TabItem value="why" label="Why" default>
 
-![Financial Advisory Architecture](/img/financial-advisory-architecture.svg)
+**Why this decision matters:**
+Tool integration determines what your agents can actually do in the real world. The wrong approach can lead to limited functionality, complex integrations, or security vulnerabilities that prevent your agents from delivering value.
+
+**Key questions to ask yourself:**
+1. **What external systems do my agents need to interact with?** (APIs, databases, file systems, third-party services)
+2. **How complex are my integration requirements?** (Simple API calls vs. complex multi-step workflows)
+3. **What's my security and compliance tolerance?** (Basic authentication vs. enterprise-grade security)
+4. **How important is standardization vs. customization?** (Standard protocols vs. custom integrations)
+5. **What's my team's expertise with different integration approaches?** (MCP vs. custom connectors vs. API wrappers)
 
 </TabItem>
-<TabItem value="plantuml" label="PlantUML Code">
+<TabItem value="how" label="How">
 
-```plantuml
-@startuml
-!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v20.0/dist
-!include AWSPuml/AWSCommon.puml
-!include AWSPuml/NetworkingContentDelivery/APIGateway.puml
-!include AWSPuml/Compute/Lambda.puml
-!include AWSPuml/Database/DynamoDB.puml
-!include AWSPuml/ArtificialIntelligence/Bedrock.puml
-!include AWSPuml/Storage/SimpleStorageService.puml
-!include AWSPuml/ManagementGovernance/CloudWatch.puml
-!include AWSPuml/SecurityIdentityCompliance/Cognito.puml
-!include AWSPuml/SecurityIdentityCompliance/IdentityandAccessManagement.puml
-!include AWSPuml/ApplicationIntegration/StepFunctions.puml
-!include AWSPuml/ApplicationIntegration/EventBridge.puml
-!include AWSPuml/Analytics/QuickSight.puml
-!include AWSPuml/Analytics/Athena.puml
-!include AWSPuml/ArtificialIntelligence/Personalize.puml
-!include AWSPuml/Analytics/SageMaker.puml
+**Due diligence checklist for tool integration:**
 
-title AI-Powered Financial Advisory System Architecture
+1. **Assess your integration requirements**
+   - [ ] Map all external systems your agents need to access
+   - [ ] Identify data types and access patterns (read, write, real-time, batch)
+   - [ ] Evaluate security and compliance requirements
+   - [ ] Assess integration complexity and maintenance needs
 
-actor "Client" as client
-actor "Financial Advisor" as advisor
-actor "Compliance Officer" as compliance
-actor "System Admin" as admin
+2. **Evaluate your technical constraints**
+   - [ ] Review your team's expertise with different integration approaches
+   - [ ] Assess your infrastructure and deployment capabilities
+   - [ ] Consider your development timeline and resource constraints
+   - [ ] Evaluate your monitoring and debugging capabilities
 
-rectangle "Client Interface Layer" {
-  component "Web Portal" as web
-  component "Mobile App" as mobile
-  component "Advisor Dashboard" as dashboard
-  component "Compliance Portal" as compliance_portal
-}
+3. **Analyze your scalability and performance needs**
+   - [ ] Define your expected usage patterns and volume
+   - [ ] Assess your performance and latency requirements
+   - [ ] Consider your scaling and growth projections
+   - [ ] Plan for system evolution and new integrations
 
-rectangle "API Gateway & Security" {
-  APIGateway(api, "API Gateway", "RESTful API")
-  Cognito(cognito, "Amazon Cognito", "Multi-Factor Auth")
-  IdentityandAccessManagement(iam, "IAM", "Role-Based Access")
-}
+4. **Design and test your integration approach**
+   - [ ] Create integration architecture diagrams
+   - [ ] Design security and access control mechanisms
+   - [ ] Plan for error handling and failure scenarios
+   - [ ] Test integrations with realistic data and scenarios
 
-rectangle "AI Agent Core" {
-  Bedrock(bedrock, "Amazon Bedrock", "Claude 3.5 Sonnet")
-  Lambda(agent_orchestrator, "Agent Orchestrator", "Lambda")
-  Lambda(risk_agent, "Risk Assessment Agent", "Lambda")
-  Lambda(portfolio_agent, "Portfolio Management Agent", "Lambda")
-  Lambda(compliance_agent, "Compliance Agent", "Lambda")
-  Lambda(market_agent, "Market Analysis Agent", "Lambda")
-}
+</TabItem>
+<TabItem value="mcp" label="Model Context Protocol (MCP)">
 
-rectangle "Memory & Knowledge Management" {
-  DynamoDB(client_memory, "Client Profiles", "DynamoDB")
-  component "Session Cache" as session_cache
-  component "Financial Knowledge" as knowledge_base
-  SimpleStorageService(documents, "Document Storage", "S3")
-}
+**Core Concept:** Standardized protocol for AI systems to communicate with external data sources, tools, and services, solving the M×N integration problem.
 
-rectangle "Data Processing & Analytics" {
-  SageMaker(ml_models, "ML Models", "SageMaker")
-  Personalize(recommendations, "Personalize", "Recommendations")
-  Athena(data_lake, "Data Lake", "Athena")
-  QuickSight(analytics, "Analytics", "QuickSight")
-}
+**Key Components:**
+- **MCP Clients:** AI applications that need access to external data
+- **MCP Servers:** Standardized interfaces to specific data sources
+- **Three Primitives:** Tools (functions), Resources (data), and Prompts (templates)
+- **Client-Server Architecture:** Supports both local and remote implementations
 
-rectangle "External Data Sources" {
-  component "Market Data APIs" as market_data
-  component "News APIs" as news
-  component "Economic Indicators" as economic
-  component "Regulatory Databases" as regulatory
-}
+**Architecture Benefits:**
+- **Reduced Complexity:** Transforms M×N integration problem into M+N solution
+- **Standardized Access:** Universal language for AI-data connections
+- **Security Integration:** Leverages existing AWS security mechanisms (IAM)
+- **Scalable Design:** Works across local development and enterprise deployments
 
-rectangle "Workflow Orchestration" {
-  StepFunctions(workflows, "Step Functions", "Orchestration")
-  EventBridge(events, "EventBridge", "Event Routing")
-  CloudWatch(monitoring, "CloudWatch", "Monitoring")
-}
+**Choose when**:
+- You need standardized access to multiple data sources
+- You want to leverage existing MCP server ecosystem
+- You're building complex multi-tool workflows
+- You need both local and remote tool access
+- You want to reduce integration maintenance overhead
 
-' Client connections
-client --> web : "Web Interface"
-client --> mobile : "Mobile App"
-advisor --> dashboard : "Advisor Interface"
-compliance --> compliance_portal : "Compliance Interface"
-admin --> dashboard : "Admin Interface"
+**Decision Points:**
+- Local vs. remote MCP server deployment
+- Security and access control requirements
+- Integration complexity and maintenance needs
+- Team expertise with protocol implementations
 
-' API Gateway connections
-web --> api : "HTTPS"
-mobile --> api : "HTTPS"
-dashboard --> api : "HTTPS"
-compliance_portal --> api : "HTTPS"
+</TabItem>
+<TabItem value="direct-api" label="Direct API Integration">
 
-' Security and authentication
-api --> cognito : "Authentication"
-api --> iam : "Authorization"
-api --> agent_orchestrator : "Agent Requests"
+**Core Concept:** Agents directly call external APIs and services using custom connectors and wrappers.
 
-' Agent Core interactions
-agent_orchestrator --> bedrock : "LLM Processing"
-agent_orchestrator --> risk_agent : "Risk Analysis"
-agent_orchestrator --> portfolio_agent : "Portfolio Management"
-agent_orchestrator --> compliance_agent : "Compliance Check"
-agent_orchestrator --> market_agent : "Market Analysis"
+**Key Components:**
+- **API Clients:** Direct HTTP/gRPC clients for external services
+- **Authentication Handlers:** OAuth, API keys, and credential management
+- **Data Transformers:** Convert between agent and external system formats
+- **Error Handlers:** Retry logic, circuit breakers, and fallback mechanisms
 
-' Memory and knowledge connections
-agent_orchestrator --> client_memory : "Client Data"
-agent_orchestrator --> session_cache : "Session Context"
-agent_orchestrator --> knowledge_base : "Financial Knowledge"
+**Architecture Benefits:**
+- **Direct Control:** Full control over integration behavior
+- **Performance:** Optimized for specific use cases
+- **Customization:** Tailored to specific business requirements
+- **Debugging:** Easier to trace and debug issues
 
-' Data processing connections
-risk_agent --> ml_models : "Risk Models"
-portfolio_agent --> recommendations : "Investment Recommendations"
-market_agent --> data_lake : "Market Data"
-compliance_agent --> documents : "Regulatory Documents"
+**Choose when**:
+- You need highly customized integration behavior
+- You're integrating with proprietary or legacy systems
+- You require specific performance optimizations
+- You have complex data transformation needs
+- You want full control over error handling and retry logic
 
-' External data connections
-market_agent --> market_data : "Real-time Data"
-market_agent --> news : "Market News"
-market_agent --> economic : "Economic Indicators"
-compliance_agent --> regulatory : "Regulatory Updates"
+**Decision Points:**
+- API complexity and authentication requirements
+- Data transformation and format conversion needs
+- Performance and latency optimization requirements
+- Team expertise with API integration patterns
 
-' Analytics connections
-ml_models --> analytics : "Model Insights"
-agent_orchestrator --> workflows : "Process Orchestration"
-workflows --> events : "Event Processing"
-agent_orchestrator --> monitoring : "System Monitoring"
+</TabItem>
+<TabItem value="embedded-tools" label="Embedded Tools">
 
-@enduml
-```
+**Core Concept:** Tools and capabilities are built directly into the agent system as embedded functions and services.
+
+**Key Components:**
+- **Internal Functions:** Built-in capabilities within the agent framework
+- **Local Services:** Microservices running in the same environment
+- **Database Connectors:** Direct database access and query capabilities
+- **File System Access:** Local and network file system operations
+
+**Architecture Benefits:**
+- **Low Latency:** No network calls for internal operations
+- **High Security:** No external network exposure
+- **Simple Deployment:** Everything in one system
+- **Easy Debugging:** All code in one codebase
+
+**Choose when**:
+- You need maximum performance and low latency
+- You're working with sensitive data requiring high security
+- You have simple, well-defined tool requirements
+- You want to minimize external dependencies
+- You're building proof-of-concept or prototype systems
+
+**Decision Points:**
+- Performance and latency requirements
+- Security and data sensitivity needs
+- Tool complexity and maintenance requirements
+- System scalability and growth projections
+
+</TabItem>
+<TabItem value="hybrid-approach" label="Hybrid Integration">
+
+**Core Concept:** Combine multiple integration approaches based on specific tool requirements and constraints.
+
+**Key Components:**
+- **MCP for Standard Tools:** Use MCP for common, standardized integrations
+- **Direct APIs for Custom:** Direct integration for specialized systems
+- **Embedded for Critical:** Built-in tools for performance-critical operations
+- **Gateway Pattern:** Centralized routing and management of different integration types
+
+**Architecture Benefits:**
+- **Flexibility:** Choose the best approach for each tool
+- **Performance:** Optimize critical paths while maintaining flexibility
+- **Maintainability:** Standardize where possible, customize where needed
+- **Scalability:** Scale different integration types independently
+
+**Choose when**:
+- You have diverse integration requirements
+- You need to balance performance, security, and flexibility
+- You're building enterprise systems with complex needs
+- You want to optimize for both development speed and production performance
+- You're evolving from simple to complex systems
+
+**Decision Points:**
+- Tool categorization and integration strategy mapping
+- Performance vs. flexibility trade-offs
+- Development and maintenance resource allocation
+- System evolution and migration planning
 
 </TabItem>
 </Tabs>
 
-### Key Decision Factors
+## Common Pitfalls
 
-#### 1. **Multi-Agent Architecture Design**
-**Decision:** Specialized Agent System with Orchestrator Pattern
-**Rationale:**
-- **Risk Assessment Agent:** Specialized in risk analysis and portfolio optimization
-- **Portfolio Management Agent:** Handles investment recommendations and rebalancing
-- **Compliance Agent:** Ensures regulatory adherence and audit trail
-- **Market Analysis Agent:** Processes real-time market data and economic indicators
-- **Agent Orchestrator:** Coordinates between agents and manages client interactions
+### Design Mistakes
+- **Over-engineering**: Starting with complex patterns when simple ones suffice
+- **Under-evaluating**: Not setting up proper testing and evaluation
+- **Ignoring costs**: Not considering API costs and infrastructure needs
+- **Poor prompt design**: Not investing time in prompt engineering
 
-#### 2. **Real-Time Data Integration Strategy**
-**Decision:** Multi-Source Data Pipeline with Event-Driven Architecture
-**Components:**
-- **Market Data APIs:** Real-time stock prices, bond yields, currency rates
-- **News APIs:** Financial news sentiment analysis and impact assessment
-- **Economic Indicators:** GDP, inflation, interest rates, employment data
-- **Regulatory Databases:** Compliance rules, reporting requirements, audit trails
+### Technical Mistakes
+- **No error handling**: Not planning for API failures and timeouts
+- **Poor data quality**: Using low-quality training or context data
+- **Security oversights**: Not implementing proper input validation
+- **Scalability issues**: Not planning for increased load
 
-#### 3. **Personalization and Recommendation Engine**
-**Decision:** AWS Personalize with Custom ML Models
-**Rationale:**
-- **Client Profiling:** Risk tolerance, investment goals, time horizon analysis
-- **Behavioral Analysis:** Investment patterns, decision-making preferences
-- **Market Conditions:** Economic environment adaptation and strategy adjustment
-- **Regulatory Compliance:** Personalized advice within regulatory constraints
+## Key Takeaways
 
-#### 4. **Security and Compliance Architecture**
-**Decision:** Multi-Layer Security with Audit Trail
-**Components:**
-- **Authentication:** Multi-factor authentication with biometric verification
-- **Authorization:** Role-based access control with fine-grained permissions
-- **Data Encryption:** End-to-end encryption for all financial data
-- **Audit Logging:** Comprehensive logging for regulatory compliance
-- **Data Residency:** Client data stored in specific geographic regions
+1. **Start Simple**: Begin with basic prompting before adding complexity
+2. **Data is King**: Good data makes good AI
+3. **Standards Help**: Use standards like MCP to make connections easier
+4. **Feedback Loops Matter**: Agentic control is about giving up control to the agent! Let it iterate but make sure it has a clear feedback loop!
+5. **Test Everything**: AI can be wrong, so always test and measure!
 
-#### 5. **Scalability and Performance Strategy**
-**Decision:** Serverless Architecture with Auto-Scaling
-**Components:**
-- **Lambda Functions:** Auto-scaling compute for agent processing
-- **DynamoDB:** NoSQL database for client profiles and session data
-- **ElastiCache:** Redis for session management and caching
-- **OpenSearch:** Vector database for financial knowledge and document search
 
-### System Capabilities and Scale
+## Next Steps
 
-#### **Current Scale Capacity:**
-- **Concurrent Users:** 50,000+ high-net-worth clients
-- **Daily Transactions:** 1M+ investment decisions processed
-- **Response Time:** Less than 1 second for real-time advice
-- **Availability:** 99.99% uptime with multi-region deployment
-- **Data Processing:** 10TB+ daily market data processing
+Ready to implement your GenAI system? Here's your action plan:
 
-#### **Performance Metrics:**
-- **Throughput:** 5,000 requests per second peak capacity
-- **Memory Usage:** 200GB Redis cache, 500GB DynamoDB storage
-- **Vector Database:** 50M+ financial document embeddings
-- **ML Model Inference:** Less than 100ms for risk assessment
+### Immediate Actions
+- [ ] **Evaluate your current architecture**: Assess your existing system against the decision framework in this guide
+- [ ] **Implement systematic evaluation**: Set up automated model evaluation starting with basic metrics
+- [ ] **Design a proof of concept**: Create a simple system using the patterns outlined, focusing on clear responsibilities
+- [ ] **Establish infrastructure practices**: Implement IaC deployment patterns for your GenAI systems
 
-### Potential Bottlenecks and Solutions
+### Advanced Learning
+- [Preparing GenAI Systems for Production](./preparing-genai-systems-for-production) for production readiness
+- [Understanding GenAI Fundamentals](./understanding-the-fundamentals-of-genai) for foundational concepts
+- [Understanding Intermediate GenAI Concepts](./understanding-intermediate-genai-concepts) for advanced patterns
 
-#### 1. **Real-Time Market Data Processing**
-**Bottleneck:** High-frequency market data causing processing delays
-**Solutions:**
-- **Stream Processing:** Use Kinesis for real-time data ingestion
-- **Data Compression:** Compress market data before processing
-- **Caching Strategy:** Cache frequently accessed market data
-- **Parallel Processing:** Process multiple data streams simultaneously
-
-#### 2. **ML Model Inference Latency**
-**Bottleneck:** Complex ML models causing response delays
-**Solutions:**
-- **Model Optimization:** Use TensorRT for GPU acceleration
-- **Model Caching:** Cache model predictions for similar scenarios
-- **Edge Deployment:** Deploy models closer to users
-- **Model Quantization:** Reduce model size for faster inference
-
-#### 3. **Regulatory Compliance Processing**
-**Bottleneck:** Complex compliance rules causing processing delays
-**Solutions:**
-- **Rule Engine Optimization:** Optimize compliance rule evaluation
-- **Parallel Compliance Checks:** Run multiple compliance checks simultaneously
-- **Compliance Caching:** Cache compliance results for similar scenarios
-- **Automated Compliance:** Use AI to automate compliance checking
-
-#### 4. **Client Data Privacy and Security**
-**Bottleneck:** Data privacy requirements causing processing delays
-**Solutions:**
-- **Data Anonymization:** Anonymize client data for processing
-- **Federated Learning:** Train models without exposing raw data
-- **Privacy-Preserving ML:** Use differential privacy techniques
-- **Secure Multi-Party Computation:** Process data without revealing individual records
-
-### Scaling Opportunities
-
-#### **Horizontal Scaling:**
-- **Multi-Region Deployment:** Deploy across multiple AWS regions
-- **Database Sharding:** Partition client data across multiple databases
-- **Load Balancing:** Distribute requests across multiple instances
-- **CDN Integration:** Use CloudFront for global content delivery
-
-#### **Vertical Scaling:**
-- **GPU Acceleration:** Use GPU instances for ML model inference
-- **Memory Optimization:** Implement more efficient memory storage
-- **CPU Optimization:** Use high-performance compute instances
-- **Storage Optimization:** Use high-performance storage solutions
-
-#### **Advanced Scaling Strategies:**
-- **Predictive Scaling:** Use ML to predict client demand patterns
-- **Edge Computing:** Deploy agents closer to clients
-- **Hybrid Cloud:** Extend to on-premises infrastructure
-- **Microservices:** Break down monolithic components
-
-### Cost Optimization
-
-#### **Current Monthly Costs (Estimated):**
-- **Bedrock API Calls:** $25,000 (based on 1M daily interactions)
-- **Lambda Functions:** $5,000 (compute and memory costs)
-- **DynamoDB:** $3,000 (storage and read/write capacity)
-- **OpenSearch:** $8,000 (cluster and storage costs)
-- **SageMaker:** $15,000 (ML model training and inference)
-- **Data Processing:** $10,000 (Kinesis, Athena, QuickSight)
-- **Total:** ~$66,000/month
-
-#### **Cost Optimization Strategies:**
-- **Reserved Capacity:** Use reserved instances for predictable workloads
-- **Spot Instances:** Use spot instances for non-critical processing
-- **Data Lifecycle:** Implement data archiving and deletion policies
-- **Model Optimization:** Use smaller, more efficient models where possible
-
-### Security and Compliance
-
-#### **Security Measures:**
-- **Multi-Factor Authentication:** Biometric and hardware token authentication
-- **Role-Based Access Control:** Fine-grained permissions for different user types
-- **Data Encryption:** End-to-end encryption for all financial data
-- **Network Security:** VPC with private subnets and security groups
-- **Audit Logging:** Comprehensive logging for regulatory compliance
-
-#### **Compliance Features:**
-- **SOX Compliance:** Sarbanes-Oxley Act compliance for financial reporting
-- **GDPR Compliance:** Data protection and privacy for EU clients
-- **PCI DSS:** Payment card industry compliance for payment processing
-- **FINRA Compliance:** Financial Industry Regulatory Authority compliance
-- **MiFID II:** Markets in Financial Instruments Directive compliance
-
-### Monitoring and Observability
-
-#### **Key Metrics:**
-- **Agent Performance:** Response accuracy, recommendation quality, client satisfaction
-- **System Health:** Latency, throughput, error rates, availability
-- **Business Metrics:** Client retention, investment performance, compliance rate
-- **Cost Metrics:** Resource utilization, cost per client, ROI
-
-#### **Alerting Strategy:**
-- **Critical Alerts:** System downtime, security breaches, data loss
-- **Performance Alerts:** High latency, low throughput, error spikes
-- **Business Alerts:** Low client satisfaction, high compliance violations
-- **Cost Alerts:** Unusual spending patterns, budget thresholds
-
-This advanced example demonstrates how to build a sophisticated AI-powered financial advisory system that can handle enterprise-scale requirements while maintaining regulatory compliance, security, and performance. The architecture showcases the integration of multiple AWS services and follows the architectural patterns outlined in this guide.
 
 <details>
 <summary>🤖 AI Metadata (Click to expand)</summary>
@@ -1919,11 +1790,30 @@ This advanced example demonstrates how to build a sophisticated AI-powered finan
 # 5. MAINTAIN_FORMAT: Preserve the structured format with clear pattern descriptions,
 #    decision factors, and implementation strategies
 #
+# CONTENT_MERGE_STATUS:
+# - Simple and Complex Systems: Merged into single comprehensive decision framework
+# - Decision Priority: Organized by importance and difficulty (Foundation → Architecture → Advanced)
+# - Complete Coverage: All major GenAI system design decisions in one document
+# - Quick Start Guidance: Clear progression from simple to complex decisions
+#
 # CONTENT_PATTERNS:
 # - Pattern Name: Core Concept, Key Components, Architecture Benefits, Implementation Strategy, Decision Factors
 # - Decision Framework: When to use, trade-offs, implementation considerations
 # - Architecture Benefits: Scalability, maintainability, performance, cost considerations
 # - Real-World Example: Comprehensive enterprise customer support system with PlantUML diagram
+# - Decision Framework Principles: Right level of detail, clear alternatives, architectural focus
+#
+# BLOG_STRUCTURE_REQUIREMENTS:
+# - Frontmatter: slug, title, description, authors, tags, date, draft status
+# - Import Statements: Tabs, TabItem from @theme for interactive content
+# - Core Questions: List of key questions the guide answers
+# - When to Use: Clear guidance on when to use this specific guide
+# - Tabbed Decision Framework: All major decisions in tabbed format for easy comparison
+# - Implementation Guidance: Practical steps and considerations
+# - Common Pitfalls: Mistakes to avoid with specific examples
+# - Next Steps: Clear progression to related guides
+# - Action Items: Specific, measurable next steps for readers
+# - AI Metadata: Comprehensive metadata for future AI updates
 #
 # DATA_SOURCES:
 # - AWS Blog Posts: /prompts/research/research-genai-arch-patterns.md (comprehensive research completed)
@@ -1937,6 +1827,10 @@ This advanced example demonstrates how to build a sophisticated AI-powered finan
 # - Real-World Example: Enterprise customer support system with full architecture
 # - Components Section: Comprehensive GenAI components and their roles documented
 # - Blog Post Structure: Adheres to /prompts/author/blog-post-structure.md
+# - Decision Framework Consolidation: All "Deciding on..." sections moved to centralized Decision Framework
+# - Autonomy Gradient Integration: Multi-agent pros enhanced with variable autonomy and risk management
+# - Section Restructuring: Removed standalone patterns, integrated into decision tabs
+# - Decision Framework Guidance: Added right level of detail guidance and decision framework principles
 #
 # CONTENT_SECTIONS:
 # 1. Core Architectural Patterns (Direct Prompting, RAG, Agentic, Multi-Agent)
@@ -1948,6 +1842,45 @@ This advanced example demonstrates how to build a sophisticated AI-powered finan
 # 7. Model Context Protocol (MCP) Patterns (universal integration, Bedrock agents)
 # 8. GenAI Components and Their Roles (comprehensive component analysis)
 # 9. Real-World Example: Enterprise Customer Support Agent System
+#
+# DECISION_FRAMEWORK_PRINCIPLES:
+# - Right Level of Detail: Architectural decisions, not implementation minutiae
+# - Clear Alternatives: Tabbed options for easy comparison
+# - When to Choose: Specific criteria for each option
+# - Implementation Guidance: Sufficient detail without overwhelming
+# - Trade-offs: Informed decision-making factors
+# - Decision Factors: Most important criteria for each use case
+# - Architectural Focus: Strategic decisions over technical details
+#
+# WHY_TAB_GUIDANCE:
+# - Default First Tab: Every tabbed decision section must start with a "Why" tab as default
+# - Why This Decision Matters: Explain the importance and consequences of the decision
+# - Key Questions Format: Provide 5 key questions users should ask themselves
+# - Question Structure: "What/How/When/Where/Why" format with clear alternatives in parentheses
+# - Decision Impact: Explain what happens if they get this decision wrong
+# - Context Setting: Help users understand the stakes before diving into options
+# - Examples of Why Content:
+#   - Knowledge Integration: "Foundation of system intelligence, impacts accuracy, cost, complexity"
+#   - Memory Strategy: "Determines context handling, personalization, user experience continuity"
+#   - Agent Architecture: "Shapes system capabilities, complexity, and scalability"
+#   - Model Strategy: "Determines performance, development speed, and ongoing costs"
+#   - Evaluation Strategy: "Determines success measurement, issue detection, quality assurance"
+#   - Runtime Environment: "Determines scalability, security, compliance, operational complexity"
+#
+# HOW_TAB_GUIDANCE:
+# - Second Tab: Every tabbed decision section must have a "How" tab as the second tab
+# - Due Diligence Checklist: Provide a structured checklist for making the decision
+# - Checklist Format: 4 main categories with specific actionable items
+# - Categories: Requirements Analysis, Constraints Evaluation, Testing/Validation, Production Planning
+# - Actionable Items: Use checkbox format with specific, measurable tasks
+# - Decision Process: Guide users through the systematic process of arriving at the right decision
+# - Examples of How Content:
+#   - Knowledge Integration: "Assess knowledge requirements, evaluate constraints, test approach, plan production"
+#   - Memory Strategy: "Analyze UX requirements, evaluate constraints, design architecture, test validation"
+#   - Agent Architecture: "Analyze problem complexity, evaluate scalability needs, assess capabilities, design/test"
+#   - Model Strategy: "Assess domain requirements, evaluate constraints, test approaches, plan production"
+#   - Evaluation Strategy: "Define success metrics, assess capacity, design framework, implement/validate"
+#   - Runtime Environment: "Assess compliance needs, evaluate scale requirements, assess capabilities, plan deployment"
 #
 # REAL_WORLD_EXAMPLE:
 # - Use Case: Enterprise customer support platform for 10,000+ concurrent users
@@ -1985,7 +1918,39 @@ This advanced example demonstrates how to build a sophisticated AI-powered finan
 # - Document real-world examples with comprehensive analysis
 # - Use tabbed structure for PlantUML diagrams (diagram first, code second)
 #
+# MERMAID_DIAGRAM_GUIDANCE:
+# - Use flowchart TB for architecture diagrams with proper shape semantics
+# - Diamond {{}} for decision/control nodes (AGENT, HUMAN, GUARDRAILS, OTHER AGENTS)
+# - Subroutine [[]] for external services/protocols (FOUNDATION MODEL, MCP, APIs, Knowledge Base)
+# - Cylinder [()] for data storage (MEMORY, DATABASES, VECTOR DATABASE)
+# - Hexagon {} for process/action nodes (TOOLS, EXTERNAL APIs)
+# - File [[]] for documents/files (PROMPT, DOCUMENT STORE)
+# - Include clickable links using click syntax: click A href "#section" "tooltip"
+# - Add shape legend below diagram explaining each shape type and meaning
+# - Use subgraphs to group related components logically
+# - Show clear flow relationships between components
+# - Include MCP servers in integration layer to show protocol implementation
+# - Show human involvement and multi-agent coordination clearly
+# - Make diagram interactive with links to relevant decision sections
+#
+# ARCHITECTURE_DIAGRAM_REQUIREMENTS:
+# - High-level overview of agentic system components
+# - Clear visual representation of relationships and flows
+# - Interactive navigation to decision sections
+# - Semantic shapes that match component functions
+# - Logical grouping of related components
+# - Show both single-agent and multi-agent scenarios
+# - Include human involvement patterns
+# - Demonstrate MCP integration architecture
+# - Provide shape legend for clarity
+# - Use professional, clean visual design
+#
 # UPDATE_FREQUENCY: Quarterly review, immediate updates for major AWS/Anthropic releases
 ```
 
 </details>
+
+
+
+
+
