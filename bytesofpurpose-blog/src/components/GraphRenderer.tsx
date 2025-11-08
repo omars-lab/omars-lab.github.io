@@ -6,6 +6,7 @@ interface Node {
   id: string;
   label: string;
   title?: string;
+  description?: string;
   group?: number;
   color?: string;
   children?: Node[];
@@ -49,6 +50,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<any>(null);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
+  const [selectedNode, setSelectedNode] = useState<any>(null);
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === 'dark';
 
@@ -63,6 +65,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         id: node.id,
         name: node.label,
         title: node.title || node.label,
+        description: node.description,
         group: node.group ?? (index % NEO4J_COLORS.length),
         color: node.color ?? NEO4J_COLORS[index % NEO4J_COLORS.length],
         hasChildren: node.children && node.children.length > 0,
@@ -125,6 +128,20 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     });
   }, []);
 
+  // Function to get and update graph width
+  const updateGraphWidth = useCallback(() => {
+    if (!containerRef.current || !graphRef.current) return;
+    
+    const containerElement = containerRef.current.parentElement;
+    if (!containerElement) return;
+    
+    const actualWidth = containerElement.offsetWidth || width;
+    const panelWidth = Math.floor(actualWidth * 0.2);
+    const graphWidth = actualWidth - panelWidth;
+    
+    graphRef.current.width(graphWidth);
+  }, [width]);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -136,10 +153,16 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     const arrowColor = isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.4)';
     const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
 
+    // Get actual container width (use parent container if available, otherwise use prop)
+    const containerElement = containerRef.current.parentElement;
+    const actualWidth = containerElement ? containerElement.offsetWidth : width;
+    const panelWidth = Math.floor(actualWidth * 0.2);
+    const graphWidth = actualWidth - panelWidth;
+
     // Initialize force graph
     if (!graphRef.current) {
       graphRef.current = new ForceGraph(containerRef.current)
-        .width(width)
+        .width(graphWidth)
         .height(height)
         .backgroundColor(backgroundColor)
         .nodeLabel((node: any) => `${node.title || node.name || node.id}`)
@@ -151,8 +174,17 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         .linkDirectionalArrowRelPos(1)
         .linkDirectionalArrowColor(() => arrowColor)
         .onNodeClick((node: any) => {
+          // Single click - toggle expansion if has children, otherwise select
           if (node.hasChildren) {
             toggleNodeExpansion(node.id);
+          }
+          // Always select the node to show details
+          setSelectedNode(node);
+        })
+        .onNodeHover((node: any) => {
+          // Show details on hover as well
+          if (node) {
+            setSelectedNode(node);
           }
         })
         .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
@@ -194,7 +226,8 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     }
 
     // Update graph data and theme when they change
-    if (graphRef.current) {
+    if (graphRef.current && containerRef.current) {
+      updateGraphWidth();
       graphRef.current.graphData(graphData);
       graphRef.current.backgroundColor(backgroundColor);
       graphRef.current.linkColor(() => linkColor);
@@ -240,30 +273,105 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       }
     }
 
+    // Setup resize observer to handle dynamic width changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateGraphWidth();
+    });
+    
+    if (containerRef.current?.parentElement) {
+      resizeObserver.observe(containerRef.current.parentElement);
+    }
+
     // Cleanup
     return () => {
+      resizeObserver.disconnect();
       if (graphRef.current) {
         graphRef.current._destructor();
         graphRef.current = null;
       }
     };
-  }, [graphData, width, height, toggleNodeExpansion, isDarkMode]);
+  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth]);
 
   const containerBorderColor = isDarkMode ? '#333' : '#e0e0e0';
   const containerBackgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
   const containerBoxShadow = isDarkMode 
     ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
     : '0 4px 6px rgba(0, 0, 0, 0.1)';
+  
+  const panelBackgroundColor = isDarkMode ? '#2a2a2a' : '#fafafa';
+  const panelTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
+  const panelBorderColor = isDarkMode ? '#555' : '#e0e0e0';
 
   return (
     <div style={{
+      width: '100%',
       border: `1px solid ${containerBorderColor}`,
       borderRadius: '8px',
       overflow: 'hidden',
       backgroundColor: containerBackgroundColor,
       boxShadow: containerBoxShadow,
+      display: 'flex',
+      flexDirection: 'row',
+      gap: '0',
     }}>
-      <div ref={containerRef} style={{ width, height }} />
+      <div ref={containerRef} style={{ flex: '1 1 80%', minWidth: 0, height }} />
+      <div style={{
+        flex: '0 0 20%',
+        minWidth: 0,
+        height,
+        borderLeft: `2px solid ${panelBorderColor}`,
+        backgroundColor: panelBackgroundColor,
+        padding: '12px',
+        overflowY: 'auto',
+        boxSizing: 'border-box',
+        borderRadius: '0 8px 8px 0',
+      }}>
+        {selectedNode ? (
+          <div>
+            <h3 style={{
+              margin: '0 0 8px 0',
+              color: panelTextColor,
+              fontSize: '14px',
+              fontWeight: '600',
+              lineHeight: '1.4',
+            }}>
+              {selectedNode.title || selectedNode.name || selectedNode.id}
+            </h3>
+            {selectedNode.description && (
+              <p style={{
+                margin: '0',
+                color: panelTextColor,
+                fontSize: '12px',
+                lineHeight: '1.5',
+                opacity: 0.85,
+              }}>
+                {selectedNode.description}
+              </p>
+            )}
+            {!selectedNode.description && (
+              <p style={{
+                margin: '0',
+                color: panelTextColor,
+                fontSize: '12px',
+                lineHeight: '1.5',
+                opacity: 0.5,
+                fontStyle: 'italic',
+              }}>
+                No description
+              </p>
+            )}
+          </div>
+        ) : (
+          <div style={{
+            color: panelTextColor,
+            fontSize: '12px',
+            opacity: 0.5,
+            fontStyle: 'italic',
+          }}>
+            Hover or click a node
+          </div>
+        )}
+      </div>
     </div>
   );
 };
