@@ -109,7 +109,6 @@ const darkTheme = themes.dracula;
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/designs/',
         },
       ],
-      
     ],
 
     themes: [

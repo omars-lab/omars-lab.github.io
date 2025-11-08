@@ -1,0 +1,1805 @@
+---
+slug: 'understanding-graphs'
+title: 'Understanding Graphs: A Complete Mental Model for Network Analysis, Algorithms, and Problem-Solving'
+description: 'A comprehensive guide covering graph types, modeling approaches, essential algorithms (topological sort, MST, shortest paths), and practical problem-solving strategies with real LeetCode examples.'
+authors: [oeid]
+tags: [data-structures, algorithms, graphs, networks, pathfinding, computer-science, topological-sort, mst, shortest-path]
+date: '2025-01-31T10:00'
+draft: false
+---
+
+# Understanding Graphs: A Complete Mental Model for Network Analysis, Algorithms, and Problem-Solving
+
+A comprehensive guide covering graph types, modeling approaches, essential algorithms (topological sort, MST, shortest paths), and practical problem-solving strategies with real LeetCode examples.
+
+## Purpose
+
+This guide was created to address four critical needs:
+
+- **I need to understand graph fundamentals**: Learn the core concepts, representations, and properties of graph data structures
+- **I need to master graph traversal**: Implement and understand BFS, DFS, and their variations for different problem types
+- **I need to solve pathfinding problems**: Apply shortest path algorithms like Dijkstra's and A* for optimization problems
+- **I need to analyze network structures**: Use graph algorithms to understand connectivity, cycles, and topological relationships
+
+The goal is to transform confusion about graph algorithms into clear, systematic problem-solving skills through structured learning and pattern recognition.
+
+## What are Graphs?
+
+A graph is a collection of vertices (nodes) connected by edges (links) that represents relationships between entities.
+
+### Key Components
+
+* ✅ **Vertices (Nodes)**: The fundamental units of a graph
+* ✅ **Edges (Links)**: Connections between vertices
+* ✅ **Directed/Undirected**: Edges may have direction or be bidirectional
+* ✅ **Weighted/Unweighted**: Edges may have associated costs or weights
+
+## Types of Graphs: A Comprehensive Classification
+
+Understanding the different types of graphs is crucial for choosing the right algorithms and data structures. Each graph type has unique properties that affect how we can traverse, analyze, and solve problems on them.
+
+### 1. Directed vs Undirected Graphs
+
+#### Directed Graph (Digraph)
+```
+A → B → C
+↓   ↑   ↓
+D → E → F
+```
+
+**Key Properties**:
+- Edges have direction (A→B ≠ B→A)
+- Asymmetric relationships
+- Can have cycles
+- In-degree and out-degree concepts
+
+**When to use**:
+- Dependency relationships (prerequisites)
+- Web page links
+- Social media follows
+- State transitions
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Prerequisites
+- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) - Character ordering
+
+#### Undirected Graph
+```
+A — B — C
+|   |   |
+D — E — F
+```
+
+**Key Properties**:
+- Bidirectional edges (A—B = B—A)
+- Symmetric relationships
+- Simpler connectivity analysis
+- Degree = number of incident edges
+
+**When to use**:
+- Social networks (friendships)
+- Road networks
+- Communication networks
+- Collaborative relationships
+
+**LeetCode Examples**:
+- [Number of Islands](https://leetcode.com/problems/number-of-islands/) - Connected components
+- [Friend Circles](https://leetcode.com/problems/friend-circles/) - Social connections
+
+### 2. Weighted vs Unweighted Graphs
+
+#### Weighted Graph
+```
+A --5-- B --3-- C
+|       |       |
+2       1       4
+|       |       |
+D --2-- E --6-- F
+```
+
+**Key Properties**:
+- Edges have associated costs/weights
+- Optimization problems
+- Shortest path algorithms
+- Minimum spanning trees
+
+**When to use**:
+- Network routing (distances, costs)
+- Resource allocation
+- Optimization problems
+- Game theory
+
+**LeetCode Examples**:
+- [Network Delay Time](https://leetcode.com/problems/network-delay-time/) - Weighted shortest path
+- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) - MST
+
+#### Unweighted Graph
+```
+A — B — C
+|   |   |
+D — E — F
+```
+
+**Key Properties**:
+- All edges have equal weight (typically 1)
+- Focus on connectivity
+- Simpler algorithms
+- BFS gives shortest path
+
+**When to use**:
+- Social networks
+- Web crawling
+- Game states
+- Simple connectivity problems
+
+**LeetCode Examples**:
+- [Word Ladder](https://leetcode.com/problems/word-ladder/) - Unweighted shortest path
+- [Binary Tree Level Order](https://leetcode.com/problems/binary-tree-level-order-traversal/) - Level traversal
+
+### 3. Connected vs Disconnected Graphs
+
+#### Connected Graph
+```
+A — B — C
+|   |   |
+D — E — F
+```
+- Every vertex is reachable from every other vertex
+- Single connected component
+- No isolated vertices
+
+#### Disconnected Graph
+```
+A — B    C — D
+|   |    |   |
+E — F    G — H
+```
+- Multiple connected components
+- Some vertices unreachable from others
+- Requires multiple traversals
+
+**LeetCode Examples**:
+- [Number of Islands](https://leetcode.com/problems/number-of-islands/) - Multiple components
+- [Friend Circles](https://leetcode.com/problems/friend-circles/) - Disconnected social groups
+
+### 4. Acyclic vs Cyclic Graphs
+
+#### Acyclic Graph (DAG - Directed Acyclic Graph)
+```
+A → B → C
+↓   ↑
+D → E
+```
+- No cycles
+- Topological ordering possible
+- Tree-like structure
+- Dependency resolution
+
+**When to use**:
+- Task scheduling
+- Build systems
+- Course prerequisites
+- Compiler dependency analysis
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - DAG validation
+- [Task Scheduler](https://leetcode.com/problems/task-scheduler/) - Dependency ordering
+
+#### Cyclic Graph
+```
+A → B → C
+↑   ↓   ↓
+D ← E ← F
+```
+- Contains cycles
+- Can revisit vertices
+- More complex algorithms
+- Infinite traversal possible
+
+**When to use**:
+- Game states
+- State machines
+- Network analysis
+- Social networks
+
+**LeetCode Examples**:
+- [Clone Graph](https://leetcode.com/problems/clone-graph/) - Cyclic graph cloning
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Cycle detection
+
+### 5. Special Graph Types
+
+#### Complete Graph
+```
+A — B
+| \ |
+C — D
+```
+- Every vertex connected to every other vertex
+- Maximum number of edges: n(n-1)/2 for undirected
+- Dense graph
+- High connectivity
+
+**When to use**:
+- Network analysis
+- Clustering problems
+- Social network analysis
+- Game theory
+
+#### Bipartite Graph
+```
+A — B — C
+|   |   |
+D — E — F
+```
+- Vertices can be divided into two sets
+- No edges within the same set
+- 2-colorable
+- Matching problems
+
+**When to use**:
+- Assignment problems
+- Matching algorithms
+- Scheduling conflicts
+- Resource allocation
+
+**LeetCode Examples**:
+- [Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/) - Bipartite detection
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Conflict detection
+
+#### Tree
+```
+    A
+   / \
+  B   C
+ / \   \
+D   E   F
+```
+- Connected acyclic graph
+- n-1 edges for n vertices
+- Unique path between any two vertices
+- Hierarchical structure
+
+**When to use**:
+- Hierarchical data
+- File systems
+- Decision trees
+- Family trees
+
+**LeetCode Examples**:
+- [Binary Tree Level Order](https://leetcode.com/problems/binary-tree-level-order-traversal/) - Tree traversal
+- [Validate BST](https://leetcode.com/problems/validate-binary-search-tree/) - Tree validation
+
+#### Forest
+```
+A — B    C — D
+|   |    |   |
+E — F    G — H
+```
+- Collection of trees
+- Multiple connected components
+- No cycles
+- Disconnected acyclic graph
+
+### 6. Graph Density Classifications
+
+#### Dense Graph
+- Many edges relative to vertices
+- E ≈ V²
+- Adjacency matrix efficient
+- High connectivity
+
+#### Sparse Graph
+- Few edges relative to vertices
+- E {'<<'} V²
+- Adjacency list efficient
+- Low connectivity
+
+### 7. Graph Connectivity Levels
+
+#### Strongly Connected (Directed)
+- Every vertex reachable from every other vertex
+- Mutual reachability
+- Tarjan's algorithm
+- Network reliability
+
+#### Weakly Connected (Directed)
+- Connected when directions ignored
+- Easier to analyze
+- Union-Find applicable
+- Social network analysis
+
+#### k-Connected
+- Requires k vertices to disconnect
+- Network robustness
+- Critical infrastructure
+- Fault tolerance
+
+## Graph Type Selection Guide
+
+| Problem Type | Best Graph Type | Key Properties | Algorithms |
+|--------------|-----------------|----------------|-----------|
+| Dependencies | Directed Acyclic | No cycles, ordering | Topological Sort |
+| Social Networks | Undirected, Weighted | Symmetric, influence | Community Detection |
+| Navigation | Directed, Weighted | Asymmetric, costs | Dijkstra's, A* |
+| Scheduling | Bipartite | Two sets, matching | Hungarian Algorithm |
+| Hierarchies | Tree | Acyclic, parent-child | DFS, BFS |
+| Optimization | Complete, Weighted | All connections, costs | TSP, MST |
+| Connectivity | Undirected | Symmetric, reachability | Union-Find, DFS |
+
+## Graph Properties Summary
+
+| Property | Directed | Undirected | Weighted | Tree | Bipartite |
+|----------|----------|------------|----------|------|-----------|
+| Direction | ✅ | ❌ | Either | Either | Either |
+| Cycles | ✅ | ✅ | Either | ❌ | ✅ |
+| Connectivity | Variable | Variable | Variable | ✅ | Variable |
+| Coloring | Complex | 2-colorable | Complex | 2-colorable | 2-colorable |
+| Shortest Path | Dijkstra's | BFS/Dijkstra's | Dijkstra's | BFS | BFS |
+| MST | N/A | Kruskal's/Prim's | Kruskal's/Prim's | N/A | Kruskal's/Prim's |
+
+## Key Distinctions: Graphs vs Other Data Structures
+
+Understanding the fundamental differences between graphs and other data structures is crucial for choosing the right approach to solve problems.
+
+### Graphs vs Trees
+
+**❌ Common Misconception**: "Graphs and trees are the same thing"
+
+**✅ Reality**: Trees are a special type of graph, but graphs are much more general
+
+#### Key Differences
+
+| Aspect | Graphs | Trees |
+|--------|--------|-------|
+| **Cycles** | ✅ Can have cycles | ❌ No cycles (acyclic) |
+| **Connectivity** | Can be disconnected | Always connected |
+| **Root** | No concept of root | Has a single root node |
+| **Parent-Child** | No hierarchical structure | Clear parent-child relationships |
+| **Paths** | Multiple paths between nodes | Unique path between any two nodes |
+| **Edges** | Can be directed/undirected | Usually directed (parent → child) |
+| **Complexity** | More complex algorithms | Simpler traversal (DFS/BFS) |
+
+#### Visual Comparison
+
+**Graph (with cycles)**:
+```
+A — B — C
+|   |   |
+D — E — F
+```
+- Multiple paths: A→B→C and A→D→E→F→C
+- Can have cycles: A→B→E→D→A
+- No root concept
+
+**Tree (no cycles)**:
+```
+    A
+   / \
+  B   C
+ / \   \
+D   E   F
+```
+- Unique path: A→B→D (only one way)
+- No cycles possible
+- Clear root (A) and hierarchy
+
+#### When to Use Each
+
+**Use Graphs when**:
+- Multiple paths between nodes
+- Cycles are possible/desired
+- Complex relationships (social networks, web pages)
+- Need to find shortest paths
+- Network analysis required
+
+**Use Trees when**:
+- Hierarchical data (file systems, organization charts)
+- Unique parent-child relationships
+- No cycles allowed
+- Simple traversal needed
+- Decision making (decision trees)
+
+**LeetCode Examples**:
+- **Graph Problems**: [Course Schedule](https://leetcode.com/problems/course-schedule/) - Cycle detection in dependencies
+- **Tree Problems**: [Binary Tree Level Order](https://leetcode.com/problems/binary-tree-level-order-traversal/) - Hierarchical traversal
+
+### Graphs vs Arrays/Lists
+
+**❌ Common Misconception**: "Graphs are just arrays with connections"
+
+**✅ Reality**: Graphs represent relationships, arrays represent sequences
+
+#### Key Differences
+
+| Aspect | Graphs | Arrays/Lists |
+|--------|--------|--------------|
+| **Structure** | Nodes + Edges (relationships) | Sequential elements |
+| **Access** | Traversal-based | Index-based O(1) |
+| **Relationships** | Complex, multi-directional | Linear, sequential |
+| **Algorithms** | DFS, BFS, shortest path | Binary search, sorting |
+| **Memory** | Adjacency list/matrix | Contiguous memory |
+| **Use Cases** | Networks, relationships | Data storage, sequences |
+
+#### When to Use Each
+
+**Use Graphs when**:
+- Modeling relationships (social networks, dependencies)
+- Finding connections between entities
+- Network analysis
+- Pathfinding problems
+
+**Use Arrays when**:
+- Storing sequential data
+- Need random access
+- Simple data structures
+- Performance-critical applications
+
+### Graphs vs Hash Maps
+
+**❌ Common Misconception**: "Graphs are just hash maps with connections"
+
+**✅ Reality**: Hash maps store key-value pairs, graphs store relationships
+
+#### Key Differences
+
+| Aspect | Graphs | Hash Maps |
+|--------|--------|-----------|
+| **Purpose** | Model relationships | Store key-value pairs |
+| **Structure** | Nodes + Edges | Key → Value mapping |
+| **Algorithms** | Traversal, pathfinding | Lookup, insertion |
+| **Complexity** | O(V + E) operations | O(1) average lookup |
+| **Use Cases** | Network analysis | Data storage, caching |
+
+#### When to Use Each
+
+**Use Graphs when**:
+- Need to traverse relationships
+- Finding paths between nodes
+- Network analysis
+- Dependency resolution
+
+**Use Hash Maps when**:
+- Fast key-value lookups
+- Caching data
+- Counting frequencies
+- Simple data storage
+
+## Graph Modeling Approaches
+
+Choosing the right graph representation is crucial for solving problems efficiently. Different modeling approaches have distinct trade-offs in terms of space complexity, time complexity, and ease of implementation.
+
+### 1. Adjacency Matrix
+
+**Best for**: Dense graphs, frequent edge existence checks, small graphs
+
+```python
+# For graph with n vertices
+adj_matrix = [[0] * n for _ in range(n)]
+
+# Add edge from i to j
+adj_matrix[i][j] = 1  # or weight for weighted graphs
+
+# Check if edge exists
+if adj_matrix[i][j]:
+    print("Edge exists")
+```
+
+**Pros**: 
+- O(1) edge lookup and modification
+- Simple implementation
+- Easy to check connectivity
+
+**Cons**: 
+- O(V²) space complexity
+- Inefficient for sparse graphs
+- Memory waste for graphs with few edges
+
+**When to use**:
+- Dense graphs (many edges relative to vertices)
+- Frequent edge existence queries
+- Small graphs where space isn't a concern
+- Floyd-Warshall algorithm (all-pairs shortest path)
+
+**LeetCode Examples**:
+- [Floyd-Warshall problems](https://leetcode.com/problems/network-delay-time/) - Network Delay Time
+- [Small graph problems](https://leetcode.com/problems/course-schedule/) - Course Schedule (for small course counts)
+
+### 2. Adjacency List
+
+**Best for**: Sparse graphs, traversal-heavy problems, memory-constrained scenarios
+
+```python
+# For each vertex, store list of neighbors
+adj_list = [[] for _ in range(n)]
+
+# Add edge from i to j
+adj_list[i].append(j)
+
+# For weighted graphs
+adj_list[i].append((j, weight))
+```
+
+**Pros**: 
+- O(V + E) space complexity
+- Efficient for sparse graphs
+- Natural for traversal algorithms
+
+**Cons**: 
+- O(degree) edge lookup
+- More complex implementation
+- Slower edge existence checks
+
+**When to use**:
+- Sparse graphs (few edges relative to vertices)
+- Traversal-heavy problems (DFS, BFS)
+- Memory-constrained environments
+- Most competitive programming problems
+
+**LeetCode Examples**:
+- [Graph Traversal](https://leetcode.com/problems/number-of-islands/) - Number of Islands
+- [Path Finding](https://leetcode.com/problems/word-ladder/) - Word Ladder
+- [Tree Problems](https://leetcode.com/problems/binary-tree-level-order-traversal/) - Binary Tree Level Order
+
+### 3. Edge List
+
+**Best for**: Kruskal's MST algorithm, edge-centric problems
+
+```python
+# Store all edges as tuples
+edges = [(u, v, weight) for u, v, weight in edge_data]
+
+# For unweighted graphs
+edges = [(u, v) for u, v in edge_data]
+```
+
+**Pros**: 
+- Simple edge iteration
+- Natural for MST algorithms
+- Easy to sort by weight
+
+**Cons**: 
+- O(E) time for neighbor lookup
+- Not suitable for traversal
+- Inefficient for adjacency queries
+
+**When to use**:
+- Kruskal's MST algorithm
+- Edge-centric problems
+- When you need to process all edges
+- Union-Find based algorithms
+
+**LeetCode Examples**:
+- [MST Problems](https://leetcode.com/problems/min-cost-to-connect-all-points/) - Min Cost to Connect All Points
+- [Union-Find](https://leetcode.com/problems/redundant-connection/) - Redundant Connection
+
+### 4. Object-Oriented Node Representation
+
+**Best for**: Complex node data, tree-like structures, when nodes have rich attributes
+
+```python
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.neighbors = []
+        # Additional data like weight, color, etc.
+        self.visited = False
+        self.distance = float('inf')
+    
+    def add_neighbor(self, node, weight=1):
+        self.neighbors.append((node, weight))
+```
+
+**Undirected Graph Implementation**:
+```python
+class UndirectedGraph:
+    def __init__(self):
+        self.nodes = {}
+        self.adj_list = {}
+    
+    def add_node(self, value):
+        if value not in self.nodes:
+            self.nodes[value] = Node(value)
+            self.adj_list[value] = []
+    
+    def add_edge(self, node1_val, node2_val, weight=1):
+        # Add edge in both directions
+        if node1_val in self.adj_list and node2_val in self.adj_list:
+            self.adj_list[node1_val].append((node2_val, weight))
+            self.adj_list[node2_val].append((node1_val, weight))
+```
+
+**Directed Graph Implementation**:
+```python
+class DirectedGraph:
+    def __init__(self):
+        self.nodes = {}
+        self.adj_list = {}
+    
+    def add_node(self, value):
+        if value not in self.nodes:
+            self.nodes[value] = Node(value)
+            self.adj_list[value] = []
+    
+    def add_edge(self, source_val, dest_val, weight=1):
+        # Add edge only in specified direction
+        if source_val in self.adj_list and dest_val in self.adj_list:
+            self.adj_list[source_val].append((dest_val, weight))
+```
+
+**When to use**:
+- Complex node attributes
+- Tree-like structures
+- When nodes need to store additional state
+- Object-oriented design patterns
+
+**LeetCode Examples**:
+- [Tree Problems](https://leetcode.com/problems/validate-binary-search-tree/) - Validate Binary Search Tree
+- [Complex Node Data](https://leetcode.com/problems/clone-graph/) - Clone Graph
+
+### 5. Hash Map Representation
+
+**Best for**: String-based nodes, dynamic graphs, when node values are not integers
+
+```python
+# String-based adjacency list
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D'],
+    'C': ['A', 'D'],
+    'D': ['B', 'C']
+}
+
+# For weighted graphs
+weighted_graph = {
+    'A': [('B', 5), ('C', 3)],
+    'B': [('A', 5), ('D', 2)],
+    'C': [('A', 3), ('D', 1)],
+    'D': [('B', 2), ('C', 1)]
+}
+```
+
+**When to use**:
+- String-based node identifiers
+- Dynamic graph construction
+- When node values are not sequential integers
+- Word-based problems
+
+**LeetCode Examples**:
+- [Word Problems](https://leetcode.com/problems/word-ladder/) - Word Ladder
+- [String-based Graphs](https://leetcode.com/problems/accounts-merge/) - Accounts Merge
+
+## Problem-Specific Modeling Guidelines
+
+### If solving problems like this, model this way:
+
+**🔄 Cycle Detection Problems**
+- **Use**: Adjacency List
+- **Why**: Need to traverse and mark visited nodes
+- **Examples**: [Course Schedule](https://leetcode.com/problems/course-schedule/), [Redundant Connection](https://leetcode.com/problems/redundant-connection/)
+
+**🛤️ Shortest Path Problems**
+- **Use**: Adjacency List with weights
+- **Why**: Efficient for Dijkstra's and BFS
+- **Examples**: [Network Delay Time](https://leetcode.com/problems/network-delay-time/), [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
+
+**🌳 Tree Problems**
+- **Use**: Object-oriented nodes or adjacency list
+- **Why**: Natural parent-child relationships
+- **Examples**: [Binary Tree Level Order](https://leetcode.com/problems/binary-tree-level-order-traversal/), [Validate BST](https://leetcode.com/problems/validate-binary-search-tree/)
+
+**🔗 Connectivity Problems**
+- **Use**: Adjacency List or Union-Find
+- **Why**: Need to traverse connected components
+- **Examples**: [Number of Islands](https://leetcode.com/problems/number-of-islands/), [Friend Circles](https://leetcode.com/problems/friend-circles/)
+
+**📊 MST Problems**
+- **Use**: Edge List for Kruskal's, Adjacency List for Prim's
+- **Why**: Different algorithms require different representations
+- **Examples**: [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
+
+**🎯 Topological Sort Problems**
+- **Use**: Adjacency List with in-degree tracking
+- **Why**: Need to process nodes based on dependencies
+- **Examples**: [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/), [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+
+## Graph Representation Comparison
+
+| Representation | Space | Edge Lookup | Add Edge | Traversal | Best For |
+|---------------|-------|-------------|----------|----------|----------|
+| Adjacency Matrix | O(V²) | O(1) | O(1) | O(V²) | Dense graphs, small graphs |
+| Adjacency List | O(V + E) | O(degree) | O(1) | O(V + E) | Sparse graphs, traversal |
+| Edge List | O(E) | O(E) | O(1) | O(E) | MST algorithms |
+| Object Nodes | O(V + E) | O(degree) | O(1) | O(V + E) | Complex node data |
+| Hash Map | O(V + E) | O(degree) | O(1) | O(V + E) | String nodes, dynamic |
+
+## Quick Decision Guide
+
+**Choose Adjacency Matrix when**:
+- Graph is dense (E ≈ V²)
+- Frequent edge existence checks
+- Small number of vertices (< 1000)
+- Need O(1) edge operations
+
+**Choose Adjacency List when**:
+- Graph is sparse (E {'<<'} V²)
+- Traversal-heavy problems
+- Memory is a concern
+- Most competitive programming problems
+
+**Choose Edge List when**:
+- Using Kruskal's MST algorithm
+- Edge-centric operations
+- Need to sort edges by weight
+
+**Choose Object Nodes when**:
+- Nodes have complex attributes
+- Tree-like structures
+- Need to store additional state
+
+**Choose Hash Map when**:
+- Node values are strings
+- Dynamic graph construction
+- Non-integer node identifiers
+
+## Essential Graph Algorithms
+
+Understanding when to use which graph algorithm is crucial for solving problems efficiently. Each algorithm has specific use cases and optimal scenarios.
+
+## Cycle Detection Algorithms
+
+Cycle detection is a fundamental problem in graph theory with applications in dependency resolution, deadlock detection, and network analysis.
+
+### 1. DFS-based Cycle Detection
+
+**When to use**: General cycle detection, directed graphs
+**Time Complexity**: O(V + E)
+**Space Complexity**: O(V)
+
+#### Directed Graph Cycle Detection
+```python
+def has_cycle_directed(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {vertex: WHITE for vertex in graph}
+    
+    def dfs(vertex):
+        if color[vertex] == GRAY:  # Back edge - cycle detected
+            return True
+        if color[vertex] == BLACK:  # Already processed
+            return False
+        
+        color[vertex] = GRAY
+        for neighbor in graph[vertex]:
+            if dfs(neighbor):
+                return True
+        color[vertex] = BLACK
+        return False
+    
+    for vertex in graph:
+        if color[vertex] == WHITE:
+            if dfs(vertex):
+                return True
+    return False
+```
+
+#### Undirected Graph Cycle Detection
+```python
+def has_cycle_undirected(graph):
+    visited = set()
+    
+    def dfs(vertex, parent):
+        visited.add(vertex)
+        
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                if dfs(neighbor, vertex):
+                    return True
+            elif neighbor != parent:  # Back edge to non-parent
+                return True
+        
+        return False
+    
+    for vertex in graph:
+        if vertex not in visited:
+            if dfs(vertex, -1):
+                return True
+    return False
+```
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Directed cycle detection
+- [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/) - Undirected cycle detection
+
+### 2. Tarjan's Strongly Connected Components (SCC)
+
+**When to use**: Finding all cycles, strongly connected components, network analysis
+**Time Complexity**: O(V + E)
+**Space Complexity**: O(V)
+
+```python
+def tarjan_scc(graph):
+    index = 0
+    stack = []
+    indices = {}
+    lowlinks = {}
+    on_stack = set()
+    sccs = []
+    
+    def strongconnect(vertex):
+        nonlocal index
+        indices[vertex] = index
+        lowlinks[vertex] = index
+        index += 1
+        stack.append(vertex)
+        on_stack.add(vertex)
+        
+        for neighbor in graph[vertex]:
+            if neighbor not in indices:
+                strongconnect(neighbor)
+                lowlinks[vertex] = min(lowlinks[vertex], lowlinks[neighbor])
+            elif neighbor in on_stack:
+                lowlinks[vertex] = min(lowlinks[vertex], indices[neighbor])
+        
+        if lowlinks[vertex] == indices[vertex]:
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                scc.append(w)
+                if w == vertex:
+                    break
+            sccs.append(scc)
+    
+    for vertex in graph:
+        if vertex not in indices:
+            strongconnect(vertex)
+    
+    return sccs
+```
+
+**Key Features of Tarjan's Algorithm**:
+- **Single Pass**: Finds all SCCs in one traversal
+- **Lowlink Values**: Tracks the earliest reachable vertex
+- **Stack-based**: Uses stack to maintain current path
+- **Cycle Detection**: SCCs with size > 1 contain cycles
+
+**LeetCode Examples**:
+- [Critical Connections](https://leetcode.com/problems/critical-connections-in-a-network/) - Bridge detection
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/) - Connected components
+
+### 3. Union-Find Cycle Detection
+
+**When to use**: Undirected graphs, incremental edge addition
+**Time Complexity**: O(E × α(V)) where α is inverse Ackermann function
+**Space Complexity**: O(V)
+
+```python
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+    
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False  # Cycle detected
+        
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        return True
+
+def has_cycle_union_find(edges, n):
+    uf = UnionFind(n)
+    
+    for u, v in edges:
+        if not uf.union(u, v):
+            return True  # Cycle detected
+    
+    return False
+```
+
+**LeetCode Examples**:
+- [Redundant Connection](https://leetcode.com/problems/redundant-connection/) - Union-Find cycle detection
+- [Number of Connected Components](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) - Component counting
+
+### 4. Kahn's Algorithm (Topological Sort)
+
+**When to use**: Directed acyclic graph validation, dependency resolution
+**Time Complexity**: O(V + E)
+**Space Complexity**: O(V)
+
+```python
+def has_cycle_kahn(graph):
+    in_degree = {vertex: 0 for vertex in graph}
+    
+    # Calculate in-degrees
+    for vertex in graph:
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] += 1
+    
+    # Find vertices with no incoming edges
+    queue = [vertex for vertex in in_degree if in_degree[vertex] == 0]
+    processed = 0
+    
+    while queue:
+        vertex = queue.pop(0)
+        processed += 1
+        
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # If not all vertices processed, there's a cycle
+    return processed != len(graph)
+```
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - DAG validation
+- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) - Topological ordering
+
+## Cycle Detection Problem Patterns
+
+### Pattern 1: Dependency Cycle Detection
+
+**When to use**: Course prerequisites, build systems, task scheduling
+**Approach**: Use DFS with color coding or Kahn's algorithm
+
+```python
+def can_finish_courses(num_courses, prerequisites):
+    graph = {i: [] for i in range(num_courses)}
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+    
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = [WHITE] * num_courses
+    
+    def dfs(course):
+        if color[course] == GRAY:
+            return False  # Cycle detected
+        if color[course] == BLACK:
+            return True
+        
+        color[course] = GRAY
+        for neighbor in graph[course]:
+            if not dfs(neighbor):
+                return False
+        color[course] = BLACK
+        return True
+    
+    for course in range(num_courses):
+        if color[course] == WHITE:
+            if not dfs(course):
+                return False
+    return True
+```
+
+### Pattern 2: Undirected Graph Cycle Detection
+
+**When to use**: Tree validation, network topology, graph connectivity
+**Approach**: Use DFS with parent tracking
+
+```python
+def is_valid_tree(n, edges):
+    if len(edges) != n - 1:
+        return False  # Not a tree (wrong number of edges)
+    
+    graph = {i: [] for i in range(n)}
+    for u, v in edges:
+        graph[u].append(v)
+        graph[v].append(u)
+    
+    visited = set()
+    
+    def dfs(vertex, parent):
+        if vertex in visited:
+            return False  # Cycle detected
+        
+        visited.add(vertex)
+        for neighbor in graph[vertex]:
+            if neighbor != parent:
+                if not dfs(neighbor, vertex):
+                    return False
+        return True
+    
+    return dfs(0, -1) and len(visited) == n
+```
+
+### Pattern 3: Strongly Connected Components
+
+**When to use**: Network analysis, social networks, web page links
+**Approach**: Use Tarjan's algorithm or Kosaraju's algorithm
+
+```python
+def kosaraju_scc(graph):
+    # Step 1: Get finish times using DFS
+    visited = set()
+    finish_times = []
+    
+    def dfs1(vertex):
+        visited.add(vertex)
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                dfs1(neighbor)
+        finish_times.append(vertex)
+    
+    for vertex in graph:
+        if vertex not in visited:
+            dfs1(vertex)
+    
+    # Step 2: Reverse graph
+    reversed_graph = {vertex: [] for vertex in graph}
+    for vertex in graph:
+        for neighbor in graph[vertex]:
+            reversed_graph[neighbor].append(vertex)
+    
+    # Step 3: DFS on reversed graph in reverse finish time order
+    visited = set()
+    sccs = []
+    
+    def dfs2(vertex, scc):
+        visited.add(vertex)
+        scc.append(vertex)
+        for neighbor in reversed_graph[vertex]:
+            if neighbor not in visited:
+                dfs2(neighbor, scc)
+    
+    for vertex in reversed(finish_times):
+        if vertex not in visited:
+            scc = []
+            dfs2(vertex, scc)
+            sccs.append(scc)
+    
+    return sccs
+```
+
+## Cycle Detection Algorithm Comparison
+
+| Algorithm | Time Complexity | Space Complexity | Use Case | Cycle Type |
+|-----------|----------------|------------------|----------|------------|
+| DFS Color Coding | O(V + E) | O(V) | General directed graphs | Directed cycles |
+| DFS Parent Tracking | O(V + E) | O(V) | Undirected graphs | Undirected cycles |
+| Tarjan's SCC | O(V + E) | O(V) | Strongly connected components | All cycles in SCCs |
+| Union-Find | O(E × α(V)) | O(V) | Undirected graphs, incremental | Undirected cycles |
+| Kahn's Algorithm | O(V + E) | O(V) | DAG validation | Directed cycles |
+
+## When to Use Each Cycle Detection Method
+
+### Use DFS Color Coding when:
+- Detecting cycles in directed graphs
+- Need to find the first cycle encountered
+- General-purpose cycle detection
+- Simple implementation needed
+
+### Use Tarjan's Algorithm when:
+- Need all strongly connected components
+- Network analysis required
+- Finding all cycles in the graph
+- Advanced graph algorithms
+
+### Use Union-Find when:
+- Undirected graphs only
+- Incremental edge addition
+- Need to detect cycle as edges are added
+- Memory efficiency is important
+
+### Use Kahn's Algorithm when:
+- Validating directed acyclic graphs
+- Dependency resolution
+- Topological sorting needed
+- Simple cycle detection in DAGs
+
+**LeetCode Examples by Pattern**:
+- **Dependency Cycles**: [Course Schedule](https://leetcode.com/problems/course-schedule/), [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+- **Undirected Cycles**: [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/), [Redundant Connection](https://leetcode.com/problems/redundant-connection/)
+- **Strongly Connected**: [Critical Connections](https://leetcode.com/problems/critical-connections-in-a-network/), [Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+
+### 1. Topological Sort
+
+**What it is**: An ordering of vertices in a directed acyclic graph (DAG) such that for every directed edge (u, v), vertex u comes before vertex v in the ordering.
+
+**When to use**:
+- Dependency resolution problems
+- Course scheduling with prerequisites
+- Build system dependency ordering
+- Task scheduling with dependencies
+- Compiler dependency analysis
+
+#### DFS-based Topological Sort (Kahn's Algorithm)
+
+```python
+def topological_sort_dfs(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {vertex: WHITE for vertex in graph}
+    result = []
+    
+    def dfs(vertex):
+        if color[vertex] == GRAY:  # Back edge - cycle detected
+            return False
+        if color[vertex] == BLACK:  # Already processed
+            return True
+        
+        color[vertex] = GRAY
+        for neighbor in graph[vertex]:
+            if not dfs(neighbor):
+                return False
+        
+        color[vertex] = BLACK
+        result.append(vertex)  # Add to result after processing all dependencies
+        return True
+    
+    for vertex in graph:
+        if color[vertex] == WHITE:
+            if not dfs(vertex):
+                return None  # Cycle detected
+    
+    return result[::-1]  # Reverse to get topological order
+```
+
+#### BFS-based Topological Sort (Kahn's Algorithm)
+
+```python
+from collections import deque
+
+def topological_sort_bfs(graph):
+    # Calculate in-degrees
+    in_degree = {vertex: 0 for vertex in graph}
+    for vertex in graph:
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] += 1
+    
+    # Find vertices with no incoming edges
+    queue = deque([vertex for vertex in in_degree if in_degree[vertex] == 0])
+    result = []
+    
+    while queue:
+        vertex = queue.popleft()
+        result.append(vertex)
+        
+        # Remove this vertex and update in-degrees
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    # Check if all vertices were processed (no cycle)
+    return result if len(result) == len(graph) else None
+```
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Detect if courses can be completed
+- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) - Find valid course order
+- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) - Reconstruct alien language order
+- [Task Scheduler](https://leetcode.com/problems/task-scheduler/) - Schedule tasks with cooldown
+
+### 2. Strongly Connected Components (SCC)
+
+**What it is**: A maximal set of vertices such that every vertex in the set is reachable from every other vertex in the set.
+
+**When to use**:
+- Social network analysis (mutual connections)
+- Web page link analysis
+- Dependency analysis in complex systems
+- Network reliability analysis
+
+#### Tarjan's Algorithm
+
+```python
+def tarjan_scc(graph):
+    index = 0
+    stack = []
+    indices = {}
+    lowlinks = {}
+    on_stack = set()
+    sccs = []
+    
+    def strongconnect(vertex):
+        nonlocal index
+        indices[vertex] = index
+        lowlinks[vertex] = index
+        index += 1
+        stack.append(vertex)
+        on_stack.add(vertex)
+        
+        for neighbor in graph[vertex]:
+            if neighbor not in indices:
+                strongconnect(neighbor)
+                lowlinks[vertex] = min(lowlinks[vertex], lowlinks[neighbor])
+            elif neighbor in on_stack:
+                lowlinks[vertex] = min(lowlinks[vertex], indices[neighbor])
+        
+        if lowlinks[vertex] == indices[vertex]:
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                scc.append(w)
+                if w == vertex:
+                    break
+            sccs.append(scc)
+    
+    for vertex in graph:
+        if vertex not in indices:
+            strongconnect(vertex)
+    
+    return sccs
+```
+
+**LeetCode Examples**:
+- [Critical Connections](https://leetcode.com/problems/critical-connections-in-a-network/) - Find bridge edges
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/) - Merge connected accounts
+
+### 3. Minimum Spanning Tree (MST)
+
+**What it is**: A subset of edges that connects all vertices with minimum total weight.
+
+**When to use**:
+- Network design (minimum cost to connect all nodes)
+- Clustering problems
+- Approximation algorithms for TSP
+- Network reliability optimization
+
+#### Kruskal's Algorithm
+
+```python
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+    
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        return True
+
+def kruskal_mst(edges, n):
+    edges.sort(key=lambda x: x[2])  # Sort by weight
+    uf = UnionFind(n)
+    mst = []
+    
+    for u, v, weight in edges:
+        if uf.union(u, v):
+            mst.append((u, v, weight))
+            if len(mst) == n - 1:
+                break
+    
+    return mst
+```
+
+#### Prim's Algorithm
+
+```python
+import heapq
+
+def prim_mst(graph, start):
+    mst = []
+    visited = {start}
+    edges = [(weight, start, neighbor) for neighbor, weight in graph[start]]
+    heapq.heapify(edges)
+    
+    while edges and len(visited) < len(graph):
+        weight, u, v = heapq.heappop(edges)
+        if v not in visited:
+            visited.add(v)
+            mst.append((u, v, weight))
+            for neighbor, w in graph[v]:
+                if neighbor not in visited:
+                    heapq.heappush(edges, (w, v, neighbor))
+    
+    return mst
+```
+
+**LeetCode Examples**:
+- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/) - MST with Manhattan distance
+- [Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/) - MST with given edges
+
+### 4. Shortest Path Algorithms
+
+#### Dijkstra's Algorithm (Single Source)
+
+**When to use**: Non-negative edge weights, single source shortest path
+
+```python
+import heapq
+
+def dijkstra(graph, start):
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    pq = [(0, start)]
+    
+    while pq:
+        current_distance, current_vertex = heapq.heappop(pq)
+        
+        if current_distance > distances[current_vertex]:
+            continue
+            
+        for neighbor, weight in graph[current_vertex]:
+            distance = current_distance + weight
+            
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(pq, (distance, neighbor))
+    
+    return distances
+```
+
+#### Bellman-Ford Algorithm
+
+**When to use**: Negative edge weights, detect negative cycles
+
+```python
+def bellman_ford(graph, start):
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    
+    # Relax edges V-1 times
+    for _ in range(len(graph) - 1):
+        for vertex in graph:
+            for neighbor, weight in graph[vertex]:
+                if distances[vertex] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[vertex] + weight
+    
+    # Check for negative cycles
+    for vertex in graph:
+        for neighbor, weight in graph[vertex]:
+            if distances[vertex] + weight < distances[neighbor]:
+                return None  # Negative cycle detected
+    
+    return distances
+```
+
+#### Floyd-Warshall Algorithm
+
+**When to use**: All-pairs shortest path, small graphs
+
+```python
+def floyd_warshall(graph):
+    n = len(graph)
+    dist = [[float('infinity')] * n for _ in range(n)]
+    
+    # Initialize distances
+    for i in range(n):
+        dist[i][i] = 0
+        for j, weight in graph[i]:
+            dist[i][j] = weight
+    
+    # Floyd-Warshall algorithm
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+    
+    return dist
+```
+
+**LeetCode Examples**:
+- [Network Delay Time](https://leetcode.com/problems/network-delay-time/) - Dijkstra's algorithm
+- [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/) - Modified Dijkstra's
+- [Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/) - Shortest path with effort
+
+### 5. Graph Coloring
+
+**What it is**: Assigning colors to vertices such that no two adjacent vertices have the same color.
+
+**When to use**:
+- Scheduling problems (no conflicts)
+- Register allocation in compilers
+- Map coloring problems
+- Resource allocation
+
+```python
+def graph_coloring(graph, num_colors):
+    colors = {}
+    
+    def is_safe(vertex, color):
+        for neighbor in graph[vertex]:
+            if neighbor in colors and colors[neighbor] == color:
+                return False
+        return True
+    
+    def color_graph(vertex):
+        if vertex >= len(graph):
+            return True
+        
+        for color in range(num_colors):
+            if is_safe(vertex, color):
+                colors[vertex] = color
+                if color_graph(vertex + 1):
+                    return True
+                colors[vertex] = -1
+        
+        return False
+    
+    return color_graph(0)
+```
+
+**LeetCode Examples**:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/) - Bipartite graph detection
+- [Is Graph Bipartite?](https://leetcode.com/problems/is-graph-bipartite/) - 2-coloring problem
+
+## Algorithm Selection Guide
+
+| Problem Type | Best Algorithm | Time Complexity | When to Use |
+|--------------|----------------|-----------------|-------------|
+| Dependency Ordering | Topological Sort | O(V + E) | DAGs, prerequisites |
+| Strong Connectivity | Tarjan's SCC | O(V + E) | Mutual reachability |
+| Minimum Spanning Tree | Kruskal's/Prim's | O(E log E) | Network design |
+| Single Source Shortest Path | Dijkstra's | O((V + E) log V) | Non-negative weights |
+| All Pairs Shortest Path | Floyd-Warshall | O(V³) | Small graphs |
+| Graph Coloring | Backtracking | O(V^C) | Scheduling, conflicts |
+
+## Graph Traversal Algorithms
+
+### 1. Depth-First Search (DFS)
+```python
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    
+    visited.add(start)
+    print(start)  # Process vertex
+    
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+```
+
+**Iterative DFS**:
+```python
+def dfs_iterative(graph, start):
+    visited = set()
+    stack = [start]
+    
+    while stack:
+        vertex = stack.pop()
+        if vertex not in visited:
+            visited.add(vertex)
+            print(vertex)  # Process vertex
+            
+            for neighbor in graph[vertex]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+```
+
+### 2. Breadth-First Search (BFS)
+```python
+from collections import deque
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    visited.add(start)
+    
+    while queue:
+        vertex = queue.popleft()
+        print(vertex)  # Process vertex
+        
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+```
+
+## Shortest Path Algorithms
+
+### 1. Dijkstra's Algorithm
+```python
+import heapq
+
+def dijkstra(graph, start):
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    pq = [(0, start)]
+    
+    while pq:
+        current_distance, current_vertex = heapq.heappop(pq)
+        
+        if current_distance > distances[current_vertex]:
+            continue
+            
+        for neighbor, weight in graph[current_vertex]:
+            distance = current_distance + weight
+            
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(pq, (distance, neighbor))
+    
+    return distances
+```
+
+### 2. Bellman-Ford Algorithm
+```python
+def bellman_ford(graph, start):
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    
+    # Relax edges V-1 times
+    for _ in range(len(graph) - 1):
+        for vertex in graph:
+            for neighbor, weight in graph[vertex]:
+                if distances[vertex] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[vertex] + weight
+    
+    # Check for negative cycles
+    for vertex in graph:
+        for neighbor, weight in graph[vertex]:
+            if distances[vertex] + weight < distances[neighbor]:
+                return None  # Negative cycle detected
+    
+    return distances
+```
+
+### 3. Floyd-Warshall Algorithm
+```python
+def floyd_warshall(graph):
+    n = len(graph)
+    dist = [[float('infinity')] * n for _ in range(n)]
+    
+    # Initialize distances
+    for i in range(n):
+        dist[i][i] = 0
+        for j, weight in graph[i]:
+            dist[i][j] = weight
+    
+    # Floyd-Warshall algorithm
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+    
+    return dist
+```
+
+## Advanced Graph Algorithms
+
+### 1. Topological Sort
+```python
+def topological_sort(graph):
+    in_degree = {vertex: 0 for vertex in graph}
+    
+    # Calculate in-degrees
+    for vertex in graph:
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] += 1
+    
+    # Find vertices with no incoming edges
+    queue = [vertex for vertex in in_degree if in_degree[vertex] == 0]
+    result = []
+    
+    while queue:
+        vertex = queue.pop(0)
+        result.append(vertex)
+        
+        for neighbor in graph[vertex]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+    
+    return result if len(result) == len(graph) else None
+```
+
+### 2. Strongly Connected Components (Tarjan's)
+```python
+def tarjan_scc(graph):
+    index = 0
+    stack = []
+    indices = {}
+    lowlinks = {}
+    on_stack = set()
+    sccs = []
+    
+    def strongconnect(vertex):
+        nonlocal index
+        indices[vertex] = index
+        lowlinks[vertex] = index
+        index += 1
+        stack.append(vertex)
+        on_stack.add(vertex)
+        
+        for neighbor in graph[vertex]:
+            if neighbor not in indices:
+                strongconnect(neighbor)
+                lowlinks[vertex] = min(lowlinks[vertex], lowlinks[neighbor])
+            elif neighbor in on_stack:
+                lowlinks[vertex] = min(lowlinks[vertex], indices[neighbor])
+        
+        if lowlinks[vertex] == indices[vertex]:
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                scc.append(w)
+                if w == vertex:
+                    break
+            sccs.append(scc)
+    
+    for vertex in graph:
+        if vertex not in indices:
+            strongconnect(vertex)
+    
+    return sccs
+```
+
+### 3. Minimum Spanning Tree (Kruskal's)
+```python
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+    
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        return True
+
+def kruskal_mst(edges, n):
+    edges.sort(key=lambda x: x[2])  # Sort by weight
+    uf = UnionFind(n)
+    mst = []
+    
+    for u, v, weight in edges:
+        if uf.union(u, v):
+            mst.append((u, v, weight))
+            if len(mst) == n - 1:
+                break
+    
+    return mst
+```
+
+## Graph Problem Patterns
+
+### 1. Cycle Detection
+```python
+def has_cycle_directed(graph):
+    WHITE, GRAY, BLACK = 0, 1, 2
+    color = {vertex: WHITE for vertex in graph}
+    
+    def dfs(vertex):
+        color[vertex] = GRAY
+        for neighbor in graph[vertex]:
+            if color[neighbor] == GRAY:
+                return True
+            if color[neighbor] == WHITE and dfs(neighbor):
+                return True
+        color[vertex] = BLACK
+        return False
+    
+    for vertex in graph:
+        if color[vertex] == WHITE:
+            if dfs(vertex):
+                return True
+    return False
+```
+
+### 2. Bipartite Graph Detection
+```python
+def is_bipartite(graph):
+    color = {}
+    
+    def dfs(vertex, c):
+        if vertex in color:
+            return color[vertex] == c
+        color[vertex] = c
+        for neighbor in graph[vertex]:
+            if not dfs(neighbor, 1 - c):
+                return False
+        return True
+    
+    for vertex in graph:
+        if vertex not in color:
+            if not dfs(vertex, 0):
+                return False
+    return True
+```
+
+## Common Graph Mistakes to Avoid
+
+❌ **Not handling disconnected components** - may miss parts of the graph
+❌ **Infinite loops in cycles** - not marking visited vertices
+❌ **Wrong data structure choice** - adjacency matrix vs list
+❌ **Not considering edge cases** - empty graphs, single vertices
+❌ **Memory issues with large graphs** - not optimizing space complexity
+
+## Graph Algorithm Complexity
+
+| Algorithm | Time Complexity | Space Complexity | Use Case |
+|-----------|----------------|------------------|----------|
+| DFS/BFS | O(V + E) | O(V) | Traversal, connectivity |
+| Dijkstra | O((V + E) log V) | O(V) | Single-source shortest path |
+| Bellman-Ford | O(VE) | O(V) | Negative weights |
+| Floyd-Warshall | O(V³) | O(V²) | All-pairs shortest path |
+| Topological Sort | O(V + E) | O(V) | DAG ordering |
+| Kruskal MST | O(E log E) | O(V) | Minimum spanning tree |
+
+## Action Items
+
+This section contains specific action items that readers can take to enhance their understanding or apply the concepts from this post:
+
+- [ ] **Implement all major graph algorithms**: Build DFS, BFS, Dijkstra's, Bellman-Ford, Floyd-Warshall, and topological sort from scratch
+- [ ] **Solve 10 graph-based coding problems**: Practice with problems like "Course Schedule", "Word Ladder", "Network Delay Time", "Critical Connections", and "Redundant Connection"
+- [ ] **Build a graph visualization tool**: Create a program that can visualize graphs and highlight the path taken by different algorithms
+- [ ] **Analyze real-world networks**: Use graph algorithms to analyze social networks, transportation systems, or web page relationships
+
+**Implementation Notes:**
+- Each action item should be specific and measurable
+- Include expected outcomes or deliverables
+- Consider different skill levels (beginner, intermediate, advanced)
+- Provide context for why each action item is valuable
+
+<details>
+<summary>🤖 AI Metadata (Click to expand)</summary>
+
+```yaml
+# AI METADATA - DO NOT REMOVE OR MODIFY
+# AI_UPDATE_INSTRUCTIONS:
+# This content should be updated when new graph algorithms, modeling techniques, or problem-solving patterns emerge
+#
+# 1. SCAN_SOURCES: Monitor algorithm textbooks, competitive programming resources, LeetCode problem updates, and graph theory research
+# 2. EXTRACT_DATA: Look for new graph algorithms, modeling approaches, optimization strategies, and real-world applications
+# 3. UPDATE_CONTENT: Add new graph types, update algorithm implementations, include new LeetCode problems, expand modeling approaches
+# 4. VERIFY_CHANGES: Ensure all code examples compile and run correctly, verify algorithm complexity claims, test LeetCode links
+# 5. MAINTAIN_FORMAT: Preserve the "I need to..." format in Purpose section, keep action items specific and measurable
+#
+# CONTENT_PATTERNS:
+# - Graph types: Include visual ASCII representations, key properties, when to use, LeetCode examples
+# - Modeling approaches: Cover adjacency matrix/list, edge list, object-oriented, hash map representations
+# - Algorithms: Always include time/space complexity, implementation details, problem-specific guidelines
+# - Code examples: Use clear variable names, include comments, provide both recursive and iterative versions
+# - Problem patterns: Include both theoretical understanding and practical implementation with real examples
+#
+# DATA_SOURCES:
+# - Algorithm textbooks: Introduction to Algorithms (CLRS), Algorithm Design Manual, Kleinberg-Tardos
+# - Competitive programming: Codeforces graph problems, AtCoder network algorithms, TopCoder
+# - Coding platforms: LeetCode graph problems, HackerRank algorithms, GeeksforGeeks
+# - Research papers: Graph theory, network science, social network analysis
+# - University courses: Princeton algorithms, MIT 6.006, Stanford CS161
+#
+# UPDATE_TRIGGERS:
+# - New graph algorithms published in computer science literature
+# - Changes in competitive programming graph problem patterns
+# - New LeetCode graph problems with different difficulty levels
+# - Performance improvements in graph algorithm implementations
+# - New real-world applications of graph algorithms (social networks, recommendation systems)
+# - Updates to graph libraries and frameworks (NetworkX, igraph, etc.)
+#
+# FORMATTING_RULES:
+# - Use ✅ and ❌ for good/bad examples consistently
+# - Include code blocks with proper syntax highlighting (python, markdown)
+# - Maintain table formatting for comparisons and algorithm selection guides
+# - Keep action items in checkbox format with implementation notes
+# - Use ASCII art for graph visualizations
+# - Include LeetCode links with descriptive text
+#
+# UPDATE_FREQUENCY: Monthly review for new LeetCode problems, quarterly review for algorithms, annual review for comprehensive updates
+```
+</details>
+

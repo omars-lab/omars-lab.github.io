@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start clear build serve version deploy fix-frontmatter upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push
+.PHONY: help install add init-site check audit clean start clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -83,6 +83,9 @@ deploy: ## Deploy the site to GitHub Pages
 
 fix-frontmatter: ## Fix frontmatter issues using AI
 	gemini --approval-mode auto_edit --allowed-tools Edit,WriteFile -p "Follow the instructions in @./bytesofpurpose-blog/prompts/fix-frontmatter.md"
+
+fix-blog-posts: ## Fix frontmatter for recently modified blog posts and placeholder content
+	gemini --approval-mode auto_edit --allowed-tools Edit,WriteFile -p "Follow the instructions in @./prompts/bootstrap/blog-posts.md"
 
 upgrade: ## Upgrade Docusaurus packages to latest versions
 	( cd ${SITEROOT} && yarn upgrade \

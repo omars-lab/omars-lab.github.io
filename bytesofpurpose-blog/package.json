@@ -24,6 +24,7 @@
     "@svgr/webpack": "^5.5.0",
     "clsx": "^1.1.1",
     "file-loader": "^6.2.0",
+    "force-graph": "^1.51.0",
     "mdx-mermaid": "^2.0.3",
     "mermaid": "^8.12.1",
     "prism-react-renderer": "^2.4.1",

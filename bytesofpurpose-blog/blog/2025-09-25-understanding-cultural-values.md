@@ -2,6 +2,7 @@
 slug: understanding-tech-company-culture
 title: "🏢 Company Culture"
 description: "A deep dive into how company size and structure influence cultural values across tech companies, from mid-size remote teams like Zapier to giants like Meta and Amazon."
+authors: [oeid]
 tags: [company-culture, remote-work, values, leadership, team-building, organizational-design]
 date: '2025-09-25T22:51'
 draft: false
