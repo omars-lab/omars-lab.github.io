@@ -51,8 +51,11 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   const graphRef = useRef<any>(null);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [paneVisible, setPaneVisible] = useState<boolean>(true);
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === 'dark';
+  
+  const menuBarHeight = 40;
 
   // Flatten nodes with children based on expansion state
   const flattenNodes = useCallback((nodes: Node[], expanded: Set<string>): { nodes: any[], links: any[] } => {
@@ -128,6 +131,70 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     });
   }, []);
 
+  // Get all nodes with children
+  const getAllNodesWithChildren = useCallback((): Set<string> => {
+    const nodesWithChildren = new Set<string>();
+    const traverse = (nodes: Node[]) => {
+      nodes.forEach(node => {
+        if (node.children && node.children.length > 0) {
+          nodesWithChildren.add(node.id);
+          traverse(node.children);
+        }
+      });
+    };
+    traverse(data.nodes);
+    return nodesWithChildren;
+  }, [data]);
+
+  // Expand all nodes
+  const expandAll = useCallback(() => {
+    const allNodesWithChildren = getAllNodesWithChildren();
+    setExpandedNodes(allNodesWithChildren);
+  }, [getAllNodesWithChildren]);
+
+  // Collapse all nodes
+  const collapseAll = useCallback(() => {
+    setExpandedNodes(new Set());
+  }, []);
+
+  // Auto center the graph
+  const autoCenter = useCallback(() => {
+    if (graphRef.current && graphData.nodes.length > 0) {
+      // Calculate center of all nodes
+      let minX = Infinity, maxX = -Infinity;
+      let minY = Infinity, maxY = -Infinity;
+      
+      graphData.nodes.forEach((node: any) => {
+        if (node.x !== undefined && node.y !== undefined) {
+          minX = Math.min(minX, node.x);
+          maxX = Math.max(maxX, node.x);
+          minY = Math.min(minY, node.y);
+          maxY = Math.max(maxY, node.y);
+        }
+      });
+
+      if (minX !== Infinity) {
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+        
+        // Get current camera position
+        const currentZoom = graphRef.current.zoom() || 1;
+        const containerElement = containerRef.current?.parentElement;
+        const actualWidth = containerElement ? containerElement.offsetWidth : width;
+        const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+        const graphWidth = actualWidth - panelWidth;
+        
+        // Center the view
+        graphRef.current.centerAt(centerX, centerY, 1000);
+      }
+    }
+  }, [graphData, width, paneVisible]);
+
+  // Toggle pane visibility
+  const togglePane = useCallback(() => {
+    setPaneVisible(prev => !prev);
+  }, []);
+
   // Function to get and update graph width
   const updateGraphWidth = useCallback(() => {
     if (!containerRef.current || !graphRef.current) return;
@@ -136,11 +203,13 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     if (!containerElement) return;
     
     const actualWidth = containerElement.offsetWidth || width;
-    const panelWidth = Math.floor(actualWidth * 0.2);
+    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
     const graphWidth = actualWidth - panelWidth;
+    const graphHeight = height - menuBarHeight;
     
     graphRef.current.width(graphWidth);
-  }, [width]);
+    graphRef.current.height(graphHeight);
+  }, [width, height, paneVisible]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -156,14 +225,15 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     // Get actual container width (use parent container if available, otherwise use prop)
     const containerElement = containerRef.current.parentElement;
     const actualWidth = containerElement ? containerElement.offsetWidth : width;
-    const panelWidth = Math.floor(actualWidth * 0.2);
+    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
     const graphWidth = actualWidth - panelWidth;
+    const graphHeight = height - menuBarHeight;
 
     // Initialize force graph
     if (!graphRef.current) {
       graphRef.current = new ForceGraph(containerRef.current)
         .width(graphWidth)
-        .height(height)
+        .height(graphHeight)
         .backgroundColor(backgroundColor)
         .nodeLabel((node: any) => `${node.title || node.name || node.id}`)
         .nodeVal((node: any) => node.hasChildren ? 12 : 8)
@@ -290,7 +360,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         graphRef.current = null;
       }
     };
-  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth]);
+  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth, paneVisible]);
 
   const containerBorderColor = isDarkMode ? '#333' : '#e0e0e0';
   const containerBackgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
@@ -301,6 +371,13 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   const panelBackgroundColor = isDarkMode ? '#2a2a2a' : '#fafafa';
   const panelTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
   const panelBorderColor = isDarkMode ? '#555' : '#e0e0e0';
+  const menuBarBackgroundColor = isDarkMode ? '#252525' : '#f0f0f0';
+  const menuBarBorderColor = isDarkMode ? '#444' : '#ddd';
+  const menuBarTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
+  const buttonHoverColor = isDarkMode ? '#333' : '#e0e0e0';
+
+  const graphHeight = height - menuBarHeight;
+  const graphAreaHeight = height - menuBarHeight;
 
   return (
     <div style={{
@@ -311,66 +388,173 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       backgroundColor: containerBackgroundColor,
       boxShadow: containerBoxShadow,
       display: 'flex',
-      flexDirection: 'row',
-      gap: '0',
+      flexDirection: 'column',
     }}>
-      <div ref={containerRef} style={{ flex: '1 1 80%', minWidth: 0, height }} />
       <div style={{
-        flex: '0 0 20%',
-        minWidth: 0,
-        height,
-        borderLeft: `2px solid ${panelBorderColor}`,
-        backgroundColor: panelBackgroundColor,
-        padding: '12px',
-        overflowY: 'auto',
-        boxSizing: 'border-box',
-        borderRadius: '0 8px 8px 0',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '0',
+        height: graphAreaHeight,
       }}>
-        {selectedNode ? (
-          <div>
-            <h3 style={{
-              margin: '0 0 8px 0',
-              color: panelTextColor,
-              fontSize: '14px',
-              fontWeight: '600',
-              lineHeight: '1.4',
-            }}>
-              {selectedNode.title || selectedNode.name || selectedNode.id}
-            </h3>
-            {selectedNode.description && (
-              <p style={{
-                margin: '0',
+        <div ref={containerRef} style={{ 
+          flex: paneVisible ? '1 1 80%' : '1 1 100%', 
+          minWidth: 0, 
+          height: graphAreaHeight 
+        }} />
+        {paneVisible && (
+          <div style={{
+            flex: '0 0 20%',
+            minWidth: 0,
+            height: graphAreaHeight,
+            borderLeft: `2px solid ${panelBorderColor}`,
+            backgroundColor: panelBackgroundColor,
+            padding: '12px',
+            overflowY: 'auto',
+            boxSizing: 'border-box',
+          }}>
+            {selectedNode ? (
+              <div>
+                <h3 style={{
+                  margin: '0 0 8px 0',
+                  color: panelTextColor,
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  lineHeight: '1.4',
+                }}>
+                  {selectedNode.title || selectedNode.name || selectedNode.id}
+                </h3>
+                {selectedNode.description && (
+                  <p style={{
+                    margin: '0',
+                    color: panelTextColor,
+                    fontSize: '12px',
+                    lineHeight: '1.5',
+                    opacity: 0.85,
+                  }}>
+                    {selectedNode.description}
+                  </p>
+                )}
+                {!selectedNode.description && (
+                  <p style={{
+                    margin: '0',
+                    color: panelTextColor,
+                    fontSize: '12px',
+                    lineHeight: '1.5',
+                    opacity: 0.5,
+                    fontStyle: 'italic',
+                  }}>
+                    No description
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div style={{
                 color: panelTextColor,
                 fontSize: '12px',
-                lineHeight: '1.5',
-                opacity: 0.85,
-              }}>
-                {selectedNode.description}
-              </p>
-            )}
-            {!selectedNode.description && (
-              <p style={{
-                margin: '0',
-                color: panelTextColor,
-                fontSize: '12px',
-                lineHeight: '1.5',
                 opacity: 0.5,
                 fontStyle: 'italic',
               }}>
-                No description
-              </p>
+                Hover or click a node
+              </div>
             )}
           </div>
-        ) : (
-          <div style={{
-            color: panelTextColor,
-            fontSize: '12px',
-            opacity: 0.5,
-            fontStyle: 'italic',
-          }}>
-            Hover or click a node
-          </div>
         )}
+      </div>
+      <div style={{
+        height: menuBarHeight,
+        borderTop: `1px solid ${menuBarBorderColor}`,
+        backgroundColor: menuBarBackgroundColor,
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 12px',
+        gap: '8px',
+        boxSizing: 'border-box',
+      }}>
+        <button
+          onClick={autoCenter}
+          style={{
+            padding: '6px 12px',
+            fontSize: '12px',
+            backgroundColor: 'transparent',
+            border: `1px solid ${menuBarBorderColor}`,
+            borderRadius: '4px',
+            color: menuBarTextColor,
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = buttonHoverColor;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          Center
+        </button>
+        <button
+          onClick={expandAll}
+          style={{
+            padding: '6px 12px',
+            fontSize: '12px',
+            backgroundColor: 'transparent',
+            border: `1px solid ${menuBarBorderColor}`,
+            borderRadius: '4px',
+            color: menuBarTextColor,
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = buttonHoverColor;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          Expand All
+        </button>
+        <button
+          onClick={collapseAll}
+          style={{
+            padding: '6px 12px',
+            fontSize: '12px',
+            backgroundColor: 'transparent',
+            border: `1px solid ${menuBarBorderColor}`,
+            borderRadius: '4px',
+            color: menuBarTextColor,
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = buttonHoverColor;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          Collapse All
+        </button>
+        <div style={{ flex: 1 }} />
+        <button
+          onClick={togglePane}
+          style={{
+            padding: '6px 12px',
+            fontSize: '12px',
+            backgroundColor: 'transparent',
+            border: `1px solid ${menuBarBorderColor}`,
+            borderRadius: '4px',
+            color: menuBarTextColor,
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = buttonHoverColor;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+        >
+          {paneVisible ? 'Hide Pane' : 'Show Pane'}
+        </button>
       </div>
     </div>
   );
