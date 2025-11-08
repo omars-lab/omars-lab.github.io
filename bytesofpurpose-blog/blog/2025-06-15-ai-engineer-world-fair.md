@@ -2,6 +2,7 @@
 slug: ai-engineer-world-fair-2025
 title: "🌍 AI Engineer World Fair 2025"
 description: "My experience attending the AI Engineer World Fair in June 2025 - key insights, tools, and trends shaping the future of AI engineering."
+authors: [oeid]
 tags: [ai-engineering, conference, genai, tools, trends, networking]
 date: '2025-06-15T10:00'
 draft: false

@@ -1,0 +1,117 @@
+---
+slug: graph
+title: 'Graph'
+description: 'How to create a graph component in Docusaurus.'
+authors: [oeid]
+tags: [docusaurus, react, components, details]
+draft: false
+---
+
+import GraphRenderer from '@site/src/components/GraphRenderer';
+
+# Graph Renderer Example
+
+Below is a simple graph rendered using the `GraphRenderer` component.
+
+## Basic Graph
+
+<GraphRenderer data={{
+  nodes: [
+    { id: '1', label: 'Node A', title: 'Node A Title' },
+    { id: '2', label: 'Node B', title: 'Node B Title' }
+  ],
+  links: [
+    { source: '1', target: '2' }
+  ]
+}} />
+
+## Graph with Expandable Subnodes
+
+**Instructions:** Click on nodes with children (they show a `+` indicator) to expand them and reveal their subnodes. Click again to collapse. Nodes with children are larger and show `+` when collapsed or `−` when expanded.
+
+This example demonstrates a multi-level nested structure:
+
+<GraphRenderer data={{
+  nodes: [
+    { 
+      id: 'root', 
+      label: 'Root', 
+      title: 'Root Node',
+      color: '#68BDF6',
+      children: [
+        { 
+          id: 'level1-a', 
+          label: 'Level 1-A', 
+          title: 'First Level Node A',
+          color: '#60BE86',
+          children: [
+            { 
+              id: 'level2-a1', 
+              label: 'Level 2-A1', 
+              title: 'Second Level Node A1',
+              color: '#FF6B6B',
+              children: [
+                { id: 'level3-a1a', label: 'Level 3-A1a', title: 'Third Level Node A1a', color: '#FFD93D' },
+                { id: 'level3-a1b', label: 'Level 3-A1b', title: 'Third Level Node A1b', color: '#FFD93D' }
+              ]
+            },
+            { id: 'level2-a2', label: 'Level 2-A2', title: 'Second Level Node A2', color: '#FF6B6B' }
+          ]
+        },
+        { 
+          id: 'level1-b', 
+          label: 'Level 1-B', 
+          title: 'First Level Node B',
+          color: '#60BE86',
+          children: [
+            { id: 'level2-b1', label: 'Level 2-B1', title: 'Second Level Node B1', color: '#FF6B6B' },
+            { id: 'level2-b2', label: 'Level 2-B2', title: 'Second Level Node B2', color: '#FF6B6B' },
+            { 
+              id: 'level2-b3', 
+              label: 'Level 2-B3', 
+              title: 'Second Level Node B3',
+              color: '#FF6B6B',
+              children: [
+                { id: 'level3-b3a', label: 'Level 3-B3a', title: 'Third Level Node B3a', color: '#FFD93D' },
+                { id: 'level3-b3b', label: 'Level 3-B3b', title: 'Third Level Node B3b', color: '#FFD93D' },
+                { id: 'level3-b3c', label: 'Level 3-B3c', title: 'Third Level Node B3c', color: '#FFD93D' }
+              ]
+            }
+          ]
+        },
+        { 
+          id: 'level1-c', 
+          label: 'Level 1-C', 
+          title: 'First Level Node C (No Children)',
+          color: '#60BE86'
+        }
+      ]
+    },
+    { 
+      id: 'sibling', 
+      label: 'Sibling', 
+      title: 'Sibling Root Node',
+      color: '#A78BFA',
+      children: [
+        { id: 'sibling-child1', label: 'Sibling Child 1', title: 'Sibling First Child', color: '#FB7185' },
+        { id: 'sibling-child2', label: 'Sibling Child 2', title: 'Sibling Second Child', color: '#FB7185' }
+      ]
+    }
+  ],
+  links: [
+    { source: 'root', target: 'sibling' }
+  ]
+}} />
+
+### Try it out:
+1. **Click on "Root"** - expands to show Level 1 nodes (A, B, C)
+2. **Click on "Level 1-A"** - expands to show Level 2 nodes (A1, A2)
+3. **Click on "Level 2-A1"** - expands to show Level 3 nodes (A1a, A1b)
+4. **Click on "Sibling"** - expands to show its children
+5. **Click again on any expanded node** - collapses it and hides its children
+
+Notice how:
+- Each level can be expanded/collapsed independently
+- Children are automatically connected to their parent with links
+- The graph layout adjusts dynamically as you expand/collapse nodes
+- Nodes with children are visually larger and show `+`/`−` indicators

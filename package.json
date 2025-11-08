@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-force-graph": "^1.43.0",
     "@docusaurus/core": "^3.7.0",
     "@docusaurus/module-type-aliases": "^3.7.0",
     "@docusaurus/preset-classic": "^3.7.0",
