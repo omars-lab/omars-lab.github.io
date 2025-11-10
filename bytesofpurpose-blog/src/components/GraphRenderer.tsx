@@ -47,6 +47,1231 @@ const NEO4J_COLORS = [
   '#FBBF24', // Amber
 ];
 
+// Debug flag to show node section separators
+const DEBUG_SHOW_NODE_SECTIONS = false;
+
+/**
+ * ============================================================================
+ * NODE RENDERING HELPER FUNCTIONS
+ * ============================================================================
+ * These functions handle the rendering of node elements (title, status indicators, etc.)
+ * They are designed to be reusable and well-documented for AI navigation.
+ */
+
+/**
+ * Calculates the radius of a node based on whether it has children.
+ * 
+ * Feature: Node sizing
+ * Use case: Determines node size - parent nodes are larger (12px) than leaf nodes (8px)
+ * 
+ * @param hasChildren - Whether the node has child nodes
+ * @returns Node radius in pixels
+ */
+const getNodeRadius = (hasChildren: boolean): number => {
+  return hasChildren ? 12 : 8;
+};
+
+/**
+ * Gets the display color for a node, falling back to default if not specified.
+ * 
+ * Feature: Node coloring
+ * Use case: Provides consistent default color (Neo4j blue) when node color is not specified
+ * 
+ * @param nodeColor - Optional color from node data
+ * @returns Color string (hex format)
+ */
+const getNodeColor = (nodeColor?: string): string => {
+  return nodeColor || '#68BDF6';
+};
+
+/**
+ * Extracts the display label for a node from various possible fields.
+ * 
+ * Feature: Node labeling
+ * Use case: Gets the best available label for a node, checking title, name, and id in order
+ * 
+ * @param node - Node object with potential label fields
+ * @returns Label string for display
+ */
+const getNodeLabel = (node: any): string => {
+  return node.title || node.name || node.id || '';
+};
+
+/**
+ * Validates that a node has valid coordinates for rendering.
+ * 
+ * Feature: Node coordinate validation
+ * Use case: Prevents rendering errors by checking node coordinates are finite numbers
+ * 
+ * @param node - Node object with x, y coordinates
+ * @returns True if node coordinates are valid for rendering
+ */
+const isValidNodeCoordinates = (node: any): boolean => {
+  return node.x !== undefined && 
+         node.y !== undefined && 
+         isFinite(node.x) && 
+         isFinite(node.y);
+};
+
+/**
+ * Calculates the available width for text at a given Y position within a circular node.
+ * 
+ * Feature: Text width constraint calculation for circular nodes (reactive to zoom)
+ * Use case: Ensures text fits within node boundaries, accounting for circular shape
+ *           Reactively adjusts margins based on zoom level to prevent text protrusion
+ * 
+ * @param y - Y coordinate in graph space
+ * @param nodeY - Center Y coordinate of the node
+ * @param nodeRadius - Radius of the node in graph coordinates
+ * @param globalScale - Current zoom level (1.0 = no zoom)
+ * @param padding - Padding in graph coordinates (default: 6)
+ * @param lineIndex - Optional: 0 = top line, 1 = middle line, 2 = bottom line
+ *                   Used to apply extra margins for top/bottom lines due to circular shape
+ * @returns Available width in screen pixels (matches ctx.measureText() output)
+ */
+const calculateAvailableTextWidth = (
+  y: number,
+  nodeY: number,
+  nodeRadius: number,
+  globalScale: number,
+  padding: number = 6,
+  lineIndex?: number
+): number => {
+  // Calculate vertical offset from node center
+  const verticalOffset = Math.abs(y - nodeY);
+  
+  // Calculate chord width at this Y position using circle geometry
+  // Formula: chord width = 2 * sqrt(radius^2 - vertical_offset^2)
+  const chordWidth = 2 * Math.sqrt(Math.max(0, nodeRadius * nodeRadius - verticalOffset * verticalOffset));
+  
+  // Convert to screen coordinates
+  const screenPadding = padding * globalScale;
+  const baseWidth = (chordWidth * globalScale) - (screenPadding * 2);
+  
+  // Apply reactive safety margins that scale with both zoom level and node size
+  // Larger nodes (root nodes with radius 12) need proportionally larger margins
+  const isTopOrBottom = lineIndex === 0 || lineIndex === 2;
+  
+  // Base margin percentage - increased for better safety
+  const baseMarginPercentage = isTopOrBottom ? 0.15 : 0.10; // Increased from 0.12/0.08
+  
+  // Scale margin percentage based on node radius (larger nodes need more margin)
+  // Root nodes (radius 12) get ~1.2x margin, leaf nodes (radius 8) get base margin
+  const radiusMultiplier = 1 + ((nodeRadius - 8) / 8) * 0.2; // Scales from 1.0 (radius 8) to 1.1 (radius 12)
+  const marginPercentage = baseMarginPercentage * radiusMultiplier;
+  const percentageMargin = baseWidth * marginPercentage;
+  
+  // Add a fixed margin that scales with both zoom and node radius
+  // Larger nodes need larger fixed margins to account for circular shape
+  const baseFixedMargin = isTopOrBottom ? 5 : 4; // Increased from 4/3
+  const radiusScaledMargin = baseFixedMargin * (nodeRadius / 8); // Scale with node radius
+  const fixedMargin = radiusScaledMargin * globalScale;
+  const totalMargin = percentageMargin + fixedMargin;
+  
+  const availableWidth = baseWidth - totalMargin;
+  // Ensure we always return a positive value, but be very conservative
+  return Math.max(2, availableWidth);
+};
+
+/**
+ * Calculates the center Y coordinate of the emoji/status indicator area.
+ * 
+ * Feature: Status indicator positioning
+ * Use case: Positions status indicators (leaf emoji, expansion arrows) in bottom section
+ * 
+ * @param nodeY - Center Y coordinate of the node
+ * @param nodeRadius - Radius of the node
+ * @returns Y coordinate for the center of the bottom section (where emoji/status goes)
+ */
+const calculateEmojiAreaCenterY = (nodeY: number, nodeRadius: number): number => {
+  const nodeDiameter = nodeRadius * 2;
+  const sectionHeight = nodeDiameter / 5;
+  const emojiAreaTop = nodeY - nodeRadius + (sectionHeight * 4);
+  const emojiAreaBottom = nodeY + nodeRadius;
+  return (emojiAreaTop + emojiAreaBottom) / 2;
+};
+
+/**
+ * Determines the status indicator symbol and type for a node.
+ * 
+ * Feature: Node status visualization
+ * Use case: Shows expansion state for parent nodes, leaf indicator for leaf nodes
+ * 
+ * @param hasChildren - Whether the node has child nodes
+ * @param isExpanded - Whether the node is currently expanded (only relevant if hasChildren)
+ * @returns Object with statusIndicator (string) and isTextLabel (boolean)
+ */
+const getNodeStatusIndicator = (
+  hasChildren: boolean,
+  isExpanded: boolean
+): { statusIndicator: string; isTextLabel: boolean } => {
+  if (hasChildren) {
+    return {
+      statusIndicator: isExpanded ? '▼' : '▶', // Down arrow = expanded, right arrow = collapsed
+      isTextLabel: false
+    };
+  } else {
+    return {
+      statusIndicator: '🌿', // Leaf emoji for leaf nodes
+      isTextLabel: false
+    };
+  }
+};
+
+/**
+ * Draws the node circle with optional highlight glow.
+ * 
+ * Feature: Node visual representation
+ * Use case: Renders the circular node background with optional highlight effect
+ * 
+ * @param ctx - Canvas rendering context
+ * @param nodeX - X coordinate of node center
+ * @param nodeY - Y coordinate of node center
+ * @param nodeRadius - Radius of the node
+ * @param nodeColor - Fill color for the node
+ * @param isHighlighted - Whether to draw highlight glow
+ * @param isDarkMode - Whether dark mode is active (affects glow color)
+ * @param borderColor - Color for node border
+ * @param globalScale - Current zoom level (for border width scaling)
+ */
+const drawNodeCircle = (
+  ctx: CanvasRenderingContext2D,
+  nodeX: number,
+  nodeY: number,
+  nodeRadius: number,
+  nodeColor: string,
+  isHighlighted: boolean,
+  isDarkMode: boolean,
+  borderColor: string,
+  globalScale: number
+): void => {
+  // Draw highlight glow for highlighted nodes
+  if (isHighlighted) {
+    const glowRadius = nodeRadius + 4;
+    const gradient = ctx.createRadialGradient(nodeX, nodeY, nodeRadius, nodeX, nodeY, glowRadius);
+    gradient.addColorStop(0, isDarkMode ? 'rgba(255, 215, 0, 0.8)' : 'rgba(255, 215, 0, 0.6)');
+    gradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(nodeX, nodeY, glowRadius, 0, 2 * Math.PI, false);
+    ctx.fill();
+  }
+  
+  // Draw node circle
+  ctx.fillStyle = nodeColor;
+  ctx.beginPath();
+  ctx.arc(nodeX, nodeY, nodeRadius, 0, 2 * Math.PI, false);
+  ctx.fill();
+  
+  // Draw node border (thicker and colored for highlighted nodes)
+  if (isHighlighted) {
+    ctx.strokeStyle = isDarkMode ? '#FFD700' : '#FFA500';
+    ctx.lineWidth = 4 / globalScale;
+  } else {
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 2 / globalScale;
+  }
+  ctx.stroke();
+};
+
+/**
+ * Draws debug section separators to visualize the 5 horizontal sections of a node.
+ * 
+ * Feature: Debug visualization
+ * Use case: Helps visualize node layout during development (top section, 3 middle sections, bottom section)
+ * 
+ * @param ctx - Canvas rendering context
+ * @param nodeX - X coordinate of node center
+ * @param nodeY - Y coordinate of node center
+ * @param nodeRadius - Radius of the node
+ * @param globalScale - Current zoom level (for line width scaling)
+ */
+const drawDebugSectionSeparators = (
+  ctx: CanvasRenderingContext2D,
+  nodeX: number,
+  nodeY: number,
+  nodeRadius: number,
+  globalScale: number
+): void => {
+  if (!DEBUG_SHOW_NODE_SECTIONS) return;
+  
+  const nodeDiameter = nodeRadius * 2;
+  const sectionHeight = nodeDiameter / 5;
+  
+  ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
+  ctx.lineWidth = 2 / globalScale;
+  const dashSize = 3 / globalScale;
+  ctx.setLineDash([dashSize, dashSize]);
+  
+  // Draw 4 separator lines (dividing 5 sections)
+  for (let i = 1; i < 5; i++) {
+    const y = nodeY - nodeRadius + (sectionHeight * i);
+    ctx.beginPath();
+    // Calculate x positions for the line endpoints on the circle
+    const angle = Math.asin((y - nodeY) / nodeRadius);
+    const xOffset = Math.cos(angle) * nodeRadius;
+    ctx.moveTo(nodeX - xOffset, y);
+    ctx.lineTo(nodeX + xOffset, y);
+    ctx.stroke();
+  }
+  
+  ctx.setLineDash([]); // Reset line dash
+};
+
+/**
+ * Calculates Y positions for the 3 text lines within a node.
+ * Lines are centered in the middle 3 sections of the node (sections 1, 2, 3).
+ * 
+ * @param nodeY - Center Y coordinate of the node
+ * @param nodeRadius - Radius of the node
+ * @returns Array of 3 Y coordinates, one for each line
+ */
+const calculateLinePositions = (nodeY: number, nodeRadius: number): number[] => {
+  const nodeDiameter = nodeRadius * 2;
+  const sectionHeight = nodeDiameter / 5;
+  const positions: number[] = [];
+  
+  for (let i = 0; i < 3; i++) {
+    const sectionTop = nodeY - nodeRadius + (sectionHeight * (1 + i));
+    const sectionBottom = nodeY - nodeRadius + (sectionHeight * (2 + i));
+    positions.push((sectionTop + sectionBottom) / 2);
+  }
+  
+  return positions;
+};
+
+/**
+ * Breaks a long word into chunks that fit within the available width.
+ * Only breaks at natural boundaries (hyphens, underscores, camelCase).
+ * If no natural break exists and the word doesn't fit, returns empty array
+ * (caller should truncate with ellipsis instead).
+ * 
+ * @param word - Word to break
+ * @param ctx - Canvas context for measuring text
+ * @param availableWidth - Maximum width available
+ * @returns Array of word chunks that fit, or empty array if word can't be broken naturally
+ */
+const breakLongWord = (
+  word: string,
+  ctx: CanvasRenderingContext2D,
+  availableWidth: number
+): string[] => {
+  if (ctx.measureText(word).width <= availableWidth) {
+    return [word];
+  }
+  
+  const chunks: string[] = [];
+  let remaining = word;
+  
+  while (remaining.length > 0) {
+    // Try to find a natural break point
+    let bestBreakIndex = -1;
+    let bestBreakLength = 0;
+    
+    // Check for hyphens/underscores first (preferred)
+    const hyphenMatch = remaining.search(/[-_]/);
+    if (hyphenMatch > 0 && hyphenMatch < remaining.length - 1) {
+      const beforeBreak = remaining.substring(0, hyphenMatch + 1);
+      if (ctx.measureText(beforeBreak).width <= availableWidth) {
+        bestBreakIndex = hyphenMatch + 1;
+        bestBreakLength = hyphenMatch + 1;
+      }
+    }
+    
+    // If no good hyphen break, try camelCase/PascalCase breaks
+    if (bestBreakIndex === -1) {
+      for (let i = 1; i < remaining.length; i++) {
+        // Check for camelCase: lowercase followed by uppercase
+        if (remaining[i - 1].match(/[a-z]/) && remaining[i].match(/[A-Z]/)) {
+          const beforeBreak = remaining.substring(0, i);
+          if (ctx.measureText(beforeBreak).width <= availableWidth) {
+            bestBreakIndex = i;
+            bestBreakLength = i;
+          } else {
+            break; // Can't fit even this, stop looking
+          }
+        }
+        // Check for PascalCase: uppercase followed by uppercase+lowercase
+        else if (i < remaining.length - 1 && 
+                 remaining[i - 1].match(/[A-Z]/) && 
+                 remaining[i].match(/[A-Z]/) && 
+                 remaining[i + 1].match(/[a-z]/)) {
+          const beforeBreak = remaining.substring(0, i);
+          if (ctx.measureText(beforeBreak).width <= availableWidth) {
+            bestBreakIndex = i;
+            bestBreakLength = i;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    
+    // If we found a natural break, use it
+    if (bestBreakIndex > 0) {
+      const chunk = remaining.substring(0, bestBreakLength);
+      chunks.push(chunk);
+      remaining = remaining.substring(bestBreakLength);
+      continue;
+    }
+    
+    // No natural break found - return empty array to signal caller should truncate
+    // Don't break character by character
+    return [];
+  }
+  
+  return chunks;
+};
+
+/**
+ * Wraps text into up to 3 lines, distributing words across lines.
+ * Implements CSS-like word-wrap: break-word behavior for long words.
+ * 
+ * @param text - Text to wrap
+ * @param ctx - Canvas context for measuring text
+ * @param fontSize - Current font size
+ * @param linePositions - Y positions for each line
+ * @param getAvailableWidth - Function to get available width at a Y position
+ * @returns Array of text lines (up to 3)
+ */
+const wrapTextIntoLines = (
+  text: string,
+  ctx: CanvasRenderingContext2D,
+  fontSize: number,
+  linePositions: number[],
+  getAvailableWidth: (y: number, lineIndex: number) => number
+): string[] => {
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+  if (words.length === 0) return [];
+  
+  ctx.font = `${fontSize}px Sans-Serif`;
+  const lines: string[] = [];
+  let currentLine = '';
+  const wordsPerLine = Math.max(1, Math.floor(words.length / 3));
+  
+  for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+    const word = words[wordIndex];
+    
+    if (lines.length >= 3) {
+      // Try to add remaining words to last line if space allows
+      if (currentLine) {
+        const remainingWords = words.slice(wordIndex).join(' ');
+        const testLine = `${currentLine} ${remainingWords}`;
+        const lastLineY = linePositions[2];
+        const availableWidth = getAvailableWidth(lastLineY, 2);
+        if (ctx.measureText(testLine).width <= availableWidth) {
+          lines[lines.length - 1] = testLine;
+        } else {
+          lines[lines.length - 1] = currentLine;
+        }
+      }
+      break;
+    }
+    
+    const lineIndex = lines.length;
+    const lineY = linePositions[lineIndex];
+    const availableWidth = getAvailableWidth(lineY, lineIndex);
+    
+    // Check if the word itself is too long
+    const wordWidth = ctx.measureText(word).width;
+    if (wordWidth > availableWidth) {
+      // Word is too long, try to break it at natural boundaries
+      if (currentLine) {
+        // Save current line and start breaking the word
+        lines.push(currentLine);
+        currentLine = '';
+      }
+      
+      // Try to break the long word into chunks at natural boundaries
+      const wordChunks = breakLongWord(word, ctx, availableWidth);
+      
+      // If word can be broken naturally, use the chunks
+      if (wordChunks.length > 0) {
+        // Add as many chunks as we can fit in remaining lines
+        for (let chunkIndex = 0; chunkIndex < wordChunks.length && lines.length < 3; chunkIndex++) {
+          const chunk = wordChunks[chunkIndex];
+          if (lines.length < 3) {
+            lines.push(chunk);
+          } else {
+            // No more lines, add to last line if it fits
+            const lastLineY = linePositions[2];
+            const lastLineAvailableWidth = getAvailableWidth(lastLineY, 2);
+            if (ctx.measureText(chunk).width <= lastLineAvailableWidth) {
+              lines[lines.length - 1] = chunk;
+            }
+          }
+        }
+      } else {
+        // Word can't be broken naturally - truncate with ellipsis
+        const truncated = truncateLine(ctx, word, availableWidth);
+        if (truncated && truncated.trim().length > 0) {
+          lines.push(truncated);
+        }
+      }
+      
+      // Continue with next word
+      continue;
+    }
+    
+    // Normal word wrapping logic
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    const testWidth = ctx.measureText(testLine).width;
+    const currentWords = testLine.split(/\s+/).length;
+    
+    const shouldWrapByWordCount = currentWords > wordsPerLine && lines.length < 3 && wordIndex < words.length - 1;
+    const shouldWrapByWidth = testWidth > availableWidth;
+    
+    if ((shouldWrapByWordCount || shouldWrapByWidth) && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  }
+  
+  if (currentLine && lines.length < 3) {
+    lines.push(currentLine);
+  }
+  
+  if (lines.length === 0 && words.length > 0) {
+    lines.push(words[0]);
+  }
+  
+  return lines;
+};
+
+/**
+ * Finds the optimal font size that ensures all non-last lines fit within their available width.
+ * 
+ * @param ctx - Canvas context
+ * @param lines - Text lines to fit
+ * @param linePositions - Y positions for each line
+ * @param getAvailableWidth - Function to get available width at a Y position
+ * @param initialFontSize - Starting font size
+ * @param minFontSize - Minimum allowed font size
+ * @param maxTextHeight - Maximum allowed text height
+ * @returns Optimal font size that fits all non-last lines
+ */
+const calculateOptimalFontSize = (
+  ctx: CanvasRenderingContext2D,
+  lines: string[],
+  linePositions: number[],
+  getAvailableWidth: (y: number, lineIndex: number) => number,
+  initialFontSize: number,
+  minFontSize: number,
+  maxTextHeight: number
+): number => {
+  let fontSize = initialFontSize;
+  
+  // First, ensure font fits within height constraint
+  ctx.font = `${fontSize}px Sans-Serif`;
+  let textMetrics = ctx.measureText('M');
+  let actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || fontSize;
+  
+  while (actualHeight > maxTextHeight && fontSize > minFontSize) {
+    fontSize = Math.max(minFontSize, fontSize - 0.5);
+    ctx.font = `${fontSize}px Sans-Serif`;
+    textMetrics = ctx.measureText('M');
+    actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || fontSize;
+  }
+  
+  // Then, ensure all non-last lines fit width-wise
+  // Allow font size to go slightly below minimum (to 2px) as last resort to ensure text is visible
+  const absoluteMinFontSize = Math.max(2, minFontSize * 0.4);
+  let attempts = 0;
+  const maxAttempts = 50;
+  let allFit = false;
+  
+  while (!allFit && fontSize >= absoluteMinFontSize && attempts < maxAttempts) {
+    attempts++;
+    allFit = true;
+    ctx.font = `${fontSize}px Sans-Serif`;
+    
+    for (let i = 0; i < lines.length - 1; i++) {
+      const line = lines[i];
+      const lineY = linePositions[i];
+      const availableWidth = getAvailableWidth(lineY, i);
+      const lineWidth = ctx.measureText(line).width;
+      
+      if (lineWidth > availableWidth) {
+        allFit = false;
+        fontSize = Math.max(absoluteMinFontSize, fontSize - 0.5);
+        break;
+      }
+    }
+  }
+  
+  // Ensure we return at least the absolute minimum, but prefer the regular minimum
+  return Math.max(absoluteMinFontSize, fontSize);
+};
+
+/**
+ * Optionally scales font size with zoom level, ensuring it still fits within constraints.
+ * 
+ * @param ctx - Canvas context
+ * @param baseFontSize - Base font size in screen pixels (already scaled by globalScale)
+ * @param lines - Text lines
+ * @param linePositions - Y positions for each line
+ * @param getAvailableWidth - Function to get available width at a Y position
+ * @param globalScale - Current zoom level
+ * @param minFontSize - Minimum allowed font size in screen pixels
+ * @param maxTextHeight - Maximum allowed text height in screen pixels
+ * @returns Scaled font size (or base size if scaling doesn't fit)
+ */
+const applyZoomScaling = (
+  ctx: CanvasRenderingContext2D,
+  baseFontSize: number,
+  lines: string[],
+  linePositions: number[],
+  getAvailableWidth: (y: number, lineIndex: number) => number,
+  globalScale: number,
+  minFontSize: number,
+  maxTextHeight: number
+): number => {
+  // When zoomed out (globalScale < 1), just return base size (already scaled)
+  if (globalScale <= 1) {
+    return baseFontSize;
+  }
+  
+  // When zoomed in moderately (1 < globalScale < 2), try to scale up conservatively
+  if (globalScale >= 2) {
+    return baseFontSize; // Don't scale at high zoom levels
+  }
+  
+  const scaledFontSize = baseFontSize * (1 + Math.log(globalScale) * 0.1);
+  let testFontSize = Math.max(minFontSize, scaledFontSize);
+  const maxIterations = 100;
+  const reductionStep = 0.15;
+  let iterations = 0;
+  
+  while (testFontSize >= baseFontSize && iterations < maxIterations) {
+    iterations++;
+    ctx.font = `${testFontSize}px Sans-Serif`;
+    
+    // Check height constraint
+    const textMetrics = ctx.measureText('M');
+    const actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || testFontSize;
+    if (actualHeight > maxTextHeight) {
+      testFontSize = Math.max(baseFontSize, testFontSize - reductionStep);
+      continue;
+    }
+    
+    // Check width constraints for non-last lines
+    const safetyMargin = 8;
+    let allFit = true;
+    for (let i = 0; i < lines.length - 1; i++) {
+      const line = lines[i];
+      const lineY = linePositions[i];
+      const availableWidth = getAvailableWidth(lineY, i);
+      const lineWidth = ctx.measureText(line).width;
+      
+      if (lineWidth + safetyMargin > availableWidth) {
+        allFit = false;
+        break;
+      }
+    }
+    
+    if (allFit) {
+      return testFontSize;
+    }
+    
+    testFontSize = Math.max(baseFontSize, testFontSize - reductionStep);
+  }
+  
+  return baseFontSize;
+};
+
+/**
+ * Truncates a line of text to fit within available width, adding ellipsis if needed.
+ * 
+ * @param ctx - Canvas context
+ * @param line - Text line to truncate
+ * @param maxWidth - Maximum available width
+ * @returns Truncated line with ellipsis if needed
+ */
+const truncateLine = (
+  ctx: CanvasRenderingContext2D,
+  line: string,
+  maxWidth: number
+): string => {
+  const ellipsis = '...';
+  const ellipsisWidth = ctx.measureText(ellipsis).width;
+  const maxLineWidth = maxWidth - ellipsisWidth;
+  
+  if (ctx.measureText(line).width <= maxWidth) {
+    return line;
+  }
+  
+  let truncated = line;
+  while (truncated.length > 0 && ctx.measureText(truncated + ellipsis).width > maxLineWidth) {
+    truncated = truncated.substring(0, truncated.length - 1);
+  }
+  
+  return truncated + ellipsis;
+};
+
+/**
+ * Calculates the optimal font size for text within a node, ensuring it fits within height constraints.
+ * 
+ * This function ensures font size scales proportionally with node size at all zoom levels.
+ * The font size is calculated as a fixed percentage of the section height, ensuring consistent
+ * text-to-row-height ratio regardless of zoom level.
+ * 
+ * @param ctx - Canvas rendering context for measuring text
+ * @param sectionHeightScreen - Section height in screen pixels (1/5 of node diameter * zoom)
+ * @param nodeDiameterScreen - Node diameter in screen pixels (for additional safety cap)
+ * @param minFontSize - Minimum font size to ensure visibility (in screen pixels)
+ * @returns Optimal font size that fits within constraints (scales proportionally with node)
+ */
+const calculateOptimalTitleFontSize = (
+  ctx: CanvasRenderingContext2D,
+  sectionHeightScreen: number,
+  nodeDiameterScreen: number,
+  minFontSize: number
+): number => {
+  // Maximum text height per line - fixed percentage of section height
+  // Use 30% to ensure text never exceeds section height
+  const maxTextHeight = sectionHeightScreen * 0.30;
+  
+  // Helper to measure ACTUAL rendered text height for a given font size
+  // This measures what will actually be rendered, which is what matters
+  const getActualTextHeight = (fs: number): number => {
+    ctx.font = `${fs}px Sans-Serif`;
+    ctx.textBaseline = 'middle'; // Same as we use for rendering
+    const textMetrics = ctx.measureText('M');
+    // Measure actual bounding box (ascent + descent)
+    const measuredHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+    // If measurement is not available, use conservative estimate
+    return measuredHeight > 0 ? measuredHeight : fs * 1.5;
+  };
+  
+  // GUARANTEED APPROACH: Binary search to find the maximum font size that fits
+  // Start with a reasonable upper bound (20% of section height)
+  let maxFontSize = Math.min(sectionHeightScreen * 0.20, nodeDiameterScreen * 0.04);
+  let minFont = Math.max(3, minFontSize);
+  
+  // Ensure minFont doesn't exceed maxFontSize
+  minFont = Math.min(minFont, maxFontSize);
+  
+  // Binary search: find the largest font size where actual height <= maxTextHeight
+  let bestFontSize = minFont;
+  let low = minFont;
+  let high = maxFontSize;
+  const tolerance = 0.1; // Stop when within 0.1px
+  
+  while (high - low > tolerance) {
+    const mid = (low + high) / 2;
+    const actualHeight = getActualTextHeight(mid);
+    
+    if (actualHeight <= maxTextHeight) {
+      // This font size fits, try larger
+      bestFontSize = mid;
+      low = mid;
+    } else {
+      // This font size is too large, try smaller
+      high = mid;
+    }
+  }
+  
+  // Final verification: measure the chosen font size one more time
+  const finalHeight = getActualTextHeight(bestFontSize);
+  if (finalHeight > maxTextHeight) {
+    // If somehow it still doesn't fit, reduce proportionally
+    const ratio = maxTextHeight / finalHeight;
+    bestFontSize = bestFontSize * ratio * 0.95; // 95% safety margin
+    bestFontSize = Math.max(minFont, Math.min(bestFontSize, maxFontSize));
+  }
+  
+  return bestFontSize;
+};
+
+/**
+ * Draws the title text within a node, displaying only the first 20 characters across 3 lines.
+ * 
+ * Simplified title rendering that:
+ * - Shows only first 20 characters of the title
+ * - Adds ellipsis if title is longer than 20 characters
+ * - Distributes text across up to 3 lines
+ * - Scales reactively with zoom level
+ * - Uses canvas clipping to guarantee text never protrudes outside node circle
+ * 
+ * @param ctx - Canvas rendering context
+ * @param node - Node object with x, y coordinates
+ * @param nodeRadius - Radius of the node in graph coordinates
+ * @param labelStr - Text to display (title/label)
+ * @param fontSize - Base font size (unused, kept for API compatibility)
+ * @param globalScale - Current zoom level (1.0 = no zoom)
+ * @returns Y coordinate of emoji area center (for status indicator positioning)
+ */
+const drawTitle = (
+  ctx: CanvasRenderingContext2D,
+  node: any,
+  nodeRadius: number,
+  labelStr: string,
+  fontSize: number,
+  globalScale: number
+): number => {
+  const nodeDiameter = nodeRadius * 2;
+  const sectionHeight = nodeDiameter / 5; // Each section is 1/5 of diameter
+  const emojiAreaCenterY = calculateEmojiAreaCenterY(node.y, nodeRadius);
+  
+  // Early return if no text
+  if (!labelStr || !labelStr.trim()) {
+    return emojiAreaCenterY;
+  }
+  
+  // Truncate to first 20 characters, replace last 3 chars with ellipsis if longer
+  const MAX_CHARS = 20;
+  const trimmed = labelStr.trim();
+  
+  console.log('[drawTitle] START', { 
+    nodeId: node.id, 
+    originalLabel: labelStr, 
+    trimmed, 
+    trimmedLength: trimmed.length 
+  });
+  
+  // Ensure we have actual text content
+  if (trimmed.length === 0) {
+    console.log('[drawTitle] EARLY RETURN: empty trimmed text');
+    return emojiAreaCenterY;
+  }
+  
+  const displayText = trimmed.length > MAX_CHARS 
+    ? trimmed.substring(0, MAX_CHARS - 3) + '...'  // Replace last 3 chars with ellipsis
+    : trimmed;
+  
+  console.log('[drawTitle] Display text prepared', { 
+    displayText, 
+    displayTextLength: displayText.length,
+    hasEllipsis: displayText.endsWith('...')
+  });
+  
+  // Save current canvas state for clipping
+  ctx.save();
+  
+  // Set up clipping path to ensure text never protrudes outside the node circle
+  ctx.beginPath();
+  ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
+  ctx.clip();
+  
+  try {
+    // Calculate dimensions in screen pixels (accounting for zoom)
+    const sectionHeightScreen = sectionHeight * globalScale;
+    const nodeDiameterScreen = nodeDiameter * globalScale;
+    
+    // Minimum font size as a fixed percentage of section height
+    const minFontSizeRatio = 0.12; // 12% of section height
+    const minFontSize = Math.max(3, sectionHeightScreen * minFontSizeRatio);
+    
+    // Calculate optimal font size that fits within height constraints
+    const optimalFontSize = calculateOptimalTitleFontSize(
+      ctx,
+      sectionHeightScreen,
+      nodeDiameterScreen,
+      minFontSize
+    );
+    
+    // Calculate line positions and available widths
+    const linePositions = calculateLinePositions(node.y, nodeRadius);
+    const getAvailableWidth = (y: number, lineIndex: number): number => {
+      return calculateAvailableTextWidth(y, node.y, nodeRadius, globalScale, 6, lineIndex);
+    };
+    
+    // Helper to distribute text across lines
+    const distributeText = (text: string, targetLines: number): string[] => {
+      console.log('[distributeText] START', { text, textLength: text.length, targetLines });
+      
+      if (!text || text.length === 0) {
+        console.log('[distributeText] EARLY RETURN: empty text');
+        return [];
+      }
+      
+      // If text is short enough, just return it as a single line
+      // Don't break up text that's already short (less than ~10 chars per line would be)
+      if (text.length <= 10) {
+        console.log('[distributeText] Short text, returning as single line', { text });
+        return [text];
+      }
+      
+      const result: string[] = [];
+      const charsPerLine = Math.ceil(text.length / targetLines);
+      const words = text.split(/\s+/);
+      
+      console.log('[distributeText] Distribution params', { 
+        charsPerLine, 
+        wordsCount: words.length, 
+        words 
+      });
+      
+      // Check if text ends with ellipsis - we want to keep it with the last word
+      const hasEllipsis = text.endsWith('...');
+      
+      // Try to break at word boundaries first
+      if (words.length > 1) {
+        let currentLine = '';
+        for (let i = 0; i < words.length; i++) {
+          const word = words[i];
+          const isLastWord = i === words.length - 1;
+          const testLine = currentLine ? `${currentLine} ${word}` : word;
+          
+          // If adding this word would exceed chars per line and we haven't filled all lines yet, start new line
+          // But don't break if this is the last word and it contains ellipsis (keep ellipsis with text)
+          if (testLine.length > charsPerLine && currentLine && result.length < targetLines - 1) {
+            // Don't break if we're on the last word and it has ellipsis
+            if (!(isLastWord && hasEllipsis)) {
+              result.push(currentLine);
+              currentLine = word;
+            } else {
+              currentLine = testLine;
+            }
+          } else {
+            currentLine = testLine;
+          }
+        }
+        if (currentLine) {
+          result.push(currentLine);
+        }
+      } else {
+        // Single word or no spaces - break character by character, but keep ellipsis together
+        if (hasEllipsis && text.length > 3) {
+          // Keep ellipsis with the last chunk - ensure last chunk has at least some text before ellipsis
+          const textWithoutEllipsis = text.substring(0, text.length - 3);
+          const remainingChars = textWithoutEllipsis.length;
+          
+          // If remaining text is very short, don't break it up
+          if (remainingChars <= 7) {
+            console.log('[distributeText] Short text with ellipsis, returning as single line', { text });
+            return [text]; // Return whole text with ellipsis
+          }
+          
+          const charsPerLineForText = Math.ceil(remainingChars / targetLines);
+          
+          for (let i = 0; i < remainingChars; i += charsPerLineForText) {
+            const chunk = textWithoutEllipsis.substring(i, i + charsPerLineForText);
+            if (i + charsPerLineForText >= remainingChars) {
+              // Last chunk - add ellipsis, but ensure it has at least 1 char before ellipsis
+              if (chunk.length > 0) {
+                result.push(chunk + '...');
+              } else {
+                // If chunk is empty, add ellipsis to previous chunk or create a line with at least 1 char
+                if (result.length > 0) {
+                  result[result.length - 1] = result[result.length - 1] + '...';
+                } else {
+                  // This shouldn't happen, but safety check
+                  console.log('[distributeText] WARNING: empty chunk, returning original text', { text });
+                  return [text];
+                }
+              }
+            } else {
+              result.push(chunk);
+            }
+          }
+        } else {
+          // No ellipsis or very short text - break normally
+          for (let i = 0; i < text.length; i += charsPerLine) {
+            result.push(text.substring(i, i + charsPerLine));
+          }
+        }
+      }
+      
+      console.log('[distributeText] Result before filtering', { result, resultLength: result.length });
+      
+      // Return all lines (don't filter - let drawing handle it)
+      const finalResult = result.slice(0, 3); // Max 3 lines
+      console.log('[distributeText] FINAL RESULT', { finalResult, finalResultLength: finalResult.length });
+      
+      return finalResult;
+    };
+    
+    const lines: string[] = [];
+    
+    // Initial distribution
+    let finalFontSize = optimalFontSize;
+    const radiusScaleFactor = 1 - ((nodeRadius - 8) / 8) * 0.05;
+    const maxTextHeight = sectionHeightScreen * 0.28 * radiusScaleFactor;
+    const baseMaxFontSizeCap = Math.min(sectionHeightScreen * 0.18, nodeDiameterScreen * 0.035);
+    const maxFontSizeCap = baseMaxFontSizeCap * radiusScaleFactor;
+    const effectiveMinFontSize = Math.max(3, Math.min(minFontSize, maxFontSizeCap));
+    
+    // Helper to measure actual rendered text height
+    const getActualTextHeight = (fs: number): number => {
+      ctx.font = `${fs}px Sans-Serif`;
+      ctx.textBaseline = 'middle';
+      const metrics = ctx.measureText('M');
+      const measuredHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+      return measuredHeight > 0 ? measuredHeight : fs * 1.5;
+    };
+    
+    // Initial distribution - always call distributeText at least once
+    ctx.font = `${finalFontSize}px Sans-Serif`;
+    const initialDistributed = distributeText(displayText, 3);
+    lines.push(...initialDistributed);
+    
+    console.log('[drawTitle] Initial distribution', {
+      finalFontSize,
+      linesCount: lines.length,
+      lines
+    });
+    
+    // Check if initial distribution fits
+    let allFit = false;
+    if (lines.length > 0) {
+      allFit = true;
+      for (let i = 0; i < lines.length && i < 3; i++) {
+        const line = lines[i];
+        const lineY = linePositions[i];
+        const availableWidth = getAvailableWidth(lineY, i);
+        const lineWidth = ctx.measureText(line).width;
+        if (lineWidth > availableWidth * 0.98) {
+          allFit = false;
+          break;
+        }
+      }
+    }
+    
+    // Adjust font size to fit width constraints
+    let attempts = 0;
+    const maxAttempts = 30;
+    
+    while (!allFit && finalFontSize >= effectiveMinFontSize && attempts < maxAttempts) {
+      attempts++;
+      allFit = true;
+      
+      // Verify height constraint
+      const actualHeight = getActualTextHeight(finalFontSize);
+      if (actualHeight > maxTextHeight) {
+        const ratio = maxTextHeight / actualHeight;
+        finalFontSize = finalFontSize * ratio * 0.90;
+        finalFontSize = Math.max(effectiveMinFontSize, Math.min(finalFontSize, maxFontSizeCap));
+        continue;
+      }
+      
+      // Set font and distribute text
+      ctx.font = `${finalFontSize}px Sans-Serif`;
+      lines.length = 0;
+      const distributed = distributeText(displayText, 3);
+      lines.push(...distributed);
+      
+      console.log('[drawTitle] Font size adjustment loop', {
+        attempt: attempts,
+        finalFontSize,
+        linesCount: lines.length,
+        lines
+      });
+      
+      // Check if all lines fit width-wise
+      for (let i = 0; i < lines.length && i < 3; i++) {
+        const line = lines[i];
+        const lineY = linePositions[i];
+        const availableWidth = getAvailableWidth(lineY, i);
+        const lineWidth = ctx.measureText(line).width;
+        
+        console.log('[drawTitle] Line width check', {
+          lineIndex: i,
+          line,
+          lineY,
+          availableWidth,
+          lineWidth,
+          fits: lineWidth <= availableWidth * 0.98
+        });
+        
+        if (lineWidth > availableWidth * 0.98) {
+          allFit = false;
+          break;
+        }
+      }
+      
+      if (!allFit) {
+        const newFontSize = Math.max(effectiveMinFontSize, finalFontSize - 0.5);
+        const newHeight = getActualTextHeight(newFontSize);
+        if (newHeight <= maxTextHeight) {
+          finalFontSize = Math.min(newFontSize, maxFontSizeCap);
+        } else {
+          break;
+        }
+      }
+    }
+    
+    // Final font size verification
+    let actualHeight = getActualTextHeight(finalFontSize);
+    if (actualHeight > maxTextHeight) {
+      const ratio = maxTextHeight / actualHeight;
+      finalFontSize = finalFontSize * ratio * 0.90;
+      finalFontSize = Math.max(effectiveMinFontSize, Math.min(finalFontSize, maxFontSizeCap));
+      ctx.font = `${finalFontSize}px Sans-Serif`;
+      lines.length = 0;
+      const distributed = distributeText(displayText, 3);
+      lines.push(...distributed);
+    }
+    
+    // Set font for drawing
+    ctx.font = `${finalFontSize}px Sans-Serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffffff';
+    
+    console.log('[drawTitle] FINAL DRAWING STATE', {
+      finalFontSize,
+      linesCount: lines.length,
+      lines,
+      nodeX: node.x,
+      nodeY: node.y,
+      nodeRadius,
+      globalScale
+    });
+    
+    // Draw each line
+    for (let i = 0; i < 3 && i < lines.length; i++) {
+      const line = lines[i];
+      
+      console.log('[drawTitle] Drawing line', {
+        lineIndex: i,
+        line,
+        lineLength: line ? line.length : 0,
+        lineTrimmed: line ? line.trim() : null
+      });
+      
+      if (!line || !line.trim()) {
+        console.log('[drawTitle] Skipping empty line', { lineIndex: i, line });
+        continue;
+      }
+      
+      const lineY = linePositions[i];
+      const availableWidth = getAvailableWidth(lineY, i);
+      const lineWidth = ctx.measureText(line).width;
+      
+      console.log('[drawTitle] Line measurements', {
+        lineIndex: i,
+        line,
+        lineY,
+        availableWidth,
+        lineWidth,
+        needsTruncation: lineWidth > availableWidth * 0.98
+      });
+      
+      // Truncate if line doesn't fit
+      if (lineWidth > availableWidth * 0.98) {
+        const truncated = truncateLine(ctx, line, availableWidth * 0.98);
+        console.log('[drawTitle] Truncating line', {
+          lineIndex: i,
+          original: line,
+          truncated,
+          truncatedLength: truncated ? truncated.length : 0
+        });
+        
+        if (truncated && truncated.trim().length > 0) {
+          console.log('[drawTitle] Drawing truncated line', {
+            lineIndex: i,
+            truncated,
+            x: node.x,
+            y: lineY
+          });
+          ctx.fillText(truncated, node.x, lineY);
+        } else {
+          console.log('[drawTitle] NOT drawing truncated line (empty result)', {
+            lineIndex: i,
+            truncated
+          });
+        }
+        break;
+      } else {
+        console.log('[drawTitle] Drawing line as-is', {
+          lineIndex: i,
+          line,
+          x: node.x,
+          y: lineY
+        });
+        ctx.fillText(line, node.x, lineY);
+      }
+    }
+    
+    console.log('[drawTitle] DRAWING COMPLETE', { nodeId: node.id });
+  } finally {
+    // Always restore canvas state (removes clipping)
+    ctx.restore();
+  }
+  
+  return emojiAreaCenterY;
+};
+
+/**
+ * Calculates the font size for status indicators (leaf emoji or expansion arrows).
+ * 
+ * Feature: Status indicator sizing
+ * Use case: Determines appropriate font size for status indicators based on node size and zoom level
+ *           - Ensures indicators fit within the bottom section (1/5 of node diameter)
+ *           - Uses conservative scaling to maintain readability
+ * 
+ * @param nodeRadius - Radius of the node
+ * @param isTextLabel - Whether this is a text label (leaf emoji) or arrow (parent node)
+ * @param globalScale - Current zoom level
+ * @returns Font size in pixels for the status indicator
+ */
+const calculateIndicatorFontSize = (
+  nodeRadius: number,
+  isTextLabel: boolean,
+  globalScale: number
+): number => {
+  const nodeDiameter = nodeRadius * 2;
+  const bottomSectionHeight = nodeDiameter / 5; // Bottom section is 1/5 of diameter
+  const maxIndicatorSize = bottomSectionHeight * 0.4; // Use 40% of section height
+  
+  // Use different multipliers for text labels vs arrows
+  // Reduced leaf emoji size from 0.35 to 0.25 for better fit
+  const baseSizeMultiplier = isTextLabel ? 0.25 : 0.20;
+  const indicatorScale = globalScale > 1
+    ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
+    : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
+  const baseIndicatorFontSize = nodeRadius * baseSizeMultiplier * indicatorScale;
+  
+  // Clamp indicator size to fit within bottom section
+  return Math.max(3, Math.min(maxIndicatorSize, baseIndicatorFontSize));
+};
+
+/**
+ * Draws the status indicator (leaf emoji or expansion arrow) in the bottom section of a node.
+ * 
+ * Feature: Node status visualization
+ * Use case: Displays visual indicators for node state:
+ *           - Leaf nodes: Shows leaf emoji (🌿)
+ *           - Parent nodes: Shows expansion arrow (▶ collapsed, ▼ expanded)
+ * 
+ * @param ctx - Canvas rendering context
+ * @param nodeX - X coordinate of node center
+ * @param emojiAreaCenterY - Y coordinate for the center of the bottom section
+ * @param statusIndicator - The symbol/emoji to display
+ * @param isTextLabel - Whether this is a text label (leaf) or arrow (parent)
+ * @param nodeRadius - Radius of the node (for calculating font size)
+ * @param indicatorFontSize - Font size for arrows (for parent nodes)
+ */
+const drawStatusIndicator = (
+  ctx: CanvasRenderingContext2D,
+  nodeX: number,
+  emojiAreaCenterY: number,
+  statusIndicator: string,
+  isTextLabel: boolean,
+  nodeRadius: number,
+  indicatorFontSize: number
+): void => {
+  if (isTextLabel) {
+    // For leaf emoji, calculate font size based on section height
+    const nodeDiameter = nodeRadius * 2;
+    const sectionHeight = nodeDiameter / 5;
+    const textFontSize = sectionHeight * 0.15; // 15% of section height (reduced from 0.18 for smaller emoji)
+    ctx.font = `${textFontSize}px Sans-Serif`;
+  } else {
+    // For arrows, use the provided indicator font size
+    ctx.font = `${indicatorFontSize}px Sans-Serif`;
+  }
+  
+  // Draw text/arrow centered in bottom section
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(statusIndicator, nodeX, emojiAreaCenterY);
+};
+
 const GraphRenderer: React.FC<GraphRendererProps> = ({ 
   data, 
   width = 800, 
@@ -432,7 +1657,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     currentGraphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
-        const nodeRadius = node.hasChildren ? 12 : 8;
+        const nodeRadius = getNodeRadius(node.hasChildren);
         minX = Math.min(minX, node.x - nodeRadius);
         minY = Math.min(minY, node.y - nodeRadius);
         maxX = Math.max(maxX, node.x + nodeRadius);
@@ -529,7 +1754,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     currentGraphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
-        const nodeRadius = node.hasChildren ? 12 : 8;
+        const nodeRadius = getNodeRadius(node.hasChildren);
         const nodeDiameter = nodeRadius * 2;
         
         // Check if node is within viewport bounds
@@ -585,9 +1810,9 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         .width(graphWidth)
         .height(graphHeight)
         .backgroundColor(backgroundColor)
-        .nodeLabel((node: any) => `${node.title || node.name || node.id}`)
-        .nodeVal((node: any) => node.hasChildren ? 12 : 8)
-        .nodeColor((node: any) => node.color || '#68BDF6')
+        .nodeLabel((node: any) => getNodeLabel(node))
+        .nodeVal((node: any) => getNodeRadius(node.hasChildren))
+        .nodeColor((node: any) => getNodeColor(node.color))
         .linkColor(() => linkColor)
         .linkWidth((link: any) => Math.max(2, Math.sqrt(link.value || 1) * 2))
         .linkDirectionalArrowLength(6)
@@ -596,7 +1821,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         .d3Force('link', d3.forceLink().id((d: any) => d.id).distance(50))
         .d3Force('charge', d3.forceManyBody().strength(-200))
         .d3Force('collision', d3.forceCollide().radius((d: any) => {
-          const nodeRadius = d.hasChildren ? 12 : 8;
+          const nodeRadius = getNodeRadius(d.hasChildren);
           return nodeRadius + 5; // Add padding around nodes
         }))
         .onNodeClick((node: any) => {
@@ -672,219 +1897,40 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         })
         .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
           // Skip rendering if node coordinates are not valid
-          if (node.x === undefined || node.y === undefined || 
-              !isFinite(node.x) || !isFinite(node.y)) {
+          if (!isValidNodeCoordinates(node)) {
             return;
           }
           
-          const label = node.title || node.name || node.id;
+          const label = getNodeLabel(node);
           const isHighlighted = highlightedNodeId === node.id;
-          const nodeRadius = node.hasChildren ? 12 : 8;
+          const nodeRadius = getNodeRadius(node.hasChildren);
+          const nodeColor = getNodeColor(node.color);
           
-          // Draw highlight glow for highlighted nodes
-          if (isHighlighted) {
-            const glowRadius = nodeRadius + 4;
-            const gradient = ctx.createRadialGradient(node.x, node.y, nodeRadius, node.x, node.y, glowRadius);
-            gradient.addColorStop(0, isDarkMode ? 'rgba(255, 215, 0, 0.8)' : 'rgba(255, 215, 0, 0.6)');
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, glowRadius, 0, 2 * Math.PI, false);
-            ctx.fill();
-          }
+          // Draw node circle and border using helper function
+          drawNodeCircle(ctx, node.x, node.y, nodeRadius, nodeColor, isHighlighted, isDarkMode, nodeBorderColor, globalScale);
           
-          // Draw node circle
-          ctx.fillStyle = node.color || '#68BDF6';
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI, false);
-          ctx.fill();
+          // Draw debug section separators if enabled
+          drawDebugSectionSeparators(ctx, node.x, node.y, nodeRadius, globalScale);
           
-          // Draw node border (thicker and colored for highlighted nodes)
-          if (isHighlighted) {
-            ctx.strokeStyle = isDarkMode ? '#FFD700' : '#FFA500';
-            ctx.lineWidth = 4 / globalScale;
+          // Determine status indicator using helper function
+          const { statusIndicator, isTextLabel } = getNodeStatusIndicator(node.hasChildren, node.isExpanded || false);
+          
+          // Calculate indicator font size using shared helper function
+          const indicatorFontSize = calculateIndicatorFontSize(nodeRadius, isTextLabel, globalScale);
+          
+          // Show title for all nodes (both parent and leaf)
+          const labelStr = String(label || node.id || '');
+          if (labelStr) {
+            // Draw title and get emoji area center Y
+            // Note: drawTitle calculates its own font size, so fontSize parameter is unused
+            const emojiAreaCenterY = drawTitle(ctx, node, nodeRadius, labelStr, 0, globalScale);
+            
+            // Draw status indicator in bottom section
+            drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
           } else {
-            ctx.strokeStyle = nodeBorderColor;
-            ctx.lineWidth = 2 / globalScale;
-          }
-          ctx.stroke();
-          
-          // Draw emoji indicator and text inside node
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
-          // Determine emoji based on node type
-          let emoji: string;
-          if (node.hasChildren) {
-            emoji = node.isExpanded ? '▼' : '▶'; // Expanded vs collapsed (down arrow vs right arrow)
-          } else {
-            emoji = '🍃'; // Leaf node
-          }
-          
-          // Scale font size proportionally to node radius and zoom level
-          // Best practice: Use logarithmic scaling to maintain good text-to-node ratio
-          // Base font size proportional to node radius
-          const baseFontSize = nodeRadius * 0.4; // Proportional to node size
-          
-          // Use logarithmic scaling for text: grows slower than linear zoom
-          // This keeps text readable and proportional to node size at all zoom levels
-          // Handle both zoom in (globalScale > 1) and zoom out (globalScale < 1)
-          const textScale = globalScale > 1 
-            ? 1 + Math.log(globalScale) * 0.4  // Logarithmic growth when zoomed in
-            : Math.max(0.5, globalScale * 0.8); // Linear scaling when zoomed out (but slower)
-          const fontSize = Math.max(5, Math.min(12, baseFontSize * textScale)); // Clamp between 5-12px
-          
-          // Emoji uses even more conservative scaling
-          const emojiScale = globalScale > 1
-            ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
-            : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
-          const emojiFontSize = Math.max(5, Math.min(10, nodeRadius * 0.35 * emojiScale)); // Reduced from 0.5 to 0.35, and max from 14 to 10
-          
-          // Only show title for leaf nodes
-          if (!node.hasChildren) {
-            // Ensure we have a label to display
-            const labelStr = String(label || node.id || '');
-            if (!labelStr) return; // Skip if no label at all
-            
-            // Set font before measuring (important for accurate measurements)
-            ctx.font = `${fontSize}px Sans-Serif`;
-            
-            // Calculate available width for title (full diameter minus padding)
-            // Use actual node size - text must stay within node boundaries
-            // Font size uses logarithmic scaling, so when zoomed in, text grows slower than zoom,
-            // allowing more characters to fit naturally without scaling available width
-            const padding = 6; // Fixed padding in screen pixels
-            const availableWidth = (nodeRadius * 2) - padding;
-            
-            // Measure text and truncate if needed (only need to fit title now)
-            let displayLabel = labelStr;
-            let textWidth = ctx.measureText(displayLabel).width;
-            
-            // Only truncate if text is actually too wide for the available space
-            // Since font size uses logarithmic scaling, when zoomed in enough, the text will
-            // naturally fit within the node and ellipsis will disappear
-            if (textWidth > availableWidth && labelStr.length > 0) {
-              const ellipsis = '...';
-              ctx.font = `${fontSize}px Sans-Serif`; // Ensure font is set for measurement
-              const ellipsisWidth = ctx.measureText(ellipsis).width;
-              const maxTextWidth = availableWidth - ellipsisWidth;
-              
-              // Binary search for the right length - ensure text + ellipsis fits within node
-              let low = 0;
-              let high = labelStr.length;
-              while (low < high) {
-                const mid = Math.floor((low + high) / 2);
-                const truncated = labelStr.substring(0, mid) + ellipsis;
-                textWidth = ctx.measureText(truncated).width;
-                
-                if (textWidth <= maxTextWidth) {
-                  low = mid + 1;
-                } else {
-                  high = mid;
-                }
-              }
-              displayLabel = labelStr.substring(0, Math.max(0, low - 1)) + ellipsis;
-              // Verify final width doesn't exceed available width
-              textWidth = ctx.measureText(displayLabel).width;
-              if (textWidth > availableWidth) {
-                // If still too wide, truncate more aggressively
-                displayLabel = ellipsis;
-              }
-            }
-            
-            // Always render title if we have a label (remove fontSize check to ensure visibility)
-            if (displayLabel) {
-              // Calculate vertical spacing - title at center of node, badge at bottom
-              const titleY = node.y; // Title at center of node
-              
-              // Badge should be at bottom of node and not exceed 1/20 of node diameter
-              const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
-              const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
-              const badgeRadius = badgeSize / 2;
-              
-              // Position badge at bottom of node with small margin
-              const margin = 2;
-              const maxBadgeBottom = node.y + nodeRadius - margin;
-              let emojiY = maxBadgeBottom - badgeRadius; // Badge at bottom
-              
-              // Ensure badge doesn't overlap with title
-              const titleBottom = node.y + fontSize / 2;
-              if (emojiY - badgeRadius <= titleBottom) {
-                // Badge would overlap with title, skip badge rendering
-                emojiY = null; // Use null as flag to skip badge
-              }
-              
-              // Draw title at center of node
-              ctx.font = `${fontSize}px Sans-Serif`;
-              
-              // Add text shadow for better visibility
-              ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-              ctx.shadowBlur = 2;
-              ctx.shadowOffsetX = 0.5;
-              ctx.shadowOffsetY = 0.5;
-              
-              ctx.fillStyle = '#ffffff';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(displayLabel, node.x, titleY);
-              
-              // Reset shadow
-              ctx.shadowColor = 'transparent';
-              ctx.shadowBlur = 0;
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 0;
-              
-              // Draw emoji below title (only if it fits within node)
-              if (emojiY !== null) {
-                // Draw emoji - centered horizontally, at bottom of node
-                ctx.font = `${emojiFontSize}px Sans-Serif`;
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                // Move emoji up slightly to keep it within node
-                const emojiOffsetY = 1; // Small upward offset
-                ctx.fillText(emoji, node.x, emojiY - emojiOffsetY);
-              }
-            }
-          } else {
-            // For nodes with children, only show emoji badge (no title)
-            // Badge should be at bottom of node and not exceed 1/20 of node diameter
-            const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
-            const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
-            const badgeRadius = badgeSize / 2;
-            
-            // Position badge at bottom of node with small margin
-            const margin = 2;
-            const badgeY = node.y + nodeRadius - margin - badgeRadius; // Badge at bottom
-            
-            // Draw badge background (rounded rectangle)
-            ctx.fillStyle = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)';
-            const badgeX = node.x - badgeRadius;
-            const cornerRadius = badgeRadius * 0.3;
-            ctx.beginPath();
-            ctx.moveTo(badgeX + cornerRadius, badgeY);
-            ctx.lineTo(badgeX + badgeSize - cornerRadius, badgeY);
-            ctx.quadraticCurveTo(badgeX + badgeSize, badgeY, badgeX + badgeSize, badgeY + cornerRadius);
-            ctx.lineTo(badgeX + badgeSize, badgeY + badgeSize - cornerRadius);
-            ctx.quadraticCurveTo(badgeX + badgeSize, badgeY + badgeSize, badgeX + badgeSize - cornerRadius, badgeY + badgeSize);
-            ctx.lineTo(badgeX + cornerRadius, badgeY + badgeSize);
-            ctx.quadraticCurveTo(badgeX, badgeY + badgeSize, badgeX, badgeY + badgeSize - cornerRadius);
-            ctx.lineTo(badgeX, badgeY + cornerRadius);
-            ctx.quadraticCurveTo(badgeX, badgeY, badgeX + cornerRadius, badgeY);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Draw badge border
-            ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // Draw emoji in badge
-            ctx.font = `${emojiFontSize}px Sans-Serif`;
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(emoji, node.x, node.y);
+            // No label, just show status indicator
+            const emojiAreaCenterY = calculateEmojiAreaCenterY(node.y, nodeRadius);
+            drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
           }
         })
         .linkCanvasObjectMode(() => 'after')
@@ -1046,218 +2092,43 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       // Update node canvas object to use theme-aware colors
       graphRef.current.nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
         // Skip rendering if node coordinates are not valid
-        if (node.x === undefined || node.y === undefined || 
-            !isFinite(node.x) || !isFinite(node.y)) {
+        if (!isValidNodeCoordinates(node)) {
           return;
         }
         
-        const label = node.title || node.name || node.id;
+        const label = getNodeLabel(node);
         const isHighlighted = highlightedNodeId === node.id;
-        const nodeRadius = node.hasChildren ? 12 : 8;
+        const nodeRadius = getNodeRadius(node.hasChildren);
+        const nodeColor = getNodeColor(node.color);
         
-        // Draw highlight glow for highlighted nodes
-        if (isHighlighted) {
-          const glowRadius = nodeRadius + 4;
-          const gradient = ctx.createRadialGradient(node.x, node.y, nodeRadius, node.x, node.y, glowRadius);
-          gradient.addColorStop(0, isDarkMode ? 'rgba(255, 215, 0, 0.8)' : 'rgba(255, 215, 0, 0.6)');
-          gradient.addColorStop(1, 'transparent');
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, glowRadius, 0, 2 * Math.PI, false);
-          ctx.fill();
-        }
+        // Draw node circle and border using helper function
+        drawNodeCircle(ctx, node.x, node.y, nodeRadius, nodeColor, isHighlighted, isDarkMode, nodeBorderColor, globalScale);
         
-        // Draw node circle
-        ctx.fillStyle = node.color || '#68BDF6';
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI, false);
-        ctx.fill();
+        // Draw debug section separators if enabled
+        drawDebugSectionSeparators(ctx, node.x, node.y, nodeRadius, globalScale);
         
-        // Draw node border (thicker and colored for highlighted nodes)
-        if (isHighlighted) {
-          ctx.strokeStyle = isDarkMode ? '#FFD700' : '#FFA500';
-          ctx.lineWidth = 4 / globalScale;
-        } else {
-          ctx.strokeStyle = nodeBorderColor;
-          ctx.lineWidth = 2 / globalScale;
-        }
-        ctx.stroke();
-        
-        // Draw emoji indicator and text inside node
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        // Determine emoji based on node type
+        // Determine status indicator using helper function
         // Check expanded state directly from expandedNodes to ensure it's up to date
         const isExpanded = expandedNodes.has(node.id);
-        let emoji: string;
-        if (node.hasChildren) {
-          emoji = isExpanded ? '▼' : '▶'; // Expanded vs collapsed (down arrow vs right arrow)
+        const { statusIndicator, isTextLabel } = getNodeStatusIndicator(node.hasChildren, isExpanded);
+        
+        // Calculate indicator font size using shared helper function
+        const indicatorFontSize = calculateIndicatorFontSize(nodeRadius, isTextLabel, globalScale);
+        
+        // Show title for all nodes (both parent and leaf)
+        const labelStr = String(label || node.id || '');
+        if (labelStr) {
+          // Draw title and get emoji area center Y
+          // Note: drawTitle calculates its own font size, so fontSize parameter is unused
+          const emojiAreaCenterY = drawTitle(ctx, node, nodeRadius, labelStr, 0, globalScale);
+          
+          // Draw status indicator in bottom section
+          drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
         } else {
-          emoji = '🌿'; // Laf node
+          // No label, just show status indicator
+          const emojiAreaCenterY = calculateEmojiAreaCenterY(node.y, nodeRadius);
+          drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
         }
-        
-        // Scale font size proportionally to node radius and zoom level
-        // Best practice: Use logarithmic scaling to maintain good text-to-node ratio
-        // Base font size proportional to node radius
-        const baseFontSize = nodeRadius * 0.4; // Proportional to node size
-        
-        // Use logarithmic scaling for text: grows slower than linear zoom
-        // This keeps text readable and proportional to node size at all zoom levels
-        // Handle both zoom in (globalScale > 1) and zoom out (globalScale < 1)
-        const textScale = globalScale > 1 
-          ? 1 + Math.log(globalScale) * 0.4  // Logarithmic growth when zoomed in
-          : Math.max(0.5, globalScale * 0.8); // Linear scaling when zoomed out (but slower)
-        const fontSize = Math.max(5, Math.min(12, baseFontSize * textScale)); // Clamp between 5-12px
-        
-        // Emoji uses even more conservative scaling
-        const emojiScale = globalScale > 1
-          ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
-          : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
-        const emojiFontSize = Math.max(5, Math.min(10, nodeRadius * 0.35 * emojiScale)); // Reduced from 0.5 to 0.35, and max from 14 to 10
-        
-        // Only show title for leaf nodes
-        if (!node.hasChildren) {
-          // Ensure we have a label to display
-          const labelStr = String(label || node.id || '');
-          if (!labelStr) return; // Skip if no label at all
-          
-          // Set font before measuring (important for accurate measurements)
-          ctx.font = `${fontSize}px Sans-Serif`;
-          
-          // Calculate available width for title (full diameter minus padding)
-          // Use actual node size - text must stay within node boundaries
-          // Font size uses logarithmic scaling, so when zoomed in, text grows slower than zoom,
-          // allowing more characters to fit naturally without scaling available width
-          const padding = 6; // Fixed padding in screen pixels
-          const availableWidth = (nodeRadius * 2) - padding;
-          
-          // Measure text and truncate if needed (only need to fit title now)
-          let displayLabel = labelStr;
-          let textWidth = ctx.measureText(displayLabel).width;
-          
-          // Only truncate if text is actually too wide for the available space
-          // Since font size uses logarithmic scaling, when zoomed in enough, the text will
-          // naturally fit within the node and ellipsis will disappear
-          if (textWidth > availableWidth && labelStr.length > 0) {
-            const ellipsis = '...';
-            ctx.font = `${fontSize}px Sans-Serif`; // Ensure font is set for measurement
-            const ellipsisWidth = ctx.measureText(ellipsis).width;
-            const maxTextWidth = availableWidth - ellipsisWidth;
-            
-            // Binary search for the right length - ensure text + ellipsis fits within node
-            let low = 0;
-            let high = labelStr.length;
-            while (low < high) {
-              const mid = Math.floor((low + high) / 2);
-              const truncated = labelStr.substring(0, mid) + ellipsis;
-              textWidth = ctx.measureText(truncated).width;
-              
-              if (textWidth <= maxTextWidth) {
-                low = mid + 1;
-              } else {
-                high = mid;
-              }
-            }
-            displayLabel = labelStr.substring(0, Math.max(0, low - 1)) + ellipsis;
-            // Verify final width doesn't exceed available width
-            textWidth = ctx.measureText(displayLabel).width;
-            if (textWidth > availableWidth) {
-              // If still too wide, truncate more aggressively
-              displayLabel = ellipsis;
-            }
-          }
-          
-          // Always render title if we have a label (remove fontSize check to ensure visibility)
-          if (displayLabel) {
-            // Calculate vertical spacing - title at center of node, badge at bottom
-            const titleY = node.y; // Title at center of node
-            
-            // Badge should be at bottom of node and not exceed 1/20 of node diameter
-            const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
-            const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
-            const badgeRadius = badgeSize / 2;
-            
-            // Position badge at bottom of node with small margin
-            const margin = 2;
-            const maxBadgeBottom = node.y + nodeRadius - margin;
-            let emojiY = maxBadgeBottom - badgeRadius; // Badge at bottom
-            
-            // Ensure badge doesn't overlap with title
-            const titleBottom = node.y + fontSize / 2;
-            if (emojiY - badgeRadius <= titleBottom) {
-              // Badge would overlap with title, skip badge rendering
-              emojiY = null; // Use null as flag to skip badge
-            }
-            
-            // Draw title at center of node
-            ctx.font = `${fontSize}px Sans-Serif`;
-            
-            // Add text shadow for better visibility
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-            ctx.shadowBlur = 2;
-            ctx.shadowOffsetX = 0.5;
-            ctx.shadowOffsetY = 0.5;
-            
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(displayLabel, node.x, titleY);
-            
-            // Reset shadow
-            ctx.shadowColor = 'transparent';
-            ctx.shadowBlur = 0;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-            
-            // Draw emoji badge below title (only if it fits within node)
-            if (emojiY !== null) {
-              // Draw badge background (rounded rectangle) - centered at emojiY
-              ctx.fillStyle = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)';
-              const badgeX = node.x - badgeRadius;
-              const badgeY = emojiY - badgeRadius; // Center badge at emojiY
-              const cornerRadius = badgeRadius * 0.3;
-              ctx.beginPath();
-              ctx.moveTo(badgeX + cornerRadius, badgeY);
-              ctx.lineTo(badgeX + badgeSize - cornerRadius, badgeY);
-              ctx.quadraticCurveTo(badgeX + badgeSize, badgeY, badgeX + badgeSize, badgeY + cornerRadius);
-              ctx.lineTo(badgeX + badgeSize, badgeY + badgeSize - cornerRadius);
-              ctx.quadraticCurveTo(badgeX + badgeSize, badgeY + badgeSize, badgeX + badgeSize - cornerRadius, badgeY + badgeSize);
-              ctx.lineTo(badgeX + cornerRadius, badgeY + badgeSize);
-              ctx.quadraticCurveTo(badgeX, badgeY + badgeSize, badgeX, badgeY + badgeSize - cornerRadius);
-              ctx.lineTo(badgeX, badgeY + cornerRadius);
-              ctx.quadraticCurveTo(badgeX, badgeY, badgeX + cornerRadius, badgeY);
-              ctx.closePath();
-              ctx.fill();
-              
-              // Draw badge border
-              ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
-              ctx.lineWidth = 1;
-              ctx.stroke();
-              
-              // Draw emoji in badge - centered both horizontally and vertically
-              ctx.font = `${emojiFontSize}px Sans-Serif`;
-              ctx.fillStyle = '#ffffff';
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(emoji, node.x, emojiY);
-            }
-          }
-          } else {
-            // For nodes with children, only show emoji (no title)
-            // Position emoji at bottom of node with small margin
-            const margin = 2;
-            const emojiY = node.y + nodeRadius - margin - emojiFontSize / 2; // Emoji at bottom
-            
-            // Draw emoji - centered horizontally, at bottom of node
-            ctx.font = `${emojiFontSize}px Sans-Serif`;
-            ctx.fillStyle = '#ffffff';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            // Move emoji up slightly to keep it within node
-            const emojiOffsetY = 1; // Small upward offset
-            ctx.fillText(emoji, node.x, emojiY - emojiOffsetY);
-          }
       });
       
       // Add edge rendering with labels
