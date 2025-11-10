@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react';
 import ForceGraph from 'force-graph';
 import { useColorMode } from '@docusaurus/theme-common';
+import * as d3 from 'd3-force';
 
 interface Node {
   id: string;
@@ -17,6 +18,7 @@ interface Link {
   target: string;
   value?: number;
   label?: string;
+  id?: string; // Optional ID for anchor links
 }
 
 interface GraphData {
@@ -29,6 +31,7 @@ interface GraphRendererProps {
   width?: number;
   height?: number;
   highlightNodeId?: string; // Optional node ID to highlight
+  highlightEdgeId?: string; // Optional edge ID to highlight
   graphId?: string; // Optional unique ID for this graph instance (for URL hash support)
 }
 
@@ -49,16 +52,21 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   width = 800, 
   height = 600,
   highlightNodeId: propHighlightNodeId,
+  highlightEdgeId: propHighlightEdgeId,
   graphId = 'graph'
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<any>(null);
   const outerContainerRef = useRef<HTMLDivElement>(null);
+  const isAdjustingZoomRef = useRef<boolean>(false);
+  const previousZoomRef = useRef<number>(1);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [selectedEdge, setSelectedEdge] = useState<any>(null);
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
+  const [highlightedEdgeId, setHighlightedEdgeId] = useState<string | null>(null);
   const [paneVisible, setPaneVisible] = useState<boolean>(true);
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId?: string; edgeId?: string } | null>(null);
   const rightClickPositionRef = useRef<{ x: number; y: number } | null>(null);
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === 'dark';
@@ -93,6 +101,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           source: parentId,
           target: node.id,
           value: 1,
+          id: `${parentId}-${node.id}`, // Generate ID for parent-child links
         });
       }
 
@@ -109,12 +118,13 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     });
 
     // Add original links
-    data.links.forEach(link => {
+    data.links.forEach((link, index) => {
       flattenedLinks.push({
         source: link.source,
         target: link.target,
         value: link.value ?? 1,
         label: link.label,
+        id: link.id || `${link.source}-${link.target}-${index}`, // Generate ID if not provided
       });
     });
 
@@ -204,8 +214,16 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   }, []);
 
   // Copy anchor link to clipboard
-  const copyAnchorLink = useCallback(async (nodeId: string) => {
-    const anchorLink = `${window.location.origin}${window.location.pathname}#${graphId}-node-${nodeId}`;
+  const copyAnchorLink = useCallback(async (nodeId?: string, edgeId?: string) => {
+    let anchorLink: string;
+    if (nodeId) {
+      anchorLink = `${window.location.origin}${window.location.pathname}#${graphId}-node-${nodeId}`;
+    } else if (edgeId) {
+      anchorLink = `${window.location.origin}${window.location.pathname}#${graphId}-edge-${edgeId}`;
+    } else {
+      return;
+    }
+    
     try {
       await navigator.clipboard.writeText(anchorLink);
       // Close context menu
@@ -296,15 +314,35 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     setHighlightedNodeId(nodeId);
   }, [data.nodes, findPathToNode]);
 
+  // Highlight a specific edge
+  const highlightEdge = useCallback((edgeId: string, scrollToGraph = false) => {
+    if (!edgeId) return;
+    
+    // Scroll to graph if requested (for anchor links)
+    if (scrollToGraph && outerContainerRef.current) {
+      outerContainerRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+    
+    // Set highlighted edge
+    setHighlightedEdgeId(edgeId);
+  }, []);
+
   // Handle URL hash changes
   useEffect(() => {
-    const hashPrefix = `#${graphId}-node-`;
+    const nodeHashPrefix = `#${graphId}-node-`;
+    const edgeHashPrefix = `#${graphId}-edge-`;
     
     const checkHash = () => {
       const hash = window.location.hash;
-      if (hash.startsWith(hashPrefix)) {
-        const nodeId = hash.substring(hashPrefix.length);
+      if (hash.startsWith(nodeHashPrefix)) {
+        const nodeId = hash.substring(nodeHashPrefix.length);
         highlightNode(nodeId, true); // Scroll to graph when hash changes
+      } else if (hash.startsWith(edgeHashPrefix)) {
+        const edgeId = hash.substring(edgeHashPrefix.length);
+        highlightEdge(edgeId, true); // Scroll to graph when hash changes
       }
     };
     
@@ -317,7 +355,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     return () => {
       window.removeEventListener('hashchange', checkHash);
     };
-  }, [graphId, highlightNode]);
+  }, [graphId, highlightNode, highlightEdge]);
 
   // Handle prop-based highlighting
   useEffect(() => {
@@ -325,6 +363,12 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       highlightNode(propHighlightNodeId);
     }
   }, [propHighlightNodeId, highlightNode]);
+
+  useEffect(() => {
+    if (propHighlightEdgeId) {
+      highlightEdge(propHighlightEdgeId);
+    }
+  }, [propHighlightEdgeId, highlightEdge]);
 
   // Re-center on highlighted node when graph data updates (after expansion)
   useEffect(() => {
@@ -373,6 +417,150 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     graphRef.current.height(graphHeight);
   }, [width, height, paneVisible]);
 
+  // Calculate bounding box of all visible nodes
+  const calculateNodeBoundingBox = useCallback(() => {
+    if (!graphRef.current) return null;
+    
+    const currentGraphData = graphRef.current.graphData();
+    if (!currentGraphData || !currentGraphData.nodes || currentGraphData.nodes.length === 0) {
+      return null;
+    }
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let validNodes = 0;
+
+    currentGraphData.nodes.forEach((node: any) => {
+      if (node.x !== undefined && node.y !== undefined && 
+          isFinite(node.x) && isFinite(node.y)) {
+        const nodeRadius = node.hasChildren ? 12 : 8;
+        minX = Math.min(minX, node.x - nodeRadius);
+        minY = Math.min(minY, node.y - nodeRadius);
+        maxX = Math.max(maxX, node.x + nodeRadius);
+        maxY = Math.max(maxY, node.y + nodeRadius);
+        validNodes++;
+      }
+    });
+
+    if (validNodes === 0) return null;
+
+    return {
+      minX,
+      minY,
+      maxX,
+      maxY,
+      width: maxX - minX,
+      height: maxY - minY,
+      centerX: (minX + maxX) / 2,
+      centerY: (minY + maxY) / 2,
+    };
+  }, []);
+
+  // Check if zoom out would make cluster < 25% of viewport
+  const canZoomOut = useCallback((newZoom: number) => {
+    if (!graphRef.current || !containerRef.current) return true;
+    
+    const bbox = calculateNodeBoundingBox();
+    if (!bbox) return true;
+
+    const containerElement = containerRef.current.parentElement;
+    if (!containerElement) return true;
+    
+    const actualWidth = containerElement.offsetWidth || width;
+    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+    const graphWidth = actualWidth - panelWidth;
+    const graphHeight = height - menuBarHeight;
+
+    // Calculate what the bounding box would be at the new zoom level
+    // The bounding box size in screen space = bbox size * zoom
+    const screenWidth = bbox.width * newZoom;
+    const screenHeight = bbox.height * newZoom;
+
+    // Calculate percentage of viewport
+    const viewportArea = graphWidth * graphHeight;
+    const clusterArea = screenWidth * screenHeight;
+    const percentage = (clusterArea / viewportArea) * 100;
+
+    // Allow zoom out if cluster would still be >= 25% of viewport
+    return percentage >= 25;
+  }, [calculateNodeBoundingBox, width, height, paneVisible]);
+
+  // Check if zoom in would result in only one node visible
+  // Allow zooming in much more - only prevent if a single node would take up >90% of viewport
+  const canZoomIn = useCallback((newZoom: number) => {
+    if (!graphRef.current || !containerRef.current) return true;
+    
+    const currentGraphData = graphRef.current.graphData();
+    if (!currentGraphData || !currentGraphData.nodes || currentGraphData.nodes.length <= 1) {
+      return true; // If there's only one node or none, allow zoom
+    }
+
+    const containerElement = containerRef.current.parentElement;
+    if (!containerElement) return true;
+    
+    const actualWidth = containerElement.offsetWidth || width;
+    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+    const graphWidth = actualWidth - panelWidth;
+    const graphHeight = height - menuBarHeight;
+
+    // Calculate viewport bounds in graph coordinates at new zoom
+    const viewportGraphWidth = graphWidth / newZoom;
+    const viewportGraphHeight = graphHeight / newZoom;
+
+    // Get the current camera position
+    let centerX: number, centerY: number;
+    
+    if (graphRef.current.screen2GraphCoords) {
+      const center = graphRef.current.screen2GraphCoords(graphWidth / 2, graphHeight / 2);
+      centerX = center.x;
+      centerY = center.y;
+    } else {
+      const bbox = calculateNodeBoundingBox();
+      if (!bbox) return true;
+      centerX = bbox.centerX;
+      centerY = bbox.centerY;
+    }
+
+    const halfWidth = viewportGraphWidth / 2;
+    const halfHeight = viewportGraphHeight / 2;
+
+    // Count visible nodes and find the largest node in viewport
+    let visibleNodes = 0;
+    let maxNodeSize = 0;
+    currentGraphData.nodes.forEach((node: any) => {
+      if (node.x !== undefined && node.y !== undefined && 
+          isFinite(node.x) && isFinite(node.y)) {
+        const nodeRadius = node.hasChildren ? 12 : 8;
+        const nodeDiameter = nodeRadius * 2;
+        
+        // Check if node is within viewport bounds
+        if (node.x - nodeRadius >= centerX - halfWidth &&
+            node.x + nodeRadius <= centerX + halfWidth &&
+            node.y - nodeRadius >= centerY - halfHeight &&
+            node.y + nodeRadius <= centerY + halfHeight) {
+          visibleNodes++;
+          maxNodeSize = Math.max(maxNodeSize, nodeDiameter);
+        }
+      }
+    });
+
+    // Allow zoom in unless a single node would take up more than 90% of viewport
+    if (visibleNodes === 1) {
+      // Calculate the screen size of the node at the new zoom level
+      const nodeScreenSize = maxNodeSize * newZoom;
+      // Calculate the viewport size in screen coordinates
+      const viewportScreenSize = Math.min(graphWidth, graphHeight);
+      const nodePercentage = (nodeScreenSize / viewportScreenSize) * 100;
+      
+      // Prevent zoom if node would take up more than 90% of viewport
+      if (nodePercentage >= 90) {
+        return false;
+      }
+    }
+
+    // If multiple nodes visible, always allow zoom
+    return true;
+  }, [calculateNodeBoundingBox, width, height, paneVisible]);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -380,8 +568,8 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     const backgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
     const borderColor = isDarkMode ? '#333' : '#e0e0e0';
     const textColor = isDarkMode ? '#ffffff' : '#1a1a1a';
-    const linkColor = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)';
-    const arrowColor = isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.4)';
+    const linkColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
+    const arrowColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
     const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
 
     // Get actual container width (use parent container if available, otherwise use prop)
@@ -401,17 +589,31 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         .nodeVal((node: any) => node.hasChildren ? 12 : 8)
         .nodeColor((node: any) => node.color || '#68BDF6')
         .linkColor(() => linkColor)
-        .linkWidth((link: any) => Math.sqrt(link.value || 1))
+        .linkWidth((link: any) => Math.max(2, Math.sqrt(link.value || 1) * 2))
         .linkDirectionalArrowLength(6)
         .linkDirectionalArrowRelPos(1)
         .linkDirectionalArrowColor(() => arrowColor)
+        .d3Force('link', d3.forceLink().id((d: any) => d.id).distance(50))
+        .d3Force('charge', d3.forceManyBody().strength(-200))
+        .d3Force('collision', d3.forceCollide().radius((d: any) => {
+          const nodeRadius = d.hasChildren ? 12 : 8;
+          return nodeRadius + 5; // Add padding around nodes
+        }))
         .onNodeClick((node: any) => {
           // Clear context menu if open
           setContextMenu(null);
           
-          // Clear highlight if clicking a different node
-          if (highlightedNodeId && highlightedNodeId !== node.id) {
-            setHighlightedNodeId(null);
+          // Clear edge highlight if any
+          if (highlightedEdgeId) {
+            setHighlightedEdgeId(null);
+          }
+          
+          // Highlight the clicked node
+          setHighlightedNodeId(node.id);
+          
+          // Update URL fragment to reflect the selected node
+          if (graphId) {
+            window.location.hash = `#${graphId}-node-${node.id}`;
           }
           
           // Single click - toggle expansion if has children, otherwise select
@@ -420,6 +622,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           }
           // Always select the node to show details
           setSelectedNode(node);
+          setSelectedEdge(null);
         })
         .onNodeRightClick((node: any) => {
           // Use the stored right-click position
@@ -427,7 +630,36 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
             setContextMenu({ 
               x: rightClickPositionRef.current.x, 
               y: rightClickPositionRef.current.y, 
-              nodeId: node.id 
+              nodeId: node.id,
+              edgeId: undefined
+            });
+            rightClickPositionRef.current = null;
+          }
+        })
+        .onLinkClick((link: any) => {
+          // Clear context menu if open
+          setContextMenu(null);
+          
+          // Clear highlights if clicking a different edge
+          if (highlightedEdgeId && highlightedEdgeId !== link.id) {
+            setHighlightedEdgeId(null);
+          }
+          if (highlightedNodeId) {
+            setHighlightedNodeId(null);
+          }
+          
+          // Select the edge
+          setSelectedEdge(link);
+          setSelectedNode(null);
+        })
+        .onLinkRightClick((link: any) => {
+          // Use the stored right-click position
+          if (rightClickPositionRef.current) {
+            setContextMenu({ 
+              x: rightClickPositionRef.current.x, 
+              y: rightClickPositionRef.current.y, 
+              edgeId: link.id,
+              nodeId: undefined
             });
             rightClickPositionRef.current = null;
           }
@@ -446,11 +678,6 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           }
           
           const label = node.title || node.name || node.id;
-          const fontSize = 12 / globalScale;
-          ctx.font = `${fontSize}px Sans-Serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
           const isHighlighted = highlightedNodeId === node.id;
           const nodeRadius = node.hasChildren ? 12 : 8;
           
@@ -482,22 +709,281 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           }
           ctx.stroke();
           
-          // Draw expand/collapse indicator for nodes with children
+          // Draw emoji indicator and text inside node
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          // Determine emoji based on node type
+          let emoji: string;
           if (node.hasChildren) {
-            ctx.fillStyle = textColor;
-            ctx.font = `${10 / globalScale}px Sans-Serif`;
-            ctx.fillText(node.isExpanded ? '−' : '+', node.x, node.y);
+            emoji = node.isExpanded ? '▼' : '▶'; // Expanded vs collapsed (down arrow vs right arrow)
+          } else {
+            emoji = '🍃'; // Leaf node
           }
           
-          // Draw label below node
-          ctx.fillStyle = textColor;
-          ctx.font = `${fontSize}px Sans-Serif`;
-          const labelY = node.y + nodeRadius + fontSize + 2;
-          ctx.fillText(label, node.x, labelY);
+          // Scale font size proportionally to node radius and zoom level
+          // Best practice: Use logarithmic scaling to maintain good text-to-node ratio
+          // Base font size proportional to node radius
+          const baseFontSize = nodeRadius * 0.4; // Proportional to node size
+          
+          // Use logarithmic scaling for text: grows slower than linear zoom
+          // This keeps text readable and proportional to node size at all zoom levels
+          // Handle both zoom in (globalScale > 1) and zoom out (globalScale < 1)
+          const textScale = globalScale > 1 
+            ? 1 + Math.log(globalScale) * 0.4  // Logarithmic growth when zoomed in
+            : Math.max(0.5, globalScale * 0.8); // Linear scaling when zoomed out (but slower)
+          const fontSize = Math.max(5, Math.min(12, baseFontSize * textScale)); // Clamp between 5-12px
+          
+          // Emoji uses even more conservative scaling
+          const emojiScale = globalScale > 1
+            ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
+            : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
+          const emojiFontSize = Math.max(5, Math.min(10, nodeRadius * 0.35 * emojiScale)); // Reduced from 0.5 to 0.35, and max from 14 to 10
+          
+          // Only show title for leaf nodes
+          if (!node.hasChildren) {
+            // Ensure we have a label to display
+            const labelStr = String(label || node.id || '');
+            if (!labelStr) return; // Skip if no label at all
+            
+            // Set font before measuring (important for accurate measurements)
+            ctx.font = `${fontSize}px Sans-Serif`;
+            
+            // Calculate available width for title (full diameter minus padding)
+            // Use actual node size - text must stay within node boundaries
+            // Font size uses logarithmic scaling, so when zoomed in, text grows slower than zoom,
+            // allowing more characters to fit naturally without scaling available width
+            const padding = 6; // Fixed padding in screen pixels
+            const availableWidth = (nodeRadius * 2) - padding;
+            
+            // Measure text and truncate if needed (only need to fit title now)
+            let displayLabel = labelStr;
+            let textWidth = ctx.measureText(displayLabel).width;
+            
+            // Only truncate if text is actually too wide for the available space
+            // Since font size uses logarithmic scaling, when zoomed in enough, the text will
+            // naturally fit within the node and ellipsis will disappear
+            if (textWidth > availableWidth && labelStr.length > 0) {
+              const ellipsis = '...';
+              ctx.font = `${fontSize}px Sans-Serif`; // Ensure font is set for measurement
+              const ellipsisWidth = ctx.measureText(ellipsis).width;
+              const maxTextWidth = availableWidth - ellipsisWidth;
+              
+              // Binary search for the right length - ensure text + ellipsis fits within node
+              let low = 0;
+              let high = labelStr.length;
+              while (low < high) {
+                const mid = Math.floor((low + high) / 2);
+                const truncated = labelStr.substring(0, mid) + ellipsis;
+                textWidth = ctx.measureText(truncated).width;
+                
+                if (textWidth <= maxTextWidth) {
+                  low = mid + 1;
+                } else {
+                  high = mid;
+                }
+              }
+              displayLabel = labelStr.substring(0, Math.max(0, low - 1)) + ellipsis;
+              // Verify final width doesn't exceed available width
+              textWidth = ctx.measureText(displayLabel).width;
+              if (textWidth > availableWidth) {
+                // If still too wide, truncate more aggressively
+                displayLabel = ellipsis;
+              }
+            }
+            
+            // Always render title if we have a label (remove fontSize check to ensure visibility)
+            if (displayLabel) {
+              // Calculate vertical spacing - title at center of node, badge at bottom
+              const titleY = node.y; // Title at center of node
+              
+              // Badge should be at bottom of node and not exceed 1/20 of node diameter
+              const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
+              const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
+              const badgeRadius = badgeSize / 2;
+              
+              // Position badge at bottom of node with small margin
+              const margin = 2;
+              const maxBadgeBottom = node.y + nodeRadius - margin;
+              let emojiY = maxBadgeBottom - badgeRadius; // Badge at bottom
+              
+              // Ensure badge doesn't overlap with title
+              const titleBottom = node.y + fontSize / 2;
+              if (emojiY - badgeRadius <= titleBottom) {
+                // Badge would overlap with title, skip badge rendering
+                emojiY = null; // Use null as flag to skip badge
+              }
+              
+              // Draw title at center of node
+              ctx.font = `${fontSize}px Sans-Serif`;
+              
+              // Add text shadow for better visibility
+              ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+              ctx.shadowBlur = 2;
+              ctx.shadowOffsetX = 0.5;
+              ctx.shadowOffsetY = 0.5;
+              
+              ctx.fillStyle = '#ffffff';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(displayLabel, node.x, titleY);
+              
+              // Reset shadow
+              ctx.shadowColor = 'transparent';
+              ctx.shadowBlur = 0;
+              ctx.shadowOffsetX = 0;
+              ctx.shadowOffsetY = 0;
+              
+              // Draw emoji below title (only if it fits within node)
+              if (emojiY !== null) {
+                // Draw emoji - centered horizontally, at bottom of node
+                ctx.font = `${emojiFontSize}px Sans-Serif`;
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                // Move emoji up slightly to keep it within node
+                const emojiOffsetY = 1; // Small upward offset
+                ctx.fillText(emoji, node.x, emojiY - emojiOffsetY);
+              }
+            }
+          } else {
+            // For nodes with children, only show emoji badge (no title)
+            // Badge should be at bottom of node and not exceed 1/20 of node diameter
+            const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
+            const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
+            const badgeRadius = badgeSize / 2;
+            
+            // Position badge at bottom of node with small margin
+            const margin = 2;
+            const badgeY = node.y + nodeRadius - margin - badgeRadius; // Badge at bottom
+            
+            // Draw badge background (rounded rectangle)
+            ctx.fillStyle = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)';
+            const badgeX = node.x - badgeRadius;
+            const cornerRadius = badgeRadius * 0.3;
+            ctx.beginPath();
+            ctx.moveTo(badgeX + cornerRadius, badgeY);
+            ctx.lineTo(badgeX + badgeSize - cornerRadius, badgeY);
+            ctx.quadraticCurveTo(badgeX + badgeSize, badgeY, badgeX + badgeSize, badgeY + cornerRadius);
+            ctx.lineTo(badgeX + badgeSize, badgeY + badgeSize - cornerRadius);
+            ctx.quadraticCurveTo(badgeX + badgeSize, badgeY + badgeSize, badgeX + badgeSize - cornerRadius, badgeY + badgeSize);
+            ctx.lineTo(badgeX + cornerRadius, badgeY + badgeSize);
+            ctx.quadraticCurveTo(badgeX, badgeY + badgeSize, badgeX, badgeY + badgeSize - cornerRadius);
+            ctx.lineTo(badgeX, badgeY + cornerRadius);
+            ctx.quadraticCurveTo(badgeX, badgeY, badgeX + cornerRadius, badgeY);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw badge border
+            ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw emoji in badge
+            ctx.font = `${emojiFontSize}px Sans-Serif`;
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, node.x, node.y);
+          }
+        })
+        .linkCanvasObjectMode(() => 'after')
+        .linkCanvasObject((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+          const isHighlighted = highlightedEdgeId === link.id;
+          
+          // Draw edge label if it exists
+          if (link.label && link.source && link.target) {
+            // Get nodes from the graph's current data
+            const currentData = graphRef.current?.graphData();
+            const startNode = currentData?.nodes?.find((n: any) => n.id === link.source);
+            const endNode = currentData?.nodes?.find((n: any) => n.id === link.target);
+            
+            if (startNode && endNode && 
+                startNode.x !== undefined && startNode.y !== undefined &&
+                endNode.x !== undefined && endNode.y !== undefined &&
+                isFinite(startNode.x) && isFinite(startNode.y) &&
+                isFinite(endNode.x) && isFinite(endNode.y)) {
+              // Calculate midpoint of the edge
+              const midX = (startNode.x + endNode.x) / 2;
+              const midY = (startNode.y + endNode.y) / 2;
+              
+              // Draw background for label
+              const fontSize = 10 / globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              const textWidth = ctx.measureText(link.label).width;
+              const padding = 4 / globalScale;
+              
+              ctx.fillStyle = isHighlighted 
+                ? (isDarkMode ? 'rgba(255, 215, 0, 0.9)' : 'rgba(255, 215, 0, 0.9)')
+                : (isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+              ctx.fillRect(
+                midX - textWidth / 2 - padding,
+                midY - fontSize / 2 - padding,
+                textWidth + padding * 2,
+                fontSize + padding * 2
+              );
+              
+              // Draw label text
+              ctx.fillStyle = isHighlighted
+                ? (isDarkMode ? '#000000' : '#000000')
+                : (isDarkMode ? '#ffffff' : '#1a1a1a');
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(link.label, midX, midY);
+            }
+          }
+        })
+        .linkColor((link: any) => {
+          if (highlightedEdgeId === link.id) {
+            return isDarkMode ? '#FFD700' : '#FFA500';
+          }
+          return linkColor;
+        })
+        .linkWidth((link: any) => {
+          const baseWidth = Math.sqrt(link.value || 1);
+          return highlightedEdgeId === link.id ? baseWidth * 2 : baseWidth;
         })
         .cooldownTicks(100)
         .onEngineStop(() => {
           // Graph has stabilized
+        })
+        .onZoom((transform: { k: number; x: number; y: number }) => {
+          // Intercept zoom changes and enforce limits
+          if (!graphRef.current || isAdjustingZoomRef.current) {
+            previousZoomRef.current = transform.k;
+            return;
+          }
+          
+          const newZoom = transform.k;
+          const previousZoom = previousZoomRef.current;
+          
+          // Check zoom limits
+          if (newZoom < previousZoom) {
+            // Zooming out - check if allowed
+            if (!canZoomOut(newZoom)) {
+              // Prevent zoom out - revert to previous zoom
+              isAdjustingZoomRef.current = true;
+              graphRef.current.zoom(previousZoom, 0);
+              setTimeout(() => {
+                isAdjustingZoomRef.current = false;
+              }, 10);
+              return;
+            }
+          } else if (newZoom > previousZoom) {
+            // Zooming in - check if allowed
+            if (!canZoomIn(newZoom)) {
+              // Prevent zoom in - revert to previous zoom
+              isAdjustingZoomRef.current = true;
+              graphRef.current.zoom(previousZoom, 0);
+              setTimeout(() => {
+                isAdjustingZoomRef.current = false;
+              }, 10);
+              return;
+            }
+          }
+          
+          // Update previous zoom if zoom was allowed
+          previousZoomRef.current = newZoom;
         });
     }
 
@@ -509,6 +995,54 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       graphRef.current.linkColor(() => linkColor);
       graphRef.current.linkDirectionalArrowColor(() => arrowColor);
       
+      // Ensure onZoom callback is set (in case it was overwritten)
+      graphRef.current.onZoom((transform: { k: number; x: number; y: number }) => {
+        // Intercept zoom changes and enforce limits
+        if (!graphRef.current || isAdjustingZoomRef.current) {
+          previousZoomRef.current = transform.k;
+          return;
+        }
+        
+        const newZoom = transform.k;
+        const previousZoom = previousZoomRef.current;
+        
+        // Check zoom limits
+        if (newZoom < previousZoom) {
+          // Zooming out - check if allowed
+          if (!canZoomOut(newZoom)) {
+            // Prevent zoom out - revert to previous zoom
+            isAdjustingZoomRef.current = true;
+            graphRef.current.zoom(previousZoom, 0);
+            setTimeout(() => {
+              isAdjustingZoomRef.current = false;
+            }, 10);
+            return;
+          }
+        } else if (newZoom > previousZoom) {
+          // Zooming in - check if allowed
+          if (!canZoomIn(newZoom)) {
+            // Prevent zoom in - revert to previous zoom
+            isAdjustingZoomRef.current = true;
+            graphRef.current.zoom(previousZoom, 0);
+            setTimeout(() => {
+              isAdjustingZoomRef.current = false;
+            }, 10);
+            return;
+          }
+        }
+        
+        // Update previous zoom if zoom was allowed
+        previousZoomRef.current = newZoom;
+      });
+      
+      // Initialize previous zoom ref if not set
+      if (previousZoomRef.current === 1) {
+        const currentZoom = graphRef.current.zoom();
+        if (currentZoom) {
+          previousZoomRef.current = currentZoom;
+        }
+      }
+      
       // Update node canvas object to use theme-aware colors
       graphRef.current.nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
         // Skip rendering if node coordinates are not valid
@@ -518,11 +1052,6 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         }
         
         const label = node.title || node.name || node.id;
-        const fontSize = 12 / globalScale;
-        ctx.font = `${fontSize}px Sans-Serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
         const isHighlighted = highlightedNodeId === node.id;
         const nodeRadius = node.hasChildren ? 12 : 8;
         
@@ -554,18 +1083,242 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         }
         ctx.stroke();
         
-        // Draw expand/collapse indicator for nodes with children
+        // Draw emoji indicator and text inside node
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Determine emoji based on node type
+        // Check expanded state directly from expandedNodes to ensure it's up to date
+        const isExpanded = expandedNodes.has(node.id);
+        let emoji: string;
         if (node.hasChildren) {
-          ctx.fillStyle = textColor;
-          ctx.font = `${10 / globalScale}px Sans-Serif`;
-          ctx.fillText(node.isExpanded ? '−' : '+', node.x, node.y);
+          emoji = isExpanded ? '▼' : '▶'; // Expanded vs collapsed (down arrow vs right arrow)
+        } else {
+          emoji = '🌿'; // Laf node
         }
         
-        // Draw label below node
-        ctx.fillStyle = textColor;
-        ctx.font = `${fontSize}px Sans-Serif`;
-        const labelY = node.y + nodeRadius + fontSize + 2;
-        ctx.fillText(label, node.x, labelY);
+        // Scale font size proportionally to node radius and zoom level
+        // Best practice: Use logarithmic scaling to maintain good text-to-node ratio
+        // Base font size proportional to node radius
+        const baseFontSize = nodeRadius * 0.4; // Proportional to node size
+        
+        // Use logarithmic scaling for text: grows slower than linear zoom
+        // This keeps text readable and proportional to node size at all zoom levels
+        // Handle both zoom in (globalScale > 1) and zoom out (globalScale < 1)
+        const textScale = globalScale > 1 
+          ? 1 + Math.log(globalScale) * 0.4  // Logarithmic growth when zoomed in
+          : Math.max(0.5, globalScale * 0.8); // Linear scaling when zoomed out (but slower)
+        const fontSize = Math.max(5, Math.min(12, baseFontSize * textScale)); // Clamp between 5-12px
+        
+        // Emoji uses even more conservative scaling
+        const emojiScale = globalScale > 1
+          ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
+          : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
+        const emojiFontSize = Math.max(5, Math.min(10, nodeRadius * 0.35 * emojiScale)); // Reduced from 0.5 to 0.35, and max from 14 to 10
+        
+        // Only show title for leaf nodes
+        if (!node.hasChildren) {
+          // Ensure we have a label to display
+          const labelStr = String(label || node.id || '');
+          if (!labelStr) return; // Skip if no label at all
+          
+          // Set font before measuring (important for accurate measurements)
+          ctx.font = `${fontSize}px Sans-Serif`;
+          
+          // Calculate available width for title (full diameter minus padding)
+          // Use actual node size - text must stay within node boundaries
+          // Font size uses logarithmic scaling, so when zoomed in, text grows slower than zoom,
+          // allowing more characters to fit naturally without scaling available width
+          const padding = 6; // Fixed padding in screen pixels
+          const availableWidth = (nodeRadius * 2) - padding;
+          
+          // Measure text and truncate if needed (only need to fit title now)
+          let displayLabel = labelStr;
+          let textWidth = ctx.measureText(displayLabel).width;
+          
+          // Only truncate if text is actually too wide for the available space
+          // Since font size uses logarithmic scaling, when zoomed in enough, the text will
+          // naturally fit within the node and ellipsis will disappear
+          if (textWidth > availableWidth && labelStr.length > 0) {
+            const ellipsis = '...';
+            ctx.font = `${fontSize}px Sans-Serif`; // Ensure font is set for measurement
+            const ellipsisWidth = ctx.measureText(ellipsis).width;
+            const maxTextWidth = availableWidth - ellipsisWidth;
+            
+            // Binary search for the right length - ensure text + ellipsis fits within node
+            let low = 0;
+            let high = labelStr.length;
+            while (low < high) {
+              const mid = Math.floor((low + high) / 2);
+              const truncated = labelStr.substring(0, mid) + ellipsis;
+              textWidth = ctx.measureText(truncated).width;
+              
+              if (textWidth <= maxTextWidth) {
+                low = mid + 1;
+              } else {
+                high = mid;
+              }
+            }
+            displayLabel = labelStr.substring(0, Math.max(0, low - 1)) + ellipsis;
+            // Verify final width doesn't exceed available width
+            textWidth = ctx.measureText(displayLabel).width;
+            if (textWidth > availableWidth) {
+              // If still too wide, truncate more aggressively
+              displayLabel = ellipsis;
+            }
+          }
+          
+          // Always render title if we have a label (remove fontSize check to ensure visibility)
+          if (displayLabel) {
+            // Calculate vertical spacing - title at center of node, badge at bottom
+            const titleY = node.y; // Title at center of node
+            
+            // Badge should be at bottom of node and not exceed 1/20 of node diameter
+            const maxBadgeSize = (nodeRadius * 2) / 20; // 1/20 of node diameter
+            const badgeSize = Math.min(emojiFontSize * 1.2, maxBadgeSize); // Limit badge size
+            const badgeRadius = badgeSize / 2;
+            
+            // Position badge at bottom of node with small margin
+            const margin = 2;
+            const maxBadgeBottom = node.y + nodeRadius - margin;
+            let emojiY = maxBadgeBottom - badgeRadius; // Badge at bottom
+            
+            // Ensure badge doesn't overlap with title
+            const titleBottom = node.y + fontSize / 2;
+            if (emojiY - badgeRadius <= titleBottom) {
+              // Badge would overlap with title, skip badge rendering
+              emojiY = null; // Use null as flag to skip badge
+            }
+            
+            // Draw title at center of node
+            ctx.font = `${fontSize}px Sans-Serif`;
+            
+            // Add text shadow for better visibility
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 0.5;
+            ctx.shadowOffsetY = 0.5;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(displayLabel, node.x, titleY);
+            
+            // Reset shadow
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            
+            // Draw emoji badge below title (only if it fits within node)
+            if (emojiY !== null) {
+              // Draw badge background (rounded rectangle) - centered at emojiY
+              ctx.fillStyle = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.15)';
+              const badgeX = node.x - badgeRadius;
+              const badgeY = emojiY - badgeRadius; // Center badge at emojiY
+              const cornerRadius = badgeRadius * 0.3;
+              ctx.beginPath();
+              ctx.moveTo(badgeX + cornerRadius, badgeY);
+              ctx.lineTo(badgeX + badgeSize - cornerRadius, badgeY);
+              ctx.quadraticCurveTo(badgeX + badgeSize, badgeY, badgeX + badgeSize, badgeY + cornerRadius);
+              ctx.lineTo(badgeX + badgeSize, badgeY + badgeSize - cornerRadius);
+              ctx.quadraticCurveTo(badgeX + badgeSize, badgeY + badgeSize, badgeX + badgeSize - cornerRadius, badgeY + badgeSize);
+              ctx.lineTo(badgeX + cornerRadius, badgeY + badgeSize);
+              ctx.quadraticCurveTo(badgeX, badgeY + badgeSize, badgeX, badgeY + badgeSize - cornerRadius);
+              ctx.lineTo(badgeX, badgeY + cornerRadius);
+              ctx.quadraticCurveTo(badgeX, badgeY, badgeX + cornerRadius, badgeY);
+              ctx.closePath();
+              ctx.fill();
+              
+              // Draw badge border
+              ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              
+              // Draw emoji in badge - centered both horizontally and vertically
+              ctx.font = `${emojiFontSize}px Sans-Serif`;
+              ctx.fillStyle = '#ffffff';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(emoji, node.x, emojiY);
+            }
+          }
+          } else {
+            // For nodes with children, only show emoji (no title)
+            // Position emoji at bottom of node with small margin
+            const margin = 2;
+            const emojiY = node.y + nodeRadius - margin - emojiFontSize / 2; // Emoji at bottom
+            
+            // Draw emoji - centered horizontally, at bottom of node
+            ctx.font = `${emojiFontSize}px Sans-Serif`;
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            // Move emoji up slightly to keep it within node
+            const emojiOffsetY = 1; // Small upward offset
+            ctx.fillText(emoji, node.x, emojiY - emojiOffsetY);
+          }
+      });
+      
+      // Add edge rendering with labels
+      graphRef.current.linkCanvasObjectMode(() => 'after');
+      graphRef.current.linkCanvasObject((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+        const isHighlighted = highlightedEdgeId === link.id;
+        
+        // Draw edge label if it exists
+        if (link.label && link.source && link.target) {
+          // Get nodes from the graph's current data
+          const currentData = graphRef.current?.graphData();
+          const startNode = currentData?.nodes?.find((n: any) => n.id === link.source);
+          const endNode = currentData?.nodes?.find((n: any) => n.id === link.target);
+          
+          if (startNode && endNode && 
+              startNode.x !== undefined && startNode.y !== undefined &&
+              endNode.x !== undefined && endNode.y !== undefined &&
+              isFinite(startNode.x) && isFinite(startNode.y) &&
+              isFinite(endNode.x) && isFinite(endNode.y)) {
+            // Calculate midpoint of the edge
+            const midX = (startNode.x + endNode.x) / 2;
+            const midY = (startNode.y + endNode.y) / 2;
+            
+            // Draw background for label
+            const fontSize = 10 / globalScale;
+            ctx.font = `${fontSize}px Sans-Serif`;
+            const textWidth = ctx.measureText(link.label).width;
+            const padding = 4 / globalScale;
+            
+            ctx.fillStyle = isHighlighted 
+              ? (isDarkMode ? 'rgba(255, 215, 0, 0.9)' : 'rgba(255, 215, 0, 0.9)')
+              : (isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+            ctx.fillRect(
+              midX - textWidth / 2 - padding,
+              midY - fontSize / 2 - padding,
+              textWidth + padding * 2,
+              fontSize + padding * 2
+            );
+            
+            // Draw label text
+            ctx.fillStyle = isHighlighted
+              ? (isDarkMode ? '#000000' : '#000000')
+              : (isDarkMode ? '#ffffff' : '#1a1a1a');
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(link.label, midX, midY);
+          }
+        }
+      });
+      
+      // Update link color based on highlight
+      graphRef.current.linkColor((link: any) => {
+        if (highlightedEdgeId === link.id) {
+          return isDarkMode ? '#FFD700' : '#FFA500';
+        }
+        return linkColor;
+      });
+      
+      graphRef.current.linkWidth((link: any) => {
+        const baseWidth = Math.sqrt(link.value || 1);
+        return highlightedEdgeId === link.id ? baseWidth * 2 : baseWidth;
       });
       
       // Force a redraw by reheating the simulation
@@ -594,16 +1347,107 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       }
     };
 
+    // Handle wheel events to enforce zoom limits (using capture phase to intercept before force-graph)
+    const handleWheel = (event: WheelEvent) => {
+      if (!graphRef.current || !containerRef.current) return;
+
+      const currentZoom = graphRef.current.zoom() || 1;
+      // Calculate zoom factor from wheel delta
+      // Force-graph typically uses a zoom factor of ~1.1 per wheel step
+      const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+      const newZoom = currentZoom * zoomFactor;
+
+      // Check if zoom is allowed
+      if (zoomFactor > 1) {
+        // Zooming in
+        if (!canZoomIn(newZoom)) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          return false;
+        }
+        
+        // If there's a highlighted node, zoom into it instead of cursor position
+        if (highlightedNodeId) {
+          const currentGraphData = graphRef.current.graphData();
+          const highlightedNode = currentGraphData?.nodes?.find((n: any) => n.id === highlightedNodeId);
+          
+          if (highlightedNode && 
+              highlightedNode.x !== undefined && highlightedNode.y !== undefined &&
+              isFinite(highlightedNode.x) && isFinite(highlightedNode.y)) {
+            // Prevent default zoom behavior
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Manually zoom and center on the highlighted node
+            isAdjustingZoomRef.current = true;
+            graphRef.current.zoom(newZoom, 100);
+            graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+            
+            setTimeout(() => {
+              isAdjustingZoomRef.current = false;
+              previousZoomRef.current = newZoom;
+            }, 150);
+            
+            return false;
+          }
+        }
+      } else {
+        // Zooming out
+        if (!canZoomOut(newZoom)) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          return false;
+        }
+        
+        // If there's a highlighted node, keep it centered while zooming out
+        if (highlightedNodeId) {
+          const currentGraphData = graphRef.current.graphData();
+          const highlightedNode = currentGraphData?.nodes?.find((n: any) => n.id === highlightedNodeId);
+          
+          if (highlightedNode && 
+              highlightedNode.x !== undefined && highlightedNode.y !== undefined &&
+              isFinite(highlightedNode.x) && isFinite(highlightedNode.y)) {
+            // Prevent default zoom behavior
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+            
+            // Manually zoom and center on the highlighted node
+            isAdjustingZoomRef.current = true;
+            graphRef.current.zoom(newZoom, 100);
+            graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+            
+            setTimeout(() => {
+              isAdjustingZoomRef.current = false;
+              previousZoomRef.current = newZoom;
+            }, 150);
+            
+            return false;
+          }
+        }
+      }
+    };
+
     // Get the canvas element and add context menu listener
     // Use a small delay to ensure canvas is rendered
     const setupCanvasListener = () => {
       const canvas = containerRef.current?.querySelector('canvas');
       if (canvas) {
         canvas.addEventListener('contextmenu', handleCanvasContextMenu);
+        // Use capture phase to intercept wheel events before force-graph handles them
+        canvas.addEventListener('wheel', handleWheel, { passive: false, capture: true });
         return canvas;
       }
       return null;
     };
+    
+    // Also add wheel listener to container with capture to catch events early
+    if (containerRef.current) {
+      containerRef.current.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    }
 
     let canvas: HTMLCanvasElement | null = null;
     const timeoutId = setTimeout(() => {
@@ -616,13 +1460,17 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       resizeObserver.disconnect();
       if (canvas) {
         canvas.removeEventListener('contextmenu', handleCanvasContextMenu);
+        canvas.removeEventListener('wheel', handleWheel, { capture: true } as any);
+      }
+      if (containerRef.current) {
+        containerRef.current.removeEventListener('wheel', handleWheel, { capture: true } as any);
       }
       if (graphRef.current) {
         graphRef.current._destructor();
         graphRef.current = null;
       }
     };
-  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth, paneVisible, highlightedNodeId]);
+  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth, paneVisible, highlightedNodeId, highlightedEdgeId, expandedNodes, canZoomIn, canZoomOut]);
 
   const containerBorderColor = isDarkMode ? '#333' : '#e0e0e0';
   const containerBackgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
@@ -687,7 +1535,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
             onContextMenu={(e) => e.preventDefault()}
           >
             <button
-              onClick={() => copyAnchorLink(contextMenu.nodeId)}
+              onClick={() => copyAnchorLink(contextMenu.nodeId, contextMenu.edgeId)}
               style={{
                 width: '100%',
                 padding: '8px 16px',
@@ -756,6 +1604,28 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
                   </p>
                 )}
               </div>
+            ) : selectedEdge ? (
+              <div>
+                <h3 style={{
+                  margin: '0 0 8px 0',
+                  color: panelTextColor,
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  lineHeight: '1.4',
+                }}>
+                  {selectedEdge.label || 'Edge'}
+                </h3>
+                <p style={{
+                  margin: '0',
+                  color: panelTextColor,
+                  fontSize: '12px',
+                  lineHeight: '1.5',
+                  opacity: 0.7,
+                }}>
+                  From: {selectedEdge.source}<br />
+                  To: {selectedEdge.target}
+                </p>
+              </div>
             ) : (
               <div style={{
                 color: panelTextColor,
@@ -763,7 +1633,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
                 opacity: 0.5,
                 fontStyle: 'italic',
               }}>
-                Hover or click a node
+                Hover or click a node or edge
               </div>
             )}
           </div>
