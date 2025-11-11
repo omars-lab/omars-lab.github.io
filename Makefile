@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push
+.PHONY: help install add init-site check audit clean start clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push open-e2e-report
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -58,9 +58,10 @@ clean: ## Clean build artifacts and dependencies
 	( cd ${SITEROOT} && yarn clear )
 	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
-start: ## Start the development server
+PORT ?= 3000
+start: ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
-	( cd ${SITEROOT} && yarn start )
+	( cd ${SITEROOT} && yarn start --port ${PORT} )
 
 clear: ## Clear Docusaurus cache
 	# Starts the development server, includes drafts and monitors and auto deploys updates
@@ -166,3 +167,14 @@ push: ## Push committed changes to remote
 	@echo "Changes pushed successfully!"
 
 commit-push: commit push ## Commit and push changes (interactive message)
+
+# Testing Targets
+
+open-e2e-report: ## Open the E2E test HTML report in the default browser
+	@if [ -f "${SITEROOT}/test-results/html-report/index.html" ]; then \
+		open "${SITEROOT}/test-results/html-report/index.html"; \
+		echo "E2E test report opened in browser"; \
+	else \
+		echo "E2E test report not found. Run 'yarn test:e2e' first."; \
+		exit 1; \
+	fi

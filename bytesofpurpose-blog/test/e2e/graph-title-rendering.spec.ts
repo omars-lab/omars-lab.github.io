@@ -223,15 +223,110 @@ test.describe('GraphRenderer Title Rendering E2E', () => {
     await page.waitForTimeout(2000);
 
     // This test verifies that nodes have actual text content, not just ellipsis
-    // We check by ensuring there are text-like regions with sufficient content
+    // We check by analyzing text regions to ensure they're wide enough to contain
+    // more than just "..." (which is only 3 characters)
 
-    const textAnalysis = await extractCanvasText(canvas, {
-      sampleSize: 25,
-      threshold: 30,
+    const textAnalysis = await canvas.evaluate((canvasEl: HTMLCanvasElement) => {
+      const ctx = canvasEl.getContext('2d');
+      if (!ctx) {
+        return { hasText: false, textRegions: [], wideRegions: 0 };
+      }
+
+      const textRegions: Array<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        pixelWidth: number;
+      }> = [];
+
+      // Sample canvas in a grid pattern to find text-like regions
+      const gridSize = 50;
+      const sampleSize = 25;
+      const threshold = 30;
+
+      for (let y = 0; y < canvasEl.height; y += gridSize) {
+        for (let x = 0; x < canvasEl.width; x += gridSize) {
+          const imageData = ctx.getImageData(
+            x,
+            y,
+            Math.min(sampleSize, canvasEl.width - x),
+            Math.min(sampleSize, canvasEl.height - y)
+          );
+
+          // Check for text-like patterns (high contrast, non-transparent)
+          let hasHighContrast = false;
+          let nonTransparentPixels = 0;
+          let leftmostPixel = sampleSize;
+          let rightmostPixel = 0;
+
+          for (let py = 0; py < imageData.height; py++) {
+            for (let px = 0; px < imageData.width; px++) {
+              const idx = (py * imageData.width + px) * 4;
+              const r = imageData.data[idx];
+              const g = imageData.data[idx + 1];
+              const b = imageData.data[idx + 2];
+              const a = imageData.data[idx + 3];
+
+              if (a > threshold) {
+                nonTransparentPixels++;
+                // Check for high contrast (text is usually high contrast)
+                const brightness = (r + g + b) / 3;
+                if (brightness < 50 || brightness > 200) {
+                  hasHighContrast = true;
+                  leftmostPixel = Math.min(leftmostPixel, px);
+                  rightmostPixel = Math.max(rightmostPixel, px);
+                }
+              }
+            }
+          }
+
+          // If region has high contrast and non-transparent pixels, it might be text
+          if (hasHighContrast && nonTransparentPixels > sampleSize * 0.1) {
+            const pixelWidth = rightmostPixel - leftmostPixel;
+            textRegions.push({
+              x,
+              y,
+              width: sampleSize,
+              height: sampleSize,
+              pixelWidth,
+            });
+          }
+        }
+      }
+
+      // Estimate character width: assume average character is ~6-8 pixels wide
+      // "..." (3 chars) would be roughly 18-24 pixels wide
+      // We want regions that are at least 30 pixels wide (more than just "...")
+      const MIN_WIDTH_FOR_REAL_TEXT = 30;
+      const wideRegions = textRegions.filter(
+        (r) => r.pixelWidth >= MIN_WIDTH_FOR_REAL_TEXT
+      ).length;
+
+      return {
+        hasText: textRegions.length > 0,
+        textRegions: textRegions.map(({ x, y, width, height }) => ({
+          x,
+          y,
+          width,
+          height,
+        })),
+        wideRegions,
+        allRegions: textRegions.length,
+      };
     });
 
     // Should have multiple text regions (nodes with actual text)
     expect(textAnalysis.textRegions.length).toBeGreaterThan(0);
+
+    // CRITICAL: At least some regions should be wide enough to contain more than just "..."
+    // If all regions are narrow (just wide enough for "..."), that's a failure
+    expect(textAnalysis.wideRegions).toBeGreaterThan(0);
+
+    // At least 50% of text regions should be wide enough for real text
+    // (allowing for some nodes that might legitimately be short)
+    const wideRegionRatio = textAnalysis.wideRegions / textAnalysis.allRegions;
+    expect(wideRegionRatio).toBeGreaterThan(0.5);
 
     // Verify that text regions are distributed (not all in one place)
     const uniqueXPositions = new Set(
@@ -242,7 +337,6 @@ test.describe('GraphRenderer Title Rendering E2E', () => {
     );
 
     // Text should be distributed across the canvas (multiple nodes)
-    // If we only had ellipsis, we'd have very few or clustered regions
     expect(uniqueXPositions.size + uniqueYPositions.size).toBeGreaterThan(2);
 
     // Take screenshot for visual verification

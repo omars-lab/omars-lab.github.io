@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react'
 import ForceGraph from 'force-graph';
 import { useColorMode } from '@docusaurus/theme-common';
 import * as d3 from 'd3-force';
+import { NodeRenderer } from './NodeRenderer';
 
 interface Node {
   id: string;
@@ -697,14 +698,55 @@ const truncateLine = (
   const ellipsis = '...';
   const ellipsisWidth = ctx.measureText(ellipsis).width;
   const maxLineWidth = maxWidth - ellipsisWidth;
+  const MIN_CHARS_BEFORE_ELLIPSIS = 20; // Minimum characters to show before ellipsis
   
   if (ctx.measureText(line).width <= maxWidth) {
     return line;
   }
   
-  let truncated = line;
-  while (truncated.length > 0 && ctx.measureText(truncated + ellipsis).width > maxLineWidth) {
-    truncated = truncated.substring(0, truncated.length - 1);
+  // If even ellipsis alone doesn't fit, return empty string (caller should handle)
+  if (ellipsisWidth > maxWidth) {
+    return '';
+  }
+  
+  // Check if we can fit at least MIN_CHARS_BEFORE_ELLIPSIS + ellipsis
+  const minTextNeeded = line.substring(0, Math.min(MIN_CHARS_BEFORE_ELLIPSIS, line.length));
+  const minWidthNeeded = ctx.measureText(minTextNeeded + ellipsis).width;
+  
+  if (maxWidth < minWidthNeeded) {
+    // Can't fit minimum required characters + ellipsis
+    // Try to show as much as possible without ellipsis
+    let truncated = line;
+    while (truncated.length > 0 && ctx.measureText(truncated).width > maxWidth) {
+      truncated = truncated.substring(0, truncated.length - 1);
+    }
+    // If we can fit at least some text without ellipsis, return it
+    if (truncated.length > 0) {
+      return truncated;
+    }
+    // Otherwise return empty (caller should handle)
+    return '';
+  }
+  
+  // We can fit at least MIN_CHARS_BEFORE_ELLIPSIS + ellipsis
+  // Start with the first MIN_CHARS_BEFORE_ELLIPSIS characters
+  let truncated = line.substring(0, Math.min(MIN_CHARS_BEFORE_ELLIPSIS, line.length));
+  
+  // If the minimum text + ellipsis fits, try to add more characters
+  while (truncated.length < line.length && ctx.measureText(truncated + line[truncated.length] + ellipsis).width <= maxWidth) {
+    truncated = truncated + line[truncated.length];
+  }
+  
+  // If we couldn't fit even the minimum, fall back to showing as much as possible
+  if (truncated.length < MIN_CHARS_BEFORE_ELLIPSIS && ctx.measureText(truncated + ellipsis).width > maxWidth) {
+    // This shouldn't happen given our check above, but handle it gracefully
+    truncated = line.substring(0, MIN_CHARS_BEFORE_ELLIPSIS);
+    while (truncated.length > 0 && ctx.measureText(truncated + ellipsis).width > maxWidth) {
+      truncated = truncated.substring(0, truncated.length - 1);
+    }
+    if (truncated.length === 0) {
+      return '';
+    }
   }
   
   return truncated + ellipsis;
@@ -820,8 +862,10 @@ const drawTitle = (
     return emojiAreaCenterY;
   }
   
-  // Truncate to first 20 characters, replace last 3 chars with ellipsis if longer
-  const MAX_CHARS = 20;
+  // Truncate to first 60 characters, replace last 3 chars with ellipsis if longer
+  // This allows more text to be shown before pixel-based truncation happens
+  // The pixel-based truncation will ensure at least 20 chars before ellipsis
+  const MAX_CHARS = 60;
   const trimmed = labelStr.trim();
   
   console.log('[drawTitle] START', { 
@@ -977,8 +1021,22 @@ const drawTitle = (
       
       console.log('[distributeText] Result before filtering', { result, resultLength: result.length });
       
-      // Return all lines (don't filter - let drawing handle it)
-      const finalResult = result.slice(0, 3); // Max 3 lines
+      // Filter out empty lines and lines that are only ellipsis
+      const filtered = result.filter(line => {
+        const trimmed = line.trim();
+        if (trimmed.length === 0 || trimmed === '...') {
+          return false;
+        }
+        // Ensure there's at least one character before ellipsis (if ellipsis is present)
+        if (trimmed.endsWith('...')) {
+          const textBeforeEllipsis = trimmed.substring(0, trimmed.length - 3);
+          return textBeforeEllipsis.length > 0;
+        }
+        return true;
+      });
+      
+      // Return filtered lines (max 3)
+      const finalResult = filtered.slice(0, 3);
       console.log('[distributeText] FINAL RESULT', { finalResult, finalResultLength: finalResult.length });
       
       return finalResult;
@@ -1132,8 +1190,8 @@ const drawTitle = (
         lineTrimmed: line ? line.trim() : null
       });
       
-      if (!line || !line.trim()) {
-        console.log('[drawTitle] Skipping empty line', { lineIndex: i, line });
+      if (!line || !line.trim() || line.trim() === '...') {
+        console.log('[drawTitle] Skipping empty or ellipsis-only line', { lineIndex: i, line });
         continue;
       }
       
@@ -1160,16 +1218,36 @@ const drawTitle = (
           truncatedLength: truncated ? truncated.length : 0
         });
         
-        if (truncated && truncated.trim().length > 0) {
-          console.log('[drawTitle] Drawing truncated line', {
-            lineIndex: i,
-            truncated,
-            x: node.x,
-            y: lineY
-          });
-          ctx.fillText(truncated, node.x, lineY);
+        // Ensure we have meaningful text (not just ellipsis or empty)
+        // If truncated line has ellipsis, ensure it has at least 20 characters before it
+        if (truncated && truncated.trim().length > 3 && truncated !== '...') {
+          const textBeforeEllipsis = truncated.replace('...', '');
+          const hasEllipsis = truncated.endsWith('...');
+          
+          // If ellipsis is present, ensure we have at least 20 characters before it
+          if (hasEllipsis && textBeforeEllipsis.length < 20) {
+            console.log('[drawTitle] NOT drawing truncated line (less than 20 chars before ellipsis)', {
+              lineIndex: i,
+              truncated,
+              textBeforeEllipsisLength: textBeforeEllipsis.length
+            });
+          } else if (textBeforeEllipsis.length > 0) {
+            console.log('[drawTitle] Drawing truncated line', {
+              lineIndex: i,
+              truncated,
+              textBeforeEllipsisLength: textBeforeEllipsis.length,
+              x: node.x,
+              y: lineY
+            });
+            ctx.fillText(truncated, node.x, lineY);
+          } else {
+            console.log('[drawTitle] NOT drawing truncated line (only ellipsis)', {
+              lineIndex: i,
+              truncated
+            });
+          }
         } else {
-          console.log('[drawTitle] NOT drawing truncated line (empty result)', {
+          console.log('[drawTitle] NOT drawing truncated line (empty or invalid result)', {
             lineIndex: i,
             truncated
           });
@@ -1293,6 +1371,8 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   const [paneVisible, setPaneVisible] = useState<boolean>(true);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId?: string; edgeId?: string } | null>(null);
   const rightClickPositionRef = useRef<{ x: number; y: number } | null>(null);
+  const [nodePositions, setNodePositions] = useState<Map<string, { x: number; y: number; radius: number }>>(new Map());
+  const [rightClickMenu, setRightClickMenu] = useState<{ nodeId: string; x: number; y: number } | null>(null);
   const { colorMode } = useColorMode();
   const isDarkMode = colorMode === 'dark';
   
@@ -1400,6 +1480,78 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     setExpandedNodes(new Set());
   }, []);
 
+  // Update node positions for floating menu rendering
+  const updateNodePositions = useCallback(() => {
+    if (!graphRef.current || !containerRef.current) return;
+    
+    const graphData = graphRef.current.graphData();
+    if (!graphData || !graphData.nodes) return;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    // Get the current zoom and pan transform
+    const zoom = graphRef.current.zoom() || 1;
+    
+    // Force-graph uses canvas rendering
+    // The canvas element should be inside the container
+    const canvas = containerRef.current.querySelector('canvas');
+    if (!canvas) {
+      // Try SVG as fallback (though force-graph typically uses canvas)
+      const svg = containerRef.current.querySelector('svg');
+      if (!svg) {
+        console.warn('Neither canvas nor SVG found in container');
+        return;
+      }
+    }
+    
+    // Force-graph centers the graph at (width/2, height/2) in screen space
+    // Graph coordinates are in the force simulation space (centered at origin)
+    // We need to convert to screen coordinates relative to the container
+    const positions = new Map<string, { x: number; y: number; radius: number }>();
+    
+    graphData.nodes.forEach((node: any) => {
+      if (node.x !== undefined && node.y !== undefined && isFinite(node.x) && isFinite(node.y)) {
+        // Convert graph coordinates to screen coordinates
+        // Force-graph centers at (width/2, height/2), so we offset by that
+        const screenX = (containerRect.width / 2) + (node.x * zoom);
+        const screenY = (containerRect.height / 2) + (node.y * zoom);
+        const radius = getNodeRadius(node.hasChildren) * zoom;
+        
+        positions.set(node.id, { x: screenX, y: screenY, radius });
+      }
+    });
+    
+    if (process.env.NODE_ENV === 'development' && positions.size > 0) {
+      const firstPos = Array.from(positions.values())[0];
+      console.log('First node position:', firstPos, 'Container:', { width: containerRect.width, height: containerRect.height, zoom });
+    }
+    
+    setNodePositions(positions);
+  }, []);
+
+  // Update node positions periodically and on graph updates
+  useEffect(() => {
+    if (!graphRef.current) return;
+    
+    let animationFrameId: number;
+    let intervalId: NodeJS.Timeout;
+    
+    const updatePositions = () => {
+      updateNodePositions();
+      animationFrameId = requestAnimationFrame(updatePositions);
+    };
+    
+    // Update positions on animation frame for smooth updates
+    animationFrameId = requestAnimationFrame(updatePositions);
+    
+    // Also update on zoom/pan changes
+    intervalId = setInterval(updateNodePositions, 100);
+    
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [graphData, updateNodePositions]);
+
   // Auto center the graph
   const autoCenter = useCallback(() => {
     if (graphRef.current && graphData.nodes.length > 0) {
@@ -1476,12 +1628,15 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   // Close context menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      if (rightClickMenu) {
+        setRightClickMenu(null);
+      }
       if (contextMenu) {
         setContextMenu(null);
       }
     };
 
-    if (contextMenu) {
+    if (rightClickMenu || contextMenu) {
       document.addEventListener('click', handleClickOutside);
       document.addEventListener('contextmenu', handleClickOutside);
     }
@@ -1490,7 +1645,7 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       document.removeEventListener('click', handleClickOutside);
       document.removeEventListener('contextmenu', handleClickOutside);
     };
-  }, [contextMenu]);
+  }, [rightClickMenu, contextMenu]);
 
   // Find path to a node (all parent node IDs)
   const findPathToNode = useCallback((targetId: string, nodes: Node[], path: string[] = []): string[] | null => {
@@ -1705,8 +1860,8 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     const clusterArea = screenWidth * screenHeight;
     const percentage = (clusterArea / viewportArea) * 100;
 
-    // Allow zoom out if cluster would still be >= 25% of viewport
-    return percentage >= 25;
+    // Allow zoom out if cluster would still be >= 10% of viewport (reduced from 25% to allow more zoom out)
+    return percentage >= 10;
   }, [calculateNodeBoundingBox, width, height, paneVisible]);
 
   // Check if zoom in would result in only one node visible
@@ -1748,41 +1903,65 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
     const halfWidth = viewportGraphWidth / 2;
     const halfHeight = viewportGraphHeight / 2;
 
+    // Find the largest node size in the entire graph (not just visible ones)
+    // This ensures we always have a reference point for zoom limits
+    let maxNodeSizeInGraph = 0;
+    currentGraphData.nodes.forEach((node: any) => {
+      if (node.x !== undefined && node.y !== undefined && 
+          isFinite(node.x) && isFinite(node.y)) {
+        const nodeRadius = getNodeRadius(node.hasChildren);
+        const nodeDiameter = nodeRadius * 2;
+        maxNodeSizeInGraph = Math.max(maxNodeSizeInGraph, nodeDiameter);
+      }
+    });
+
     // Count visible nodes and find the largest node in viewport
     let visibleNodes = 0;
-    let maxNodeSize = 0;
+    let maxNodeSizeInViewport = 0;
     currentGraphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
         const nodeRadius = getNodeRadius(node.hasChildren);
         const nodeDiameter = nodeRadius * 2;
         
-        // Check if node is within viewport bounds
-        if (node.x - nodeRadius >= centerX - halfWidth &&
-            node.x + nodeRadius <= centerX + halfWidth &&
-            node.y - nodeRadius >= centerY - halfHeight &&
-            node.y + nodeRadius <= centerY + halfHeight) {
+        // Check if node is within viewport bounds (with some padding for edge cases)
+        const padding = nodeRadius * 0.5; // Add padding to account for nodes partially visible
+        if (node.x - nodeRadius - padding >= centerX - halfWidth &&
+            node.x + nodeRadius + padding <= centerX + halfWidth &&
+            node.y - nodeRadius - padding >= centerY - halfHeight &&
+            node.y + nodeRadius + padding <= centerY + halfHeight) {
           visibleNodes++;
-          maxNodeSize = Math.max(maxNodeSize, nodeDiameter);
+          maxNodeSizeInViewport = Math.max(maxNodeSizeInViewport, nodeDiameter);
         }
       }
     });
 
-    // Allow zoom in unless a single node would take up more than 90% of viewport
-    if (visibleNodes === 1) {
-      // Calculate the screen size of the node at the new zoom level
+    // Use the largest node in viewport if available, otherwise use largest in graph
+    const maxNodeSize = maxNodeSizeInViewport > 0 ? maxNodeSizeInViewport : maxNodeSizeInGraph;
+
+    // Prevent zoom in if any node would take up more than 90% of viewport
+    if (maxNodeSize > 0) {
+      // Calculate the screen size of the largest node at the new zoom level
       const nodeScreenSize = maxNodeSize * newZoom;
       // Calculate the viewport size in screen coordinates
       const viewportScreenSize = Math.min(graphWidth, graphHeight);
       const nodePercentage = (nodeScreenSize / viewportScreenSize) * 100;
       
-      // Prevent zoom if node would take up more than 90% of viewport
+      // Prevent zoom if largest node would take up more than 90% of viewport
       if (nodePercentage >= 90) {
         return false;
       }
     }
 
-    // If multiple nodes visible, always allow zoom
+    // Also prevent zoom if viewport in graph coordinates becomes too small
+    // This prevents zooming in so much that the viewport is smaller than a single node
+    // Use a more conservative limit based on the largest node size
+    const minViewportSize = Math.min(viewportGraphWidth, viewportGraphHeight);
+    const minAllowedViewportSize = maxNodeSizeInGraph > 0 ? maxNodeSizeInGraph * 3 : 50;
+    if (minViewportSize < minAllowedViewportSize) {
+      return false;
+    }
+
     return true;
   }, [calculateNodeBoundingBox, width, height, paneVisible]);
 
@@ -1850,19 +2029,19 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           setSelectedEdge(null);
         })
         .onNodeRightClick((node: any) => {
-          // Use the stored right-click position
+          // Show floating menu on right-click
           if (rightClickPositionRef.current) {
-            setContextMenu({ 
-              x: rightClickPositionRef.current.x, 
-              y: rightClickPositionRef.current.y, 
+            setRightClickMenu({
               nodeId: node.id,
-              edgeId: undefined
+              x: rightClickPositionRef.current.x,
+              y: rightClickPositionRef.current.y,
             });
             rightClickPositionRef.current = null;
           }
         })
         .onLinkClick((link: any) => {
-          // Clear context menu if open
+          // Clear menus if open
+          setRightClickMenu(null);
           setContextMenu(null);
           
           // Clear highlights if clicking a different edge
@@ -1896,42 +2075,18 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
           }
         })
         .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-          // Skip rendering if node coordinates are not valid
-          if (!isValidNodeCoordinates(node)) {
-            return;
-          }
+          // Use NodeRenderer class to render the complete node
+          const renderer = new NodeRenderer({
+            ctx,
+            node,
+            globalScale,
+            isDarkMode,
+            isHighlighted: highlightedNodeId === node.id,
+            nodeBorderColor,
+            showDebugSeparators: DEBUG_SHOW_NODE_SECTIONS,
+          });
           
-          const label = getNodeLabel(node);
-          const isHighlighted = highlightedNodeId === node.id;
-          const nodeRadius = getNodeRadius(node.hasChildren);
-          const nodeColor = getNodeColor(node.color);
-          
-          // Draw node circle and border using helper function
-          drawNodeCircle(ctx, node.x, node.y, nodeRadius, nodeColor, isHighlighted, isDarkMode, nodeBorderColor, globalScale);
-          
-          // Draw debug section separators if enabled
-          drawDebugSectionSeparators(ctx, node.x, node.y, nodeRadius, globalScale);
-          
-          // Determine status indicator using helper function
-          const { statusIndicator, isTextLabel } = getNodeStatusIndicator(node.hasChildren, node.isExpanded || false);
-          
-          // Calculate indicator font size using shared helper function
-          const indicatorFontSize = calculateIndicatorFontSize(nodeRadius, isTextLabel, globalScale);
-          
-          // Show title for all nodes (both parent and leaf)
-          const labelStr = String(label || node.id || '');
-          if (labelStr) {
-            // Draw title and get emoji area center Y
-            // Note: drawTitle calculates its own font size, so fontSize parameter is unused
-            const emojiAreaCenterY = drawTitle(ctx, node, nodeRadius, labelStr, 0, globalScale);
-            
-            // Draw status indicator in bottom section
-            drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
-          } else {
-            // No label, just show status indicator
-            const emojiAreaCenterY = calculateEmojiAreaCenterY(node.y, nodeRadius);
-            drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
-          }
+          renderer.render();
         })
         .linkCanvasObjectMode(() => 'after')
         .linkCanvasObject((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
@@ -1993,7 +2148,18 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         .onEngineStop(() => {
           // Graph has stabilized
         })
+        .onNodeDrag((node: any) => {
+          // Update node positions as nodes are dragged
+          updateNodePositions();
+        })
+        .onNodeDragEnd((node: any) => {
+          // Update node positions after drag ends
+          updateNodePositions();
+        })
         .onZoom((transform: { k: number; x: number; y: number }) => {
+          // Update positions on zoom/pan
+          updateNodePositions();
+          
           // Intercept zoom changes and enforce limits
           if (!graphRef.current || isAdjustingZoomRef.current) {
             previousZoomRef.current = transform.k;
@@ -2091,44 +2257,21 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
       
       // Update node canvas object to use theme-aware colors
       graphRef.current.nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-        // Skip rendering if node coordinates are not valid
-        if (!isValidNodeCoordinates(node)) {
-          return;
-        }
+        // Update node's expanded state from expandedNodes set
+        node.isExpanded = expandedNodes.has(node.id);
         
-        const label = getNodeLabel(node);
-        const isHighlighted = highlightedNodeId === node.id;
-        const nodeRadius = getNodeRadius(node.hasChildren);
-        const nodeColor = getNodeColor(node.color);
+        // Use NodeRenderer class to render the complete node
+        const renderer = new NodeRenderer({
+          ctx,
+          node,
+          globalScale,
+          isDarkMode,
+          isHighlighted: highlightedNodeId === node.id,
+          nodeBorderColor,
+          showDebugSeparators: DEBUG_SHOW_NODE_SECTIONS,
+        });
         
-        // Draw node circle and border using helper function
-        drawNodeCircle(ctx, node.x, node.y, nodeRadius, nodeColor, isHighlighted, isDarkMode, nodeBorderColor, globalScale);
-        
-        // Draw debug section separators if enabled
-        drawDebugSectionSeparators(ctx, node.x, node.y, nodeRadius, globalScale);
-        
-        // Determine status indicator using helper function
-        // Check expanded state directly from expandedNodes to ensure it's up to date
-        const isExpanded = expandedNodes.has(node.id);
-        const { statusIndicator, isTextLabel } = getNodeStatusIndicator(node.hasChildren, isExpanded);
-        
-        // Calculate indicator font size using shared helper function
-        const indicatorFontSize = calculateIndicatorFontSize(nodeRadius, isTextLabel, globalScale);
-        
-        // Show title for all nodes (both parent and leaf)
-        const labelStr = String(label || node.id || '');
-        if (labelStr) {
-          // Draw title and get emoji area center Y
-          // Note: drawTitle calculates its own font size, so fontSize parameter is unused
-          const emojiAreaCenterY = drawTitle(ctx, node, nodeRadius, labelStr, 0, globalScale);
-          
-          // Draw status indicator in bottom section
-          drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
-        } else {
-          // No label, just show status indicator
-          const emojiAreaCenterY = calculateEmojiAreaCenterY(node.y, nodeRadius);
-          drawStatusIndicator(ctx, node.x, emojiAreaCenterY, statusIndicator, isTextLabel, nodeRadius, indicatorFontSize);
-        }
+        renderer.render();
       });
       
       // Add edge rendering with labels
@@ -2384,8 +2527,95 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         <div ref={containerRef} style={{ 
           flex: paneVisible ? '1 1 80%' : '1 1 100%', 
           minWidth: 0, 
-          height: graphAreaHeight 
+          height: graphAreaHeight,
+          position: 'relative',
         }} />
+        {/* Right-click floating menu */}
+        {rightClickMenu && (() => {
+          const node = graphData.nodes.find((n: any) => n.id === rightClickMenu.nodeId);
+          if (!node) return null;
+          
+          const hasChildren = node.hasChildren;
+          const isExpanded = expandedNodes.has(rightClickMenu.nodeId);
+          const menuItems = [];
+          
+          // Add expand/fold option for parent nodes
+          if (hasChildren) {
+            menuItems.push({
+              label: isExpanded ? 'Fold' : 'Expand',
+              icon: isExpanded ? '▼' : '▶',
+              action: () => {
+                toggleNodeExpansion(rightClickMenu.nodeId);
+                setRightClickMenu(null);
+              },
+            });
+          }
+          
+          // Add anchor link option
+          menuItems.push({
+            label: 'Copy Anchor Link',
+            icon: '📋',
+            action: async () => {
+              await copyAnchorLink(rightClickMenu.nodeId, undefined);
+              setRightClickMenu(null);
+            },
+          });
+          
+          return (
+            <div
+              style={{
+                position: 'absolute',
+                left: `${rightClickMenu.x}px`,
+                top: `${rightClickMenu.y}px`,
+                backgroundColor: isDarkMode ? '#2a2a2a' : '#ffffff',
+                border: `1px solid ${isDarkMode ? '#555' : '#ddd'}`,
+                borderRadius: '8px',
+                boxShadow: isDarkMode 
+                  ? '0 4px 12px rgba(0, 0, 0, 0.5)' 
+                  : '0 4px 12px rgba(0, 0, 0, 0.15)',
+                padding: '4px',
+                minWidth: '160px',
+                zIndex: 1000,
+              }}
+              onClick={(e) => e.stopPropagation()}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              {menuItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    item.action();
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    textAlign: 'left',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: isDarkMode ? '#ffffff' : '#1a1a1a',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    borderRadius: '4px',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = isDarkMode ? '#333' : '#f0f0f0';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          );
+        })()}
         {contextMenu && (
           <div
             style={{

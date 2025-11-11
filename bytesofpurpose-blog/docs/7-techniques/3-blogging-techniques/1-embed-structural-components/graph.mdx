@@ -8,12 +8,97 @@ draft: false
 ---
 
 import GraphRenderer from '@site/src/components/GraphRenderer';
+import NodeRendererDemo from '@site/src/components/NodeRendererDemo';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 # Graph Renderer Component
 
 The `GraphRenderer` component is an interactive, force-directed graph visualization built on top of D3.js force simulation. It supports hierarchical node structures, dynamic expansion/collapse, zoom controls, anchor links, and dark mode.
+
+## NodeRenderer: Title Display Examples
+
+The `NodeRenderer` class handles all node rendering, including sophisticated title display with automatic truncation and ellipsis handling. Below are examples showcasing how titles are rendered at different lengths and zoom levels.
+
+### Short Titles (≤20 characters)
+
+Short titles are displayed in full without truncation:
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="Short" zoomLevel={1.0} />
+  <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
+  <NodeRendererDemo title="A Short Node Title" zoomLevel={1.0} />
+</div>
+
+### Medium Titles (21-40 characters)
+
+Medium titles may be truncated or wrapped across multiple lines:
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
+  <NodeRendererDemo title="A Medium Length Node Title Here" zoomLevel={1.0} />
+  <NodeRendererDemo title="Medium Title That Needs Wrapping" zoomLevel={1.0} />
+</div>
+
+### Long Titles (>40 characters)
+
+Long titles are truncated to ensure at least 20 characters are shown before the ellipsis:
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
+  <NodeRendererDemo title="A Very Long Node Title That Will Definitely Be Truncated With Ellipsis" zoomLevel={1.0} />
+  <NodeRendererDemo title="Extremely Long Title That Demonstrates The Ellipsis Mechanism Perfectly" zoomLevel={1.0} />
+</div>
+
+### Zoom Level Effects
+
+The same title at different zoom levels. Notice how the text scales reactively while maintaining the 20-character minimum before ellipsis:
+
+#### Short Title at Different Zoom Levels
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="Short Title" zoomLevel={0.5} />
+  <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
+  <NodeRendererDemo title="Short Title" zoomLevel={1.5} />
+  <NodeRendererDemo title="Short Title" zoomLevel={2.0} />
+</div>
+
+#### Medium Title at Different Zoom Levels
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="This is a medium length title" zoomLevel={0.5} />
+  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
+  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.5} />
+  <NodeRendererDemo title="This is a medium length title" zoomLevel={2.0} />
+</div>
+
+#### Long Title at Different Zoom Levels
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={0.5} />
+  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
+  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.5} />
+  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={2.0} />
+</div>
+
+### Parent vs Leaf Nodes
+
+Parent nodes (with children) are larger and show expansion arrows, while leaf nodes are smaller and show a leaf emoji:
+
+<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
+  <NodeRendererDemo title="Parent Node" zoomLevel={1.0} isParent={true} />
+  <NodeRendererDemo title="Leaf Node" zoomLevel={1.0} isParent={false} />
+  <NodeRendererDemo title="Long Parent Node Title" zoomLevel={1.0} isParent={true} />
+  <NodeRendererDemo title="Long Leaf Node Title" zoomLevel={1.0} isParent={false} />
+</div>
+
+### Key Features Demonstrated
+
+- **20-Character Minimum**: When ellipsis is shown, at least 20 characters of text are displayed before it
+- **Reactive Scaling**: Text scales with zoom level while staying within node boundaries
+- **Multi-line Support**: Long titles are distributed across up to 3 lines
+- **Canvas Clipping**: Text never protrudes outside the circular node shape
+- **Smart Truncation**: Ellipsis only appears when necessary, never alone
 
 ## Features
 
