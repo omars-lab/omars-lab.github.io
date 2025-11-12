@@ -1,0 +1,181 @@
+---
+slug: blog-roadmap
+title: Blog Roadmap
+description: 'Comprehensive roadmap for blog development including analytics, technical enhancements, content strategy, user engagement, design, and AI/ML features.'
+authors: [oeid]
+tags: [blog, roadmap, analytics, react, rag, seo, development]
+date: 2025-01-31T10:00
+draft: false
+---
+
+# Blog Roadmap
+
+This document outlines the roadmap for developing and enhancing the blog platform.
+
+## Analytics & Tracking
+
+### Google Analytics Integration
+- [ ] Add google analytics to my site!
+	- [ ] https://support.google.com/analytics/answer/1008015?hl=en
+	- [ ] https://analytics.google.com/analytics/web/provision/?authuser=0#/a195952157p270847816/admin/streams/promo
+	- [ ] https://analytics.google.com/analytics/web/?authuser=0#/a195952157p270847816/admin/streams/table/
+- [ ] Make sure things are properly setup to track in google analytics ...
+- [ ] See if I can add custom button click events ...
+    - [ ] Hook up a simple dynamodb counter? 1 vote per browser?
+
+### Analytics Dashboard
+- [ ] How much of the Google Dashboard Analytics should I expose?
+- [ ] Should I have and host notebooks that I update periodically ...
+- [ ] Make sure I can track engagement per post ...
+- [ ] Make sure I can track votes!
+
+### SEO & Ingress Analysis
+- [ ] I need to understand how users arrive at each of my posts ...
+    - [https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Abytesofpurpose.com](https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Abytesofpurpose.com)
+- [ ] I need to figure out best terms to use in description for seo for each blog post ...
+    - senior software engineer vs sde ...
+        [https://trends.google.as/trends/explore?geo=US&q=senior%20sde,senior%20software%20engineer](https://trends.google.as/trends/explore?geo=US&q=senior%20sde,senior%20software%20engineer)
+    - principal software engineer vs sde ...
+        - [https://trends.google.as/trends/explore?geo=US&q=Principal%20sde,Principal%20software%20engineer](https://trends.google.as/trends/explore?geo=US&q=Principal%20sde,Principal%20software%20engineer)
+    - entry level
+        [https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer,entry%20level%20software%20engineer](https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer,entry%20level%20software%20engineer)
+
+## Technical Enhancements
+
+### Docusaurus Features
+- [ ] See https://docusaurus.io/docs/markdown-features/inline-toc
+	* https://docusaurus.io/docs/markdown-features/toc#inline-table-of-contents
+- [ ] Look for themes ...
+	* https://docusaurus.io/docs/api/themes/@docusaurus/theme-live-codeblock
+- [ ] Setup visual regression tests
+	* https://docusaurus.io/blog/upgrading-frontend-dependencies-with-confidence-using-visual-regression-testing
+
+### Plugins
+- [ ] Should I make my own docusaurus plugin ...?
+- [ ] What existing plugins should I use?
+	* https://github.com/facebook/docusaurus/blob/main/admin/extending-remarkable.md
+	* https://github.com/sjwall/mdx-mermaid/blob/main/src/mdxast-mermaid.ts#L8
+
+### Converting to React
+>2021-11-03 
+
+- [ ] Turn my portfolio into a real react app with unit tests ... >2021-11-03 
+    - [x] Create hello world react app ... @done(2021-11-03T00:50:19-05:00)    
+        - https://upmostly.com/tutorials/react-hello-world-your-first-react-app
+        - https://github.com/facebook/create-react-app
+        - https://github.com/expo/expo-cli
+    - [x] Port base portfolio mechanics into react ... @done(2021-11-03T00:50:31-05:00)
+    - [ ] Recreate entire portfolio in react
+    - [ ] Start messing with routers / more advanced react concepts ...
+
+- [ ] Figure out where else to add react ...
+    - [ ] Add react to blog?!
+        - [ ] In what capacity?
+    - [ ] Turn sacred patterns/ portfolio into a react app?
+
+### Content Features
+- [ ] Can't take same approach for puml as mermaid
+	- [ ] import PUML from 'remarkable-plantuml'; - requires fs - not browser plugin ..
+	- [ ] Can add puml to svg as a prestep ...
+- [ ] incorporate svg into blog, test with puml 
+- [ ] Add a plantuml button!
+	- [https://github.com/webgears/remarkable-plantuml](https://github.com/webgears/remarkable-plantuml)
+- [ ] Similar to mermaid ... i need tasks ...
+- [ ] Link the 3D Models … into blog …
+- [ ] Link the art into the blog …    
+
+## AI & Knowledge Management
+
+### Blog RAG (Retrieval-Augmented Generation)
+- [ ] Turn my notes into a rag!
+	* [ ] Or at least my blog???
+- [ ] Build a knowledge graph from my notes
+	* Tinker with Rag: 
+		* https://docs.llamaindex.ai/en/stable/getting_started/starter_tools/rag_cli/
+		* https://github.com/OpenBMB/UltraRAG
+	* Ingest my notes ...
+	* https://docs.llamaindex.ai/en/stable/use_cases/
+
+- [ ] Tinker with Amazon Neptune, Rags, etc ...?
+	- Workshop - Building a Generative AI/GraphRAG application with Amazon Neptune
+
+## Content Strategy
+
+### Content Planning
+- [ ] Determine what kind of content I will capture in blog ...
+	* [ ] Start an automated bytes blog ... recommend automation tools and use cases! physical buttons and stuff ...?
+- [ ] Should I have blog posts for each of my tools / scripts?
+	- Blog: Make a command line tool to cat markdown!
+	- Blog: Basic Vim Plugin?
+- [ ] what are the root most topics in my blog?
+	* [ ] Software development, personal development, business development, process development? Spiritual Development? ... 
+
+### Content Structure
+- [ ] What sections should I have in the blog?
+    - [ ] Have an architecture section!
+    - [ ] Should I have a notebooks section?
+    - [ ] Need a coming soon section where people can vote on future posts ...
+    - [ ] Have an initiatives section?
+    - [ ] Have an blueprints/roadmap section?
+- [ ] On the homepage of the blog .... I can add 
+- [ ] Right now ... I don't have a separate diagramming / documentation habit ... does blogging effectively mix the two?
+
+### Content Process
+- [ ] Move my processes from blog to paper ...
+	* [ ] My ideation habit is a whole process ... I can convert it into a planning doc ... 
+	* [ ] how many other habits are whole processes too?
+- [ ] I need to find a better way to deal with images ... svg??? smaller in size?? especially of I make them in figma??
+	* [ ] Doesn't seem like I can export figjam to svg ... maybe only figma ...
+
+## User Engagement
+
+### Voting Features
+- [ ] I should seek peoples inputs when prioritizing blog posts ...
+	- [ ] Add a page dedicated to voting with tiles ...
+	- [ ] I need to make clear what blog posts are coming soon and which ones are to be ..
+
+### Support & Monetization
+- [ ] I should give people the option of supporting me!
+	- [ ] Add a support me button!
+		- [ ] [https://www.paypal.com/donate/buttons](https://www.paypal.com/donate/buttons)
+		- [ ] Change the email ... to be related to the site ...
+- [ ] "cafinate the nerd"- should this be on front page?
+- [ ] Can I sell stuff on my site / blog … >2019-09-03
+	* Thought about selling packs of coasters that capture bits and pieces of mindset!
+		* This is a good opportunity to work on an acrylic project!
+		* A layer of glitter paper + laminate + epoxy resin
+		* If the coasters turn out good … might be able to apply this idea to the 99 names of Allah …
+
+## Design & Theme
+
+### Design Enhancements
+- [ ] Add Mechanics to highlight dates like spacey!
+- [ ] Add icons into blogs!
+- [ ] Make the vote button and support button more appealing, inviting!
+- [ ] Need to add icons to home screen ...
+- [ ] Need to add a link to the dashboard ...
+- [ ] Need to change the order of the menu bar ... Posts > Ideas > Docs
+- [ ] Need my own favicon ...
+
+### Images & Icons
+- [ ] Get images for sections ...
+	- [idea](https://thenounproject.com/icon/idea-4826361/)
+	- [binary](https://thenounproject.com/icon/binary-3994392/)
+	- [arabesque](https://thenounproject.com/icon/arabesque-1180259/)
+	- [islamic-window](https://thenounproject.com/icon/islamic-window-1156376/)
+	- [decode](https://thenounproject.com/icon/decode-2311447/)
+	- [coding](https://thenounproject.com/icon/coding-3730790/)
+- [ ] Get icon for support button ...
+	- [espresso](https://thenounproject.com/icon/espresso-1073830/)
+- [ ] Get Images for rest of sections ...
+	- [engine](https://thenounproject.com/icon/engine-3433962/)
+	- [diagram-software](https://thenounproject.com/icon/diagram-software-4337787/)
+	- [blog](https://thenounproject.com/icon/blog-1563318/)
+
+## Productivity & Workflow
+
+### Productivity Features
+- [ ] Add to the front matter the local development link to see this page ... and the remote link other people see!
+- [ ] Nice to See my initiatives / habits / etc as a private blog post ...
+- [ ] Add link to the blog post to edit it locally with glue!
+

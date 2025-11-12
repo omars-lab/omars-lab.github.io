@@ -8,7 +8,8 @@ import { test, expect } from '@playwright/test';
  * - Ellipsis-only node regression test
  * - Zoom level behavior
  * - Node interactions
- * - Text truncation and distribution
+ * - Text truncation (max 10 chars: 7 + "...")
+ * - Sun-like theming for selected nodes
  * 
  * Note: Playwright automatically handles browser/page cleanup.
  * The webServer process may stay running after tests complete (expected behavior).

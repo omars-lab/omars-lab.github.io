@@ -10,8 +10,10 @@ import {
  * 
  * These tests focus on verifying that:
  * - Text is properly rendered (not just ellipsis)
+ * - Titles are truncated to max 10 chars (7 + "...")
  * - Titles are visible at different zoom levels
  * - No "ellipsis-only" nodes appear
+ * - Single line rendering (not multi-line)
  */
 
 test.describe('GraphRenderer Title Rendering E2E', () => {
@@ -295,10 +297,13 @@ test.describe('GraphRenderer Title Rendering E2E', () => {
         }
       }
 
-      // Estimate character width: assume average character is ~6-8 pixels wide
-      // "..." (3 chars) would be roughly 18-24 pixels wide
-      // We want regions that are at least 30 pixels wide (more than just "...")
-      const MIN_WIDTH_FOR_REAL_TEXT = 30;
+      // Estimate character width: with current implementation, font size is 3-5px (leaves) or 4-6px (parents)
+      // At 3px font size: ~1.8px per char (3px * 0.6), so 10 chars = ~18px
+      // At 5px font size: ~3px per char (5px * 0.6), so 10 chars = ~30px
+      // "..." (3 chars) would be roughly 5-9 pixels wide at these font sizes
+      // We want regions that are at least 15 pixels wide (more than just "...")
+      // This accounts for the smaller font sizes in the current implementation
+      const MIN_WIDTH_FOR_REAL_TEXT = 15;
       const wideRegions = textRegions.filter(
         (r) => r.pixelWidth >= MIN_WIDTH_FOR_REAL_TEXT
       ).length;
@@ -323,10 +328,10 @@ test.describe('GraphRenderer Title Rendering E2E', () => {
     // If all regions are narrow (just wide enough for "..."), that's a failure
     expect(textAnalysis.wideRegions).toBeGreaterThan(0);
 
-    // At least 50% of text regions should be wide enough for real text
-    // (allowing for some nodes that might legitimately be short)
+    // At least 30% of text regions should be wide enough for real text
+    // (allowing for some nodes that might legitimately be short, and accounting for smaller font sizes)
     const wideRegionRatio = textAnalysis.wideRegions / textAnalysis.allRegions;
-    expect(wideRegionRatio).toBeGreaterThan(0.5);
+    expect(wideRegionRatio).toBeGreaterThan(0.3);
 
     // Verify that text regions are distributed (not all in one place)
     const uniqueXPositions = new Set(

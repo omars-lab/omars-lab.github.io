@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push open-e2e-report
+.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -62,6 +62,11 @@ PORT ?= 3000
 start: ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	( cd ${SITEROOT} && yarn start --port ${PORT} )
+
+PORT ?= 3000
+start-prod: ## Start the development server with NODE_ENV=production
+	# Starts the development server in production mode, includes drafts and monitors and auto deploys updates
+	( cd ${SITEROOT} && NODE_ENV=production yarn start --port ${PORT} )
 
 clear: ## Clear Docusaurus cache
 	# Starts the development server, includes drafts and monitors and auto deploys updates
@@ -169,6 +174,18 @@ push: ## Push committed changes to remote
 commit-push: commit push ## Commit and push changes (interactive message)
 
 # Testing Targets
+
+test-e2e: ## Run E2E tests with Playwright
+	( cd ${SITEROOT} && yarn test:e2e )
+
+test-e2e-headed: ## Run E2E tests in headed mode (see browser)
+	( cd ${SITEROOT} && yarn test:e2e:headed )
+
+test-e2e-ui: ## Run E2E tests with UI mode (interactive)
+	( cd ${SITEROOT} && yarn test:e2e:ui )
+
+test-e2e-debug: ## Run E2E tests in debug mode
+	( cd ${SITEROOT} && yarn test:e2e:debug )
 
 open-e2e-report: ## Open the E2E test HTML report in the default browser
 	@if [ -f "${SITEROOT}/test-results/html-report/index.html" ]; then \
