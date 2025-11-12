@@ -1,8 +1,6 @@
 import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react';
-import ForceGraph from 'force-graph';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useColorMode } from '@docusaurus/theme-common';
-import * as d3 from 'd3-force';
-import { NodeRenderer } from './NodeRenderer';
 
 interface Node {
   id: string;
@@ -1354,38 +1352,7 @@ const drawStatusIndicator = (
   ctx.fillText(statusIndicator, nodeX, emojiAreaCenterY);
 };
 
-/**
- * Creates a reusable node rendering function for the force graph
- * This consolidates the node rendering logic to avoid duplication
- */
-const createNodeRenderer = (
-  isDarkMode: boolean,
-  highlightedNodeId: string | null,
-  selectedNode: any,
-  nodeBorderColor: string,
-  expandedNodes: Set<string>
-) => {
-  return (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-    // Update node's expanded state from expandedNodes set
-    node.isExpanded = expandedNodes.has(node.id);
-    
-    // Use NodeRenderer class to render the complete node
-    const renderer = new NodeRenderer({
-      ctx,
-      node,
-      globalScale,
-      isDarkMode,
-      isHighlighted: highlightedNodeId === node.id,
-      isSelected: selectedNode?.id === node.id,
-      nodeBorderColor,
-      showDebugSeparators: DEBUG_SHOW_NODE_SECTIONS,
-    });
-    
-    renderer.render();
-  };
-};
-
-const GraphRenderer: React.FC<GraphRendererProps> = ({ 
+const GraphRendererImpl: React.FC<GraphRendererProps> = ({ 
   data, 
   width = 800, 
   height = 600,
@@ -1395,8 +1362,47 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
   onEdgeClick,
   initialExpandedNodes
 }) => {
+  // Dynamically import browser-only dependencies
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const ForceGraph = require('force-graph').default;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const d3 = require('d3-force');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { NodeRenderer } = require('./NodeRenderer');
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<any>(null);
+
+  /**
+   * Creates a reusable node rendering function for the force graph
+   * This consolidates the node rendering logic to avoid duplication
+   */
+  const createNodeRenderer = useCallback((
+    isDarkMode: boolean,
+    highlightedNodeId: string | null,
+    selectedNode: any,
+    nodeBorderColor: string,
+    expandedNodes: Set<string>
+  ) => {
+    return (node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+      // Update node's expanded state from expandedNodes set
+      node.isExpanded = expandedNodes.has(node.id);
+      
+      // Use NodeRenderer class to render the complete node
+      const renderer = new NodeRenderer({
+        ctx,
+        node,
+        globalScale,
+        isDarkMode,
+        isHighlighted: highlightedNodeId === node.id,
+        isSelected: selectedNode?.id === node.id,
+        nodeBorderColor,
+        showDebugSeparators: DEBUG_SHOW_NODE_SECTIONS,
+      });
+      
+      renderer.render();
+    };
+  }, []);
 
   // Helper function to clean node object (remove force-graph internal properties)
   const cleanNodeForSelection = useCallback((node: any) => {
@@ -4159,6 +4165,15 @@ const GraphRenderer: React.FC<GraphRendererProps> = ({
         </button>
       </div>
     </div>
+  );
+};
+
+// Wrap the implementation with BrowserOnly to prevent SSR issues
+const GraphRenderer: React.FC<GraphRendererProps> = (props) => {
+  return (
+    <BrowserOnly fallback={<div>Loading graph...</div>}>
+      {() => <GraphRendererImpl {...props} />}
+    </BrowserOnly>
   );
 };
 

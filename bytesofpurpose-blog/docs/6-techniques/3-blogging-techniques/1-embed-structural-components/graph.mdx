@@ -25,30 +25,30 @@ The `NodeRenderer` class handles all node rendering, including sophisticated tit
 Short titles are displayed in full without truncation:
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="Short" zoomLevel={1.0} />
-  <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
-  <NodeRendererDemo title="A Short Node Title" zoomLevel={1.0} />
-</div>
+    <NodeRendererDemo title="Short" zoomLevel={1.0} />
+    <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
+    <NodeRendererDemo title="A Short Node Title" zoomLevel={1.0} />
+  </div>
 
 ### Medium Titles (21-40 characters)
 
 Medium titles may be truncated or wrapped across multiple lines:
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
-  <NodeRendererDemo title="A Medium Length Node Title Here" zoomLevel={1.0} />
-  <NodeRendererDemo title="Medium Title That Needs Wrapping" zoomLevel={1.0} />
-</div>
+    <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
+    <NodeRendererDemo title="A Medium Length Node Title Here" zoomLevel={1.0} />
+    <NodeRendererDemo title="Medium Title That Needs Wrapping" zoomLevel={1.0} />
+  </div>
 
 ### Long Titles (>40 characters)
 
 Long titles are truncated to ensure at least 20 characters are shown before the ellipsis:
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
-  <NodeRendererDemo title="A Very Long Node Title That Will Definitely Be Truncated With Ellipsis" zoomLevel={1.0} />
-  <NodeRendererDemo title="Extremely Long Title That Demonstrates The Ellipsis Mechanism Perfectly" zoomLevel={1.0} />
-</div>
+    <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
+    <NodeRendererDemo title="A Very Long Node Title That Will Definitely Be Truncated With Ellipsis" zoomLevel={1.0} />
+    <NodeRendererDemo title="Extremely Long Title That Demonstrates The Ellipsis Mechanism Perfectly" zoomLevel={1.0} />
+  </div>
 
 ### Zoom Level Effects
 
@@ -57,40 +57,40 @@ The same title at different zoom levels. Notice how the text scales reactively w
 #### Short Title at Different Zoom Levels
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="Short Title" zoomLevel={0.5} />
-  <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
-  <NodeRendererDemo title="Short Title" zoomLevel={1.5} />
-  <NodeRendererDemo title="Short Title" zoomLevel={2.0} />
-</div>
+    <NodeRendererDemo title="Short Title" zoomLevel={0.5} />
+    <NodeRendererDemo title="Short Title" zoomLevel={1.0} />
+    <NodeRendererDemo title="Short Title" zoomLevel={1.5} />
+    <NodeRendererDemo title="Short Title" zoomLevel={2.0} />
+  </div>
 
 #### Medium Title at Different Zoom Levels
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="This is a medium length title" zoomLevel={0.5} />
-  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
-  <NodeRendererDemo title="This is a medium length title" zoomLevel={1.5} />
-  <NodeRendererDemo title="This is a medium length title" zoomLevel={2.0} />
-</div>
+    <NodeRendererDemo title="This is a medium length title" zoomLevel={0.5} />
+    <NodeRendererDemo title="This is a medium length title" zoomLevel={1.0} />
+    <NodeRendererDemo title="This is a medium length title" zoomLevel={1.5} />
+    <NodeRendererDemo title="This is a medium length title" zoomLevel={2.0} />
+  </div>
 
 #### Long Title at Different Zoom Levels
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={0.5} />
-  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
-  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.5} />
-  <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={2.0} />
-</div>
+    <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={0.5} />
+    <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.0} />
+    <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={1.5} />
+    <NodeRendererDemo title="This is a very long title that exceeds the maximum character limit" zoomLevel={2.0} />
+  </div>
 
 ### Parent vs Leaf Nodes
 
 Parent nodes (with children) are larger and show expansion arrows, while leaf nodes are smaller and show a leaf emoji:
 
 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', margin: '20px 0' }}>
-  <NodeRendererDemo title="Parent Node" zoomLevel={1.0} isParent={true} />
-  <NodeRendererDemo title="Leaf Node" zoomLevel={1.0} isParent={false} />
-  <NodeRendererDemo title="Long Parent Node Title" zoomLevel={1.0} isParent={true} />
-  <NodeRendererDemo title="Long Leaf Node Title" zoomLevel={1.0} isParent={false} />
-</div>
+    <NodeRendererDemo title="Parent Node" zoomLevel={1.0} isParent={true} />
+    <NodeRendererDemo title="Leaf Node" zoomLevel={1.0} isParent={false} />
+    <NodeRendererDemo title="Long Parent Node Title" zoomLevel={1.0} isParent={true} />
+    <NodeRendererDemo title="Long Leaf Node Title" zoomLevel={1.0} isParent={false} />
+  </div>
 
 ### Key Features Demonstrated
 
@@ -121,14 +121,14 @@ Parent nodes (with children) are larger and show expansion arrows, while leaf no
 A basic graph with two nodes and a link:
 
 <GraphRenderer data={{
-  nodes: [
-    { id: '1', label: 'Node A', title: 'Node A Title' },
-    { id: '2', label: 'Node B', title: 'Node B Title' }
-  ],
-  links: [
-    { source: '1', target: '2' }
-  ]
-}} />
+    nodes: [
+      { id: '1', label: 'Node A', title: 'Node A Title' },
+      { id: '2', label: 'Node B', title: 'Node B Title' }
+    ],
+    links: [
+      { source: '1', target: '2' }
+    ]
+  }} />
 
 ```jsx
 <GraphRenderer data={{
@@ -296,16 +296,16 @@ Create deep links to specific nodes using URL hashes. When a link is clicked, th
 Edges can have labels displayed at their midpoint:
 
 <GraphRenderer data={{
-  nodes: [
-    { id: 'a', label: 'Node A', title: 'Source' },
-    { id: 'b', label: 'Node B', title: 'Target' },
-    { id: 'c', label: 'Node C', title: 'Another' }
-  ],
-  links: [
-    { source: 'a', target: 'b', label: 'connects to', id: 'link-ab' },
-    { source: 'b', target: 'c', label: 'related to', id: 'link-bc' }
-  ]
-}} />
+    nodes: [
+      { id: 'a', label: 'Node A', title: 'Source' },
+      { id: 'b', label: 'Node B', title: 'Target' },
+      { id: 'c', label: 'Node C', title: 'Another' }
+    ],
+    links: [
+      { source: 'a', target: 'b', label: 'connects to', id: 'link-ab' },
+      { source: 'b', target: 'c', label: 'related to', id: 'link-bc' }
+    ]
+  }} />
 
 ```jsx
 links: [
@@ -323,18 +323,18 @@ links: [
 Assign custom colors to nodes:
 
 <GraphRenderer data={{
-  nodes: [
-    { id: '1', label: 'Blue Node', title: 'Blue', color: '#68BDF6' },
-    { id: '2', label: 'Green Node', title: 'Green', color: '#60BE86' },
-    { id: '3', label: 'Red Node', title: 'Red', color: '#FF6B6B' },
-    { id: '4', label: 'Purple Node', title: 'Purple', color: '#A78BFA' }
-  ],
-  links: [
-    { source: '1', target: '2' },
-    { source: '2', target: '3' },
-    { source: '3', target: '4' }
-  ]
-}} />
+    nodes: [
+      { id: '1', label: 'Blue Node', title: 'Blue', color: '#68BDF6' },
+      { id: '2', label: 'Green Node', title: 'Green', color: '#60BE86' },
+      { id: '3', label: 'Red Node', title: 'Red', color: '#FF6B6B' },
+      { id: '4', label: 'Purple Node', title: 'Purple', color: '#A78BFA' }
+    ],
+    links: [
+      { source: '1', target: '2' },
+      { source: '2', target: '3' },
+      { source: '3', target: '4' }
+    ]
+  }} />
 
 If no color is specified, nodes use a default Neo4j-inspired color palette.
 
