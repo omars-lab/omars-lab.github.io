@@ -1,0 +1,113 @@
+---
+slug: terminal-shortcuts
+title: 'Terminal Shortcuts'
+description: 'Key techniques for establishing shortcuts in terminal, shell, editors, and development environments to improve productivity.'
+authors: [oeid]
+tags: [terminal, shortcuts, aliases, vim, shell, productivity, scripting]
+draft: false
+---
+
+# Leveraging Terminal Shortcuts
+
+Key techniques for establishing shortcuts across terminal, shell, editors, and development environments.
+
+## Shell Aliases
+
+### Basic Aliases
+* [ ] Create aliases in shell configuration files (`.bashrc`, `.zshrc`, `.bash_profile`)
+* [ ] Shorten frequently used commands
+* [ ] Add flags to common commands
+* [ ] Example: `alias ll='ls -lah'`, `alias gs='git status'`
+
+### Git Aliases
+* [ ] Configure git aliases via `git config --global alias.st status`
+* [ ] Create complex git command shortcuts
+* [ ] Example: `alias gco='git checkout'`, `alias gcm='git commit -m'`
+
+## Shell Functions
+
+### Custom Functions
+* [ ] Create reusable shell functions in configuration files
+* [ ] Functions can accept parameters (unlike aliases)
+* [ ] Combine multiple commands with logic
+* [ ] Example: `function mkcd() { mkdir -p "$1" && cd "$1"; }`
+
+## Shell Scripts
+
+### Executable Scripts
+* [ ] Create standalone shell scripts in `~/bin` or `~/.local/bin`
+* [ ] Add scripts to PATH for global access
+* [ ] Use shebang (`#!/bin/bash` or `#!/usr/bin/env bash`)
+* [ ] Make scripts executable with `chmod +x script.sh`
+* [ ] Shell script shortcut alias to directly edit override variables
+
+## Text Expansions & Replacements
+
+### Shell Expansion Tools
+* [ ] Use `zsh` abbreviations with `zsh-abbr` plugin
+* [ ] Configure text expansion tools (espanso, aText, TextExpander)
+* [ ] Create snippets for code patterns
+* [ ] Set up IDE/editor snippets
+
+### Editor Snippets
+* [ ] VSCode snippets (`.code-snippets` files)
+* [ ] Vim snippets (UltiSnips, SnipMate)
+* [ ] Emacs abbreviations and yasnippet
+
+## Vim/Editor Keybindings
+
+### Vim Shortcuts
+* [ ] Custom key mappings in `.vimrc` or `init.vim`
+* [ ] Leader key combinations
+* [ ] Plugin-specific shortcuts
+* [ ] Custom commands and functions
+* [ ] Example: `nnoremap <leader>w :w<CR>`
+
+### Editor Keybindings
+* [ ] VSCode keybindings (`.vscode/keybindings.json`)
+* [ ] Custom keyboard shortcuts in IDEs
+* [ ] Command palette shortcuts
+* [ ] Multi-cursor and selection shortcuts
+
+## Terminal Multiplexer Shortcuts
+
+### tmux/screen
+* [ ] Configure tmux keybindings in `.tmux.conf`
+* [ ] Custom prefix key combinations
+* [ ] Window and pane navigation shortcuts
+* [ ] Session management shortcuts
+
+## Configuration Files
+
+### Shell Configuration
+* [ ] `.bashrc` / `.bash_profile` (Bash)
+* [ ] `.zshrc` (Zsh)
+* [ ] `.profile` (POSIX-compliant shells)
+* [ ] Source configuration files: `source ~/.zshrc`
+
+### Editor Configuration
+* [ ] `.vimrc` / `init.vim` (Vim/Neovim)
+* [ ] `.emacs` / `init.el` (Emacs)
+* [ ] VSCode settings and keybindings JSON files
+
+## System-Level Shortcuts
+
+### macOS Shortcuts
+* [ ] System Preferences → Keyboard → Shortcuts
+* [ ] Application-specific shortcuts
+* [ ] Automator workflows
+* [ ] AppleScript shortcuts
+
+### Linux Shortcuts
+* [ ] Window manager keybindings
+* [ ] Desktop environment shortcuts
+* [ ] Custom keyboard shortcuts via `xbindkeys` or similar
+
+## Best Practices
+
+* [ ] Keep shortcuts consistent across environments
+* [ ] Document custom shortcuts
+* [ ] Use version control for configuration files
+* [ ] Organize shortcuts by category/function
+* [ ] Test shortcuts after configuration changes
+* [ ] Share useful shortcuts with team

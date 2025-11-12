@@ -1,0 +1,37 @@
+---
+slug: table-of-content
+title: 'Table of Contents'
+sidebar_position: 2
+description: 'How to create a table of contents component in Docusaurus.'
+authors: [oeid]
+tags: [docusaurus, react, components, toc]
+draft: false
+---
+
+import TOCInline from '@theme/TOCInline';
+
+:::tip Mechanic 
+Table of Content
+:::
+
+> start before
+<TOCInline toc={toc}/>
+> end before
+
+# Title
+
+Stuff
+
+## Inner Header
+
+asdf
+
+### Even more Inner 
+
+# Another Title
+
+asdf
+
+> start after
+<TOCInline toc={toc}/>
+> end after

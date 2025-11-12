@@ -46,7 +46,7 @@ export default defineConfig({
     stdout: 'pipe',
     stderr: 'pipe',
     // Graceful shutdown: send SIGTERM, then SIGKILL after 3 minutes if still running
-    gracefulShutdown: { signal: 'SIGTERM', timeout: 180000 },
+    // gracefulShutdown: { signal: 'SIGTERM', timeout: 180000 },
   },
 });
 

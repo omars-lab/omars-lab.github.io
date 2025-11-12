@@ -1,0 +1,536 @@
+---
+slug: preparing-for-system-design-questions
+sidebar_position: 11
+title: 'System Design Prep'
+description: 'A comprehensive guide to answering system design questions with systematic approach, background knowledge, and evaluation criteria'
+authors: [oeid]
+tags: [interviewing, system-design, architecture, technical-interview, preparation]
+date: '2025-01-31T10:00'
+draft: false
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<style>{`
+  .tabs-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    border: 1px solid #e9ecef;
+  }
+  
+  .tabs-container .tabs {
+    background-color: transparent;
+  }
+  
+  .tabs-container .tabItem {
+    background-color: transparent;
+  }
+  
+  .checklist {
+    background-color: #e8f5e8;
+    border-left: 4px solid #28a745;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  
+  .checklist h4 {
+    color: #155724;
+    margin-top: 0;
+  }
+  
+  .checklist ul {
+    margin-bottom: 0;
+  }
+`}</style>
+
+# System Design Interview Guide
+
+A comprehensive guide to answering system design questions with systematic approach, background knowledge, and evaluation criteria.
+
+## Purpose
+
+This guide was created to address three critical needs:
+
+- **I need to systematically approach system design problems**: Learn a structured methodology to break down complex system design questions
+- **I need to understand what interviewers evaluate**: Know the specific criteria and questions interviewers use to assess system design skills
+- **I need to build foundational knowledge**: Develop the background understanding of databases, architectures, and design patterns required for system design
+
+The goal is to transform system design interviews from overwhelming challenges into structured, manageable problems you can solve systematically.
+
+## Background Knowledge to Pursue
+
+Before diving into system design problems, ensure you have foundational knowledge in these areas:
+
+### Database Types & Characteristics
+
+<div className="tabs-container">
+<Tabs>
+<TabItem value="relational" label="Relational Databases" default>
+
+**When to Use:**
+- ACID compliance required
+- Complex relationships between entities
+- Structured data with consistent schema
+- Transactional consistency critical
+
+**Key Concepts:**
+- ACID properties (Atomicity, Consistency, Isolation, Durability)
+- Normalization vs denormalization
+- Indexing strategies
+- Query optimization
+
+**Examples:** PostgreSQL, MySQL, Oracle
+
+</TabItem>
+
+<TabItem value="nosql" label="NoSQL Databases">
+
+**Document Stores (MongoDB):**
+- Semi-structured data
+- Flexible schema requirements
+- Rapid development and iteration
+- Horizontal scaling needs
+
+**Key-Value Stores (Redis, DynamoDB):**
+- Simple data models
+- High performance requirements
+- Caching scenarios
+- Session storage
+
+**Columnar (Cassandra, HBase):**
+- Time-series data
+- High write throughput
+- Geographic distribution
+- Analytics workloads
+
+**Graph Databases (Neo4j):**
+- Complex relationships
+- Real-time graph traversals
+- Recommendation systems
+- Social networks
+
+</TabItem>
+
+<TabItem value="consistency" label="Consistency Models">
+
+**ACID vs BASE:**
+- **ACID:** Strong consistency, suitable for financial systems
+- **BASE:** Eventually consistent, suitable for distributed systems
+
+**CAP Theorem:**
+- **Consistency:** All nodes see same data simultaneously
+- **Availability:** System remains operational
+- **Partition Tolerance:** System continues despite network failures
+
+**Trade-offs:**
+- CP systems: Strong consistency, may sacrifice availability
+- AP systems: High availability, eventual consistency
+- CA systems: Not possible in distributed systems
+
+</TabItem>
+</Tabs>
+</div>
+
+### Architecture Patterns
+
+**N-Tier Architecture:**
+- **Presentation Tier:** User interface and user experience
+- **Application Tier:** Business logic and application processing
+- **Data Tier:** Database and data storage
+- **Benefits:** Separation of concerns, scalability, maintainability
+
+**Service-Oriented Architecture (SOA):**
+- Services communicate via well-defined interfaces
+- Loose coupling between services
+- Reusable business logic
+- Technology agnostic
+
+**Microservices:**
+- Small, independent services
+- Each service owns its data
+- Decentralized governance
+- Fault isolation
+
+### Essential Resources
+
+**System Design Fundamentals:**
+- [Amazon System Design Preparation (SIP)](https://www.youtube.com/watch?v=gNQ9-kgyHfo)
+- [System Design Interview – Step By Step Guide](https://youtu.be/bUHFg8CZFws?t=1471)
+- [System Design Primer](https://github.com/donnemartin/system-design-primer)
+- [Beginner's Guide to System Design](https://medium.com/@sentalkssane/a-beginners-guide-to-system-design-76d64689788b)
+- [System Design Video Tutorial](https://www.youtube.com/watch?v=-W9F__D3oY4)
+
+**GenAI System Design:**
+- [ByteByteGo GenAI System Design Course](https://bytebytego.com/courses/genai-system-design-interview/introduction-and-overview)
+
+**Key Concepts:**
+- [Understanding Latency vs Throughput](https://community.cadence.com/cadence_blogs_8/b/fv/posts/understanding-latency-vs-throughput)
+- [CAP Theorem Explained](http://ksat.me/a-plain-english-introduction-to-cap-theorem)
+
+**Database Deep Dives:**
+- [Intro to Graph Databases Episode #1 - Evolution of DBs](https://www.youtube.com/watch?v=5Tl8WcaqZoc&t=299s)
+- [Intro to Graph Databases Episode #2 - Properties of Graph DBs & Use Cases](https://www.youtube.com/watch?v=-dCeFEqDkUI)
+- [MongoDB NoSQL Explained](https://www.mongodb.com/nosql-explained)
+- [Please Stop Calling Databases CP or AP](https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html)
+
+## Systematic Approach to System Design
+
+<div className="tabs-container">
+<Tabs>
+<TabItem value="phase1" label="Phase 1: Requirements Gathering (5-10 min)" default>
+
+### Phase 1: Requirements Gathering (5-10 minutes)
+
+<div className="checklist">
+<h4>📋 Requirements Gathering Checklist</h4>
+<ul>
+<li>Clarify functional requirements</li>
+<li>Understand scale requirements</li>
+<li>Identify performance requirements</li>
+<li>Determine cost constraints</li>
+<li>Establish availability guarantees</li>
+<li>Define security requirements</li>
+</ul>
+</div>
+
+#### Self-Assessment Questions
+
+**Usage Requirements:**
+- Who is using the system?
+- How will it be used?
+- What are they trying to accomplish?
+- What data should be returned?
+- What's the interface/API?
+
+**Scale Requirements:**
+- How many users? (DAU, MAU)
+- How much data? (storage, growth rate)
+- What's the read/write ratio?
+- What are peak vs average loads?
+
+**Performance Requirements:**
+- How fast? (latency requirements)
+- What's the throughput? (requests per second)
+- What are the SLA targets?
+
+**Cost Requirements:**
+- Development cost constraints?
+- Maintenance cost preferences?
+- Open source vs commercial solutions?
+
+**Availability Guarantees:**
+- Do we need to be always up?
+- What's the acceptable downtime?
+- What are the RTO/RPO requirements?
+
+</TabItem>
+
+<TabItem value="phase2" label="Phase 2: High-Level Design (10-15 min)">
+
+### Phase 2: High-Level Design (10-15 minutes)
+
+<div className="checklist">
+<h4>📋 High-Level Design Checklist</h4>
+<ul>
+<li>Define system boundaries</li>
+<li>Identify major components</li>
+<li>Design data flow</li>
+<li>Plan API structure</li>
+<li>Consider frontend requirements</li>
+<li>Address basic scalability</li>
+</ul>
+</div>
+
+#### Key Design Decisions
+
+**Frontend Considerations:**
+- UI/UX requirements
+- Landing pages and user flows
+- Search functionality
+- User experience patterns
+
+**Backend Architecture:**
+- Service-based vs monolithic approach
+- Event-driven vs request-response
+- API design (REST, GraphQL, gRPC)
+- Data processing framework needs
+
+**Data Model:**
+- High-level objects to store
+- Entity relationships
+- Access patterns
+- Data lifecycle
+
+</TabItem>
+
+<TabItem value="phase3" label="Phase 3: Detailed Design (15-20 min)">
+
+### Phase 3: Detailed Design (15-20 minutes)
+
+<div className="checklist">
+<h4>📋 Detailed Design Checklist</h4>
+<ul>
+<li>Choose appropriate databases</li>
+<li>Design caching strategy</li>
+<li>Plan load balancing</li>
+<li>Address fault tolerance</li>
+<li>Consider security measures</li>
+<li>Plan monitoring and observability</li>
+</ul>
+</div>
+
+#### Database Selection Criteria
+
+**Write Performance:**
+- Do we need fast writes?
+- What's the write pattern?
+- Do we need ACID compliance?
+
+**Availability & Fault Tolerance:**
+- What's the availability requirement?
+- How do we handle failures?
+- What's the backup strategy?
+
+**Consistency Requirements:**
+- Strong consistency vs eventual consistency
+- What are the consistency trade-offs?
+- How do we handle conflicts?
+
+#### Scalability Strategies
+
+**Horizontal vs Vertical Scaling:**
+- When to scale horizontally
+- When vertical scaling is sufficient
+- Cost implications of each approach
+
+**Caching Strategy:**
+- What to cache and where
+- Cache invalidation strategies
+- Distributed caching considerations
+
+**Load Balancing:**
+- Traffic distribution strategies
+- Health checking mechanisms
+- Session affinity requirements
+
+</TabItem>
+
+<TabItem value="phase4" label="Phase 4: Deep Dive & Trade-offs (5-10 min)">
+
+### Phase 4: Deep Dive & Trade-offs (5-10 minutes)
+
+<div className="checklist">
+<h4>📋 Deep Dive Checklist</h4>
+<ul>
+<li>Identify potential bottlenecks</li>
+<li>Discuss failure scenarios</li>
+<li>Address edge cases</li>
+<li>Explain design trade-offs</li>
+<li>Consider alternative approaches</li>
+<li>Plan for future scaling</li>
+</ul>
+</div>
+
+</TabItem>
+</Tabs>
+</div>
+
+## Interviewer Evaluation Criteria
+
+### What Interviewers Look For
+
+**Problem-Solving Approach:**
+- Do you ask clarifying questions?
+- Do you break down complex problems systematically?
+- Do you consider multiple approaches?
+- Do you explain your reasoning clearly?
+
+**Technical Knowledge:**
+- Do you understand different database types and their trade-offs?
+- Can you discuss scalability strategies?
+- Do you understand distributed systems concepts?
+- Can you explain performance implications?
+
+**Communication Skills:**
+- Do you engage the interviewer like a co-worker?
+- Do you explain trade-offs and implications?
+- Do you use appropriate technical terminology?
+- Do you adapt your explanation to the audience?
+
+**Design Thinking:**
+- Do you start with simplicity and enhance as needed?
+- Do you consider operational requirements?
+- Do you think about monitoring and debugging?
+- Do you plan for future evolution?
+
+### Common Interviewer Questions
+
+**Requirements & Scope:**
+- "What assumptions are you making?"
+- "How would you handle [specific edge case]?"
+- "What if the requirements changed to [new requirement]?"
+- "What's your MVP vs full system approach?"
+
+**Technical Decisions:**
+- "Why did you choose [specific technology]?"
+- "What are the trade-offs of your approach?"
+- "How would you handle [specific failure scenario]?"
+- "What are the bottlenecks in your design?"
+
+**Scalability & Performance:**
+- "How would this scale to 10x the current load?"
+- "What happens if one component fails?"
+- "How would you optimize for [specific metric]?"
+- "What's your strategy for handling peak loads?"
+
+**Operational Concerns:**
+- "How would you monitor this system?"
+- "What metrics would you track?"
+- "How would you debug issues in production?"
+- "What's your deployment strategy?"
+
+## Example: Inventory Management System
+
+### Requirements Gathering
+
+**Usage:**
+- Fulfillment center operators need real-time inventory visibility
+- Managers need reporting and analytics
+- External systems need inventory updates
+
+**Scale:**
+- 1M+ inventory items across multiple locations
+- 10K+ daily transactions
+- 100+ concurrent users
+
+**Performance:**
+- less than 100ms response time for inventory lookups
+- 99.9% availability
+- Real-time updates for critical operations
+
+### High-Level Design
+
+**Components:**
+- Web frontend for operators
+- API gateway for external access
+- Inventory service for business logic
+- Database for persistence
+- Message queue for async processing
+
+**Data Flow:**
+- Real-time updates via WebSocket
+- Batch processing for analytics
+- Event-driven updates between services
+
+### Detailed Design
+
+**Database Choice:**
+- Primary: PostgreSQL for transactional consistency
+- Cache: Redis for frequently accessed data
+- Analytics: Columnar database for reporting
+
+**Scalability:**
+- Horizontal scaling of application servers
+- Database read replicas
+- CDN for static content
+
+## Action Items
+
+This section contains specific action items that readers can take to enhance their understanding or apply the concepts from this post:
+
+- [ ] **Study Database Types**: Deep dive into relational, NoSQL, and specialized databases, understanding when to use each and their trade-offs
+- [ ] **Practice Requirements Gathering**: Work through 5 different system design problems, focusing on asking the right clarifying questions and understanding scope
+- [ ] **Build Architecture Knowledge**: Study real-world system architectures (Twitter, Netflix, Uber) to understand how companies solve similar problems at scale
+- [ ] **Practice Trade-off Discussions**: Prepare explanations for common design trade-offs (consistency vs availability, performance vs cost, simplicity vs flexibility)
+
+**Implementation Notes:**
+- Each action item should be specific and measurable with clear deliverables
+- Focus on understanding trade-offs rather than memorizing solutions
+- Practice explaining your reasoning out loud, as communication is crucial
+- Consider different skill levels: beginners should focus on basic concepts, intermediate on trade-offs, advanced on real-world complexity
+- Provide context: these skills directly translate to real-world system design decisions
+
+## Conclusion
+
+System design interviews test your ability to think systematically about complex problems, make informed technical decisions, and communicate your reasoning effectively. By following a structured approach, building foundational knowledge, and practicing trade-off discussions, you can demonstrate the skills companies look for in senior engineering roles.
+
+Remember: The goal isn't to design the perfect system, but to show how you approach complex problems, make reasoned decisions, and communicate effectively with your team.
+
+<details>
+<summary>🤖 AI Metadata (Click to expand)</summary>
+
+```yaml
+# AI METADATA - DO NOT REMOVE OR MODIFY
+# AI_UPDATE_INSTRUCTIONS:
+# This blog post is a comprehensive system design interview guide that requires
+# careful maintenance to ensure accuracy and relevance.
+#
+# 1. SCAN_SOURCES: Monitor system design best practices, new technologies, and interview trends
+# 2. EXTRACT_DATA: Identify new database types, architecture patterns, and evaluation criteria
+# 3. UPDATE_CONTENT: Update background knowledge, systematic approach, and evaluation criteria
+# 4. VERIFY_CHANGES: Ensure all checklists are comprehensive and examples are current
+# 5. MAINTAIN_FORMAT: Preserve tabbed interface, checklists, and structured approach
+#
+# CONTENT_PATTERNS:
+# - Purpose Section: Must use "I need to..." format for each bullet point
+# - Background Knowledge: Tabbed sections for different technology areas
+# - Systematic Approach: Phase-based with checklists for each phase
+# - Evaluation Criteria: Separated into self-assessment vs interviewer questions
+# - Action Items: 4 specific, measurable tasks with implementation notes
+#
+# DATA_SOURCES:
+# - Primary: System design best practices and interview preparation materials
+# - Secondary: Real-world system architectures and technology documentation
+# - Tertiary: This document (structured approach and evaluation criteria)
+#
+# UPDATE_TRIGGERS:
+# - New database technologies or architectural patterns emerge
+# - Changes to system design interview practices or evaluation criteria
+# - Updates to technology trade-offs or best practices
+# - New real-world system design examples become available
+#
+# FORMATTING_RULES:
+# - Maintain exact tabbed interface format for background knowledge
+# - Preserve checklist format with green styling and checkboxes
+# - Keep systematic approach in 4 phases with time allocations
+# - Separate self-assessment questions from interviewer evaluation criteria
+# - Use consistent technical terminology and clear explanations
+# - Action items must be specific, measurable, and include implementation notes
+# - Purpose section must use "I need to..." format for all bullet points
+# - AI metadata must be collapsible and follow exact format
+#
+# SYSTEMATIC_APPROACH_REQUIREMENTS:
+# - Phase 1: Requirements Gathering (5-10 minutes) with comprehensive checklist
+# - Phase 2: High-Level Design (10-15 minutes) with component identification
+# - Phase 3: Detailed Design (15-20 minutes) with technology decisions
+# - Phase 4: Deep Dive & Trade-offs (5-10 minutes) with bottleneck analysis
+# - Each phase must have actionable checklist items
+# - Time allocations must be realistic for typical interview duration
+#
+# BACKGROUND_KNOWLEDGE_REQUIREMENTS:
+# - Database Types: Relational, NoSQL (document, key-value, columnar, graph)
+# - Consistency Models: ACID vs BASE, CAP theorem, trade-offs
+# - Architecture Patterns: N-tier, SOA, microservices
+# - Essential Resources: Curated list of learning materials
+# - Each knowledge area must include when to use and key concepts
+#
+# EVALUATION_CRITERIA_REQUIREMENTS:
+# - Separate self-assessment questions from interviewer questions
+# - Cover problem-solving approach, technical knowledge, communication, design thinking
+# - Include specific examples of interviewer questions
+# - Focus on what interviewers actually evaluate during system design interviews
+# - Provide clear criteria for success
+#
+# INTERVIEW_QUESTIONS_FORMAT:
+# - Self-assessment questions organized by category (usage, scale, performance, cost, availability)
+# - Interviewer questions organized by evaluation area (requirements, technical decisions, scalability, operational)
+# - Questions must be specific and actionable
+# - Include examples of good vs poor responses where appropriate
+#
+# UPDATE_FREQUENCY: Check quarterly or when significant changes occur in system design practices
+```
+
+</details>

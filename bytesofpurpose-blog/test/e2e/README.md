@@ -61,6 +61,8 @@ yarn playwright test --project=webkit
 
 ### Title Rendering
 - ✅ Text content is rendered (not just ellipsis)
+- ✅ Titles are truncated to max 10 chars (7 + "...")
+- ✅ Single line rendering (not multi-line)
 - ✅ Text is visible at different zoom levels
 - ✅ No "ellipsis-only" nodes (regression test)
 - ✅ Text remains visible after rapid zoom changes
@@ -69,7 +71,8 @@ yarn playwright test --project=webkit
 ### Interactions
 - ✅ Zoom in/out works correctly
 - ✅ Pan/drag interactions work
-- ✅ Node clicks are handled
+- ✅ Node clicks select nodes (sun-like theming)
+- ✅ Node selection via URL fragment works
 - ✅ Canvas remains stable after interactions
 
 ### Visual Verification
