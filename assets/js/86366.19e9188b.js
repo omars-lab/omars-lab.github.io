@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkbytesofpurpose_blog=globalThis.webpackChunkbytesofpurpose_blog||[]).push([[86366],{86366:(e,s,b)=>{b.d(s,{createArchitectureServices:()=>o.S});var o=b(38980);b(87960)}}]);

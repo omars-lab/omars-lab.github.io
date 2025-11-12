@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-mental-models/understanding-the-genai-domain/2025-07-30-understanding-the-fundamentals-of-genai" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">🤖 The Fundamentals of Agentic Systems | Bytes of Purpose</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" name="twitter:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" property="og:url" content="https://blog.bytesofpurpose.com/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="twitter:site" content="@rythome"><meta data-rh="true" name="twitter:creator" content="@rythome"><meta data-rh="true" property="og:type" content="website"><meta data-rh="true" property="og:site_name" content="Bytes of Purpose"><meta data-rh="true" property="og:locale" content="en_US"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="🤖 The Fundamentals of Agentic Systems | Bytes of Purpose"><meta data-rh="true" name="description" content="A comprehensive glossary of GenAI concepts with practical definitions and key differences between commonly confused components."><meta data-rh="true" property="og:description" content="A comprehensive glossary of GenAI concepts with practical definitions and key differences between commonly confused components."><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://blog.bytesofpurpose.com/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems" hreflang="en"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"🤖 The Fundamentals of Agentic Systems","item":"https://blog.bytesofpurpose.com/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Bytes of Purpose Atom Feed">
+
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79YSEH7T7X"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-79YSEH7T7X",{})</script>
+
+
+
+<link rel="alternate" type="application/rss+xml" href="/designs/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.27fb5d53.css">
+<script src="/assets/js/runtime~main.8361b24b.js" defer="defer"></script>
+<script src="/assets/js/main.9ba17b49.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><link rel="preload" as="image" href="/img/logo_dark.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo_dark.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">BytesOfPurpose</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/welcome/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Posts</a><a class="navbar__item navbar__link" href="/designs">Designs</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item"><a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></div><b class="navbar__title text--truncate">Buy Me a Coffee?</b></a></div><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/welcome/intro"><span title="👋 Welcome" class="linkLabel_WmDU">👋 Welcome</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/definitions/emojis-for-activities"><span title="📖 Definitions" class="categoryLinkLabel_W154">📖 Definitions</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/docs/mental-models/understanding-data-structs-and-algos/understanding-dynamic-programming"><span title="🧠 Mental Models" class="categoryLinkLabel_W154">🧠 Mental Models</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/mental-models/understanding-data-structs-and-algos/understanding-dynamic-programming"><span title="📚 Understanding Data Structures &amp; Algorithms" class="categoryLinkLabel_W154">📚 Understanding Data Structures &amp; Algorithms</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/mental-models/understanding-cultural-values/understanding-tech-company-culture"><span title="🌍 Cultural Values" class="categoryLinkLabel_W154">🌍 Cultural Values</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/mental-models/understanding-processes/understanding-the-interview-process"><span title="⚙️ Understanding Processes" class="categoryLinkLabel_W154">⚙️ Understanding Processes</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/mental-models/understanding-career-levels/understanding-sde-levels"><span title="📊 Understanding Career Levels" class="categoryLinkLabel_W154">📊 Understanding Career Levels</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/mental-models/understanding-skills/leadership-principles-companies-look-for"><span title="🎯 Understanding Desirable Skills" class="categoryLinkLabel_W154">🎯 Understanding Desirable Skills</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" tabindex="0" href="/docs/mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025"><span title="🤖 Understanding the GenAI Domain" class="categoryLinkLabel_W154">🤖 Understanding the GenAI Domain</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025"><span title="🌍 AI Engineer World Fair 2025" class="linkLabel_WmDU">🌍 AI Engineer World Fair 2025</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems"><span title="🤖 The Fundamentals of Agentic Systems" class="linkLabel_WmDU">🤖 The Fundamentals of Agentic Systems</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/mental-models/understanding-the-genai-domain/learning-about-genai"><span title="💡 GenAI Learning Guide" class="linkLabel_WmDU">💡 GenAI Learning Guide</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape"><span title="🗺️ The AI Framework Landscape" class="linkLabel_WmDU">🗺️ The AI Framework Landscape</span></a></li></ul></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/development/development"><span title="🚀 Development" class="categoryLinkLabel_W154">🚀 Development</span></a><button aria-label="Expand sidebar category &#x27;🚀 Development&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/craftsmanship/craftsmanship"><span title="🧰 Craftsmanship" class="categoryLinkLabel_W154">🧰 Craftsmanship</span></a><button aria-label="Expand sidebar category &#x27;🧰 Craftsmanship&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/techniques/mechanics"><span title="🔧 Techniques" class="categoryLinkLabel_W154">🔧 Techniques</span></a><button aria-label="Expand sidebar category &#x27;🔧 Techniques&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/skills/interviewing"><span title="🍳 Skills" class="categoryLinkLabel_W154">🍳 Skills</span></a><button aria-label="Expand sidebar category &#x27;🍳 Skills&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/habits/habits-automating"><span title="🎯 Habits" class="categoryLinkLabel_W154">🎯 Habits</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist" href="/docs/prompts"><span title="📝 Prompts" class="categoryLinkLabel_W154">📝 Prompts</span></a><button aria-label="Expand sidebar category &#x27;📝 Prompts&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">🧠 Mental Models</span></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">🤖 Understanding the GenAI Domain</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">🤖 The Fundamentals of Agentic Systems</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><p>I wanted to document the fundamentals of Gen AI that I have been iteratively learning about; thus I made this post with the help of gen AI :)</p>
+<header><h1>The Fundamentals of Agentic Systems</h1></header>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Purpose of Guide</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Core Questions</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">When to Use</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">What You&#x27;ll Learn</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p>This comprehensive glossary explains essential GenAI concepts, why they matter, and provides practical implementation examples. It focuses on clarifying the differences between commonly confused components.</p><p><strong>What This Guide Covers:</strong></p><ul>
+<li class="">Essential GenAI concepts and their importance</li>
+<li class="">Practical implementation examples for each concept</li>
+<li class="">Key differences between similar-sounding components</li>
+<li class="">Interactive learning diagram with clickable navigation</li>
+<li class="">Real-world applications and use cases</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li class="">What are the key concepts I need to know in GenAI?</li>
+<li class="">Why do these concepts matter for building AI systems?</li>
+<li class="">What are the differences between similar-sounding components?</li>
+<li class="">What are practical examples and implementations of each concept?</li>
+<li class="">How do these concepts work together in real systems?</li>
+<li class="">What are the key applications and use cases for GenAI?</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li class="">You&#x27;re new to GenAI and need to understand the fundamentals</li>
+<li class="">You need to understand key concepts before making design decisions</li>
+<li class="">You want to learn why certain technologies are important</li>
+<li class="">You&#x27;re preparing to work with GenAI systems</li>
+<li class="">You need to distinguish between similar components</li>
+<li class="">You&#x27;re building or designing AI-powered applications</li>
+<li class="">You need to understand the GenAI technology landscape</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""></div></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="genai-domain-overview">GenAI Domain Overview<a href="#genai-domain-overview" class="hash-link" aria-label="Direct link to GenAI Domain Overview" title="Direct link to GenAI Domain Overview" translate="no">​</a></h2>
+<iframe style="border:1px solid rgba(0, 0, 0, 0.1)" width="100%" height="450" src="https://embed.figma.com/board/DE44pLgNmB4Hz88OENhEKA/The-GenAI-Domain?embed-host=share"></iframe>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="genai-fundamentals-glossary">GenAI Fundamentals Glossary<a href="#genai-fundamentals-glossary" class="hash-link" aria-label="Direct link to GenAI Fundamentals Glossary" title="Direct link to GenAI Fundamentals Glossary" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="foundation-models-llms">Foundation Models (LLMs)<a href="#foundation-models-llms" class="hash-link" aria-label="Direct link to Foundation Models (LLMs)" title="Direct link to Foundation Models (LLMs)" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Model Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Popular Implementations</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Large language models that can understand and generate human-like text.</p><p><strong>Why it matters</strong>: These are the &quot;brains&quot; that power your AI system. Without them, you can&#x27;t have AI.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Trained on massive datasets (trillions of tokens)</li>
+<li class="">Capable of text generation, reasoning, and conversation</li>
+<li class="">Foundation for all other GenAI components</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Capability</strong>:</p><ul>
+<li class=""><strong>Text Generation</strong>: GPT-4, Claude, Llama</li>
+<li class=""><strong>Multimodal</strong>: GPT-4V, Claude 3.5, Gemini Pro</li>
+<li class=""><strong>Code Specialized</strong>: Claude 3.5 Sonnet, GitHub Copilot</li>
+<li class=""><strong>Open Source</strong>: Llama 3, Mistral, CodeLlama</li>
+</ul><p><strong>By Provider</strong>:</p><ul>
+<li class=""><strong>OpenAI</strong>: GPT-4, GPT-4V, GPT-3.5</li>
+<li class=""><strong>Anthropic</strong>: Claude 3.5 Sonnet, Claude 3 Haiku</li>
+<li class=""><strong>Google</strong>: Gemini Pro, Gemini Ultra</li>
+<li class=""><strong>Meta</strong>: Llama 3, Code Llama</li>
+<li class=""><strong>AWS</strong>: Amazon Nova, Titan</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Commercial Models</strong>:</p><ul>
+<li class=""><strong>GPT-4</strong>: OpenAI&#x27;s flagship, excellent for complex reasoning</li>
+<li class=""><strong>Claude 3.5 Sonnet</strong>: Anthropic&#x27;s model, great for analysis and coding</li>
+<li class=""><strong>Gemini Pro</strong>: Google&#x27;s model, strong for multimodal tasks</li>
+<li class=""><strong>Amazon Nova</strong>: AWS&#x27;s model, optimized for enterprise use</li>
+</ul><p><strong>Open Source Models</strong>:</p><ul>
+<li class=""><strong>Llama 3</strong>: Meta&#x27;s open-source model, good for customization</li>
+<li class=""><strong>Mistral</strong>: High-performance open-source alternative</li>
+<li class=""><strong>CodeLlama</strong>: Specialized for code generation</li>
+<li class=""><strong>Phi-3</strong>: Microsoft&#x27;s efficient small model</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Response Quality</strong>: How good are the answers?</li>
+<li class=""><strong>Speed</strong>: How fast does it respond?</li>
+<li class=""><strong>Cost</strong>: How much does each response cost?</li>
+<li class=""><strong>Context Window</strong>: How much text can it process at once?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="prompting">Prompting<a href="#prompting" class="hash-link" aria-label="Direct link to Prompting" title="Direct link to Prompting" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Prompt Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Tools &amp; Platforms</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: The instructions you give to AI models to get them to do what you want.</p><p><strong>Why it matters</strong>: Good prompts = good results. Bad prompts = useless results.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Clear, specific instructions</li>
+<li class="">Context and examples when needed</li>
+<li class="">Iterative refinement process</li>
+<li class="">Foundation for all AI interactions</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Structure</strong>:</p><ul>
+<li class=""><strong>Zero-shot</strong>: Single instruction without examples</li>
+<li class=""><strong>Few-shot</strong>: Instruction with 2-5 examples</li>
+<li class=""><strong>Chain-of-Thought</strong>: Step-by-step reasoning prompts</li>
+<li class=""><strong>Role-playing</strong>: Character-based prompts</li>
+</ul><p><strong>By Purpose</strong>:</p><ul>
+<li class=""><strong>Creative Writing</strong>: Storytelling, content creation</li>
+<li class=""><strong>Code Generation</strong>: Programming assistance</li>
+<li class=""><strong>Analysis</strong>: Data interpretation, research</li>
+<li class=""><strong>Conversation</strong>: Chat, customer service</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Prompt Engineering Platforms</strong>:</p><ul>
+<li class=""><strong>OpenAI Playground</strong>: Interactive prompt testing</li>
+<li class=""><strong>Anthropic Console</strong>: Claude prompt development</li>
+<li class=""><strong>LangSmith</strong>: Prompt debugging and optimization</li>
+<li class=""><strong>PromptLayer</strong>: Prompt versioning and analytics</li>
+</ul><p><strong>Best Practices</strong>:</p><ul>
+<li class="">Be specific with context and requirements</li>
+<li class="">Provide examples of desired output</li>
+<li class="">Iterate and refine based on results</li>
+<li class="">Test with different model versions</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Prompt Effectiveness</strong>: How often do good prompts lead to good results?</li>
+<li class=""><strong>Token Efficiency</strong>: How many words do you need to get good results?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="rag-retrieval-augmented-generation">RAG (Retrieval Augmented Generation)<a href="#rag-retrieval-augmented-generation" class="hash-link" aria-label="Direct link to RAG (Retrieval Augmented Generation)" title="Direct link to RAG (Retrieval Augmented Generation)" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAG Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Components &amp; Tools</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: A way to let AI access your company&#x27;s documents, databases, and knowledge to give better answers.</p><p><strong>Why it matters</strong>: Without RAG, AI only knows what it learned during training. With RAG, it can access your specific information.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Combines information retrieval with text generation</li>
+<li class="">Provides access to real-time, specific data</li>
+<li class="">Reduces hallucinations by grounding responses in facts</li>
+<li class="">Essential for enterprise AI applications</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Architecture</strong>:</p><ul>
+<li class=""><strong>Basic RAG</strong>: Simple retrieval + generation</li>
+<li class=""><strong>Advanced RAG</strong>: Query rewriting, reranking, hybrid search</li>
+<li class=""><strong>Agentic RAG</strong>: Multi-step reasoning and tool use</li>
+<li class=""><strong>Graph RAG</strong>: Knowledge graph integration</li>
+</ul><p><strong>Advanced RAG Patterns</strong>:</p><ul>
+<li class=""><strong>Hybrid Retriever</strong>: Combines semantic search with keyword-based search (TF/IDF, BM25)</li>
+<li class=""><strong>Query Rewriting</strong>: Uses LLM to generate multiple query variations for better retrieval</li>
+<li class=""><strong>Reranker</strong>: Ranks retrieved documents by relevance before sending to LLM</li>
+</ul><p><strong>By Data Source</strong>:</p><ul>
+<li class=""><strong>Document RAG</strong>: PDFs, Word docs, web pages</li>
+<li class=""><strong>Database RAG</strong>: Structured data from databases</li>
+<li class=""><strong>API RAG</strong>: Real-time data from external APIs</li>
+<li class=""><strong>Hybrid RAG</strong>: Multiple data sources combined</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Vector Databases</strong>:</p><ul>
+<li class=""><strong>Pinecone</strong>: Managed vector database service</li>
+<li class=""><strong>Weaviate</strong>: Open-source vector database</li>
+<li class=""><strong>Chroma</strong>: Lightweight vector database</li>
+<li class=""><strong>Qdrant</strong>: High-performance vector database</li>
+<li class=""><strong>AWS OpenSearch</strong>: Managed search and analytics</li>
+</ul><p><strong>Embedding Models</strong>:</p><ul>
+<li class=""><strong>OpenAI Embeddings</strong>: text-embedding-ada-002, text-embedding-3-large</li>
+<li class=""><strong>Cohere Embed</strong>: Multilingual embedding model</li>
+<li class=""><strong>Sentence Transformers</strong>: Open-source embedding models</li>
+<li class=""><strong>AWS Bedrock Embeddings</strong>: Amazon&#x27;s embedding models</li>
+</ul><p><strong>Document Processing</strong>:</p><ul>
+<li class=""><strong>LangChain</strong>: Document loaders and processors</li>
+<li class=""><strong>LlamaIndex</strong>: Document indexing and retrieval</li>
+<li class=""><strong>Unstructured</strong>: Document parsing and extraction</li>
+<li class=""><strong>Apache Tika</strong>: Content extraction from files</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Retrieval Accuracy</strong>: How often does it find the right information?</li>
+<li class=""><strong>Response Relevance</strong>: How often are the answers actually helpful?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="vector-databases">Vector Databases<a href="#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Database Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Popular Implementations</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Differentiating Factors</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Special databases that can find similar information even when you don&#x27;t use the exact same words.</p><p><strong>Why it matters</strong>: Humans search by meaning, not exact words. Vector databases let AI do the same.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Store high-dimensional vectors (embeddings)</li>
+<li class="">Enable semantic search and similarity matching</li>
+<li class="">Optimized for approximate nearest neighbor (ANN) search</li>
+<li class="">Essential for RAG and semantic search applications</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Deployment</strong>:</p><ul>
+<li class=""><strong>Managed Services</strong>: Pinecone, Weaviate Cloud, AWS OpenSearch</li>
+<li class=""><strong>Self-hosted</strong>: Chroma, Qdrant, Milvus</li>
+<li class=""><strong>Cloud-native</strong>: AWS OpenSearch, Azure Cognitive Search</li>
+<li class=""><strong>Hybrid</strong>: LanceDB with S3 integration</li>
+</ul><p><strong>By Architecture</strong>:</p><ul>
+<li class=""><strong>In-memory</strong>: Fast but limited by RAM</li>
+<li class=""><strong>Disk-based</strong>: Persistent but slower</li>
+<li class=""><strong>Distributed</strong>: Scalable across multiple nodes</li>
+<li class=""><strong>Serverless</strong>: Auto-scaling managed services</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Managed Services</strong>:</p><ul>
+<li class=""><strong>Pinecone</strong>: Fully managed, excellent performance</li>
+<li class=""><strong>Weaviate Cloud</strong>: Open-source with managed hosting</li>
+<li class=""><strong>AWS OpenSearch</strong>: Integrated with AWS ecosystem</li>
+<li class=""><strong>Azure Cognitive Search</strong>: Microsoft&#x27;s search service</li>
+</ul><p><strong>Self-hosted Options</strong>:</p><ul>
+<li class=""><strong>Chroma</strong>: Lightweight, easy to deploy</li>
+<li class=""><strong>Qdrant</strong>: High-performance, Rust-based</li>
+<li class=""><strong>Milvus</strong>: Scalable, enterprise-grade</li>
+<li class=""><strong>Weaviate</strong>: Open-source, feature-rich</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Search Accuracy</strong>: How often does it find what you&#x27;re looking for?</li>
+<li class=""><strong>Search Speed</strong>: How fast can it search through millions of documents?</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>How to Choose Between Vector Database Types</strong>:</p><p><strong>Managed vs. Self-hosted</strong>:</p><ul>
+<li class=""><strong>Managed Services</strong> (Pinecone, Weaviate Cloud): Best for quick deployment, no infrastructure management</li>
+<li class=""><strong>Self-hosted</strong> (Chroma, Qdrant, Milvus): Best for data control, customization, cost optimization</li>
+</ul><p><strong>Performance vs. Simplicity</strong>:</p><ul>
+<li class=""><strong>High Performance</strong> (Pinecone, Qdrant): Best for production workloads with high query volumes</li>
+<li class=""><strong>Simple Setup</strong> (Chroma): Best for prototyping and small-scale applications</li>
+</ul><p><strong>Cloud vs. On-premises</strong>:</p><ul>
+<li class=""><strong>Cloud-native</strong> (AWS OpenSearch, Azure Cognitive Search): Best for cloud-first architectures</li>
+<li class=""><strong>Multi-cloud</strong> (Weaviate, Milvus): Best for hybrid or multi-cloud deployments</li>
+</ul><p><strong>Key Decision Factors</strong>:</p><ul>
+<li class=""><strong>Scale Requirements</strong>: Vector count and query volume</li>
+<li class=""><strong>Performance Needs</strong>: Search latency and throughput</li>
+<li class=""><strong>Cost Considerations</strong>: Storage and compute costs</li>
+<li class=""><strong>Integration Complexity</strong>: Ease of integration with existing systems</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="memory-systems">Memory Systems<a href="#memory-systems" class="hash-link" aria-label="Direct link to Memory Systems" title="Direct link to Memory Systems" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Memory Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Storage Solutions</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Differentiating Factors</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Ways for AI to remember what happened in previous conversations.</p><p><strong>Why it matters</strong>: Without memory, every conversation starts from scratch. With memory, AI can build on past interactions.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Persistent storage across conversations</li>
+<li class="">Context retrieval and injection</li>
+<li class="">User preference learning</li>
+<li class="">Essential for personalized AI experiences</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Duration</strong>:</p><ul>
+<li class=""><strong>Short-term Memory</strong>: Session context, conversation history</li>
+<li class=""><strong>Long-term Memory</strong>: User preferences, learned facts</li>
+<li class=""><strong>Working Memory</strong>: Current context and state</li>
+<li class=""><strong>Episodic Memory</strong>: Specific events and conversations</li>
+</ul><p><strong>By Content</strong>:</p><ul>
+<li class=""><strong>Semantic Memory</strong>: Facts and knowledge storage</li>
+<li class=""><strong>Procedural Memory</strong>: Task and workflow memory</li>
+<li class=""><strong>Conversational Memory</strong>: Chat history and context</li>
+<li class=""><strong>Preference Memory</strong>: User settings and preferences</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Short-term Memory</strong>:</p><ul>
+<li class=""><strong>Redis</strong>: In-memory data store for session storage</li>
+<li class=""><strong>Memcached</strong>: Distributed memory caching</li>
+<li class=""><strong>DynamoDB</strong>: NoSQL database for conversation state</li>
+<li class=""><strong>PostgreSQL</strong>: Relational database for structured memory</li>
+</ul><p><strong>Long-term Memory</strong>:</p><ul>
+<li class=""><strong>AgentCore Memory</strong>: AWS&#x27;s agent memory service</li>
+<li class=""><strong>Weaviate</strong>: Vector database for semantic memory</li>
+<li class=""><strong>Pinecone</strong>: Managed vector storage for knowledge</li>
+<li class=""><strong>Custom Solutions</strong>: Built-in memory systems</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Memory Accuracy</strong>: How often does it remember correctly?</li>
+<li class=""><strong>Memory Persistence</strong>: How long does it remember important information?</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>How to Choose Between Memory System Types</strong>:</p><p><strong>Short-term vs. Long-term Memory</strong>:</p><ul>
+<li class=""><strong>Short-term</strong> (Redis, Memcached): Best for session management, real-time context</li>
+<li class=""><strong>Long-term</strong> (AgentCore Memory, Weaviate): Best for persistent user preferences, learning</li>
+</ul><p><strong>Performance vs. Persistence</strong>:</p><ul>
+<li class=""><strong>High Performance</strong> (Redis, Memcached): Best for real-time applications, low latency</li>
+<li class=""><strong>Persistent Storage</strong> (DynamoDB, PostgreSQL): Best for data durability, complex queries</li>
+</ul><p><strong>Cloud vs. Self-hosted</strong>:</p><ul>
+<li class=""><strong>Managed Services</strong> (AgentCore Memory): Best for AWS ecosystems, minimal management</li>
+<li class=""><strong>Self-hosted</strong> (Redis, PostgreSQL): Best for data control, custom requirements</li>
+</ul><p><strong>Key Decision Factors</strong>:</p><ul>
+<li class=""><strong>Memory Duration</strong>: How long data needs to be stored</li>
+<li class=""><strong>Performance Needs</strong>: Access speed and latency requirements</li>
+<li class=""><strong>Data Complexity</strong>: Structured vs. unstructured memory needs</li>
+<li class=""><strong>Scalability</strong>: Multi-user and multi-agent support</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="agentic-systems">Agentic Systems<a href="#agentic-systems" class="hash-link" aria-label="Direct link to Agentic Systems" title="Direct link to Agentic Systems" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Agent Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Frameworks &amp; Tools</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Differentiating Factors</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: AI systems that can not just talk, but actually do things like send emails, update databases, or make API calls.</p><p><strong>Why it matters</strong>: Most AI just talks. Agentic AI actually gets things done.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Autonomous task execution</li>
+<li class="">Tool and system integration</li>
+<li class="">Multi-step reasoning and planning</li>
+<li class="">Real-world action capabilities</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Architecture</strong>:</p><ul>
+<li class=""><strong>Single Agent</strong>: One AI system handling all tasks</li>
+<li class=""><strong>Multi-Agent</strong>: Multiple specialized agents working together</li>
+<li class=""><strong>Hierarchical</strong>: Supervisor agents coordinating worker agents</li>
+<li class=""><strong>Swarm</strong>: Decentralized agents with emergent behavior</li>
+</ul><p><strong>By Capability</strong>:</p><ul>
+<li class=""><strong>Browser Automation</strong>: Web interaction and data extraction</li>
+<li class=""><strong>API Integration</strong>: External service connections</li>
+<li class=""><strong>Database Operations</strong>: Data management and queries</li>
+<li class=""><strong>Communication</strong>: Email, Slack, Teams integration</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Agent Frameworks</strong>:</p><ul>
+<li class=""><strong>Strands Agents</strong>: AWS&#x27;s agent development platform</li>
+<li class=""><strong>LangGraph</strong>: Multi-agent workflow framework</li>
+<li class=""><strong>CrewAI</strong>: Collaborative agent framework</li>
+<li class=""><strong>LlamaIndex</strong>: Agent and tool integration</li>
+<li class=""><strong>AutoGen</strong>: Microsoft&#x27;s multi-agent framework</li>
+</ul><p><strong>Agent Capabilities</strong>:</p><ul>
+<li class=""><strong>Browser Automation</strong>: Nova Act, Playwright agents</li>
+<li class=""><strong>API Integration</strong>: REST, GraphQL, gRPC connections</li>
+<li class=""><strong>Database Operations</strong>: CRUD operations, queries</li>
+<li class=""><strong>File Operations</strong>: Read, write, process files</li>
+<li class=""><strong>Communication</strong>: Email, Slack, Teams integration</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Task Completion Rate</strong>: How often does it successfully complete tasks?</li>
+<li class=""><strong>Action Accuracy</strong>: How often does it do the right thing?</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>How to Choose Between Agent Framework Types</strong>:</p><p><strong>Single vs. Multi-Agent</strong>:</p><ul>
+<li class=""><strong>Single Agent</strong> (Simple frameworks): Best for straightforward tasks, easier to manage</li>
+<li class=""><strong>Multi-Agent</strong> (CrewAI, LangGraph): Best for complex workflows, specialized agents</li>
+</ul><p><strong>Cloud vs. Self-hosted</strong>:</p><ul>
+<li class=""><strong>Managed Services</strong> (Strands Agents): Best for AWS ecosystems, minimal infrastructure</li>
+<li class=""><strong>Open Source</strong> (LangGraph, CrewAI): Best for customization, cost control</li>
+</ul><p><strong>Capability Focus</strong>:</p><ul>
+<li class=""><strong>Browser Automation</strong> (Nova Act): Best for web-based tasks</li>
+<li class=""><strong>API Integration</strong> (Custom frameworks): Best for system integration</li>
+<li class=""><strong>Communication</strong> (Slack/Teams bots): Best for user interaction</li>
+</ul><p><strong>Key Decision Factors</strong>:</p><ul>
+<li class=""><strong>Task Complexity</strong>: Simple vs. complex multi-step workflows</li>
+<li class=""><strong>Integration Needs</strong>: Existing system integration requirements</li>
+<li class=""><strong>Development Speed</strong>: Time to market vs. customization needs</li>
+<li class=""><strong>Team Expertise</strong>: Developer skill levels and preferences</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tool-integration">Tool Integration<a href="#tool-integration" class="hash-link" aria-label="Direct link to Tool Integration" title="Direct link to Tool Integration" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Integration Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Tools &amp; Standards</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Ways to connect AI to your existing tools and systems (databases, APIs, software).</p><p><strong>Why it matters</strong>: AI is only useful if it can work with your existing systems and data.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Standardized interfaces for tool access</li>
+<li class="">Secure authentication and authorization</li>
+<li class="">Real-time data access and manipulation</li>
+<li class="">Essential for practical AI applications</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Protocol</strong>:</p><ul>
+<li class=""><strong>MCP (Model Context Protocol)</strong>: Standardized tool access</li>
+<li class=""><strong>Direct API Integration</strong>: REST, GraphQL, gRPC</li>
+<li class=""><strong>Embedded Tools</strong>: Built-in functionality</li>
+<li class=""><strong>Hybrid Integration</strong>: Multiple approaches combined</li>
+</ul><p><strong>By Function</strong>:</p><ul>
+<li class=""><strong>Database Tools</strong>: SQL, NoSQL database access</li>
+<li class=""><strong>API Tools</strong>: External service integration</li>
+<li class=""><strong>File Tools</strong>: Document and data processing</li>
+<li class=""><strong>Communication Tools</strong>: Email, messaging, notifications</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>MCP Servers</strong>:</p><ul>
+<li class=""><strong>Database MCP</strong>: SQL and NoSQL database connections</li>
+<li class=""><strong>File System MCP</strong>: File operations and management</li>
+<li class=""><strong>API MCP</strong>: REST and GraphQL integrations</li>
+<li class=""><strong>Custom MCP</strong>: Specialized tool implementations</li>
+</ul><p><strong>Direct API Integration</strong>:</p><ul>
+<li class=""><strong>REST APIs</strong>: HTTP-based integrations</li>
+<li class=""><strong>GraphQL</strong>: Query-based data access</li>
+<li class=""><strong>gRPC</strong>: High-performance RPC calls</li>
+<li class=""><strong>WebSocket</strong>: Real-time communication</li>
+</ul><p><strong>MCP Benefits</strong>:</p><ul>
+<li class=""><strong>Standardization</strong>: Consistent tool interfaces</li>
+<li class=""><strong>Interoperability</strong>: Cross-platform compatibility</li>
+<li class=""><strong>Extensibility</strong>: Easy tool addition</li>
+<li class=""><strong>Security</strong>: Controlled access patterns</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Integration Reliability</strong>: How often do the connections work?</li>
+<li class=""><strong>Data Accuracy</strong>: How often does it access the right data?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="evaluation-and-testing">Evaluation and Testing<a href="#evaluation-and-testing" class="hash-link" aria-label="Direct link to Evaluation and Testing" title="Direct link to Evaluation and Testing" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Evaluation Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Tools &amp; Frameworks</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Ways to test and measure whether your AI system is working correctly.</p><p><strong>Why it matters</strong>: AI can seem to work but actually be wrong or harmful. Testing helps catch problems.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Systematic evaluation of AI performance</li>
+<li class="">Automated testing and validation</li>
+<li class="">Human feedback integration</li>
+<li class="">Continuous improvement through metrics</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Method</strong>:</p><ul>
+<li class=""><strong>Automated Testing</strong>: Systematic evaluation of responses</li>
+<li class=""><strong>Human Evaluation</strong>: Qualitative assessment by experts</li>
+<li class=""><strong>A/B Testing</strong>: Comparative performance analysis</li>
+<li class=""><strong>User Feedback</strong>: Real-world usage metrics</li>
+</ul><p><strong>By Focus</strong>:</p><ul>
+<li class=""><strong>Accuracy Testing</strong>: Correctness of responses</li>
+<li class=""><strong>Safety Testing</strong>: Harmful content detection</li>
+<li class=""><strong>Performance Testing</strong>: Speed and efficiency</li>
+<li class=""><strong>User Experience</strong>: Satisfaction and usability</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Evaluation Frameworks</strong>:</p><ul>
+<li class=""><strong>LangSmith</strong>: LLM evaluation and debugging</li>
+<li class=""><strong>Weights &amp; Biases</strong>: Experiment tracking and evaluation</li>
+<li class=""><strong>MLflow</strong>: Model evaluation and versioning</li>
+<li class=""><strong>Evidently AI</strong>: Data and model monitoring</li>
+</ul><p><strong>Testing Tools</strong>:</p><ul>
+<li class=""><strong>Pytest</strong>: Python testing framework</li>
+<li class=""><strong>Playwright</strong>: End-to-end testing</li>
+<li class=""><strong>Postman</strong>: API testing and validation</li>
+<li class=""><strong>Custom Test Suites</strong>: Specialized evaluation tools</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Accuracy Rate</strong>: Correctness of responses</li>
+<li class=""><strong>Response Time</strong>: Latency and performance</li>
+<li class=""><strong>Task Completion</strong>: Success rate of actions</li>
+<li class=""><strong>User Satisfaction</strong>: Human feedback scores</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="security-and-guardrails">Security and Guardrails<a href="#security-and-guardrails" class="hash-link" aria-label="Direct link to Security and Guardrails" title="Direct link to Security and Guardrails" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Security Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Tools &amp; Services</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: Systems that prevent AI from doing harmful things or accessing sensitive information.</p><p><strong>Why it matters</strong>: AI can be powerful but also dangerous if not properly controlled.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Content filtering and safety controls</li>
+<li class="">Access control and authentication</li>
+<li class="">Data protection and privacy</li>
+<li class="">Compliance and audit capabilities</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Function</strong>:</p><ul>
+<li class=""><strong>Content Safety</strong>: Harmful content detection and filtering</li>
+<li class=""><strong>Access Control</strong>: Authentication and authorization</li>
+<li class=""><strong>Data Protection</strong>: Encryption and privacy controls</li>
+<li class=""><strong>Compliance</strong>: Regulatory and policy adherence</li>
+</ul><p><strong>By Level</strong>:</p><ul>
+<li class=""><strong>Basic Security</strong>: Standard authentication and filtering</li>
+<li class=""><strong>Enterprise Security</strong>: Advanced controls and compliance</li>
+<li class=""><strong>Custom Security</strong>: Domain-specific safety rules</li>
+<li class=""><strong>Zero Trust</strong>: Comprehensive security architecture</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>Content Safety</strong>:</p><ul>
+<li class=""><strong>AWS Guardrails</strong>: Content filtering and safety</li>
+<li class=""><strong>Azure Content Safety</strong>: Microsoft&#x27;s safety services</li>
+<li class=""><strong>OpenAI Moderation</strong>: Content moderation API</li>
+<li class=""><strong>Custom Filters</strong>: Specialized safety rules</li>
+</ul><p><strong>Access Control</strong>:</p><ul>
+<li class=""><strong>OAuth 2.0</strong>: Standard authentication protocol</li>
+<li class=""><strong>JWT Tokens</strong>: Secure session management</li>
+<li class=""><strong>RBAC</strong>: Role-based access control</li>
+<li class=""><strong>API Keys</strong>: Service authentication</li>
+</ul><p><strong>Data Protection</strong>:</p><ul>
+<li class=""><strong>Encryption</strong>: Data at rest and in transit</li>
+<li class=""><strong>PII Detection</strong>: Personal information identification</li>
+<li class=""><strong>Data Masking</strong>: Sensitive data protection</li>
+<li class=""><strong>Audit Logging</strong>: Security event tracking</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Security Incidents</strong>: How often does it try to do something it shouldn&#x27;t?</li>
+<li class=""><strong>Compliance Rate</strong>: How often does it follow your company&#x27;s rules?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="mcp-model-context-protocol">MCP (Model Context Protocol)<a href="#mcp-model-context-protocol" class="hash-link" aria-label="Direct link to MCP (Model Context Protocol)" title="Direct link to MCP (Model Context Protocol)" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">MCP Components</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Tools &amp; Examples</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: A standard way for AI systems to connect to tools and data sources.</p><p><strong>Why it matters</strong>: Without standards, every AI system needs custom connections. MCP makes it easier to connect AI to different tools.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Standardized protocol for tool access</li>
+<li class="">Interoperability between different AI systems</li>
+<li class="">Secure and controlled tool access</li>
+<li class="">Extensible architecture for new tools</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Role</strong>:</p><ul>
+<li class=""><strong>MCP Servers</strong>: Tool implementations that expose capabilities</li>
+<li class=""><strong>MCP Clients</strong>: AI systems that consume tool capabilities</li>
+<li class=""><strong>MCP Protocols</strong>: Standardized communication protocols</li>
+<li class=""><strong>MCP Tools</strong>: Specific tool implementations</li>
+</ul><p><strong>By Function</strong>:</p><ul>
+<li class=""><strong>Database MCP</strong>: SQL and NoSQL database connections</li>
+<li class=""><strong>File System MCP</strong>: File operations and management</li>
+<li class=""><strong>API MCP</strong>: REST and GraphQL integrations</li>
+<li class=""><strong>Custom MCP</strong>: Specialized tool implementations</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>MCP Servers</strong>:</p><ul>
+<li class=""><strong>Database MCP</strong>: SQL and NoSQL database connections</li>
+<li class=""><strong>File System MCP</strong>: File operations and management</li>
+<li class=""><strong>API MCP</strong>: REST and GraphQL integrations</li>
+<li class=""><strong>Custom MCP</strong>: Specialized tool implementations</li>
+</ul><p><strong>MCP Clients</strong>:</p><ul>
+<li class=""><strong>Claude Desktop</strong>: Native MCP support</li>
+<li class=""><strong>Custom Clients</strong>: Application-specific implementations</li>
+<li class=""><strong>SDK Libraries</strong>: Development frameworks</li>
+<li class=""><strong>Integration Tools</strong>: Connection utilities</li>
+</ul><p><strong>MCP Benefits</strong>:</p><ul>
+<li class=""><strong>Standardization</strong>: Consistent tool interfaces</li>
+<li class=""><strong>Interoperability</strong>: Cross-platform compatibility</li>
+<li class=""><strong>Extensibility</strong>: Easy tool addition</li>
+<li class=""><strong>Security</strong>: Controlled access patterns</li>
+</ul><p><strong>Key Metrics</strong>:</p><ul>
+<li class=""><strong>Connection Success Rate</strong>: How often do MCP connections work?</li>
+<li class=""><strong>Tool Availability</strong>: How many tools can you easily connect?</li>
+</ul></div></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="infrastructure-as-code-iac">Infrastructure as Code (IaC)<a href="#infrastructure-as-code-iac" class="hash-link" aria-label="Direct link to Infrastructure as Code (IaC)" title="Direct link to Infrastructure as Code (IaC)" translate="no">​</a></h3>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Definition &amp; Why It Matters</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">IaC Types</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Popular Implementations</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Differentiating Factors</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><p><strong>What it is</strong>: A way to manage and provision infrastructure using code instead of manual processes.</p><p><strong>Why it matters</strong>: IaC makes GenAI deployments reproducible, scalable, and maintainable by treating infrastructure as software.</p><p><strong>Key Characteristics</strong>:</p><ul>
+<li class="">Version-controlled infrastructure definitions</li>
+<li class="">Automated deployment and configuration</li>
+<li class="">Consistent environments across development, staging, and production</li>
+<li class="">Easy rollback and disaster recovery</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>By Tool</strong>:</p><ul>
+<li class=""><strong>AWS CDK</strong>: Programmatic infrastructure with familiar programming languages</li>
+<li class=""><strong>Terraform</strong>: Declarative infrastructure management</li>
+<li class=""><strong>CloudFormation</strong>: AWS-native infrastructure as code</li>
+<li class=""><strong>Pulumi</strong>: Multi-cloud infrastructure with real programming languages</li>
+</ul><p><strong>By Approach</strong>:</p><ul>
+<li class=""><strong>Declarative</strong>: Define desired state, tool figures out how to achieve it</li>
+<li class=""><strong>Imperative</strong>: Define exact steps to create infrastructure</li>
+<li class=""><strong>Hybrid</strong>: Combine declarative and imperative approaches</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>AWS CDK</strong>:</p><ul>
+<li class=""><strong>Languages</strong>: TypeScript, Python, Java, C#</li>
+<li class=""><strong>Benefits</strong>: Type safety, IDE support, reusable components</li>
+<li class=""><strong>Use Cases</strong>: Complex AWS architectures, team collaboration</li>
+</ul><p><strong>Terraform</strong>:</p><ul>
+<li class=""><strong>Multi-cloud</strong>: Works with AWS, Azure, GCP, and others</li>
+<li class=""><strong>State Management</strong>: Tracks infrastructure state</li>
+<li class=""><strong>Modules</strong>: Reusable infrastructure components</li>
+</ul><p><strong>CloudFormation</strong>:</p><ul>
+<li class=""><strong>AWS Native</strong>: Deep integration with AWS services</li>
+<li class=""><strong>Templates</strong>: JSON or YAML infrastructure definitions</li>
+<li class=""><strong>Stack Management</strong>: Automated stack operations</li>
+</ul><p><strong>Key Benefits</strong>:</p><ul>
+<li class=""><strong>Reproducibility</strong>: Same infrastructure every time</li>
+<li class=""><strong>Version Control</strong>: Track infrastructure changes</li>
+<li class=""><strong>Automation</strong>: Eliminate manual configuration errors</li>
+<li class=""><strong>Scalability</strong>: Easy to replicate and scale</li>
+</ul><p><strong>Production Deployment Patterns</strong>:</p><ul>
+<li class=""><strong>Crawl-Walk-Run</strong>: Gradual rollout (internal → limited external → full production)</li>
+<li class=""><strong>SageMaker JumpStart</strong>: Rapid model deployment with pre-built solutions</li>
+<li class=""><strong>Enterprise Solutions</strong>: AgentCore runtime with comprehensive services</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p><strong>How to Choose Between IaC Tools</strong>:</p><p><strong>AWS CDK vs. Terraform</strong>:</p><ul>
+<li class=""><strong>AWS CDK</strong>: Best for AWS-only projects, team prefers programming languages</li>
+<li class=""><strong>Terraform</strong>: Best for multi-cloud or when you need vendor neutrality</li>
+</ul><p><strong>CloudFormation vs. CDK</strong>:</p><ul>
+<li class=""><strong>CloudFormation</strong>: Best for simple AWS deployments, JSON/YAML preference</li>
+<li class=""><strong>CDK</strong>: Best for complex logic, type safety, and reusable components</li>
+</ul><p><strong>Terraform vs. Pulumi</strong>:</p><ul>
+<li class=""><strong>Terraform</strong>: Best for declarative approach, large community</li>
+<li class=""><strong>Pulumi</strong>: Best for imperative approach, real programming languages</li>
+</ul><p><strong>Key Decision Factors</strong>:</p><ul>
+<li class=""><strong>Cloud Strategy</strong>: Single cloud vs. multi-cloud</li>
+<li class=""><strong>Team Expertise</strong>: Programming languages vs. configuration languages</li>
+<li class=""><strong>Complexity</strong>: Simple deployments vs. complex logic requirements</li>
+<li class=""><strong>Community</strong>: Support and ecosystem considerations</li>
+</ul></div></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-these-concepts-work-together">How These Concepts Work Together<a href="#how-these-concepts-work-together" class="hash-link" aria-label="Direct link to How These Concepts Work Together" title="Direct link to How These Concepts Work Together" translate="no">​</a></h2>
+<p>Think of building an AI system like building a house:</p>
+<ul>
+<li class=""><strong>Foundation Models</strong> = The foundation (everything else builds on this)</li>
+<li class=""><strong>Prompting</strong> = The blueprints (how you tell it what to do)</li>
+<li class=""><strong>RAG</strong> = The library (access to information)</li>
+<li class=""><strong>Vector Databases</strong> = The filing system (organizing information)</li>
+<li class=""><strong>Memory</strong> = The family history (remembering past interactions)</li>
+<li class=""><strong>Agentic Systems</strong> = The hands (actually doing things)</li>
+<li class=""><strong>Tool Integration</strong> = The utilities (connecting to existing systems)</li>
+<li class=""><strong>Evaluation</strong> = The inspection (making sure everything works)</li>
+<li class=""><strong>Security</strong> = The locks and alarms (keeping things safe)</li>
+<li class=""><strong>MCP</strong> = The standard electrical outlets (easy connections)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-these-concepts-differ">How These Concepts Differ<a href="#how-these-concepts-differ" class="hash-link" aria-label="Direct link to How These Concepts Differ" title="Direct link to How These Concepts Differ" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="vector-databases-vs-knowledge-bases">Vector Databases vs. Knowledge Bases<a href="#vector-databases-vs-knowledge-bases" class="hash-link" aria-label="Direct link to Vector Databases vs. Knowledge Bases" title="Direct link to Vector Databases vs. Knowledge Bases" translate="no">​</a></h3>
+<div style="display:flex;gap:20px"><div style="flex:1"><p><strong>Vector Databases</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Storage and retrieval of embeddings</li>
+<li class=""><strong>Purpose</strong>: Fast semantic search</li>
+<li class=""><strong>Scope</strong>: Technical infrastructure component</li>
+<li class=""><strong>Examples</strong>: Pinecone, Weaviate, Chroma</li>
+</ul></div><div style="flex:1"><p><strong>Knowledge Bases</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Document processing, chunking, and retrieval logic</li>
+<li class=""><strong>Purpose</strong>: Comprehensive knowledge management</li>
+<li class=""><strong>Scope</strong>: End-to-end RAG solution</li>
+<li class=""><strong>Examples</strong>: Amazon Bedrock Knowledge Bases, Custom solutions</li>
+</ul></div></div>
+<p><strong>Key Difference</strong>: Vector databases are infrastructure; knowledge bases are complete solutions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="agent-frameworks-vs-tool-systems">Agent Frameworks vs. Tool Systems<a href="#agent-frameworks-vs-tool-systems" class="hash-link" aria-label="Direct link to Agent Frameworks vs. Tool Systems" title="Direct link to Agent Frameworks vs. Tool Systems" translate="no">​</a></h3>
+<div style="display:flex;gap:20px"><div style="flex:1"><p><strong>Agent Frameworks</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Overall agent infrastructure and orchestration</li>
+<li class=""><strong>Purpose</strong>: Agent development and management</li>
+<li class=""><strong>Scope</strong>: Complete agent lifecycle</li>
+<li class=""><strong>Examples</strong>: Strands Agents, LangGraph, CrewAI</li>
+</ul></div><div style="flex:1"><p><strong>Tool Systems</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: External system integration</li>
+<li class=""><strong>Purpose</strong>: Tool access and execution</li>
+<li class=""><strong>Scope</strong>: Tool-specific functionality</li>
+<li class=""><strong>Examples</strong>: MCP Servers, API integrations, Database connectors</li>
+</ul></div></div>
+<p><strong>Key Difference</strong>: Frameworks are broader; tool systems are more focused.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="memory-systems-vs-knowledge-bases">Memory Systems vs. Knowledge Bases<a href="#memory-systems-vs-knowledge-bases" class="hash-link" aria-label="Direct link to Memory Systems vs. Knowledge Bases" title="Direct link to Memory Systems vs. Knowledge Bases" translate="no">​</a></h3>
+<div style="display:flex;gap:20px"><div style="flex:1"><p><strong>Memory Systems</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Conversation context and user preferences</li>
+<li class=""><strong>Purpose</strong>: Personalized AI experiences</li>
+<li class=""><strong>Scope</strong>: User-specific data</li>
+<li class=""><strong>Examples</strong>: AgentCore Memory, Redis, DynamoDB</li>
+</ul></div><div style="flex:1"><p><strong>Knowledge Bases</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Domain knowledge and factual information</li>
+<li class=""><strong>Purpose</strong>: Accurate information retrieval</li>
+<li class=""><strong>Scope</strong>: Organization-wide data</li>
+<li class=""><strong>Examples</strong>: Document stores, Vector databases, RAG systems</li>
+</ul></div></div>
+<p><strong>Key Difference</strong>: Memory is personal; knowledge is organizational.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="model-serving-vs-agent-frameworks">Model Serving vs. Agent Frameworks<a href="#model-serving-vs-agent-frameworks" class="hash-link" aria-label="Direct link to Model Serving vs. Agent Frameworks" title="Direct link to Model Serving vs. Agent Frameworks" translate="no">​</a></h3>
+<div style="display:flex;gap:20px"><div style="flex:1"><p><strong>Model Serving</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Running foundation models efficiently</li>
+<li class=""><strong>Purpose</strong>: Model execution and scaling</li>
+<li class=""><strong>Scope</strong>: Infrastructure for model hosting</li>
+<li class=""><strong>Examples</strong>: Amazon Bedrock, SageMaker, Azure OpenAI</li>
+</ul></div><div style="flex:1"><p><strong>Agent Frameworks</strong>:</p><ul>
+<li class=""><strong>Focus</strong>: Agent-specific capabilities and orchestration</li>
+<li class=""><strong>Purpose</strong>: Agent development and management</li>
+<li class=""><strong>Scope</strong>: Complete agent functionality</li>
+<li class=""><strong>Examples</strong>: Strands Agents, LangGraph, CrewAI</li>
+</ul></div></div>
+<p><strong>Key Difference</strong>: Model serving is infrastructure; agent frameworks are application layer.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="example-agentic-applications">Example Agentic Applications<a href="#example-agentic-applications" class="hash-link" aria-label="Direct link to Example Agentic Applications" title="Direct link to Example Agentic Applications" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Content Creation</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Business Applications</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Technical Infrastructure</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
+<li class=""><strong>Text Generation</strong>: Articles, code, documentation</li>
+<li class=""><strong>Image Generation</strong>: Visual content, design assets</li>
+<li class=""><strong>Audio/Video</strong>: Voice synthesis, video creation</li>
+<li class=""><strong>Code Generation</strong>: Programming assistance, automation</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li class=""><strong>Customer Service</strong>: Chatbots, support automation</li>
+<li class=""><strong>Data Analysis</strong>: Insights, reporting, visualization</li>
+<li class=""><strong>Process Automation</strong>: Workflow optimization, task automation</li>
+<li class=""><strong>Decision Support</strong>: Analysis, recommendations, forecasting</li>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
+<li class=""><strong>Cloud Platforms</strong>: AWS, Google Cloud, Azure AI services</li>
+<li class=""><strong>Open Source</strong>: Hugging Face, Ollama, local deployment</li>
+<li class=""><strong>Enterprise</strong>: Custom models, private deployment</li>
+<li class=""><strong>Edge Computing</strong>: On-device AI, mobile applications</li>
+</ul></div></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h2>
+<p>Ready to dive deeper? Check out:</p>
+<ul>
+<li class=""><a class="" href="/docs/mental-models/understanding-the-genai-domain/designing-genai-systems">Designing GenAI Systems</a> for architectural decisions</li>
+<li class=""><a class="" href="/docs/mental-models/understanding-the-genai-domain/preparing-genai-systems-for-production">Preparing GenAI Systems for Production</a> for production readiness</li>
+</ul>
+<hr>
+<p><em>This guide gives you the foundation you need to understand and work with GenAI systems. Each concept builds on the others, so understanding all of them helps you make better decisions about your AI projects.</em></p>
+<details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>🤖 AI Metadata</summary><div><div class="collapsibleContent_i85q"><div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain"># AI METADATA - DO NOT REMOVE OR MODIFY</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># AI_UPDATE_INSTRUCTIONS:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># This document should be updated when new agentic system fundamentals emerge,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># core concepts evolve, or foundational technologies change.</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 1. SCAN_SOURCES: Monitor agentic AI research, foundation model updates,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#    core technology developments, and fundamental concept evolution</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 2. EXTRACT_DATA: Extract new fundamental concepts, core technologies,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#    component relationships, and foundational patterns from authoritative sources</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 3. UPDATE_CONTENT: Add new fundamentals, update component descriptions,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#    and ensure all foundational concepts remain current and relevant</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 4. VERIFY_CHANGES: Cross-reference new content with multiple sources and ensure</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#    consistency with existing fundamental concepts and component relationships</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 5. MAINTAIN_FORMAT: Preserve the structured format with clear concept descriptions,</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#    component relationships, and foundational understanding</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># CONTENT_PATTERNS:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Core Concepts: Direct Prompting, RAG, Memory Management, Vector Stores, Infrastructure as Code</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Component Relationships: How different agentic system components work together</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Key Technologies: Language models, vector databases, agent frameworks, deployment patterns</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Core Questions: Educational questions for understanding agentic system fundamentals</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># DATA_SOURCES:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Agentic AI Research: Foundation models, core concepts, fundamental technologies</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Component Analysis: Agentic system components and their roles and relationships</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Technology Landscape: Language models, vector databases, agent frameworks, IaC</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Additional Resources: Core agentic system concepts, foundational technologies</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># RESEARCH_STATUS:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Fundamentals: Core agentic system concepts and component relationships documented</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Educational Focus: Content structured for understanding agentic system fundamentals</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Component Analysis: Comprehensive agentic system components and their roles documented</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Blog Post Structure: Adheres to /prompts/author/blog-post-structure.md</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Content Integration: Merged from multiple sources (domain overview, intermediate concepts)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Document Evolution: Transformed from documentation to comprehensive blog post</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># CONTENT_SECTIONS:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 1. Purpose Section (Purpose of Guide, Core Questions, When to Use, What You&#x27;ll Learn)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 2. Core Concepts (Foundation Models, Prompting, RAG, Vector Databases, Memory Systems, etc.)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 3. Example Applications (Content Creation, Business Applications, Technical Infrastructure)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 4. Component Relationships (How components work together)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 5. Practical Considerations (Implementation, development, future, challenges)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># 6. Next Steps (Design decision guidance)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># FUNDAMENTAL_CONCEPTS:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Direct Prompting: Simple, effective, limited to model knowledge</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - RAG: Retrieval Augmented Generation, combines retrieval with generation</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Memory Management: Conversation context and user preferences</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Vector Stores: Semantic search and similarity matching</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Agent Frameworks: Autonomous AI agent infrastructure</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Infrastructure as Code: Automated, reproducible agentic system deployments</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># STRUCTURING_APPROACH:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Interactive Learning Diagram: High-level Mermaid flowchart showing concept relationships</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Clickable Navigation: Direct links from diagram nodes to detailed sections</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Tabbed Content: Each concept has Definition, Types, Implementations, Differentiating Factors</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Two-Column Comparisons: Side-by-side layout for &quot;How These Concepts Differ&quot; section</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Visual Hierarchy: Clear progression from fundamentals to differences to next steps</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Emoji Integration: Visual cues with italicized angle-bracket formatting (*&lt;&lt;emoji description&gt;&gt;*)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Color-Coded Categories: Distinct colors for Core Concepts, Memory, Action, Quality</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Clean Background: Light gray/white background with colored borders for distinction</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># ITERATION_HISTORY:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Initial: Comprehensive glossary with tabbed sections for each concept</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Enhanced: Added interactive Mermaid diagram with clickable links</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Refined: Simplified diagram to focus on core concepts and relationships</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Improved: Added two-column layout for concept comparisons</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Polished: Clean color scheme with light background and distinct borders</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Final: Interactive diagram with direct navigation, no redundant text links</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># DIAGRAM_STRUCTURE:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - High-Level Overview: Shows GenAI fundamentals and their relationships</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Category Grouping: Core Concepts, Memory &amp; Context, Action &amp; Integration, Quality &amp; Safety</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Relationship Mapping: Solid lines for direct relationships, dotted for cross-connections</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Interactive Elements: Clickable nodes that link to detailed sections</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Visual Design: Clean, professional appearance with subtle background colors</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Navigation Integration: Seamless connection between diagram and content sections</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># BLOG_POST_EVOLUTION:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Original Purpose: Documentation-style glossary of GenAI fundamentals</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Content Integration: Merged domain overview and intermediate concepts</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Structure Enhancement: Added tabbed purpose section and example applications</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Visual Improvements: Interactive Mermaid diagram with clickable navigation</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Content Consolidation: Removed duplicate sections and integrated advanced patterns</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Final Form: Comprehensive blog post covering fundamentals through applications</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">#</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># INTEGRATION_HISTORY:</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Domain Overview: Merged Figma embed and application examples from understanding-genai-domain.md</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Intermediate Concepts: Integrated advanced RAG patterns and deployment strategies</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Content Organization: Properly categorized Infrastructure as Code as separate concept</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Pattern Integration: Moved advanced patterns into appropriate existing sections</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"># - Structure Optimization: Converted Key Applications to tabbed Example Agentic Applications</span><br></span></code></pre></div></div></div></div></details></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-tags-row"><div class="col"><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/genai">genai</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/fundamentals">fundamentals</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/concepts">concepts</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/patterns">patterns</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/education">education</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/docs/tags/glossary">glossary</a></li></ul></div></div><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/docs/3-mental-models/6-understanding-the-genai-domain/2025-07-30-understanding-the-fundamentals-of-genai.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">🌍 AI Engineer World Fair 2025</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/mental-models/understanding-the-genai-domain/learning-about-genai"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">💡 GenAI Learning Guide</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#genai-domain-overview" class="table-of-contents__link toc-highlight">GenAI Domain Overview</a></li><li><a href="#genai-fundamentals-glossary" class="table-of-contents__link toc-highlight">GenAI Fundamentals Glossary</a><ul><li><a href="#foundation-models-llms" class="table-of-contents__link toc-highlight">Foundation Models (LLMs)</a></li><li><a href="#prompting" class="table-of-contents__link toc-highlight">Prompting</a></li><li><a href="#rag-retrieval-augmented-generation" class="table-of-contents__link toc-highlight">RAG (Retrieval Augmented Generation)</a></li><li><a href="#vector-databases" class="table-of-contents__link toc-highlight">Vector Databases</a></li><li><a href="#memory-systems" class="table-of-contents__link toc-highlight">Memory Systems</a></li><li><a href="#agentic-systems" class="table-of-contents__link toc-highlight">Agentic Systems</a></li><li><a href="#tool-integration" class="table-of-contents__link toc-highlight">Tool Integration</a></li><li><a href="#evaluation-and-testing" class="table-of-contents__link toc-highlight">Evaluation and Testing</a></li><li><a href="#security-and-guardrails" class="table-of-contents__link toc-highlight">Security and Guardrails</a></li><li><a href="#mcp-model-context-protocol" class="table-of-contents__link toc-highlight">MCP (Model Context Protocol)</a></li><li><a href="#infrastructure-as-code-iac" class="table-of-contents__link toc-highlight">Infrastructure as Code (IaC)</a></li></ul></li><li><a href="#how-these-concepts-work-together" class="table-of-contents__link toc-highlight">How These Concepts Work Together</a></li><li><a href="#how-these-concepts-differ" class="table-of-contents__link toc-highlight">How These Concepts Differ</a><ul><li><a href="#vector-databases-vs-knowledge-bases" class="table-of-contents__link toc-highlight">Vector Databases vs. Knowledge Bases</a></li><li><a href="#agent-frameworks-vs-tool-systems" class="table-of-contents__link toc-highlight">Agent Frameworks vs. Tool Systems</a></li><li><a href="#memory-systems-vs-knowledge-bases" class="table-of-contents__link toc-highlight">Memory Systems vs. Knowledge Bases</a></li><li><a href="#model-serving-vs-agent-frameworks" class="table-of-contents__link toc-highlight">Model Serving vs. Agent Frameworks</a></li></ul></li><li><a href="#example-agentic-applications" class="table-of-contents__link toc-highlight">Example Agentic Applications</a></li><li><a href="#next-steps" class="table-of-contents__link toc-highlight">Next Steps</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contact</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/omars-lab/omars-lab.github.io" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.linkedin.com/in/oeid/" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:contact@rythome.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Email<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amp;amount=1&amp;no_recurring=0&amp;item_name=Support+a+Developer&amp;currency_code=USD" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Other Works</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.bytesofpurpose.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Portfolio<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.bytesofpurpose.com/resume.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Resume<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 BytesOfPurpose, Inc. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkbytesofpurpose_blog=self.webpackChunkbytesofpurpose_blog||[]).push([[8296],{98384:s=>{s.exports=JSON.parse('{"blogBasePath":"/designs","blogTitle":"Blog","authorsListPath":"/designs/authors"}')}}]);
