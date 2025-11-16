@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "react-force-graph": "^1.43.0",
     "@docusaurus/core": "^3.7.0",
     "@docusaurus/module-type-aliases": "^3.7.0",
     "@docusaurus/preset-classic": "^3.7.0",
     "@docusaurus/theme-live-codeblock": "^3.7.0",
     "@docusaurus/theme-mermaid": "^3.8.1",
     "@docusaurus/tsconfig": "^3.7.0",
-    "@docusaurus/types": "^3.7.0"
+    "@docusaurus/types": "^3.7.0",
+    "react-force-graph": "^1.48.1"
   }
 }

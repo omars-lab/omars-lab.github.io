@@ -9,15 +9,20 @@ interface NodeRendererDemoProps {
   color?: string;
 }
 
+interface NodeRendererDemoImplProps extends NodeRendererDemoProps {
+  NodeRenderer: any;
+}
+
 /**
  * Demo component to showcase NodeRenderer with isolated nodes
  * Shows how titles are rendered at different zoom levels
  */
-const NodeRendererDemoImpl: React.FC<NodeRendererDemoProps> = ({
+const NodeRendererDemoImpl: React.FC<NodeRendererDemoImplProps> = ({
   title,
   zoomLevel = 1.0,
   isParent = false,
   color = '#68BDF6',
+  NodeRenderer,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { colorMode } = useColorMode();
@@ -29,10 +34,6 @@ const NodeRendererDemoImpl: React.FC<NodeRendererDemoProps> = ({
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    // Dynamically import NodeRenderer (browser-only)
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { NodeRenderer } = require('./NodeRenderer');
 
     // Set canvas size - smaller canvas so node appears larger
     const size = 150;
@@ -99,7 +100,22 @@ const NodeRendererDemoImpl: React.FC<NodeRendererDemoProps> = ({
 const NodeRendererDemo: React.FC<NodeRendererDemoProps> = (props) => {
   return (
     <BrowserOnly fallback={<div>Loading demo...</div>}>
-      {() => <NodeRendererDemoImpl {...props} />}
+      {() => {
+        // Ensure we're in the browser
+        if (typeof window === 'undefined') {
+          return <div>Loading demo...</div>;
+        }
+        
+        try {
+          // Dynamically import NodeRenderer only when in browser
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const { NodeRenderer } = require('./NodeRenderer');
+          return <NodeRendererDemoImpl {...props} NodeRenderer={NodeRenderer} />;
+        } catch (error) {
+          console.error('Error loading NodeRendererDemo dependencies:', error);
+          return <div>Error loading demo. Please refresh the page.</div>;
+        }
+      }}
     </BrowserOnly>
   );
 };

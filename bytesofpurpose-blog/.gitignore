@@ -31,3 +31,6 @@ coverage/
 test/e2e/screenshots/*.png
 !test/e2e/screenshots/.gitkeep
 # HTML report is saved to test-results/html-report (view offline)
+
+*storybook.log
+storybook-static
