@@ -73,18 +73,17 @@ Maintenance scripts and strategic planning documents:
 - Node.js (v16 or higher)
 - Yarn package manager
 
-### Development Setup
+### Quick Start
 ```bash
 # Clone the repository
 git clone https://github.com/omars-lab/omars-lab.github.io.git
 cd omars-lab.github.io
 
 # Install dependencies
-yarn install
+make install
 
 # Start development server
-cd bytesofpurpose-blog
-yarn start
+make start
 ```
 
 ### Building for Production
@@ -94,6 +93,13 @@ make build
 
 # The built site will be in bytesofpurpose-blog/build/
 ```
+
+> **📖 For detailed development instructions**, see [DEVELOPMENT.md](DEVELOPMENT.md) which covers:
+> - Component development
+> - Storybook setup and usage
+> - Testing
+> - TypeScript & Babel configuration
+> - Troubleshooting
 
 ## 🛠️ Key Features
 
@@ -160,6 +166,8 @@ This repository welcomes contributions in several areas:
 3. Make your changes
 4. Test thoroughly (especially for link integrity)
 5. Submit a pull request
+
+> **💡 Developer Guide**: See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup, component development, testing, and build instructions.
 
 ## 📊 Project Status
 

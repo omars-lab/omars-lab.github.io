@@ -1,0 +1,525 @@
+/* ============================================================================
+ * GraphRenderer Styles
+ * ============================================================================
+ * All styles for the GraphRenderer component, extracted from inline styles
+ * for better maintainability and performance.
+ * ============================================================================ */
+
+/* Container Styles */
+.container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.containerDark {
+  border: 1px solid #333;
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.containerLight {
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Graph Area Layout */
+.graphArea {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  position: relative;
+}
+
+.graphCanvas {
+  min-width: 0;
+  position: relative;
+}
+
+.graphCanvasWithPane {
+  flex: 1 1 80%;
+}
+
+.graphCanvasWithoutPane {
+  flex: 1 1 100%;
+}
+
+/* Right-Click Menu */
+.rightClickMenu {
+  position: absolute;
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 160px;
+  z-index: 1000;
+}
+
+.rightClickMenuDark {
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.rightClickMenuLight {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.rightClickMenuItem {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.rightClickMenuItemDark {
+  color: #ffffff;
+}
+
+.rightClickMenuItemLight {
+  color: #1a1a1a;
+}
+
+.rightClickMenuItem:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Context Menu */
+.contextMenu {
+  position: absolute;
+  border-radius: 4px;
+  padding: 4px 0;
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.contextMenuDark {
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.contextMenuLight {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.contextMenuItem {
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.contextMenuItemDark {
+  color: #ffffff;
+}
+
+.contextMenuItemLight {
+  color: #1a1a1a;
+}
+
+.contextMenuItem:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Side Panel */
+.sidePanel {
+  flex: 0 0 20%;
+  min-width: 0;
+  padding: 12px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sidePanelDark {
+  border-left: 2px solid #555;
+  background-color: #2a2a2a;
+}
+
+.sidePanelLight {
+  border-left: 2px solid #e0e0e0;
+  background-color: #fafafa;
+}
+
+/* Panel Content */
+.panelTitle {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.panelTitleDark {
+  color: #ffffff;
+}
+
+.panelTitleLight {
+  color: #1a1a1a;
+}
+
+.panelDescription {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.panelDescriptionDark {
+  color: #ffffff;
+  opacity: 0.85;
+}
+
+.panelDescriptionLight {
+  color: #1a1a1a;
+  opacity: 0.85;
+}
+
+.panelDescriptionEmpty {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.panelSectionTitle {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.panelSectionTitleDark {
+  color: #ffffff;
+}
+
+.panelSectionTitleLight {
+  color: #1a1a1a;
+}
+
+.panelSectionContent {
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.panelSectionContentDark {
+  background-color: #2a2a2a;
+}
+
+.panelSectionContentLight {
+  background-color: #f5f5f5;
+}
+
+.panelLink {
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+  display: block;
+  padding: 4px 0;
+  transition: opacity 0.2s;
+}
+
+.panelLinkDark {
+  color: #68BDF6;
+  border-bottom: 1px solid #333;
+}
+
+.panelLinkLight {
+  color: #2563eb;
+  border-bottom: 1px solid #eee;
+}
+
+.panelLink:hover {
+  opacity: 0.7;
+}
+
+.panelLinkText {
+  font-weight: 500;
+}
+
+.panelLinkLabel {
+  opacity: 0.7;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+.panelNodeItem {
+  margin-bottom: 8px;
+}
+
+.panelNodeItemLast {
+  margin-bottom: 0;
+}
+
+/* Menu Bar */
+.menuBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid;
+}
+
+.menuBarDark {
+  background-color: #252525;
+  border-top-color: #444;
+}
+
+.menuBarLight {
+  background-color: #f0f0f0;
+  border-top-color: #ddd;
+}
+
+.menuBarButton {
+  padding: 6px 12px;
+  border: 1px solid;
+  border-radius: 4px;
+  background-color: transparent;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.menuBarButtonDark {
+  color: #ffffff;
+  border-color: #555;
+}
+
+.menuBarButtonLight {
+  color: #1a1a1a;
+  border-color: #ccc;
+}
+
+.menuBarButton:hover {
+  background-color: var(--hover-bg);
+}
+
+.menuBarButtonDark:hover {
+  background-color: #333;
+}
+
+.menuBarButtonLight:hover {
+  background-color: #e0e0e0;
+}
+
+.menuBarToggle {
+  margin-left: auto;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Panel Content - Additional Styles */
+.panelNoConnections {
+  margin: 16px 0 0 0;
+  font-size: 12px;
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.panelNoConnectionsDark {
+  color: #ffffff;
+}
+
+.panelNoConnectionsLight {
+  color: #1a1a1a;
+}
+
+.panelSectionDivider {
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.panelSectionDividerDark {
+  border-top: 1px solid #333;
+}
+
+.panelSectionDividerLight {
+  border-top: 1px solid #eee;
+}
+
+.panelExternalLinksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panelExternalLink {
+  display: inline-block;
+  font-size: 11px;
+  word-break: break-word;
+}
+
+.panelEdgeSection {
+  margin-bottom: 16px;
+}
+
+.panelEdgeNodeDescription {
+  margin: 4px 0 0 0;
+  font-size: 11px;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+.panelEdgeNodeDescriptionDark {
+  color: #ffffff;
+}
+
+.panelEdgeNodeDescriptionLight {
+  color: #1a1a1a;
+}
+
+.panelUseCasesContainer {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.panelUseCaseItem {
+  margin-bottom: 8px;
+}
+
+.panelSimilaritiesContainer,
+.panelDifferencesContainer {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.panelSimilaritiesContainerDark,
+.panelDifferencesContainerDark {
+  background-color: #2a2a2a;
+}
+
+.panelSimilaritiesContainerLight,
+.panelDifferencesContainerLight {
+  background-color: #f5f5f5;
+}
+
+.panelSimilaritiesTitle {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #60BE86;
+}
+
+.panelDifferencesTitle {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #FF6B6B;
+}
+
+.panelSimilaritiesList,
+.panelDifferencesList {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.panelDifferencesListWithMargin {
+  margin: 4px 0 0 0;
+  padding-left: 20px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.panelDifferencesLabel {
+  font-size: 11px;
+}
+
+.panelDifferencesLabelDark {
+  color: #ffffff;
+}
+
+.panelDifferencesLabelLight {
+  color: #1a1a1a;
+}
+
+.panelDifferencesSection {
+  margin-bottom: 12px;
+}
+
+.panelKeyDifferentiatorsContainer {
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.panelKeyDifferentiatorsContainerDark {
+  background-color: #2a2a2a;
+}
+
+.panelKeyDifferentiatorsContainerLight {
+  background-color: #f5f5f5;
+}
+
+.panelKeyDifferentiatorsContent {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.panelKeyDifferentiatorsItem {
+  margin-bottom: 8px;
+}
+
+.panelEmptyState {
+  font-size: 12px;
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.panelEmptyStateDark {
+  color: #ffffff;
+}
+
+.panelEmptyStateLight {
+  color: #1a1a1a;
+}
+
+/* Link Base Styles (static parts of linkStyle object) */
+.panelLinkBase {
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+  display: block;
+  padding: 4px 0;
+  transition: opacity 0.2s;
+}
+
+/* Menu Bar Base Styles */
+.menuBarBase {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.menuBarSpacer {
+  flex: 1;
+}
+
+/* CSS Variables for dynamic values */
+:root {
+  --hover-bg-dark: #333;
+  --hover-bg-light: #e0e0e0;
+}
+

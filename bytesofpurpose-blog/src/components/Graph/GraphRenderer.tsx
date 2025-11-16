@@ -1,42 +1,88 @@
+/**
+ * ============================================================================
+ * GraphRenderer Component
+ * ============================================================================
+ * 
+ * A comprehensive force-directed graph visualization component built for Docusaurus.
+ * 
+ * KEY LEARNINGS & PATTERNS:
+ * 
+ * 1. BROWSER-ONLY RENDERING (SSR Prevention)
+ *    - Uses BrowserOnly wrapper to prevent server-side rendering issues
+ *    - Browser-only dependencies (react-force-graph-2d, d3-force, canvas APIs) 
+ *      are dynamically imported inside BrowserOnly callback
+ *    - This prevents "window is not defined" errors during static site generation
+ * 
+ * 2. INFINITE LOOP PREVENTION (Critical Pattern)
+ *    - Problem: useEffect dependencies on callbacks/objects that change every render
+ *    - Solution: Use refs to store latest callbacks/values, update refs in separate useEffect
+ *    - Pattern: 
+ *      ```ts
+ *      const callbackRef = useRef(callback);
+ *      useEffect(() => { callbackRef.current = callback; }, [callback]);
+ *      // Then use callbackRef.current in other useEffects instead of callback
+ *      ```
+ *    - For graphData: Use graphDataRef to avoid dependency on object that changes when expandedNodes changes
+ *    - For callbacks: Use highlightNodeRef/highlightEdgeRef to break dependency cycles
+ * 
+ * 3. DEPENDENCY ARRAY OPTIMIZATION
+ *    - Instead of depending on entire objects (graphData), depend on primitives (graphData.nodes.length)
+ *    - Use refs to track previous values and only run effects when meaningful changes occur
+ *    - Example: Track previousGraphDataNodesLengthRef to prevent re-runs when count unchanged
+ * 
+ * 4. react-force-graph-2d vs react-force-graph
+ *    - Use react-force-graph-2d (2D-only) instead of react-force-graph (includes 3D/VR/AR)
+ *    - Avoids A-Frame dependencies that cause "AFRAME is not defined" errors
+ *    - No need for custom webpack configuration to ignore A-Frame
+ *    - Exports ForceGraph as default export, not named export
+ * 
+ * 5. REF ACCESS PATTERNS
+ *    - graphRef.current points to component instance, not DOM element
+ *    - Access underlying force-graph methods via: (graphRef.current as any)?.method?.()
+ *    - Use optional chaining to safely access methods that may not exist
+ *    - graphData() method doesn't exist on ref - use graphData from props/state instead
+ * 
+ * 6. STATE UPDATE OPTIMIZATION
+ *    - Use functional updates (prev => new) to prevent unnecessary re-renders
+ *    - Check if values actually changed before updating state
+ *    - Example: Only update nodePositions if positions actually changed (threshold-based comparison)
+ * 
+ * ============================================================================
+ */
+
 import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useColorMode } from '@docusaurus/theme-common';
-
-interface Node {
-  id: string;
-  label: string;
-  title?: string;
-  description?: string;
-  group?: number;
-  color?: string;
-  children?: Node[];
-  markdownSection?: string; // ID of markdown section this node links to
-}
-
-interface Link {
-  source: string;
-  target: string;
-  value?: number;
-  label?: string;
-  id?: string; // Optional ID for anchor links
-  markdownSection?: string; // ID of markdown section this edge links to
-}
-
-interface GraphData {
-  nodes: Node[];
-  links: Link[];
-}
-
-interface GraphRendererProps {
-  data: GraphData;
-  width?: number;
-  height?: number;
-  highlightNodeId?: string; // Optional node ID to highlight
-  highlightEdgeId?: string; // Optional edge ID to highlight
-  graphId?: string; // Optional unique ID for this graph instance (for URL hash support)
-  onEdgeClick?: (edge: any) => void; // Optional callback when edge is clicked
-  initialExpandedNodes?: Set<string>; // Optional set of node IDs to expand initially
-}
+import styles from './GraphRenderer.module.css';
+import { 
+  Node, 
+  Link, 
+  GraphData, 
+  GraphRendererProps 
+} from './types';
+import {
+  findPathToNode,
+  findNodeById,
+  getNodeRadius,
+  getNodeColor,
+  getNodeLabel,
+  cleanNodeForSelection,
+  cleanEdgeForSelection,
+  getAllNodesWithChildren,
+  isValidNodeCoordinates,
+  getEdgeCoordinates as getEdgeCoordinatesUtil,
+  calculateAvailableTextWidth,
+  calculateEmojiAreaCenterY,
+  calculateLinePositions,
+  getNodeStatusIndicator,
+  breakLongWord,
+  wrapTextIntoLines,
+  truncateLine,
+  calculateOptimalFontSize,
+  applyZoomScaling,
+  calculateOptimalTitleFontSize,
+  calculateIndicatorFontSize,
+} from './graphUtils';
 
 // Neo4j-like color palette
 const NEO4J_COLORS = [
@@ -57,169 +103,18 @@ const DEBUG_SHOW_NODE_SECTIONS = false;
  * ============================================================================
  * NODE RENDERING HELPER FUNCTIONS
  * ============================================================================
- * These functions handle the rendering of node elements (title, status indicators, etc.)
- * They are designed to be reusable and well-documented for AI navigation.
+ * Note: Core utility functions (getNodeRadius, getNodeColor, getNodeLabel, etc.)
+ * are now imported from './graphUtils' to improve maintainability.
+ * 
+ * Functions below are component-specific rendering helpers that depend on
+ * canvas context or component state.
+ * ============================================================================
  */
 
-/**
- * Calculates the radius of a node based on whether it has children.
- * 
- * Feature: Node sizing
- * Use case: Determines node size - parent nodes are larger (12px) than leaf nodes (8px)
- * 
- * @param hasChildren - Whether the node has child nodes
- * @returns Node radius in pixels
- */
-const getNodeRadius = (hasChildren: boolean): number => {
-  return hasChildren ? 12 : 8;
-};
+// Note: isValidNodeCoordinates is now imported from './graphUtils'
 
-/**
- * Gets the display color for a node, falling back to default if not specified.
- * 
- * Feature: Node coloring
- * Use case: Provides consistent default color (Neo4j blue) when node color is not specified
- * 
- * @param nodeColor - Optional color from node data
- * @returns Color string (hex format)
- */
-const getNodeColor = (nodeColor?: string): string => {
-  return nodeColor || '#68BDF6';
-};
-
-/**
- * Extracts the display label for a node from various possible fields.
- * 
- * Feature: Node labeling
- * Use case: Gets the best available label for a node, checking title, name, and id in order
- * 
- * @param node - Node object with potential label fields
- * @returns Label string for display
- */
-const getNodeLabel = (node: any): string => {
-  return node.title || node.name || node.id || '';
-};
-
-/**
- * Validates that a node has valid coordinates for rendering.
- * 
- * Feature: Node coordinate validation
- * Use case: Prevents rendering errors by checking node coordinates are finite numbers
- * 
- * @param node - Node object with x, y coordinates
- * @returns True if node coordinates are valid for rendering
- */
-const isValidNodeCoordinates = (node: any): boolean => {
-  return node.x !== undefined && 
-         node.y !== undefined && 
-         isFinite(node.x) && 
-         isFinite(node.y);
-};
-
-/**
- * Calculates the available width for text at a given Y position within a circular node.
- * 
- * Feature: Text width constraint calculation for circular nodes (reactive to zoom)
- * Use case: Ensures text fits within node boundaries, accounting for circular shape
- *           Reactively adjusts margins based on zoom level to prevent text protrusion
- * 
- * @param y - Y coordinate in graph space
- * @param nodeY - Center Y coordinate of the node
- * @param nodeRadius - Radius of the node in graph coordinates
- * @param globalScale - Current zoom level (1.0 = no zoom)
- * @param padding - Padding in graph coordinates (default: 6)
- * @param lineIndex - Optional: 0 = top line, 1 = middle line, 2 = bottom line
- *                   Used to apply extra margins for top/bottom lines due to circular shape
- * @returns Available width in screen pixels (matches ctx.measureText() output)
- */
-const calculateAvailableTextWidth = (
-  y: number,
-  nodeY: number,
-  nodeRadius: number,
-  globalScale: number,
-  padding: number = 6,
-  lineIndex?: number
-): number => {
-  // Calculate vertical offset from node center
-  const verticalOffset = Math.abs(y - nodeY);
-  
-  // Calculate chord width at this Y position using circle geometry
-  // Formula: chord width = 2 * sqrt(radius^2 - vertical_offset^2)
-  const chordWidth = 2 * Math.sqrt(Math.max(0, nodeRadius * nodeRadius - verticalOffset * verticalOffset));
-  
-  // Convert to screen coordinates
-  const screenPadding = padding * globalScale;
-  const baseWidth = (chordWidth * globalScale) - (screenPadding * 2);
-  
-  // Apply reactive safety margins that scale with both zoom level and node size
-  // Larger nodes (root nodes with radius 12) need proportionally larger margins
-  const isTopOrBottom = lineIndex === 0 || lineIndex === 2;
-  
-  // Base margin percentage - increased for better safety
-  const baseMarginPercentage = isTopOrBottom ? 0.15 : 0.10; // Increased from 0.12/0.08
-  
-  // Scale margin percentage based on node radius (larger nodes need more margin)
-  // Root nodes (radius 12) get ~1.2x margin, leaf nodes (radius 8) get base margin
-  const radiusMultiplier = 1 + ((nodeRadius - 8) / 8) * 0.2; // Scales from 1.0 (radius 8) to 1.1 (radius 12)
-  const marginPercentage = baseMarginPercentage * radiusMultiplier;
-  const percentageMargin = baseWidth * marginPercentage;
-  
-  // Add a fixed margin that scales with both zoom and node radius
-  // Larger nodes need larger fixed margins to account for circular shape
-  const baseFixedMargin = isTopOrBottom ? 5 : 4; // Increased from 4/3
-  const radiusScaledMargin = baseFixedMargin * (nodeRadius / 8); // Scale with node radius
-  const fixedMargin = radiusScaledMargin * globalScale;
-  const totalMargin = percentageMargin + fixedMargin;
-  
-  const availableWidth = baseWidth - totalMargin;
-  // Ensure we always return a positive value, but be very conservative
-  return Math.max(2, availableWidth);
-};
-
-/**
- * Calculates the center Y coordinate of the emoji/status indicator area.
- * 
- * Feature: Status indicator positioning
- * Use case: Positions status indicators (leaf emoji, expansion arrows) in bottom section
- * 
- * @param nodeY - Center Y coordinate of the node
- * @param nodeRadius - Radius of the node
- * @returns Y coordinate for the center of the bottom section (where emoji/status goes)
- */
-const calculateEmojiAreaCenterY = (nodeY: number, nodeRadius: number): number => {
-  const nodeDiameter = nodeRadius * 2;
-  const sectionHeight = nodeDiameter / 5;
-  const emojiAreaTop = nodeY - nodeRadius + (sectionHeight * 4);
-  const emojiAreaBottom = nodeY + nodeRadius;
-  return (emojiAreaTop + emojiAreaBottom) / 2;
-};
-
-/**
- * Determines the status indicator symbol and type for a node.
- * 
- * Feature: Node status visualization
- * Use case: Shows expansion state for parent nodes, leaf indicator for leaf nodes
- * 
- * @param hasChildren - Whether the node has child nodes
- * @param isExpanded - Whether the node is currently expanded (only relevant if hasChildren)
- * @returns Object with statusIndicator (string) and isTextLabel (boolean)
- */
-const getNodeStatusIndicator = (
-  hasChildren: boolean,
-  isExpanded: boolean
-): { statusIndicator: string; isTextLabel: boolean } => {
-  if (hasChildren) {
-    return {
-      statusIndicator: isExpanded ? '▼' : '▶', // Down arrow = expanded, right arrow = collapsed
-      isTextLabel: false
-    };
-  } else {
-    return {
-      statusIndicator: '🌿', // Leaf emoji for leaf nodes
-      isTextLabel: false
-    };
-  }
-};
+// Note: calculateAvailableTextWidth, calculateEmojiAreaCenterY, and getNodeStatusIndicator
+// are now imported from './graphUtils'
 
 /**
  * Draws the node circle with optional highlight glow.
@@ -321,513 +216,19 @@ const drawDebugSectionSeparators = (
   ctx.setLineDash([]); // Reset line dash
 };
 
-/**
- * Calculates Y positions for the 3 text lines within a node.
- * Lines are centered in the middle 3 sections of the node (sections 1, 2, 3).
- * 
- * @param nodeY - Center Y coordinate of the node
- * @param nodeRadius - Radius of the node
- * @returns Array of 3 Y coordinates, one for each line
- */
-const calculateLinePositions = (nodeY: number, nodeRadius: number): number[] => {
-  const nodeDiameter = nodeRadius * 2;
-  const sectionHeight = nodeDiameter / 5;
-  const positions: number[] = [];
-  
-  for (let i = 0; i < 3; i++) {
-    const sectionTop = nodeY - nodeRadius + (sectionHeight * (1 + i));
-    const sectionBottom = nodeY - nodeRadius + (sectionHeight * (2 + i));
-    positions.push((sectionTop + sectionBottom) / 2);
-  }
-  
-  return positions;
-};
+// Note: calculateLinePositions is now imported from './graphUtils'
 
-/**
- * Breaks a long word into chunks that fit within the available width.
- * Only breaks at natural boundaries (hyphens, underscores, camelCase).
- * If no natural break exists and the word doesn't fit, returns empty array
- * (caller should truncate with ellipsis instead).
- * 
- * @param word - Word to break
- * @param ctx - Canvas context for measuring text
- * @param availableWidth - Maximum width available
- * @returns Array of word chunks that fit, or empty array if word can't be broken naturally
- */
-const breakLongWord = (
-  word: string,
-  ctx: CanvasRenderingContext2D,
-  availableWidth: number
-): string[] => {
-  if (ctx.measureText(word).width <= availableWidth) {
-    return [word];
-  }
-  
-  const chunks: string[] = [];
-  let remaining = word;
-  
-  while (remaining.length > 0) {
-    // Try to find a natural break point
-    let bestBreakIndex = -1;
-    let bestBreakLength = 0;
-    
-    // Check for hyphens/underscores first (preferred)
-    const hyphenMatch = remaining.search(/[-_]/);
-    if (hyphenMatch > 0 && hyphenMatch < remaining.length - 1) {
-      const beforeBreak = remaining.substring(0, hyphenMatch + 1);
-      if (ctx.measureText(beforeBreak).width <= availableWidth) {
-        bestBreakIndex = hyphenMatch + 1;
-        bestBreakLength = hyphenMatch + 1;
-      }
-    }
-    
-    // If no good hyphen break, try camelCase/PascalCase breaks
-    if (bestBreakIndex === -1) {
-      for (let i = 1; i < remaining.length; i++) {
-        // Check for camelCase: lowercase followed by uppercase
-        if (remaining[i - 1].match(/[a-z]/) && remaining[i].match(/[A-Z]/)) {
-          const beforeBreak = remaining.substring(0, i);
-          if (ctx.measureText(beforeBreak).width <= availableWidth) {
-            bestBreakIndex = i;
-            bestBreakLength = i;
-          } else {
-            break; // Can't fit even this, stop looking
-          }
-        }
-        // Check for PascalCase: uppercase followed by uppercase+lowercase
-        else if (i < remaining.length - 1 && 
-                 remaining[i - 1].match(/[A-Z]/) && 
-                 remaining[i].match(/[A-Z]/) && 
-                 remaining[i + 1].match(/[a-z]/)) {
-          const beforeBreak = remaining.substring(0, i);
-          if (ctx.measureText(beforeBreak).width <= availableWidth) {
-            bestBreakIndex = i;
-            bestBreakLength = i;
-          } else {
-            break;
-          }
-        }
-      }
-    }
-    
-    // If we found a natural break, use it
-    if (bestBreakIndex > 0) {
-      const chunk = remaining.substring(0, bestBreakLength);
-      chunks.push(chunk);
-      remaining = remaining.substring(bestBreakLength);
-      continue;
-    }
-    
-    // No natural break found - return empty array to signal caller should truncate
-    // Don't break character by character
-    return [];
-  }
-  
-  return chunks;
-};
+// Note: breakLongWord is now imported from './graphUtils'
 
-/**
- * Wraps text into up to 3 lines, distributing words across lines.
- * Implements CSS-like word-wrap: break-word behavior for long words.
- * 
- * @param text - Text to wrap
- * @param ctx - Canvas context for measuring text
- * @param fontSize - Current font size
- * @param linePositions - Y positions for each line
- * @param getAvailableWidth - Function to get available width at a Y position
- * @returns Array of text lines (up to 3)
- */
-const wrapTextIntoLines = (
-  text: string,
-  ctx: CanvasRenderingContext2D,
-  fontSize: number,
-  linePositions: number[],
-  getAvailableWidth: (y: number, lineIndex: number) => number
-): string[] => {
-  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-  if (words.length === 0) return [];
-  
-  ctx.font = `${fontSize}px Sans-Serif`;
-  const lines: string[] = [];
-  let currentLine = '';
-  const wordsPerLine = Math.max(1, Math.floor(words.length / 3));
-  
-  for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-    const word = words[wordIndex];
-    
-    if (lines.length >= 3) {
-      // Try to add remaining words to last line if space allows
-      if (currentLine) {
-        const remainingWords = words.slice(wordIndex).join(' ');
-        const testLine = `${currentLine} ${remainingWords}`;
-        const lastLineY = linePositions[2];
-        const availableWidth = getAvailableWidth(lastLineY, 2);
-        if (ctx.measureText(testLine).width <= availableWidth) {
-          lines[lines.length - 1] = testLine;
-        } else {
-          lines[lines.length - 1] = currentLine;
-        }
-      }
-      break;
-    }
-    
-    const lineIndex = lines.length;
-    const lineY = linePositions[lineIndex];
-    const availableWidth = getAvailableWidth(lineY, lineIndex);
-    
-    // Check if the word itself is too long
-    const wordWidth = ctx.measureText(word).width;
-    if (wordWidth > availableWidth) {
-      // Word is too long, try to break it at natural boundaries
-      if (currentLine) {
-        // Save current line and start breaking the word
-        lines.push(currentLine);
-        currentLine = '';
-      }
-      
-      // Try to break the long word into chunks at natural boundaries
-      const wordChunks = breakLongWord(word, ctx, availableWidth);
-      
-      // If word can be broken naturally, use the chunks
-      if (wordChunks.length > 0) {
-        // Add as many chunks as we can fit in remaining lines
-        for (let chunkIndex = 0; chunkIndex < wordChunks.length && lines.length < 3; chunkIndex++) {
-          const chunk = wordChunks[chunkIndex];
-          if (lines.length < 3) {
-            lines.push(chunk);
-          } else {
-            // No more lines, add to last line if it fits
-            const lastLineY = linePositions[2];
-            const lastLineAvailableWidth = getAvailableWidth(lastLineY, 2);
-            if (ctx.measureText(chunk).width <= lastLineAvailableWidth) {
-              lines[lines.length - 1] = chunk;
-            }
-          }
-        }
-      } else {
-        // Word can't be broken naturally - truncate with ellipsis
-        const truncated = truncateLine(ctx, word, availableWidth);
-        if (truncated && truncated.trim().length > 0) {
-          lines.push(truncated);
-        }
-      }
-      
-      // Continue with next word
-      continue;
-    }
-    
-    // Normal word wrapping logic
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-    const testWidth = ctx.measureText(testLine).width;
-    const currentWords = testLine.split(/\s+/).length;
-    
-    const shouldWrapByWordCount = currentWords > wordsPerLine && lines.length < 3 && wordIndex < words.length - 1;
-    const shouldWrapByWidth = testWidth > availableWidth;
-    
-    if ((shouldWrapByWordCount || shouldWrapByWidth) && currentLine) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
-  }
-  
-  if (currentLine && lines.length < 3) {
-    lines.push(currentLine);
-  }
-  
-  if (lines.length === 0 && words.length > 0) {
-    lines.push(words[0]);
-  }
-  
-  return lines;
-};
+// Note: wrapTextIntoLines is now imported from './graphUtils'
 
-/**
- * Finds the optimal font size that ensures all non-last lines fit within their available width.
- * 
- * @param ctx - Canvas context
- * @param lines - Text lines to fit
- * @param linePositions - Y positions for each line
- * @param getAvailableWidth - Function to get available width at a Y position
- * @param initialFontSize - Starting font size
- * @param minFontSize - Minimum allowed font size
- * @param maxTextHeight - Maximum allowed text height
- * @returns Optimal font size that fits all non-last lines
- */
-const calculateOptimalFontSize = (
-  ctx: CanvasRenderingContext2D,
-  lines: string[],
-  linePositions: number[],
-  getAvailableWidth: (y: number, lineIndex: number) => number,
-  initialFontSize: number,
-  minFontSize: number,
-  maxTextHeight: number
-): number => {
-  let fontSize = initialFontSize;
-  
-  // First, ensure font fits within height constraint
-  ctx.font = `${fontSize}px Sans-Serif`;
-  let textMetrics = ctx.measureText('M');
-  let actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || fontSize;
-  
-  while (actualHeight > maxTextHeight && fontSize > minFontSize) {
-    fontSize = Math.max(minFontSize, fontSize - 0.5);
-    ctx.font = `${fontSize}px Sans-Serif`;
-    textMetrics = ctx.measureText('M');
-    actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || fontSize;
-  }
-  
-  // Then, ensure all non-last lines fit width-wise
-  // Allow font size to go slightly below minimum (to 2px) as last resort to ensure text is visible
-  const absoluteMinFontSize = Math.max(2, minFontSize * 0.4);
-  let attempts = 0;
-  const maxAttempts = 50;
-  let allFit = false;
-  
-  while (!allFit && fontSize >= absoluteMinFontSize && attempts < maxAttempts) {
-    attempts++;
-    allFit = true;
-    ctx.font = `${fontSize}px Sans-Serif`;
-    
-    for (let i = 0; i < lines.length - 1; i++) {
-      const line = lines[i];
-      const lineY = linePositions[i];
-      const availableWidth = getAvailableWidth(lineY, i);
-      const lineWidth = ctx.measureText(line).width;
-      
-      if (lineWidth > availableWidth) {
-        allFit = false;
-        fontSize = Math.max(absoluteMinFontSize, fontSize - 0.5);
-        break;
-      }
-    }
-  }
-  
-  // Ensure we return at least the absolute minimum, but prefer the regular minimum
-  return Math.max(absoluteMinFontSize, fontSize);
-};
+// Note: calculateOptimalFontSize is now imported from './graphUtils'
 
-/**
- * Optionally scales font size with zoom level, ensuring it still fits within constraints.
- * 
- * @param ctx - Canvas context
- * @param baseFontSize - Base font size in screen pixels (already scaled by globalScale)
- * @param lines - Text lines
- * @param linePositions - Y positions for each line
- * @param getAvailableWidth - Function to get available width at a Y position
- * @param globalScale - Current zoom level
- * @param minFontSize - Minimum allowed font size in screen pixels
- * @param maxTextHeight - Maximum allowed text height in screen pixels
- * @returns Scaled font size (or base size if scaling doesn't fit)
- */
-const applyZoomScaling = (
-  ctx: CanvasRenderingContext2D,
-  baseFontSize: number,
-  lines: string[],
-  linePositions: number[],
-  getAvailableWidth: (y: number, lineIndex: number) => number,
-  globalScale: number,
-  minFontSize: number,
-  maxTextHeight: number
-): number => {
-  // When zoomed out (globalScale < 1), just return base size (already scaled)
-  if (globalScale <= 1) {
-    return baseFontSize;
-  }
-  
-  // When zoomed in moderately (1 < globalScale < 2), try to scale up conservatively
-  if (globalScale >= 2) {
-    return baseFontSize; // Don't scale at high zoom levels
-  }
-  
-  const scaledFontSize = baseFontSize * (1 + Math.log(globalScale) * 0.1);
-  let testFontSize = Math.max(minFontSize, scaledFontSize);
-  const maxIterations = 100;
-  const reductionStep = 0.15;
-  let iterations = 0;
-  
-  while (testFontSize >= baseFontSize && iterations < maxIterations) {
-    iterations++;
-    ctx.font = `${testFontSize}px Sans-Serif`;
-    
-    // Check height constraint
-    const textMetrics = ctx.measureText('M');
-    const actualHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent || testFontSize;
-    if (actualHeight > maxTextHeight) {
-      testFontSize = Math.max(baseFontSize, testFontSize - reductionStep);
-      continue;
-    }
-    
-    // Check width constraints for non-last lines
-    const safetyMargin = 8;
-    let allFit = true;
-    for (let i = 0; i < lines.length - 1; i++) {
-      const line = lines[i];
-      const lineY = linePositions[i];
-      const availableWidth = getAvailableWidth(lineY, i);
-      const lineWidth = ctx.measureText(line).width;
-      
-      if (lineWidth + safetyMargin > availableWidth) {
-        allFit = false;
-        break;
-      }
-    }
-    
-    if (allFit) {
-      return testFontSize;
-    }
-    
-    testFontSize = Math.max(baseFontSize, testFontSize - reductionStep);
-  }
-  
-  return baseFontSize;
-};
+// Note: applyZoomScaling is now imported from './graphUtils'
 
-/**
- * Truncates a line of text to fit within available width, adding ellipsis if needed.
- * 
- * @param ctx - Canvas context
- * @param line - Text line to truncate
- * @param maxWidth - Maximum available width
- * @returns Truncated line with ellipsis if needed
- */
-const truncateLine = (
-  ctx: CanvasRenderingContext2D,
-  line: string,
-  maxWidth: number
-): string => {
-  const ellipsis = '...';
-  const ellipsisWidth = ctx.measureText(ellipsis).width;
-  const maxLineWidth = maxWidth - ellipsisWidth;
-  const MIN_CHARS_BEFORE_ELLIPSIS = 20; // Minimum characters to show before ellipsis
-  
-  if (ctx.measureText(line).width <= maxWidth) {
-    return line;
-  }
-  
-  // If even ellipsis alone doesn't fit, return empty string (caller should handle)
-  if (ellipsisWidth > maxWidth) {
-    return '';
-  }
-  
-  // Check if we can fit at least MIN_CHARS_BEFORE_ELLIPSIS + ellipsis
-  const minTextNeeded = line.substring(0, Math.min(MIN_CHARS_BEFORE_ELLIPSIS, line.length));
-  const minWidthNeeded = ctx.measureText(minTextNeeded + ellipsis).width;
-  
-  if (maxWidth < minWidthNeeded) {
-    // Can't fit minimum required characters + ellipsis
-    // Try to show as much as possible without ellipsis
-    let truncated = line;
-    while (truncated.length > 0 && ctx.measureText(truncated).width > maxWidth) {
-      truncated = truncated.substring(0, truncated.length - 1);
-    }
-    // If we can fit at least some text without ellipsis, return it
-    if (truncated.length > 0) {
-      return truncated;
-    }
-    // Otherwise return empty (caller should handle)
-    return '';
-  }
-  
-  // We can fit at least MIN_CHARS_BEFORE_ELLIPSIS + ellipsis
-  // Start with the first MIN_CHARS_BEFORE_ELLIPSIS characters
-  let truncated = line.substring(0, Math.min(MIN_CHARS_BEFORE_ELLIPSIS, line.length));
-  
-  // If the minimum text + ellipsis fits, try to add more characters
-  while (truncated.length < line.length && ctx.measureText(truncated + line[truncated.length] + ellipsis).width <= maxWidth) {
-    truncated = truncated + line[truncated.length];
-  }
-  
-  // If we couldn't fit even the minimum, fall back to showing as much as possible
-  if (truncated.length < MIN_CHARS_BEFORE_ELLIPSIS && ctx.measureText(truncated + ellipsis).width > maxWidth) {
-    // This shouldn't happen given our check above, but handle it gracefully
-    truncated = line.substring(0, MIN_CHARS_BEFORE_ELLIPSIS);
-    while (truncated.length > 0 && ctx.measureText(truncated + ellipsis).width > maxWidth) {
-      truncated = truncated.substring(0, truncated.length - 1);
-    }
-    if (truncated.length === 0) {
-      return '';
-    }
-  }
-  
-  return truncated + ellipsis;
-};
+// Note: truncateLine is now imported from './graphUtils'
 
-/**
- * Calculates the optimal font size for text within a node, ensuring it fits within height constraints.
- * 
- * This function ensures font size scales proportionally with node size at all zoom levels.
- * The font size is calculated as a fixed percentage of the section height, ensuring consistent
- * text-to-row-height ratio regardless of zoom level.
- * 
- * @param ctx - Canvas rendering context for measuring text
- * @param sectionHeightScreen - Section height in screen pixels (1/5 of node diameter * zoom)
- * @param nodeDiameterScreen - Node diameter in screen pixels (for additional safety cap)
- * @param minFontSize - Minimum font size to ensure visibility (in screen pixels)
- * @returns Optimal font size that fits within constraints (scales proportionally with node)
- */
-const calculateOptimalTitleFontSize = (
-  ctx: CanvasRenderingContext2D,
-  sectionHeightScreen: number,
-  nodeDiameterScreen: number,
-  minFontSize: number
-): number => {
-  // Maximum text height per line - fixed percentage of section height
-  // Use 30% to ensure text never exceeds section height
-  const maxTextHeight = sectionHeightScreen * 0.30;
-  
-  // Helper to measure ACTUAL rendered text height for a given font size
-  // This measures what will actually be rendered, which is what matters
-  const getActualTextHeight = (fs: number): number => {
-    ctx.font = `${fs}px Sans-Serif`;
-    ctx.textBaseline = 'middle'; // Same as we use for rendering
-    const textMetrics = ctx.measureText('M');
-    // Measure actual bounding box (ascent + descent)
-    const measuredHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
-    // If measurement is not available, use conservative estimate
-    return measuredHeight > 0 ? measuredHeight : fs * 1.5;
-  };
-  
-  // GUARANTEED APPROACH: Binary search to find the maximum font size that fits
-  // Start with a reasonable upper bound (20% of section height)
-  let maxFontSize = Math.min(sectionHeightScreen * 0.20, nodeDiameterScreen * 0.04);
-  let minFont = Math.max(3, minFontSize);
-  
-  // Ensure minFont doesn't exceed maxFontSize
-  minFont = Math.min(minFont, maxFontSize);
-  
-  // Binary search: find the largest font size where actual height <= maxTextHeight
-  let bestFontSize = minFont;
-  let low = minFont;
-  let high = maxFontSize;
-  const tolerance = 0.1; // Stop when within 0.1px
-  
-  while (high - low > tolerance) {
-    const mid = (low + high) / 2;
-    const actualHeight = getActualTextHeight(mid);
-    
-    if (actualHeight <= maxTextHeight) {
-      // This font size fits, try larger
-      bestFontSize = mid;
-      low = mid;
-    } else {
-      // This font size is too large, try smaller
-      high = mid;
-    }
-  }
-  
-  // Final verification: measure the chosen font size one more time
-  const finalHeight = getActualTextHeight(bestFontSize);
-  if (finalHeight > maxTextHeight) {
-    // If somehow it still doesn't fit, reduce proportionally
-    const ratio = maxTextHeight / finalHeight;
-    bestFontSize = bestFontSize * ratio * 0.95; // 95% safety margin
-    bestFontSize = Math.max(minFont, Math.min(bestFontSize, maxFontSize));
-  }
-  
-  return bestFontSize;
-};
+// Note: calculateOptimalTitleFontSize is now imported from './graphUtils'
 
 /**
  * Draws the title text within a node, displaying only the first 20 characters across 3 lines.
@@ -1275,39 +676,7 @@ const drawTitle = (
   return emojiAreaCenterY;
 };
 
-/**
- * Calculates the font size for status indicators (leaf emoji or expansion arrows).
- * 
- * Feature: Status indicator sizing
- * Use case: Determines appropriate font size for status indicators based on node size and zoom level
- *           - Ensures indicators fit within the bottom section (1/5 of node diameter)
- *           - Uses conservative scaling to maintain readability
- * 
- * @param nodeRadius - Radius of the node
- * @param isTextLabel - Whether this is a text label (leaf emoji) or arrow (parent node)
- * @param globalScale - Current zoom level
- * @returns Font size in pixels for the status indicator
- */
-const calculateIndicatorFontSize = (
-  nodeRadius: number,
-  isTextLabel: boolean,
-  globalScale: number
-): number => {
-  const nodeDiameter = nodeRadius * 2;
-  const bottomSectionHeight = nodeDiameter / 5; // Bottom section is 1/5 of diameter
-  const maxIndicatorSize = bottomSectionHeight * 0.4; // Use 40% of section height
-  
-  // Use different multipliers for text labels vs arrows
-  // Reduced leaf emoji size from 0.35 to 0.25 for better fit
-  const baseSizeMultiplier = isTextLabel ? 0.25 : 0.20;
-  const indicatorScale = globalScale > 1
-    ? 1 + Math.log(globalScale) * 0.25  // Very conservative growth
-    : Math.max(0.6, globalScale * 0.9); // Less shrinkage when zoomed out
-  const baseIndicatorFontSize = nodeRadius * baseSizeMultiplier * indicatorScale;
-  
-  // Clamp indicator size to fit within bottom section
-  return Math.max(3, Math.min(maxIndicatorSize, baseIndicatorFontSize));
-};
+// Note: calculateIndicatorFontSize is now imported from './graphUtils'
 
 /**
  * Draws the status indicator (leaf emoji or expansion arrow) in the bottom section of a node.
@@ -1352,7 +721,13 @@ const drawStatusIndicator = (
   ctx.fillText(statusIndicator, nodeX, emojiAreaCenterY);
 };
 
-const GraphRendererImpl: React.FC<GraphRendererProps> = ({ 
+interface GraphRendererImplProps extends GraphRendererProps {
+  ForceGraph2D: any;
+  d3: any;
+  NodeRenderer: any;
+}
+
+const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({ 
   data, 
   width = 800, 
   height = 600,
@@ -1360,18 +735,12 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
   highlightEdgeId: propHighlightEdgeId,
   graphId = 'graph',
   onEdgeClick,
-  initialExpandedNodes
+  initialExpandedNodes,
+  ForceGraph2D,
+  d3,
+  NodeRenderer
 }) => {
-  // Dynamically import browser-only dependencies
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const ForceGraph = require('force-graph').default;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const d3 = require('d3-force');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { NodeRenderer } = require('./NodeRenderer');
-  
-  const containerRef = useRef<HTMLDivElement>(null);
-  const graphRef = useRef<any>(null);
+  const graphRef = useRef<any>(null); // This will hold the ForceGraph2D component instance (react-force-graph exposes underlying instance via ref)
 
   /**
    * Creates a reusable node rendering function for the force graph
@@ -1404,22 +773,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     };
   }, []);
 
-  // Helper function to clean node object (remove force-graph internal properties)
-  const cleanNodeForSelection = useCallback((node: any) => {
-    return {
-      id: node.id,
-      name: node.name,
-      title: node.title,
-      label: node.label,
-      description: typeof node.description === 'string' ? node.description : '',
-      group: node.group,
-      color: node.color,
-      hasChildren: node.hasChildren,
-      isExpanded: node.isExpanded,
-      markdownSection: (node as any).markdownSection,
-      keyLinks: (node as any).keyLinks,
-    };
-  }, []);
+  // Note: cleanNodeForSelection is imported from './graphUtils'
 
   // Helper function to clean edge object (remove force-graph internal properties and ensure source/target are strings)
   const cleanEdgeForSelection = useCallback((link: any) => {
@@ -1449,40 +803,14 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
   }, []);
 
   // Helper function to get edge coordinates (start/end points on node surfaces)
+  // Uses getEdgeCoordinatesUtil from graphUtils, wrapped in useCallback for component use
   const getEdgeCoordinates = useCallback((
     link: any,
     startNode: any,
     endNode: any,
-    getNodeRadius: (hasChildren: boolean) => number
+    getNodeRadiusFn: (hasChildren: boolean) => number
   ): { startX: number; startY: number; endX: number; endY: number; midX: number; midY: number } | null => {
-    if (!startNode || !endNode ||
-        startNode.x === undefined || startNode.y === undefined ||
-        endNode.x === undefined || endNode.y === undefined ||
-        !isFinite(startNode.x) || !isFinite(startNode.y) ||
-        !isFinite(endNode.x) || !isFinite(endNode.y)) {
-      return null;
-    }
-
-    const sourceRadius = getNodeRadius(startNode.hasChildren);
-    const targetRadius = getNodeRadius(endNode.hasChildren);
-    
-    const dx = endNode.x - startNode.x;
-    const dy = endNode.y - startNode.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    if (distance === 0) return null;
-    
-    const unitX = dx / distance;
-    const unitY = dy / distance;
-    
-    const startX = startNode.x + unitX * sourceRadius;
-    const startY = startNode.y + unitY * sourceRadius;
-    const endX = endNode.x - unitX * targetRadius;
-    const endY = endNode.y - unitY * targetRadius;
-    const midX = (startX + endX) / 2;
-    const midY = (startY + endY) / 2;
-    
-    return { startX, startY, endX, endY, midX, midY };
+    return getEdgeCoordinatesUtil(startNode, endNode, getNodeRadiusFn);
   }, []);
 
   // Helper function to draw comparison edge (dashed, gray, no arrows)
@@ -1552,7 +880,6 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     ctx.textBaseline = 'middle';
     ctx.fillText(label, midX, midY);
   }, []);
-  const outerContainerRef = useRef<HTMLDivElement>(null);
   const isAdjustingZoomRef = useRef<boolean>(false);
   const previousZoomRef = useRef<number>(1);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(initialExpandedNodes || new Set());
@@ -1650,26 +977,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     });
   }, []);
 
-  // Get all nodes with children
-  const getAllNodesWithChildren = useCallback((): Set<string> => {
-    const nodesWithChildren = new Set<string>();
-    const traverse = (nodes: Node[]) => {
-      nodes.forEach(node => {
-        if (node.children && node.children.length > 0) {
-          nodesWithChildren.add(node.id);
-          traverse(node.children);
-        }
-      });
-    };
-    traverse(data.nodes);
-    return nodesWithChildren;
+  // Note: getAllNodesWithChildren is imported from './graphUtils'
+  // Wrapper to pass data.nodes
+  const getAllNodesWithChildrenWrapper = useCallback((): Set<string> => {
+    return getAllNodesWithChildren(data.nodes);
   }, [data]);
 
   // Expand all nodes
   const expandAll = useCallback(() => {
-    const allNodesWithChildren = getAllNodesWithChildren();
+    const allNodesWithChildren = getAllNodesWithChildrenWrapper();
     setExpandedNodes(allNodesWithChildren);
-  }, [getAllNodesWithChildren]);
+  }, [getAllNodesWithChildrenWrapper]);
 
   // Collapse all nodes
   const collapseAll = useCallback(() => {
@@ -1683,26 +1001,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
   // Update node positions for floating menu rendering
   const updateNodePositions = useCallback(() => {
-    if (!graphRef.current || !containerRef.current) return;
+    if (!graphRef.current) return;
     
-    const graphData = graphRef.current.graphData();
+    // Use the graphData from props/state instead of calling graphData() on the ref
+    // react-force-graph-2d ref exposes the instance, but we should use our data
     if (!graphData || !graphData.nodes) return;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
-    // Get the current zoom and pan transform
-    const zoom = graphRef.current.zoom() || 1;
+    // Get the canvas element from the graph component
+    // With react-force-graph-2d, the ref points to the component instance
+    // We need to find the canvas from the DOM
+    const canvas = document.querySelector('canvas') || null;
+    if (!canvas) return;
     
-    // Force-graph uses canvas rendering
-    // The canvas element should be inside the container
-    const canvas = containerRef.current.querySelector('canvas');
-    if (!canvas) {
-      // Try SVG as fallback (though force-graph typically uses canvas)
-      const svg = containerRef.current.querySelector('svg');
-      if (!svg) {
-        console.warn('Neither canvas nor SVG found in container');
-        return;
-      }
-    }
+    const containerRect = canvas.getBoundingClientRect();
+    // Get the current zoom and pan transform - react-force-graph-2d exposes this via ref
+    const zoom = (graphRef.current as any)?.zoom?.() || 1;
     
     // Force-graph centers the graph at (width/2, height/2) in screen space
     // Graph coordinates are in the force simulation space (centered at origin)
@@ -1721,37 +1034,68 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       }
     });
     
-    if (process.env.NODE_ENV === 'development' && positions.size > 0) {
-      const firstPos = Array.from(positions.values())[0];
-      console.log('First node position:', firstPos, 'Container:', { width: containerRect.width, height: containerRect.height, zoom });
-    }
-    
-    setNodePositions(positions);
-  }, []);
+    // Remove console.log to prevent infinite logging
+    // Only update positions if they've actually changed to prevent unnecessary re-renders
+    setNodePositions(prevPositions => {
+      // Check if positions have actually changed
+      if (prevPositions.size !== positions.size) {
+        return positions;
+      }
+      for (const [id, pos] of positions.entries()) {
+        const prevPos = prevPositions.get(id);
+        if (!prevPos || 
+            Math.abs(prevPos.x - pos.x) > 0.1 || 
+            Math.abs(prevPos.y - pos.y) > 0.1 || 
+            Math.abs(prevPos.radius - pos.radius) > 0.1) {
+          return positions;
+        }
+      }
+      return prevPositions; // No change, return previous to prevent re-render
+    });
+  }, [graphData, getNodeRadius]);
 
   // Update node positions periodically and on graph updates
+  // Use a ref to track if we should be updating to prevent infinite loops
+  const isUpdatingPositionsRef = useRef(false);
+  
+  // Track previous graphData nodes length to prevent unnecessary re-runs
+  const previousGraphDataNodesLengthForPositionsRef = useRef<number>(0);
+  
   useEffect(() => {
-    if (!graphRef.current) return;
+    if (!graphRef.current || !graphData || !graphData.nodes.length) return;
+    
+    // Only re-run if nodes count actually changed
+    if (previousGraphDataNodesLengthForPositionsRef.current === graphData.nodes.length && isUpdatingPositionsRef.current) {
+      return;
+    }
+    
+    previousGraphDataNodesLengthForPositionsRef.current = graphData.nodes.length;
+    
+    // Only start the update loop if not already running
+    if (isUpdatingPositionsRef.current) return;
+    isUpdatingPositionsRef.current = true;
     
     let animationFrameId: number;
-    let intervalId: NodeJS.Timeout;
+    let lastUpdateTime = 0;
+    const UPDATE_INTERVAL = 100; // Update at most every 100ms
     
-    const updatePositions = () => {
-      updateNodePositions();
+    const updatePositions = (currentTime: number) => {
+      // Throttle updates to prevent excessive re-renders
+      if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
+        updateNodePositions();
+        lastUpdateTime = currentTime;
+      }
       animationFrameId = requestAnimationFrame(updatePositions);
     };
     
-    // Update positions on animation frame for smooth updates
+    // Start the update loop
     animationFrameId = requestAnimationFrame(updatePositions);
-    
-    // Also update on zoom/pan changes
-    intervalId = setInterval(updateNodePositions, 100);
     
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      if (intervalId) clearInterval(intervalId);
+      isUpdatingPositionsRef.current = false;
     };
-  }, [graphData, updateNodePositions]);
+  }, [graphData.nodes.length, updateNodePositions]);
 
   // Auto center the graph
   const autoCenter = useCallback(() => {
@@ -1773,15 +1117,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         const centerX = (minX + maxX) / 2;
         const centerY = (minY + maxY) / 2;
         
-        // Get current camera position
-        const currentZoom = graphRef.current.zoom() || 1;
-        const containerElement = containerRef.current?.parentElement;
+        // Get current camera position - access via ref
+        const currentZoom = (graphRef.current as any)?.zoom?.() || 1;
+        const graphContainer = graphRef.current?.parentElement;
+        const containerElement = graphContainer?.parentElement;
         const actualWidth = containerElement ? containerElement.offsetWidth : width;
         const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
         const graphWidth = actualWidth - panelWidth;
         
         // Center the view
-        graphRef.current.centerAt(centerX, centerY, 1000);
+        // Access centerAt via ref - react-force-graph-2d exposes underlying instance
+        (graphRef.current as any)?.centerAt?.(centerX, centerY, 1000);
       }
     }
   }, [graphData, width, paneVisible]);
@@ -1848,45 +1194,25 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     };
   }, [rightClickMenu, contextMenu]);
 
-  // Find path to a node (all parent node IDs)
-  const findPathToNode = useCallback((targetId: string, nodes: Node[], path: string[] = []): string[] | null => {
-    for (const node of nodes) {
-      const currentPath = [...path, node.id];
-      
-      if (node.id === targetId) {
-        return currentPath;
-      }
-      
-      if (node.children) {
-        const found = findPathToNode(targetId, node.children, currentPath);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return null;
-  }, []);
-
-  // Find a node by ID in the node tree
-  const findNodeById = useCallback((targetId: string, nodes: Node[]): Node | null => {
-    for (const node of nodes) {
-      if (node.id === targetId) {
-        return node;
-      }
-      
-      if (node.children) {
-        const found = findNodeById(targetId, node.children);
-        if (found) {
-          return found;
-        }
-      }
-    }
-    return null;
-  }, []);
+  // Note: findPathToNode and findNodeById are imported from './graphUtils'
 
   // Highlight a specific node by expanding parents and centering
   const highlightNode = useCallback((nodeId: string, scrollToGraph = false) => {
     if (!nodeId) return;
+    
+    // First check if node exists in current visible graph data (to avoid errors)
+    const nodeExistsInGraph = graphData.nodes.some((n: any) => n.id === nodeId);
+    if (!nodeExistsInGraph) {
+      // Check if it exists in original data (might be collapsed)
+      const path = findPathToNode(nodeId, data.nodes);
+      if (!path) {
+        // Only warn if node truly doesn't exist anywhere
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Node not found: ${nodeId}`);
+        }
+        return; // Node not found
+      }
+    }
     
     // Scroll to graph if requested (for anchor links)
     if (scrollToGraph && outerContainerRef.current) {
@@ -1896,11 +1222,12 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       });
     }
     
-    // Find path to the node
+    // Find path to the node in original data
     const path = findPathToNode(nodeId, data.nodes);
     if (!path) {
-      console.warn(`Node not found: ${nodeId}`);
-      return; // Node not found
+      // If node exists in graph but not in original data, just highlight it
+      setHighlightedNodeId(nodeId);
+      return;
     }
     
     // Expand all parent nodes (all nodes in path except the target)
@@ -1927,7 +1254,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     if (scrollToGraph && node) {
       setSelectedNode(cleanNodeForSelection(node));
     }
-  }, [data.nodes, findPathToNode, findNodeById, cleanNodeForSelection]);
+  }, [data.nodes, graphData.nodes, findPathToNode, findNodeById, cleanNodeForSelection]);
 
   // Highlight a specific edge
   const highlightEdge = useCallback((edgeId: string, scrollToGraph = false) => {
@@ -1935,8 +1262,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     
     // Check if the edge exists in the current graph data
     // This is important because if nodes are collapsed, edges referencing those nodes won't be in the graph
-    const currentGraphData = graphData;
-    const edge = currentGraphData.links.find((l: any) => l.id === edgeId);
+    const edge = graphData.links.find((l: any) => l.id === edgeId);
     if (!edge) {
       console.warn(`Edge not found: ${edgeId} (source/target nodes may be collapsed)`);
       return; // Edge not found (possibly because source/target nodes are collapsed)
@@ -1952,6 +1278,48 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     
     // Set highlighted edge
     setHighlightedEdgeId(edgeId);
+  }, [graphData]);
+
+  /**
+   * ============================================================================
+   * INFINITE LOOP PREVENTION PATTERN
+   * ============================================================================
+   * 
+   * PROBLEM: useEffect hooks that depend on callbacks or objects that change
+   *          every render cause infinite loops (Maximum update depth exceeded).
+   * 
+   * SOLUTION: Store callbacks/values in refs and update refs in separate useEffect.
+   *           Other useEffects use refs instead of direct dependencies.
+   * 
+   * WHY THIS WORKS:
+   * - Refs don't trigger re-renders when updated
+   * - Refs always hold the latest value
+   * - Breaking the dependency cycle prevents infinite loops
+   * 
+   * PATTERN:
+   * 1. Create ref: const callbackRef = useRef(callback)
+   * 2. Update ref: useEffect(() => { callbackRef.current = callback }, [callback])
+   * 3. Use ref: useEffect(() => { callbackRef.current() }, [otherStableDeps])
+   * 
+   * ============================================================================
+   */
+  
+  // Use refs to store latest callbacks to avoid infinite loops
+  const highlightNodeRef = useRef(highlightNode);
+  const highlightEdgeRef = useRef(highlightEdge);
+  
+  // Update refs when callbacks change (doesn't cause re-render)
+  useEffect(() => {
+    highlightNodeRef.current = highlightNode;
+    highlightEdgeRef.current = highlightEdge;
+  }, [highlightNode, highlightEdge]);
+
+  // Use ref to store latest graphData for event handlers (prevents infinite loops)
+  // graphData changes when expandedNodes changes, but we don't want to re-run
+  // event handlers every time - ref allows access to latest without dependency
+  const graphDataRef = useRef(graphData);
+  useEffect(() => {
+    graphDataRef.current = graphData;
   }, [graphData]);
 
   // Handle markdown section clicks that link to graph nodes/edges
@@ -1978,17 +1346,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       
       if (nodeId) {
         e.preventDefault();
-        highlightNode(nodeId, true);
+        highlightNodeRef.current(nodeId, true);
         // Update URL hash
         if (graphId) {
           window.location.hash = `#${graphId}-node-${nodeId}`;
         }
       } else if (edgeId) {
         e.preventDefault();
-        // Check if edge exists before trying to highlight/select it
-        const edge = graphData.links.find((l: any) => l.id === edgeId);
+        // Use ref to get latest graphData
+        const edge = graphDataRef.current.links.find((l: any) => l.id === edgeId);
         if (edge) {
-          highlightEdge(edgeId, true);
+          highlightEdgeRef.current(edgeId, true);
           setSelectedEdge(cleanEdgeForSelection(edge));
           setSelectedNode(null);
           // Update URL hash
@@ -1996,7 +1364,9 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
             window.location.hash = `#${graphId}-edge-${edgeId}`;
           }
         } else {
-          console.warn(`Edge not found: ${edgeId} (source/target nodes may be collapsed)`);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Edge not found: ${edgeId} (source/target nodes may be collapsed)`);
+          }
         }
       }
     };
@@ -2007,7 +1377,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     return () => {
       document.removeEventListener('click', handleMarkdownSectionClick, true);
     };
-  }, [graphId, highlightNode, highlightEdge, graphData, setSelectedEdge, setSelectedNode]);
+  }, [graphId, setSelectedEdge, setSelectedNode]);
 
   // Handle URL hash changes
   useEffect(() => {
@@ -2018,17 +1388,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       const hash = window.location.hash;
       if (hash.startsWith(nodeHashPrefix)) {
         const nodeId = hash.substring(nodeHashPrefix.length);
-        highlightNode(nodeId, true); // Scroll to graph when hash changes
+        // Use ref to avoid dependency on highlightNode
+        highlightNodeRef.current(nodeId, true); // Scroll to graph when hash changes
       } else if (hash.startsWith(edgeHashPrefix)) {
         const edgeId = hash.substring(edgeHashPrefix.length);
-        // Check if edge exists before trying to highlight/select it
-        const edge = graphData.links.find((l: any) => l.id === edgeId);
+        // Use ref to get latest graphData
+        const edge = graphDataRef.current.links.find((l: any) => l.id === edgeId);
         if (edge) {
-          highlightEdge(edgeId, true); // Scroll to graph when hash changes
+          // Use ref to avoid dependency on highlightEdge
+          highlightEdgeRef.current(edgeId, true); // Scroll to graph when hash changes
           setSelectedEdge(cleanEdgeForSelection(edge));
           setSelectedNode(null);
         } else {
-          console.warn(`Edge not found: ${edgeId} (source/target nodes may be collapsed)`);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`Edge not found: ${edgeId} (source/target nodes may be collapsed)`);
+          }
         }
       }
     };
@@ -2042,23 +1416,58 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     return () => {
       window.removeEventListener('hashchange', checkHash);
     };
-  }, [graphId, highlightNode, highlightEdge]);
+  }, [graphId, cleanEdgeForSelection, setSelectedEdge, setSelectedNode]);
 
   // Handle prop-based highlighting
   useEffect(() => {
     if (propHighlightNodeId) {
-      highlightNode(propHighlightNodeId);
+      highlightNodeRef.current(propHighlightNodeId);
     }
-  }, [propHighlightNodeId, highlightNode]);
+  }, [propHighlightNodeId]);
 
   useEffect(() => {
     if (propHighlightEdgeId) {
-      highlightEdge(propHighlightEdgeId);
+      highlightEdgeRef.current(propHighlightEdgeId);
     }
-  }, [propHighlightEdgeId, highlightEdge]);
+  }, [propHighlightEdgeId]);
 
+  /**
+   * ============================================================================
+   * DEPENDENCY ARRAY OPTIMIZATION PATTERN
+   * ============================================================================
+   * 
+   * PROBLEM: Depending on entire objects (like graphData) causes effects to run
+   *          every time the object reference changes, even if content is the same.
+   * 
+   * SOLUTION: 
+   * 1. Depend on primitives (graphData.nodes.length) instead of objects
+   * 2. Use refs to track previous values
+   * 3. Only run effect when meaningful changes occur
+   * 
+   * WHY THIS MATTERS:
+   * - graphData is recreated when expandedNodes changes (due to useMemo)
+   * - But we only care if node count actually changed
+   * - Tracking previous values prevents unnecessary re-runs
+   * 
+   * ============================================================================
+   */
+  
   // Re-center on highlighted node when graph data updates (after expansion)
+  // Use refs to track previous values and prevent infinite loops
+  const previousHighlightedNodeIdRef = useRef<string | null>(null);
+  const previousGraphDataNodesLengthRef = useRef<number>(0);
+  
   useEffect(() => {
+    // Only run if highlightedNodeId actually changed or graphData nodes count changed
+    const nodeIdChanged = previousHighlightedNodeIdRef.current !== highlightedNodeId;
+    const nodesCountChanged = previousGraphDataNodesLengthRef.current !== graphData.nodes.length;
+    
+    if (!nodeIdChanged && !nodesCountChanged) return;
+    
+    // Update refs
+    previousHighlightedNodeIdRef.current = highlightedNodeId;
+    previousGraphDataNodesLengthRef.current = graphData.nodes.length;
+    
     if (highlightedNodeId && graphRef.current && graphData.nodes.length > 0) {
       // Wait for node to be positioned by force simulation
       const attemptCenter = (attempts = 0) => {
@@ -2067,14 +1476,15 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         setTimeout(() => {
           if (graphRef.current) {
             // Get the current graph data (may have updated positions)
-            const currentGraphData = graphRef.current.graphData();
-            const node = currentGraphData?.nodes?.find((n: any) => n.id === highlightedNodeId);
+            // Use graphData from state instead of calling graphData() on ref
+            const node = graphData.nodes.find((n: any) => n.id === highlightedNodeId);
             
             if (node && node.x !== undefined && node.y !== undefined && 
                 isFinite(node.x) && isFinite(node.y)) {
               // Center and zoom on the node
-              graphRef.current.centerAt(node.x, node.y, 1000);
-              graphRef.current.zoom(1.5, 1000);
+              // Access methods via ref - react-force-graph-2d exposes underlying instance
+              (graphRef.current as any)?.centerAt?.(node.x, node.y, 1000);
+              (graphRef.current as any)?.zoom?.(1.5, 1000);
               setSelectedNode(cleanNodeForSelection(node));
             } else {
               // Node not yet positioned, try again
@@ -2086,37 +1496,24 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       
       attemptCenter();
     }
-  }, [graphData, highlightedNodeId]);
+  }, [highlightedNodeId, graphData.nodes.length, cleanNodeForSelection]);
 
-  // Function to get and update graph width
-  const updateGraphWidth = useCallback(() => {
-    if (!containerRef.current || !graphRef.current) return;
-    
-    const containerElement = containerRef.current.parentElement;
-    if (!containerElement) return;
-    
-    const actualWidth = containerElement.offsetWidth || width;
-    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
-    const graphWidth = actualWidth - panelWidth;
-    const graphHeight = height - menuBarHeight;
-    
-    graphRef.current.width(graphWidth);
-    graphRef.current.height(graphHeight);
-  }, [width, height, paneVisible]);
+  // Note: updateGraphWidth removed - ForceGraph2D handles resizing via props
+  // Width and height are calculated above and passed as props to the component
 
   // Calculate bounding box of all visible nodes
   const calculateNodeBoundingBox = useCallback(() => {
     if (!graphRef.current) return null;
     
-    const currentGraphData = graphRef.current.graphData();
-    if (!currentGraphData || !currentGraphData.nodes || currentGraphData.nodes.length === 0) {
+    // Use graphData from state instead of calling graphData() on ref
+    if (!graphData || !graphData.nodes || graphData.nodes.length === 0) {
       return null;
     }
 
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     let validNodes = 0;
 
-    currentGraphData.nodes.forEach((node: any) => {
+    graphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
         const nodeRadius = getNodeRadius(node.hasChildren);
@@ -2144,12 +1541,14 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
   // Check if zoom out would make cluster < 25% of viewport
   const canZoomOut = useCallback((newZoom: number) => {
-    if (!graphRef.current || !containerRef.current) return true;
+    if (!graphRef.current) return true;
     
     const bbox = calculateNodeBoundingBox();
     if (!bbox) return true;
 
-    const containerElement = containerRef.current.parentElement;
+    // With react-force-graph-2d, ref points to component instance, not DOM
+    // Access container via outerContainerRef instead
+    const containerElement = outerContainerRef.current?.parentElement;
     if (!containerElement) return true;
     
     const actualWidth = containerElement.offsetWidth || width;
@@ -2174,14 +1573,16 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
   // Check if zoom in would result in only one node visible
   // Allow zooming in much more - only prevent if a single node would take up >90% of viewport
   const canZoomIn = useCallback((newZoom: number) => {
-    if (!graphRef.current || !containerRef.current) return true;
+    if (!graphRef.current) return true;
     
-    const currentGraphData = graphRef.current.graphData();
-    if (!currentGraphData || !currentGraphData.nodes || currentGraphData.nodes.length <= 1) {
+    // Use graphData from state instead of calling graphData() on ref
+    if (!graphData || !graphData.nodes || graphData.nodes.length <= 1) {
       return true; // If there's only one node or none, allow zoom
     }
 
-    const containerElement = containerRef.current.parentElement;
+    // With react-force-graph-2d, ref points to component instance, not DOM
+    // Access container via outerContainerRef instead
+    const containerElement = outerContainerRef.current?.parentElement;
     if (!containerElement) return true;
     
     const actualWidth = containerElement.offsetWidth || width;
@@ -2196,8 +1597,9 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     // Get the current camera position
     let centerX: number, centerY: number;
     
-    if (graphRef.current.screen2GraphCoords) {
-      const center = graphRef.current.screen2GraphCoords(graphWidth / 2, graphHeight / 2);
+    // Access screen2GraphCoords via ref - react-force-graph-2d exposes underlying instance
+    if ((graphRef.current as any)?.screen2GraphCoords) {
+      const center = (graphRef.current as any).screen2GraphCoords(graphWidth / 2, graphHeight / 2);
       centerX = center.x;
       centerY = center.y;
     } else {
@@ -2213,7 +1615,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     // Find the largest node size in the entire graph (not just visible ones)
     // This ensures we always have a reference point for zoom limits
     let maxNodeSizeInGraph = 0;
-    currentGraphData.nodes.forEach((node: any) => {
+    graphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
         const nodeRadius = getNodeRadius(node.hasChildren);
@@ -2225,7 +1627,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     // Count visible nodes and find the largest node in viewport
     let visibleNodes = 0;
     let maxNodeSizeInViewport = 0;
-    currentGraphData.nodes.forEach((node: any) => {
+    graphData.nodes.forEach((node: any) => {
       if (node.x !== undefined && node.y !== undefined && 
           isFinite(node.x) && isFinite(node.y)) {
         const nodeRadius = getNodeRadius(node.hasChildren);
@@ -2272,595 +1674,419 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     return true;
   }, [calculateNodeBoundingBox, width, height, paneVisible]);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  // Theme-based colors (moved outside useEffect for use in props)
+  const backgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
+  const linkColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
+  const arrowColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
+  const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
 
-    // Theme-based colors
-    const backgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
-    const borderColor = isDarkMode ? '#333' : '#e0e0e0';
-    const textColor = isDarkMode ? '#ffffff' : '#1a1a1a';
-    const linkColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
-    const arrowColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.8)';
-    const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
+  // Calculate graph dimensions
+  // Note: With react-force-graph, we calculate dimensions based on props
+  // The component will handle responsive sizing
+  const outerContainerRef = useRef<HTMLDivElement>(null);
+  const containerElement = outerContainerRef.current?.parentElement;
+  const actualWidth = containerElement ? containerElement.offsetWidth : width;
+  const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+  const graphWidth = actualWidth - panelWidth;
 
-    // Get actual container width (use parent container if available, otherwise use prop)
-    const containerElement = containerRef.current.parentElement;
-    const actualWidth = containerElement ? containerElement.offsetWidth : width;
-    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
-    const graphWidth = actualWidth - panelWidth;
-    const graphHeight = height - menuBarHeight;
+  // Memoize graph data
+  const memoizedGraphData = useMemo(() => graphData, [graphData]);
 
-    // Initialize force graph
-    if (!graphRef.current) {
-      graphRef.current = new ForceGraph(containerRef.current)
-        .width(graphWidth)
-        .height(graphHeight)
-        .backgroundColor(backgroundColor)
-        .nodeLabel((node: any) => getNodeLabel(node))
-        .nodeVal((node: any) => getNodeRadius(node.hasChildren))
-        // Note: nodeColor is not needed when using nodeCanvasObject with mode 'replace'
-        .linkColor((link: any) => {
-          // Comparison edges are drawn in linkCanvasObject with 'replace' mode, so hide default line
-          if ((link as any).type === 'differentiating') {
-            return 'rgba(0,0,0,0)'; // Fully transparent - use rgba instead of 'transparent' string
-          }
-          return linkColor;
-        })
-        .linkWidth((link: any) => {
-          // Comparison edges are drawn in linkCanvasObject as dashed lines, so hide default line
-          // Note: Setting to 0 might prevent linkCanvasObject from being called, so we use a very small value
-          if ((link as any).type === 'differentiating') {
-            return 0.1; // Very small width - should be invisible but still trigger linkCanvasObject
-          }
-          // Use same width calculation as helper function
-          return getEdgeWidth(link, false);
-        })
-        .linkDirectionalArrowLength((link: any) => {
-          // No arrows for comparison edges
-          if ((link as any).type === 'differentiating') {
-            return 0;
-          }
-          return 6;
-        })
-        .linkDirectionalArrowRelPos((link: any) => {
-          // No arrows for comparison edges
-          if ((link as any).type === 'differentiating') {
-            return 0;
-          }
-          // Calculate the position where arrow tip should touch the node surface
-          // Get node radius to account for node size
-          const currentData = graphRef.current?.graphData();
-          const targetNode = currentData?.nodes?.find((n: any) => n.id === link.target);
-          if (targetNode && graphRef.current) {
-            const nodeRadius = getNodeRadius(targetNode.hasChildren);
-            // Calculate distance from source to target
-            const sourceNode = currentData?.nodes?.find((n: any) => n.id === link.source);
-            if (sourceNode && sourceNode.x !== undefined && sourceNode.y !== undefined &&
-                targetNode.x !== undefined && targetNode.y !== undefined) {
-              const dx = targetNode.x - sourceNode.x;
-              const dy = targetNode.y - sourceNode.y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-              
-              if (distance > 0) {
-                // Position arrow so tip touches node surface
-                // In force-graph, linkDirectionalArrowRelPos is where the arrow base is positioned
-                // The arrow extends from relPos toward the target
-                // Arrow tip position = relPos * distance + arrowLength
-                // We want arrow tip to be at: distance - nodeRadius
-                // So: relPos * distance + arrowLength = distance - nodeRadius
-                // Therefore: relPos = (distance - nodeRadius - arrowLength) / distance
-                const arrowLength = 6; // Match linkDirectionalArrowLength
-                const relPos = Math.max(0, (distance - nodeRadius - arrowLength) / distance);
-                // Ensure it's as close as possible to the target (but not beyond 1.0)
-                return Math.min(0.999, Math.max(0.9, relPos));
-              }
-            }
-          }
-          return 0.98; // Default: very close to target node
-        })
-        .linkDirectionalArrowColor(() => arrowColor)
-        .d3Force('link', d3.forceLink().id((d: any) => d.id).distance(50))
-        .d3Force('charge', d3.forceManyBody().strength(-200))
-        .d3Force('collision', d3.forceCollide().radius((d: any) => {
-          const nodeRadius = getNodeRadius(d.hasChildren);
-          return nodeRadius + 5; // Add padding around nodes
-        }))
-        .onNodeClick((node: any) => {
-          // Clear context menu if open
-          setContextMenu(null);
-          
-          // Clear edge highlight and selection if any
-          if (highlightedEdgeId) {
-            setHighlightedEdgeId(null);
-          }
-          if (selectedEdge) {
-            setSelectedEdge(null);
-          }
-          
-          // Check if this node is already selected
-          const isAlreadySelected = selectedNode?.id === node.id;
-          
-          // Highlight the clicked node
-          setHighlightedNodeId(node.id);
-          
-          // Update URL fragment to reflect the selected node
-          if (graphId) {
-            window.location.hash = `#${graphId}-node-${node.id}`;
-          }
-          
-          // Only toggle expansion if node is already selected and has children
-          // When selecting a new node, just select it without toggling
-          if (isAlreadySelected && node.hasChildren) {
-            toggleNodeExpansion(node.id);
-          } else if (!isAlreadySelected && node.hasChildren) {
-            // When selecting a new node with children, expand it
-            setExpandedNodes(prev => {
-              const newSet = new Set(prev);
-              newSet.add(node.id);
-              return newSet;
-            });
-          }
-          
-          // Always select the node to show details
-          setSelectedNode(cleanNodeForSelection(node));
-          setSelectedEdge(null);
-        })
-        .onNodeRightClick((node: any) => {
-          // Show floating menu on right-click
-          if (rightClickPositionRef.current) {
-            setRightClickMenu({
-              nodeId: node.id,
-              x: rightClickPositionRef.current.x,
-              y: rightClickPositionRef.current.y,
-            });
-            rightClickPositionRef.current = null;
-          }
-        })
-        .onLinkClick((link: any) => {
-          // Clear menus if open
-          setRightClickMenu(null);
-          setContextMenu(null);
-          
-          // Clear highlights if clicking a different edge
-          if (highlightedEdgeId && highlightedEdgeId !== link.id) {
-            setHighlightedEdgeId(null);
-          }
-          if (highlightedNodeId) {
-            setHighlightedNodeId(null);
-          }
-          
-          // Select the edge
-          setSelectedEdge(cleanEdgeForSelection(link));
-          setSelectedNode(null);
-          
-          // Update URL fragment to reflect the selected edge
-          if (graphId && link.id) {
-            window.location.hash = `#${graphId}-edge-${link.id}`;
-          }
-          
-          // Call external callback if provided (for custom edge handling like AIFrameworkGraph)
-          if (onEdgeClick) {
-            onEdgeClick(link);
-          }
-        })
-        .onLinkRightClick((link: any) => {
-          // Use the stored right-click position
-          if (rightClickPositionRef.current) {
-            setContextMenu({ 
-              x: rightClickPositionRef.current.x, 
-              y: rightClickPositionRef.current.y, 
-              edgeId: link.id,
-              nodeId: undefined
-            });
-            rightClickPositionRef.current = null;
-          }
-        })
-        // Note: Removed onNodeHover - sun theming only applies on click/selection, not hover
-        .nodeCanvasObjectMode(() => 'replace') // Replace default node rendering with custom
-        .nodeCanvasObject(createNodeRenderer(
-          isDarkMode,
-          highlightedNodeId,
-          selectedNode,
-          nodeBorderColor,
-          expandedNodes
-        ))
-        .linkCanvasObjectMode((link: any) => {
-          // Use 'replace' mode for comparison edges to ensure they're drawn
-          // Use 'after' mode for regular edges to draw labels on top
-          const linkType = (link as any).type;
-          const isComparison = linkType === 'differentiating';
-          return isComparison ? 'replace' : 'after';
-        })
-        .linkCanvasObject((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-          const isHighlighted = highlightedEdgeId === link.id;
-          const linkType = (link as any).type;
-          const isComparisonEdge = linkType === 'differentiating';
-          
-          // For comparison edges, draw dashed gray lines (replace mode)
-          // For regular edges, we'll draw labels in 'after' mode
-          if (isComparisonEdge && link.source && link.target) {
-            const currentData = graphRef.current?.graphData();
-            // Handle both string IDs and node objects
-            const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-            const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-            const startNode = currentData?.nodes?.find((n: any) => n.id === sourceId);
-            const endNode = currentData?.nodes?.find((n: any) => n.id === targetId);
-            
-            const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
-            if (coords) {
-              // Use same width calculation as normal edges
-              const linkWidth = getEdgeWidth(link, isHighlighted);
-              
-              // Draw the dashed gray line for comparison edges
-              drawComparisonEdge(
-                ctx,
-                coords.startX,
-                coords.startY,
-                coords.endX,
-                coords.endY,
-                isHighlighted,
-                isDarkMode,
-                linkWidth
-              );
-              
-              // Draw label for comparison edges if zoomed in enough
-              if (link.label && globalScale >= 0.5) {
-                drawEdgeLabel(
-                  ctx,
-                  link.label,
-                  coords.midX,
-                  coords.midY,
-                  globalScale,
-                  isHighlighted,
-                  isDarkMode
-                );
-              }
-            }
-          }
-          
-          // Only show edge labels when zoomed in enough (globalScale > 0.5)
-          // Lowered threshold to make labels more visible
-          const MIN_ZOOM_FOR_LABELS = 0.5;
-          
-          // Draw edge label if it exists and zoomed in enough (for non-comparison edges or on top of comparison edges)
-          if (!isComparisonEdge && link.label && link.source && link.target && globalScale >= MIN_ZOOM_FOR_LABELS) {
-            // Get nodes from the graph's current data
-            const currentData = graphRef.current?.graphData();
-            // Handle both string IDs and node objects
-            const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-            const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-            const startNode = currentData?.nodes?.find((n: any) => n.id === sourceId);
-            const endNode = currentData?.nodes?.find((n: any) => n.id === targetId);
-            
-            if (startNode && endNode && 
-                startNode.x !== undefined && startNode.y !== undefined &&
-                endNode.x !== undefined && endNode.y !== undefined &&
-                isFinite(startNode.x) && isFinite(startNode.y) &&
-                isFinite(endNode.x) && isFinite(endNode.y)) {
-              // Calculate midpoint of the edge, accounting for node radii
-              const sourceRadius = getNodeRadius(startNode.hasChildren);
-              const targetRadius = getNodeRadius(endNode.hasChildren);
-              
-              // Calculate direction vector
-              const dx = endNode.x - startNode.x;
-              const dy = endNode.y - startNode.y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-              
-              if (distance > 0) {
-                // Normalize direction
-                const unitX = dx / distance;
-                const unitY = dy / distance;
-                
-                // Calculate start and end points on node surfaces
-                const startX = startNode.x + unitX * sourceRadius;
-                const startY = startNode.y + unitY * sourceRadius;
-                const endX = endNode.x - unitX * targetRadius;
-                const endY = endNode.y - unitY * targetRadius;
-                
-                // Calculate midpoint of the visible edge (between node surfaces)
-                const midX = (startX + endX) / 2;
-                const midY = (startY + endY) / 2;
-                
-                // Use fixed font size that scales with zoom for readability
-                const fontSize = Math.max(10, 12 * globalScale);
-                ctx.font = `${fontSize}px Sans-Serif`;
-                const textWidth = ctx.measureText(link.label).width;
-                const padding = 4;
-                
-                // Draw background for label
-                ctx.fillStyle = isHighlighted 
-                  ? (isDarkMode ? 'rgba(255, 215, 0, 0.9)' : 'rgba(255, 215, 0, 0.9)')
-                  : (isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)');
-                ctx.fillRect(
-                  midX - textWidth / 2 - padding,
-                  midY - fontSize / 2 - padding,
-                  textWidth + padding * 2,
-                  fontSize + padding * 2
-                );
-                
-                // Draw label text
-                ctx.fillStyle = isHighlighted
-                  ? (isDarkMode ? '#000000' : '#000000')
-                  : (isDarkMode ? '#ffffff' : '#1a1a1a');
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(link.label, midX, midY);
-              }
-            }
-          }
-        })
-        .cooldownTicks(100)
-        .onEngineStop(() => {
-          // Graph has stabilized
-        })
-        .onNodeDrag((node: any) => {
-          // Update node positions as nodes are dragged
-          updateNodePositions();
-        })
-        .onNodeDragEnd((node: any) => {
-          // Update node positions after drag ends
-          updateNodePositions();
-        })
-        .onZoom((transform: { k: number; x: number; y: number }) => {
-          // Update positions on zoom/pan
-          updateNodePositions();
-          
-          // Intercept zoom changes and enforce limits
-          if (!graphRef.current || isAdjustingZoomRef.current) {
-            previousZoomRef.current = transform.k;
-            return;
-          }
-          
-          const newZoom = transform.k;
-          const previousZoom = previousZoomRef.current;
-          
-          // Check zoom limits
-          if (newZoom < previousZoom) {
-            // Zooming out - check if allowed
-            if (!canZoomOut(newZoom)) {
-              // Prevent zoom out - revert to previous zoom
-              isAdjustingZoomRef.current = true;
-              graphRef.current.zoom(previousZoom, 0);
-              setTimeout(() => {
-                isAdjustingZoomRef.current = false;
-              }, 10);
-              return;
-            }
-          } else if (newZoom > previousZoom) {
-            // Zooming in - check if allowed
-            if (!canZoomIn(newZoom)) {
-              // Prevent zoom in - revert to previous zoom
-              isAdjustingZoomRef.current = true;
-              graphRef.current.zoom(previousZoom, 0);
-              setTimeout(() => {
-                isAdjustingZoomRef.current = false;
-              }, 10);
-              return;
-            }
-          }
-          
-          // Update previous zoom if zoom was allowed
-          previousZoomRef.current = newZoom;
-        });
+  // Create memoized callbacks for event handlers
+  const handleNodeClick = useCallback((node: any) => {
+    // Clear context menu if open
+    setContextMenu(null);
+    
+    // Clear edge highlight and selection if any
+    if (highlightedEdgeId) {
+      setHighlightedEdgeId(null);
     }
+    if (selectedEdge) {
+      setSelectedEdge(null);
+    }
+    
+    // Check if this node is already selected
+    const isAlreadySelected = selectedNode?.id === node.id;
+    
+    // Highlight the clicked node
+    setHighlightedNodeId(node.id);
+    
+    // Update URL fragment to reflect the selected node
+    if (graphId) {
+      window.location.hash = `#${graphId}-node-${node.id}`;
+    }
+    
+    // Only toggle expansion if node is already selected and has children
+    // When selecting a new node, just select it without toggling
+    if (isAlreadySelected && node.hasChildren) {
+      toggleNodeExpansion(node.id);
+    } else if (!isAlreadySelected && node.hasChildren) {
+      // When selecting a new node with children, expand it
+      setExpandedNodes(prev => {
+        const newSet = new Set(prev);
+        newSet.add(node.id);
+        return newSet;
+      });
+    }
+    
+    // Always select the node to show details
+    setSelectedNode(cleanNodeForSelection(node));
+    setSelectedEdge(null);
+  }, [highlightedEdgeId, selectedEdge, selectedNode, graphId, toggleNodeExpansion, setExpandedNodes, cleanNodeForSelection]);
 
-    // Update graph data and theme when they change
-    if (graphRef.current && containerRef.current) {
-      updateGraphWidth();
-      const comparisonCount = graphData.links.filter((l: any) => l.type === 'differentiating').length;
-      console.log('Graph data set:', { 
-        nodes: graphData.nodes.length, 
-        links: graphData.links.length,
-        comparisonEdges: comparisonCount,
-        sampleLink: graphData.links[0] ? { 
-          id: graphData.links[0].id, 
-          type: (graphData.links[0] as any).type, 
-          keys: Object.keys(graphData.links[0]),
-          fullLink: graphData.links[0]
-        } : null,
-        allLinkTypes: [...new Set(graphData.links.map((l: any) => l.type))],
-        linksWithType: graphData.links.filter((l: any) => l.type).length
+  const handleNodeRightClick = useCallback((node: any) => {
+    // Show floating menu on right-click
+    if (rightClickPositionRef.current) {
+      setRightClickMenu({
+        nodeId: node.id,
+        x: rightClickPositionRef.current.x,
+        y: rightClickPositionRef.current.y,
       });
-      graphRef.current.graphData(graphData);
-      graphRef.current.backgroundColor(backgroundColor);
-      graphRef.current.linkColor((link: any) => {
-        // Comparison edges are drawn in linkCanvasObject with 'replace' mode, so hide default line
-        if ((link as any).type === 'differentiating') {
-          return 'rgba(0,0,0,0)'; // Fully transparent - use rgba instead of 'transparent' string
-        }
-        return linkColor;
+      rightClickPositionRef.current = null;
+    }
+  }, []);
+
+  const handleLinkClick = useCallback((link: any) => {
+    // Clear menus if open
+    setRightClickMenu(null);
+    setContextMenu(null);
+    
+    // Clear highlights if clicking a different edge
+    if (highlightedEdgeId && highlightedEdgeId !== link.id) {
+      setHighlightedEdgeId(null);
+    }
+    if (highlightedNodeId) {
+      setHighlightedNodeId(null);
+    }
+    
+    // Select the edge
+    setSelectedEdge(cleanEdgeForSelection(link));
+    setSelectedNode(null);
+    
+    // Update URL fragment to reflect the selected edge
+    if (graphId && link.id) {
+      window.location.hash = `#${graphId}-edge-${link.id}`;
+    }
+    
+    // Call external callback if provided (for custom edge handling like AIFrameworkGraph)
+    if (onEdgeClick) {
+      onEdgeClick(link);
+    }
+  }, [highlightedEdgeId, highlightedNodeId, graphId, onEdgeClick, cleanEdgeForSelection]);
+
+  const handleLinkRightClick = useCallback((link: any) => {
+    // Use the stored right-click position
+    if (rightClickPositionRef.current) {
+      setContextMenu({ 
+        x: rightClickPositionRef.current.x, 
+        y: rightClickPositionRef.current.y, 
+        edgeId: link.id,
+        nodeId: undefined
       });
-      graphRef.current.linkDirectionalArrowColor(() => arrowColor);
+      rightClickPositionRef.current = null;
+    }
+  }, []);
+
+  const handleNodeDrag = useCallback((node: any) => {
+    // Update node positions as nodes are dragged
+    updateNodePositions();
+  }, [updateNodePositions]);
+
+  const handleNodeDragEnd = useCallback((node: any) => {
+    // Update node positions after drag ends
+    updateNodePositions();
+  }, [updateNodePositions]);
+
+  const handleZoom = useCallback((transform: { k: number; x: number; y: number }) => {
+    // Update positions on zoom/pan
+    updateNodePositions();
+    
+    // Intercept zoom changes and enforce limits
+    if (!graphRef.current || isAdjustingZoomRef.current) {
+      previousZoomRef.current = transform.k;
+      return;
+    }
+    
+    const newZoom = transform.k;
+    const previousZoom = previousZoomRef.current;
+    
+    // Check zoom limits
+    if (newZoom < previousZoom) {
+      // Zooming out - check if allowed
+      if (!canZoomOut(newZoom)) {
+        // Prevent zoom out - revert to previous zoom
+        // Access zoom via ref - react-force-graph-2d exposes underlying instance
+        isAdjustingZoomRef.current = true;
+        (graphRef.current as any)?.zoom?.(previousZoom, 0);
+        setTimeout(() => {
+          isAdjustingZoomRef.current = false;
+        }, 10);
+        return;
+      }
+    } else if (newZoom > previousZoom) {
+      // Zooming in - check if allowed
+      if (!canZoomIn(newZoom)) {
+        // Prevent zoom in - revert to previous zoom
+        // Access zoom via ref - react-force-graph-2d exposes underlying instance
+        isAdjustingZoomRef.current = true;
+        (graphRef.current as any)?.zoom?.(previousZoom, 0);
+        setTimeout(() => {
+          isAdjustingZoomRef.current = false;
+        }, 10);
+        return;
+      }
+    }
+    
+    // Update previous zoom if zoom was allowed
+    previousZoomRef.current = newZoom;
+  }, [updateNodePositions, canZoomOut, canZoomIn]);
+
+  // Create memoized render functions
+  const nodeCanvasObject = useMemo(() => createNodeRenderer(
+    isDarkMode,
+    highlightedNodeId,
+    selectedNode,
+    nodeBorderColor,
+    expandedNodes
+  ), [createNodeRenderer, isDarkMode, highlightedNodeId, selectedNode, nodeBorderColor, expandedNodes]);
+
+  const linkCanvasObjectMode = useCallback((link: any) => {
+    // Use 'replace' mode for comparison edges to ensure they're drawn
+    // Use 'after' mode for regular edges to draw labels on top
+    const linkType = (link as any).type;
+    const isComparison = linkType === 'differentiating';
+    return isComparison ? 'replace' : 'after';
+  }, []);
+
+  const linkCanvasObject = useCallback((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+    const isHighlighted = highlightedEdgeId === link.id;
+    const linkType = (link as any).type;
+    const isComparisonEdge = linkType === 'differentiating';
+    
+    // For comparison edges, draw dashed gray lines (replace mode)
+    // For regular edges, we'll draw labels in 'after' mode
+    if (isComparisonEdge && link.source && link.target) {
+      // Use graphData from props/state instead of calling graphData() on ref
+      // Handle both string IDs and node objects
+      const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
+      const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
+      const startNode = graphData.nodes.find((n: any) => n.id === sourceId);
+      const endNode = graphData.nodes.find((n: any) => n.id === targetId);
       
-      // Ensure onZoom callback is set (in case it was overwritten)
-      graphRef.current.onZoom((transform: { k: number; x: number; y: number }) => {
-        // Intercept zoom changes and enforce limits
-        if (!graphRef.current || isAdjustingZoomRef.current) {
-          previousZoomRef.current = transform.k;
-          return;
+      const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
+      if (coords) {
+        // Use same width calculation as normal edges
+        const linkWidth = getEdgeWidth(link, isHighlighted);
+        
+        // Draw the dashed gray line for comparison edges
+        drawComparisonEdge(
+          ctx,
+          coords.startX,
+          coords.startY,
+          coords.endX,
+          coords.endY,
+          isHighlighted,
+          isDarkMode,
+          linkWidth
+        );
+        
+        // Draw label for comparison edges if zoomed in enough
+        if (link.label && globalScale >= 0.5) {
+          drawEdgeLabel(
+            ctx,
+            link.label,
+            coords.midX,
+            coords.midY,
+            globalScale,
+            isHighlighted,
+            isDarkMode
+          );
         }
-        
-        const newZoom = transform.k;
-        const previousZoom = previousZoomRef.current;
-        
-        // Check zoom limits
-        if (newZoom < previousZoom) {
-          // Zooming out - check if allowed
-          if (!canZoomOut(newZoom)) {
-            // Prevent zoom out - revert to previous zoom
-            isAdjustingZoomRef.current = true;
-            graphRef.current.zoom(previousZoom, 0);
-            setTimeout(() => {
-              isAdjustingZoomRef.current = false;
-            }, 10);
-            return;
-          }
-        } else if (newZoom > previousZoom) {
-          // Zooming in - check if allowed
-          if (!canZoomIn(newZoom)) {
-            // Prevent zoom in - revert to previous zoom
-            isAdjustingZoomRef.current = true;
-            graphRef.current.zoom(previousZoom, 0);
-            setTimeout(() => {
-              isAdjustingZoomRef.current = false;
-            }, 10);
-            return;
-          }
-        }
-        
-        // Update previous zoom if zoom was allowed
-        previousZoomRef.current = newZoom;
-      });
+      }
+    }
+    
+    // Only show edge labels when zoomed in enough (globalScale > 0.5)
+    // Lowered threshold to make labels more visible
+    const MIN_ZOOM_FOR_LABELS = 0.5;
+    
+    // Draw edge label if it exists and zoomed in enough (for non-comparison edges or on top of comparison edges)
+    if (!isComparisonEdge && link.label && link.source && link.target && globalScale >= MIN_ZOOM_FOR_LABELS) {
+      // Use graphData from props/state instead of calling graphData() on ref
+      // Handle both string IDs and node objects
+      const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
+      const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
+      const startNode = graphData.nodes.find((n: any) => n.id === sourceId);
+      const endNode = graphData.nodes.find((n: any) => n.id === targetId);
       
-      // Initialize previous zoom ref if not set
-      if (previousZoomRef.current === 1) {
-        const currentZoom = graphRef.current.zoom();
+      if (startNode && endNode && 
+          startNode.x !== undefined && startNode.y !== undefined &&
+          endNode.x !== undefined && endNode.y !== undefined &&
+          isFinite(startNode.x) && isFinite(startNode.y) &&
+          isFinite(endNode.x) && isFinite(endNode.y)) {
+        // Calculate midpoint of the edge, accounting for node radii
+        const sourceRadius = getNodeRadius(startNode.hasChildren);
+        const targetRadius = getNodeRadius(endNode.hasChildren);
+        
+        // Calculate direction vector
+        const dx = endNode.x - startNode.x;
+        const dy = endNode.y - startNode.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance > 0) {
+          // Normalize direction
+          const unitX = dx / distance;
+          const unitY = dy / distance;
+          
+          // Calculate start and end points on node surfaces
+          const startX = startNode.x + unitX * sourceRadius;
+          const startY = startNode.y + unitY * sourceRadius;
+          const endX = endNode.x - unitX * targetRadius;
+          const endY = endNode.y - unitY * targetRadius;
+          
+          // Calculate midpoint of the visible edge (between node surfaces)
+          const midX = (startX + endX) / 2;
+          const midY = (startY + endY) / 2;
+          
+          // Use fixed font size that scales with zoom for readability
+          const fontSize = Math.max(10, 12 * globalScale);
+          ctx.font = `${fontSize}px Sans-Serif`;
+          const textWidth = ctx.measureText(link.label).width;
+          const padding = 4;
+          
+          // Draw background for label
+          ctx.fillStyle = isHighlighted 
+            ? (isDarkMode ? 'rgba(255, 215, 0, 0.9)' : 'rgba(255, 215, 0, 0.9)')
+            : (isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+          ctx.fillRect(
+            midX - textWidth / 2 - padding,
+            midY - fontSize / 2 - padding,
+            textWidth + padding * 2,
+            fontSize + padding * 2
+          );
+          
+          // Draw label text
+          ctx.fillStyle = isHighlighted
+            ? (isDarkMode ? '#000000' : '#000000')
+            : (isDarkMode ? '#ffffff' : '#1a1a1a');
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(link.label, midX, midY);
+        }
+      }
+    }
+  }, [highlightedEdgeId, isDarkMode, getEdgeCoordinates, getNodeRadius, drawComparisonEdge, drawEdgeLabel]);
+
+  // Create memoized props functions for ForceGraph2D
+  const nodeLabel = useCallback((node: any) => getNodeLabel(node), []);
+  const nodeVal = useCallback((node: any) => getNodeRadius(node.hasChildren), []);
+  
+  const linkColorFn = useCallback((link: any) => {
+    // Comparison edges are drawn in linkCanvasObject with 'replace' mode, so hide default line
+    if ((link as any).type === 'differentiating') {
+      return 'rgba(0,0,0,0)'; // Fully transparent
+    }
+    return linkColor;
+  }, [linkColor]);
+
+  const linkWidthFn = useCallback((link: any) => {
+    // Comparison edges are drawn in linkCanvasObject, so hide default line
+    if ((link as any).type === 'differentiating') {
+      return 0.1; // Very small width - should be invisible but still trigger linkCanvasObject
+    }
+    return getEdgeWidth(link, false);
+  }, [getEdgeWidth]);
+
+  const linkDirectionalArrowLengthFn = useCallback((link: any) => {
+    // No arrows for comparison edges
+    if ((link as any).type === 'differentiating') {
+      return 0;
+    }
+    return 6;
+  }, []);
+
+  const linkDirectionalArrowRelPosFn = useCallback((link: any) => {
+    // No arrows for comparison edges
+    if ((link as any).type === 'differentiating') {
+      return 0;
+    }
+    // Calculate the position where arrow tip should touch the node surface
+    // Use graphData from props/state instead of calling graphData() on ref
+    const targetNode = graphData.nodes.find((n: any) => n.id === link.target);
+    if (targetNode && graphRef.current) {
+      const nodeRadius = getNodeRadius(targetNode.hasChildren);
+      const sourceNode = graphData.nodes.find((n: any) => n.id === link.source);
+      if (sourceNode && sourceNode.x !== undefined && sourceNode.y !== undefined &&
+          targetNode.x !== undefined && targetNode.y !== undefined) {
+        const dx = targetNode.x - sourceNode.x;
+        const dy = targetNode.y - sourceNode.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance > 0) {
+          const arrowLength = 6;
+          const relPos = Math.max(0, (distance - nodeRadius - arrowLength) / distance);
+          return Math.min(0.999, Math.max(0.9, relPos));
+        }
+      }
+    }
+    return 0.98; // Default: very close to target node
+  }, [getNodeRadius]);
+
+  const linkDirectionalArrowColorFn = useCallback(() => arrowColor, [arrowColor]);
+
+  // Setup d3 forces - react-force-graph uses d3Force prop which can be a function
+  // We'll set up individual forces via useEffect after component mounts
+  // For now, create the force functions
+  const d3ForceLinkFn = useMemo(() => d3.forceLink().id((d: any) => d.id).distance(50), [d3]);
+  const d3ForceChargeFn = useMemo(() => d3.forceManyBody().strength(-200), [d3]);
+  const d3ForceCollisionFn = useMemo(() => d3.forceCollide().radius((d: any) => {
+    const nodeRadius = getNodeRadius(d.hasChildren);
+    return nodeRadius + 5; // Add padding around nodes
+  }), [d3, getNodeRadius]);
+
+  // Setup d3 forces after component mounts
+  useEffect(() => {
+    if (!graphRef.current) return;
+    
+    // Set up d3 forces via imperative API (react-force-graph-2d exposes underlying instance)
+    // Access d3Force via ref - react-force-graph-2d exposes underlying instance
+    (graphRef.current as any)?.d3Force?.('link', d3ForceLinkFn);
+    (graphRef.current as any)?.d3Force?.('charge', d3ForceChargeFn);
+    (graphRef.current as any)?.d3Force?.('collision', d3ForceCollisionFn);
+  }, [d3ForceLinkFn, d3ForceChargeFn, d3ForceCollisionFn]);
+
+  // Update graph dimensions when container size changes
+  // Note: With react-force-graph, most props are handled declaratively
+  // This effect only handles imperative operations like resize observer
+  useEffect(() => {
+    if (!graphRef.current) return;
+    
+    // Initialize previous zoom ref if not set
+    if (previousZoomRef.current === 1) {
+        // Access zoom via ref - react-force-graph-2d exposes underlying instance
+        const currentZoom = (graphRef.current as any)?.zoom?.();
         if (currentZoom) {
           previousZoomRef.current = currentZoom;
         }
-      }
-      
-      // Add edge rendering with labels
-      graphRef.current.linkCanvasObjectMode((link: any) => {
-        // Use 'replace' mode for comparison edges to ensure they're drawn
-        // Use 'after' mode for regular edges to draw labels on top
-        const linkType = (link as any).type;
-        const isComparison = linkType === 'differentiating';
-        // Debug: log first few calls to verify callback is invoked
-        if (!(window as any).__modeCallCountUseEffect) (window as any).__modeCallCountUseEffect = 0;
-        (window as any).__modeCallCountUseEffect++;
-        if ((window as any).__modeCallCountUseEffect <= 3) {
-          console.log('linkCanvasObjectMode (useEffect) called:', { 
-            call: (window as any).__modeCallCountUseEffect,
-            id: link.id, 
-            type: linkType, 
-            isComparison,
-            keys: Object.keys(link)
-          });
-        }
-        // Debug: only log comparison edges after first 3 calls
-        if (isComparison && (window as any).__modeCallCountUseEffect > 3) {
-          console.log('linkCanvasObjectMode (useEffect, comparison):', { id: link.id, type: linkType });
-        }
-        return isComparison ? 'replace' : 'after';
-      });
-      graphRef.current.linkCanvasObject((link: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-        const isHighlighted = highlightedEdgeId === link.id;
-        const linkType = (link as any).type;
-        const isComparisonEdge = linkType === 'differentiating';
-        
-        // Draw comparison edges as dashed lines (must draw before labels to ensure visibility)
-        if (isComparisonEdge && link.source && link.target) {
-          const currentData = graphRef.current?.graphData();
-          const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-          const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-          const startNode = currentData?.nodes?.find((n: any) => n.id === sourceId);
-          const endNode = currentData?.nodes?.find((n: any) => n.id === targetId);
-          
-          const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
-          if (coords) {
-            // Use same width calculation as normal edges
-            const linkWidth = getEdgeWidth(link, isHighlighted);
-            
-            // Draw the dashed gray line for comparison edges
-            drawComparisonEdge(
-              ctx,
-              coords.startX,
-              coords.startY,
-              coords.endX,
-              coords.endY,
-              isHighlighted,
-              isDarkMode,
-              linkWidth
-            );
-            
-            // Draw label for comparison edges if zoomed in enough
-            if (link.label && globalScale >= 0.5) {
-              drawEdgeLabel(
-                ctx,
-                link.label,
-                coords.midX,
-                coords.midY,
-                globalScale,
-                isHighlighted,
-                isDarkMode
-              );
-            }
-          }
-        }
-        
-        // Draw edge label for non-comparison edges (in 'after' mode, labels appear on top)
-        const MIN_ZOOM_FOR_LABELS = 0.5;
-        if (!isComparisonEdge && link.label && link.source && link.target && globalScale >= MIN_ZOOM_FOR_LABELS) {
-          const currentData = graphRef.current?.graphData();
-          const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-          const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-          const startNode = currentData?.nodes?.find((n: any) => n.id === sourceId);
-          const endNode = currentData?.nodes?.find((n: any) => n.id === targetId);
-          
-          const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
-          if (coords) {
-            drawEdgeLabel(
-              ctx,
-              link.label,
-              coords.midX,
-              coords.midY,
-              globalScale,
-              isHighlighted,
-              isDarkMode
-            );
-          }
-        }
-      });
-      
-      // Update link color based on highlight
-      graphRef.current.linkColor((link: any) => {
-        // Comparison edges are drawn in linkCanvasObject with 'replace' mode, so hide default line
-        if ((link as any).type === 'differentiating') {
-          return 'rgba(0,0,0,0)'; // Fully transparent - use rgba instead of 'transparent' string
-        }
-        if (highlightedEdgeId === link.id) {
-          return isDarkMode ? '#FFD700' : '#FFA500';
-        }
-        return linkColor;
-      });
-      
-      graphRef.current.linkWidth((link: any) => {
-        // Comparison edges are drawn in linkCanvasObject, so hide default line
-        if ((link as any).type === 'differentiating') {
-          return 0;
-        }
-        const baseWidth = Math.sqrt(link.value || 1);
-        return highlightedEdgeId === link.id ? baseWidth * 2 : baseWidth;
-      });
-      
-      graphRef.current.linkDirectionalArrowLength((link: any) => {
-        // No arrows for comparison edges
-        if ((link as any).type === 'differentiating') {
-          return 0;
-        }
-        return 6;
-      });
-      
-      // Force a redraw by reheating the simulation
-      if (graphRef.current.d3ReheatSimulation) {
-        graphRef.current.d3ReheatSimulation();
-      }
     }
 
     // Setup resize observer to handle dynamic width changes
     const resizeObserver = new ResizeObserver(() => {
-      updateGraphWidth();
+      // Update graph width/height when container resizes
+      // Note: react-force-graph handles most updates via props, but we can update via ref if needed
+      // The component will re-render with new props when dimensions change
     });
     
-    if (containerRef.current?.parentElement) {
-      resizeObserver.observe(containerRef.current.parentElement);
+    // Observe the parent container for size changes
+    const parentElement = graphRef.current?.parentElement?.parentElement;
+    if (parentElement) {
+      resizeObserver.observe(parentElement);
     }
 
     // Track right-click position on the canvas
     const handleCanvasContextMenu = (event: MouseEvent) => {
-      if (containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
+      const canvas = (event.target as HTMLElement)?.closest('canvas');
+      if (canvas) {
+        const containerRect = canvas.getBoundingClientRect();
         rightClickPositionRef.current = {
           x: event.clientX - containerRect.left,
           y: event.clientY - containerRect.top,
@@ -2870,7 +2096,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
     // Handle wheel events to enforce zoom limits (using capture phase to intercept before force-graph)
     const handleWheel = (event: WheelEvent) => {
-      if (!graphRef.current || !containerRef.current) return;
+      if (!graphRef.current) return;
 
       const currentZoom = graphRef.current.zoom() || 1;
       // Calculate zoom factor from wheel delta
@@ -2890,8 +2116,8 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         
         // If there's a highlighted node, zoom into it instead of cursor position
         if (highlightedNodeId) {
-          const currentGraphData = graphRef.current.graphData();
-          const highlightedNode = currentGraphData?.nodes?.find((n: any) => n.id === highlightedNodeId);
+          // Use graphData from state instead of calling graphData() on ref
+          const highlightedNode = graphData.nodes.find((n: any) => n.id === highlightedNodeId);
           
           if (highlightedNode && 
               highlightedNode.x !== undefined && highlightedNode.y !== undefined &&
@@ -2925,8 +2151,8 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         
         // If there's a highlighted node, keep it centered while zooming out
         if (highlightedNodeId) {
-          const currentGraphData = graphRef.current.graphData();
-          const highlightedNode = currentGraphData?.nodes?.find((n: any) => n.id === highlightedNodeId);
+          // Use graphData from state instead of calling graphData() on ref
+          const highlightedNode = graphData.nodes.find((n: any) => n.id === highlightedNodeId);
           
           if (highlightedNode && 
               highlightedNode.x !== undefined && highlightedNode.y !== undefined &&
@@ -2955,7 +2181,9 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
     // Get the canvas element and add context menu listener
     // Use a small delay to ensure canvas is rendered
     const setupCanvasListener = () => {
-      const canvas = containerRef.current?.querySelector('canvas');
+      // Find canvas within the graph component
+      const graphContainer = graphRef.current?.parentElement;
+      const canvas = graphContainer?.querySelector('canvas');
       if (canvas) {
         canvas.addEventListener('contextmenu', handleCanvasContextMenu);
         // Use capture phase to intercept wheel events before force-graph handles them
@@ -2965,9 +2193,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
       return null;
     };
     
-    // Also add wheel listener to container with capture to catch events early
-    if (containerRef.current) {
-      containerRef.current.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    // Also add wheel listener to graph container with capture to catch events early
+    const graphContainer = graphRef.current?.parentElement;
+    if (graphContainer) {
+      graphContainer.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     }
 
     let canvas: HTMLCanvasElement | null = null;
@@ -2983,84 +2212,71 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         canvas.removeEventListener('contextmenu', handleCanvasContextMenu);
         canvas.removeEventListener('wheel', handleWheel, { capture: true } as any);
       }
-      if (containerRef.current) {
-        containerRef.current.removeEventListener('wheel', handleWheel, { capture: true } as any);
+      const graphContainer = graphRef.current?.parentElement;
+      if (graphContainer) {
+        graphContainer.removeEventListener('wheel', handleWheel, { capture: true } as any);
       }
-      if (graphRef.current) {
-        graphRef.current._destructor();
-        graphRef.current = null;
-      }
+      // Note: react-force-graph handles cleanup automatically, no need to call _destructor
     };
-  }, [graphData, width, height, toggleNodeExpansion, isDarkMode, updateGraphWidth, paneVisible, highlightedEdgeId, expandedNodes, canZoomIn, canZoomOut]);
+  }, [width, height, paneVisible, canZoomIn, canZoomOut, menuBarHeight]);
 
-  // Separate effect to update node rendering when selection/highlight changes
-  // This avoids re-running the entire graph setup when only selection changes
-  useEffect(() => {
-    if (!graphRef.current) return;
+  // Note: Node rendering updates are handled via props (nodeCanvasObject) which is memoized
+  // No separate effect needed - React will re-render when props change
 
-    // Calculate theme-based node border color
-    const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
+  const graphAreaHeight = height - menuBarHeight;
 
-    // Update node canvas object to use theme-aware colors
-    graphRef.current.nodeCanvasObjectMode(() => 'replace'); // Ensure default rendering is disabled
-    graphRef.current.nodeCanvasObject(createNodeRenderer(
-      isDarkMode,
-      highlightedNodeId,
-      selectedNode,
-      nodeBorderColor,
-      expandedNodes
-    ));
-
-    // Force a re-render of nodes (not the entire graph)
-    if (graphRef.current.d3ReheatSimulation) {
-      graphRef.current.d3ReheatSimulation();
-    }
-  }, [isDarkMode, highlightedNodeId, selectedNode, expandedNodes]);
-
-  const containerBorderColor = isDarkMode ? '#333' : '#e0e0e0';
-  const containerBackgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
-  const containerBoxShadow = isDarkMode 
-    ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-    : '0 4px 6px rgba(0, 0, 0, 0.1)';
-  
-  const panelBackgroundColor = isDarkMode ? '#2a2a2a' : '#fafafa';
+  // Color variables for dynamic inline styles that can't be moved to CSS
+  // (e.g., conditional colors, dynamic values, or styles applied via JavaScript)
+  // Static styles have been migrated to GraphRenderer.module.css
   const panelTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
-  const panelBorderColor = isDarkMode ? '#555' : '#e0e0e0';
   const menuBarBackgroundColor = isDarkMode ? '#252525' : '#f0f0f0';
   const menuBarBorderColor = isDarkMode ? '#444' : '#ddd';
   const menuBarTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
   const buttonHoverColor = isDarkMode ? '#333' : '#e0e0e0';
 
-  const graphHeight = height - menuBarHeight;
-  const graphAreaHeight = height - menuBarHeight;
-
   return (
     <div 
       ref={outerContainerRef}
-      style={{
-        width: '100%',
-        border: `1px solid ${containerBorderColor}`,
-        borderRadius: '8px',
-        overflow: 'hidden',
-        backgroundColor: containerBackgroundColor,
-        boxShadow: containerBoxShadow,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      className={`${styles.container} ${isDarkMode ? styles.containerDark : styles.containerLight}`}
     >
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '0',
-        height: graphAreaHeight,
-        position: 'relative',
-      }}>
-        <div ref={containerRef} style={{ 
-          flex: paneVisible ? '1 1 80%' : '1 1 100%', 
-          minWidth: 0, 
-          height: graphAreaHeight,
-          position: 'relative',
-        }} />
+      <div 
+        className={styles.graphArea}
+        style={{ height: graphAreaHeight }}
+      >
+        <div 
+          className={`${styles.graphCanvas} ${paneVisible ? styles.graphCanvasWithPane : styles.graphCanvasWithoutPane}`}
+          style={{ height: graphAreaHeight }}
+        >
+          <ForceGraph2D
+            ref={graphRef}
+            graphData={memoizedGraphData}
+            width={graphWidth}
+            height={height - menuBarHeight}
+            backgroundColor={backgroundColor}
+            nodeLabel={nodeLabel}
+            nodeVal={nodeVal}
+            linkColor={linkColorFn}
+            linkWidth={linkWidthFn}
+            linkDirectionalArrowLength={linkDirectionalArrowLengthFn}
+            linkDirectionalArrowRelPos={linkDirectionalArrowRelPosFn}
+            linkDirectionalArrowColor={linkDirectionalArrowColorFn}
+            onNodeClick={handleNodeClick}
+            onNodeRightClick={handleNodeRightClick}
+            onLinkClick={handleLinkClick}
+            onLinkRightClick={handleLinkRightClick}
+            onNodeDrag={handleNodeDrag}
+            onNodeDragEnd={handleNodeDragEnd}
+            onZoom={handleZoom}
+            nodeCanvasObjectMode={() => 'replace'}
+            nodeCanvasObject={nodeCanvasObject}
+            linkCanvasObjectMode={linkCanvasObjectMode}
+            linkCanvasObject={linkCanvasObject}
+            cooldownTicks={100}
+            onEngineStop={() => {
+              // Graph has stabilized
+            }}
+          />
+        </div>
         {/* Right-click floating menu */}
         {rightClickMenu && (() => {
           const node = graphData.nodes.find((n: any) => n.id === rightClickMenu.nodeId);
@@ -3094,19 +2310,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
           
           return (
             <div
+              className={`${styles.rightClickMenu} ${isDarkMode ? styles.rightClickMenuDark : styles.rightClickMenuLight}`}
               style={{
-                position: 'absolute',
                 left: `${rightClickMenu.x}px`,
                 top: `${rightClickMenu.y}px`,
-                backgroundColor: isDarkMode ? '#2a2a2a' : '#ffffff',
-                border: `1px solid ${isDarkMode ? '#555' : '#ddd'}`,
-                borderRadius: '8px',
-                boxShadow: isDarkMode 
-                  ? '0 4px 12px rgba(0, 0, 0, 0.5)' 
-                  : '0 4px 12px rgba(0, 0, 0, 0.15)',
-                padding: '4px',
-                minWidth: '160px',
-                zIndex: 1000,
               }}
               onClick={(e) => e.stopPropagation()}
               onContextMenu={(e) => e.preventDefault()}
@@ -3118,21 +2325,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                     e.stopPropagation();
                     item.action();
                   }}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    textAlign: 'left',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    color: isDarkMode ? '#ffffff' : '#1a1a1a',
-                    fontSize: '14px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.2s',
-                  }}
+                  className={`${styles.rightClickMenuItem} ${isDarkMode ? styles.rightClickMenuItemDark : styles.rightClickMenuItemLight}`}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = isDarkMode ? '#333' : '#f0f0f0';
                   }}
@@ -3149,36 +2342,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         })()}
         {contextMenu && (
           <div
+            className={`${styles.contextMenu} ${isDarkMode ? styles.contextMenuDark : styles.contextMenuLight}`}
             style={{
-              position: 'absolute',
               left: `${contextMenu.x}px`,
               top: `${contextMenu.y}px`,
-              backgroundColor: isDarkMode ? '#2a2a2a' : '#ffffff',
-              border: `1px solid ${isDarkMode ? '#555' : '#ddd'}`,
-              borderRadius: '4px',
-              boxShadow: isDarkMode 
-                ? '0 4px 12px rgba(0, 0, 0, 0.5)' 
-                : '0 4px 12px rgba(0, 0, 0, 0.15)',
-              padding: '4px 0',
-              minWidth: '180px',
-              zIndex: 1000,
             }}
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
             <button
               onClick={() => copyAnchorLink(contextMenu.nodeId, contextMenu.edgeId)}
-              style={{
-                width: '100%',
-                padding: '8px 16px',
-                textAlign: 'left',
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: isDarkMode ? '#ffffff' : '#1a1a1a',
-                fontSize: '14px',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s',
-              }}
+              className={`${styles.contextMenuItem} ${isDarkMode ? styles.contextMenuItemDark : styles.contextMenuItemLight}`}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = isDarkMode ? '#333' : '#f0f0f0';
               }}
@@ -3191,16 +2365,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
           </div>
         )}
         {paneVisible && (
-          <div style={{
-            flex: '0 0 20%',
-            minWidth: 0,
-            height: graphAreaHeight,
-            borderLeft: `2px solid ${panelBorderColor}`,
-            backgroundColor: panelBackgroundColor,
-            padding: '12px',
-            overflowY: 'auto',
-            boxSizing: 'border-box',
-          }}>
+          <div 
+            className={`${styles.sidePanel} ${isDarkMode ? styles.sidePanelDark : styles.sidePanelLight}`}
+            style={{ height: graphAreaHeight }}
+          >
             {selectedNode ? (() => {
               // Find ingress and egress links for the selected node
               const ingressLinks = graphData.links.filter((link: any) => {
@@ -3247,21 +2415,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                   }
                   
                   // Center on the node if graph is available
+                  // Access centerAt via ref - react-force-graph-2d exposes underlying instance
                   if (graphRef.current && node.x !== undefined && node.y !== undefined) {
-                    graphRef.current.centerAt(node.x, node.y, 500);
+                    (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
                   }
                 }
               };
 
+              // linkStyle: Static parts moved to CSS (panelLinkBase), only dynamic colors remain
               const linkStyle = {
                 color: isDarkMode ? '#68BDF6' : '#2563eb',
-                textDecoration: 'none',
-                fontSize: '12px',
-                cursor: 'pointer',
-                display: 'block',
-                padding: '4px 0',
                 borderBottom: `1px solid ${isDarkMode ? '#333' : '#eee'}`,
-                transition: 'opacity 0.2s',
               };
 
               const linkHoverStyle = {
@@ -3270,35 +2434,16 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
               return (
                 <div>
-                  <h3 style={{
-                    margin: '0 0 12px 0',
-                    color: panelTextColor,
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    lineHeight: '1.4',
-                  }}>
+                  <h3 className={`${styles.panelTitle} ${isDarkMode ? styles.panelTitleDark : styles.panelTitleLight}`}>
                     {selectedNode.title || selectedNode.name || selectedNode.id}
                   </h3>
                   {selectedNode.description && typeof selectedNode.description === 'string' && (
-                    <p style={{
-                      margin: '0 0 16px 0',
-                      color: panelTextColor,
-                      fontSize: '12px',
-                      lineHeight: '1.5',
-                      opacity: 0.85,
-                    }}>
+                    <p className={`${styles.panelDescription} ${isDarkMode ? styles.panelDescriptionDark : styles.panelDescriptionLight}`}>
                       {selectedNode.description}
                     </p>
                   )}
                   {!selectedNode.description && (
-                    <p style={{
-                      margin: '0 0 16px 0',
-                      color: panelTextColor,
-                      fontSize: '12px',
-                      lineHeight: '1.5',
-                      opacity: 0.5,
-                      fontStyle: 'italic',
-                    }}>
+                    <p className={`${styles.panelDescription} ${styles.panelDescriptionEmpty} ${isDarkMode ? styles.panelDescriptionDark : styles.panelDescriptionLight}`}>
                       No description
                     </p>
                   )}
@@ -3306,33 +2451,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                   {/* Ingress Section */}
                   {ingressNodes.length > 0 && (
                     <div style={{ marginBottom: '16px' }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Ingress ({ingressNodes.length})
                       </h4>
-                      <div style={{
-                        backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                        borderRadius: '4px',
-                        padding: '8px',
-                      }}>
+                      <div className={`${styles.panelSectionContent} ${isDarkMode ? styles.panelSectionContentDark : styles.panelSectionContentLight}`}>
                         {ingressNodes.map((node: any, idx: number) => {
                           const link = ingressLinks[idx];
                           const linkLabel = link?.label || 'connected from';
                           return (
-                            <div key={node.id} style={{ marginBottom: idx < ingressNodes.length - 1 ? '8px' : '0' }}>
+                            <div key={node.id} className={idx < ingressNodes.length - 1 ? styles.panelNodeItem : styles.panelNodeItemLast}>
                               <a
                                 onClick={(e) => {
                                   e.preventDefault();
                                   handleNodeClick(node.id);
                                 }}
-                                style={linkStyle}
+                                className={`${styles.panelLink} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
                                 onMouseEnter={(e) => {
                                   Object.assign(e.currentTarget.style, linkHoverStyle);
                                 }}
@@ -3340,9 +2473,9 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                                   e.currentTarget.style.opacity = '1';
                                 }}
                               >
-                                <span style={{ fontWeight: '500' }}>{node.title || node.name || node.id}</span>
+                                <span className={styles.panelLinkText}>{node.title || node.name || node.id}</span>
                                 {linkLabel && (
-                                  <span style={{ opacity: 0.7, fontSize: '11px', marginLeft: '4px' }}>
+                                  <span className={styles.panelLinkLabel}>
                                     ({linkLabel})
                                   </span>
                                 )}
@@ -3357,33 +2490,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                   {/* Egress Section */}
                   {egressNodes.length > 0 && (
                     <div>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Egress ({egressNodes.length})
                       </h4>
-                      <div style={{
-                        backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                        borderRadius: '4px',
-                        padding: '8px',
-                      }}>
+                      <div className={`${styles.panelSectionContent} ${isDarkMode ? styles.panelSectionContentDark : styles.panelSectionContentLight}`}>
                         {egressNodes.map((node: any, idx: number) => {
                           const link = egressLinks[idx];
                           const linkLabel = link?.label || 'connected to';
                           return (
-                            <div key={node.id} style={{ marginBottom: idx < egressNodes.length - 1 ? '8px' : '0' }}>
+                            <div key={node.id} className={idx < egressNodes.length - 1 ? styles.panelNodeItem : styles.panelNodeItemLast}>
                               <a
                                 onClick={(e) => {
                                   e.preventDefault();
                                   handleNodeClick(node.id);
                                 }}
-                                style={linkStyle}
+                                className={`${styles.panelLink} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
                                 onMouseEnter={(e) => {
                                   Object.assign(e.currentTarget.style, linkHoverStyle);
                                 }}
@@ -3391,9 +2512,9 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                                   e.currentTarget.style.opacity = '1';
                                 }}
                               >
-                                <span style={{ fontWeight: '500' }}>{node.title || node.name || node.id}</span>
+                                <span className={styles.panelLinkText}>{node.title || node.name || node.id}</span>
                                 {linkLabel && (
-                                  <span style={{ opacity: 0.7, fontSize: '11px', marginLeft: '4px' }}>
+                                  <span className={styles.panelLinkLabel}>
                                     ({linkLabel})
                                   </span>
                                 )}
@@ -3407,36 +2528,18 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                   {/* Show message if no connections */}
                   {ingressNodes.length === 0 && egressNodes.length === 0 && (
-                    <p style={{
-                      margin: '16px 0 0 0',
-                      color: panelTextColor,
-                      fontSize: '12px',
-                      opacity: 0.5,
-                      fontStyle: 'italic',
-                    }}>
+                    <p className={`${styles.panelNoConnections} ${isDarkMode ? styles.panelNoConnectionsDark : styles.panelNoConnectionsLight}`}>
                       No connections
                     </p>
                   )}
 
                   {/* External Links Section */}
                   {(selectedNode as any).keyLinks && (selectedNode as any).keyLinks.length > 0 && (
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: `1px solid ${isDarkMode ? '#333' : '#eee'}` }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                    <div className={`${styles.panelSectionDivider} ${isDarkMode ? styles.panelSectionDividerDark : styles.panelSectionDividerLight}`}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Learn More
                       </h4>
-                      <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '6px',
-                      }}>
+                      <div className={styles.panelExternalLinksContainer}>
                         {(selectedNode as any).keyLinks.map((link: string, idx: number) => {
                           // Extract hostname for display, with error handling
                           let displayText = link;
@@ -3467,11 +2570,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                               href={link}
                               target="_blank"
                               rel="noopener noreferrer"
+                              className={`${styles.panelLinkBase} ${styles.panelExternalLink} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
                               style={{
-                                ...linkStyle,
-                                display: 'inline-block',
-                                fontSize: '11px',
-                                wordBreak: 'break-word',
+                                color: linkStyle.color,
+                                borderBottom: linkStyle.borderBottom,
                               }}
                               onMouseEnter={(e) => {
                                 Object.assign(e.currentTarget.style, linkHoverStyle);
@@ -3491,16 +2593,8 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                   {/* Markdown Section Link */}
                   {selectedNode.markdownSection && (
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: `1px solid ${isDarkMode ? '#333' : '#eee'}` }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                    <div className={`${styles.panelSectionDivider} ${isDarkMode ? styles.panelSectionDividerDark : styles.panelSectionDividerLight}`}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Documentation
                       </h4>
                       <a
@@ -3568,9 +2662,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                             }
                           }, 100);
                         }}
+                        className={`${styles.panelLinkBase} ${styles.panelExternalLink} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
                         style={{
-                          ...linkStyle,
-                          display: 'inline-block',
+                          color: linkStyle.color,
+                          borderBottom: linkStyle.borderBottom,
                         }}
                         onMouseEnter={(e) => {
                           Object.assign(e.currentTarget.style, linkHoverStyle);
@@ -3622,21 +2717,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                   }
                   
                   // Center on the node if graph is available
+                  // Access centerAt via ref - react-force-graph-2d exposes underlying instance
                   if (graphRef.current && node.x !== undefined && node.y !== undefined) {
-                    graphRef.current.centerAt(node.x, node.y, 500);
+                    (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
                   }
                 }
               };
 
+              // linkStyle: Static parts moved to CSS (panelLinkBase), only dynamic colors remain
               const linkStyle = {
                 color: isDarkMode ? '#68BDF6' : '#2563eb',
-                textDecoration: 'none',
-                fontSize: '12px',
-                cursor: 'pointer',
-                display: 'block',
-                padding: '4px 0',
                 borderBottom: `1px solid ${isDarkMode ? '#333' : '#eee'}`,
-                transition: 'opacity 0.2s',
               };
 
               const linkHoverStyle = {
@@ -3645,13 +2736,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
               return (
                 <div>
-                  <h3 style={{
-                    margin: '0 0 12px 0',
-                    color: panelTextColor,
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    lineHeight: '1.4',
-                  }}>
+                  <h3 className={`${styles.panelTitle} ${isDarkMode ? styles.panelTitleDark : styles.panelTitleLight}`}>
                     {(selectedEdge as any).type === 'differentiating' 
                       ? `${sourceDisplayName} vs. ${targetDisplayName}`
                       : (selectedEdge.label || 'Edge')}
@@ -3659,29 +2744,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                   {/* Source Node Section */}
                   {sourceNode && (
-                    <div style={{ marginBottom: '16px' }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                    <div className={styles.panelEdgeSection}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Source
                       </h4>
-                      <div style={{
-                        backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                        borderRadius: '4px',
-                        padding: '8px',
-                      }}>
+                      <div className={`${styles.panelSectionContent} ${isDarkMode ? styles.panelSectionContentDark : styles.panelSectionContentLight}`}>
                         <a
                           onClick={(e) => {
                             e.preventDefault();
                             handleNodeClick(sourceNode.id);
                           }}
-                          style={linkStyle}
+                          className={`${styles.panelLinkBase} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
+                          style={{
+                            color: linkStyle.color,
+                            borderBottom: linkStyle.borderBottom,
+                          }}
                           onMouseEnter={(e) => {
                             Object.assign(e.currentTarget.style, linkHoverStyle);
                           }}
@@ -3689,16 +2766,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                             e.currentTarget.style.opacity = '1';
                           }}
                         >
-                          <span style={{ fontWeight: '500' }}>{sourceNode.title || sourceNode.name || sourceNode.id}</span>
+                          <span className={styles.panelLinkText}>{sourceNode.title || sourceNode.name || sourceNode.id}</span>
                         </a>
                         {sourceNode.description && (
-                          <p style={{
-                            margin: '4px 0 0 0',
-                            color: panelTextColor,
-                            fontSize: '11px',
-                            opacity: 0.7,
-                            lineHeight: '1.4',
-                          }}>
+                          <p className={`${styles.panelEdgeNodeDescription} ${isDarkMode ? styles.panelEdgeNodeDescriptionDark : styles.panelEdgeNodeDescriptionLight}`}>
                             {sourceNode.description}
                           </p>
                         )}
@@ -3708,29 +2779,21 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                   {/* Target Node Section */}
                   {targetNode && (
-                    <div style={{ marginBottom: '16px' }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                    <div className={styles.panelEdgeSection}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Destination
                       </h4>
-                      <div style={{
-                        backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                        borderRadius: '4px',
-                        padding: '8px',
-                      }}>
+                      <div className={`${styles.panelSectionContent} ${isDarkMode ? styles.panelSectionContentDark : styles.panelSectionContentLight}`}>
                         <a
                           onClick={(e) => {
                             e.preventDefault();
                             handleNodeClick(targetNode.id);
                           }}
-                          style={linkStyle}
+                          className={`${styles.panelLinkBase} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
+                          style={{
+                            color: linkStyle.color,
+                            borderBottom: linkStyle.borderBottom,
+                          }}
                           onMouseEnter={(e) => {
                             Object.assign(e.currentTarget.style, linkHoverStyle);
                           }}
@@ -3738,16 +2801,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                             e.currentTarget.style.opacity = '1';
                           }}
                         >
-                          <span style={{ fontWeight: '500' }}>{targetNode.title || targetNode.name || targetNode.id}</span>
+                          <span className={styles.panelLinkText}>{targetNode.title || targetNode.name || targetNode.id}</span>
                         </a>
                         {targetNode.description && (
-                          <p style={{
-                            margin: '4px 0 0 0',
-                            color: panelTextColor,
-                            fontSize: '11px',
-                            opacity: 0.7,
-                            lineHeight: '1.4',
-                          }}>
+                          <p className={`${styles.panelEdgeNodeDescription} ${isDarkMode ? styles.panelEdgeNodeDescriptionDark : styles.panelEdgeNodeDescriptionLight}`}>
                             {targetNode.description}
                           </p>
                         )}
@@ -3811,26 +2868,13 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                       )}
 
                       {/* Use Cases */}
-                      {(selectedEdge as any).sourceData && (selectedEdge as any).targetData && (
-                        <div style={{
-                          marginBottom: '16px',
-                          padding: '12px',
-                          backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                          borderRadius: '4px',
-                        }}>
-                          <h4 style={{
-                            margin: '0 0 8px 0',
-                            color: panelTextColor,
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                            opacity: 0.8,
-                          }}>
+                      {(selectedEdge as any).sourceData && (selectedEdge as any).targetData && (selectedEdge as any).sourceData.main_use_case && (
+                        <div className={`${styles.panelSectionContent} ${isDarkMode ? styles.panelSectionContentDark : styles.panelSectionContentLight} ${styles.panelEdgeSection}`}>
+                          <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                             Use Cases
                           </h4>
-                          <div style={{ fontSize: '11px', lineHeight: '1.6' }}>
-                            <div style={{ marginBottom: '8px' }}>
+                          <div className={styles.panelUseCasesContainer}>
+                            <div className={styles.panelUseCaseItem}>
                               <strong>{sourceDisplayName}:</strong> {(selectedEdge as any).sourceData.main_use_case}
                             </div>
                             <div>
@@ -3842,28 +2886,11 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                       {/* Similarities */}
                       {(selectedEdge as any).similarities && (selectedEdge as any).similarities.length > 0 && (
-                        <div style={{
-                          marginBottom: '16px',
-                          padding: '12px',
-                          backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                          borderRadius: '4px',
-                        }}>
-                          <h4 style={{
-                            margin: '0 0 8px 0',
-                            color: '#60BE86',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                          }}>
+                        <div className={`${styles.panelSimilaritiesContainer} ${isDarkMode ? styles.panelSimilaritiesContainerDark : styles.panelSimilaritiesContainerLight}`}>
+                          <h4 className={styles.panelSimilaritiesTitle}>
                             Similarities
                           </h4>
-                          <ul style={{
-                            margin: 0,
-                            paddingLeft: '20px',
-                            fontSize: '11px',
-                            lineHeight: '1.6',
-                          }}>
+                          <ul className={styles.panelSimilaritiesList}>
                             {(selectedEdge as any).similarities.map((similarity: string, idx: number) => (
                               <li key={idx}>{similarity}</li>
                             ))}
@@ -3873,34 +2900,17 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                       {/* Differences */}
                       {(selectedEdge as any).differences && (
-                        <div style={{
-                          marginBottom: '16px',
-                          padding: '12px',
-                          backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                          borderRadius: '4px',
-                        }}>
-                          <h4 style={{
-                            margin: '0 0 8px 0',
-                            color: '#FF6B6B',
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                          }}>
+                        <div className={`${styles.panelDifferencesContainer} ${isDarkMode ? styles.panelDifferencesContainerDark : styles.panelDifferencesContainerLight}`}>
+                          <h4 className={styles.panelDifferencesTitle}>
                             Differences
                           </h4>
                           
                           {(selectedEdge as any).differences.source && (selectedEdge as any).differences.source.length > 0 && (
-                            <div style={{ marginBottom: '12px' }}>
-                              <strong style={{ fontSize: '11px', color: panelTextColor }}>
+                            <div className={styles.panelDifferencesSection}>
+                              <strong className={`${styles.panelDifferencesLabel} ${isDarkMode ? styles.panelDifferencesLabelDark : styles.panelDifferencesLabelLight}`}>
                                 {selectedEdge.source} only:
                               </strong>
-                              <ul style={{
-                                margin: '4px 0 0 0',
-                                paddingLeft: '20px',
-                                fontSize: '11px',
-                                lineHeight: '1.6',
-                              }}>
+                              <ul className={styles.panelDifferencesListWithMargin}>
                                 {(selectedEdge as any).differences.source.map((diff: string, idx: number) => (
                                   <li key={idx}>{diff}</li>
                                 ))}
@@ -3910,15 +2920,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                           {(selectedEdge as any).differences.target && (selectedEdge as any).differences.target.length > 0 && (
                             <div>
-                              <strong style={{ fontSize: '11px', color: panelTextColor }}>
+                              <strong className={`${styles.panelDifferencesLabel} ${isDarkMode ? styles.panelDifferencesLabelDark : styles.panelDifferencesLabelLight}`}>
                                 {selectedEdge.target} only:
                               </strong>
-                              <ul style={{
-                                margin: '4px 0 0 0',
-                                paddingLeft: '20px',
-                                fontSize: '11px',
-                                lineHeight: '1.6',
-                              }}>
+                              <ul className={styles.panelDifferencesListWithMargin}>
                                 {(selectedEdge as any).differences.target.map((diff: string, idx: number) => (
                                   <li key={idx}>{diff}</li>
                                 ))}
@@ -3930,24 +2935,12 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                       {/* Differentiators */}
                       {(selectedEdge as any).sourceData && (selectedEdge as any).targetData && (
-                        <div style={{
-                          padding: '12px',
-                          backgroundColor: isDarkMode ? '#2a2a2a' : '#f5f5f5',
-                          borderRadius: '4px',
-                        }}>
-                          <h4 style={{
-                            margin: '0 0 8px 0',
-                            color: panelTextColor,
-                            fontSize: '12px',
-                            fontWeight: '600',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px',
-                            opacity: 0.8,
-                          }}>
+                        <div className={`${styles.panelKeyDifferentiatorsContainer} ${isDarkMode ? styles.panelKeyDifferentiatorsContainerDark : styles.panelKeyDifferentiatorsContainerLight}`}>
+                          <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                             Key Differentiators
                           </h4>
-                          <div style={{ fontSize: '11px', lineHeight: '1.6' }}>
-                            <div style={{ marginBottom: '8px' }}>
+                          <div className={styles.panelKeyDifferentiatorsContent}>
+                            <div className={styles.panelKeyDifferentiatorsItem}>
                               <strong>{sourceDisplayName}:</strong> {(selectedEdge as any).sourceData.differentiators}
                             </div>
                             <div>
@@ -3961,16 +2954,8 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
 
                   {/* Markdown Section Link */}
                   {selectedEdge.markdownSection && (
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: `1px solid ${isDarkMode ? '#333' : '#eee'}` }}>
-                      <h4 style={{
-                        margin: '0 0 8px 0',
-                        color: panelTextColor,
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        opacity: 0.8,
-                      }}>
+                    <div className={`${styles.panelSectionDivider} ${isDarkMode ? styles.panelSectionDividerDark : styles.panelSectionDividerLight}`}>
+                      <h4 className={`${styles.panelSectionTitle} ${isDarkMode ? styles.panelSectionTitleDark : styles.panelSectionTitleLight}`}>
                         Documentation
                       </h4>
                       <a
@@ -4038,9 +3023,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                             }
                           }, 100);
                         }}
+                        className={`${styles.panelLinkBase} ${styles.panelExternalLink} ${isDarkMode ? styles.panelLinkDark : styles.panelLinkLight}`}
                         style={{
-                          ...linkStyle,
-                          display: 'inline-block',
+                          color: linkStyle.color,
+                          borderBottom: linkStyle.borderBottom,
                         }}
                         onMouseEnter={(e) => {
                           Object.assign(e.currentTarget.style, linkHoverStyle);
@@ -4056,40 +3042,22 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
                 </div>
               );
             })() : (
-              <div style={{
-                color: panelTextColor,
-                fontSize: '12px',
-                opacity: 0.5,
-                fontStyle: 'italic',
-              }}>
+              <div className={`${styles.panelEmptyState} ${isDarkMode ? styles.panelEmptyStateDark : styles.panelEmptyStateLight}`}>
                 Hover or click a node or edge
               </div>
             )}
           </div>
         )}
       </div>
-      <div style={{
-        height: menuBarHeight,
-        borderTop: `1px solid ${menuBarBorderColor}`,
-        backgroundColor: menuBarBackgroundColor,
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 12px',
-        gap: '8px',
-        boxSizing: 'border-box',
-      }}>
+      <div 
+        className={`${styles.menuBarBase} ${styles.menuBar} ${isDarkMode ? styles.menuBarDark : styles.menuBarLight}`}
+        style={{
+          height: menuBarHeight,
+        }}
+      >
         <button
           onClick={autoCenter}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            backgroundColor: 'transparent',
-            border: `1px solid ${menuBarBorderColor}`,
-            borderRadius: '4px',
-            color: menuBarTextColor,
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
+          className={`${styles.menuBarButton} ${isDarkMode ? styles.menuBarButtonDark : styles.menuBarButtonLight}`}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = buttonHoverColor;
           }}
@@ -4101,16 +3069,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         </button>
         <button
           onClick={expandAll}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            backgroundColor: 'transparent',
-            border: `1px solid ${menuBarBorderColor}`,
-            borderRadius: '4px',
-            color: menuBarTextColor,
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
+          className={`${styles.menuBarButton} ${isDarkMode ? styles.menuBarButtonDark : styles.menuBarButtonLight}`}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = buttonHoverColor;
           }}
@@ -4122,16 +3081,7 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         </button>
         <button
           onClick={collapseAll}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            backgroundColor: 'transparent',
-            border: `1px solid ${menuBarBorderColor}`,
-            borderRadius: '4px',
-            color: menuBarTextColor,
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
+          className={`${styles.menuBarButton} ${isDarkMode ? styles.menuBarButtonDark : styles.menuBarButtonLight}`}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = buttonHoverColor;
           }}
@@ -4141,19 +3091,10 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
         >
           Collapse All
         </button>
-        <div style={{ flex: 1 }} />
+        <div className={styles.menuBarSpacer} />
         <button
           onClick={togglePane}
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            backgroundColor: 'transparent',
-            border: `1px solid ${menuBarBorderColor}`,
-            borderRadius: '4px',
-            color: menuBarTextColor,
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
+          className={`${styles.menuBarButton} ${styles.menuBarToggle} ${isDarkMode ? styles.menuBarButtonDark : styles.menuBarButtonLight}`}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = buttonHoverColor;
           }}
@@ -4168,11 +3109,107 @@ const GraphRendererImpl: React.FC<GraphRendererProps> = ({
   );
 };
 
+/**
+ * ============================================================================
+ * BROWSER-ONLY WRAPPER
+ * ============================================================================
+ * 
+ * WHY BrowserOnly IS NEEDED:
+ * - Docusaurus generates static HTML (SSR/SSG)
+ * - Browser-only APIs (window, canvas, force-graph) don't exist on server
+ * - BrowserOnly ensures component only renders in browser, not during build
+ * 
+ * DYNAMIC IMPORT PATTERN:
+ * - Load dependencies inside BrowserOnly callback using async import()
+ * - Prevents bundling issues and circular dependencies
+ * - Allows graceful loading states and error handling
+ * 
+ * react-force-graph-2d vs react-force-graph:
+ * - react-force-graph-2d: 2D-only, no A-Frame dependencies
+ * - react-force-graph: Includes 3D/VR/AR (A-Frame), causes "AFRAME is not defined" errors
+ * - Use 2D version unless you need 3D/VR features
+ * 
+ * ============================================================================
+ */
 // Wrap the implementation with BrowserOnly to prevent SSR issues
 const GraphRenderer: React.FC<GraphRendererProps> = (props) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dependencies, setDependencies] = useState<{
+    ForceGraph2D: any;
+    d3: any;
+    NodeRenderer: any;
+  } | null>(null);
+
+  useEffect(() => {
+    // Use dynamic import to avoid circular dependency issues
+    const loadDependencies = async () => {
+      try {
+        // Use dynamic import instead of require to avoid initialization issues
+        // Use react-force-graph-2d to avoid A-Frame dependencies (only needed for VR/AR components)
+        const [reactForceGraphModule, d3Module, nodeRendererModule] = await Promise.all([
+          import('react-force-graph-2d'),
+          import('d3-force'),
+          import('./NodeRenderer'),
+        ]);
+
+        // Extract ForceGraph2D from the module
+        // react-force-graph-2d exports ForceGraph as default (not named export)
+        const ForceGraph2D = (reactForceGraphModule as any).default;
+
+        if (!ForceGraph2D) {
+          console.error('ForceGraph2D not found. Available exports:', Object.keys(reactForceGraphModule));
+          setError('ForceGraph2D component not found');
+          return;
+        }
+
+        setDependencies({
+          ForceGraph2D,
+          d3: d3Module,
+          NodeRenderer: nodeRendererModule.NodeRenderer,
+        });
+        setIsLoading(false);
+      } catch (err) {
+        console.error('Error loading GraphRenderer dependencies:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+        setIsLoading(false);
+      }
+    };
+
+    loadDependencies();
+  }, []);
+
   return (
     <BrowserOnly fallback={<div>Loading graph...</div>}>
-      {() => <GraphRendererImpl {...props} />}
+      {() => {
+        if (typeof window === 'undefined') {
+          return <div>Loading graph...</div>;
+        }
+
+        if (isLoading) {
+          return <div>Loading graph...</div>;
+        }
+
+        if (error || !dependencies) {
+          return (
+            <div>
+              <div>Error loading graph: {error || 'Dependencies not loaded'}</div>
+              <div style={{ fontSize: '12px', marginTop: '8px', color: '#666' }}>
+                Please refresh the page.
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <GraphRendererImpl
+            {...props}
+            ForceGraph2D={dependencies.ForceGraph2D}
+            d3={dependencies.d3}
+            NodeRenderer={dependencies.NodeRenderer}
+          />
+        );
+      }}
     </BrowserOnly>
   );
 };

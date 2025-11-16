@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report
+.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -42,7 +42,25 @@ install: ## Install dependencies for the Docusaurus site
 add: ## Add new packages to the Docusaurus site
 	# ( cd ${SITEROOT} && yarn add @docusaurus/plugin-svgr )
 	( cd ${SITEROOT} && yarn add react-gist )
+	( cd ${SITEROOT} && yarn add yarn add -D @types/node )
+	( cd ${SITEROOT} && yarn add react-force-graph-2d )
+	( cd ${SITEROOT} && yarn add -D @storybook/addon-essentials @storybook/addon-interactions @storybook/addon-links )
+	( cd ${SITEROOT} && yarn add -D @storybook/addon-essentials@^10.0.7 @storybook/addon-interactions@^10.0.7 )
+	( cd ${SITEROOT} && yarn add -D "@storybook/addon-essentials@^10.0.7" "@storybook/addon-interactions@^10.0.7" )
+	( cd ${SITEROOT} && yarn remove @storybook/addon-essentials @storybook/addon-interactions && yarn add -D @storybook/addon-essentials@10.0.7 @storybook/addon-interactions@10.0.7 )
+	( cd ${SITEROOT} && yarn add -D @storybook/addon-essentials @storybook/addon-interactions )
 	true
+
+setup-storybook:
+	( cd ${SITEROOT} && yarn create storybook )
+
+storybook: ## Start Storybook development server (with optional type-check)
+	# Type-check is optional - uncomment the next line if you want to type-check before starting
+	# ( cd ${SITEROOT} && yarn typecheck )
+	( cd ${SITEROOT} && yarn storybook )
+
+build-storybook: ## Build Storybook for production
+	( cd ${SITEROOT} && yarn build-storybook )
 
 init-site: ## Initialize a new Docusaurus site
 	test -d ${SITEROOT} || npx @docusaurus/init@latest init ${SITENAME} classic --typescript
@@ -59,8 +77,9 @@ clean: ## Clean build artifacts and dependencies
 	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
 PORT ?= 3000
-start: ## Start the development server (use PORT=8080 to specify a custom port)
+start: build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
+	# Builds Storybook first so it's available at /storybook/
 	( cd ${SITEROOT} && yarn start --port ${PORT} )
 
 PORT ?= 3000
@@ -72,7 +91,7 @@ clear: ## Clear Docusaurus cache
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	( cd ${SITEROOT} && yarn clear )
 
-build: ## Build the site for production
+build: build-storybook ## Build the site for production
 	# Bundles your website into static files for production.
 	( cd ${SITEROOT} && yarn build )
 
