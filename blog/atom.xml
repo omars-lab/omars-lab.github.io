@@ -2,11 +2,422 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.bytesofpurpose.com/blog</id>
     <title>Bytes of Purpose Blog</title>
-    <updated>2025-09-27T10:00:00.000Z</updated>
+    <updated>2025-11-16T10:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.bytesofpurpose.com/blog"/>
     <subtitle>Bytes of Purpose Blog</subtitle>
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[🔧 Storybook + TypeScript + Babel: Understanding the Build Pipeline]]></title>
+        <id>https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup</id>
+        <link href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup"/>
+        <updated>2025-11-16T10:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A deep dive into configuring Storybook with TypeScript and Babel, explaining how webpack, babel-loader, and TypeScript work together in the build process.]]></summary>
+        <content type="html"><![CDATA[<p>Recently, I spent significant time debugging why Storybook wasn't processing TypeScript files correctly. The error was cryptic: <code>Module parse failed: Unexpected token</code> when encountering <code>import type</code> syntax. This post documents the solution and explains how the build pipeline actually works.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-problem">The Problem<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-problem" class="hash-link" aria-label="Direct link to The Problem" title="Direct link to The Problem" translate="no">​</a></h2>
+<p>When running Storybook with TypeScript files, webpack was trying to parse TypeScript syntax (like <code>import type</code>) directly, which it cannot do. Webpack needs JavaScript, not TypeScript. The error looked like this:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">ERROR in ./.storybook/preview.ts 1:12</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Module parse failed: Unexpected token (1:12)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">&gt; import type { Preview } from '@storybook/react';</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-solution-a-unified-babel-configuration">The Solution: A Unified Babel Configuration<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-solution-a-unified-babel-configuration" class="hash-link" aria-label="Direct link to The Solution: A Unified Babel Configuration" title="Direct link to The Solution: A Unified Babel Configuration" translate="no">​</a></h2>
+<p>The key insight is that <strong>Babel handles TypeScript transpilation</strong>, and we need to ensure babel-loader runs <strong>before</strong> webpack tries to parse the files. Here's how we set it up:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-babel-configuration-babelconfigjs">1. Babel Configuration (<code>babel.config.js</code>)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#1-babel-configuration-babelconfigjs" class="hash-link" aria-label="Direct link to 1-babel-configuration-babelconfigjs" title="Direct link to 1-babel-configuration-babelconfigjs" translate="no">​</a></h3>
+<p>The main Babel configuration lives at the project root and is shared between Docusaurus and Storybook:</p>
+<div class="language-javascript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-javascript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token property-access">exports</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token literal-property property" style="color:#36acaa">presets</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'@babel/preset-typescript'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token literal-property property" style="color:#36acaa">isTSX</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token literal-property property" style="color:#36acaa">allExtensions</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'@docusaurus/core/lib/babel/preset'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p><strong>What this does:</strong></p>
+<ul>
+<li class=""><code>@babel/preset-typescript</code> - Strips TypeScript syntax (including <code>import type</code>) and converts it to JavaScript</li>
+<li class=""><code>@docusaurus/core/lib/babel/preset</code> - Docusaurus-specific transformations</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-storybook-configuration-storybookmaints">2. Storybook Configuration (<code>.storybook/main.ts</code>)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#2-storybook-configuration-storybookmaints" class="hash-link" aria-label="Direct link to 2-storybook-configuration-storybookmaints" title="Direct link to 2-storybook-configuration-storybookmaints" translate="no">​</a></h3>
+<p>Storybook needs to be told to use babel-loader for TypeScript files:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token function-variable function" style="color:#d73a49">webpackFinal</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">async</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">config</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> configDir </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic">// ... other config ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic">// Ensure babel-loader processes TypeScript files FIRST</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">if</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">config</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">module</span><span class="token operator" style="color:#393A34">?.</span><span class="token plain">rules</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    config</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">rules</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">unshift</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      test</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token regex regex-source language-regex special-escape escape" style="color:#36acaa">\.</span><span class="token regex regex-source language-regex group punctuation" style="color:#393A34">(</span><span class="token regex regex-source language-regex" style="color:#36acaa">ts</span><span class="token regex regex-source language-regex alternation keyword" style="color:#00009f">|</span><span class="token regex regex-source language-regex" style="color:#36acaa">tsx</span><span class="token regex regex-source language-regex group punctuation" style="color:#393A34">)</span><span class="token regex regex-source language-regex anchor function" style="color:#d73a49">$</span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      exclude</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token regex regex-source language-regex" style="color:#36acaa">node_modules</span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      use</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">          loader</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'babel-loader'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">          </span><span class="token comment" style="color:#999988;font-style:italic">// babel-loader automatically uses babel.config.js from project root</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> config</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class=""><code>unshift()</code> adds the rule at the <strong>beginning</strong> of the rules array</li>
+<li class="">This ensures babel-loader runs <strong>before</strong> Storybook's CSF plugin</li>
+<li class="">babel-loader automatically finds and uses <code>babel.config.js</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-typescript-configuration-tsconfigjson">3. TypeScript Configuration (<code>tsconfig.json</code>)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#3-typescript-configuration-tsconfigjson" class="hash-link" aria-label="Direct link to 3-typescript-configuration-tsconfigjson" title="Direct link to 3-typescript-configuration-tsconfigjson" translate="no">​</a></h3>
+<p>We consolidated to a single <code>tsconfig.json</code> that works for both Docusaurus and Storybook:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property" style="color:#36acaa">"extends"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"@docusaurus/tsconfig"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property" style="color:#36acaa">"compilerOptions"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">"baseUrl"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"."</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">"module"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"ESNext"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">"moduleResolution"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"bundler"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">"allowSyntheticDefaultImports"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token property" style="color:#36acaa">"isolatedModules"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token property" style="color:#36acaa">"include"</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string" style="color:#e3116c">"src/**/*"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token string" style="color:#e3116c">".storybook/**/*"</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-the-build-process-works">How the Build Process Works<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#how-the-build-process-works" class="hash-link" aria-label="Direct link to How the Build Process Works" title="Direct link to How the Build Process Works" translate="no">​</a></h2>
+<p>Let me break down what happens when you run <code>make storybook</code>:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="step-by-step-execution-flow">Step-by-Step Execution Flow<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#step-by-step-execution-flow" class="hash-link" aria-label="Direct link to Step-by-Step Execution Flow" title="Direct link to Step-by-Step Execution Flow" translate="no">​</a></h3>
+<!-- -->
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-build-pipeline-architecture">The Build Pipeline Architecture<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-build-pipeline-architecture" class="hash-link" aria-label="Direct link to The Build Pipeline Architecture" title="Direct link to The Build Pipeline Architecture" translate="no">​</a></h3>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="understanding-typescript-and-babel-a-laymans-guide">Understanding TypeScript and Babel: A Layman's Guide<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#understanding-typescript-and-babel-a-laymans-guide" class="hash-link" aria-label="Direct link to Understanding TypeScript and Babel: A Layman's Guide" title="Direct link to Understanding TypeScript and Babel: A Layman's Guide" translate="no">​</a></h2>
+<p>Before we dive into the technical details, let's understand what these tools actually do in simple terms.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-is-typescript">What is TypeScript?<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#what-is-typescript" class="hash-link" aria-label="Direct link to What is TypeScript?" title="Direct link to What is TypeScript?" translate="no">​</a></h3>
+<p>Think of TypeScript as a <strong>safety net</strong> for JavaScript. When you write JavaScript, you can accidentally do things like:</p>
+<div class="language-javascript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-javascript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">add</span><span class="token punctuation" style="color:#393A34">(</span><span class="token parameter">a</span><span class="token parameter punctuation" style="color:#393A34">,</span><span class="token parameter"> b</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword control-flow" style="color:#00009f">return</span><span class="token plain"> a </span><span class="token operator" style="color:#393A34">+</span><span class="token plain"> b</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token function" style="color:#d73a49">add</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">"hello"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// Returns "hello5" - probably not what you wanted!</span><br></span></code></pre></div></div>
+<p>TypeScript lets you add <strong>type annotations</strong> to catch these mistakes:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">add</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">a</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">number</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> b</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">number</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">number</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> a </span><span class="token operator" style="color:#393A34">+</span><span class="token plain"> b</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token function" style="color:#d73a49">add</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">"hello"</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// ❌ Error: "hello" is not a number!</span><br></span></code></pre></div></div>
+<p><strong>Key Point</strong>: TypeScript is like a spell-checker for your code. It checks for errors <strong>before</strong> your code runs, but it doesn't actually run your code. The type information is like comments that help developers and tools understand the code better.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-is-babel">What is Babel?<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#what-is-babel" class="hash-link" aria-label="Direct link to What is Babel?" title="Direct link to What is Babel?" translate="no">​</a></h3>
+<p>Babel is like a <strong>translator</strong>. Imagine you wrote a book in modern English, but you need to publish it in a language that older readers can understand. Babel does something similar for code:</p>
+<ol>
+<li class=""><strong>You write</strong>: Modern JavaScript with TypeScript types</li>
+<li class=""><strong>Babel reads it</strong>: Understands the modern syntax</li>
+<li class=""><strong>Babel translates</strong>: Converts it to older JavaScript that browsers can run</li>
+<li class=""><strong>Babel removes</strong>: All the TypeScript type annotations (they're not needed at runtime)</li>
+</ol>
+<p>Here's what Babel does:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// What you write (TypeScript):</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">greet</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">name</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">string</span><span class="token punctuation" style="color:#393A34">)</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token builtin">string</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token template-string template-punctuation string" style="color:#e3116c">`</span><span class="token template-string string" style="color:#e3116c">Hello, </span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">${</span><span class="token template-string interpolation">name</span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">}</span><span class="token template-string string" style="color:#e3116c">!</span><span class="token template-string template-punctuation string" style="color:#e3116c">`</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<div class="language-javascript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-javascript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// What Babel produces (JavaScript):</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">greet</span><span class="token punctuation" style="color:#393A34">(</span><span class="token parameter">name</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword control-flow" style="color:#00009f">return</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"Hello, "</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">+</span><span class="token plain"> name </span><span class="token operator" style="color:#393A34">+</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"!"</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<p>Notice that:</p>
+<ul>
+<li class="">The <code>: string</code> type annotations are <strong>removed</strong> (they were just for checking)</li>
+<li class="">The template string is converted to regular string concatenation (for older browser support)</li>
+</ul>
+<p><strong>Key Point</strong>: Babel <strong>transpiles</strong> (transforms + compiles) your code. It doesn't check types - it just converts syntax.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-they-work-together">How They Work Together<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#how-they-work-together" class="hash-link" aria-label="Direct link to How They Work Together" title="Direct link to How They Work Together" translate="no">​</a></h3>
+<!-- -->
+<p><strong>The Flow:</strong></p>
+<ol>
+<li class=""><strong>You write TypeScript</strong> → TypeScript checks for type errors (in your IDE)</li>
+<li class=""><strong>Babel transpiles</strong> → Removes types and converts to JavaScript</li>
+<li class=""><strong>Browser runs</strong> → The JavaScript executes</li>
+</ol>
+<p><strong>Important</strong>: TypeScript and Babel have different jobs:</p>
+<ul>
+<li class=""><strong>TypeScript</strong>: "Is this code correct?" (type checking)</li>
+<li class=""><strong>Babel</strong>: "Can I convert this to runnable JavaScript?" (transpilation)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-complete-picture-from-source-to-browser">The Complete Picture: From Source to Browser<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-complete-picture-from-source-to-browser" class="hash-link" aria-label="Direct link to The Complete Picture: From Source to Browser" title="Direct link to The Complete Picture: From Source to Browser" translate="no">​</a></h3>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="laymans-guide-to-all-tools">Layman's Guide to All Tools<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#laymans-guide-to-all-tools" class="hash-link" aria-label="Direct link to Layman's Guide to All Tools" title="Direct link to Layman's Guide to All Tools" translate="no">​</a></h2>
+<p>Here's a simple explanation of every tool in our stack, using everyday analogies:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-writing-tools-development">The Writing Tools (Development)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-writing-tools-development" class="hash-link" aria-label="Direct link to The Writing Tools (Development)" title="Direct link to The Writing Tools (Development)" translate="no">​</a></h3>
+<p><strong>TypeScript</strong> (<code>tsconfig.json</code>)</p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a grammar checker for code</li>
+<li class=""><strong>What it does</strong>: Checks if your code makes sense before you run it</li>
+<li class=""><strong>Example</strong>: Catches mistakes like trying to add a number to a word</li>
+<li class=""><strong>When it runs</strong>: While you're writing code (in your editor)</li>
+</ul>
+<p><strong>Babel</strong> (<code>babel.config.js</code>)</p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a translator that converts modern language to older language</li>
+<li class=""><strong>What it does</strong>: Converts your modern TypeScript/JavaScript to code that old browsers can understand</li>
+<li class=""><strong>Example</strong>: Converts <code>const x = 5</code> to <code>var x = 5</code> for older browsers</li>
+<li class=""><strong>When it runs</strong>: During the build process</li>
+</ul>
+<p><strong>babel-loader</strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a worker who takes files to Babel and brings back the translated version</li>
+<li class=""><strong>What it does</strong>: Connects Webpack (the build system) to Babel (the translator)</li>
+<li class=""><strong>Example</strong>: "Hey Babel, translate this TypeScript file for me"</li>
+<li class=""><strong>When it runs</strong>: During the build process, for each file</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-assembly-line-build-system">The Assembly Line (Build System)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-assembly-line-build-system" class="hash-link" aria-label="Direct link to The Assembly Line (Build System)" title="Direct link to The Assembly Line (Build System)" translate="no">​</a></h3>
+<p><strong>Webpack</strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a factory assembly line that takes raw materials and creates a finished product</li>
+<li class=""><strong>What it does</strong>: Takes all your code files, processes them through various tools, and bundles them into files the browser can use</li>
+<li class=""><strong>Example</strong>: Combines 100 small files into 3 optimized files</li>
+<li class=""><strong>When it runs</strong>: During the build process</li>
+</ul>
+<p><strong>Storybook CSF Plugin</strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a specialized worker on the assembly line who handles component documentation</li>
+<li class=""><strong>What it does</strong>: Processes Storybook story files to extract component information</li>
+<li class=""><strong>Example</strong>: Reads your component stories and creates the Storybook UI</li>
+<li class=""><strong>When it runs</strong>: During the build process, after Babel has converted TypeScript</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-presentation-tools-development-environment">The Presentation Tools (Development Environment)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-presentation-tools-development-environment" class="hash-link" aria-label="Direct link to The Presentation Tools (Development Environment)" title="Direct link to The Presentation Tools (Development Environment)" translate="no">​</a></h3>
+<p><strong>Storybook</strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a showroom where you can see and test individual components</li>
+<li class=""><strong>What it does</strong>: Creates an isolated environment to develop and test React components</li>
+<li class=""><strong>Example</strong>: Shows your button component in different states (clicked, hovered, disabled)</li>
+<li class=""><strong>When it runs</strong>: When you start the Storybook development server</li>
+</ul>
+<p><strong>Docusaurus</strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a website builder for documentation</li>
+<li class=""><strong>What it does</strong>: Takes your Markdown files and creates a beautiful documentation website</li>
+<li class=""><strong>Example</strong>: Converts this blog post from Markdown to HTML</li>
+<li class=""><strong>When it runs</strong>: When you build or start the documentation site</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-configuration-files">The Configuration Files<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-configuration-files" class="hash-link" aria-label="Direct link to The Configuration Files" title="Direct link to The Configuration Files" translate="no">​</a></h3>
+<p><strong><code>babel.config.js</code></strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a recipe card for Babel</li>
+<li class=""><strong>What it does</strong>: Tells Babel how to translate your code</li>
+<li class=""><strong>Contains</strong>: Instructions like "remove TypeScript types" and "convert modern JavaScript"</li>
+</ul>
+<p><strong><code>tsconfig.json</code></strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a style guide for TypeScript</li>
+<li class=""><strong>What it does</strong>: Tells TypeScript how strict to be and what rules to follow</li>
+<li class=""><strong>Contains</strong>: Settings like "check all files" and "allow modern JavaScript features"</li>
+</ul>
+<p><strong><code>.storybook/main.ts</code></strong></p>
+<ul>
+<li class=""><strong>Analogy</strong>: Like a blueprint for Storybook</li>
+<li class=""><strong>What it does</strong>: Tells Storybook where to find stories and how to build them</li>
+<li class=""><strong>Contains</strong>: Instructions like "use babel-loader for TypeScript files"</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="how-they-all-work-together-the-complete-picture">How They All Work Together: The Complete Picture<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#how-they-all-work-together-the-complete-picture" class="hash-link" aria-label="Direct link to How They All Work Together: The Complete Picture" title="Direct link to How They All Work Together: The Complete Picture" translate="no">​</a></h3>
+<!-- -->
+<p><strong>The Journey:</strong></p>
+<ol>
+<li class=""><strong>You write</strong> TypeScript code with types</li>
+<li class=""><strong>TypeScript checks</strong> if the types are correct (catches errors early)</li>
+<li class=""><strong>Webpack starts</strong> the build process</li>
+<li class=""><strong>babel-loader</strong> takes each TypeScript file</li>
+<li class=""><strong>Babel reads</strong> <code>babel.config.js</code> to know how to translate</li>
+<li class=""><strong>Babel removes</strong> all the type annotations (they're not needed at runtime)</li>
+<li class=""><strong>Babel converts</strong> modern syntax to compatible JavaScript</li>
+<li class=""><strong>CSF Plugin</strong> processes the JavaScript to extract Storybook stories</li>
+<li class=""><strong>Webpack bundles</strong> everything into optimized files</li>
+<li class=""><strong>Browser loads</strong> and runs the final JavaScript</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-toolchain-what-each-component-does">The Toolchain: What Each Component Does<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-toolchain-what-each-component-does" class="hash-link" aria-label="Direct link to The Toolchain: What Each Component Does" title="Direct link to The Toolchain: What Each Component Does" translate="no">​</a></h2>
+<p>Before diving into the build process, let's understand each tool in the stack:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="core-build-tools">Core Build Tools<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#core-build-tools" class="hash-link" aria-label="Direct link to Core Build Tools" title="Direct link to Core Build Tools" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-typescript-tsconfigjson">1. <strong>TypeScript</strong> (<code>tsconfig.json</code>)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#1-typescript-tsconfigjson" class="hash-link" aria-label="Direct link to 1-typescript-tsconfigjson" title="Direct link to 1-typescript-tsconfigjson" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Type system and developer experience</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Provides static type checking</li>
+<li class="">Enables IDE autocomplete and IntelliSense</li>
+<li class="">Catches type errors before runtime</li>
+<li class=""><strong>Important</strong>: TypeScript does NOT compile code - it only checks types</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: <code>tsconfig.json</code> defines compiler options and project structure</li>
+<li class=""><strong>When it runs</strong>: During development (IDE) and optionally during build (type checking)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-babel-babelconfigjs--babel-loader">2. <strong>Babel</strong> (<code>babel.config.js</code> + <code>babel-loader</code>)<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#2-babel-babelconfigjs--babel-loader" class="hash-link" aria-label="Direct link to 2-babel-babelconfigjs--babel-loader" title="Direct link to 2-babel-babelconfigjs--babel-loader" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: JavaScript transpiler and transformer</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class=""><strong>Transpiles</strong> TypeScript syntax → JavaScript</li>
+<li class="">Strips type annotations (<code>import type</code>, <code>: Type</code>, etc.)</li>
+<li class="">Converts modern JavaScript to compatible versions</li>
+<li class="">Transforms JSX to JavaScript</li>
+<li class="">Applies code transformations (plugins)</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: <code>babel.config.js</code> defines presets and plugins</li>
+<li class=""><strong>When it runs</strong>: At build time via <code>babel-loader</code> in webpack</li>
+<li class=""><strong>Key insight</strong>: Babel is the bridge between TypeScript source and webpack's JavaScript requirement</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-webpack">3. <strong>Webpack</strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#3-webpack" class="hash-link" aria-label="Direct link to 3-webpack" title="Direct link to 3-webpack" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Module bundler and build orchestrator</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Orchestrates the entire build process</li>
+<li class="">Manages module resolution and dependencies</li>
+<li class="">Processes files through loaders (transformations)</li>
+<li class="">Bundles everything into optimized output files</li>
+<li class="">Handles code splitting and optimization</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: <code>.storybook/main.ts</code> (webpackFinal function)</li>
+<li class=""><strong>When it runs</strong>: During build/development server startup</li>
+<li class=""><strong>Key limitation</strong>: Webpack only understands JavaScript - it needs loaders to process other file types</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-babel-loader">4. <strong>babel-loader</strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#4-babel-loader" class="hash-link" aria-label="Direct link to 4-babel-loader" title="Direct link to 4-babel-loader" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Webpack loader that runs Babel</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Acts as a bridge between webpack and Babel</li>
+<li class="">Processes <code>.ts</code>/<code>.tsx</code> files through Babel</li>
+<li class="">Automatically finds and uses <code>babel.config.js</code></li>
+<li class="">Returns JavaScript that webpack can understand</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: Defined in webpack rules</li>
+<li class=""><strong>When it runs</strong>: During webpack's module processing phase</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="development-tools">Development Tools<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#development-tools" class="hash-link" aria-label="Direct link to Development Tools" title="Direct link to Development Tools" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-storybook">5. <strong>Storybook</strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#5-storybook" class="hash-link" aria-label="Direct link to 5-storybook" title="Direct link to 5-storybook" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Component development and documentation environment</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Provides isolated component development environment</li>
+<li class="">Renders components in different states (stories)</li>
+<li class="">Generates interactive documentation</li>
+<li class="">Uses webpack under the hood for bundling</li>
+<li class="">Adds Storybook-specific loaders (CSF plugin, etc.)</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: <code>.storybook/main.ts</code> and <code>.storybook/preview.ts</code></li>
+<li class=""><strong>When it runs</strong>: Development server (<code>yarn storybook</code>) or build (<code>yarn build-storybook</code>)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-storybook-csf-plugin">6. <strong>Storybook CSF Plugin</strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#6-storybook-csf-plugin" class="hash-link" aria-label="Direct link to 6-storybook-csf-plugin" title="Direct link to 6-storybook-csf-plugin" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Processes Storybook story files</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Parses <code>.stories.tsx</code> files</li>
+<li class="">Extracts story metadata</li>
+<li class="">Generates story exports</li>
+<li class=""><strong>Requires</strong>: JavaScript input (not TypeScript)</li>
+</ul>
+</li>
+<li class=""><strong>When it runs</strong>: After babel-loader has transpiled TypeScript</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="7-docusaurus">7. <strong>Docusaurus</strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#7-docusaurus" class="hash-link" aria-label="Direct link to 7-docusaurus" title="Direct link to 7-docusaurus" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Documentation and blog platform</li>
+<li class=""><strong>What it does</strong>:<!-- -->
+<ul>
+<li class="">Generates static documentation site</li>
+<li class="">Processes Markdown and MDX files</li>
+<li class="">Uses the same Babel configuration as Storybook</li>
+<li class="">Provides the blog where this post lives!</li>
+</ul>
+</li>
+<li class=""><strong>Configuration</strong>: <code>docusaurus.config.js</code></li>
+<li class=""><strong>When it runs</strong>: During site build or development server</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-files">Configuration Files<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#configuration-files" class="hash-link" aria-label="Direct link to Configuration Files" title="Direct link to Configuration Files" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="8-babelconfigjs">8. <strong><code>babel.config.js</code></strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#8-babelconfigjs" class="hash-link" aria-label="Direct link to 8-babelconfigjs" title="Direct link to 8-babelconfigjs" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Central Babel configuration</li>
+<li class=""><strong>What it contains</strong>:<!-- -->
+<ul>
+<li class="">Presets (TypeScript, Docusaurus)</li>
+<li class="">Plugins (transformations)</li>
+<li class="">Shared by Docusaurus and Storybook</li>
+</ul>
+</li>
+<li class=""><strong>Location</strong>: Project root</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="9-tsconfigjson">9. <strong><code>tsconfig.json</code></strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#9-tsconfigjson" class="hash-link" aria-label="Direct link to 9-tsconfigjson" title="Direct link to 9-tsconfigjson" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: TypeScript compiler configuration</li>
+<li class=""><strong>What it contains</strong>:<!-- -->
+<ul>
+<li class="">Compiler options (module system, target, etc.)</li>
+<li class="">Path mappings</li>
+<li class="">Include/exclude patterns</li>
+</ul>
+</li>
+<li class=""><strong>Location</strong>: Project root (shared)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="10-storybookmaints">10. <strong><code>.storybook/main.ts</code></strong><a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#10-storybookmaints" class="hash-link" aria-label="Direct link to 10-storybookmaints" title="Direct link to 10-storybookmaints" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Purpose</strong>: Storybook configuration</li>
+<li class=""><strong>What it contains</strong>:<!-- -->
+<ul>
+<li class="">Story file patterns</li>
+<li class="">Addon configuration</li>
+<li class="">Webpack customization (webpackFinal)</li>
+<li class="">Babel configuration</li>
+</ul>
+</li>
+<li class=""><strong>Location</strong>: <code>.storybook/</code> directory</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tool-interaction-summary">Tool Interaction Summary<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#tool-interaction-summary" class="hash-link" aria-label="Direct link to Tool Interaction Summary" title="Direct link to Tool Interaction Summary" translate="no">​</a></h3>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="understanding-the-dependencies">Understanding the Dependencies<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#understanding-the-dependencies" class="hash-link" aria-label="Direct link to Understanding the Dependencies" title="Direct link to Understanding the Dependencies" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tool-responsibilities">Tool Responsibilities<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#tool-responsibilities" class="hash-link" aria-label="Direct link to Tool Responsibilities" title="Direct link to Tool Responsibilities" translate="no">​</a></h3>
+<ol>
+<li class="">
+<p><strong>TypeScript (<code>tsconfig.json</code>)</strong></p>
+<ul>
+<li class="">Provides type checking (when enabled)</li>
+<li class="">IDE support and autocomplete</li>
+<li class=""><strong>Does NOT compile code</strong> - that's Babel's job</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Babel (<code>babel.config.js</code> + <code>babel-loader</code>)</strong></p>
+<ul>
+<li class=""><strong>Transpiles</strong> TypeScript → JavaScript</li>
+<li class="">Strips type annotations (<code>import type</code>, <code>: Type</code>, etc.)</li>
+<li class="">Applies transformations (JSX, modern syntax, etc.)</li>
+<li class="">Runs <strong>at build time</strong> via webpack</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Webpack</strong></p>
+<ul>
+<li class="">Orchestrates the build process</li>
+<li class="">Manages module resolution</li>
+<li class="">Bundles everything together</li>
+<li class=""><strong>Does NOT understand TypeScript</strong> - needs babel-loader</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Storybook</strong></p>
+<ul>
+<li class="">Provides the development environment</li>
+<li class="">Uses webpack under the hood</li>
+<li class="">Adds Storybook-specific loaders (CSF plugin, etc.)</li>
+</ul>
+</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-order-matters">Why Order Matters<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#why-order-matters" class="hash-link" aria-label="Direct link to Why Order Matters" title="Direct link to Why Order Matters" translate="no">​</a></h3>
+<p>The webpack loader chain executes in <strong>reverse order</strong> (right to left), but rules are processed <strong>top to bottom</strong>. By using <code>unshift()</code>, we ensure:</p>
+<ol>
+<li class=""><strong>babel-loader runs first</strong> → TypeScript becomes JavaScript</li>
+<li class=""><strong>CSF plugin runs second</strong> → Processes the JavaScript</li>
+<li class=""><strong>Other loaders run</strong> → Final processing</li>
+</ol>
+<p>If babel-loader runs after the CSF plugin, the plugin tries to parse TypeScript syntax and fails.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-complete-setup">The Complete Setup<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#the-complete-setup" class="hash-link" aria-label="Direct link to The Complete Setup" title="Direct link to The Complete Setup" translate="no">​</a></h2>
+<p>Here's what we ended up with:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="file-structure">File Structure<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#file-structure" class="hash-link" aria-label="Direct link to File Structure" title="Direct link to File Structure" translate="no">​</a></h3>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">bytesofpurpose-blog/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── babel.config.js          # Shared Babel config (Docusaurus + Storybook)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── tsconfig.json            # Shared TypeScript config</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├── .storybook/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   ├── main.ts              # Storybook webpack config</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">│   └── preview.ts           # Storybook preview config</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└── src/</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    └── **/*.stories.tsx     # Story files</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="configuration-files-1">Configuration Files<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#configuration-files-1" class="hash-link" aria-label="Direct link to Configuration Files" title="Direct link to Configuration Files" translate="no">​</a></h3>
+<p><strong><code>babel.config.js</code></strong> - The single source of truth for transpilation:</p>
+<div class="language-javascript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-javascript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token property-access">exports</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token literal-property property" style="color:#36acaa">presets</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'@babel/preset-typescript'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token literal-property property" style="color:#36acaa">isTSX</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token literal-property property" style="color:#36acaa">allExtensions</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"> </span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'@docusaurus/core/lib/babel/preset'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
+<p><strong><code>.storybook/main.ts</code></strong> - Minimal webpack configuration:</p>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token function-variable function" style="color:#d73a49">webpackFinal</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">async</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">config</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic">// Add babel-loader rule FIRST</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  config</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">rules</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">unshift</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    test</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token regex regex-source language-regex special-escape escape" style="color:#36acaa">\.</span><span class="token regex regex-source language-regex group punctuation" style="color:#393A34">(</span><span class="token regex regex-source language-regex" style="color:#36acaa">ts</span><span class="token regex regex-source language-regex alternation keyword" style="color:#00009f">|</span><span class="token regex regex-source language-regex" style="color:#36acaa">tsx</span><span class="token regex regex-source language-regex group punctuation" style="color:#393A34">)</span><span class="token regex regex-source language-regex anchor function" style="color:#d73a49">$</span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    exclude</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token regex regex-source language-regex" style="color:#36acaa">node_modules</span><span class="token regex regex-delimiter" style="color:#36acaa">/</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    use</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> loader</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'babel-loader'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> config</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-takeaways">Key Takeaways<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#key-takeaways" class="hash-link" aria-label="Direct link to Key Takeaways" title="Direct link to Key Takeaways" translate="no">​</a></h2>
+<ol>
+<li class=""><strong>Babel transpiles, TypeScript types</strong> - TypeScript provides types, Babel removes them</li>
+<li class=""><strong>Webpack needs JavaScript</strong> - It can't parse TypeScript directly</li>
+<li class=""><strong>Loader order matters</strong> - babel-loader must run before other loaders</li>
+<li class=""><strong>Unified config is better</strong> - One <code>babel.config.js</code> for the whole project</li>
+<li class=""><strong>No pre-compilation needed</strong> - babel-loader handles it on-the-fly</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="common-pitfalls">Common Pitfalls<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#common-pitfalls" class="hash-link" aria-label="Direct link to Common Pitfalls" title="Direct link to Common Pitfalls" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-wrong-adding-rule-at-the-end">❌ Wrong: Adding rule at the end<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#-wrong-adding-rule-at-the-end" class="hash-link" aria-label="Direct link to ❌ Wrong: Adding rule at the end" title="Direct link to ❌ Wrong: Adding rule at the end" translate="no">​</a></h3>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">config</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">rules</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">push</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">...</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// Runs AFTER other rules</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-right-adding-rule-at-the-beginning">✅ Right: Adding rule at the beginning<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#-right-adding-rule-at-the-beginning" class="hash-link" aria-label="Direct link to ✅ Right: Adding rule at the beginning" title="Direct link to ✅ Right: Adding rule at the beginning" translate="no">​</a></h3>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">config</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">module</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">rules</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">unshift</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">...</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// Runs BEFORE other rules</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-wrong-duplicating-babel-config">❌ Wrong: Duplicating Babel config<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#-wrong-duplicating-babel-config" class="hash-link" aria-label="Direct link to ❌ Wrong: Duplicating Babel config" title="Direct link to ❌ Wrong: Duplicating Babel config" translate="no">​</a></h3>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// Don't duplicate presets in webpack config</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">loader</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'babel-loader'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">options</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  presets</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token operator" style="color:#393A34">...</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic">// ❌ Already in babel.config.js</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-right-let-babel-loader-find-config">✅ Right: Let babel-loader find config<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#-right-let-babel-loader-find-config" class="hash-link" aria-label="Direct link to ✅ Right: Let babel-loader find config" title="Direct link to ✅ Right: Let babel-loader find config" translate="no">​</a></h3>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// babel-loader automatically uses babel.config.js</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">loader</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">require</span><span class="token punctuation" style="color:#393A34">.</span><span class="token function" style="color:#d73a49">resolve</span><span class="token punctuation" style="color:#393A34">(</span><span class="token string" style="color:#e3116c">'babel-loader'</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// No options needed!</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="conclusion">Conclusion<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#conclusion" class="hash-link" aria-label="Direct link to Conclusion" title="Direct link to Conclusion" translate="no">​</a></h2>
+<p>Understanding how TypeScript, Babel, and Webpack work together is crucial for debugging build issues. The key insight is that <strong>Babel is the bridge</strong> between TypeScript source code and webpack's JavaScript requirements. By ensuring babel-loader runs first in the webpack pipeline, we maintain a clean, unified build process that works for both Docusaurus and Storybook.</p>
+<p>The setup is now simple and maintainable:</p>
+<ul>
+<li class="">One <code>babel.config.js</code> for the entire project</li>
+<li class="">Minimal webpack configuration in Storybook</li>
+<li class="">No pre-compilation step needed</li>
+<li class="">Everything works seamlessly together</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="references">References<a href="https://blog.bytesofpurpose.com/blog/storybook-typescript-babel-setup#references" class="hash-link" aria-label="Direct link to References" title="Direct link to References" translate="no">​</a></h2>
+<ul>
+<li class=""><a href="https://storybook.js.org/docs/configure/typescript" target="_blank" rel="noopener noreferrer" class="">Storybook TypeScript Configuration</a></li>
+<li class=""><a href="https://babeljs.io/docs/en/babel-preset-typescript" target="_blank" rel="noopener noreferrer" class="">Babel TypeScript Preset</a></li>
+<li class=""><a href="https://webpack.js.org/concepts/loaders/" target="_blank" rel="noopener noreferrer" class="">Webpack Loaders</a></li>
+<li class=""><a href="https://storybook.js.org/docs/builders/webpack" target="_blank" rel="noopener noreferrer" class="">Storybook Webpack Configuration</a></li>
+</ul>]]></content>
+        <author>
+            <name>Omar Eid</name>
+            <uri>https://github.com/omars-lab</uri>
+        </author>
+        <category label="storybook" term="storybook"/>
+        <category label="typescript" term="typescript"/>
+        <category label="babel" term="babel"/>
+        <category label="webpack" term="webpack"/>
+        <category label="build-systems" term="build-systems"/>
+        <category label="frontend" term="frontend"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[🚀 My Contributions]]></title>
         <id>https://blog.bytesofpurpose.com/blog/my-contributions</id>
