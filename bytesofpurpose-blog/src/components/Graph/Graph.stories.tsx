@@ -7,8 +7,6 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { GraphMenuBar } from './GraphMenuBar';
-import { GraphInfoPanel } from './GraphInfoPanel';
 
 const meta: Meta = {
   title: 'Graph/Architecture',
@@ -124,58 +122,9 @@ export const Architecture: Story = {
 };
 
 /**
- * Example showing GraphMenuBar component.
+ * For detailed examples of individual components, see:
+ * - GraphMenuBar stories: Graph/GraphMenuBar
+ * - GraphInfoPanel stories: Graph/GraphInfoPanel
+ * - GraphCanvas stories: Graph/GraphCanvas
  */
-export const MenuBarExample: Story = {
-  render: () => (
-    <div>
-      <GraphMenuBar
-        onCenter={() => console.log('Center clicked')}
-        onExpandAll={() => console.log('Expand All clicked')}
-        onCollapseAll={() => console.log('Collapse All clicked')}
-        onTogglePane={() => console.log('Toggle Pane clicked')}
-        paneVisible={true}
-        isDarkMode={false}
-        menuBarHeight={40}
-      />
-    </div>
-  ),
-};
-
-/**
- * Example showing GraphInfoPanel component.
- */
-export const InfoPanelExample: Story = {
-  render: () => (
-    <div style={{ display: 'flex', height: '600px' }}>
-      <div style={{ flex: 1, backgroundColor: '#f0f0f0', padding: '20px' }}>
-        <p>Graph Canvas Area (Mock)</p>
-      </div>
-      <GraphInfoPanel
-        selectedNode={{
-          id: 'node1',
-          title: 'Example Node',
-          description: 'This is an example node showing the info panel.',
-        }}
-        selectedEdge={null}
-        graphData={{
-          nodes: [
-            { id: 'node1', title: 'Node 1' },
-            { id: 'node2', title: 'Node 2' },
-          ],
-          links: [
-            { id: 'link1', source: 'node1', target: 'node2' },
-          ],
-        }}
-        expandedNodes={new Set()}
-        graphRef={{ current: null }}
-        graphId="example"
-        isDarkMode={false}
-        height={600}
-        onNodeClick={() => {}}
-        onExpandNode={() => {}}
-      />
-    </div>
-  ),
-};
 

@@ -7,6 +7,27 @@ export default function StorybookPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  // Hide navbar and adjust body styles when component mounts
+  useEffect(() => {
+    const navbar = document.querySelector('.navbar');
+    const originalNavbarDisplay = navbar ? window.getComputedStyle(navbar).display : null;
+    const originalBodyOverflow = document.body.style.overflow;
+
+    // Hide navbar and prevent body scroll
+    if (navbar) {
+      (navbar as HTMLElement).style.display = 'none';
+    }
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup on unmount
+    return () => {
+      if (navbar && originalNavbarDisplay !== null) {
+        (navbar as HTMLElement).style.display = originalNavbarDisplay;
+      }
+      document.body.style.overflow = originalBodyOverflow;
+    };
+  }, []);
+
   useEffect(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
@@ -58,7 +79,8 @@ export default function StorybookPage() {
         border: 'none',
         margin: 0,
         padding: 0,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        zIndex: 1
       }}>
         {isLoading && (
           <div style={{

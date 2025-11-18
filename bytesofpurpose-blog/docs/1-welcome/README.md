@@ -16,7 +16,7 @@ Welcome to my developer blog! This is a place where I share my thoughts, learnin
 You'll find a comprehensive collection of documentation and blog posts that you can navigate using the sidebar. The content is organized into several key areas:
 
 ### 📚 Documentation Sections
-- **[Techniques](/docs/techniques/mechanics)** - Technical implementation details and tools
+- **[Techniques](/docs/techniques)** - Technical implementation details and tools
 - **[Coding Challenges](/docs/skills/solving-coding-challenges/coding-challenges)** - Algorithm problems and solutions
 - **[Development](/docs/developing/development)** - Setup guides and development workflows
 - **[Interviewing](/docs/skills/interviewing)** - Technical interview preparation
@@ -90,4 +90,4 @@ This blog covers several key technical areas:
 
 ---
 
-*Ready to explore? Start with the [Techniques section](/docs/techniques/mechanics/) for technical implementation details, or check out the [latest blog posts](/blog/) for recent insights and experiences.*
+*Ready to explore? Start with the [Techniques section](/docs/techniques) for technical implementation details, or check out the [latest blog posts](/blog/) for recent insights and experiences.*
