@@ -12,7 +12,6 @@ const darkTheme = themes.dracula;
     baseUrl: '/',
     // onBrokenLinks: 'throw',
     onBrokenLinks: 'warn',
-    onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
     projectName: 'omars-lab.github.io', // Usually your repo name.
@@ -20,6 +19,9 @@ const darkTheme = themes.dracula;
     staticDirectories: ['static'],
     markdown: {
       mermaid: true,
+      hooks: {
+        onBrokenMarkdownLinks: 'warn',
+      },
     },
     presets: [
       [

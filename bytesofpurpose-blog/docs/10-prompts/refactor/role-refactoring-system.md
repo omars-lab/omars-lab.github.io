@@ -4,6 +4,8 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "role-management", "organization", "personal-development"]
 description: "How I use AI to systematically refactor and organize personal role definitions, separating generic frameworks from personal action items for better clarity and actionability"
 author: "Omar Eid"
+slug: role-refactoring-system
+authors: [oeid]
 ---
 
 # Role Refactoring System: AI-Powered Personal Role Organization

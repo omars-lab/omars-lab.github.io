@@ -4,6 +4,8 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "sql", "database", "documentation", "analysis"]
 description: "How I use AI to analyze complex SQL queries, generate comprehensive documentation, create visual diagrams, and produce clean, readable code with self-healing capabilities"
 author: "Omar Eid"
+slug: sql-query-analyzer
+authors: [oeid]
 ---
 
 # SQL Query Analyzer: AI-Powered Database Query Documentation

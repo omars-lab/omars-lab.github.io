@@ -4,6 +4,8 @@ date: 2025-01-31
 tags: ["ai", "prompts", "overview", "use-cases", "workflow", "automation", "productivity"]
 description: "Comprehensive overview of AI prompt use cases covering analysis, content creation, maintenance, organization, and quality assessment workflows"
 author: "Omar Eid"
+slug: readme
+authors: [oeid]
 ---
 
 # AI Prompts Use Case Overview

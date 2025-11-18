@@ -5,6 +5,7 @@ description: "My practical GenAI workflow for development, writing, and problem-
 tags: [genai, productivity, workflow, tools]
 date: '2025-09-30T10:00'
 draft: true
+authors: [oeid]
 ---
 
 I've been using GenAI tools for over a year. Here's my practical workflow.

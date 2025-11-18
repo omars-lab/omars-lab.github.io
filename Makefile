@@ -80,6 +80,7 @@ PORT ?= 3000
 start: build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	# Builds Storybook first so it's available at /storybook/
+	# Changelog data is auto-generated via npm 'prestart' hook before starting
 	( cd ${SITEROOT} && yarn start --port ${PORT} )
 
 PORT ?= 3000
@@ -93,6 +94,7 @@ clear: ## Clear Docusaurus cache
 
 build: build-storybook ## Build the site for production
 	# Bundles your website into static files for production.
+	# Changelog data is auto-generated via npm 'prebuild' hook before building
 	( cd ${SITEROOT} && yarn build )
 
 serve: build ## Serve the built site locally

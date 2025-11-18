@@ -5,6 +5,7 @@ authors: [oeid]
 tags: []
 draft: true
 date: 2022-05-30T10:00
+description: Development initiative for building Quip apps
 ---
 
 # Building Quip Live Apps

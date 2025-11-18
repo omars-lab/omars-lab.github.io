@@ -1,0 +1,21 @@
+.legendSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  align-items: flex-end;
+  width: 100%;
+  align-self: flex-start; /* Anchor to top, not bottom */
+  margin-top: 0; /* Ensure no top margin pushes it down */
+}
+
+.legendTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ifm-heading-color);
+  white-space: nowrap;
+  text-align: right;
+  width: 100%;
+}
+

@@ -1,0 +1,141 @@
+.dateOverlay {
+  width: 100%;
+  margin-bottom: 0;
+  padding-top: 0; /* No padding needed - headers are positioned within yearGroup */
+  position: relative;
+  z-index: 10;
+  min-height: 44px; /* Ensure minimum height for headers */
+}
+
+.dateOverlayContent {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.dateOverlaySpacer {
+  display: none; /* No longer needed - DateOverlay spans full width */
+}
+
+.dateOverlay .heatmapGrid {
+  padding-top: 0;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.heatmapGrid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: 100%;
+  overflow-x: visible;
+  overflow-y: visible;
+  align-items: flex-start;
+}
+
+.yearGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
+  min-width: fit-content;
+  min-height: 44px; /* Ensure space for year and quarter headers */
+}
+
+.yearHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  z-index: 2;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+.yearLine {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 2px;
+  background: var(--ifm-color-emphasis-400);
+  z-index: 0; /* Behind the year label */
+}
+
+.yearLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-800);
+  white-space: nowrap;
+  background: var(--ifm-background-color);
+  padding: 2px 6px;
+  z-index: 3;
+  position: relative;
+}
+
+/* Style for Highlight component used for year labels */
+.yearHeader :global(mark) {
+  margin: 0 !important; /* Remove default margin from Highlight component */
+  padding: 0.25em 0.5em !important; /* Smaller padding for year labels */
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  position: relative;
+  z-index: 3; /* Ensure year label is above the line */
+}
+
+.yearHeader :global(mark span) {
+  display: none; /* Hide label span since we're not using it for years */
+}
+
+.quarterHeader {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 2px; /* Match monthsRow gap - applies to gap divs too */
+  align-items: center;
+  height: 16px;
+  z-index: 2;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+.quarterHeaderItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-shrink: 0;
+  min-width: fit-content;
+  overflow: hidden; /* Prevent quarter line from extending beyond container */
+}
+
+.quarterLine {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  height: 1px;
+  background: var(--ifm-color-emphasis-300);
+  z-index: 1;
+  width: 100%; /* Stretch to fill quarter width, but not beyond */
+  box-sizing: border-box;
+}
+
+.quarterLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
+  white-space: nowrap;
+  background: var(--ifm-background-color);
+  padding: 1px 3px;
+  z-index: 2;
+  position: relative;
+}
+

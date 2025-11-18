@@ -94,12 +94,13 @@ make build
 # The built site will be in bytesofpurpose-blog/build/
 ```
 
-> **📖 For detailed development instructions**, see [DEVELOPMENT.md](DEVELOPMENT.md) which covers:
+> **📖 For detailed development instructions**, see [DEVELOPMENT.md](docs/DEVELOPMENT.md) which covers:
 > - Component development
 > - Storybook setup and usage
 > - Testing
 > - TypeScript & Babel configuration
 > - Troubleshooting
+> - Changelog generation system
 
 ## 🛠️ Key Features
 
@@ -167,7 +168,7 @@ This repository welcomes contributions in several areas:
 4. Test thoroughly (especially for link integrity)
 5. Submit a pull request
 
-> **💡 Developer Guide**: See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup, component development, testing, and build instructions.
+> **💡 Developer Guide**: See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for detailed setup, component development, testing, and build instructions. See [NAMING_CONVENTIONS.md](docs/NAMING_CONVENTIONS.md) for changelog entry naming conventions.
 
 ## 📊 Project Status
 
