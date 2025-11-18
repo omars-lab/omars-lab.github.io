@@ -147,6 +147,11 @@ const darkTheme = themes.dracula;
               to: '/storybook/', 
               position: 'left'
             },
+            {
+              label: 'Changelog', 
+              to: '/changelog', 
+              position: 'left'
+            },
             // {
             //   label: 'Ideas', 
             //   to: '/blog/process-blog-post-ideation', 

@@ -1,0 +1,226 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Graph/Requirements" />
+
+# GraphRenderer Component Requirements
+
+This document captures the functional requirements and behavioral specifications for the `GraphRenderer` component, including responsive design, pane visibility, canvas sizing, and interaction behaviors.
+
+## Overview
+
+The `GraphRenderer` component is a force-directed graph visualization that must work seamlessly across desktop and mobile devices, with adaptive layouts and behaviors based on screen size and pane visibility.
+
+## Responsive Layout Requirements
+
+### Desktop (width > 768px)
+
+**Layout:**
+- Graph canvas and info pane are side-by-side (horizontal layout)
+- Graph canvas takes 80% of available width when pane is visible
+- Graph canvas takes 100% of available width when pane is hidden
+- Info pane takes 20% of available width when visible
+- Both graph canvas and info pane share the same full height
+
+**Dimensions:**
+- `graphAreaHeight` = `actualHeight - menuBarHeight` (full available height)
+- `graphCanvasHeight` = `graphAreaHeight` (full height)
+- `graphWidth` = `actualWidth - panelWidth` (where `panelWidth` = 20% of `actualWidth` when pane visible, 0 when hidden)
+
+### Mobile (width ≤ 768px)
+
+**Layout:**
+- Graph canvas and info pane are stacked vertically (column layout)
+- Graph canvas appears above the info pane
+- Graph canvas takes full width
+- Info pane takes full width and appears below the graph
+
+**Dimensions:**
+- `baseGraphAreaHeight` = `actualHeight - menuBarHeight` (full available height)
+- `graphCanvasHeight` = 60% of `baseGraphAreaHeight` (consistent size regardless of pane visibility)
+- `graphAreaHeight`:
+  - When pane visible: 100% of `baseGraphAreaHeight` (full height to accommodate graph + pane)
+  - When pane hidden: 60% of `baseGraphAreaHeight` (matches graph canvas height, no extra space)
+- `graphWidth` = `actualWidth` (full width, no panel on side)
+
+## Pane Visibility Behavior
+
+### When Pane is Visible
+
+**Desktop:**
+- Graph canvas: 80% width, full height
+- Info pane: 20% width, full height (beside graph)
+
+**Mobile:**
+- Graph canvas: 100% width, 60% of base height
+- Info pane: 100% width, 40% of base height (below graph)
+- Graph area: 100% of base height (accommodates both graph and pane)
+
+### When Pane is Hidden
+
+**Desktop:**
+- Graph canvas: 100% width, full height
+- Info pane: Not rendered
+- Graph area: Full height
+
+**Mobile:**
+- Graph canvas: 100% width, 60% of base height (same size as when pane visible)
+- Info pane: Not rendered
+- Graph area: 60% of base height (shrinks to match graph canvas, no extra space)
+
+## Critical Requirements
+
+### 1. No Clipping on Mobile
+
+**Requirement:** When the info pane is minimized on mobile, nodes must not be clipped or cut off.
+
+**Implementation:**
+- Graph canvas maintains consistent size (60% of base height) regardless of pane visibility
+- `overflow: visible` on both `.graphArea` and `.graphCanvas` to prevent clipping
+- Graph area shrinks to match graph canvas height when pane is hidden, but overflow allows content to be visible
+
+### 2. Consistent Node Positioning
+
+**Requirement:** Node positions should remain stable when toggling pane visibility on mobile.
+
+**Implementation:**
+- Graph canvas always uses 60% of base height on mobile, regardless of pane visibility
+- This prevents the force simulation from recalculating node positions when pane is toggled
+- Graph dimensions passed to `ForceGraph2D` remain constant: `height={graphCanvasHeight}`
+
+### 3. Space Efficiency
+
+**Requirement:** When pane is hidden on mobile, the graph area should not leave empty space below the graph.
+
+**Implementation:**
+- `graphAreaHeight` shrinks to match `graphCanvasHeight` (60% of base) when pane is hidden
+- Graph canvas fills 100% of the reduced graph area
+- No wasted vertical space
+
+### 4. Canvas Overflow Prevention
+
+**Requirement:** Canvas must not overflow its container on any screen size.
+
+**Implementation:**
+- `max-width: 100%` and `max-height: 100%` on canvas element
+- Container width calculation uses actual container width (not prop width) to prevent overflow
+- `box-sizing: border-box` to include padding/border in width calculations
+
+### 5. Touch Interaction Support
+
+**Requirement:** Graph must support touch drag on mobile devices.
+
+**Implementation:**
+- `touch-action: none` on `.graphCanvas` and `.graphCanvas canvas` to enable custom touch interactions
+- iOS-specific properties: `-webkit-touch-callout: none`, `-webkit-user-select: none`
+- Prevents default touch behaviors (scrolling, text selection) while allowing graph drag
+
+## CSS Class Behavior
+
+### `.graphCanvasWithPane` (Desktop)
+- `flex: 1 1 80%` - Takes 80% width when pane is visible
+
+### `.graphCanvasWithoutPane` (Desktop)
+- `flex: 1 1 100%` - Takes 100% width when pane is hidden
+
+### `.graphCanvasWithPane` (Mobile)
+- `flex: 0 0 60%` - Takes 60% height when pane is visible
+- `width: 100%` - Full width
+
+### `.graphCanvasWithoutPane` (Mobile)
+- `flex: 0 0 60%` - Takes 60% height even when pane is hidden (consistent size)
+- `width: 100%` - Full width
+
+### `.graphArea` (Mobile)
+- `flex-direction: column` - Stacks graph and pane vertically
+- `overflow: visible` - Prevents clipping when area shrinks
+
+### `.sidePanel` (Mobile)
+- `flex: 0 0 40%` - Takes 40% height when visible
+- `width: 100%` - Full width
+- `order: 2` - Appears after graph canvas (which has `order: 1`)
+
+## Dimension Calculations
+
+### Base Calculations
+```typescript
+const baseGraphAreaHeight = actualHeight - menuBarHeight;
+const graphCanvasHeight = isMobile 
+  ? Math.floor(baseGraphAreaHeight * 0.6) 
+  : baseGraphAreaHeight;
+```
+
+### Graph Area Height
+```typescript
+const graphAreaHeight = isMobile && !paneVisible 
+  ? graphCanvasHeight  // Shrinks to match graph canvas when pane hidden
+  : baseGraphAreaHeight; // Full height when pane visible or on desktop
+```
+
+### Graph Width
+```typescript
+const panelWidth = isMobile 
+  ? 0  // No side panel on mobile
+  : (paneVisible ? Math.floor(actualWidth * 0.2) : 0);
+const graphWidth = actualWidth - panelWidth;
+```
+
+## Container Width Calculation
+
+**Requirement:** Canvas must use actual container width to prevent overflow.
+
+**Implementation:**
+- On both mobile and desktop, measure actual container width via `outerContainerRef.current.offsetWidth`
+- Use measured width instead of prop width to account for CSS constraints
+- Recalculate when pane visibility changes (affects width on desktop)
+
+## Menu Bar Requirements
+
+**Requirement:** Menu bar buttons must not wrap or stack on mobile.
+
+**Implementation:**
+- `flex-wrap: nowrap` on `.menuBarBase`
+- `white-space: nowrap` on `.menuBarButton`
+- `overflow-x: auto` on `.menuBarBase` for horizontal scrolling if needed
+- Reduced padding and font size on mobile for better fit
+
+## Text Overflow Handling
+
+**Requirement:** Text in info pane must wrap properly and not overflow container.
+
+**Implementation:**
+- `word-wrap: break-word` and `overflow-wrap: break-word` on all text elements
+- `max-width: 100%`, `width: 100%`, `white-space: normal` on headers
+- `box-sizing: border-box` to include padding in width calculations
+- `overflow-x: hidden` on `.sidePanel` to prevent horizontal overflow
+
+## Centering Behavior
+
+**Requirement:** Center button should center the graph correctly on both desktop and mobile.
+
+**Current Status:** 
+- Works correctly on desktop
+- On mobile, may over-compensate to the right (known issue)
+- Root cause: `centerAt` method may use cached/stale internal dimensions
+- Multiple approaches attempted (documented in `autoCenter` function JSDoc)
+
+## Testing Checklist
+
+When testing the graph component, verify:
+
+- [ ] Graph canvas maintains consistent size when toggling pane on mobile
+- [ ] No nodes are clipped when pane is minimized on mobile
+- [ ] Graph area shrinks appropriately when pane is hidden on mobile (no extra space)
+- [ ] Canvas does not overflow container on any screen size
+- [ ] Touch drag works on mobile devices
+- [ ] Menu bar buttons don't wrap on mobile
+- [ ] Text in info pane wraps properly and doesn't overflow
+- [ ] Graph centers correctly on desktop
+- [ ] Layout switches from horizontal to vertical at 768px breakpoint
+- [ ] Graph width calculation accounts for pane width on desktop
+
+## Related Files
+
+- Component: `src/components/Graph/GraphRenderer.tsx`
+- Styles: `src/components/Graph/GraphRenderer.module.css`
+- Mocks: `src/stories/mocks/` (for Storybook)
+

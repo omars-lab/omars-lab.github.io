@@ -1,0 +1,448 @@
+---
+title: '🔧 Storybook + TypeScript + Babel: Common Pitfalls & Issues'
+description: 'Learn about common pitfalls, debugging tips, and issues you might encounter when setting up Storybook with TypeScript and Babel.'
+authors: [oeid]
+tags: [storybook, typescript, babel, webpack, build-systems, frontend, debugging, troubleshooting]
+---
+
+## Questions Answered by This Post
+
+- What are the most common mistakes when setting up Storybook with TypeScript?
+- Why does my webpack configuration fail even though it looks correct?
+- How do I debug "Module parse failed" errors?
+- What happens if I add the babel-loader rule in the wrong order?
+- Why shouldn't I duplicate Babel configuration in webpack?
+- How do I troubleshoot build errors in Storybook?
+- What are the warning signs that my configuration is wrong?
+
+
+This guide covers common pitfalls, debugging tips, and issues you might encounter when setting up Storybook with TypeScript and Babel. If you're looking for the setup guide, see [Setup & Overview](./setup-overview).
+
+## The Original Problem
+
+When I first encountered this issue, the error was cryptic:
+
+```
+ERROR in ./.storybook/preview.ts 1:12
+Module parse failed: Unexpected token (1:12)
+> import type { Preview } from '@storybook/react';
+```
+
+**What this means**: Webpack is trying to parse TypeScript syntax directly, which it cannot do. The `import type` syntax is TypeScript-specific and needs to be transpiled to JavaScript first.
+
+## Common Pitfalls
+
+### ❌ Pitfall 1: Adding Rule at the End
+
+**The Mistake:**
+```typescript
+webpackFinal: async (config) => {
+  // ... other config ...
+  
+  // ❌ WRONG: This runs AFTER other rules
+  config.module.rules.push({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Why it fails:**
+- Webpack processes rules in order
+- If babel-loader runs after the CSF plugin, the plugin tries to parse TypeScript syntax
+- The CSF plugin expects JavaScript, not TypeScript
+- Result: `Module parse failed: Unexpected token`
+
+**The Fix:**
+```typescript
+webpackFinal: async (config) => {
+  // ✅ RIGHT: This runs BEFORE other rules
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Key insight**: `unshift()` adds to the beginning, `push()` adds to the end. We need babel-loader to run first.
+
+### ❌ Pitfall 2: Duplicating Babel Configuration
+
+**The Mistake:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{
+      loader: require.resolve('babel-loader'),
+      options: {
+        // ❌ WRONG: Duplicating config that's already in babel.config.js
+        presets: [
+          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
+          '@docusaurus/core/lib/babel/preset',
+        ],
+      },
+    }],
+  });
+  
+  return config;
+}
+```
+
+**Why it's problematic:**
+- Duplicates configuration that's already in `babel.config.js`
+- Makes maintenance harder (need to update in two places)
+- Can lead to inconsistencies
+- babel-loader automatically finds `babel.config.js` from the project root
+
+**The Fix:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{
+      loader: require.resolve('babel-loader'),
+      // ✅ RIGHT: No options needed - babel-loader finds babel.config.js automatically
+    }],
+  });
+  
+  return config;
+}
+```
+
+**Key insight**: Let babel-loader do its job - it automatically discovers `babel.config.js`.
+
+### ❌ Pitfall 3: Missing TypeScript Preset
+
+**The Mistake:**
+```javascript
+// babel.config.js
+module.exports = {
+  presets: [
+    // ❌ WRONG: Missing @babel/preset-typescript
+    require.resolve('@docusaurus/core/lib/babel/preset'),
+  ],
+};
+```
+
+**Why it fails:**
+- Babel doesn't know how to handle TypeScript syntax
+- Type annotations and `import type` statements aren't stripped
+- Webpack receives TypeScript code instead of JavaScript
+- Result: `Module parse failed: Unexpected token`
+
+**The Fix:**
+```javascript
+// babel.config.js
+module.exports = {
+  presets: [
+    // ✅ RIGHT: Include TypeScript preset
+    [require.resolve('@babel/preset-typescript'), { 
+      isTSX: true, 
+      allExtensions: true 
+    }],
+    require.resolve('@docusaurus/core/lib/babel/preset'),
+  ],
+};
+```
+
+**Key insight**: The TypeScript preset is essential - it tells Babel how to handle TypeScript syntax.
+
+### ❌ Pitfall 4: Wrong File Extensions in Test Pattern
+
+**The Mistake:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.ts$/,  // ❌ WRONG: Missing .tsx
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Why it fails:**
+- Only matches `.ts` files, not `.tsx` files
+- React components with JSX (`.tsx`) won't be processed
+- Result: Some files work, others don't
+
+**The Fix:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,  // ✅ RIGHT: Matches both .ts and .tsx
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Key insight**: React components use `.tsx` - make sure your pattern matches both extensions.
+
+### ❌ Pitfall 5: Including node_modules
+
+**The Mistake:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    // ❌ WRONG: Missing exclude - processes node_modules
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Why it's problematic:**
+- Processes TypeScript files in `node_modules`
+- Slows down builds significantly
+- Can cause conflicts with pre-compiled packages
+- Usually unnecessary (most packages are already compiled)
+
+**The Fix:**
+```typescript
+webpackFinal: async (config) => {
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,  // ✅ RIGHT: Exclude node_modules
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**Key insight**: Always exclude `node_modules` unless you have a specific reason not to.
+
+### ❌ Pitfall 6: Conflicting TypeScript Configuration
+
+**The Mistake:**
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "CommonJS",  // ❌ WRONG: Conflicts with modern bundlers
+    "moduleResolution": "node",
+    // ...
+  }
+}
+```
+
+**Why it's problematic:**
+- `CommonJS` module system conflicts with modern bundlers
+- Can cause issues with tree-shaking and code splitting
+- Doesn't work well with `moduleResolution: "bundler"`
+
+**The Fix:**
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "ESNext",  // ✅ RIGHT: Works with modern bundlers
+    "moduleResolution": "bundler",
+    // ...
+  }
+}
+```
+
+**Key insight**: Use modern module systems (`ESNext`) when working with bundlers like webpack.
+
+## Debugging Tips
+
+### 1. Check Loader Order
+
+**How to debug:**
+```typescript
+webpackFinal: async (config) => {
+  // Log the rules to see their order
+  console.log('Webpack rules:', config.module.rules.map(r => r.test));
+  
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**What to look for:**
+- babel-loader rule should be first (or early in the list)
+- CSF plugin should come after babel-loader
+- Check that your rule is actually being added
+
+### 2. Verify Babel Configuration
+
+**How to debug:**
+```bash
+# Test Babel configuration directly
+npx babel src/your-file.ts --out-file test-output.js
+```
+
+**What to look for:**
+- TypeScript syntax should be removed
+- `import type` should be stripped
+- Output should be valid JavaScript
+
+### 3. Check File Extensions
+
+**How to debug:**
+```typescript
+webpackFinal: async (config) => {
+  // Log which files are being processed
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{
+      loader: require.resolve('babel-loader'),
+      options: {
+        // This will log each file being processed
+        onDebug: (options, context) => {
+          console.log('Processing:', context.resourcePath);
+        },
+      },
+    }],
+  });
+  
+  return config;
+}
+```
+
+**What to look for:**
+- Files with `.ts` and `.tsx` extensions should be logged
+- Files in `node_modules` should NOT be logged
+- All your source files should appear
+
+### 4. Verify TypeScript Preset
+
+**How to debug:**
+```javascript
+// babel.config.js
+module.exports = {
+  presets: [
+    [require.resolve('@babel/preset-typescript'), { 
+      isTSX: true, 
+      allExtensions: true 
+    }],
+    require.resolve('@docusaurus/core/lib/babel/preset'),
+  ],
+};
+
+// Test: Check if preset is loaded
+console.log('Babel presets:', module.exports.presets);
+```
+
+**What to look for:**
+- `@babel/preset-typescript` should be in the presets array
+- Options should match your needs (`isTSX: true` for React)
+
+### 5. Check for Conflicting Rules
+
+**How to debug:**
+```typescript
+webpackFinal: async (config) => {
+  // Check for existing TypeScript rules
+  const existingTsRule = config.module.rules.find(
+    rule => rule.test && rule.test.toString().includes('ts')
+  );
+  
+  if (existingTsRule) {
+    console.warn('Found existing TypeScript rule:', existingTsRule);
+  }
+  
+  // Your babel-loader rule
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  
+  return config;
+}
+```
+
+**What to look for:**
+- Other rules that might conflict
+- Rules that process TypeScript files differently
+- Order of conflicting rules
+
+## Warning Signs
+
+### Red Flags That Your Configuration Is Wrong
+
+1. **"Module parse failed: Unexpected token"**
+   - Webpack is trying to parse TypeScript directly
+   - **Fix**: Ensure babel-loader runs first
+
+2. **Some files work, others don't**
+   - Check file extension patterns (`.ts` vs `.tsx`)
+   - Check `exclude` patterns
+
+3. **Build is very slow**
+   - You might be processing `node_modules`
+   - Check your `exclude` pattern
+
+4. **TypeScript errors in build output**
+   - Babel might not be configured correctly
+   - Check that `@babel/preset-typescript` is included
+
+5. **Inconsistent behavior between dev and build**
+   - Different webpack configurations
+   - Check both `.storybook/main.ts` and build configs
+
+## Quick Reference: Common Errors
+
+| Error Message | Likely Cause | Solution |
+|--------------|--------------|----------|
+| `Module parse failed: Unexpected token` | Webpack parsing TypeScript directly | Add babel-loader rule first |
+| `Cannot find module` | TypeScript config issue | Check `tsconfig.json` paths |
+| `SyntaxError: Unexpected token` | Missing TypeScript preset | Add `@babel/preset-typescript` |
+| Build works but types are wrong | TypeScript not checking | Check `tsconfig.json` settings |
+| Some files fail, others work | Wrong file extension pattern | Use `/\.(ts\|tsx)$/` |
+
+## Best Practices Summary
+
+1. ✅ **Always use `unshift()`** - Add babel-loader rule at the beginning
+2. ✅ **Don't duplicate config** - Let babel-loader find `babel.config.js`
+3. ✅ **Include TypeScript preset** - Essential for TypeScript support
+4. ✅ **Match both extensions** - Use `/\.(ts|tsx)$/` pattern
+5. ✅ **Exclude node_modules** - Always exclude for performance
+6. ✅ **Use modern module system** - `ESNext` with `moduleResolution: "bundler"`
+
+## Conclusion
+
+Most issues stem from:
+- **Wrong loader order** - babel-loader must run first
+- **Missing TypeScript preset** - Babel needs to know how to handle TypeScript
+- **Configuration duplication** - Let babel-loader discover config automatically
+- **Wrong file patterns** - Make sure to match both `.ts` and `.tsx`
+
+When in doubt, check the loader order and verify that babel-loader is processing files before other loaders try to parse them.
+
+## Related Posts
+
+- For the **setup guide**, see [Setup & Overview](./setup-overview)
+- For **understanding the tools** and their responsibilities, see [Understanding the Tools](./understanding-tools)
+- For **the development process and build flow**, see [Development Process & Experience](./development-process)
+
+## References
+
+- [Storybook TypeScript Configuration](https://storybook.js.org/docs/configure/typescript)
+- [Babel TypeScript Preset](https://babeljs.io/docs/en/babel-preset-typescript)
+- [Webpack Loaders](https://webpack.js.org/concepts/loaders/)
+- [Storybook Webpack Configuration](https://storybook.js.org/docs/builders/webpack)
+

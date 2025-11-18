@@ -2,3 +2,4 @@ _site
 .DS_Store
 node_modules/
 importing/
+bytesofpurpose-blog/static/storybook/

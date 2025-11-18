@@ -1,0 +1,166 @@
+.statusSection {
+  margin-bottom: 3rem;
+}
+
+.statusTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.entriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.entryCard {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: var(--ifm-background-color);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.entryCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.entryHeader {
+  margin-bottom: 1rem;
+}
+
+.entryTitle {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.entryTitle a {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+
+.entryTitle a:hover {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgePlanned {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.badgeInProgress {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.badgeCompleted {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.badgeCancelled {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.badgeRefactoring {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.badgeFeature {
+  background-color: #e1f5fe;
+  color: #0277bd;
+}
+
+.badgeBugfix {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.badgeDocumentation {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.badgeInfrastructure {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+.badgeLow {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.badgeMedium {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.badgeHigh {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.badgeCritical {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.badgeDefault {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+}
+
+.entryDescription {
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.entryMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+}
+
+.metaItem strong {
+  margin-right: 0.5rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+@media (max-width: 768px) {
+  .entriesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

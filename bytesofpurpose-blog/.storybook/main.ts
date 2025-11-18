@@ -48,6 +48,35 @@ const config: StorybookConfig = {
     const rootDir = path.resolve(configDir, '..');
     config.resolve.alias!['@site'] = rootDir;
     
+    // Mock Docusaurus-specific modules for Storybook
+    // These mocks are located in src/stories/mocks/ and documented in src/stories/mocks/README.md
+    // BrowserOnly is used to prevent SSR, but Storybook always runs in browser
+    config.resolve.alias!['@docusaurus/BrowserOnly'] = path.resolve(
+      rootDir,
+      'src/stories/mocks/BrowserOnlyMock.tsx'
+    );
+    
+    // Mock useColorMode hook from Docusaurus theme
+    // Returns 'light' by default (can be enhanced to detect Storybook theme)
+    config.resolve.alias!['@docusaurus/theme-common'] = path.resolve(
+      rootDir,
+      'src/stories/mocks/theme-common-mock.ts'
+    );
+    
+    // Mock Link component from Docusaurus for navigation
+    // Renders as a simple anchor tag in Storybook
+    config.resolve.alias!['@docusaurus/Link'] = path.resolve(
+      rootDir,
+      'src/stories/mocks/LinkMock.tsx'
+    );
+    
+    // Mock useBaseUrl hook from Docusaurus for URL resolution
+    // Returns paths as-is or with simple prefix in Storybook
+    config.resolve.alias!['@docusaurus/useBaseUrl'] = path.resolve(
+      rootDir,
+      'src/stories/mocks/useBaseUrlMock.ts'
+    );
+    
     // Configure publicPath for serving from /storybook/ in Docusaurus
     // Use relative paths so assets load correctly when served from /storybook/
     // Only set this when building (not in dev mode)

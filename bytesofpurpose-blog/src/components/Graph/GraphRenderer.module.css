@@ -8,10 +8,12 @@
 /* Container Styles */
 .container {
   width: 100%;
+  max-width: 100%; /* Prevent container from exceeding viewport */
   border-radius: 8px;
-  overflow: hidden;
+  overflow: hidden; /* Prevent content from overflowing */
   display: flex;
   flex-direction: column;
+  box-sizing: border-box; /* Include padding/border in width calculation */
 }
 
 .containerDark {
@@ -32,11 +34,37 @@
   flex-direction: row;
   gap: 0;
   position: relative;
+  overflow: visible; /* Allow graph canvas to be visible even when graphArea shrinks */
+}
+
+/* Responsive: Stack vertically on mobile */
+@media (max-width: 768px) {
+  .graphArea {
+    flex-direction: column;
+    /* Don't use height: auto - keep fixed height to prevent infinite expansion */
+  }
 }
 
 .graphCanvas {
   min-width: 0;
   position: relative;
+  width: 100%;
+  height: 100%;
+  touch-action: none; /* Enable touch drag on mobile - prevent default touch behaviors */
+  overflow: visible; /* Allow canvas content to be visible (canvas itself handles clipping) */
+  max-width: 100%; /* Ensure canvas doesn't exceed container width */
+}
+
+/* Ensure canvas element inside graphCanvas can receive touch events */
+.graphCanvas canvas {
+  touch-action: none; /* Enable touch drag on mobile */
+  -webkit-touch-callout: none; /* Disable iOS callout on long press */
+  -webkit-user-select: none; /* Disable text selection on iOS */
+  user-select: none; /* Disable text selection */
+  max-width: 100%; /* Prevent canvas from exceeding container width */
+  max-height: 100%; /* Prevent canvas from exceeding container height */
+  box-sizing: border-box; /* Include padding/border in width calculation */
+  display: block; /* Ensure canvas is block-level element */
 }
 
 .graphCanvasWithPane {
@@ -45,6 +73,19 @@
 
 .graphCanvasWithoutPane {
   flex: 1 1 100%;
+}
+
+/* Responsive: Full width on mobile */
+@media (max-width: 768px) {
+  .graphCanvasWithPane {
+    flex: 0 0 60%; /* Take 60% of height when pane is visible */
+    width: 100%;
+  }
+  
+  .graphCanvasWithoutPane {
+    flex: 0 0 60%; /* Keep same 60% height even when pane is hidden */
+    width: 100%;
+  }
 }
 
 /* Right-Click Menu */
@@ -145,7 +186,49 @@
   min-width: 0;
   padding: 12px;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal overflow */
   box-sizing: border-box;
+  word-wrap: break-word; /* Allow long words to break */
+  overflow-wrap: break-word; /* Modern property for word wrapping */
+}
+
+/* Ensure all headers in side panel wrap properly */
+.sidePanel h3,
+.sidePanel h4 {
+  max-width: 100%;
+  width: 100%; /* Force full width */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  hyphens: auto;
+  white-space: normal; /* Ensure text can wrap */
+  display: block; /* Make headers block-level */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Responsive: Full width below graph on mobile */
+@media (max-width: 768px) {
+  .sidePanel {
+    flex: 0 0 40%; /* Take 40% of height on mobile */
+    width: 100%;
+    border-left: none;
+    border-top: 2px solid;
+    order: 2; /* Ensure panel appears after graph canvas (order: 1) */
+  }
+  
+  .sidePanelDark {
+    border-top-color: #555;
+  }
+  
+  .sidePanelLight {
+    border-top-color: #e0e0e0;
+  }
+  
+  /* Ensure graph canvas comes first on mobile */
+  .graphCanvasWithPane,
+  .graphCanvasWithoutPane {
+    order: 1;
+  }
 }
 
 .sidePanelDark {
@@ -164,6 +247,15 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%; /* Ensure headers don't exceed container width */
+  width: 100%; /* Force full width */
+  overflow: hidden; /* Prevent overflow */
+  white-space: normal; /* Ensure text can wrap */
+  display: block; /* Make headers block-level */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .panelTitleDark {
@@ -178,6 +270,9 @@
   margin: 0 0 16px 0;
   font-size: 12px;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .panelDescriptionDark {
@@ -202,6 +297,10 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   opacity: 0.8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%; /* Ensure headers don't exceed container width */
+  overflow: hidden; /* Prevent overflow */
 }
 
 .panelSectionTitleDark {
@@ -215,6 +314,8 @@
 .panelSectionContent {
   border-radius: 4px;
   padding: 8px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .panelSectionContentDark {
@@ -232,6 +333,8 @@
   display: block;
   padding: 4px 0;
   transition: opacity 0.2s;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .panelLinkDark {
@@ -293,6 +396,10 @@
   font-size: 12px;
   cursor: pointer;
   transition: background-color 0.2s;
+  white-space: nowrap; /* Prevent button text from wrapping */
+  word-wrap: normal; /* Prevent word breaking in buttons */
+  overflow-wrap: normal; /* Prevent word breaking in buttons */
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .menuBarButtonDark {
@@ -511,6 +618,21 @@
   padding: 0 12px;
   gap: 8px;
   box-sizing: border-box;
+  flex-wrap: nowrap; /* Prevent buttons from wrapping to new line */
+  overflow-x: auto; /* Allow horizontal scrolling if needed on very small screens */
+}
+
+/* Prevent word break in menu bar on mobile */
+@media (max-width: 768px) {
+  .menuBarBase {
+    gap: 4px; /* Reduce gap on mobile to fit more buttons */
+    padding: 0 8px; /* Reduce padding on mobile */
+  }
+  
+  .menuBarButton {
+    padding: 6px 8px; /* Reduce button padding on mobile */
+    font-size: 11px; /* Slightly smaller font on mobile */
+  }
 }
 
 .menuBarSpacer {

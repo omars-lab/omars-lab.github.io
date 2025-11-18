@@ -1,0 +1,191 @@
+---
+title: '🔧 Storybook + TypeScript + Babel: Setup Guide'
+description: 'A practical guide to setting up Storybook with TypeScript and Babel. Learn the high-level approach and why this configuration matters.'
+authors: [oeid]
+tags: [storybook, typescript, babel, webpack, build-systems, frontend, setup]
+---
+
+## Questions Answered by This Post
+
+- How do I set up Storybook to work with TypeScript files?
+- What's the high-level approach to configuring Babel with Storybook?
+- Why does webpack fail when processing TypeScript files directly?
+- What's the minimal configuration needed to get Storybook + TypeScript working?
+- Why should I use a unified Babel configuration?
+- What value does this setup provide?
+
+This guide provides a practical setup for configuring Storybook with TypeScript and Babel. You'll learn the high-level approach and why this configuration matters for your development workflow.
+
+## Why This Setup Matters
+
+When working with Storybook and TypeScript, you need a way to convert TypeScript to JavaScript before webpack processes it. Here's why this setup is valuable:
+
+### 1. **Unified Configuration**
+- One `babel.config.js` for the entire project
+- Works for both Docusaurus and Storybook
+- Easier to maintain and understand
+
+### 2. **No Pre-compilation Needed**
+- babel-loader handles transpilation on-the-fly
+- No separate build step required
+- Faster development workflow
+
+### 3. **Clean Separation of Concerns**
+- TypeScript handles type checking (in your IDE)
+- Babel handles transpilation (at build time)
+- Webpack handles bundling
+- Each tool does what it's best at
+
+### 4. **Better Developer Experience**
+- Type safety during development
+- Fast build times
+- Clear error messages
+- Works seamlessly with modern tooling
+
+## The Approach: A Unified Babel Configuration
+
+The key insight is that **Babel handles TypeScript transpilation**, and we need to ensure babel-loader runs **before** webpack tries to parse the files. Here's the high-level approach:
+
+1. **Babel transpiles TypeScript to JavaScript** - Babel removes type annotations and converts TypeScript syntax to JavaScript
+2. **babel-loader runs first** - We configure webpack to process TypeScript files through babel-loader before other loaders
+3. **Unified configuration** - One `babel.config.js` shared between Docusaurus and Storybook
+
+## The Setup
+
+### 1. Babel Configuration (`babel.config.js`)
+
+The main Babel configuration lives at the project root and is shared between Docusaurus and Storybook:
+
+```javascript
+module.exports = {
+  presets: [
+    [require.resolve('@babel/preset-typescript'), { 
+      isTSX: true, 
+      allExtensions: true 
+    }],
+    require.resolve('@docusaurus/core/lib/babel/preset'),
+  ],
+};
+```
+
+**What this does:**
+- `@babel/preset-typescript` - Strips TypeScript syntax (including `import type`) and converts it to JavaScript
+- `@docusaurus/core/lib/babel/preset` - Docusaurus-specific transformations
+
+### 2. Storybook Configuration (`.storybook/main.ts`)
+
+Storybook needs to be told to use babel-loader for TypeScript files:
+
+```typescript
+webpackFinal: async (config, { configDir }) => {
+  // ... other config ...
+  
+  // Ensure babel-loader processes TypeScript files FIRST
+  if (config.module?.rules) {
+    config.module.rules.unshift({
+      test: /\.(ts|tsx)$/,
+      exclude: /node_modules/,
+      use: [
+        {
+          loader: require.resolve('babel-loader'),
+          // babel-loader automatically uses babel.config.js from project root
+        },
+      ],
+    });
+  }
+  
+  return config;
+}
+```
+
+**Key points:**
+- `unshift()` adds the rule at the **beginning** of the rules array
+- This ensures babel-loader runs **before** Storybook's CSF plugin
+- babel-loader automatically finds and uses `babel.config.js`
+
+### 3. TypeScript Configuration (`tsconfig.json`)
+
+We consolidated to a single `tsconfig.json` that works for both Docusaurus and Storybook:
+
+```json
+{
+  "extends": "@docusaurus/tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*",
+    ".storybook/**/*"
+  ]
+}
+```
+
+## The Complete Setup
+
+Here's what we ended up with:
+
+### File Structure
+```
+bytesofpurpose-blog/
+├── babel.config.js          # Shared Babel config (Docusaurus + Storybook)
+├── tsconfig.json            # Shared TypeScript config
+├── .storybook/
+│   ├── main.ts              # Storybook webpack config
+│   └── preview.ts           # Storybook preview config
+└── src/
+    └── **/*.stories.tsx     # Story files
+```
+
+### Configuration Files
+
+**`babel.config.js`** - The single source of truth for transpilation:
+```javascript
+module.exports = {
+  presets: [
+    [require.resolve('@babel/preset-typescript'), { 
+      isTSX: true, 
+      allExtensions: true 
+    }],
+    require.resolve('@docusaurus/core/lib/babel/preset'),
+  ],
+};
+```
+
+**`.storybook/main.ts`** - Minimal webpack configuration:
+```typescript
+webpackFinal: async (config) => {
+  // Add babel-loader rule FIRST
+  config.module.rules.unshift({
+    test: /\.(ts|tsx)$/,
+    exclude: /node_modules/,
+    use: [{ loader: require.resolve('babel-loader') }],
+  });
+  return config;
+}
+```
+
+## Key Takeaways
+
+1. **Babel transpiles, TypeScript types** - TypeScript provides types, Babel removes them
+2. **Webpack needs JavaScript** - It can't parse TypeScript directly
+3. **Loader order matters** - babel-loader must run before other loaders
+4. **Unified config is better** - One `babel.config.js` for the whole project
+5. **No pre-compilation needed** - babel-loader handles it on-the-fly
+
+## What's Next?
+
+- For **understanding the tools** and their responsibilities, see [Understanding the Tools](./understanding-tools)
+- For **the development process and build flow**, see [Development Process & Experience](./development-process)
+- For **common pitfalls and debugging tips**, see [Common Pitfalls & Issues](./common-pitfalls)
+
+## References
+
+- [Storybook TypeScript Configuration](https://storybook.js.org/docs/configure/typescript)
+- [Babel TypeScript Preset](https://babeljs.io/docs/en/babel-preset-typescript)
+- [Webpack Loaders](https://webpack.js.org/concepts/loaders/)
+- [Storybook Webpack Configuration](https://storybook.js.org/docs/builders/webpack)
+

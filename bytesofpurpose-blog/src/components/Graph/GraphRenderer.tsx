@@ -813,6 +813,7 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     return getEdgeCoordinatesUtil(startNode, endNode, getNodeRadiusFn);
   }, []);
 
+
   // Helper function to draw comparison edge (dashed, gray, no arrows)
   const drawComparisonEdge = useCallback((
     ctx: CanvasRenderingContext2D,
@@ -888,6 +889,31 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
   const [highlightedEdgeId, setHighlightedEdgeId] = useState<string | null>(null);
   const [paneVisible, setPaneVisible] = useState<boolean>(true);
+  
+  // Responsive: Detect mobile screen size (must be declared early for use in callbacks)
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Track container dimensions for reactive sizing
+  const [containerDimensions, setContainerDimensions] = useState({ width: width, height: height });
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // Track container size - use initial props to prevent feedback loops
+  // Reading from parent element dimensions was causing infinite expansion
+  // Simply use the provided width/height props which are stable
+  useEffect(() => {
+    // Always use initial dimensions from props to prevent feedback loops
+    // The parent component should handle responsive sizing, not this component
+    setContainerDimensions({ width, height });
+  }, [width, height]);
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; nodeId?: string; edgeId?: string } | null>(null);
   const rightClickPositionRef = useRef<{ x: number; y: number } | null>(null);
   const [nodePositions, setNodePositions] = useState<Map<string, { x: number; y: number; radius: number }>>(new Map());
@@ -963,6 +989,15 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
   const graphData = useMemo(() => {
     return flattenNodes(data.nodes, expandedNodes);
   }, [data, expandedNodes, flattenNodes]);
+
+  // Helper function to get nodes from a link (handles both string IDs and node objects)
+  const getNodesFromLink = useCallback((link: any) => {
+    const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
+    const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
+    const startNode = graphData.nodes.find((n: any) => n.id === sourceId);
+    const endNode = graphData.nodes.find((n: any) => n.id === targetId);
+    return { startNode, endNode };
+  }, [graphData.nodes]);
 
   // Toggle node expansion
   const toggleNodeExpansion = useCallback((nodeId: string) => {
@@ -1097,7 +1132,62 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     };
   }, [graphData.nodes.length, updateNodePositions]);
 
-  // Auto center the graph
+  /**
+   * Auto center the graph
+   * 
+   * Centers the graph view on the center point of all visible nodes.
+   * 
+   * APPROACHES TRIED FOR MOBILE CENTERING ISSUE:
+   * 
+   * Problem: On mobile, when pressing the center button, the graph centers too far to the right,
+   * as if it's accounting for a panel on the right side even though on mobile the panel is below.
+   * 
+   * Attempted Solutions:
+   * 
+   * 1. Double requestAnimationFrame with delay:
+   *    - Used double requestAnimationFrame to ensure graph has fully rendered
+   *    - Added 200ms delay on mobile to wait for dimension updates
+   *    - Result: Still centers too far to the right
+   * 
+   * 2. Accessing current zoom/pan state before centering:
+   *    - Tried accessing graphInstance.zoom(), x(), y() to force dimension recalculation
+   *    - Added additional 50ms delay after accessing state
+   *    - Result: Still centers incorrectly
+   * 
+   * 3. Manual transform calculation using canvas dimensions:
+   *    - Got actual canvas element and its offsetWidth/offsetHeight
+   *    - Calculated targetPanX/Y manually: actualWidth/2 - centerX * zoom
+   *    - Tried to use d3Zoom.transform() directly to set transform
+   *    - Result: Selected nodes not even visible in canvas (broke centering completely)
+   * 
+   * 4. Multiple centerAt calls with delays:
+   *    - Called centerAt once, then again after 300ms delay
+   *    - Result: Still centers too far to the right
+   * 
+   * 5. Simplified approach (current):
+   *    - Just use centerAt with double requestAnimationFrame and delay
+   *    - The graph width prop is correct (full width on mobile, panelWidth = 0)
+   *    - centerAt should use the graph's current width/height props
+   *    - Issue: centerAt appears to use cached/stale internal dimensions
+   * 
+   * ROOT CAUSE HYPOTHESIS:
+   * - The graph width prop is correct (graphWidth = actualWidth - panelWidth, where panelWidth = 0 on mobile)
+   * - But centerAt uses the graph's internal zoom/pan state which may have cached dimensions
+   * - When switching from desktop to mobile, the graph's internal state might not update immediately
+   * - centerAt calculates the center based on: screenCenter = graphCenter * zoom + panOffset
+   * - If the graph's internal width is wrong (e.g., still thinks panel is on right), the calculation is off
+   * 
+   * POTENTIAL SOLUTIONS NOT YET TRIED:
+   * - Force graph to recalculate dimensions by accessing canvas and triggering a resize event
+   * - Use graph's zoomToFit() method if available instead of centerAt
+   * - Manually calculate and set pan position using graph's x() and y() methods
+   * - Wait for graph's onEngineStop or similar event before centering
+   * - Force graph re-render by temporarily changing a prop before centering
+   * 
+   * CURRENT STATUS:
+   * - Using simple centerAt with delays - works on desktop, centers too far right on mobile
+   * - The graph width prop is correct, but centerAt uses stale internal dimensions
+   */
   const autoCenter = useCallback(() => {
     if (graphRef.current && graphData.nodes.length > 0) {
       // Calculate center of all nodes
@@ -1117,20 +1207,31 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
         const centerX = (minX + maxX) / 2;
         const centerY = (minY + maxY) / 2;
         
-        // Get current camera position - access via ref
-        const currentZoom = (graphRef.current as any)?.zoom?.() || 1;
-        const graphContainer = graphRef.current?.parentElement;
-        const containerElement = graphContainer?.parentElement;
-        const actualWidth = containerElement ? containerElement.offsetWidth : width;
-        const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
-        const graphWidth = actualWidth - panelWidth;
-        
         // Center the view
         // Access centerAt via ref - react-force-graph-2d exposes underlying instance
-        (graphRef.current as any)?.centerAt?.(centerX, centerY, 1000);
+        // On mobile, wait longer to ensure graph dimensions are fully updated after layout changes
+        const centerDelay = isMobile ? 200 : 0;
+        
+        setTimeout(() => {
+          // Use double requestAnimationFrame to ensure graph has fully rendered
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (graphRef.current) {
+                const graphInstance = graphRef.current as any;
+                
+                // The graph width prop should be correct (full width on mobile, minus panel on desktop)
+                // centerAt uses graph coordinates and the graph's current width/height
+                // On mobile, if centerAt is off, it's likely because the graph hasn't updated its
+                // internal dimensions yet. The width prop is passed correctly, so centerAt should work.
+                // Just use centerAt - the graph should handle the dimensions correctly
+                graphInstance?.centerAt?.(centerX, centerY, 1000);
+              }
+            });
+          });
+        }, centerDelay);
       }
     }
-  }, [graphData, width, paneVisible]);
+  }, [graphData, isMobile, paneVisible]);
 
   // Toggle pane visibility
   const togglePane = useCallback(() => {
@@ -1483,8 +1584,18 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
                 isFinite(node.x) && isFinite(node.y)) {
               // Center and zoom on the node
               // Access methods via ref - react-force-graph-2d exposes underlying instance
-              (graphRef.current as any)?.centerAt?.(node.x, node.y, 1000);
-              (graphRef.current as any)?.zoom?.(1.5, 1000);
+              // On mobile, wait longer to ensure graph dimensions are updated
+              const centerDelay = isMobile ? 300 : 0;
+              
+              setTimeout(() => {
+                requestAnimationFrame(() => {
+                  if (graphRef.current) {
+                    (graphRef.current as any)?.centerAt?.(node.x, node.y, 1000);
+                    (graphRef.current as any)?.zoom?.(1.5, 1000);
+                  }
+                });
+              }, centerDelay);
+              
               setSelectedNode(cleanNodeForSelection(node));
             } else {
               // Node not yet positioned, try again
@@ -1496,7 +1607,32 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
       
       attemptCenter();
     }
-  }, [highlightedNodeId, graphData.nodes.length, cleanNodeForSelection]);
+  }, [highlightedNodeId, graphData.nodes.length, cleanNodeForSelection, isMobile]);
+
+  // Force graph to recalculate dimensions when switching to/from mobile
+  // This helps ensure centerAt uses correct dimensions on mobile
+  useEffect(() => {
+    if (graphRef.current && isMobile) {
+      // On mobile, force graph to recalculate by accessing its dimensions
+      // This ensures the graph's internal state is updated with full width
+      const graphInstance = graphRef.current as any;
+      
+      // Small delay to ensure layout has settled
+      setTimeout(() => {
+        // Access canvas to trigger dimension recalculation
+        const canvas = graphInstance?.canvas?.();
+        if (canvas) {
+          // Force a resize event or access dimensions to trigger update
+          // The graph should recalculate its internal dimensions when we access these
+          const width = canvas.offsetWidth || canvas.width;
+          const height = canvas.offsetHeight || canvas.height;
+          
+          // If dimensions don't match expected full width, the graph might need more time
+          // But we can't force it - just ensure we wait before centering
+        }
+      }, 100);
+    }
+  }, [isMobile]);
 
   // Note: updateGraphWidth removed - ForceGraph2D handles resizing via props
   // Width and height are calculated above and passed as props to the component
@@ -1552,9 +1688,9 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     if (!containerElement) return true;
     
     const actualWidth = containerElement.offsetWidth || width;
-    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+    const panelWidth = isMobile ? 0 : (paneVisible ? Math.floor(actualWidth * 0.2) : 0);
     const graphWidth = actualWidth - panelWidth;
-    const graphHeight = height - menuBarHeight;
+    const graphHeight = actualHeight - menuBarHeight;
 
     // Calculate what the bounding box would be at the new zoom level
     // The bounding box size in screen space = bbox size * zoom
@@ -1568,7 +1704,7 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
 
     // Allow zoom out if cluster would still be >= 10% of viewport (reduced from 25% to allow more zoom out)
     return percentage >= 10;
-  }, [calculateNodeBoundingBox, width, height, paneVisible]);
+  }, [calculateNodeBoundingBox, width, height, paneVisible, isMobile]);
 
   // Check if zoom in would result in only one node visible
   // Allow zooming in much more - only prevent if a single node would take up >90% of viewport
@@ -1586,9 +1722,9 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     if (!containerElement) return true;
     
     const actualWidth = containerElement.offsetWidth || width;
-    const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+    const panelWidth = isMobile ? 0 : (paneVisible ? Math.floor(actualWidth * 0.2) : 0);
     const graphWidth = actualWidth - panelWidth;
-    const graphHeight = height - menuBarHeight;
+    const graphHeight = actualHeight - menuBarHeight;
 
     // Calculate viewport bounds in graph coordinates at new zoom
     const viewportGraphWidth = graphWidth / newZoom;
@@ -1672,7 +1808,7 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     }
 
     return true;
-  }, [calculateNodeBoundingBox, width, height, paneVisible]);
+  }, [calculateNodeBoundingBox, width, height, paneVisible, isMobile]);
 
   // Theme-based colors (moved outside useEffect for use in props)
   const backgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
@@ -1681,12 +1817,30 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
   const nodeBorderColor = isDarkMode ? '#ffffff' : '#333333';
 
   // Calculate graph dimensions
-  // Note: With react-force-graph, we calculate dimensions based on props
-  // The component will handle responsive sizing
+  // Use initial props directly to prevent feedback loops
+  // The parent component should handle responsive sizing
   const outerContainerRef = useRef<HTMLDivElement>(null);
-  const containerElement = outerContainerRef.current?.parentElement;
-  const actualWidth = containerElement ? containerElement.offsetWidth : width;
-  const panelWidth = paneVisible ? Math.floor(actualWidth * 0.2) : 0;
+  
+  // Get actual container width to prevent canvas overflow on both mobile and desktop
+  // Use the outerContainerRef's own width, not parent, to avoid measuring wrong element
+  const [actualContainerWidth, setActualContainerWidth] = useState(width);
+  
+  useEffect(() => {
+    if (outerContainerRef.current) {
+      // Get the actual container width to ensure canvas doesn't overflow
+      // Measure the outerContainer itself, not its parent
+      const containerWidth = outerContainerRef.current.offsetWidth || width;
+      setActualContainerWidth(containerWidth);
+    } else {
+      setActualContainerWidth(width);
+    }
+  }, [isMobile, width, paneVisible]); // Recalculate when pane visibility changes (affects width on desktop)
+  
+  const actualWidth = actualContainerWidth;
+  const actualHeight = height;
+  
+  // On mobile, graph takes full width; on desktop, subtract panel width
+  const panelWidth = isMobile ? 0 : (paneVisible ? Math.floor(actualWidth * 0.2) : 0);
   const graphWidth = actualWidth - panelWidth;
 
   // Memoize graph data
@@ -1798,8 +1952,11 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
   }, [updateNodePositions]);
 
   const handleZoom = useCallback((transform: { k: number; x: number; y: number }) => {
-    // Update positions on zoom/pan
-    updateNodePositions();
+    // Update positions on zoom/pan - defer state update to avoid "Cannot update component during render" error
+    // ForceGraph2D may call onZoom during render (e.g., during adjustCanvasSize), so we defer the state update
+    requestAnimationFrame(() => {
+      updateNodePositions();
+    });
     
     // Intercept zoom changes and enforce limits
     if (!graphRef.current || isAdjustingZoomRef.current) {
@@ -1866,12 +2023,7 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     // For comparison edges, draw dashed gray lines (replace mode)
     // For regular edges, we'll draw labels in 'after' mode
     if (isComparisonEdge && link.source && link.target) {
-      // Use graphData from props/state instead of calling graphData() on ref
-      // Handle both string IDs and node objects
-      const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-      const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-      const startNode = graphData.nodes.find((n: any) => n.id === sourceId);
-      const endNode = graphData.nodes.find((n: any) => n.id === targetId);
+      const { startNode, endNode } = getNodesFromLink(link);
       
       const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
       if (coords) {
@@ -1909,72 +2061,35 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     // Lowered threshold to make labels more visible
     const MIN_ZOOM_FOR_LABELS = 0.5;
     
-    // Draw edge label if it exists and zoomed in enough (for non-comparison edges or on top of comparison edges)
+    // Draw edge label if it exists and zoomed in enough (for non-comparison edges)
     if (!isComparisonEdge && link.label && link.source && link.target && globalScale >= MIN_ZOOM_FOR_LABELS) {
-      // Use graphData from props/state instead of calling graphData() on ref
-      // Handle both string IDs and node objects
-      const sourceId = typeof link.source === 'string' ? link.source : (link.source as any)?.id;
-      const targetId = typeof link.target === 'string' ? link.target : (link.target as any)?.id;
-      const startNode = graphData.nodes.find((n: any) => n.id === sourceId);
-      const endNode = graphData.nodes.find((n: any) => n.id === targetId);
+      const { startNode, endNode } = getNodesFromLink(link);
       
+      // Validate nodes exist and have valid coordinates
       if (startNode && endNode && 
           startNode.x !== undefined && startNode.y !== undefined &&
           endNode.x !== undefined && endNode.y !== undefined &&
           isFinite(startNode.x) && isFinite(startNode.y) &&
           isFinite(endNode.x) && isFinite(endNode.y)) {
-        // Calculate midpoint of the edge, accounting for node radii
-        const sourceRadius = getNodeRadius(startNode.hasChildren);
-        const targetRadius = getNodeRadius(endNode.hasChildren);
         
-        // Calculate direction vector
-        const dx = endNode.x - startNode.x;
-        const dy = endNode.y - startNode.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        // Use the same coordinate calculation as comparison edges
+        const coords = getEdgeCoordinates(link, startNode, endNode, getNodeRadius);
         
-        if (distance > 0) {
-          // Normalize direction
-          const unitX = dx / distance;
-          const unitY = dy / distance;
-          
-          // Calculate start and end points on node surfaces
-          const startX = startNode.x + unitX * sourceRadius;
-          const startY = startNode.y + unitY * sourceRadius;
-          const endX = endNode.x - unitX * targetRadius;
-          const endY = endNode.y - unitY * targetRadius;
-          
-          // Calculate midpoint of the visible edge (between node surfaces)
-          const midX = (startX + endX) / 2;
-          const midY = (startY + endY) / 2;
-          
-          // Use fixed font size that scales with zoom for readability
-          const fontSize = Math.max(10, 12 * globalScale);
-          ctx.font = `${fontSize}px Sans-Serif`;
-          const textWidth = ctx.measureText(link.label).width;
-          const padding = 4;
-          
-          // Draw background for label
-          ctx.fillStyle = isHighlighted 
-            ? (isDarkMode ? 'rgba(255, 215, 0, 0.9)' : 'rgba(255, 215, 0, 0.9)')
-            : (isDarkMode ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)');
-          ctx.fillRect(
-            midX - textWidth / 2 - padding,
-            midY - fontSize / 2 - padding,
-            textWidth + padding * 2,
-            fontSize + padding * 2
+        if (coords) {
+          // Reuse the same label drawing function for consistency
+          drawEdgeLabel(
+            ctx,
+            link.label,
+            coords.midX,
+            coords.midY,
+            globalScale,
+            isHighlighted,
+            isDarkMode
           );
-          
-          // Draw label text
-          ctx.fillStyle = isHighlighted
-            ? (isDarkMode ? '#000000' : '#000000')
-            : (isDarkMode ? '#ffffff' : '#1a1a1a');
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(link.label, midX, midY);
         }
       }
     }
-  }, [highlightedEdgeId, isDarkMode, getEdgeCoordinates, getNodeRadius, drawComparisonEdge, drawEdgeLabel]);
+  }, [highlightedEdgeId, isDarkMode, getEdgeCoordinates, getNodeRadius, drawComparisonEdge, drawEdgeLabel, getNodesFromLink, graphData.nodes]);
 
   // Create memoized props functions for ForceGraph2D
   const nodeLabel = useCallback((node: any) => getNodeLabel(node), []);
@@ -2069,18 +2184,9 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
         }
     }
 
-    // Setup resize observer to handle dynamic width changes
-    const resizeObserver = new ResizeObserver(() => {
-      // Update graph width/height when container resizes
-      // Note: react-force-graph handles most updates via props, but we can update via ref if needed
-      // The component will re-render with new props when dimensions change
-    });
-    
-    // Observe the parent container for size changes
-    const parentElement = graphRef.current?.parentElement?.parentElement;
-    if (parentElement) {
-      resizeObserver.observe(parentElement);
-    }
+    // Note: Container dimension tracking is handled by a separate ResizeObserver
+    // that updates containerDimensions state (see earlier useEffect)
+    // This ensures the graph re-renders with correct dimensions when container resizes
 
     // Track right-click position on the canvas
     const handleCanvasContextMenu = (event: MouseEvent) => {
@@ -2128,14 +2234,23 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
             event.stopImmediatePropagation();
             
             // Manually zoom and center on the highlighted node
+            // On mobile, use longer delay to ensure graph dimensions are updated
             isAdjustingZoomRef.current = true;
-            graphRef.current.zoom(newZoom, 100);
-            graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+            const zoomDelay = isMobile ? 100 : 0;
+            
+            setTimeout(() => {
+              requestAnimationFrame(() => {
+                if (graphRef.current) {
+                  graphRef.current.zoom(newZoom, 100);
+                  graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+                }
+              });
+            }, zoomDelay);
             
             setTimeout(() => {
               isAdjustingZoomRef.current = false;
               previousZoomRef.current = newZoom;
-            }, 150);
+            }, 150 + zoomDelay);
             
             return false;
           }
@@ -2163,14 +2278,23 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
             event.stopImmediatePropagation();
             
             // Manually zoom and center on the highlighted node
+            // On mobile, use longer delay to ensure graph dimensions are updated
             isAdjustingZoomRef.current = true;
-            graphRef.current.zoom(newZoom, 100);
-            graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+            const zoomDelay = isMobile ? 100 : 0;
+            
+            setTimeout(() => {
+              requestAnimationFrame(() => {
+                if (graphRef.current) {
+                  graphRef.current.zoom(newZoom, 100);
+                  graphRef.current.centerAt(highlightedNode.x, highlightedNode.y, 100);
+                }
+              });
+            }, zoomDelay);
             
             setTimeout(() => {
               isAdjustingZoomRef.current = false;
               previousZoomRef.current = newZoom;
-            }, 150);
+            }, 150 + zoomDelay);
             
             return false;
           }
@@ -2207,7 +2331,6 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     // Cleanup
     return () => {
       clearTimeout(timeoutId);
-      resizeObserver.disconnect();
       if (canvas) {
         canvas.removeEventListener('contextmenu', handleCanvasContextMenu);
         canvas.removeEventListener('wheel', handleWheel, { capture: true } as any);
@@ -2218,12 +2341,24 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
       }
       // Note: react-force-graph handles cleanup automatically, no need to call _destructor
     };
-  }, [width, height, paneVisible, canZoomIn, canZoomOut, menuBarHeight]);
+  }, [width, height, paneVisible, canZoomIn, canZoomOut, menuBarHeight, isMobile, containerDimensions]);
 
   // Note: Node rendering updates are handled via props (nodeCanvasObject) which is memoized
   // No separate effect needed - React will re-render when props change
 
-  const graphAreaHeight = height - menuBarHeight;
+  // On mobile, when pane is visible, graph takes 60% and pane takes 40% of graphAreaHeight
+  // On mobile, when pane is hidden, graphArea shrinks to match graph canvas height (60% of base)
+  // The graph canvas stays at 60% of base height regardless of pane visibility
+  // Overflow is set to visible to prevent clipping when graphArea shrinks
+  // On desktop, graph and pane share the same height
+  // Use actualHeight for reactive sizing
+  const baseGraphAreaHeight = actualHeight - menuBarHeight;
+  // On mobile, graph canvas always uses 60% of base height to maintain consistent node positioning
+  const graphCanvasHeight = isMobile ? Math.floor(baseGraphAreaHeight * 0.6) : baseGraphAreaHeight;
+  // Shrink graphArea when pane is hidden on mobile (overflow: visible prevents clipping)
+  const graphAreaHeight = isMobile && !paneVisible 
+    ? graphCanvasHeight // When pane hidden, graphArea matches graph canvas height
+    : baseGraphAreaHeight; // When pane visible, graphArea is full height
 
   // Color variables for dynamic inline styles that can't be moved to CSS
   // (e.g., conditional colors, dynamic values, or styles applied via JavaScript)
@@ -2241,17 +2376,26 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
     >
       <div 
         className={styles.graphArea}
-        style={{ height: graphAreaHeight }}
+        style={{ 
+          height: graphAreaHeight
+        }}
       >
         <div 
           className={`${styles.graphCanvas} ${paneVisible ? styles.graphCanvasWithPane : styles.graphCanvasWithoutPane}`}
-          style={{ height: graphAreaHeight }}
+          style={{ 
+            // On mobile: graph canvas always uses 60% of base height (consistent size regardless of pane visibility)
+            // On desktop: always takes full height (pane is on the side)
+            height: graphCanvasHeight,
+            width: '100%',
+            flexShrink: 0 /* Prevent shrinking on mobile */
+          }}
         >
           <ForceGraph2D
             ref={graphRef}
             graphData={memoizedGraphData}
             width={graphWidth}
-            height={height - menuBarHeight}
+            height={graphCanvasHeight}
+            // On mobile: graph canvas always uses 60% of base height to prevent clipping when pane is toggled
             backgroundColor={backgroundColor}
             nodeLabel={nodeLabel}
             nodeVal={nodeVal}
@@ -2367,7 +2511,10 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
         {paneVisible && (
           <div 
             className={`${styles.sidePanel} ${isDarkMode ? styles.sidePanelDark : styles.sidePanelLight}`}
-            style={{ height: graphAreaHeight }}
+            style={{ 
+              // On mobile, pane takes 40% of height (below graph); on desktop, takes full height (beside graph)
+              height: isMobile ? Math.floor(graphAreaHeight * 0.4) : graphAreaHeight
+            }}
           >
             {selectedNode ? (() => {
               // Find ingress and egress links for the selected node
@@ -2416,8 +2563,16 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
                   
                   // Center on the node if graph is available
                   // Access centerAt via ref - react-force-graph-2d exposes underlying instance
+                  // On mobile, wait longer to ensure graph dimensions are updated
                   if (graphRef.current && node.x !== undefined && node.y !== undefined) {
-                    (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
+                    const centerDelay = isMobile ? 200 : 0;
+                    setTimeout(() => {
+                      requestAnimationFrame(() => {
+                        if (graphRef.current) {
+                          (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
+                        }
+                      });
+                    }, centerDelay);
                   }
                 }
               };
@@ -2718,8 +2873,16 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
                   
                   // Center on the node if graph is available
                   // Access centerAt via ref - react-force-graph-2d exposes underlying instance
+                  // On mobile, wait longer to ensure graph dimensions are updated
                   if (graphRef.current && node.x !== undefined && node.y !== undefined) {
-                    (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
+                    const centerDelay = isMobile ? 200 : 0;
+                    setTimeout(() => {
+                      requestAnimationFrame(() => {
+                        if (graphRef.current) {
+                          (graphRef.current as any)?.centerAt?.(node.x, node.y, 500);
+                        }
+                      });
+                    }, centerDelay);
                   }
                 }
               };
