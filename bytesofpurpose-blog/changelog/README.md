@@ -1,78 +1,53 @@
----
-title: 'Changelog'
-description: 'Track all changes, plans, and improvements to the blog'
----
+# Changelog Directory Structure
 
-# Changelog
+This directory contains changelog entries organized by category.
 
-This directory tracks all changes, plans, and improvements made to the blog. Each entry is a markdown file with frontmatter metadata.
+## Directory Structure
 
-## File Naming Convention
+- **`content/`** - Content-related changes (blog posts, documentation, content enhancements)
+- **`development/`** - Development/infrastructure changes (components, mechanics, infrastructure, optimization, structure)
 
-Files are named using the format: `YYYY-MM-DD-description.md`
+## File Organization
 
-- **YYYY-MM-DD**: Date of inception (for plans) or execution (for completed work)
-- **description**: Brief description of the change
+### Content Changes (`content/`)
+Place entries related to:
+- New blog posts (`content-post-*`)
+- Documentation updates (`documentation-*`)
+- Content enhancements
 
-## Frontmatter Fields
+**Example**: `content/2025-01-15-content-post-knowledge-agents-design.md`
 
-Each changelog entry includes the following frontmatter fields:
+### Development Changes (`development/`)
+Place entries related to:
+- Component creation/enhancement (`component-*`)
+- Blogging mechanics (`mechanic-*`)
+- Infrastructure improvements (`infrastructure-*`)
+- Performance optimizations (`optimization-*`)
+- Structure changes (`structure-*`)
+- Refactoring (`refactoring-*`)
+- Bug fixes (`bugfix-*`)
 
-- `title`: Human-readable title
-- `description`: Brief description
-- `status`: Current status (`planned`, `in-progress`, `completed`, `cancelled`)
-- `inception_date`: Date when the plan/change was first conceived
-- `execution_date`: Date when the change was executed (use `TBD` for plans)
-- `type`: Type of change (`refactoring`, `feature`, `bugfix`, `documentation`, `infrastructure`)
-- `component`: Affected component or area (optional)
-- `priority`: Priority level (`low`, `medium`, `high`, `critical`)
+**Example**: `development/2025-01-15-component-creation-svg-kanban.md`
 
-## Status Values
+## Backward Compatibility
 
-- **planned**: Change is planned but not yet started
-- **in-progress**: Change is currently being worked on
-- **completed**: Change has been completed
-- **cancelled**: Change was cancelled or abandoned
+Files in the root `changelog/` directory are automatically categorized:
+- Files with `content-post-*` prefix → `content` category
+- All other files → `development` category
 
-## Type Values
+However, **it's recommended to move files to the appropriate subdirectory** for better organization.
 
-- **refactoring**: Code refactoring or restructuring
-- **feature**: New feature addition
-- **bugfix**: Bug fix
-- **documentation**: Documentation updates
-- **infrastructure**: Infrastructure or tooling changes
+## Migration Guide
 
-## Viewing Changelog
+To migrate existing files:
 
-The changelog is accessible via the "Changelog" tab in the Docusaurus navbar.
+1. **Content entries** → Move to `content/` subdirectory
+2. **Development entries** → Move to `development/` subdirectory
 
-## Entry Structure
+The generation script automatically handles subdirectories, so slugs will include the subdirectory path (e.g., `content/2025-01-15-content-post-...`).
 
-Each changelog entry must have two main sections:
+## See Also
 
-### 1. Execution Plan
-This section describes what was planned to be done. It should include:
-- Goals and objectives
-- Planned approach or strategy
-- Expected outcomes
-- Any prerequisites or dependencies
-
-### 2. Execution Results / Attempts
-This section documents what was actually done or attempted. It should include:
-- What was completed
-- What was attempted but didn't work
-- Challenges encountered
-- Deviations from the plan
-- Lessons learned
-- Current status
-
-For entries with status `planned`, the "Execution Results / Attempts" section should indicate that execution has not yet begun.
-
-## Adding New Entries
-
-1. Create a new markdown file in this directory
-2. Use the naming convention: `YYYY-MM-DD-description.md`
-3. Add appropriate frontmatter
-4. Include both "Execution Plan" and "Execution Results / Attempts" sections
-5. Update this README if needed
+- [Naming Conventions](../../docs/NAMING_CONVENTIONS.md)
+- [Changelog System Documentation](../../docs/6-techniques/3-blogging-techniques/changelog-system.md)
 

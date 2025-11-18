@@ -4,6 +4,8 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "task-management"]
 description: "How I use AI to automatically carry over incomplete tasks from daily notes, organize meeting notes, and maintain clean productivity workflows"
 author: "Omar Eid"
+slug: daily-todo-carry-over
+authors: [oeid]
 ---
 
 # Daily Todo Carry Over: Automating Task Management with AI

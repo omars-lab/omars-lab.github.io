@@ -1,0 +1,205 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Changelog/Structure" />
+
+# Changelog Component Structure
+
+The Changelog component displays changelog entries in a visual heatmap format with horizontal scrolling quarter lists. The component uses a modular architecture with separate sub-components for maintainability.
+
+## Component Architecture
+
+The Changelog component is modularized into the following sub-components:
+
+- **`DateOverlay`** - Shared year and quarter headers above heatmap rows
+- **`HeatmapRow`** - Individual heatmap row for each category (content/development)
+- **`LegendSidebar`** - Title and legend wrapper for each heatmap row
+- **`Legend`** - Intensity scale legend with current month indicator
+- **`ChangelogFilters`** - Filter dropdowns (status, type, priority, category)
+- **`QuarterSection`** - Quarterly entries display with filtering
+
+## Layout Structure
+
+### Heatmap Section
+
+The heatmap visualizes activity over time using a month-based granularity with separate rows for content and development:
+
+```
+┌─────────────────────────────────────────────────────────┬──────────────┐
+│                    [Year Label]                         │   Legend     │
+│  ────────────────────────────────────────────────────   │   Header     │
+│                                                         │              │
+│  [Q1]      [Q2]      [Q3]      [Q4]                     │              │
+│  ────      ────      ────      ────                     │              │
+│                                                         │              │
+│  [][][][]  [][][][]  [][][][]  [][][][]                 │ Less [][][][]│
+│  Content Row                                            │ More [Jan]   │
+│                                                         │              │
+│  [][][][]  [][][][]  [][][][]  [][][][]                 │ Less [][][][]│
+│  Development Row                                        │ More [Jan]   │
+└─────────────────────────────────────────────────────────┴──────────────┘
+```
+
+#### Date Overlay (Shared Above Both Rows)
+- **Year Labels**: Displayed using Highlight component with gradient background
+- **Year Line**: Horizontal line spanning full year width (behind year label, z-index: 0)
+- **Quarter Labels**: Q1, Q2, Q3, Q4 positioned below the year line
+- **Quarter Lines**: Horizontal lines spanning each quarter's months
+- **Quarter Gaps**: 4px gap divs + 2px CSS gap on each side = 8px total visual gap
+- **Position**: Absolutely positioned above heatmap rows, spanning only rows width (not legend)
+
+#### Heatmap Rows
+- **Two Separate Rows**: Content (blue) and Development (green) color schemes
+- **Position**: Left side of container (flex: 1)
+- **Spacing**: 2px gap between rows (matching square spacing)
+
+#### Month Squares
+- **Size**: 20px × 20px with 2px gap between squares within a quarter
+- **Quarter Gaps**: 8px total visual gap between quarters (4px div + 2px CSS gap on each side)
+- **Color Intensity**: 5 levels (0-4) based on entry count
+  - Content: Blue color scheme (light blue to dark blue)
+  - Development: Green color scheme (light green to dark green)
+- **Current Month**: Highlighted with border
+- **Selected Quarter**: All months in selected quarter highlighted
+
+#### Legend Section
+- **Position**: Right side of container (fixed 200px width)
+- **Header**: "Legend" title anchored to top-right
+- **Content**: Each heatmap row has its own legend with:
+  - "Less" → intensity squares (0-4) → "More"
+  - Current month indicator (bordered square + month/year label)
+- **Alignment**: Top-right anchored, minimal vertical spacing
+
+### Quarters List Section
+
+Horizontal scrolling container showing up to 3 quarters at a time:
+
+```
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│ 2025-Q4  │  │ 2025-Q3  │  │ 2025-Q2  │  ...
+│ (3)      │  │ (2)      │  │ (1)      │
+│          │  │          │  │          │
+│ Completed│  │ Planned  │  │ In Prog  │
+│ [Card]   │  │ [Card]   │  │ [Card]   │
+│ [Card]   │  │          │  │          │
+└──────────┘  └──────────┘  └──────────┘
+```
+
+#### Quarter Columns
+- **Width**: 33.33% on desktop (3 visible), 50% on tablet (2 visible), 100% on mobile (1 visible)
+- **Height**: Max 70vh with vertical scrolling within each column
+- **Content**: Entries grouped by status (completed, in-progress, planned, cancelled)
+
+#### Entry Cards
+- **Badges**: Status, Type, Priority
+- **Metadata**: Component, Inception date, Execution date
+- **Links**: Navigate to individual changelog entry pages
+
+## Interaction
+
+### Heatmap Interactions
+1. **Hover**: Shows tooltip with month name, entry count, and entry titles
+2. **Click**: Scrolls to corresponding quarter in the list view
+3. **Selection**: Highlights all months in the selected quarter
+
+### Quarter List Interactions
+1. **Horizontal Scroll**: Smooth scrolling to navigate between quarters
+2. **Vertical Scroll**: Within each quarter column to view all entries
+3. **Auto-scroll**: When clicking heatmap cell, automatically scrolls to that quarter
+
+## Data Structure
+
+### Month Cell
+```typescript
+interface MonthCell {
+  monthStart: Date;    // Start of month
+  monthEnd: Date;      // End of month
+  count: number;       // Number of entries in this month
+  entries: ChangelogEntry[];  // Entries for this month
+  year: number;        // Year (e.g., 2025)
+  month: number;       // Month index (0-11)
+  quarter: number;    // Quarter number (1-4)
+}
+```
+
+### Quarter Data
+```typescript
+interface QuarterData {
+  quarter: string;     // "2025-Q4"
+  year: number;
+  quarterNum: number;
+  entries: ChangelogEntry[];
+  startDate: Date;
+  endDate: Date;
+}
+```
+
+## Date Handling
+
+- **XX Dates**: Dates with "XX" (e.g., `2025-12-XX`) are normalized to the first day of the month
+- **Date Range**: Always shows 1 year ago, this year, and next year (e.g., 2024, 2025, 2026 if current year is 2025)
+- **Grouping**: Entries grouped by month, then organized into quarters and years
+- **Current Month Indicator**: Displayed in legend with bordered square and month/year label
+
+## Responsive Behavior
+
+- **Desktop**: 3 quarter columns visible, full heatmap width
+- **Tablet**: 2 quarter columns visible
+- **Mobile**: 1 quarter column visible, heatmap scrolls horizontally
+
+## Color Scheme
+
+### Content (Blue) - Light Mode
+- Intensity 0: `#ebedf0` (light gray)
+- Intensity 1: `#a5d8ff` (light blue)
+- Intensity 2: `#4dabf7` (medium blue)
+- Intensity 3: `#339af0` (dark blue)
+- Intensity 4: `#1c7ed6` (darkest blue)
+
+### Content (Blue) - Dark Mode
+- Intensity 0: `#161b22` (dark gray)
+- Intensity 1: `#0c3a5c` (dark blue)
+- Intensity 2: `#1864ab` (medium blue)
+- Intensity 3: `#339af0` (bright blue)
+- Intensity 4: `#4dabf7` (brightest blue)
+
+### Development (Green) - Light Mode
+- Intensity 0: `#ebedf0` (light gray)
+- Intensity 1: `#9be9a8` (light green)
+- Intensity 2: `#40c463` (medium green)
+- Intensity 3: `#30a14e` (dark green)
+- Intensity 4: `#216e39` (darkest green)
+
+### Development (Green) - Dark Mode
+- Intensity 0: `#161b22` (dark gray)
+- Intensity 1: `#0e4429` (dark green)
+- Intensity 2: `#006d32` (medium green)
+- Intensity 3: `#26a641` (bright green)
+- Intensity 4: `#39d353` (brightest green)
+
+## Example Usage
+
+```tsx
+import { Changelog } from '@site/src/components/Changelog';
+// ChangelogEntry type is available from './types'
+
+const entries = [
+  {
+    title: 'Feature X',
+    description: 'Added new feature',
+    status: 'completed',
+    inception_date: '2025-11-17',
+    execution_date: '2025-11-17',
+    type: 'feature',
+    priority: 'high',
+    content: '',
+    slug: '2025-11-17-feature-x',
+  },
+  // ... more entries
+];
+
+<Changelog 
+  entries={entries}
+  getEntryUrl={(slug) => `/changelog/${slug}`}
+/>
+```
+

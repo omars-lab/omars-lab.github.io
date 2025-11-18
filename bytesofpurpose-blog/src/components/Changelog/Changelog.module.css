@@ -1,0 +1,954 @@
+.statusSection {
+  margin-bottom: 3rem;
+}
+
+.statusTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.entriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.entryCard {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: var(--ifm-background-color);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.entryCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.entryHeader {
+  margin-bottom: 1rem;
+}
+
+.entryTitle {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.entryTitle a {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+
+.entryTitle a:hover {
+  color: var(--ifm-link-color);
+  text-decoration: underline;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badgePlanned {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.badgeInProgress {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.badgeCompleted {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.badgeCancelled {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.badgeRefactoring {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.badgeFeature {
+  background-color: #e1f5fe;
+  color: #0277bd;
+}
+
+.badgeBugfix {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.badgeDocumentation {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.badgeInfrastructure {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+.badgeOptimization {
+  background-color: #e8eaf6;
+  color: #3f51b5;
+}
+
+.badgeLow {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.badgeMedium {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.badgeHigh {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.badgeCritical {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+.badgeDefault {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+}
+
+.entryDescription {
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.entryMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+}
+
+.metaItem strong {
+  margin-right: 0.5rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+@media (max-width: 768px) {
+  .entriesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Container */
+.changelogContainer {
+  max-width: 100% !important;
+  padding-left: var(--ifm-spacing-horizontal);
+  padding-right: var(--ifm-spacing-horizontal);
+}
+
+/* Header Section */
+.headerSection {
+  margin-bottom: 2rem;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.toggleButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+.toggleButtonActive {
+  background: var(--ifm-color-primary);
+  color: white;
+  border-color: var(--ifm-color-primary);
+}
+
+.toggleButtonActive:hover {
+  background: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+}
+
+/* Heatmap Section */
+.heatmapSection {
+  margin-bottom: 3rem;
+}
+
+.heatmapTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.heatmapContainer {
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.heatmapMonths {
+  display: none; /* Hide month labels for week view */
+}
+
+.heatmapWrapper {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 1rem;
+}
+
+.heatmapDays {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 50px;
+}
+
+.dayLabel {
+  height: 11px;
+  font-size: 0.7rem;
+  color: var(--ifm-color-emphasis-600);
+  text-align: right;
+  padding-right: 4px;
+  padding-top: 2px;
+  line-height: 11px;
+}
+
+.heatmapGrid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  align-items: flex-start;
+}
+
+.yearGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.yearHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  z-index: 2;
+}
+
+.yearLine {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  height: 2px;
+  background: var(--ifm-color-emphasis-400);
+  z-index: 1;
+}
+
+.yearLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-800);
+  white-space: nowrap;
+  background: var(--ifm-background-color);
+  padding: 2px 6px;
+  z-index: 3;
+  position: relative;
+}
+
+.quarterHeader {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  display: flex;
+  gap: 0;
+  align-items: center;
+  height: 16px;
+  z-index: 2;
+}
+
+.quarterHeaderItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.quarterLine {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ifm-color-emphasis-300);
+  z-index: 1;
+}
+
+.quarterLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
+  white-space: nowrap;
+  background: var(--ifm-background-color);
+  padding: 1px 3px;
+  z-index: 2;
+  position: relative;
+}
+
+.monthsRow {
+  display: flex;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.heatmapMonthCell {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.heatmapMonthCell:hover {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.heatmapMonthCell.currentMonth {
+  outline: 2px solid var(--ifm-color-primary-dark);
+  outline-offset: 1px;
+}
+
+.heatmapMonthCell.selected {
+  outline: 3px solid var(--ifm-color-primary-dark);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+}
+
+.heatmapCell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.heatmapCell:hover {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.heatmapCell.today {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 1px;
+}
+
+.heatmapCell.selected {
+  outline: 3px solid var(--ifm-color-primary-dark);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+}
+
+/* Empty cells (before date range) */
+.emptyCell {
+  background-color: transparent;
+  cursor: default;
+}
+
+.emptyCell:hover {
+  outline: none;
+  transform: none;
+}
+
+/* Intensity levels - GitHub-style colors (default/development - green) */
+.intensity0,
+.developmentIntensity0 {
+  background-color: #ebedf0;
+}
+
+.intensity1,
+.developmentIntensity1 {
+  background-color: #9be9a8;
+}
+
+.intensity2,
+.developmentIntensity2 {
+  background-color: #40c463;
+}
+
+.intensity3,
+.developmentIntensity3 {
+  background-color: #30a14e;
+}
+
+.intensity4,
+.developmentIntensity4 {
+  background-color: #216e39;
+}
+
+/* Content intensity levels - Blue color scheme */
+.contentIntensity0 {
+  background-color: #ebedf0;
+}
+
+.contentIntensity1 {
+  background-color: #a5d8ff;
+}
+
+.contentIntensity2 {
+  background-color: #4dabf7;
+}
+
+.contentIntensity3 {
+  background-color: #339af0;
+}
+
+.contentIntensity4 {
+  background-color: #1c7ed6;
+}
+
+/* Dark mode intensity levels - Development (green) */
+[data-theme='dark'] .intensity0,
+[data-theme='dark'] .developmentIntensity0 {
+  background-color: #161b22;
+}
+
+[data-theme='dark'] .intensity1,
+[data-theme='dark'] .developmentIntensity1 {
+  background-color: #0e4429;
+}
+
+[data-theme='dark'] .intensity2,
+[data-theme='dark'] .developmentIntensity2 {
+  background-color: #006d32;
+}
+
+[data-theme='dark'] .intensity3,
+[data-theme='dark'] .developmentIntensity3 {
+  background-color: #26a641;
+}
+
+[data-theme='dark'] .intensity4,
+[data-theme='dark'] .developmentIntensity4 {
+  background-color: #39d353;
+}
+
+/* Dark mode intensity levels - Content (blue) */
+[data-theme='dark'] .contentIntensity0 {
+  background-color: #161b22;
+}
+
+[data-theme='dark'] .contentIntensity1 {
+  background-color: #0c3a5c;
+}
+
+[data-theme='dark'] .contentIntensity2 {
+  background-color: #1864ab;
+}
+
+[data-theme='dark'] .contentIntensity3 {
+  background-color: #339af0;
+}
+
+[data-theme='dark'] .contentIntensity4 {
+  background-color: #4dabf7;
+}
+
+/* Heatmap Container */
+.heatmapContainer {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Date Overlay Wrapper - Only spans rows width */
+.dateOverlayWrapper {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* Heatmap Rows Section - Contains DateOverlay and rows */
+.heatmapRowsSection {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shared Headers (Year/Quarter overlay) - Fixed at top */
+.sharedHeaders {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0;
+  padding-top: 50px; /* Space for year/quarter labels */
+  position: relative;
+  z-index: 10;
+}
+
+.sharedHeadersContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.sharedHeadersSpacer {
+  flex: 0 0 200px; /* Match sidebar width */
+}
+
+.sharedHeaders .heatmapGrid {
+  padding-top: 0; /* Remove extra padding since we have padding-top on container */
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Heatmap Rows and Legends - Contains rows on left and legends on right */
+.heatmapRowsAndLegends {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Heatmap Rows Container - Below DateOverlay */
+.heatmapRowsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* Small gap between rows, matching square spacing */
+  padding-top: 0; /* No padding needed - DateOverlay is separate above */
+}
+
+/* Legends Section - Right side */
+.legendsSection {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* Small gap between legends, matching square spacing */
+  align-items: flex-end;
+  align-content: flex-start; /* Start from top */
+  justify-content: flex-start; /* Start from top */
+  align-self: flex-start; /* Ensure section itself starts from top */
+}
+
+.legendsSectionHeader {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  color: var(--ifm-heading-color);
+  white-space: nowrap;
+  text-align: right;
+  width: 100%;
+  flex-shrink: 0; /* Don't shrink */
+  line-height: 1.2; /* Tighter line height */
+}
+
+/* Heatmap Row styles are defined in HeatmapRow.module.css */
+
+/* Legend - positioned on the left */
+.categoryLegend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.legendLabel {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.legendCells {
+  display: flex;
+  gap: 3px;
+}
+
+.legendCell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}
+
+/* Legacy legend (for backward compatibility) */
+.heatmapLegend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* Tooltip */
+.heatmapTooltip {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  padding: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px;
+  max-width: 300px;
+  pointer-events: none;
+  margin-bottom: 8px;
+}
+
+.tooltipDate {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-heading-color);
+  font-size: 0.875rem;
+}
+
+.tooltipCount {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 0.5rem;
+}
+
+.tooltipEntries {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.tooltipEntry {
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltipMore {
+  margin-top: 0.25rem;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-500);
+}
+
+/* Selected Date Info */
+.selectedDateInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.clearFilter {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.clearFilter:hover {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+/* Quarters Section */
+.quartersSection {
+  margin-top: 3rem;
+}
+
+.quartersTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+/* Filters Container */
+.filtersContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  align-items: center;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  white-space: nowrap;
+}
+
+.filterSelect {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filterSelect:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+}
+
+/* Category Quarter Section */
+.categoryQuarterSection {
+  margin-bottom: 3rem;
+}
+
+.categoryQuarterTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+  color: var(--ifm-heading-color);
+}
+
+.quartersScrollContainer {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  /* Show max 3 columns at a time */
+  width: 100%;
+}
+
+.quartersScrollContainer::-webkit-scrollbar {
+  height: 8px;
+}
+
+.quartersScrollContainer::-webkit-scrollbar-track {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 4px;
+}
+
+.quartersScrollContainer::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-emphasis-400);
+  border-radius: 4px;
+}
+
+.quartersScrollContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-emphasis-600);
+}
+
+.quarterColumn {
+  flex: 0 0 calc(33.333% - 1rem);
+  min-width: 350px;
+  max-width: calc(33.333% - 1rem);
+  scroll-snap-align: start;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.quarterColumn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quarterSelected {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+}
+
+.quarterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.quarterTitle {
+  font-size: 1.25rem;
+  margin: 0;
+  color: var(--ifm-heading-color);
+}
+
+.quarterCount {
+  font-size: 0.875rem;
+  color: var(--ifm-color-emphasis-600);
+  background: var(--ifm-color-emphasis-100);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.quarterEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.quarterEntries::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quarterEntries::-webkit-scrollbar-track {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 3px;
+}
+
+.quarterEntries::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-emphasis-400);
+  border-radius: 3px;
+}
+
+.quarterStatusGroup {
+  margin-bottom: 1rem;
+}
+
+.quarterStatusTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--ifm-heading-color);
+  text-transform: capitalize;
+}
+
+.quarterCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quarterCards .entryCard {
+  margin: 0;
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .heatmapContainer {
+    padding: 1rem;
+  }
+
+  .heatmapCell {
+    width: 10px;
+    height: 10px;
+  }
+
+  .legendCell {
+    width: 10px;
+    height: 10px;
+  }
+
+  .heatmapLegend {
+    font-size: 0.7rem;
+  }
+
+  .heatmapTooltip {
+    max-width: 250px;
+    font-size: 0.7rem;
+  }
+
+  .quarterColumn {
+    flex: 0 0 calc(100% - 1rem);
+    min-width: 300px;
+    max-width: calc(100% - 1rem);
+  }
+
+  .quarterEntries {
+    max-height: 60vh;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .quarterColumn {
+    flex: 0 0 calc(50% - 1rem);
+    max-width: calc(50% - 1rem);
+  }
+}
+

@@ -1,0 +1,163 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Changelog/Structure" />
+
+# Changelog Component Structure
+
+The Changelog component displays changelog entries in a visual heatmap format with horizontal scrolling quarter lists.
+
+## Layout Structure
+
+### Heatmap Section
+
+The heatmap visualizes activity over time using a month-based granularity:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    [Year Label]                         │
+│  ────────────────────────────────────────────────────   │ (Year line spanning all months)
+│                                                         │
+│  [Q1]      [Q2]      [Q3]      [Q4]                     │ (Quarter labels)
+│  ────      ────      ────      ────                     │ (Quarter lines)
+│                                                         │
+│  [][][][]  [][][][]  [][][][]  [][][][]                 │ (Month squares - 12 per year)
+└─────────────────────────────────────────────────────────┘
+```
+
+#### Year Grouping
+- **Year Label**: Centered above all months of that year
+- **Year Line**: Horizontal line spanning from first to last month of the year
+- **Position**: Absolutely positioned at the top of each year group
+
+#### Quarter Grouping
+- **Quarter Labels**: Q1, Q2, Q3, Q4 positioned below the year line
+- **Quarter Lines**: Horizontal lines spanning each quarter's 3 months
+- **Position**: Below year header, above month squares
+
+#### Month Squares
+- **Size**: 20px × 20px with 2px gap between squares
+- **Color Intensity**: 5 levels (0-4) based on entry count
+  - Level 0: No entries (light gray)
+  - Level 1-4: Increasing intensity (light to dark green)
+- **Current Month**: Highlighted with border
+- **Selected Quarter**: All months in selected quarter highlighted
+
+### Quarters List Section
+
+Horizontal scrolling container showing up to 3 quarters at a time:
+
+```
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│ 2025-Q4  │  │ 2025-Q3  │  │ 2025-Q2  │  ...
+│ (3)      │  │ (2)      │  │ (1)      │
+│          │  │          │  │          │
+│ Completed│  │ Planned  │  │ In Prog  │
+│ [Card]   │  │ [Card]   │  │ [Card]   │
+│ [Card]   │  │          │  │          │
+└──────────┘  └──────────┘  └──────────┘
+```
+
+#### Quarter Columns
+- **Width**: 33.33% on desktop (3 visible), 50% on tablet (2 visible), 100% on mobile (1 visible)
+- **Height**: Max 70vh with vertical scrolling within each column
+- **Content**: Entries grouped by status (completed, in-progress, planned, cancelled)
+
+#### Entry Cards
+- **Badges**: Status, Type, Priority
+- **Metadata**: Component, Inception date, Execution date
+- **Links**: Navigate to individual changelog entry pages
+
+## Interaction
+
+### Heatmap Interactions
+1. **Hover**: Shows tooltip with month name, entry count, and entry titles
+2. **Click**: Scrolls to corresponding quarter in the list view
+3. **Selection**: Highlights all months in the selected quarter
+
+### Quarter List Interactions
+1. **Horizontal Scroll**: Smooth scrolling to navigate between quarters
+2. **Vertical Scroll**: Within each quarter column to view all entries
+3. **Auto-scroll**: When clicking heatmap cell, automatically scrolls to that quarter
+
+## Data Structure
+
+### Month Cell
+```typescript
+interface MonthCell {
+  monthStart: Date;    // Start of month
+  monthEnd: Date;      // End of month
+  count: number;       // Number of entries in this month
+  entries: ChangelogEntry[];  // Entries for this month
+  year: number;        // Year (e.g., 2025)
+  month: number;       // Month index (0-11)
+  quarter: number;    // Quarter number (1-4)
+}
+```
+
+### Quarter Data
+```typescript
+interface QuarterData {
+  quarter: string;     // "2025-Q4"
+  year: number;
+  quarterNum: number;
+  entries: ChangelogEntry[];
+  startDate: Date;
+  endDate: Date;
+}
+```
+
+## Date Handling
+
+- **XX Dates**: Dates with "XX" (e.g., `2025-12-XX`) are normalized to the first day of the month
+- **Date Range**: Automatically calculated from all entries, with 3-month future buffer
+- **Grouping**: Entries grouped by month, then organized into quarters and years
+
+## Responsive Behavior
+
+- **Desktop**: 3 quarter columns visible, full heatmap width
+- **Tablet**: 2 quarter columns visible
+- **Mobile**: 1 quarter column visible, heatmap scrolls horizontally
+
+## Color Scheme
+
+### Light Mode
+- Intensity 0: `#ebedf0` (light gray)
+- Intensity 1: `#9be9a8` (light green)
+- Intensity 2: `#40c463` (medium green)
+- Intensity 3: `#30a14e` (dark green)
+- Intensity 4: `#216e39` (darkest green)
+
+### Dark Mode
+- Intensity 0: `#161b22` (dark gray)
+- Intensity 1: `#0e4429` (dark green)
+- Intensity 2: `#006d32` (medium green)
+- Intensity 3: `#26a641` (bright green)
+- Intensity 4: `#39d353` (brightest green)
+
+## Example Usage
+
+```tsx
+import { Changelog } from '@site/src/components/Changelog';
+// ChangelogEntry type is available from './types'
+
+const entries = [
+  {
+    title: 'Feature X',
+    description: 'Added new feature',
+    status: 'completed',
+    inception_date: '2025-11-17',
+    execution_date: '2025-11-17',
+    type: 'feature',
+    priority: 'high',
+    content: '',
+    slug: '2025-11-17-feature-x',
+  },
+  // ... more entries
+];
+
+<Changelog 
+  entries={entries}
+  getEntryUrl={(slug) => `/changelog/${slug}`}
+/>
+```
+

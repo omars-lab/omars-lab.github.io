@@ -34,3 +34,6 @@ test/e2e/screenshots/*.png
 
 *storybook.log
 storybook-static
+
+# Generated changelog data
+src/components/Changelog/changelog-data.json

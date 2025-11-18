@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import HomepageFeatures from './index';
-import { BrowserOnlyMock } from '../../stories/mocks/BrowserOnlyMock';
 
 const meta = {
   title: 'Components/HomepageFeatures',
@@ -17,13 +16,6 @@ Each feature includes an image, title, description, and a link button.
     },
   },
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <BrowserOnlyMock>
-        <Story />
-      </BrowserOnlyMock>
-    ),
-  ],
 } satisfies Meta<typeof HomepageFeatures>;
 
 export default meta;

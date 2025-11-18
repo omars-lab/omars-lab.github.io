@@ -48,6 +48,41 @@ const config: StorybookConfig = {
     const rootDir = path.resolve(configDir, '..');
     config.resolve.alias!['@site'] = rootDir;
     
+    // Optimize bundle sizes - merge with existing optimization settings
+    config.optimization = config.optimization || {};
+    
+    // Enable tree shaking (usedExports is already enabled by Storybook, but ensure it's on)
+    config.optimization.usedExports = true;
+    
+    // Split chunks for better caching and smaller initial bundles
+    // Merge with existing splitChunks config if present
+    const existingSplitChunks = config.optimization.splitChunks || {};
+    config.optimization.splitChunks = {
+      ...existingSplitChunks,
+      chunks: existingSplitChunks.chunks || 'all',
+      maxInitialRequests: existingSplitChunks.maxInitialRequests || 25,
+      minSize: existingSplitChunks.minSize || 20000,
+      cacheGroups: {
+        ...existingSplitChunks.cacheGroups,
+        // Separate large libraries into their own chunks for better caching
+        forceGraph: {
+          name: 'force-graph',
+          test: /[\\/]node_modules[\\/](react-force-graph|force-graph|d3-)[\\/]/,
+          chunks: 'all',
+          priority: 30,
+          enforce: true,
+        },
+        // Separate Storybook addons (they're already split, but ensure they stay separate)
+        storybookAddons: {
+          name: 'storybook-addons',
+          test: /[\\/]node_modules[\\/]@storybook[\\/]addon-[\\/]/,
+          chunks: 'all',
+          priority: 25,
+          enforce: true,
+        },
+      },
+    };
+    
     // Mock Docusaurus-specific modules for Storybook
     // These mocks are located in src/stories/mocks/ and documented in src/stories/mocks/README.md
     // BrowserOnly is used to prevent SSR, but Storybook always runs in browser
@@ -101,6 +136,21 @@ const config: StorybookConfig = {
           },
         ],
       });
+      
+      // Ensure MDX files are processed correctly
+      // Find the MDX rule and ensure it handles TypeScript properly
+      const mdxRuleIndex = config.module.rules.findIndex(
+        (rule: any) => rule && typeof rule === 'object' && rule.test && rule.test.toString().includes('mdx')
+      );
+      
+      if (mdxRuleIndex !== -1) {
+        const mdxRule = config.module.rules[mdxRuleIndex];
+        // Ensure MDX loader processes files correctly
+        if (mdxRule && typeof mdxRule === 'object' && Array.isArray(mdxRule.use)) {
+          // MDX rule should already be configured by @storybook/addon-essentials
+          // Just ensure it's not conflicting
+        }
+      }
     }
     
     return config;
