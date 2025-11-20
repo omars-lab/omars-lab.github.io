@@ -37,3 +37,6 @@ storybook-static
 
 # Generated changelog data
 src/components/Changelog/changelog-data.json
+
+# Generated changelog pages (copied from changelog/ directory)
+src/pages/changelog/

@@ -8,6 +8,14 @@
   margin-left: auto;
 }
 
+/* Mobile: Left align legend */
+@media (max-width: 768px) {
+  .legend {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+}
+
 .legendLabel {
   font-size: 0.75rem;
   white-space: nowrap;

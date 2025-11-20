@@ -111,6 +111,32 @@ const darkTheme = themes.dracula;
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/designs/',
         },
       ],
+      // Serve changelog markdown files as blog posts
+      // Similar to how designs blog plugin supports multiple instances with id
+      [
+        '@docusaurus/plugin-content-blog',
+        {
+          /**
+           * Required for any multi-instance plugin
+           */
+          id: 'changelog',
+          /**
+           * URL route for the changelog section of your site.
+           * *DO NOT* include a trailing slash.
+           */
+          routeBasePath: 'changelog',
+          /**
+           * Path to data on filesystem relative to site dir.
+           */
+          path: './changelog',
+          blogSidebarTitle: 'Changelog Entries',
+          blogSidebarCount: 'ALL',
+          // remarkPlugins: [require('mdx-mermaid')],
+          showReadingTime: true,
+          editUrl:
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/changelog/',
+        },
+      ],
     ],
 
     themes: [

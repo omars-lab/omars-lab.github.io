@@ -46,6 +46,7 @@ export function HeatmapRow({
             return (
               <div 
                 key={year} 
+                data-year={year}
                 className={styles.yearGroup}
                 style={{ width: `${yearGroupWidth}px` }}
               >

@@ -9,8 +9,15 @@
 
 .dateOverlayContent {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: visible; /* Parent container handles scrolling on mobile */
   overflow-y: visible;
+}
+
+/* Mobile: Remove individual scrolling - parent handles it */
+@media (max-width: 768px) {
+  .dateOverlayContent {
+    overflow-x: visible; /* Parent handles scrolling */
+  }
 }
 
 .dateOverlaySpacer {
@@ -32,6 +39,13 @@
   overflow-x: visible;
   overflow-y: visible;
   align-items: flex-start;
+}
+
+/* Mobile: Ensure no individual scrolling - parent handles it */
+@media (max-width: 768px) {
+  .heatmapGrid {
+    overflow-x: visible; /* Parent handles scrolling */
+  }
 }
 
 .yearGroup {
