@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="blog-wrapper blog-post-page plugin-blog plugin-id-changelog" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Component Creation - Changelog Component | Bytes of Purpose</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" name="twitter:image" content="https://blog.bytesofpurpose.com/img/logo.svg"><meta data-rh="true" property="og:url" content="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="twitter:site" content="@rythome"><meta data-rh="true" name="twitter:creator" content="@rythome"><meta data-rh="true" property="og:site_name" content="Bytes of Purpose"><meta data-rh="true" property="og:locale" content="en_US"><meta data-rh="true" property="og:title" content="Component Creation - Changelog Component | Bytes of Purpose"><meta data-rh="true" name="description" content="Create and refine the Changelog React component with GitHub-style heatmap visualization and modular architecture"><meta data-rh="true" property="og:description" content="Create and refine the Changelog React component with GitHub-style heatmap visualization and modular architecture"><meta data-rh="true" property="og:type" content="article"><meta data-rh="true" property="article:published_time" content="2025-11-16T00:00:00.000Z"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component" hreflang="en"><link data-rh="true" rel="alternate" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component","mainEntityOfPage":"https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component","url":"https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component","headline":"Component Creation - Changelog Component","name":"Component Creation - Changelog Component","description":"Create and refine the Changelog React component with GitHub-style heatmap visualization and modular architecture","datePublished":"2025-11-16T00:00:00.000Z","author":[],"keywords":[],"isPartOf":{"@type":"Blog","@id":"https://blog.bytesofpurpose.com/changelog","name":"Blog"}}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Bytes of Purpose Atom Feed">
+
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79YSEH7T7X"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-79YSEH7T7X",{})</script>
+
+
+
+<link rel="alternate" type="application/rss+xml" href="/designs/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed">
+<link rel="alternate" type="application/rss+xml" href="/changelog/rss.xml" title="Bytes of Purpose RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/changelog/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.36e8f468.css">
+<script src="/assets/js/runtime~main.6953afa1.js" defer="defer"></script>
+<script src="/assets/js/main.491fb9aa.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/logo.svg"><link rel="preload" as="image" href="/img/logo_dark.svg"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo_dark.svg" alt="BytesOfPurpose Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">BytesOfPurpose</b></a><a class="navbar__item navbar__link" href="/docs/welcome/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Posts</a><a class="navbar__item navbar__link" href="/designs">Designs</a><a class="navbar__item navbar__link" href="/storybook">Components</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/changelog">Changelog</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item"><a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></div><b class="navbar__title text--truncate">Buy Me a Coffee?</b></a></div><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class="row"><aside class="col col--3"><nav class="sidebar_re4s thin-scrollbar" aria-label="Blog recent posts navigation"><div class="sidebarItemTitle_pO2u margin-bottom--md">Changelog Entries</div><div role="group"><h3 class="yearGroupHeading_rMGB">2025</h3><ul class="sidebarItemList_Yudw clean-list"><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/content/2025-XX-XX-content-post-future-content-ideas">Future Content Ideas</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/content/2025-XX-XX-content-post-knowledge-agents-design">Blog Content - Knowledge Agents Design</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams">Mermaid-Based Components for Blog</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-component-enhancement-graph-component">Blog Graph Component</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-documentation-component-development-roadmap">Component Development Roadmap</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration">Infrastructure Improvements</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience">Developer Experience Improvements</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-infrastructure-improvement-performance">Performance Optimizations</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality">Testing &amp; Quality Improvements</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis">Blog Mechanic - Journey Analysis</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-mechanic-establishment-link-management">Blogging Mechanism - Link Management</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-mechanic-establishment-search">Blogging Mechanism - Search</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-mechanic-establishment-seo">Blogging Mechanism - SEO</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-optimization-bundle-size-storybook">Bundle Size Optimization</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog">Plan - Leveraging GenAI to Enhance Blog</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-structure-changelog-roadmap">Blog Structure - Changelog &amp; Roadmap</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-structure-habits">Blog Structure - Habits</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-structure-techniques">Blog Structure - Techniques</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/README">Changelog Directory Structure</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/development/2025-XX-XX-component-refactoring-graph-renderer">GraphRenderer Component Refactoring Plan</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/11/17/development/component-refactoring-graph-component">Graph Component Refactoring Summary</a></li><li class="sidebarItem__DBe"><a aria-current="page" class="sidebarItemLink_mo7H sidebarItemLinkActive_I1ZP" href="/changelog/2025/11/16/development/component-creation-changelog-component">Component Creation - Changelog Component</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/11/16/development/mechanic-establishment-storybook">Blogging Mechanism - Storybook Component Documentation</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/11/13/development/component-creation-graph-renderer">Graph Renderer Component Creation</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/09/23/development/component-creation-card-timeline">Card and Timeline Components Creation</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/09/10/development/mechanic-establishment-frontmatter-management">Blogging Mechanism - Frontmatter Management</a></li><li class="sidebarItem__DBe"><a class="sidebarItemLink_mo7H" href="/changelog/2025/01/15/development/component-creation-svg-kanban">SVG Kanban Board Component</a></li></ul></div></nav></aside><main class="col col--7"><article class=""><header><h1 class="title_f1Hy">Component Creation - Changelog Component</h1><div class="container_mt6G margin-vert--md"><time datetime="2025-11-16T00:00:00.000Z">November 16, 2025</time> · <!-- -->11 min read</div></header><div id="__blog-post-container" class="markdown"><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<p>Create a comprehensive Changelog React component with:</p>
+<ul>
+<li class="">GitHub-style heatmap visualization (month/quarter/year granularity)</li>
+<li class="">Separate heatmap rows for content vs development categories</li>
+<li class="">Shared date overlay (year/quarter headers) above heatmap rows</li>
+<li class="">Legend section positioned to the right of heatmap rows</li>
+<li class="">Modular component architecture for maintainability</li>
+<li class="">Quarter-based list view with filtering</li>
+<li class="">Responsive design and proper alignment</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-initial-changelog-component-created-2025-01-20">✅ Initial Changelog Component Created (2025-01-20)<a href="#-initial-changelog-component-created-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Initial Changelog Component Created (2025-01-20)" title="Direct link to ✅ Initial Changelog Component Created (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025</p>
+<p><strong>Key Accomplishments:</strong></p>
+<ul>
+<li class="">Created initial Changelog component with heatmap visualization</li>
+<li class="">Implemented month/quarter/year grouping and display</li>
+<li class="">Added quarter-based list view with horizontal scrolling</li>
+<li class="">Integrated with changelog data generation system</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-component-modularization--refinement-2025-01-20">✅ Component Modularization &amp; Refinement (2025-01-20)<a href="#-component-modularization--refinement-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Component Modularization &amp; Refinement (2025-01-20)" title="Direct link to ✅ Component Modularization &amp; Refinement (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025 (Iterative refinement)</p>
+<p><strong>Key Accomplishments:</strong></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="component-architecture">Component Architecture<a href="#component-architecture" class="hash-link" aria-label="Direct link to Component Architecture" title="Direct link to Component Architecture" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Modularized Changelog component</strong> into sub-components:<!-- -->
+<ul>
+<li class=""><code>DateOverlay/</code> - Shared year and quarter headers above heatmap rows</li>
+<li class=""><code>HeatmapRow/</code> - Individual heatmap row for each category (content/development)</li>
+<li class=""><code>LegendSidebar/</code> - Title and legend for each heatmap row</li>
+<li class=""><code>Legend/</code> - Intensity scale legend component</li>
+<li class=""><code>Filters/</code> - Filter dropdowns (status, type, priority, category)</li>
+<li class=""><code>QuarterSection/</code> - Quarterly entries display with filtering</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="layout--alignment">Layout &amp; Alignment<a href="#layout--alignment" class="hash-link" aria-label="Direct link to Layout &amp; Alignment" title="Direct link to Layout &amp; Alignment" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Separated heatmap rows from legends</strong>:<!-- -->
+<ul>
+<li class="">Heatmap rows on left side (flex: 1)</li>
+<li class="">Legends section on right side (fixed 200px width)</li>
+<li class="">DateOverlay positioned above rows, spanning only rows width</li>
+<li class="">Legend section header (&quot;Legend&quot;) aligned with DateOverlay</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="heatmap-visualization">Heatmap Visualization<a href="#heatmap-visualization" class="hash-link" aria-label="Direct link to Heatmap Visualization" title="Direct link to Heatmap Visualization" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Two separate heatmap rows</strong>:<!-- -->
+<ul>
+<li class="">Content row (blue color scheme)</li>
+<li class="">Development row (green color scheme)</li>
+<li class="">Each row has its own title and legend on the right</li>
+<li class="">Shared date overlay (year/quarter headers) above both rows</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="spacing--alignment">Spacing &amp; Alignment<a href="#spacing--alignment" class="hash-link" aria-label="Direct link to Spacing &amp; Alignment" title="Direct link to Spacing &amp; Alignment" translate="no">​</a></h4>
+<ul>
+<li class="">
+<p><strong>Quarter gaps</strong>:</p>
+<ul>
+<li class="">Added 4px gap divs between quarters (matching heatmap squares)</li>
+<li class="">CSS gap (2px) applies to gap divs, creating 8px total visual gap</li>
+<li class="">Updated width calculations to account for quarter gaps (8px total)</li>
+<li class="">Quarter bars align perfectly with heatmap squares below</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Row spacing</strong>:</p>
+<ul>
+<li class="">Minimal 2px gap between heatmap rows (matching square spacing)</li>
+<li class="">Minimal 2px gap between legend entries</li>
+<li class="">Removed excessive padding/margins</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="alignment-fixes">Alignment Fixes<a href="#alignment-fixes" class="hash-link" aria-label="Direct link to Alignment Fixes" title="Direct link to Alignment Fixes" translate="no">​</a></h4>
+<ul>
+<li class="">
+<p>Fixed quarter bar alignment with heatmap squares:</p>
+<ul>
+<li class="">Accounted for CSS gap (2px) in width calculations</li>
+<li class="">Quarter gap divs (4px) + CSS gap (2px on each side) = 8px total</li>
+<li class="">Year and quarter lines span correct widths</li>
+<li class="">Quarter lines don&#x27;t extend beyond their containers (overflow: hidden)</li>
+</ul>
+</li>
+<li class="">
+<p>Fixed legend alignment:</p>
+<ul>
+<li class="">Legends anchored to top-right (not bottom)</li>
+<li class="">Added &quot;Legend&quot; header aligned with DateOverlay</li>
+<li class="">Proper flex alignment (align-content: flex-start, justify-content: flex-start)</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="date-overlay">Date Overlay<a href="#date-overlay" class="hash-link" aria-label="Direct link to Date Overlay" title="Direct link to Date Overlay" translate="no">​</a></h4>
+<ul>
+<li class="">Year labels and lines span full year width (including quarter gaps)</li>
+<li class="">Quarter labels and lines span individual quarter widths</li>
+<li class="">Proper positioning above heatmap rows</li>
+<li class="">Gap divs match heatmap row structure exactly</li>
+<li class="">Year labels use Highlight component with gradient background</li>
+<li class="">Year line positioned behind year label (z-index: 0)</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="additional-enhancements">Additional Enhancements<a href="#additional-enhancements" class="hash-link" aria-label="Direct link to Additional Enhancements" title="Direct link to Additional Enhancements" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Dynamic Date Range</strong>: Always shows 1 year ago, this year, and next year (dynamically calculated)</li>
+<li class=""><strong>Current Month Indicator</strong>: Added to legend with bordered square and month/year label</li>
+<li class=""><strong>Year Highlighting</strong>: Year labels use Highlight component for visual emphasis</li>
+<li class=""><strong>Legend Header</strong>: &quot;Legend&quot; header anchored to top-right with minimal vertical space</li>
+</ul>
+<p><strong>Components Created:</strong></p>
+<ul>
+<li class=""><strong><code>src/components/Changelog/Changelog.tsx</code></strong> - Main component orchestrating all sub-components</li>
+<li class=""><strong><code>src/components/Changelog/DateOverlay/DateOverlay.tsx</code></strong> - Year and quarter headers</li>
+<li class=""><strong><code>src/components/Changelog/HeatmapRow/HeatmapRow.tsx</code></strong> - Individual heatmap row</li>
+<li class=""><strong><code>src/components/Changelog/LegendSidebar/LegendSidebar.tsx</code></strong> - Title and legend wrapper</li>
+<li class=""><strong><code>src/components/Changelog/Legend/Legend.tsx</code></strong> - Intensity scale legend</li>
+<li class=""><strong><code>src/components/Changelog/Filters/ChangelogFilters.tsx</code></strong> - Filter dropdowns</li>
+<li class=""><strong><code>src/components/Changelog/QuarterSection/QuarterSection.tsx</code></strong> - Quarterly entries display</li>
+</ul>
+<p><strong>CSS Modules Created:</strong></p>
+<ul>
+<li class="">Each component has its own <code>.module.css</code> file for scoped styling</li>
+<li class="">Proper alignment and spacing rules</li>
+<li class="">Responsive design considerations</li>
+</ul>
+<p><strong>Key Technical Details:</strong></p>
+<ul>
+<li class="">Width calculations account for:<!-- -->
+<ul>
+<li class="">Month cells: 20px each</li>
+<li class="">Month gaps: 2px between months (CSS gap)</li>
+<li class="">Quarter gaps: 4px gap div + 2px CSS gap on each side = 8px total</li>
+<li class="">Year width = sum of quarter widths + (quarters.length - 1) × 8px</li>
+</ul>
+</li>
+<li class="">Date range: Dynamically shows 1 year ago, this year, and next year</li>
+<li class="">Year labels use Highlight component with gradient background</li>
+<li class="">Year line z-index: 0 (behind label), label z-index: 3 (above line)</li>
+<li class="">Legend includes current month indicator with bordered square and month/year label</li>
+</ul>
+<p><strong>Storybook Stories:</strong></p>
+<ul>
+<li class=""><strong><code>Changelog.stories.tsx</code></strong>: Default, SingleEntry, ManyEntries, ContentOnly, DevelopmentOnly stories</li>
+<li class=""><strong><code>Changelog.mdx</code></strong>: Comprehensive documentation of component structure, layout, and behavior</li>
+<li class="">Stories include sample entries with proper category assignments (content/development)</li>
+</ul>
+<p><strong>Related Links:</strong></p>
+<ul>
+<li class=""><a href="/assets/files/Changelog-69883cfabcd25d3f738a263ee348bb08.tsx" target="_blank" class="">Changelog Component</a></li>
+<li class=""><a href="/assets/files/Changelog.stories-946d2d682a7ebc776e42859cbe89bfcc.tsx" target="_blank" class="">Changelog Stories</a></li>
+<li class=""><a class="" href="/changelog/2025/11/src/stories/Changelog.mdx">Changelog Documentation</a></li>
+<li class=""><a class="" href="/changelog">Changelog Page</a></li>
+<li class=""><a class="" href="/changelog/development/2025-XX-XX-structure-changelog-roadmap">Changelog System Entry</a></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-mobile-responsiveness--ux-improvements-2025-01-20">✅ Mobile Responsiveness &amp; UX Improvements (2025-01-20)<a href="#-mobile-responsiveness--ux-improvements-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Mobile Responsiveness &amp; UX Improvements (2025-01-20)" title="Direct link to ✅ Mobile Responsiveness &amp; UX Improvements (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025 (Iterative refinement)</p>
+<p><strong>Key Accomplishments:</strong></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="mobile-card-design">Mobile Card Design<a href="#mobile-card-design" class="hash-link" aria-label="Direct link to Mobile Card Design" title="Direct link to Mobile Card Design" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Minimal, horizontally wide rectangular cards</strong>:<!-- -->
+<ul>
+<li class="">Reduced card padding from <code>1.5rem</code> to <code>0.75rem 1rem</code> (horizontal emphasis)</li>
+<li class="">Reduced border radius from <code>8px</code> to <code>6px</code> for tighter appearance</li>
+<li class="">Reduced gap between cards from <code>1rem</code> to <code>0.75rem</code></li>
+<li class="">Disabled hover transform on mobile (no <code>translateY</code>)</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="typography-optimization">Typography Optimization<a href="#typography-optimization" class="hash-link" aria-label="Direct link to Typography Optimization" title="Direct link to Typography Optimization" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Smaller font sizes on mobile</strong>:<!-- -->
+<ul>
+<li class="">Title: <code>1.25rem</code> → <code>1rem</code></li>
+<li class="">Description: <code>0.875rem</code> with 2-line clamp and ellipsis</li>
+<li class="">Meta: <code>0.875rem</code> → <code>0.75rem</code></li>
+<li class="">Status titles: <code>1rem</code> → <code>0.875rem</code></li>
+<li class="">Quarter titles: <code>1.25rem</code> → <code>1.1rem</code></li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="badge-improvements">Badge Improvements<a href="#badge-improvements" class="hash-link" aria-label="Direct link to Badge Improvements" title="Direct link to Badge Improvements" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Compact badges</strong>:<!-- -->
+<ul>
+<li class="">Padding: <code>0.25rem 0.75rem</code> → <code>0.15rem 0.5rem</code></li>
+<li class="">Font size: <code>0.75rem</code> → <code>0.65rem</code></li>
+<li class="">Border radius: <code>12px</code> → <code>8px</code></li>
+<li class="">Tighter gap: <code>0.5rem</code> → <code>0.25rem</code></li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="layout-enhancements">Layout Enhancements<a href="#layout-enhancements" class="hash-link" aria-label="Direct link to Layout Enhancements" title="Direct link to Layout Enhancements" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Description truncation</strong>: Limited to 2 lines with ellipsis on mobile</li>
+<li class=""><strong>Meta information</strong>: Horizontal layout (<code>flex-direction: row</code>) instead of vertical</li>
+<li class=""><strong>Meta items</strong>: Inline with <code>white-space: nowrap</code> for compact display</li>
+<li class=""><strong>Quarter section</strong>: Reduced padding from <code>1.5rem</code> to <code>1rem</code> on mobile</li>
+<li class=""><strong>Quarter headers</strong>: Reduced margins and thinner borders</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="mobile-heatmap--legend-layout">Mobile Heatmap &amp; Legend Layout<a href="#mobile-heatmap--legend-layout" class="hash-link" aria-label="Direct link to Mobile Heatmap &amp; Legend Layout" title="Direct link to Mobile Heatmap &amp; Legend Layout" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Vertical stacking on mobile</strong>:<!-- -->
+<ul>
+<li class="">Legend section moves above heatmap rows (<code>order: -1</code>)</li>
+<li class="">Legend takes full width and left-aligns</li>
+<li class="">Date overlay and heatmap rows scroll together (no independent scrolling)</li>
+<li class="">Filters stack vertically with full-width dropdowns</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="filter-improvements">Filter Improvements<a href="#filter-improvements" class="hash-link" aria-label="Direct link to Filter Improvements" title="Direct link to Filter Improvements" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Mobile-friendly filters</strong>:<!-- -->
+<ul>
+<li class="">Stack vertically on mobile (<code>flex-direction: column</code>)</li>
+<li class="">Full-width dropdowns with proper box-sizing</li>
+<li class="">Smaller font sizes (<code>0.8rem</code> for labels, <code>0.875rem</code> for selects)</li>
+<li class="">Proper text wrapping and overflow handling</li>
+<li class="">Removed <code>appearance</code> defaults for better mobile compatibility</li>
+</ul>
+</li>
+</ul>
+<p><strong>CSS Files Modified:</strong></p>
+<ul>
+<li class=""><code>QuarterSection.module.css</code> - Mobile card styles, typography, badges, meta layout</li>
+<li class=""><code>Changelog.module.css</code> - Mobile heatmap/legend layout, filter styles</li>
+<li class=""><code>LegendSidebar.module.css</code> - Mobile legend alignment</li>
+<li class=""><code>Legend.module.css</code> - Mobile legend alignment</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-entrytimeline-component-creation-2025-01-20">✅ EntryTimeline Component Creation (2025-01-20)<a href="#-entrytimeline-component-creation-2025-01-20" class="hash-link" aria-label="Direct link to ✅ EntryTimeline Component Creation (2025-01-20)" title="Direct link to ✅ EntryTimeline Component Creation (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025</p>
+<p><strong>Key Accomplishments:</strong></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="timeline-visualization">Timeline Visualization<a href="#timeline-visualization" class="hash-link" aria-label="Direct link to Timeline Visualization" title="Direct link to Timeline Visualization" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Created <code>EntryTimeline</code> component</strong> to replace text-based date display with a proper timeline visualization:<!-- -->
+<ul>
+<li class=""><strong>Timeline bar</strong>: Horizontal line spanning full width (2px height, gray background)</li>
+<li class=""><strong>Inception dot</strong>: Primary color dot positioned at left (0%) on the bar</li>
+<li class=""><strong>Execution dot</strong>: Success color dot positioned at right (100%) on the bar (only shown if execution date exists)</li>
+<li class=""><strong>Duration label</strong>: Centered on the bar, showing time between inception and execution</li>
+<li class=""><strong>Date labels</strong>: Displayed below the bar, aligned with their respective dots</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="visual-layout-structure">Visual Layout Structure<a href="#visual-layout-structure" class="hash-link" aria-label="Direct link to Visual Layout Structure" title="Direct link to Visual Layout Structure" translate="no">​</a></h4>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">[●─────────────────── 5 days ───────────────────●]</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Inception                                    Execution</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Jan 15, 2025                            Jan 20, 2025</span><br></span></code></pre></div></div>
+<p><strong>Layout Components:</strong></p>
+<ol>
+<li class="">
+<p><strong>Timeline Bar</strong> (<code>.timelineBar</code>):</p>
+<ul>
+<li class="">Horizontal line (2px height) spanning full width</li>
+<li class="">Gray background (<code>var(--ifm-color-emphasis-300)</code>)</li>
+<li class="">Position: relative container for absolutely positioned dots</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Timeline Dots</strong> (<code>.timelineDotContainer</code>):</p>
+<ul>
+<li class=""><strong>Inception dot</strong>: Absolutely positioned at <code>left: 0</code> (start of bar)<!-- -->
+<ul>
+<li class="">Primary color (<code>var(--ifm-color-primary)</code>)</li>
+<li class="">10px diameter (8px on mobile)</li>
+<li class="">2px border (1.5px on mobile)</li>
+</ul>
+</li>
+<li class=""><strong>Execution dot</strong>: Absolutely positioned at <code>right: 0</code> (end of bar)<!-- -->
+<ul>
+<li class="">Success color (<code>var(--ifm-color-success)</code>) when execution date exists</li>
+<li class="">Muted gray color (<code>var(--ifm-color-emphasis-400)</code>) with reduced opacity when execution is TBD</li>
+<li class="">Same size as inception dot</li>
+<li class=""><strong>Always rendered</strong> - shows even when execution date is &quot;TBD&quot; or &quot;XX&quot;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Duration Label</strong> (<code>.timelineDuration</code>):</p>
+<ul>
+<li class="">Centered on the bar (<code>left: 50%</code>, <code>transform: translate(-50%, -50%)</code>)</li>
+<li class="">Background matches page background (appears above bar)</li>
+<li class="">Shows calculated duration or &quot;X days thus far&quot; for TBD execution</li>
+<li class="">Font: <code>0.7rem</code> (<code>0.65rem</code> on mobile), font-weight: 600</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Date Labels</strong> (<code>.timelineDates</code>):</p>
+<ul>
+<li class="">Row below the bar, flex layout with space-between</li>
+<li class=""><strong>Inception date</strong>: Left-aligned under inception dot</li>
+<li class=""><strong>Execution date</strong>: Right-aligned under execution dot (always shown)</li>
+<li class="">Each date item contains:<!-- -->
+<ul>
+<li class=""><strong>Label</strong>: &quot;INCEPTION&quot; or &quot;EXECUTION&quot; (uppercase, <code>0.65rem</code>, <code>0.6rem</code> on mobile)</li>
+<li class=""><strong>Date</strong>: Formatted date string (<code>0.75rem</code>, <code>0.7rem</code> on mobile) or &quot;TBD&quot; if execution date is TBD</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="duration-calculation">Duration Calculation<a href="#duration-calculation" class="hash-link" aria-label="Direct link to Duration Calculation" title="Direct link to Duration Calculation" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Smart duration formatting</strong>:<!-- -->
+<ul>
+<li class=""><strong>TBD execution</strong>: Shows &quot;X days thus far&quot; (calculated from inception to today)</li>
+<li class=""><strong>Completed execution</strong>: Shows duration between inception and execution dates</li>
+<li class=""><strong>Duration formats</strong>:<!-- -->
+<ul>
+<li class="">&quot;Same day&quot; if 0 days</li>
+<li class="">&quot;X days&quot; if &lt; 7 days</li>
+<li class="">&quot;X weeks&quot; if &lt; 30 days</li>
+<li class="">&quot;X months&quot; if &lt; 365 days</li>
+<li class="">&quot;X years, Y months&quot; if &gt;= 1 year</li>
+</ul>
+</li>
+<li class="">Handles invalid dates gracefully (returns &quot;TBD&quot;)</li>
+</ul>
+</li>
+<li class=""><strong>Visual indication for TBD execution</strong>:<!-- -->
+<ul>
+<li class="">Execution dot always visible (even when TBD)</li>
+<li class="">TBD execution dot uses muted gray color with reduced opacity (<code>.timelineDotTBD</code>)</li>
+<li class="">Execution date label shows &quot;TBD&quot; instead of formatted date</li>
+<li class="">Duration shows &quot;X days thus far&quot; to indicate ongoing work</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="date-formatting">Date Formatting<a href="#date-formatting" class="hash-link" aria-label="Direct link to Date Formatting" title="Direct link to Date Formatting" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Smart date formatting</strong>:<!-- -->
+<ul>
+<li class="">Handles &quot;TBD&quot; and &quot;XX&quot; dates gracefully (replaces &quot;XX&quot; with &quot;??&quot;)</li>
+<li class="">Formats dates as &quot;Jan 15, 2025&quot; (month short, day numeric, year numeric)</li>
+<li class="">Falls back to original string if date parsing fails</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="responsive-design">Responsive Design<a href="#responsive-design" class="hash-link" aria-label="Direct link to Responsive Design" title="Direct link to Responsive Design" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Mobile optimization</strong>:<!-- -->
+<ul>
+<li class="">Thinner bar: <code>2px</code> → <code>1.5px</code> height on mobile</li>
+<li class="">Smaller dots: <code>10px</code> → <code>8px</code> diameter on mobile</li>
+<li class="">Thinner borders: <code>2px</code> → <code>1.5px</code> on mobile</li>
+<li class="">Smaller duration label: <code>0.7rem</code> → <code>0.65rem</code> on mobile</li>
+<li class="">Smaller date fonts: <code>0.75rem</code> → <code>0.7rem</code> for dates, <code>0.65rem</code> → <code>0.6rem</code> for labels</li>
+<li class="">Tighter spacing: <code>0.5rem</code> → <code>0.375rem</code> gap</li>
+<li class="">Reduced padding on duration label: <code>0.125rem 0.375rem</code> → <code>0.1rem 0.25rem</code></li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="integration">Integration<a href="#integration" class="hash-link" aria-label="Direct link to Integration" title="Direct link to Integration" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Replaced text-based dates</strong> in <code>QuarterSection</code>:<!-- -->
+<ul>
+<li class="">Removed separate &quot;Inception:&quot; and &quot;Execution:&quot; text spans</li>
+<li class="">Integrated <code>EntryTimeline</code> component into <code>entryMeta</code> section</li>
+<li class="">Timeline aligns properly with other meta items (component name, etc.)</li>
+<li class="">Works seamlessly with horizontal meta layout on mobile</li>
+</ul>
+</li>
+</ul>
+<p><strong>Components Created:</strong></p>
+<ul>
+<li class=""><strong><code>src/components/Changelog/EntryTimeline/EntryTimeline.tsx</code></strong> - Timeline component with duration calculation</li>
+<li class=""><strong><code>src/components/Changelog/EntryTimeline/EntryTimeline.module.css</code></strong> - Timeline styles with bar, dots, and date layout</li>
+<li class=""><strong><code>src/components/Changelog/EntryTimeline/index.tsx</code></strong> - Export file</li>
+</ul>
+<p><strong>CSS Classes:</strong></p>
+<ul>
+<li class=""><code>.timeline</code> - Main container (flex column)</li>
+<li class=""><code>.timelineBar</code> - Horizontal bar/line (relative positioning)</li>
+<li class=""><code>.timelineDotContainer</code> - Container for dots (absolute positioning)</li>
+<li class=""><code>.timelineDot</code> - Dot styling (circular, colored)</li>
+<li class=""><code>.timelineDotInception</code> - Primary color for inception dot</li>
+<li class=""><code>.timelineDotExecution</code> - Success color for execution dot (when execution date exists)</li>
+<li class=""><code>.timelineDotTBD</code> - Muted gray color for execution dot when execution is TBD</li>
+<li class=""><code>.timelineDuration</code> - Duration label (centered on bar)</li>
+<li class=""><code>.durationLabel</code> - Duration text styling</li>
+<li class=""><code>.timelineDates</code> - Date labels row (flex, space-between)</li>
+<li class=""><code>.timelineDateItem</code> - Individual date item container</li>
+<li class=""><code>.timelineLabel</code> - &quot;INCEPTION&quot; / &quot;EXECUTION&quot; label styling</li>
+<li class=""><code>.timelineDate</code> - Formatted date text styling</li>
+</ul>
+<p><strong>CSS Integration:</strong></p>
+<ul>
+<li class="">Added timeline styles integration in <code>QuarterSection.module.css</code></li>
+<li class="">Timeline works seamlessly with horizontal meta layout on mobile</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-docusaurus-routing-configuration-2025-01-20">✅ Docusaurus Routing Configuration (2025-01-20)<a href="#-docusaurus-routing-configuration-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Docusaurus Routing Configuration (2025-01-20)" title="Direct link to ✅ Docusaurus Routing Configuration (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025</p>
+<p><strong>Key Accomplishments:</strong></p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="plugin-configuration">Plugin Configuration<a href="#plugin-configuration" class="hash-link" aria-label="Direct link to Plugin Configuration" title="Direct link to Plugin Configuration" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Added <code>@docusaurus/plugin-content-docs</code> plugin</strong> to serve changelog markdown files as pages:<!-- -->
+<ul>
+<li class=""><strong>Plugin ID</strong>: <code>changelog</code> (unique identifier for multi-instance plugin, similar to blog plugin&#x27;s <code>id: &#x27;designs&#x27;</code>)</li>
+<li class=""><strong>Path</strong>: <code>./changelog</code> (points to changelog directory, no file copying required)</li>
+<li class=""><strong>Route Base Path</strong>: <code>changelog</code> (files accessible at <code>/changelog/...</code>)</li>
+<li class=""><strong>Sidebar Configuration</strong>: <code>sidebarPath: false</code> (no sidebar needed for changelog entries)</li>
+<li class=""><strong>Edit URL</strong>: Points to GitHub for easy editing</li>
+<li class=""><strong>Uses built-in Docusaurus plugin</strong>: Follows same pattern as <code>@docusaurus/plugin-content-blog</code> for multiple instances</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-docs-plugin-instead-of-pages-plugin">Why Docs Plugin Instead of Pages Plugin<a href="#why-docs-plugin-instead-of-pages-plugin" class="hash-link" aria-label="Direct link to Why Docs Plugin Instead of Pages Plugin" title="Direct link to Why Docs Plugin Instead of Pages Plugin" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Pages plugin limitation</strong>: <code>@docusaurus/plugin-content-pages</code> doesn&#x27;t support multiple instances (unlike blog/docs plugins)</li>
+<li class=""><strong>Docs plugin advantage</strong>: <code>@docusaurus/plugin-content-docs</code> supports multiple instances with <code>id</code> field, just like blog plugin</li>
+<li class=""><strong>No file copying required</strong>: Files served directly from <code>changelog/</code> directory (like blog serves from <code>designs/</code>)</li>
+<li class=""><strong>Proper MDX rendering</strong>: Full markdown content rendered with Docusaurus MDX features and frontmatter support</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="link-generation-fix">Link Generation Fix<a href="#link-generation-fix" class="hash-link" aria-label="Direct link to Link Generation Fix" title="Direct link to Link Generation Fix" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Fixed broken changelog entry links</strong>:<!-- -->
+<ul>
+<li class="">Previously linked to GitHub (temporary workaround)</li>
+<li class="">Now links to <code>/changelog/${slug}</code> (proper Docusaurus routes)</li>
+<li class="">Preserves subdirectory structure in URLs (e.g., <code>/changelog/development/2025-01-15-...</code>)</li>
+<li class="">Links work correctly for both content and development entries</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="benefits">Benefits<a href="#benefits" class="hash-link" aria-label="Direct link to Benefits" title="Direct link to Benefits" translate="no">​</a></h4>
+<ul>
+<li class=""><strong>Changelog entries are now accessible as pages</strong>:<!-- -->
+<ul>
+<li class="">Full markdown content rendered with Docusaurus MDX features</li>
+<li class="">Frontmatter properly parsed and displayed</li>
+<li class="">Edit links point to GitHub for easy updates</li>
+<li class="">Proper routing and navigation within Docusaurus site</li>
+<li class="">SEO-friendly URLs</li>
+<li class="">No file copying or custom plugins required</li>
+<li class="">Uses standard Docusaurus plugin pattern (same as blog plugin)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Configuration Files Modified:</strong></p>
+<ul>
+<li class=""><strong><code>docusaurus.config.js</code></strong>: Added changelog docs plugin configuration (follows blog plugin pattern)</li>
+<li class=""><strong><code>src/pages/changelog.tsx</code></strong>: Updated <code>getEntryUrl</code> to use proper routes</li>
+</ul>
+<p><strong>Example URLs:</strong></p>
+<ul>
+<li class=""><code>/changelog/development/2025-01-15-component-creation-svg-kanban</code></li>
+<li class=""><code>/changelog/content/2025-XX-XX-content-post-knowledge-agents-design</code></li>
+</ul>
+<p><strong>Configuration Pattern:</strong></p>
+<div class="language-javascript codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-javascript codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token string" style="color:#e3116c">&#x27;@docusaurus/plugin-content-docs&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token literal-property property" style="color:#36acaa">id</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;changelog&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic">// Multi-instance support (like blog plugin)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token literal-property property" style="color:#36acaa">path</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;./changelog&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token literal-property property" style="color:#36acaa">routeBasePath</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;changelog&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token literal-property property" style="color:#36acaa">sidebarPath</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">false</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token literal-property property" style="color:#36acaa">editUrl</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;https://github.com/.../changelog/&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><br></span></code></pre></div></div>
+<p><strong>Status:</strong> Changelog component has been successfully created and refined with modular architecture, proper alignment, GitHub-style heatmap visualization, dynamic date range, year highlighting, current month indicator, mobile responsiveness, timeline visualization, and proper Docusaurus routing. The component is production-ready and maintains clean separation of concerns. Storybook stories and documentation are complete. All changelog entries are now accessible as pages with proper routing.</p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/changelog/changelog/development/2025-11-16-component-creation-changelog-component.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href="/changelog/2025/11/17/development/component-refactoring-graph-component"><div class="pagination-nav__sublabel">Newer post</div><div class="pagination-nav__label">Graph Component Refactoring Summary</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/changelog/2025/11/16/development/mechanic-establishment-storybook"><div class="pagination-nav__sublabel">Older post</div><div class="pagination-nav__label">Blogging Mechanism - Storybook Component Documentation</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#execution-plan" class="table-of-contents__link toc-highlight">Execution Plan</a></li><li><a href="#execution-results--attempts" class="table-of-contents__link toc-highlight">Execution Results / Attempts</a><ul><li><a href="#-initial-changelog-component-created-2025-01-20" class="table-of-contents__link toc-highlight">✅ Initial Changelog Component Created (2025-01-20)</a></li><li><a href="#-component-modularization--refinement-2025-01-20" class="table-of-contents__link toc-highlight">✅ Component Modularization &amp; Refinement (2025-01-20)</a></li><li><a href="#-mobile-responsiveness--ux-improvements-2025-01-20" class="table-of-contents__link toc-highlight">✅ Mobile Responsiveness &amp; UX Improvements (2025-01-20)</a></li><li><a href="#-entrytimeline-component-creation-2025-01-20" class="table-of-contents__link toc-highlight">✅ EntryTimeline Component Creation (2025-01-20)</a></li><li><a href="#-docusaurus-routing-configuration-2025-01-20" class="table-of-contents__link toc-highlight">✅ Docusaurus Routing Configuration (2025-01-20)</a></li></ul></li></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Contact</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/omars-lab/omars-lab.github.io" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.linkedin.com/in/oeid/" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">LinkedIn<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="mailto:contact@rythome.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Email<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amp;amount=1&amp;no_recurring=0&amp;item_name=Support+a+Developer&amp;currency_code=USD" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Support<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Other Works</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.bytesofpurpose.com" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Portfolio<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://www.bytesofpurpose.com/resume.pdf" target="_blank" rel="noopener noreferrer" class="footer__link-item" position="right">Resume<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 BytesOfPurpose, Inc. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
