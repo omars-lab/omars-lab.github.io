@@ -1,6 +1,6 @@
 ---
-slug: develop-prayer-tracking-apple-watch-app
-title: 'Develop Prayer Tracking Apple Watch App'
+slug: prayer-tracking-apple-watch-app
+title: 'Prayer Tracking Apple Watch App'
 description: 'Development of an Apple Watch app for tracking prayer metrics using Core Motion framework'
 authors: [oeid]
 tags: [apple-watch, prayer-tracking, core-motion, ios-development, swift, apps, frontend-projects]

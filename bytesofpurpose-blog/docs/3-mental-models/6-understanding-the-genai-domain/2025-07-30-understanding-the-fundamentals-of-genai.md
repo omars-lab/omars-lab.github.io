@@ -1023,8 +1023,8 @@ Think of building an AI system like building a house:
 ## Next Steps
 
 Ready to dive deeper? Check out:
-- [Designing GenAI Systems](./designing-genai-systems) for architectural decisions
-- [Preparing GenAI Systems for Production](./preparing-genai-systems-for-production) for production readiness
+- [Designing GenAI Systems](/docs/skills/solving-system-design/framework-for-designing-genai-systems) for architectural decisions
+- [Preparing GenAI Systems for Production](/docs/skills/solving-system-design/preparing-genai-systems-for-production) for production readiness
 
 ---
 

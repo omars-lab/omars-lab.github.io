@@ -12,7 +12,7 @@ draft: false
 
 I need a portfolio website ... this document serves as my initial plan to put one together.
 
-*See [Portfolio Roadmap](/docs/developing/roadmaps/portfolio-roadmap) for future enhancements and strategic planning.*
+*See [Portfolio Roadmap](/docs/development/7-roadmaps/portfolio-roadmap) for future enhancements and strategic planning.*
 
 # Completed Work
 

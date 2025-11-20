@@ -275,13 +275,14 @@ Create deep links to specific nodes using URL hashes. When a link is clicked, th
 **Link Format:** `#graphId-node-{nodeId}`
 
 **Example Links:**
-- [Highlight Level 2-A1](#hierarchical-example-node-level2-a1)
-- [Highlight Level 3-A1a](#hierarchical-example-node-level3-a1a)
-- [Highlight Level 1-C](#hierarchical-example-node-level1-c)
+- Links to graph nodes are created dynamically when the graph is rendered
+- Use the `highlightNodeId` prop to highlight specific nodes programmatically
 
 ```jsx
-// In your MDX file, create links like this:
-[Highlight Node](#hierarchical-example-node-level2-a1)
+// In your MDX file, use the highlightNodeId prop:
+<GraphRenderer 
+  graphId="my-graph"
+  highlightNodeId="level2-a1"
 
 // Or programmatically:
 <GraphRenderer 
@@ -453,7 +454,7 @@ Here's a comprehensive example showcasing multiple features:
 
 **Try these features:**
 1. **Expand nodes**: Click on nodes with `▶` to expand
-2. **Use anchor links**: [Highlight Level 2-A1](#advanced-example-node-level2-a1)
+2. **Use highlightNodeId prop**: Set `highlightNodeId="level2-a1"` to highlight specific nodes
 3. **Right-click**: Right-click any node to copy its anchor link
 4. **Zoom**: Use mouse wheel to zoom in/out
 5. **Pan**: Click and drag to move the graph

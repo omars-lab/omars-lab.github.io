@@ -38,21 +38,21 @@ Interview preparation is not just about memorizing answers—it's about developi
 Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
-- [ ] **Read [Interview Process](understanding-the-interview-process.md)** - Learn the overall interview flow and what to expect
-- [ ] **Study [SDE Skill Differences](understanding-differences-in-skills.mdx)** - Understand the differences between SDE levels and expectations
-- [ ] **Review [Leadership Principles](understanding-desireable-leadership-skills.md)** - Master the 10 core leadership principles and what interviewers look for
-- [ ] **Study [Technical Skills Evaluation](understanding-desireable-tech-skills.md)** - Learn the technical evaluation criteria
-- [ ] **Review [Soft Skills Evaluation](understanding-desireable-soft-skills.md)** - Learn the soft skills evaluation criteria
+- [ ] **Read [Interview Process](/docs/mental-models/understanding-processes/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
+- [ ] **Study [SDE Skill Differences](/docs/mental-models/understanding-career-levels/understanding-differences-in-skills)** - Understand the differences between SDE levels and expectations
+- [ ] **Review [Leadership Principles](/docs/mental-models/understanding-skills/understanding-desireable-leadership-skills)** - Master the 10 core leadership principles and what interviewers look for
+- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-tech-skills)** - Learn the technical evaluation criteria
+- [ ] **Review [Soft Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-soft-skills)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
-- [ ] **Build your [Personal Story Bank](personal-story-bank.md)** - Develop 2-3 STAR stories for each leadership principle
-- [ ] **Practice [Leadership Interview Prep](preparing-responses-for-leadership-questions.md)** - Master the behavioral interview format
-- [ ] **Prepare [Interviewing the Interviewer](prepraring-questions-to-ask-interviewers.md)** - Develop thoughtful questions that demonstrate your interest
+- [ ] **Build your [Personal Story Bank](/docs/skills/preparing-for-interviews/personal-story-bank)** - Develop 2-3 STAR stories for each leadership principle
+- [ ] **Practice [Leadership Interview Prep](/docs/skills/preparing-for-interviews/pre-meditating-responses-for-leadership-questions)** - Master the behavioral interview format
+- [ ] **Prepare [Interviewing the Interviewer](/docs/skills/preparing-for-interviews/prepraring-questions-to-ask-interviewers)** - Develop thoughtful questions that demonstrate your interest
 
 ### Phase 3: Technical Preparation
-- [ ] **Master [Preparing for Coding Questions](preparing-for-coding-questions.mdx)** - Learn systematic approach to coding problems and algorithms
-- [ ] **Study [Technical Skills Evaluation](understanding-desireable-tech-skills.md)** - Understand what companies evaluate in technical interviews
-- [ ] **Study [Preparing for System Design Questions](preparing-for-system-design-questions.mdx)** - Learn how to approach architecture and design questions
+- [ ] **Master [Preparing for Coding Questions](/docs/skills/preparing-for-interviews/preparing-for-coding-questions)** - Learn systematic approach to coding problems and algorithms
+- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-tech-skills)** - Understand what companies evaluate in technical interviews
+- [ ] **Study [Preparing for System Design Questions](/docs/skills/preparing-for-interviews/preparing-for-system-design-questions)** - Learn how to approach architecture and design questions
 
 ### Phase 4: Practice and Refinement
 - [ ] **Practice telling your stories** - Time yourself to ensure 2-3 minute responses
