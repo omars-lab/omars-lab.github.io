@@ -150,12 +150,23 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
   const [tooltipPosition, setTooltipPosition] = useState<{ x: number; y: number } | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<'content' | 'development' | null>(null);
   const quartersScrollRef = useRef<HTMLDivElement>(null);
+  const heatmapRowsSectionRef = useRef<HTMLDivElement>(null);
 
   // Filter states
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [yearFilter, setYearFilter] = useState<string>('all');
+  const [quarterFilter, setQuarterFilter] = useState<string>('all');
+  
+  // Reset quarter filter when year filter changes
+  // This ensures quarters are always filtered by the selected year
+  useEffect(() => {
+    if (quarterFilter !== 'all') {
+      setQuarterFilter('all');
+    }
+  }, [yearFilter]); // Only depend on yearFilter, not quarterFilter to avoid infinite loop
 
   // Split entries by category
   const contentEntries = useMemo(() => entries.filter(e => e.category === 'content'), [entries]);
@@ -268,6 +279,45 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
       if (statusFilter !== 'all' && entry.status !== statusFilter) return false;
       if (typeFilter !== 'all' && entry.type !== typeFilter) return false;
       if (priorityFilter !== 'all' && entry.priority !== priorityFilter) return false;
+      
+      // Parse date once for both year and quarter filtering
+      // Use execution_date if available and not TBD, otherwise use inception_date
+      const dateStr = entry.execution_date !== 'TBD' ? entry.execution_date : entry.inception_date;
+      let date: Date;
+      if (dateStr.includes('XX')) {
+        const normalized = dateStr.replace('XX', '01');
+        date = new Date(normalized);
+      } else {
+        date = new Date(dateStr);
+      }
+      
+      // Skip entries with invalid dates
+      if (isNaN(date.getTime())) return false;
+      
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const quarterNum = Math.floor(month / 3) + 1;
+      const entryQuarter = `Q${quarterNum}`;
+      
+      // Filter by year
+      if (yearFilter !== 'all') {
+        if (year.toString() !== yearFilter) return false;
+      }
+      
+      // Filter by quarter (format: "Q1", "Q2", etc.)
+      // Quarter filter works in tandem with year filter
+      if (quarterFilter !== 'all') {
+        // If year filter is not set, we can't filter by quarter alone
+        if (yearFilter === 'all') {
+          return false; // Require year to be selected when filtering by quarter
+        }
+        
+        // Check if entry matches quarter filter
+        if (entryQuarter !== quarterFilter) {
+          return false;
+        }
+      }
+      
       return true;
     });
 
@@ -316,8 +366,8 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
     });
   };
 
-  const contentQuartersData = useMemo(() => getFilteredQuartersData('content'), [contentEntries, statusFilter, typeFilter, priorityFilter]);
-  const developmentQuartersData = useMemo(() => getFilteredQuartersData('development'), [developmentEntries, statusFilter, typeFilter, priorityFilter]);
+  const contentQuartersData = useMemo(() => getFilteredQuartersData('content'), [contentEntries, statusFilter, typeFilter, priorityFilter, yearFilter, quarterFilter]);
+  const developmentQuartersData = useMemo(() => getFilteredQuartersData('development'), [developmentEntries, statusFilter, typeFilter, priorityFilter, yearFilter, quarterFilter]);
 
   // Scroll to selected quarter
   useEffect(() => {
@@ -328,6 +378,21 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
       }
     }
   }, [selectedQuarter]);
+
+  // Auto-scroll to current year on initial load
+  useEffect(() => {
+    if (!heatmapRowsSectionRef.current) return;
+    
+    const currentYear = new Date().getFullYear();
+    const currentYearElement = heatmapRowsSectionRef.current.querySelector(`[data-year="${currentYear}"]`);
+    
+    if (currentYearElement) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        currentYearElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }, 100);
+    }
+  }, [sharedYearQuarterStructure]); // Run when date structure is ready
 
   return (
     <div className={styles.changelogContainer}>
@@ -346,7 +411,7 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
           {/* Heatmap Section - DateOverlay above rows on left, Legends on right */}
           <div className={styles.heatmapRowsAndLegends}>
             {/* Left side: DateOverlay above rows */}
-            <div className={styles.heatmapRowsSection}>
+            <div ref={heatmapRowsSectionRef} className={styles.heatmapRowsSection}>
               {/* Shared year/quarter headers - Above rows only */}
               <div className={styles.dateOverlayWrapper}>
                 <DateOverlay monthsByYearAndQuarter={sharedYearQuarterStructure} />
@@ -449,10 +514,14 @@ export function Changelog({ entries, getEntryUrl = (slug) => `/changelog/${slug}
           typeFilter={typeFilter}
           priorityFilter={priorityFilter}
           categoryFilter={categoryFilter}
+          yearFilter={yearFilter}
+          quarterFilter={quarterFilter}
           onStatusChange={setStatusFilter}
           onTypeChange={setTypeFilter}
           onPriorityChange={setPriorityFilter}
           onCategoryChange={setCategoryFilter}
+          onYearChange={setYearFilter}
+          onQuarterChange={setQuarterFilter}
         />
 
         {/* Content Quarters Section */}

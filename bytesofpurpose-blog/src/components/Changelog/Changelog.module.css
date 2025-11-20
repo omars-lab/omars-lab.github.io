@@ -167,6 +167,11 @@
   .entriesGrid {
     grid-template-columns: 1fr;
   }
+  
+  .changelogContainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 /* Container */
@@ -179,6 +184,19 @@
 /* Header Section */
 .headerSection {
   margin-bottom: 2rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile: Ensure header section is visible */
+@media (max-width: 768px) {
+  .headerSection {
+    display: block !important;
+    visibility: visible !important;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .viewToggle {
@@ -217,6 +235,20 @@
 /* Heatmap Section */
 .heatmapSection {
   margin-bottom: 3rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile: Ensure heatmap section is visible */
+@media (max-width: 768px) {
+  .heatmapSection {
+    display: block !important;
+    visibility: visible !important;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
 }
 
 .heatmapTitle {
@@ -233,6 +265,26 @@
   padding: 1.5rem;
   overflow-x: auto;
   overflow-y: visible;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile: Reduce padding and ensure visibility */
+@media (max-width: 768px) {
+  .heatmapContainer {
+    padding: 0.75rem;
+    overflow-x: visible; /* Child handles scrolling */
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .heatmapSection {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }
 
 .heatmapMonths {
@@ -377,14 +429,13 @@
 }
 
 .heatmapMonthCell.currentMonth {
-  outline: 2px solid var(--ifm-color-primary-dark);
-  outline-offset: 1px;
+  /* Inward current month indicator using inset box-shadow */
+  box-shadow: inset 0 0 0 2px var(--ifm-color-primary-dark);
 }
 
 .heatmapMonthCell.selected {
-  outline: 3px solid var(--ifm-color-primary-dark);
-  outline-offset: 1px;
-  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+  /* Inward selection indicator using inset box-shadow only */
+  box-shadow: inset 0 0 0 3px var(--ifm-color-primary-dark);
 }
 
 .heatmapCell {
@@ -532,12 +583,34 @@
   margin-bottom: 0;
 }
 
+/* Mobile: Remove individual scrolling - parent handles it */
+@media (max-width: 768px) {
+  .dateOverlayWrapper {
+    width: 100%;
+    overflow-x: visible; /* Parent handles scrolling */
+    overflow-y: visible;
+    flex-shrink: 0; /* Don't shrink */
+  }
+}
+
 /* Heatmap Rows Section - Contains DateOverlay and rows */
 .heatmapRowsSection {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* Mobile: Ensure heatmap rows section takes full width and scrolls together */
+@media (max-width: 768px) {
+  .heatmapRowsSection {
+    width: 100%;
+    flex: 1 1 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    /* Enable smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Shared Headers (Year/Quarter overlay) - Fixed at top */
@@ -559,6 +632,13 @@
   flex: 0 0 200px; /* Match sidebar width */
 }
 
+/* Mobile: Hide spacer since legend is now above */
+@media (max-width: 768px) {
+  .sharedHeadersSpacer {
+    display: none;
+  }
+}
+
 .sharedHeaders .heatmapGrid {
   padding-top: 0; /* Remove extra padding since we have padding-top on container */
   overflow-x: auto;
@@ -570,6 +650,15 @@
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  position: relative; /* Needed for sticky positioning of legends */
+}
+
+/* Mobile: Stack vertically - Legend above heatmap rows */
+@media (max-width: 768px) {
+  .heatmapRowsAndLegends {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* Heatmap Rows Container - Below DateOverlay */
@@ -578,6 +667,17 @@
   flex-direction: column;
   gap: 2px; /* Small gap between rows, matching square spacing */
   padding-top: 0; /* No padding needed - DateOverlay is separate above */
+}
+
+/* Mobile: Heatmap rows take full width, no individual scrolling */
+@media (max-width: 768px) {
+  .heatmapRowsContainer {
+    width: 100%;
+    order: 1; /* Heatmap rows below legend */
+    overflow-x: visible; /* Parent handles scrolling */
+    overflow-y: visible;
+    flex-shrink: 0; /* Don't shrink */
+  }
 }
 
 /* Legends Section - Right side */
@@ -590,6 +690,24 @@
   align-content: flex-start; /* Start from top */
   justify-content: flex-start; /* Start from top */
   align-self: flex-start; /* Ensure section itself starts from top */
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 5;
+}
+
+/* Mobile: Legend takes full width, positioned above heatmap */
+@media (max-width: 768px) {
+  .legendsSection {
+    flex: 1 1 100%;
+    width: 100%;
+    order: -1; /* Move legend above heatmap rows */
+    align-items: flex-start; /* Left align on mobile */
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  }
 }
 
 .legendsSectionHeader {
@@ -603,6 +721,21 @@
   width: 100%;
   flex-shrink: 0; /* Don't shrink */
   line-height: 1.2; /* Tighter line height */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile: Left align legend header */
+@media (max-width: 768px) {
+  .legendsSectionHeader {
+    text-align: left;
+  }
+  
+  .legendsSection {
+    position: static; /* Not sticky on mobile since it's above */
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 /* Heatmap Row styles are defined in HeatmapRow.module.css */
@@ -719,6 +852,20 @@
 /* Quarters Section */
 .quartersSection {
   margin-top: 3rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile: Ensure quarters section is visible */
+@media (max-width: 768px) {
+  .quartersSection {
+    display: block !important;
+    visibility: visible !important;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 2rem;
+  }
 }
 
 .quartersTitle {
@@ -738,12 +885,17 @@
   background: var(--ifm-color-emphasis-100);
   border-radius: 8px;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .filterGroup {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .filterLabel {
@@ -751,6 +903,7 @@
   font-weight: 600;
   color: var(--ifm-heading-color);
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filterSelect {
@@ -762,6 +915,45 @@
   font-size: 0.875rem;
   cursor: pointer;
   transition: border-color 0.2s ease;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Mobile: Ensure filters don't cause horizontal overflow */
+@media (max-width: 768px) {
+  .filtersContainer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+  
+  .filterGroup {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .filterLabel {
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+  
+  .filterSelect {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.5rem;
+  }
 }
 
 .filterSelect:hover {

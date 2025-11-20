@@ -17,5 +17,19 @@
   white-space: nowrap;
   text-align: right;
   width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Mobile: Left align legend title */
+@media (max-width: 768px) {
+  .legendSidebar {
+    align-items: flex-start; /* Left align on mobile */
+  }
+  
+  .legendTitle {
+    text-align: left;
+  }
 }
 

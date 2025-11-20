@@ -1,5 +1,6 @@
 import React from 'react';
 import type { QuarterData, ChangelogEntry } from '../types';
+import { EntryTimeline } from '../EntryTimeline';
 import styles from './QuarterSection.module.css';
 
 export interface QuarterSectionProps {
@@ -18,8 +19,8 @@ const statusOrder = ['completed', 'in-progress', 'planned', 'cancelled'];
 /**
  * QuarterSection Component
  * 
- * Displays quarterly changelog entries in a horizontal scrolling layout.
- * Entries are grouped by status within each quarter.
+ * Displays quarterly changelog entries in a horizontal scrolling layout on desktop,
+ * and vertically stacked on mobile. Entries are grouped by status within each quarter.
  */
 export function QuarterSection({
   title,
@@ -83,17 +84,10 @@ export function QuarterSection({
                                 <strong>Component:</strong> {entry.component}
                               </span>
                             )}
-                            <span className={styles.metaItem}>
-                              <strong>Inception:</strong> {entry.inception_date}
-                            </span>
-                            <span className={styles.metaItem}>
-                              <strong>Execution:</strong>{' '}
-                              {entry.execution_date === 'TBD' ? (
-                                <em>TBD</em>
-                              ) : (
-                                entry.execution_date
-                              )}
-                            </span>
+                            <EntryTimeline
+                              inceptionDate={entry.inception_date}
+                              executionDate={entry.execution_date}
+                            />
                           </div>
                         </div>
                       ))}

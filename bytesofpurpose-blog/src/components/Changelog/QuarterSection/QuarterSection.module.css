@@ -23,6 +23,18 @@
   width: 100%;
 }
 
+/* Mobile: Stack quarters vertically instead of horizontal scrolling */
+@media (max-width: 768px) {
+  .quartersScrollContainer {
+    flex-direction: column;
+    overflow-x: visible;
+    overflow-y: visible;
+    scroll-snap-type: none;
+    gap: 1.5rem;
+    padding-bottom: 0;
+  }
+}
+
 .quartersScrollContainer::-webkit-scrollbar {
   height: 8px;
 }
@@ -41,6 +53,13 @@
   background: var(--ifm-color-emphasis-600);
 }
 
+/* Mobile: Hide scrollbar since we're not scrolling horizontally */
+@media (max-width: 768px) {
+  .quartersScrollContainer::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .quarterColumn {
   flex: 0 0 calc(33.333% - 1rem);
   min-width: 350px;
@@ -51,6 +70,18 @@
   border-radius: 8px;
   padding: 1.5rem;
   transition: all 0.3s ease;
+}
+
+/* Mobile: Full width columns, no min-width constraint, reduced padding */
+@media (max-width: 768px) {
+  .quarterColumn {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    scroll-snap-align: none;
+    padding: 1rem;
+  }
 }
 
 .quarterColumn:hover {
@@ -71,10 +102,26 @@
   border-bottom: 2px solid var(--ifm-color-emphasis-300);
 }
 
+/* Mobile: Compact quarter header */
+@media (max-width: 768px) {
+  .quarterHeader {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom-width: 1px;
+  }
+}
+
 .quarterTitle {
   font-size: 1.25rem;
   margin: 0;
   color: var(--ifm-heading-color);
+}
+
+/* Mobile: Smaller quarter title */
+@media (max-width: 768px) {
+  .quarterTitle {
+    font-size: 1.1rem;
+  }
 }
 
 .quarterCount {
@@ -92,6 +139,15 @@
   max-height: 70vh;
   overflow-y: auto;
   padding-right: 0.5rem;
+}
+
+/* Mobile: Remove max-height constraint and allow natural flow */
+@media (max-width: 768px) {
+  .quarterEntries {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
 }
 
 .quarterEntries::-webkit-scrollbar {
@@ -120,6 +176,14 @@
   text-transform: capitalize;
 }
 
+/* Mobile: Smaller status title */
+@media (max-width: 768px) {
+  .quarterStatusTitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
 .quarterCards {
   display: flex;
   flex-direction: column;
@@ -129,6 +193,17 @@
 .quarterCards .entryCard {
   margin: 0;
   padding: 1rem;
+}
+
+/* Mobile: Tighter spacing between cards */
+@media (max-width: 768px) {
+  .quarterCards {
+    gap: 0.75rem;
+  }
+  
+  .quarterCards .entryCard {
+    padding: 0.75rem 1rem;
+  }
 }
 
 .entryCard {
@@ -144,8 +219,30 @@
   transform: translateY(-2px);
 }
 
+/* Mobile: Minimal, horizontally wide rectangular cards */
+@media (max-width: 768px) {
+  .entryCard {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+  }
+  
+  .entryCard:hover {
+    transform: none; /* Disable hover transform on mobile */
+  }
+}
+
 .entryHeader {
   margin-bottom: 1rem;
+}
+
+/* Mobile: Horizontal layout for header */
+@media (max-width: 768px) {
+  .entryHeader {
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 
 .entryTitle {
@@ -153,12 +250,23 @@
   margin-bottom: 0.75rem;
 }
 
-.entryTitle a {
+/* Mobile: Smaller title, no bottom margin */
+@media (max-width: 768px) {
+  .entryTitle {
+    font-size: 1rem;
+    margin-bottom: 0;
+    line-height: 1.3;
+  }
+}
+
+.entryTitle a,
+.entryLink {
   color: var(--ifm-heading-color);
   text-decoration: none;
 }
 
-.entryTitle a:hover {
+.entryTitle a:hover,
+.entryLink:hover {
   color: var(--ifm-link-color);
   text-decoration: underline;
 }
@@ -170,6 +278,14 @@
   margin-bottom: 0.5rem;
 }
 
+/* Mobile: Smaller badges, tighter spacing */
+@media (max-width: 768px) {
+  .badges {
+    gap: 0.25rem;
+    margin-bottom: 0;
+  }
+}
+
 .badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -178,6 +294,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* Mobile: Smaller badges */
+@media (max-width: 768px) {
+  .badge {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 8px;
+    letter-spacing: 0.25px;
+  }
 }
 
 .badgePlanned {
@@ -261,6 +387,21 @@
   line-height: 1.6;
 }
 
+/* Mobile: Compact description */
+@media (max-width: 768px) {
+  .entryDescription {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .entryMeta {
   display: flex;
   flex-direction: column;
@@ -269,7 +410,36 @@
   color: var(--ifm-color-emphasis-600);
 }
 
+/* Mobile: Horizontal, compact meta */
+@media (max-width: 768px) {
+  .entryMeta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    align-items: center;
+  }
+}
+
 .metaItem {
   display: block;
+}
+
+/* Mobile: Inline meta items */
+@media (max-width: 768px) {
+  .metaItem {
+    display: inline;
+    white-space: nowrap;
+  }
+  
+  .metaItem strong {
+    margin-right: 0.25rem;
+  }
+}
+
+/* Timeline styles integration */
+.entryMeta :global(.timeline) {
+  margin: 0;
 }
 
