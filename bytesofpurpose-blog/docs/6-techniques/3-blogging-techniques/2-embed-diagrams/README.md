@@ -42,11 +42,11 @@ Blogging diagram embedding emphasizes visual presentation, while documentation t
 
 ## Key Documents
 
-- [Figma Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-figma) - Embedding Figma designs and prototypes
-- [Flow Charts](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-flow-charts) - Creating and embedding flow charts
-- [Google Drawing](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-google-drawing) - Using Google Drawings for diagrams
-- [Kanban Customization](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-kanban-customization) - Customizing and embedding Kanban boards
+- [Figma Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-figma) - Embedding Figma designs and prototypes
+- [Flow Charts](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-flow-charts) - Creating and embedding flow charts
+- [Google Drawing](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-google-drawings) - Using Google Drawings for diagrams
+- [Kanban Customization](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-kanban-customization) - Customizing and embedding Kanban boards
 - [Mermaid Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
-- [MindNode](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-mindnode) - Mind mapping with MindNode
-- [PlantUML Sequence Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-puml-sequence) - Creating sequence diagrams with PlantUML
+- [MindNode](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-mindnode-diagrams) - Mind mapping with MindNode
+- [PlantUML Sequence Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-sequence-diagrams) - Creating sequence diagrams with PlantUML
 

@@ -31,7 +31,7 @@ Code embedding techniques are **methods for adding code to content**:
 
 ## Key Documents
 
-- [Code Cells](/docs/techniques/blogging-techniques/embed-code/code-cells) - Creating and embedding interactive code cells
-- [Code Gists](/docs/techniques/blogging-techniques/embed-code/code-gists) - GitHub Gist integration and embedding
-- [Jupyter Notebooks](/docs/techniques/blogging-techniques/embed-code/code-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
+- [Code Cells](/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-code-cells) - Creating and embedding interactive code cells
+- [Code Gists](/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-gist) - GitHub Gist integration and embedding
+- [Jupyter Notebooks](/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
 

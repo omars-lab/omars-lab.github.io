@@ -1,0 +1,166 @@
+---
+slug: changelog-system
+title: 'Changelog System'
+description: 'Complete guide to the changelog system including file naming conventions, frontmatter requirements, entry structure, and best practices.'
+authors: [oeid]
+tags: [changelog, documentation, system, tracking, content-management]
+draft: false
+---
+
+# Changelog System
+
+Complete guide to the changelog system for tracking all changes, plans, and improvements to the blog. Each entry is a markdown file with frontmatter metadata.
+
+## Overview
+
+The changelog system provides a structured way to track:
+- **Content changes**: Blog posts, documentation, content enhancements
+- **Development changes**: Components, mechanics, infrastructure, optimizations
+- **Project evolution**: Historical record of what was planned, what was done, and what was learned
+
+The changelog is accessible via the "Changelog" tab in the Docusaurus navbar.
+
+## File Naming Convention
+
+Files are named using the format: `YYYY-MM-DD-{category}-{action}-{descriptor}.md`
+
+- **YYYY-MM-DD**: Date of inception (for plans) or execution (for completed work)
+- **{category}**: Type of change (see Categories below)
+- **{action}**: What's being done (see Actions below)
+- **{descriptor}**: Kebab-case description of the specific item
+
+### Content Category Prefixes
+
+For entries in the `content/` directory, use these specific prefixes:
+
+- **`content-post-{descriptor}`**: For blog posts and blog content enhancements
+  - Example: `2025-XX-XX-content-post-knowledge-agents-design.md`
+
+- **`content-docs-{descriptor}`**: For documentation that results in new documentation files
+  - Use when creating new documentation guides or documentation content
+  - Example: `2025-11-20-content-docs-adding-content-guides.md`
+
+- **`content-changelog-{descriptor}`**: For changelog-related content or analysis
+  - Use for changelog analysis, reviews, or changelog-related documentation
+  - Example: `2025-11-20-content-changelog-missing-features-analysis.md`
+
+- **`documentation-{descriptor}`**: For general documentation updates (legacy, prefer `content-docs-*` for new entries)
+  - Example: `2025-01-20-documentation-api-reference.md`
+
+See [Naming Conventions](/docs/NAMING_CONVENTIONS) for complete naming guidelines.
+
+## Directory Structure
+
+Changelog entries are organized into two main categories:
+
+- **`changelog/content/`** - Content-related changes (blog posts, documentation, content enhancements)
+- **`changelog/development/`** - Development/infrastructure changes (components, mechanics, infrastructure, optimization, structure)
+
+See [Changelog Directory Structure](/changelog/README) for detailed organization guidelines.
+
+## Frontmatter Fields
+
+Each changelog entry includes the following frontmatter fields:
+
+- `title`: Human-readable title (required)
+- `description`: Brief description (required)
+- `status`: Current status (`planned`, `in-progress`, `completed`, `cancelled`) (required)
+- `inception_date`: Date when the plan/change was first conceived (required)
+- `execution_date`: Date when the change was executed (use `TBD` for plans) (required)
+- `type`: Type of change (`refactoring`, `feature`, `bugfix`, `documentation`, `infrastructure`) (required)
+- `component`: Affected component or area (optional)
+- `priority`: Priority level (`low`, `medium`, `high`, `critical`) (required)
+- `category`: Content category (`content` or `development`) (optional, inferred from directory)
+
+### Status Values
+
+- **planned**: Change is planned but not yet started
+- **in-progress**: Change is currently being worked on
+- **completed**: Change has been completed
+- **cancelled**: Change was cancelled or abandoned
+
+### Type Values
+
+- **refactoring**: Code refactoring or restructuring
+- **feature**: New feature addition
+- **bugfix**: Bug fix
+- **documentation**: Documentation updates
+- **infrastructure**: Infrastructure or tooling changes
+
+## Entry Structure
+
+Each changelog entry must have two main sections:
+
+### 1. Execution Plan
+
+This section describes what was planned to be done. It should include:
+- Goals and objectives
+- Planned approach or strategy
+- Expected outcomes
+- Any prerequisites or dependencies
+
+### 2. Execution Results / Attempts
+
+This section documents what was actually done or attempted. It should include:
+- What was completed
+- What was attempted but didn't work
+- Challenges encountered
+- Deviations from the plan
+- Lessons learned
+- Current status
+
+**For content changelog entries**, also include:
+- **Files/Folders Impacted**: Links to all files and folders that were created, modified, or affected
+  - Use markdown links with proper paths (e.g., `[docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx](/docs/techniques/blogging-techniques/adding-content)`)
+  - Include both created and enhanced files
+  - Link to folders when entire directories were affected
+
+**Example:**
+```markdown
+**Files Created:**
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx`](/docs/techniques/blogging-techniques/adding-content) - Main index page
+
+**Files Enhanced:**
+- [`docs/6-techniques/3-blogging-techniques/README.mdx`](/docs/techniques/blogging-techniques) - Added new section
+
+**Folders Impacted:**
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/`](/docs/techniques/blogging-techniques/adding-content) - Restructured folder
+```
+
+For entries with status `planned`, the "Execution Results / Attempts" section should indicate that execution has not yet begun.
+
+## Adding New Entries
+
+1. **Choose the correct directory**:
+   - `changelog/content/` for content-related changes (blog posts, documentation, content enhancements)
+   - `changelog/development/` for development/infrastructure changes (components, mechanics, infrastructure, etc.)
+
+2. **Use the correct naming convention**:
+   - For content entries: `YYYY-MM-DD-{prefix}-{descriptor}.md`
+     - Use `content-post-*` for blog posts
+     - Use `content-docs-*` for documentation that creates new docs
+     - Use `content-changelog-*` for changelog-related content
+   - For development entries: `YYYY-MM-DD-{category}-{action}-{descriptor}.md`
+     - See [Naming Conventions](/docs/NAMING_CONVENTIONS) for complete guidelines
+
+3. **Add appropriate frontmatter**:
+   - Include all required fields (title, description, status, dates, type, priority)
+   - Set `category: 'content'` for content entries, or omit for development entries
+
+4. **Include both sections**:
+   - "Execution Plan" - What was planned
+   - "Execution Results / Attempts" - What was done
+
+5. **For content entries, include file/folder links**:
+   - Add "Files/Folders Impacted" section with links to all affected files and folders
+   - Use proper markdown links with correct paths
+
+6. **Update this documentation if needed**:
+   - If you discover new patterns or conventions, update this file
+
+## Related Guides
+
+- [Adding Changelog Entries](/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries) - Step-by-step guide for creating changelog entries
+- [Changelog Directory Structure](/changelog/README) - Detailed changelog structure guide
+- [Naming Conventions](/docs/NAMING_CONVENTIONS) - Complete naming convention reference
+

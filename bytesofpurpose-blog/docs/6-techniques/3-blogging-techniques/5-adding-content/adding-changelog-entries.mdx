@@ -1,0 +1,354 @@
+---
+slug: adding-changelog-entries
+title: 'Adding Changelog Entries'
+description: 'Complete guide to creating changelog entries, including file structure, naming conventions, frontmatter requirements, and categorization.'
+authors: [oeid]
+tags: [changelog, content-creation, documentation, tracking]
+draft: false
+---
+
+# Adding Changelog Entries
+
+Complete guide to creating changelog entries for tracking changes, features, and improvements. Learn about file structure, naming conventions, frontmatter requirements, and how to categorize entries.
+
+## What Are Changelog Entries?
+
+Changelog entries are **structured entries that track changes, features, and improvements** systematically. They provide a historical record of what has been done, what is planned, and what is in progress.
+
+### ✅ Use Changelog Entries For:
+
+- **New features**: Tracking new capabilities and features
+- **Component changes**: UI components, React components, or visual elements
+- **Infrastructure improvements**: Build system, CI/CD, deployment changes
+- **Bug fixes**: Error corrections and bug resolutions
+- **Content additions**: New blog posts, documentation updates
+- **Refactoring**: Code restructuring and improvements
+- **Optimizations**: Performance improvements and optimizations
+- **Structure changes**: Navigation, organization, information architecture
+
+### Examples of Changelog Entries:
+
+- Component creation: `2025-01-20-component-creation-graph-renderer.md`
+- Bug fix: `2025-01-20-bugfix-graph-centering-mobile.md`
+- Infrastructure improvement: `2025-XX-XX-infrastructure-improvement-performance.md`
+- Content post: `2025-XX-XX-content-post-knowledge-agents-design.md`
+
+## Changelog Structure
+
+### Directory Organization
+
+Changelog entries are organized into two main categories:
+
+```
+changelog/
+  content/          # Content-related changes
+  development/      # Development/infrastructure changes
+```
+
+### Content Category (`changelog/content/`)
+
+Place entries related to:
+- New blog posts (`content-post-*`)
+- Documentation updates (`documentation-*`)
+- Content enhancements
+
+**Example**: `content/2025-01-15-content-post-knowledge-agents-design.md`
+
+### Development Category (`changelog/development/`)
+
+Place entries related to:
+- Component creation/enhancement (`component-*`)
+- Blogging mechanics (`mechanic-*`)
+- Infrastructure improvements (`infrastructure-*`)
+- Performance optimizations (`optimization-*`)
+- Structure changes (`structure-*`)
+- Refactoring (`refactoring-*`)
+- Bug fixes (`bugfix-*`)
+
+**Example**: `development/2025-01-15-component-creation-svg-kanban.md`
+
+## File Naming Convention
+
+Changelog entries follow a strict naming convention:
+
+```
+YYYY-MM-DD-{category}-{action}-{descriptor}.md
+```
+
+### Format Components
+
+- **`YYYY-MM-DD`**: Date (use `XX` for unknown/planned dates)
+- **`{category}`**: Type of change (see Categories below)
+- **`{action}`**: What's being done (see Actions below)
+- **`{descriptor}`**: Kebab-case description of the specific item
+
+### Date Format
+
+- Use `YYYY-MM-DD` for specific dates (e.g., `2025-01-20`)
+- Use `YYYY-XX-XX` for planned entries with unknown dates (e.g., `2025-XX-XX`)
+- Use `YYYY-MM-XX` for entries with known month but unknown day (e.g., `2025-01-XX`)
+
+## Categories
+
+### Component
+
+For changes related to UI components, React components, or visual elements.
+
+**Format**: `component-{action}-{component-name}`
+
+**Examples**:
+- `2025-01-20-component-creation-graph-renderer.md`
+- `2025-01-20-component-enhancement-graph-renderer.md`
+- `2025-01-20-component-refactoring-graph-renderer.md`
+
+### Mechanic
+
+For changes related to blogging mechanisms, workflows, or processes.
+
+**Format**: `mechanic-{action}-{mechanic-name}`
+
+**Examples**:
+- `2025-01-20-mechanic-establishment-link-management.md`
+- `2025-01-20-mechanic-enhancement-link-management.md`
+
+### Content Post
+
+For blog content enhancements, new blog posts, or content-related improvements.
+
+**Format**: `content-post-{descriptor}`
+
+**Examples**:
+- `2025-XX-XX-content-post-knowledge-agents-design.md`
+- `2025-01-20-content-post-api-tutorial.md`
+
+### Feature
+
+For new features or capabilities that don't fit into other categories.
+
+**Format**: `feature-{descriptor}`
+
+**Examples**:
+- `2025-XX-XX-feature-search-functionality.md`
+- `2025-01-20-feature-user-authentication.md`
+
+### Bugfix
+
+For bug fixes and error corrections.
+
+**Format**: `bugfix-{descriptor}`
+
+**Examples**:
+- `2025-01-20-bugfix-graph-centering-mobile.md`
+- `2025-01-20-bugfix-link-resolution-error.md`
+
+### Documentation
+
+For documentation improvements, guides, or content updates.
+
+**Format**: `documentation-{descriptor}`
+
+**Examples**:
+- `2025-01-20-documentation-api-reference.md`
+- `2025-01-20-documentation-setup-guide.md`
+
+### Infrastructure
+
+For infrastructure, build system, CI/CD, or deployment changes.
+
+**Format**: `infrastructure-{descriptor}` or `infrastructure-improvement-{descriptor}`
+
+**Examples**:
+- `2025-XX-XX-infrastructure-build-optimization.md`
+- `2025-01-20-infrastructure-ci-cd-pipeline.md`
+- `2025-XX-XX-infrastructure-improvement-performance.md`
+
+### Optimization
+
+For performance optimizations, bundle size improvements, load time optimizations.
+
+**Format**: `optimization-{descriptor}`
+
+**Examples**:
+- `2025-01-20-optimization-bundle-size-storybook.md`
+- `2025-XX-XX-optimization-page-load-time.md`
+- `2025-01-20-optimization-code-splitting.md`
+
+### Structure
+
+For changes related to the blog's structure, organization, navigation, or information architecture.
+
+**Format**: `structure-{descriptor}`
+
+**Examples**:
+- `2025-XX-XX-structure-navigation-reorganization.md`
+- `2025-01-20-structure-category-hierarchy.md`
+
+### Refactoring
+
+For code refactoring that doesn't fit into component refactoring.
+
+**Format**: `refactoring-{descriptor}`
+
+**Examples**:
+- `2025-01-20-refactoring-code-organization.md`
+- `2025-01-20-refactoring-test-structure.md`
+
+## Actions
+
+### For Components
+
+- **`creation`**: Creating a new component from scratch
+- **`enhancement`**: Adding features or improving an existing component
+- **`refactoring`**: Restructuring or improving code quality
+
+### For Mechanics
+
+- **`establishment`**: Establishing a new blogging mechanism or workflow
+- **`enhancement`**: Improving or extending an existing mechanism
+- **`refactoring`**: Restructuring an existing mechanism
+
+### For Other Categories
+
+Most other categories don't require explicit actions, but you can use:
+- **`improvement`**: General improvements (e.g., `infrastructure-improvement-build-speed.md`)
+- **`addition`**: Adding something new (e.g., `documentation-addition-api-guide.md`)
+
+## Frontmatter Requirements
+
+Changelog entries require specific frontmatter fields:
+
+```yaml
+---
+title: 'Entry Title'
+description: 'Brief description of the change'
+status: 'planned' | 'in-progress' | 'completed' | 'cancelled'
+inception_date: 'YYYY-MM-DD'
+execution_date: 'YYYY-MM-DD' | 'TBD'
+type: 'refactoring' | 'feature' | 'bugfix' | 'documentation' | 'infrastructure' | 'optimization'
+component: 'Component Name'  # Optional
+priority: 'low' | 'medium' | 'high' | 'critical'
+category: 'content' | 'development'  # Optional, inferred from directory
+slug: 'auto-generated'  # Auto-generated from filename
+---
+```
+
+### Frontmatter Fields
+
+- **`title`**: Entry title (required)
+- **`description`**: Brief description (required)
+- **`status`**: Current status (required)
+  - `planned`: Not yet started
+  - `in-progress`: Currently being worked on
+  - `completed`: Finished
+  - `cancelled`: No longer planned
+- **`inception_date`**: When the idea was conceived (required)
+- **`execution_date`**: When work was/will be completed (required, use `TBD` for planned)
+- **`type`**: Type of change (required)
+- **`component`**: Component name if applicable (optional)
+- **`priority`**: Priority level (required)
+- **`category`**: Content or development (optional, inferred from directory)
+
+### Example Frontmatter
+
+```yaml
+---
+title: 'Performance Optimizations'
+description: 'Optimize bundle sizes, improve page load times, and optimize Storybook build size'
+status: 'planned'
+inception_date: '2025-01-20'
+execution_date: 'TBD'
+type: 'infrastructure'
+priority: 'medium'
+---
+```
+
+## Entry Content Structure
+
+Changelog entries typically include:
+
+### Execution Plan
+
+Outline what needs to be done:
+
+```markdown
+## Execution Plan
+
+- Task 1
+- Task 2
+- Task 3
+```
+
+### Execution Results / Attempts
+
+Document progress and results:
+
+```markdown
+## Execution Results / Attempts
+
+### Status: In Progress
+
+**Related Work:**
+- Link to related changelog entries
+- Reference to specific commits or PRs
+
+**Remaining Work:**
+- What still needs to be done
+- Next steps
+```
+
+### Status Sections
+
+Use appropriate status sections:
+
+- **`### Status: Not Started`**: For planned entries
+- **`### Status: In Progress`**: For active work
+- **`### Status: Completed`**: For finished work
+- **`### Status: Cancelled`**: For abandoned work
+
+## Best Practices
+
+### Naming
+
+1. **Be specific**: Use clear, descriptive names
+2. **Use kebab-case**: All lowercase with hyphens
+3. **Be concise**: Avoid redundant words
+4. **Match category**: Ensure filename matches the category
+
+### Organization
+
+1. **Use correct directory**: Place entries in `content/` or `development/` as appropriate
+2. **Follow naming convention**: Use the exact format specified
+3. **Update status**: Keep status current as work progresses
+4. **Link related entries**: Reference related changelog entries
+
+### Content
+
+1. **Be descriptive**: Clearly explain what the change is
+2. **Include context**: Explain why the change is needed
+3. **Document progress**: Update execution results as work progresses
+4. **Link to related work**: Reference commits, PRs, or other entries
+
+## Changelog Generation
+
+The changelog system automatically:
+
+- Generates changelog data from entries
+- Creates slugs from filenames
+- Handles subdirectories correctly
+- Categorizes entries automatically
+
+Run the generation script:
+
+```bash
+node scripts/generate-changelog-data.js
+```
+
+## Related Guides
+
+- [Adding Blog Posts](/docs/techniques/blogging-techniques/adding-content/mx-docx-blog-posts) - Creating blog posts
+- [Adding Documentation](/docs/techniques/blogging-techniques/adding-content/adding-docs) - Creating documentation
+- [Adding Design Posts](/docs/techniques/blogging-techniques/adding-content/adding-designs) - Creating design posts
+- [Changelog System](/docs/techniques/blogging-techniques/changelog-system) - Complete guide to the changelog system
+- [Changelog Directory Structure](/changelog/README) - Detailed changelog structure guide
+- [Naming Conventions](/docs/NAMING_CONVENTIONS) - Complete naming convention reference
+

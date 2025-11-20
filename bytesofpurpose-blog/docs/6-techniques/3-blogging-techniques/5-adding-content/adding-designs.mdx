@@ -1,0 +1,275 @@
+---
+slug: adding-designs
+title: 'Adding Design Posts'
+description: 'Complete guide to creating design posts, including what qualifies as a design post, file structure, frontmatter, and best practices.'
+authors: [oeid]
+tags: [designs, content-creation, architecture, documentation]
+draft: false
+---
+
+# Adding Design Posts
+
+Complete guide to creating design posts in Docusaurus. Learn what qualifies as a design post, how to structure files, configure frontmatter, and follow best practices.
+
+## What Qualifies as a Design Post?
+
+Design posts are designed for **documenting design decisions and architectural insights**. They capture the rationale behind design choices, system architecture, and visual design documentation.
+
+### ✅ Choose Design Posts When Your Content Is:
+
+- **Design decisions**: Documenting why specific design choices were made
+- **Architecture documentation**: System design and architectural patterns
+- **Visual design**: Design mockups, prototypes, and visual documentation
+- **Design rationale**: Explaining the reasoning behind design choices
+- **System design**: High-level system architecture and components
+- **Design process**: Documenting the design process and iterations
+
+### Examples of Good Design Posts:
+
+- "GenAI Agent Design" - System architecture and design decisions
+- "Blog Design Framework" - Design system and structure
+- "Component Architecture" - React component design patterns
+- "API Design Decisions" - API structure and rationale
+- "User Flow Design" - User experience and interaction design
+
+### ❌ Don't Use Design Posts For:
+
+- Step-by-step implementation guides (use documentation)
+- Personal experiences building something (use blog posts)
+- Time-sensitive content (use blog posts)
+- Reference material (use documentation)
+
+## Design Post Structure
+
+### File Location
+
+Design posts are stored in the `designs/` directory:
+
+```
+bytesofpurpose-blog/
+  designs/
+    2025-02-06-genai-agent-design.mdx
+    2025-12-31-blog-design.md
+    2025-12-31-Framework.mdx
+    authors.yml
+```
+
+### File Naming Convention
+
+Design posts can use date-based naming similar to blog posts:
+
+```
+YYYY-MM-DD-descriptor.mdx
+```
+
+**Examples**:
+- `2025-02-06-genai-agent-design.mdx`
+- `2025-12-31-blog-design.md`
+- `2025-12-31-Framework.mdx`
+
+Alternatively, use descriptive names without dates:
+
+```
+descriptor.mdx
+```
+
+### Design Post Folders
+
+You can create folders for design posts to co-locate related files:
+
+```
+designs/
+  genai-agent-design/
+    index.mdx
+    architecture-diagram.png
+    component-diagram.svg
+```
+
+## Frontmatter Requirements
+
+Design posts support [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features), including [MDX](https://mdxjs.com/).
+
+### Required Frontmatter
+
+```yaml
+---
+slug: my-design-slug
+sidebar_position: 1
+title: 'My Design Title'
+description: 'A brief description of the design'
+authors: [oeid]
+tags: [design, architecture, system-design]
+draft: false
+---
+```
+
+### Common Frontmatter Fields
+
+- **`slug`**: URL-friendly identifier (required)
+- **`title`**: Design post title (required)
+- **`description`**: Brief description (optional)
+- **`authors`**: Array of author IDs from `authors.yml` (optional)
+- **`tags`**: Array of tags for categorization (optional)
+- **`sidebar_position`**: Position in sidebar (optional)
+- **`draft`**: Set to `false` to publish, `true` to keep as draft (optional, default: `false`)
+
+### Example Frontmatter
+
+```yaml
+---
+slug: design-genai-agent
+sidebar_position: 1
+title: GenAI Agent Design
+description: 'Design and architecture for a GenAI agent system'
+authors: [oeid]
+tags: [genai, architecture, design, agents]
+draft: false
+---
+```
+
+## Design Post Content
+
+### Typical Structure
+
+Design posts often include:
+
+```markdown
+# Design Title
+
+Brief introduction explaining the design context.
+
+## Prioritization / Motivation
+
+Why this design is important and what problems it solves.
+
+## Requirements
+
+What the design needs to accomplish.
+
+## Use Cases
+
+Specific use cases the design addresses.
+
+## High Level Design
+
+Overview of the design approach.
+
+## Components
+
+Key components and their relationships.
+
+## Approach
+
+How the design will be implemented.
+
+## Resources
+
+Links to relevant resources and references.
+```
+
+### Using Components
+
+Design posts can embed various components:
+
+- **Diagrams**: Figma embeds, Mermaid diagrams, PlantUML
+- **Images**: Architecture diagrams, mockups, prototypes
+- **Code**: Code examples showing implementation
+- **Tabs**: Organize different aspects of the design
+
+### Example: Using Figma Embeds
+
+```markdown
+<iframe 
+  style={{border: "1px solid rgba(0, 0, 0, 0.1)"}} 
+  width="800" 
+  height="450" 
+  src="https://embed.figma.com/board/..." 
+  allowfullscreen>
+</iframe>
+```
+
+### Example: Using Tabs
+
+```markdown
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="use-case-1" label="Use Case 1">
+    Content for use case 1
+  </TabItem>
+  <TabItem value="use-case-2" label="Use Case 2">
+    Content for use case 2
+  </TabItem>
+</Tabs>
+```
+
+## Best Practices
+
+### Content Quality
+
+1. **Document rationale**: Explain why design decisions were made
+2. **Show architecture**: Include diagrams and visual representations
+3. **Be comprehensive**: Cover all aspects of the design
+4. **Include context**: Explain the problem being solved
+5. **Document trade-offs**: Discuss alternatives and why they weren't chosen
+
+### Formatting
+
+1. **Use visual aids**: Include diagrams, mockups, and visual representations
+2. **Structure clearly**: Use headings to organize content
+3. **Use tabs**: Organize different aspects or use cases
+4. **Include code**: Show implementation examples when relevant
+5. **Link to resources**: Reference related documentation and resources
+
+### Organization
+
+1. **Clear sections**: Organize content into logical sections
+2. **Visual hierarchy**: Use headings and formatting effectively
+3. **Cross-references**: Link to related designs and documentation
+4. **Consistent structure**: Follow similar structure across design posts
+5. **Update as needed**: Keep designs current as they evolve
+
+## Design Post vs Other Content Types
+
+### Design Posts vs Blog Posts
+
+- **Design Posts**: Focus on design decisions and architecture
+- **Blog Posts**: Focus on experiences, stories, and time-sensitive content
+
+### Design Posts vs Documentation
+
+- **Design Posts**: Document design rationale and architecture
+- **Documentation**: Provide reference material and how-to guides
+
+### Design Posts vs Changelog Entries
+
+- **Design Posts**: Document design decisions and architecture
+- **Changelog Entries**: Track changes and implementation progress
+
+## Authors Configuration
+
+Design post authors are defined in `designs/authors.yml`:
+
+```yaml
+oeid:
+  name: Omar Eid
+  title: Software Engineer
+  url: https://github.com/omareid
+  image_url: https://github.com/omareid.png
+```
+
+Reference authors in frontmatter:
+
+```yaml
+authors: [oeid]
+```
+
+## Related Guides
+
+- [Adding Blog Posts](/docs/techniques/blogging-techniques/adding-content/mx-docx-blog-posts) - Creating blog posts
+- [Adding Changelog Entries](/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries) - Creating changelog entries
+- [Adding Documentation](/docs/techniques/blogging-techniques/adding-content/adding-docs) - Creating documentation
+- [Embedding Diagrams](/docs/techniques/blogging-techniques/embed-diagrams) - Adding diagrams to design posts
+- [Embedding External Components](/docs/techniques/blogging-techniques/embed-external-components) - Adding external content
+

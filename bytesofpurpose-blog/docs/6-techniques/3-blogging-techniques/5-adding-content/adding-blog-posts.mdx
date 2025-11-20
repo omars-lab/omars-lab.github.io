@@ -1,0 +1,234 @@
+---
+slug: mx-docx-blog-posts
+title: 'Adding Blog Posts'
+description: 'Complete guide to creating blog posts in Docusaurus, including what qualifies as a blog post, file structure, frontmatter, and best practices.'
+authors: [oeid]
+tags: [docusaurus, blog, content-creation, blogging]
+draft: false
+---
+
+# Adding Blog Posts
+
+Complete guide to creating blog posts in Docusaurus. Learn what qualifies as a blog post, how to structure files, configure frontmatter, and follow best practices.
+
+## What Qualifies as a Blog Post?
+
+Blog posts are designed for **discovery and storytelling**. They capture moments in time, share experiences, and help people learn through narrative.
+
+### ✅ Choose Blog Posts When Your Content Is:
+
+- **Time-sensitive**: Current events, new tool releases, or trending topics
+- **Personal experience**: Your journey learning something, mistakes made, lessons learned
+- **Opinion or analysis**: Your take on industry trends or tool comparisons
+- **Story-driven**: Content that benefits from narrative structure
+- **Discovery-focused**: Content that helps people find new ideas or approaches
+- **Tinkering timeline**: Capturing the journey of experimentation and learning
+
+### Examples of Good Blog Posts:
+
+- "My experience migrating from X to Y"
+- "Why I switched to this new framework"
+- "Lessons learned from building my first SaaS"
+- "Comparing different approaches to solve problem Z"
+- "What I learned from debugging a production issue"
+
+### ❌ Don't Use Blog Posts For:
+
+- Reference material (use documentation instead)
+- Step-by-step guides that won't change (use documentation)
+- API documentation (use documentation)
+- Configuration instructions (use documentation)
+
+For more guidance on choosing between blog posts and documentation, see [Docs vs Blog Posts](/blog/docs-vs-blog-posts).
+
+## Blog Post Structure
+
+### File Location
+
+Blog posts are stored in the `blog/` directory at the root of your project:
+
+```
+bytesofpurpose-blog/
+  blog/
+    2025-01-31-docs-vs-blogs.md
+    2025-03-07-DFS-vs-BFS.md
+    2025-09-27-my-contributions.mdx
+    authors.yml
+```
+
+### File Naming Convention
+
+Blog post dates are extracted from filenames. Use the format:
+
+```
+YYYY-MM-DD-slug.md
+```
+
+**Examples**:
+- `2025-01-31-docs-vs-blogs.md`
+- `2025-03-07-DFS-vs-BFS.md`
+- `2025-09-27-my-contributions.mdx`
+
+### Blog Post Folders
+
+You can also create a folder for a blog post, which is convenient for co-locating images:
+
+```
+blog/
+  2025-01-31-my-post/
+    index.md
+    image1.png
+    image2.jpg
+```
+
+## Frontmatter Requirements
+
+Blog posts support [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features), including [MDX](https://mdxjs.com/).
+
+### Required Frontmatter
+
+```yaml
+---
+slug: my-blog-post-slug
+title: 'My Blog Post Title'
+description: 'A brief description of the blog post'
+authors: [oeid]
+tags: [tag1, tag2, tag3]
+date: 2025-01-31T10:00
+draft: false
+---
+```
+
+### Frontmatter Fields
+
+- **`slug`**: URL-friendly identifier (required)
+- **`title`**: Blog post title (required)
+- **`description`**: Brief description for SEO and previews (required)
+- **`authors`**: Array of author IDs from `authors.yml` (required)
+- **`tags`**: Array of tags for categorization (optional but recommended)
+- **`date`**: Publication date in ISO format (required)
+- **`draft`**: Set to `false` to publish, `true` to keep as draft (optional, default: `false`)
+- **`image`**: Path to featured image (optional)
+- **`hide_table_of_contents`**: Hide TOC (optional, default: `false`)
+
+### Example Frontmatter
+
+```yaml
+---
+slug: docs-vs-blog-posts
+title: '📝 Docs vs Blogs'
+description: 'Learn the key differences between documentation and blog posts to make better content decisions for your developer blog.'
+authors: [oeid]
+tags: [content-strategy, blogging, documentation, writing]
+date: 2025-01-31T10:00
+image: /img/versus.jpg
+draft: false
+---
+```
+
+## Authors Configuration
+
+Regular blog authors are defined in `blog/authors.yml`:
+
+```yaml
+oeid:
+  name: Omar Eid
+  title: Software Engineer
+  url: https://github.com/omareid
+  image_url: https://github.com/omareid.png
+```
+
+Reference authors in frontmatter using their key:
+
+```yaml
+authors: [oeid]
+```
+
+## Blog Post Content
+
+### Truncation
+
+Use the `<!-- truncate -->` comment to mark where the post preview should end:
+
+```markdown
+I needed to distinguish when I should create a new blog post vs doc; thus I made this post.
+
+<!-- truncate -->
+
+# Full Content Starts Here
+```
+
+### Markdown Features
+
+Blog posts support all [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features):
+
+- **MDX**: Use React components and JSX
+- **Code blocks**: Syntax highlighting for code examples
+- **Admonitions**: Callouts, tips, warnings, etc.
+- **Links**: Internal and external links
+- **Images**: Embedded images with optimization
+- **Tables**: Markdown tables
+
+### Using Components
+
+You can embed components from other sections:
+
+- **Structural Components**: Cards, buttons, headers, footers
+- **Diagrams**: Mermaid, Figma, PlantUML
+- **Code**: Gists, Jupyter notebooks, code cells
+- **External Components**: HTML, images, videos
+
+See the [Blogging Techniques](/docs/techniques/blogging-techniques) section for detailed guides.
+
+## Best Practices
+
+### Content Quality
+
+1. **Tell a story**: Blog posts benefit from narrative structure
+2. **Share experiences**: Include personal insights and lessons learned
+3. **Be relatable**: Include your thought process and decision-making
+4. **Use engaging headlines**: Make titles compelling and descriptive
+5. **Include context**: Explain why decisions were made
+
+### Formatting
+
+1. **Use headings**: Structure content with clear headings
+2. **Add code examples**: Include working code snippets
+3. **Use images**: Visual content enhances engagement
+4. **Link to related content**: Connect to documentation and other posts
+5. **Add tags**: Use relevant tags for discoverability
+
+### SEO and Discoverability
+
+1. **Write descriptive titles**: Include keywords naturally
+2. **Add descriptions**: Write compelling meta descriptions
+3. **Use tags**: Tag posts appropriately for categorization
+4. **Link internally**: Connect to related documentation and posts
+5. **Add images**: Include featured images for social sharing
+
+## Blog Plugin Configuration
+
+[Docusaurus blogging features](https://docusaurus.io/docs/blog) are powered by the [blog plugin](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog).
+
+The blog plugin is configured in `docusaurus.config.js`. Key settings include:
+
+- **Blog directory**: Where blog posts are stored
+- **Blog title**: Title of the blog section
+- **Blog description**: Description for SEO
+- **Posts per page**: Number of posts per listing page
+- **Blog sidebar**: Sidebar configuration
+
+## Disabling the Blog
+
+If you don't want a blog, you can:
+
+1. Delete the `blog/` directory
+2. Set `blog: false` in your Docusaurus config
+
+## Related Guides
+
+- [Adding Changelog Entries](/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries) - Creating changelog entries
+- [Adding Documentation](/docs/techniques/blogging-techniques/adding-content/adding-docs) - Creating documentation
+- [Adding Design Posts](/docs/techniques/blogging-techniques/adding-content/adding-designs) - Creating design posts
+- [Docs vs Blog Posts](/blog/docs-vs-blog-posts) - Choosing between formats
+- [Blogging Techniques](/docs/techniques/blogging-techniques) - Advanced blogging features

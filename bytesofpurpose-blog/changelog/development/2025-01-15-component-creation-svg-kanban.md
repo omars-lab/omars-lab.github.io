@@ -108,7 +108,7 @@ import KanbanExample from '@site/static/img/kanban-example.svg';
 ## Related Links
 
 - [Kanban Board Customization Blog Post](/docs/10-prompts/draw/kanban-board-customization)
-- [Kanban Customization Documentation](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-kanban-customization)
+- [Kanban Customization Documentation](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-kanban-customization)
 - [Customization Prompt](https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/draw/customize-kanban-board.md)
 - [Base SVG Template](/img/kanban-structure.svg)
 

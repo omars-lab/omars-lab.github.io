@@ -1,0 +1,263 @@
+---
+slug: adding-docs
+title: 'Adding Documentation'
+description: 'Complete guide to creating documentation, including what qualifies as documentation, file structure, frontmatter, and best practices.'
+authors: [oeid]
+tags: [documentation, content-creation, docusaurus, guides]
+draft: false
+---
+
+# Adding Documentation
+
+Complete guide to creating documentation in Docusaurus. Learn what qualifies as documentation, how to structure files, configure frontmatter, and follow best practices.
+
+## What Qualifies as Documentation?
+
+Documentation is designed for **reference and durability**. It's the content people return to when they need to solve a specific problem or understand how something works.
+
+### ✅ Choose Documentation When Your Content Is:
+
+- **Reference material**: Step-by-step guides, API documentation, configuration instructions
+- **Durable knowledge**: Information that won't become outdated quickly
+- **Problem-solving focused**: "How to do X" content that solves specific problems
+- **Comprehensive**: Complete guides that cover a topic thoroughly
+- **Searchable**: Content people will look for when they have a specific need
+- **Authoritative**: Complete, accurate information that serves as a reference
+
+### Examples of Good Documentation:
+
+- "Setting up a local development environment"
+- "Docusaurus configuration guide"
+- "Algorithm problem-solving techniques"
+- "React component patterns"
+- "API reference documentation"
+- "Troubleshooting common issues"
+
+### ❌ Don't Use Documentation For:
+
+- Time-sensitive content (use blog posts instead)
+- Personal experiences or stories (use blog posts)
+- Opinion pieces (use blog posts)
+- Design decisions (use design posts)
+
+For more guidance on choosing between documentation and blog posts, see [Docs vs Blog Posts](/blog/docs-vs-blog-posts).
+
+## Documentation Structure
+
+### File Location
+
+Documentation is stored in the `docs/` directory:
+
+```
+bytesofpurpose-blog/
+  docs/
+    1-welcome/
+      README.md
+    2-definitions/
+      README.md
+      terminology-blog.md
+    6-techniques/
+      3-blogging-techniques/
+        README.mdx
+        5-adding-content/
+          README.mdx
+          adding-blog-posts.mdx
+```
+
+### Directory Organization
+
+Documentation is organized hierarchically:
+
+- **Top-level folders**: Major sections (e.g., `1-welcome`, `2-definitions`, `6-techniques`)
+- **Sub-folders**: Subsections and categories
+- **Files**: Individual documentation pages
+
+### File Naming
+
+- Use descriptive, kebab-case names
+- Use `README.md` or `README.mdx` for index pages
+- Use meaningful names for content files (e.g., `adding-blog-posts.mdx`)
+
+### Category Files
+
+Each folder can have a `_category_.json` file for sidebar configuration:
+
+```json
+{
+  "label": "📝 Adding Content",
+  "position": 5
+}
+```
+
+## Frontmatter Requirements
+
+Documentation supports [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features), including [MDX](https://mdxjs.com/).
+
+### Required Frontmatter
+
+```yaml
+---
+slug: my-doc-slug
+title: 'My Documentation Title'
+description: 'A brief description of the documentation'
+authors: [oeid]
+tags: [tag1, tag2, tag3]
+draft: false
+---
+```
+
+### Common Frontmatter Fields
+
+- **`slug`**: URL-friendly identifier (required)
+- **`title`**: Documentation title (required)
+- **`description`**: Brief description for SEO and previews (required)
+- **`authors`**: Array of author IDs from `authors.yml` (required)
+- **`tags`**: Array of tags for categorization (optional but recommended)
+- **`draft`**: Set to `false` to publish, `true` to keep as draft (optional, default: `false`)
+- **`sidebar_position`**: Position in sidebar (optional)
+- **`hide_table_of_contents`**: Hide TOC (optional, default: `false`)
+
+### Example Frontmatter
+
+```yaml
+---
+slug: adding-blog-posts
+title: 'Adding Blog Posts'
+description: 'Complete guide to creating blog posts in Docusaurus, including what qualifies as a blog post, file structure, frontmatter, and best practices.'
+authors: [oeid]
+tags: [docusaurus, blog, content-creation, blogging]
+draft: false
+---
+```
+
+## Documentation Content
+
+### Structure
+
+Documentation should be well-structured:
+
+```markdown
+# Main Title
+
+Brief introduction explaining what this documentation covers.
+
+## Section 1
+
+Content for section 1.
+
+### Subsection 1.1
+
+More detailed content.
+
+## Section 2
+
+Content for section 2.
+```
+
+### Markdown Features
+
+Documentation supports all [Docusaurus Markdown features](https://docusaurus.io/docs/markdown-features):
+
+- **MDX**: Use React components and JSX
+- **Code blocks**: Syntax highlighting for code examples
+- **Admonitions**: Callouts, tips, warnings, etc.
+- **Links**: Internal and external links
+- **Images**: Embedded images with optimization
+- **Tables**: Markdown tables
+- **Diagrams**: Mermaid, PlantUML, and other diagram types
+
+### Using Components
+
+You can embed components from other sections:
+
+- **Structural Components**: Cards, buttons, headers, footers
+- **Diagrams**: Mermaid, Figma, PlantUML
+- **Code**: Gists, Jupyter notebooks, code cells
+- **External Components**: HTML, images, videos
+
+See the [Blogging Techniques](/docs/techniques/blogging-techniques) section for detailed guides.
+
+## Best Practices
+
+### Content Quality
+
+1. **Be comprehensive**: Cover topics thoroughly
+2. **Be accurate**: Ensure all information is correct and up-to-date
+3. **Be clear**: Use clear, scannable formatting
+4. **Include examples**: Provide working code examples
+5. **Keep updated**: Maintain documentation as things change
+
+### Formatting
+
+1. **Use headings**: Structure content with clear headings
+2. **Add code examples**: Include working code snippets
+3. **Use images**: Visual content enhances understanding
+4. **Link to related content**: Connect to other documentation and posts
+5. **Add tags**: Use relevant tags for discoverability
+
+### Organization
+
+1. **Logical structure**: Organize content hierarchically
+2. **Clear navigation**: Use sidebar positioning effectively
+3. **Cross-references**: Link to related documentation
+4. **Index pages**: Use README files for section overviews
+5. **Consistent naming**: Follow naming conventions
+
+### SEO and Discoverability
+
+1. **Write descriptive titles**: Include keywords naturally
+2. **Add descriptions**: Write compelling meta descriptions
+3. **Use tags**: Tag documentation appropriately
+4. **Link internally**: Connect to related content
+5. **Use clear headings**: Help search engines understand structure
+
+## Documentation vs Blog Posts
+
+Understanding when to use documentation vs blog posts:
+
+### Use Documentation For:
+
+- Reference material that won't change quickly
+- Step-by-step guides
+- API documentation
+- Configuration instructions
+- Problem-solving guides
+
+### Use Blog Posts For:
+
+- Time-sensitive content
+- Personal experiences
+- Opinion pieces
+- Story-driven content
+- Discovery-focused content
+
+See [Docs vs Blog Posts](/blog/docs-vs-blog-posts) for detailed guidance.
+
+## Sidebar Configuration
+
+Documentation sidebar is configured in `sidebars.js`:
+
+```javascript
+module.exports = {
+  docs: [
+    'intro',
+    {
+      type: 'category',
+      label: 'Techniques',
+      items: [
+        'techniques/blogging-techniques',
+        // ...
+      ],
+    },
+  ],
+};
+```
+
+## Related Guides
+
+- [Adding Blog Posts](/docs/techniques/blogging-techniques/adding-content/mx-docx-blog-posts) - Creating blog posts
+- [Adding Changelog Entries](/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries) - Creating changelog entries
+- [Adding Design Posts](/docs/techniques/blogging-techniques/adding-content/adding-designs) - Creating design posts
+- [Docs vs Blog Posts](/blog/docs-vs-blog-posts) - Choosing between formats
+- [Documentation Techniques](/docs/techniques/documentation-techniques) - Advanced documentation features
+

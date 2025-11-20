@@ -45,7 +45,7 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 
 ## Docusaurus Configuration
 
-*See [Blog Roadmap](/docs/developing/roadmaps/blog-roadmap) for future Docusaurus features and plugins.*
+*See [Blog Roadmap](/docs/development/7-roadmaps/blog-roadmap) for future Docusaurus features and plugins.*
 
 ### Learnings
 * Learning - pointing to a draft page will throw an error ...

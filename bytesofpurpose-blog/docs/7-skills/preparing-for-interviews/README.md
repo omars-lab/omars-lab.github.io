@@ -39,10 +39,10 @@ Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
 - [ ] **Read [Interview Process](/docs/mental-models/understanding-processes/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
-- [ ] **Study [SDE Skill Differences](/docs/mental-models/understanding-career-levels/understanding-differences-in-skills)** - Understand the differences between SDE levels and expectations
-- [ ] **Review [Leadership Principles](/docs/mental-models/understanding-skills/understanding-desireable-leadership-skills)** - Master the 10 core leadership principles and what interviewers look for
-- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-tech-skills)** - Learn the technical evaluation criteria
-- [ ] **Review [Soft Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-soft-skills)** - Learn the soft skills evaluation criteria
+- [ ] **Study [SDE Skill Differences](/docs/mental-models/understanding-career-levels/understanding-sde-levels)** - Understand the differences between SDE levels and expectations
+- [ ] **Review [Leadership Principles](/docs/mental-models/understanding-skills/leadership-principles-companies-look-for)** - Master the 10 core leadership principles and what interviewers look for
+- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/technical-skills-interview-evaluation)** - Learn the technical evaluation criteria
+- [ ] **Review [Soft Skills Evaluation](/docs/mental-models/understanding-skills/soft-skills-interview-evaluation)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
 - [ ] **Build your [Personal Story Bank](/docs/skills/preparing-for-interviews/personal-story-bank)** - Develop 2-3 STAR stories for each leadership principle
@@ -51,7 +51,7 @@ Follow this systematic approach to maximize your interview success:
 
 ### Phase 3: Technical Preparation
 - [ ] **Master [Preparing for Coding Questions](/docs/skills/preparing-for-interviews/preparing-for-coding-questions)** - Learn systematic approach to coding problems and algorithms
-- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/understanding-desireable-tech-skills)** - Understand what companies evaluate in technical interviews
+- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/technical-skills-interview-evaluation)** - Understand what companies evaluate in technical interviews
 - [ ] **Study [Preparing for System Design Questions](/docs/skills/preparing-for-interviews/preparing-for-system-design-questions)** - Learn how to approach architecture and design questions
 
 ### Phase 4: Practice and Refinement
