@@ -14,7 +14,7 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 
 # Content
 
-*See [Blog Roadmap](/docs/developing/roadmaps/blog-roadmap) for content planning, strategy, structure, and features.*
+*See [Blog Roadmap](/docs/development/7-roadmaps/blog-roadmap) for content planning, strategy, structure, and features.*
 
 # Blog Infrastructure
 

@@ -55,7 +55,7 @@ const FeatureList: FeatureItem[] = [
         the design for this very site, and more! 
       </>
     ),
-    to: "/designs/blog-design",
+    to: "/designs/design-blog",
     buttonText: "Designs"
   },
 ];

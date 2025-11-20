@@ -85,7 +85,7 @@ flowchart TD
 
 ### Essential Reading
 
-- **[The Fundamentals of Agentic Systems](/blog/understanding-fundamentals-of-genai-systems)** - Comprehensive glossary covering:
+- **[The Fundamentals of Agentic Systems](/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems)** - Comprehensive glossary covering:
   - Foundation Models (LLMs)
   - Prompting techniques
   - RAG (Retrieval-Augmented Generation)
@@ -219,7 +219,7 @@ flowchart TD
 
 ### Design Framework
 
-- **[Designing GenAI Systems](/docs/5-skills/solving-system-design/designing-genai-systems)** - Complete decision framework covering:
+- **[Designing GenAI Systems](/docs/skills/solving-system-design/framework-for-designing-genai-systems)** - Complete decision framework covering:
   - **Foundation Decisions**: RAG vs. prompting, memory, fine-tuning, model selection
   - **Architecture Decisions**: Single vs. multi-agent, vector DB selection, evaluation strategy
   - **Advanced Decisions**: Specialized databases, processing patterns, runtime environments
@@ -376,11 +376,10 @@ flowchart TD
 
 ## 🔗 Related Content
 
-- **[Fundamentals Guide](/blog/understanding-fundamentals-of-genai-systems)** - Core concepts glossary
-- **[Framework Landscape](/blog/ai-framework-landscape)** - Interactive framework comparison
-- **[System Design Guide](/docs/5-skills/solving-system-design/designing-genai-systems)** - Complete design framework
+- **[Fundamentals Guide](/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems)** - Core concepts glossary
+- **[Framework Landscape](/docs/mental-models/understanding-the-genai-domain/2025-11-10-ai-framework-landscape)** - Interactive framework comparison
+- **[System Design Guide](/docs/skills/solving-system-design/framework-for-designing-genai-systems)** - Complete design framework
 - **[Local LLMs](/docs/craftsmanship/workspace/running-llms-locally)** - Running LLMs locally
-- **[Personal Workflow](/blog/how-i-use-genai)** - Practical GenAI usage
 
 ---
 

@@ -132,11 +132,11 @@ Create a comprehensive Changelog React component with:
 - Stories include sample entries with proper category assignments (content/development)
 
 **Related Links:**
-- [Changelog Component](../../src/components/Changelog/Changelog.tsx)
-- [Changelog Stories](../../src/components/Changelog/Changelog.stories.tsx)
-- [Changelog Documentation](../../src/stories/Changelog.mdx)
+- [Changelog Component](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx)
+- [Changelog Stories](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.stories.tsx)
+- [Changelog Documentation](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/stories/Changelog.mdx)
 - [Changelog Page](/changelog)
-- [Changelog System Entry](../development/2025-XX-XX-structure-changelog-roadmap.md)
+- [Changelog System Entry](/changelog/development/2025-XX-XX-structure-changelog-roadmap)
 
 ### ✅ Mobile Responsiveness & UX Improvements (2025-01-20)
 

@@ -18,9 +18,9 @@ You'll find a comprehensive collection of documentation and blog posts that you 
 ### 📚 Documentation Sections
 - **[Techniques](/docs/techniques)** - Technical implementation details and tools
 - **[Coding Challenges](/docs/skills/solving-coding-challenges/coding-challenges)** - Algorithm problems and solutions
-- **[Development](/docs/developing/development)** - Setup guides and development workflows
-- **[Interviewing](/docs/skills/interviewing)** - Technical interview preparation
-- **[Deep Dives](/docs/developing/research/research)** - In-depth technical explorations
+- **[Development](/docs/development)** - Setup guides and development workflows
+- **[Interviewing](/docs/skills/preparing-for-interviews/interview-preparation-guide)** - Technical interview preparation
+- **[Deep Dives](/docs/development/5-initiatives)** - In-depth technical explorations
 
 ### 📝 Blog Posts
 - **[Latest Posts](/blog/)** - Recent thoughts and experiences
@@ -78,7 +78,7 @@ I have a section of future ideas that you can vote on, helping me prioritize wha
 This blog covers several key technical areas:
 
 - **Algorithm Problem Solving** - Including [DFS vs BFS comparisons](/blog/dfs-vs-bfs) and coding challenge solutions
-- **Local Development Setup** - From [running LLMs locally](/docs/developing/research/running-llms-locally) to development environment configuration
+- **Local Development Setup** - From [running LLMs locally](/docs/craftsmanship/workspace/running-llms-locally) to development environment configuration
 - **Development Tools** - Docusaurus setup, VS Code plugins, and productivity tools
 - **Technical Interviewing** - System design expectations and problem-solving frameworks
 

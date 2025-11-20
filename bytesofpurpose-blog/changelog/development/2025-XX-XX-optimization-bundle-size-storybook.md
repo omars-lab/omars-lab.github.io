@@ -109,7 +109,7 @@ Optimize bundle sizes and load times for both Storybook and the main blog to imp
 
 ## Related Links
 
-- [Storybook Webpack Config](../../.storybook/main.ts)
-- [Graph Component](../../src/components/Graph/GraphRenderer.tsx)
-- [Performance Optimization Entry](../2025-XX-XX-infrastructure-improvement-performance.md)
+- [Storybook Webpack Config](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/.storybook/main.ts)
+- [Graph Component](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Graph/GraphRenderer.tsx)
+- [Performance Optimization Entry](/changelog/development/2025-XX-XX-infrastructure-improvement-performance)
 
