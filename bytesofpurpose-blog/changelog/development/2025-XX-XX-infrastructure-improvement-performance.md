@@ -21,7 +21,7 @@ priority: 'medium'
 ### Status: In Progress
 
 **Related Work:**
-- See [Bundle Size Optimization](/changelog/development/2025-01-20-optimization-bundle-size-storybook) for detailed work on Storybook bundle optimization
+- See [Bundle Size Optimization](/changelog/2025/XX/XX/development/optimization-bundle-size-storybook) for detailed work on Storybook bundle optimization
 - Initial webpack code splitting configuration completed (2025-01-20)
 
 **Remaining Work:**

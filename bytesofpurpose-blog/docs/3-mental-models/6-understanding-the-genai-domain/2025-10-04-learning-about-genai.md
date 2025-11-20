@@ -174,7 +174,7 @@ flowchart TD
 
 ### Framework Comparison
 
-- **[The AI Framework Landscape](/blog/ai-framework-landscape)** - Interactive guide covering:
+- **[The AI Framework Landscape](/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape)** - Interactive guide covering:
   - **Frameworks**: LangChain, LangGraph, Haystack, Semantic Kernel
   - **Specialized Libraries**: LlamaIndex, Guidance, Outlines, Instructor
   - **Multi-Agent**: AutoGen, CrewAI
@@ -337,7 +337,6 @@ flowchart TD
 
 ### Practical Examples
 
-- **[How I Use GenAI](/blog/how-i-use-genai)** - Personal workflow and tools
 - MCP server implementations
 - Prompt library examples
 - Integration patterns

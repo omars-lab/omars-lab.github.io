@@ -12,10 +12,21 @@ This directory contains changelog entries organized by category.
 ### Content Changes (`content/`)
 Place entries related to:
 - New blog posts (`content-post-*`)
-- Documentation updates (`documentation-*`)
+- Documentation that creates new docs (`content-docs-*`)
+- Changelog-related content/analysis (`content-changelog-*`)
+- General documentation updates (`documentation-*` - legacy, prefer `content-docs-*` for new entries)
 - Content enhancements
 
-**Example**: `content/2025-01-15-content-post-knowledge-agents-design.md`
+**Prefix Guidelines:**
+- **`content-post-{descriptor}`**: For blog posts and blog content enhancements
+- **`content-docs-{descriptor}`**: For documentation that results in new documentation files
+- **`content-changelog-{descriptor}`**: For changelog-related content or analysis
+- **`documentation-{descriptor}`**: For general documentation updates (legacy format)
+
+**Examples**:
+- `content/2025-01-15-content-post-knowledge-agents-design.md` - Blog post entry
+- `content/2025-11-20-content-docs-adding-content-guides.md` - Documentation creation entry
+- `content/2025-11-20-content-changelog-missing-features-analysis.md` - Changelog analysis entry
 
 ### Development Changes (`development/`)
 Place entries related to:

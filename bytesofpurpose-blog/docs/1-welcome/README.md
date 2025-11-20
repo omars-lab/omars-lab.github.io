@@ -77,7 +77,7 @@ I have a section of future ideas that you can vote on, helping me prioritize wha
 
 This blog covers several key technical areas:
 
-- **Algorithm Problem Solving** - Including [DFS vs BFS comparisons](/blog/dfs-vs-bfs) and coding challenge solutions
+- **Algorithm Problem Solving** - Coding challenge solutions and problem-solving techniques
 - **Local Development Setup** - From [running LLMs locally](/docs/craftsmanship/workspace/running-llms-locally) to development environment configuration
 - **Development Tools** - Docusaurus setup, VS Code plugins, and productivity tools
 - **Technical Interviewing** - System design expectations and problem-solving frameworks

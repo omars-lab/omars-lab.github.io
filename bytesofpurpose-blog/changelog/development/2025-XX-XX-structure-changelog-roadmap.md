@@ -37,7 +37,7 @@ Organize and structure the changelog and roadmap sections of the blog, including
 - Integrated changelog generation into build process (npm lifecycle hooks)
 
 **Components Created:**
-- **Changelog Component System** - See [Component Creation Entry](/changelog/development/2025-11-16-component-creation-changelog-component) for detailed component architecture
+- **Changelog Component System** - See [Component Creation Entry](/changelog/2025/01/20/development/component-creation-changelog-component) for detailed component architecture
   - Main Changelog component (`src/components/Changelog/Changelog.tsx`)
   - Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)
   - Heatmap visualization with month/quarter/year grouping
@@ -57,15 +57,13 @@ Organize and structure the changelog and roadmap sections of the blog, including
 **Documentation Created:**
 - **`NAMING_CONVENTIONS.md`**: Comprehensive naming conventions for changelog entries
 - **`docs/6-techniques/3-blogging-techniques/changelog-system.md`**: Changelog entry format and guidelines
-- **`docs/6-techniques/3-blogging-techniques/changelog-sync-with-git-plan.md`**: Plan for syncing changelog with git history
 - **`prompts/heal/heal-blog-changelog.md`**: Reusable prompt for inferring and enriching changelog entries from git history
 
 **Related Links:**
-- [Changelog Component Creation](/changelog/development/2025-11-16-component-creation-changelog-component) - Detailed component architecture and implementation
+- [Changelog Component Creation](/changelog/2025/01/20/development/component-creation-changelog-component) - Detailed component architecture and implementation
 - [Changelog Page](/changelog)
 - [Naming Conventions](https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md)
 - [Changelog System Documentation](/docs/techniques/blogging-techniques/changelog-system)
-- [Changelog Sync Plan](/docs/techniques/blogging-techniques/changelog-sync-with-git-plan)
 - [Heal Changelog Prompt](https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md) - Reusable prompt for inferring and enriching changelog entries
 - [Changelog Generation Script](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js)
 - [Changelog Component](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx)
