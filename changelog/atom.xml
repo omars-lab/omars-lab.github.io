@@ -350,7 +350,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-in-progress">Status: In Progress<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#status-in-progress" class="hash-link" aria-label="Direct link to Status: In Progress" title="Direct link to Status: In Progress" translate="no">​</a></h3>
 <p><strong>Related Work:</strong></p>
 <ul>
-<li class="">See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025-01-20-optimization-bundle-size-storybook.md">Bundle Size Optimization</a> for detailed work on Storybook bundle optimization</li>
+<li class="">See <a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-01-20-optimization-bundle-size-storybook">Bundle Size Optimization</a> for detailed work on Storybook bundle optimization</li>
 <li class="">Initial webpack code splitting configuration completed (2025-01-20)</li>
 </ul>
 <p><strong>Remaining Work:</strong></p>
@@ -644,9 +644,9 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-links">Related Links<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#related-links" class="hash-link" aria-label="Direct link to Related Links" title="Direct link to Related Links" translate="no">​</a></h2>
 <ul>
-<li class=""><a href="https://blog.bytesofpurpose.com/assets/files/main-0df2cd5ffa4c98bce6fc506841351c90.ts" target="_blank" class="">Storybook Webpack Config</a></li>
-<li class=""><a href="https://blog.bytesofpurpose.com/assets/files/GraphRenderer-6a9371192e43a3a013119c505d15b2f3.tsx" target="_blank" class="">Graph Component</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025-XX-XX-infrastructure-improvement-performance.md">Performance Optimization Entry</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/.storybook/main.ts" target="_blank" rel="noopener noreferrer" class="">Storybook Webpack Config</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Graph/GraphRenderer.tsx" target="_blank" rel="noopener noreferrer" class="">Graph Component</a></li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance">Performance Optimization Entry</a></li>
 </ul>]]></content>
     </entry>
     <entry>
@@ -735,7 +735,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 <p><strong>Components Created:</strong></p>
 <ul>
-<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-01-20-component-creation-changelog-component.md">Component Creation Entry</a> for detailed component architecture<!-- -->
+<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-11-16-component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
 <ul>
 <li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
 <li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
@@ -774,14 +774,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 <p><strong>Related Links:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-01-20-component-creation-changelog-component.md">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-11-16-component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog">Changelog Page</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/NAMING_CONVENTIONS.md">Naming Conventions</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-sync-with-git-plan">Changelog Sync Plan</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/prompts/heal/heal-blog-changelog.md">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
-<li class=""><a href="https://blog.bytesofpurpose.com/assets/files/generate-changelog-data-1dceaea666d94d4ff04ce05fbb602e85.js" target="_blank" class="">Changelog Generation Script</a></li>
-<li class=""><a href="https://blog.bytesofpurpose.com/assets/files/Changelog-69883cfabcd25d3f738a263ee348bb08.tsx" target="_blank" class="">Changelog Component</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md" target="_blank" rel="noopener noreferrer" class="">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js" target="_blank" rel="noopener noreferrer" class="">Changelog Generation Script</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx" target="_blank" rel="noopener noreferrer" class="">Changelog Component</a></li>
 <li class=""><a href="https://posthog.com/changelog" target="_blank" rel="noopener noreferrer" class="">PostHog Changelog Inspiration</a></li>
 </ul>
 <p><strong>Roadmap Migration:</strong></p>
@@ -892,8 +892,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <p>The generation script automatically handles subdirectories, so slugs will include the subdirectory path (e.g., <code>content/2025-01-15-content-post-...</code>).</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-also">See Also<a href="https://blog.bytesofpurpose.com/changelog/README#see-also" class="hash-link" aria-label="Direct link to See Also" title="Direct link to See Also" translate="no">​</a></h2>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/NAMING_CONVENTIONS.md">Naming Conventions</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/6-techniques/3-blogging-techniques/changelog-system.md">Changelog System Documentation</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
 </ul>]]></content>
     </entry>
     <entry>

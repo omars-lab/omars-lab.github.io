@@ -17,8 +17,8 @@
 <link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed">
 <link rel="alternate" type="application/rss+xml" href="/changelog/rss.xml" title="Bytes of Purpose RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/changelog/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.36e8f468.css">
-<script src="/assets/js/runtime~main.6953afa1.js" defer="defer"></script>
-<script src="/assets/js/main.491fb9aa.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d51e1299.js" defer="defer"></script>
+<script src="/assets/js/main.b82805a6.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -212,9 +212,9 @@
 </ol>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-links">Related Links<a href="#related-links" class="hash-link" aria-label="Direct link to Related Links" title="Direct link to Related Links" translate="no">​</a></h2>
 <ul>
-<li class=""><a href="/assets/files/main-0df2cd5ffa4c98bce6fc506841351c90.ts" target="_blank" class="">Storybook Webpack Config</a></li>
-<li class=""><a href="/assets/files/GraphRenderer-6a9371192e43a3a013119c505d15b2f3.tsx" target="_blank" class="">Graph Component</a></li>
-<li class=""><a class="" href="/changelog/2025-XX-XX-infrastructure-improvement-performance.md">Performance Optimization Entry</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/.storybook/main.ts" target="_blank" rel="noopener noreferrer" class="">Storybook Webpack Config</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Graph/GraphRenderer.tsx" target="_blank" rel="noopener noreferrer" class="">Graph Component</a></li>
+<li class=""><a class="" href="/changelog/development/2025-XX-XX-infrastructure-improvement-performance">Performance Optimization Entry</a></li>
 </ul></div><footer class="row docusaurus-mt-lg"></footer></article><article class="margin-bottom--xl"><header><h2 class="title_f1Hy"><a href="/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog">Plan - Leveraging GenAI to Enhance Blog</a></h2><div class="container_mt6G margin-vert--md"><time datetime="2025-11-18T15:48:34.000Z">November 18, 2025</time> · <!-- -->One min read</div></header><div class="markdown"><ul>
 <li class="">For my blog ...<!-- -->
 <ul>
@@ -287,7 +287,7 @@
 </ul>
 <p><strong>Components Created:</strong></p>
 <ul>
-<li class=""><strong>Changelog Component System</strong> - See <a class="" href="/changelog/page/2025-01-20-component-creation-changelog-component.md">Component Creation Entry</a> for detailed component architecture<!-- -->
+<li class=""><strong>Changelog Component System</strong> - See <a class="" href="/changelog/development/2025-11-16-component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
 <ul>
 <li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
 <li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
@@ -326,14 +326,14 @@
 </ul>
 <p><strong>Related Links:</strong></p>
 <ul>
-<li class=""><a class="" href="/changelog/page/2025-01-20-component-creation-changelog-component.md">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
+<li class=""><a class="" href="/changelog/development/2025-11-16-component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
 <li class=""><a class="" href="/changelog">Changelog Page</a></li>
-<li class=""><a class="" href="/docs/NAMING_CONVENTIONS.md">Naming Conventions</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
 <li class=""><a class="" href="/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
 <li class=""><a class="" href="/docs/techniques/blogging-techniques/changelog-sync-with-git-plan">Changelog Sync Plan</a></li>
-<li class=""><a class="" href="/prompts/heal/heal-blog-changelog.md">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
-<li class=""><a href="/assets/files/generate-changelog-data-1dceaea666d94d4ff04ce05fbb602e85.js" target="_blank" class="">Changelog Generation Script</a></li>
-<li class=""><a href="/assets/files/Changelog-69883cfabcd25d3f738a263ee348bb08.tsx" target="_blank" class="">Changelog Component</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md" target="_blank" rel="noopener noreferrer" class="">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js" target="_blank" rel="noopener noreferrer" class="">Changelog Generation Script</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx" target="_blank" rel="noopener noreferrer" class="">Changelog Component</a></li>
 <li class=""><a href="https://posthog.com/changelog" target="_blank" rel="noopener noreferrer" class="">PostHog Changelog Inspiration</a></li>
 </ul>
 <p><strong>Roadmap Migration:</strong></p>
@@ -420,8 +420,8 @@
 <p>The generation script automatically handles subdirectories, so slugs will include the subdirectory path (e.g., <code>content/2025-01-15-content-post-...</code>).</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-also">See Also<a href="#see-also" class="hash-link" aria-label="Direct link to See Also" title="Direct link to See Also" translate="no">​</a></h2>
 <ul>
-<li class=""><a class="" href="/docs/NAMING_CONVENTIONS.md">Naming Conventions</a></li>
-<li class=""><a class="" href="/docs/6-techniques/3-blogging-techniques/changelog-system.md">Changelog System Documentation</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
+<li class=""><a class="" href="/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
 </ul></div><footer class="row docusaurus-mt-lg"></footer></article><article class="margin-bottom--xl"><header><h2 class="title_f1Hy"><a href="/changelog/development/2025-XX-XX-component-refactoring-graph-renderer">GraphRenderer Component Refactoring Plan</a></h2><div class="container_mt6G margin-vert--md"><time datetime="2025-11-18T03:12:29.000Z">November 18, 2025</time> · <!-- -->21 min read</div></header><div class="markdown"><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Refactor the 3382-line <code>GraphRenderer.tsx</code> into smaller, composable components and utilities while maintaining all existing functionality. This plan follows principles that a principal frontend engineer would approve.</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h3>
