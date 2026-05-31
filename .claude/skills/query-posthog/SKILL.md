@@ -84,6 +84,17 @@ GROUP BY day ORDER BY day
 directly (curl/python) with `stats` / `pages` / `daily` subcommands — use it if you
 prefer not to download the CLI.
 
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `unrecognized subcommand 'query'` | `query` is **not** top-level; it lives under `exp`. | Use `exp query run "<SQL>"` (also `exp query check` / `editor`). |
+| `unrecognized subcommand 'SELECT …'` | Missing the `run` verb. | `exp query run "<SQL>"`. |
+| `Couldn't find POSTHOG_CLI_API_KEY and POSTHOG_CLI_PROJECT_ID` | Env vars not exported (often a multi-line `sed` mapping that broke). | Use the one-line-per-var mapping in "Run a query" above; verify `echo $POSTHOG_CLI_API_KEY \| cut -c1-4` = `phx_`. |
+| `401 authentication_failed … Personal API key … invalid` | Used the `phc_` project key, not a `phx_` personal key. | Create a personal key (Settings → Personal API keys, scope Query: Read). |
+| Query returns 200 but **no rows / zeros** for recent events | Either nothing ingested yet (wait 30–60s) or you're counting bot test traffic. | Re-run after a beat; for real traffic add `AND properties.$browser_type != 'bot'`. |
+| `source .env` blanks the keys | Earlier `.env` values contain shell-special chars. | Don't `source`; extract per-var (see the mapping block). |
+
 ## Caveats
 
 - `exp query` is labelled experimental ("subject to change") by PostHog.

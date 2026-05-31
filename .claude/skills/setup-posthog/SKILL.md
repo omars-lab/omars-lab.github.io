@@ -70,6 +70,18 @@ python3 .claude/skills/manage-cloudflare-access/posthog_stats.py pages --days 7
 ## Tracking is build-time
 
 `POSTHOG_KEY`/`POSTHOG_HOST` are read by `docusaurus.config.js` during `yarn build`.
-If unset, analytics silently no-ops. The `deploy-site` skill `source`s `.env` first
-for exactly this reason. Production CSP must allow `connect-src https://us.i.posthog.com`
-(and `https://us-assets.i.posthog.com` for the bundle) — verify after deploy.
+If unset, analytics silently no-ops. Production CSP must allow
+`connect-src https://us.i.posthog.com` (and `https://us-assets.i.posthog.com` for the
+bundle) — verify after deploy.
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Query API → `401 "Personal API key … is invalid"` | Pasted the **project** key (`phc_`) into `POSTHOG_PERSONAL_API_KEY`. | Use a **personal** key (`phx_`) from Settings → Personal API keys (scope Query: Read). |
+| Build runs but no analytics on the live/served site | `POSTHOG_KEY` empty at build time. | Confirm it's in the bundle: `grep -rl "phc_" bytesofpurpose-blog/build/assets/js/main.*.js`. |
+| `source .env` leaves `POSTHOG_KEY` empty even though it's in the file | Earlier `.env` values contain shell-special chars (`!`, `&`, spaces, parens) that break `source`, blanking later vars. | Don't `source`; extract per-var: `grep -E '^POSTHOG_KEY=' .env \| cut -d= -f2- \| sed 's/[[:space:]]*#.*//' \| tr -d ' "'\'''`. (The `make test-posthog` target already does this.) |
+| Events leave the browser but never appear in PostHog | Bot/UA filter drops automated-browser events. | Build with `POSTHOG_TEST_MODE=1` for e2e; for real traffic filter `properties.$browser_type != 'bot'`. See `posthog-issues.md` ISSUE-002. |
+| `window.posthog` undefined in browser | Dynamic import raced hydration (old bug) or key unset. | Static import in `src/posthog.js` (fixed); ensure key is set. See ISSUE-001. |
+
+Full debugging history: `bytesofpurpose-blog/src/posthog-issues.md`.
