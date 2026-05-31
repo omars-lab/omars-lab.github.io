@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Secret-leak guard. Scans STAGED changes with gitleaks before each commit.
+# Enable once with:  git config core.hooksPath .githooks   (or: make install-hooks)
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+CONFIG="$REPO_ROOT/.gitleaks.toml"
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "⚠️  gitleaks not installed — skipping secret scan."
+  echo "    Install:  brew install gitleaks"
+  exit 0
+fi
+
+echo "🔎 gitleaks: scanning staged changes for secrets…"
+if ! gitleaks protect --staged --redact --config "$CONFIG" --verbose; then
+  echo
+  echo "❌ COMMIT BLOCKED: a potential secret was found in your staged changes."
+  echo "   Remove it (or add a justified allowlist entry to .gitleaks.toml) and re-stage."
+  exit 1
+fi
+echo "✅ No secrets detected in staged changes."

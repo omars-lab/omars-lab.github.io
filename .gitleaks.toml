@@ -1,0 +1,42 @@
+# gitleaks config — secret-leak scanning for omars-lab.github.io (a PUBLIC repo).
+# Matches the convention used across the other repos: extend defaults + allowlist.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentionally public keys, templates, and generated/vendored artifacts"
+regexes = [
+  # PostHog project key is a PUBLIC, write-only ingestion key — safe to ship.
+  '''phc_[A-Za-z0-9]+''',
+  # .env.example placeholders (never real secrets)
+  '''your-[a-z-]*(token|key|secret|id)''',
+  '''sk-ant-\.\.\.''',
+  # Placeholder credentials in tutorial docs (not real)
+  '''YOUR_(EMAIL|API_TOKEN|TRELLO_KEY|TRELLO_TOKEN|WEBHOOK)''',
+  '''--user YOUR_EMAIL:YOUR_API_TOKEN''',
+]
+paths = [
+  # Local secrets file — gitignored, never committed; the staged-commit guard
+  # (gitleaks protect) ignores it anyway. Excluded so on-disk scans stay quiet.
+  '''(^|/)\.env$''',
+  '''\.env\.example$''',
+  '''node_modules/''',
+  '''bytesofpurpose-blog/build/''',
+  '''bytesofpurpose-blog/\.docusaurus/''',
+  '''bytesofpurpose-blog/static/storybook/''',
+  # Minified Storybook bundle artifacts — false positives (Storybook internals,
+  # not real secrets). Present only in git history under storybook/.
+  '''storybook/.*\.iframe\.bundle\.js$''',
+  '''_site/''',
+  '''\.git/''',
+  '''yarn\.lock$''',
+  '''package-lock\.json$''',
+]
+
+# NOTE: historical commit 7c549a8a (2025-09-15) contains REAL credentials that
+# were exposed in this PUBLIC repo (Trello API key/token + an Atlassian password,
+# and a Slack incoming-webhook URL). They MUST be rotated/revoked — scrubbing
+# history does not un-expose them. They are NOT allowlisted here on purpose, so
+# `make secret-scan` keeps flagging them until the history is rewritten. The
+# pre-commit hook (gitleaks protect --staged) only scans NEW changes, so day-to-day
+# commits are unaffected.

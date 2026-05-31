@@ -3,3 +3,10 @@ _site
 node_modules/
 importing/
 bytesofpurpose-blog/static/storybook/
+
+# Secrets — NEVER commit. Consumed by .claude/skills/manage-cloudflare-access
+.env
+.env.*
+!.env.example
+*.token
+cloudflared/*.json
