@@ -56,6 +56,15 @@ needed. Revisit (`mask_all_text`) if any authenticated/PII surface is ever added
   `src/posthog.js`. Reasoning above.
 - Kept the wizard's bespoke events as-is (no conflict; init is single-path).
 
+## Experiments (A/B tests)
+
+| Flag key | Variants | Component | Conversion | Status |
+|---|---|---|---|---|
+| `support-button-copy` | control "Buy me a coffee ☕" / test "Support the dev 💜" | `src/components/SupportButton/index.tsx` (rendered on docs footer page) | `support button clicked` | wiring done; create experiment in PostHog + run |
+
+Workflow + per-experiment task template: `.claude/skills/run-ab-test`. Spec:
+`test/e2e/support-ab-test.spec.ts`.
+
 ## Open / future ideas
 
 - Dashboards & insights created by the wizard live in PostHog (Blog Analytics

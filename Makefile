@@ -221,15 +221,17 @@ test-posthog: ## Validate PostHog events end-to-end against a production build
 	# Builds with POSTHOG_TEST_MODE=1 (opts out of PostHog's bot filter so Playwright
 	# events reach ingestion), serves the build, runs the posthog-events spec, then
 	# tears down the server. Requires POSTHOG_KEY/HOST in .env.
-	@set -a; . ./.env; set +a; \
-	export POSTHOG_TEST_MODE=1; \
-	if [ -z "$$POSTHOG_KEY" ]; then echo "POSTHOG_KEY not set in .env — aborting."; exit 1; fi; \
-	echo "Building with POSTHOG_TEST_MODE=1…"; \
-	( cd ${SITEROOT} && yarn build >/tmp/posthog-build.log 2>&1 ) || { echo "build failed (see /tmp/posthog-build.log)"; exit 1; }; \
+	@# Robust per-var extraction (NOT `source .env` — some values contain shell-special
+	@# chars that break sourcing and silently blank out later vars like POSTHOG_KEY).
+	@PK=$$(grep -E '^POSTHOG_KEY=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PH=$$(grep -E '^POSTHOG_HOST=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	if [ -z "$$PK" ]; then echo "POSTHOG_KEY not found in .env — aborting."; exit 1; fi; \
+	echo "Building with POSTHOG_TEST_MODE=1 (key $${PK%$${PK#????}}…)…"; \
+	( cd ${SITEROOT} && POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH POSTHOG_TEST_MODE=1 yarn build >/tmp/posthog-build.log 2>&1 ) || { echo "build failed (see /tmp/posthog-build.log)"; exit 1; }; \
 	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
 	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/posthog-serve.log 2>&1 & ); \
 	sleep 6; \
-	( cd ${SITEROOT} && CI=1 PH_BASE_URL=http://localhost:4173 npx playwright test posthog-events --reporter=list ); \
+	( cd ${SITEROOT} && CI=1 PH_BASE_URL=http://localhost:4173 npx playwright test posthog-events support-ab-test --reporter=list ); \
 	rc=$$?; \
 	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
 	exit $$rc

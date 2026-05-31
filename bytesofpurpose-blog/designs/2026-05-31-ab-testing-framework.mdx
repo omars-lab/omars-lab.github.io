@@ -1,0 +1,102 @@
+---
+slug: design-ab-testing
+sidebar_position: 3
+title: A/B Testing Framework
+draft: true
+---
+
+How A/B experiments work on this blog: a thin layer over PostHog feature flags,
+designed so experiments are easy to add, deterministic to test, and safe in
+production.
+
+<!-- truncate -->
+
+## Goals
+
+- Run A/B experiments (e.g. Support-button copy) with **PostHog** as the source of
+  truth for assignment + results.
+- Make experiments **trivial to add** — declare one registry entry, read one helper.
+- Be **deterministic to test & QA**: force any variant locally without touching
+  PostHog, for Playwright and manual checks.
+- **Safe in production**: test overrides cannot be triggered by real visitors.
+
+## Architecture
+
+```
+src/experiments.ts          ← registry of all experiments + shared resolver
+  EXPERIMENTS { '<flag-key>': { key, variants } }
+  resolveVariant(exp, cb)   → URL override (localhost) → PostHog flag → 'control'
+  urlOverride(exp)          → parses ?ab / ?ab-<key> on localhost only
+
+src/components/<X>/index.tsx ← reads its experiment via resolveVariant()
+docusaurus.config.js         ← POSTHOG_KEY/HOST (+ POSTHOG_TEST_MODE for e2e)
+src/posthog.js               ← posthog.init (autocapture, pageleave, scroll…)
+test/e2e/<x>-ab-test.spec.ts ← forces each variant via ?ab=, asserts copy+events
+```
+
+### Assignment & exposure
+
+PostHog hashes each user's `distinct_id` against the flag, so a user is **sticky** —
+always the same variant. Reading the variant with `getFeatureFlag(key)` records the
+`$feature_flag_called` **exposure** event. The conversion event is tagged with the
+variant (`variant` + `$feature/<key>`) so the split is queryable even without the
+experiment stats engine.
+
+## Forcing a variant — the three mechanisms
+
+| Need | Mechanism | Scope | Persistence |
+|---|---|---|---|
+| **Test/QA yourself, locally** | URL param `?ab=test` or `?ab-<key>=test` | localhost only | per-request |
+| **Preview yourself, anywhere** | devtools: `posthog.featureFlags.overrideFeatureFlags({flags:{'<key>':'test'}})` | your browser | localStorage |
+| **Force a specific customer** | PostHog UI → flag → Release conditions (match email / `distinct_id`) → 100% to a variant | that user/cohort | server-side |
+
+### URL-param override (localhost only) — supports a set of experiments
+
+```
+?ab-<flag-key>=<variant>                 force one experiment
+?ab=<variant>                            bare form, applies to the experiment read
+?ab=flagA:test,flagB:control             force several experiments at once
+```
+
+Gated to `localhost`/`127.0.0.1` in `urlOverride()` so production visitors can't
+self-assign. This is what Playwright uses (deterministic, pre-hydration — no
+dependence on PostHog override/localStorage timing, which proved flaky).
+
+### Forcing a real customer (or cohort) into a variant
+
+This is a **PostHog targeting** decision, not code:
+
+1. PostHog → Feature Flags → `<flag-key>` → **Release conditions**.
+2. Add a condition matching the user(s): `email = …`, `distinct_id = …`, or a cohort.
+3. Set that condition to serve the desired variant at 100%.
+
+For stable cross-device assignment, call `posthog.identify(userId)` so the user has a
+durable `distinct_id` (the blog currently uses anonymous per-browser ids).
+
+## Adding a new experiment
+
+1. Add an entry to `EXPERIMENTS` in `src/experiments.ts` (flag key + variants).
+2. In the component, `resolveVariant(EXPERIMENTS['<key>'], setVariant)` and render
+   `exp.variants[variant]`; tag the conversion `capture` with the variant.
+3. Create the experiment/flag in PostHog (variants + goal metric).
+4. Add a Playwright spec that drives `?ab=<variant>` and asserts copy + events.
+5. Validate (`make test-posthog`) → confirm data (`query-posthog`) → roll out winner.
+
+Full step-by-step + per-experiment task template: the **run-ab-test** skill.
+
+## Validation & data
+
+- **Browser→ingestion:** Playwright asserts POSTs to `us.i.posthog.com`
+  (build with `POSTHOG_TEST_MODE=1`; PostHog drops bot UAs otherwise).
+- **Landed server-side:** `query-posthog` (official `@posthog/cli`) — exposure split
+  by `$feature_flag_response`, conversion split by `variant`; exclude
+  `$browser_type='bot'`.
+
+## Risks / decisions
+
+- **SSR shows control**: flags resolve client-side, so the first paint is the control
+  copy. Acceptable (no layout shift, no blank flash). Could pre-render per-variant
+  later if it matters.
+- **Anonymous ids**: assignment is per-browser until we `identify()`. Fine for a blog.
+- **Override flakiness**: PostHog's `overrideFeatureFlags`+reload didn't reliably
+  re-bucket in tests → we chose URL params for deterministic local forcing.
