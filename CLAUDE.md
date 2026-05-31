@@ -25,7 +25,10 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Cloudflare Access | `manage-cloudflare-access` | make subdomains public/private; account/wildcard model |
 | Analytics setup | `setup-posthog` | obtain/place the 4 PostHog keys; CLI install; key gotchas |
 | Analytics queries | `query-posthog` | official @posthog/cli readback, HogQL, confirmations |
-| A/B testing | `run-ab-test` | per-experiment workflow: flag injection point, Playwright, data, rollout |
+| Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) → timeline entry |
+| A/B testing (execute) | `run-ab-test` | flag injection point, create/validate/launch (REST API), Playwright |
+| Experiment analysis | `analyze-experiment` | pull exposure+conversion split, significance, write Outcome |
+| Experiment decision | `conclude-experiment` | act on winner: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
 | Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |
@@ -49,3 +52,11 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 
 - `bytesofpurpose-blog/src/posthog-integration-plan.md` — what events/why + verify.
 - `bytesofpurpose-blog/src/posthog-issues.md` — debugging log / resolved issues.
+
+## Experiment timeline (lab notebook)
+
+- `bytesofpurpose-blog/docs/4-development/6-projects/experiments/` — **one published doc
+  per experiment** (design + living status + outcome) + `README.md` timeline table +
+  `_TEMPLATE.md`. Lifecycle: `design-experiment` → `run-ab-test` → `analyze-experiment`
+  → `conclude-experiment`. Keep each doc's status + the README table current as an
+  experiment moves through the phases.

@@ -47,6 +47,13 @@ test.describe('Support button A/B experiment', () => {
       await expect(btn).toBeVisible();
       await expect(btn).toContainText(expectedCopy);
 
+      // Capture a per-variant screenshot artifact so control vs treatment can be eyeballed
+      // (and embedded in the experiment timeline doc) without re-running. Artifacts only —
+      // we do NOT diff against a baseline here, so this never fails on a visual change.
+      await btn.screenshot({
+        path: `test-results/ab/support-button-copy-${variant}.png`,
+      });
+
       // The A/B behaviour under test is VARIANT RENDERING (asserted above). Event
       // ingestion is proven separately by posthog-events.spec.ts + server-side
       // readback (query-posthog), so we don't re-gate on PostHog's batch-flush

@@ -13,3 +13,7 @@ cloudflared/*.json
 
 # Local Claude settings (machine-specific)
 .claude/settings.local.json
+
+# Python bytecode (skill helper scripts)
+__pycache__/
+*.pyc

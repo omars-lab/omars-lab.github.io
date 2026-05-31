@@ -6,8 +6,18 @@ description: Run a PostHog A/B experiment on the blog end-to-end — define the 
 # Run an A/B test (PostHog experiment)
 
 A repeatable, **per-experiment** workflow for A/B testing on the Bytes of Purpose
-blog using PostHog experiments + feature flags. Pairs with `setup-posthog` (keys),
-`query-posthog` (data readback), `author-blog-post` (component edits).
+blog using PostHog experiments + feature flags. This is the **execute** phase of the
+experiment lifecycle:
+
+**`design-experiment`** (design doc) → **run-ab-test** (build + create/validate/launch) →
+**`analyze-experiment`** (results) → **`conclude-experiment`** (roll out the winner).
+
+Each experiment has **one timeline doc** at
+`bytesofpurpose-blog/docs/4-development/6-projects/experiments/<date>-<flag-key>.md`
+(design + living status + outcome). Keep that doc's status + the folder `README.md`
+timeline table current as the experiment moves through this skill (injection point →
+draft → validated → running). Pairs with `setup-posthog` (keys), `query-posthog`
+(readback), `author-blog-post` (component edits).
 
 ## ▶️ FIRST STEP when this skill runs — create the tracking tasks
 
@@ -22,8 +32,9 @@ subjects with the flag key.
 ```tasks
 - [ ] Define experiment: pick <FLAG_KEY>, variants (control/test) + copy, the
       conversion event, and which component/page is the injection point.
-- [ ] Create the PostHog experiment/flag in the UI: key <FLAG_KEY>, variants
-      50/50, goal metric = <conversion event>. (Manual, user.)
+- [ ] Create the PostHog experiment/flag (scripted): create_experiment.py
+      --create → --validate, then --launch after user confirms. Needs a
+      WRITE-scoped key (POSTHOG_WRITE_API_KEY). Launch is the user-gated step.
 - [ ] Add the injection point in code: read the flag in <component>, render per
       variant, capture exposure (getFeatureFlag) + tag the conversion with variant.
 - [ ] Add/extend a Playwright spec: force each variant, assert the right copy
@@ -34,7 +45,10 @@ subjects with the flag key.
       (exclude $browser_type='bot').
 - [ ] Confirm conversion split in data: query <conversion event> by variant.
 - [ ] Run until significance in PostHog; record the decision.
+- [ ] Update the experiment timeline doc status as you go (draft → validated → running)
+      and keep the experiments README table row current.
 - [ ] Roll out winner (flag → 100% winner, or hard-code) and clean up the loser.
+      (Handled by the `conclude-experiment` skill.)
 ```
 
 ## Step 1 — Define the experiment
@@ -98,11 +112,36 @@ control "Buy me a coffee ☕" / test "Support the dev 💜", conversion
 | Preview yourself, anywhere | devtools `posthog.featureFlags.overrideFeatureFlags({flags:{'<key>':'test'}})` | your browser |
 | Force a specific customer/cohort | PostHog UI → flag → Release conditions → match email/distinct_id/cohort → 100% variant | server-side, sticky |
 
-## Step 3 — Create the experiment in PostHog (manual)
+## Step 3 — Create the experiment in PostHog (scripted: create → validate → launch)
 
-PostHog → **Experiments → New experiment** → feature flag key `<FLAG_KEY>`, variants
-`control`+`test` (50/50), goal metric = `<conversion event>`. Launch. (Or just a
-multivariate **feature flag** with those variant keys for a plain A/B.)
+**No browser needed.** The official `@posthog/cli` has no flag/experiment *create*
+command (only `query`/`task`/`endpoints`/`schema`), but PostHog's **REST API** does, and
+`create_experiment.py` (in this skill dir) drives it. The flow is deliberately staged so
+"go live" is a separate step: **create a DRAFT → validate it → ask the human → launch.**
+
+```bash
+python3 .claude/skills/run-ab-test/create_experiment.py --check     # dry-run, shows the payload
+python3 .claude/skills/run-ab-test/create_experiment.py --create    # POST a DRAFT (no traffic yet)
+python3 .claude/skills/run-ab-test/create_experiment.py --validate  # read back: variants/goal/draft
+# → confirm with the user, THEN:
+python3 .claude/skills/run-ab-test/create_experiment.py --launch     # start it (buckets real traffic)
+```
+
+One POST to `/api/projects/<id>/experiments/` with `parameters.feature_flag_variants`
+creates the experiment **and** its linked multivariate flag. Launch = PATCH `start_date`.
+**Draft vs launched:** a draft is wired but dormant — real visitors all fall through to
+`control`, no `$feature_flag_called` exposure, stats paused; launching sets `start_date`
+and begins the 50/50 sticky split. (To customize: edit `FLAG_KEY`/`VARIANTS`/
+`CONVERSION_EVENT` at the top of the script — it mirrors `src/experiments.ts`.)
+
+**Keys / scopes (gotcha):** reads use `POSTHOG_PERSONAL_API_KEY` (read-only); **writes
+(create/launch) need a separate `POSTHOG_WRITE_API_KEY`** with scopes `experiment:write`
++ `feature_flag:write`. A read-only key returns `403 permission_denied: API key missing
+required scope 'experiment:write'`. Keep them separate (least privilege); the script
+auto-selects which key per operation.
+
+Manual fallback (if you'd rather click): PostHog → **Experiments → New experiment** →
+flag key `<FLAG_KEY>`, variants `control`+`test` (50/50), goal = `<conversion event>`.
 
 ## Step 4 — Validate both variants (Playwright)
 
@@ -121,6 +160,12 @@ make test-posthog                                   # builds test-mode + runs po
 PH_BASE_URL=http://localhost:4173 npx playwright test <spec> --reporter=list
 ```
 Reference spec: `bytesofpurpose-blog/test/e2e/support-ab-test.spec.ts`.
+
+**Per-variant screenshots:** the spec captures each variant to
+`test-results/ab/<flag-key>-<variant>.png` (artifacts only — no baseline diff, so a
+visual change never fails the run). Use them to eyeball control-vs-treatment without
+re-running, or to embed in the experiment's timeline doc. `test-results/` is gitignored;
+copy a PNG into the experiments docs folder if you want it committed into the lab notebook.
 
 ## Step 5 — Confirm the data (query-posthog)
 
@@ -162,6 +207,9 @@ Symptoms seen while building this workflow and how to resolve them:
 | Events fire in test but **0 in the data** | PostHog bot filter drops automated-browser events. | Build with `POSTHOG_TEST_MODE=1` (`opt_out_useragent_filter`). Verify flag in bundle: `grep -rl opt_out_useragent_filter build/assets/js/*.js`. In queries, real traffic = `properties.$browser_type != 'bot'`. |
 | Two buttons match the locator | The navbar has its own "Buy Me a Coffee?" PayPal link separate from `<Support>`. | Target the component's unique `data-testid`, not button text. |
 | `$feature_flag_called` missing in data | Variant read with `getAllFlags`/payload instead of `getFeatureFlag`. | Only `getFeatureFlag(key)` records the exposure event. |
+| `create_experiment.py` **403 `permission_denied: API key missing required scope 'experiment:write'`** | The personal key is read-only (made for `query-posthog`). | Create a separate WRITE key (scopes `experiment:write` + `feature_flag:write`), put it in `.env` as `POSTHOG_WRITE_API_KEY`. The script uses the write key only for `--create`/`--launch`. |
+| `create_experiment.py` says **"no experiment exists"** right after a successful `--create` | Caller passed `FLAG_KEY` where `find_existing` expects the **API auth key** (the param was named `key`, shadowing the flag-key constant → the call silently auth-failed and returned None). | Pass the resolved auth key to `find_existing(auth_key, …)`, not the flag key. Fixed; param renamed `auth_key`. Lesson: don't name an auth-token param `key` next to a `FLAG_KEY` constant. |
+| Need to create flags/experiments from the CLI | The official `@posthog/cli` has **no** flag/experiment create command. | Use the REST API (`create_experiment.py`) — `@posthog/cli` is only for `query`/`task`/`endpoints`/`schema`. |
 
 Quick interactive debug: `npx playwright test <spec> --headed --debug`, or add a
 throwaway spec that `console.log`s `page.evaluate(() => ({ ph: typeof window.posthog,

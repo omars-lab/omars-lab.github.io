@@ -70,6 +70,30 @@ Experiments are **structured, hypothesis-driven projects** that follow scientifi
 
 *Note: Tinkering has been moved to its own section at `/docs/developing/tinkering`*
 
+## 📋 Experiment timeline
+
+Every experiment gets **one doc in this folder** that is both its **design** and its
+**living timeline** — hypothesis, why we placed it where we did, status, and outcome.
+Each row below links to that doc. Lifecycle:
+`proposed → designed → draft → running → analyzing → concluded → rolled-out / abandoned`.
+
+| Experiment | Flag | Status | Started | Outcome |
+|---|---|---|---|---|
+| [Support button copy](./2026-05-31-support-button-copy.md) | `support-button-copy` | 🟢 running | 2026-05-31 | pending |
+
+> Add a row when you start an experiment; update its status as it moves through the
+> lifecycle. New entry from `_TEMPLATE.md`. The four skills below each own a phase and
+> keep the doc + this table current.
+
+### The experiment lifecycle (skills)
+
+| Phase | Skill | Does |
+|---|---|---|
+| **Design** | `design-experiment` | Writes the pre-experiment design doc (this folder): hypothesis, design, placement rationale. |
+| **Execute** | `run-ab-test` | Adds the code injection point, creates/validates/launches the PostHog experiment, Playwright-validates variants. |
+| **Analyze** | `analyze-experiment` | Pulls the exposure + conversion split, checks significance, writes the Outcome section. |
+| **Decide** | `conclude-experiment` | Acts on the decision — keep control & clean up, or ship treatment for good — and finalizes the doc. |
+
 ## What You'll Find Here
 
 - A/B tests and multivariate tests
