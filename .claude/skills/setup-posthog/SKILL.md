@@ -44,11 +44,28 @@ Why test mode: PostHog's bot filter silently drops events from automated browser
 
 ## Read stats back (server-side confirmation)
 
-Needs `POSTHOG_PERSONAL_API_KEY` + `POSTHOG_PROJECT_ID`:
+Needs `POSTHOG_PERSONAL_API_KEY` (the `phx_` personal key — **not** the `phc_`
+project key) + `POSTHOG_PROJECT_ID`. Two ways:
+
+**Official PostHog CLI** (authoritative — see the `query-posthog` skill for full
+usage). The query command lives under `exp` and is experimental:
+```bash
+npx --yes @posthog/cli@latest --version          # first run downloads it
+# map .env → CLI env, then:
+POSTHOG_CLI_API_KEY=$phx POSTHOG_CLI_PROJECT_ID=$pid POSTHOG_CLI_HOST=$host \
+  npx --yes @posthog/cli@latest exp query run \
+  "SELECT event, count() FROM events WHERE timestamp > now() - INTERVAL 7 DAY GROUP BY event"
+```
+
+**No-download alternative** (raw Query API via curl/python):
 ```bash
 python3 .claude/skills/manage-cloudflare-access/posthog_stats.py daily --days 1
 python3 .claude/skills/manage-cloudflare-access/posthog_stats.py pages --days 7
 ```
+
+> Gotcha: a `phc_` key in the personal-key slot returns
+> `401 Personal API key … is invalid`. Personal keys start with `phx_` and are
+> created under **Settings → Personal API keys** (different page from the project key).
 
 ## Tracking is build-time
 
