@@ -90,6 +90,7 @@ placement) is identical, so any difference is attributable to copy.
 | 2026-05-31 | playwright validated | both variants render the right copy (`support-ab-test.spec.ts`); event ingestion proven separately |
 | 2026-05-31 | draft created | PostHog experiment **id 374363**, linked flag 696584, 50/50, goal `support button clicked` — via `create_experiment.py --create`, read-back validated |
 | 2026-05-31 | **running** | launched 19:16:55 UTC (`create_experiment.py --launch`) — now bucketing real traffic 50/50 |
+| 2026-05-31 | live | site deployed to gh-pages (PostHog on, bot filter ON); experiment now collecting real exposures/conversions. This doc kept `draft:true` (hidden). |
 
 ## 6. Outcome
 
