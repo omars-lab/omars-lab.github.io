@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook
+.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -104,7 +104,16 @@ serve: build ## Serve the built site locally
 version: ## Show Docusaurus version
 	( cd ${SITEROOT} && npx docusaurus --version )
 
-deploy: ## Deploy the site to GitHub Pages
+secret-scan: ## Scan the full repo history + working tree for leaked secrets
+	# Mirrors the gitleaks pattern used across the other repos.
+	@command -v gitleaks >/dev/null 2>&1 || { echo "Install gitleaks: brew install gitleaks"; exit 1; }
+	gitleaks detect --source . --config .gitleaks.toml --redact --verbose
+
+install-hooks: ## Enable the local pre-commit secret-scan hook
+	git config core.hooksPath .githooks
+	@echo "✓ pre-commit secret scanning enabled (core.hooksPath=.githooks)"
+
+deploy: secret-scan ## Deploy the site to GitHub Pages (runs a secret scan first)
 	# Publishes the website to GitHub pages.
 	( cd ${SITEROOT} && USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy )
 
@@ -207,6 +216,23 @@ test-e2e-ui: ## Run E2E tests with UI mode (interactive)
 
 test-e2e-debug: ## Run E2E tests in debug mode
 	( cd ${SITEROOT} && yarn test:e2e:debug )
+
+test-posthog: ## Validate PostHog events end-to-end against a production build
+	# Builds with POSTHOG_TEST_MODE=1 (opts out of PostHog's bot filter so Playwright
+	# events reach ingestion), serves the build, runs the posthog-events spec, then
+	# tears down the server. Requires POSTHOG_KEY/HOST in .env.
+	@set -a; . ./.env; set +a; \
+	export POSTHOG_TEST_MODE=1; \
+	if [ -z "$$POSTHOG_KEY" ]; then echo "POSTHOG_KEY not set in .env — aborting."; exit 1; fi; \
+	echo "Building with POSTHOG_TEST_MODE=1…"; \
+	( cd ${SITEROOT} && yarn build >/tmp/posthog-build.log 2>&1 ) || { echo "build failed (see /tmp/posthog-build.log)"; exit 1; }; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/posthog-serve.log 2>&1 & ); \
+	sleep 6; \
+	( cd ${SITEROOT} && CI=1 PH_BASE_URL=http://localhost:4173 npx playwright test posthog-events --reporter=list ); \
+	rc=$$?; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	exit $$rc
 
 open-e2e-report: ## Open the E2E test HTML report in the default browser
 	@if [ -f "${SITEROOT}/test-results/html-report/index.html" ]; then \

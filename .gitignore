@@ -10,3 +10,6 @@ bytesofpurpose-blog/static/storybook/
 !.env.example
 *.token
 cloudflared/*.json
+
+# Local Claude settings (machine-specific)
+.claude/settings.local.json
