@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import posthog from 'posthog-js';
 // @ts-ignore - Docusaurus theme module
 import Layout from '@theme/Layout';
 import { Changelog } from '@site/src/components/Changelog';
 import { getAllChangelogEntries } from '@site/src/components/Changelog/changelogUtils';
 
 export default function ChangelogPage() {
+  useEffect(() => {
+    posthog.capture('changelog viewed');
+  }, []);
+
   // Get all changelog entries from the generated data file
   // The data file is automatically generated from markdown files in the changelog directory
   const allEntries = getAllChangelogEntries();

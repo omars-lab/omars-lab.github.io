@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import posthog from 'posthog-js';
 import styles from '../../css/FancyButton.module.css';
 
 // import gtag from '@docusaurus/plugin-google-gtag';
@@ -27,7 +28,11 @@ export const Vote = ({children, color}) => (
       //   'event_label': 'vote',
       //   'value': window.location.pathname.split("/").pop()
       // });
-      console.log("Thanks for voting!")
+      console.log("Thanks for voting!");
+      posthog.capture('blog post voted', {
+        post_path: window.location.pathname,
+        vote_label: String(children),
+      });
     }}>
     {children}
   </button>

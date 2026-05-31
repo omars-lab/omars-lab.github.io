@@ -1,4 +1,5 @@
 import React from 'react';
+import posthog from 'posthog-js';
 import type { ChangelogEntry } from '../types';
 import styles from './ChangelogFilters.module.css';
 // Import badge styles to match card badge appearance
@@ -161,6 +162,11 @@ export function ChangelogFilters({
     return priorityClasses[priority] || badgeStyles.badgeDefault;
   };
 
+  const captureFilter = (filterType: string, filterValue: string, originalHandler: (v: string) => void) => {
+    originalHandler(filterValue);
+    posthog.capture('changelog filter changed', { filter_type: filterType, filter_value: filterValue });
+  };
+
   return (
     <div className={styles.filtersContainer}>
       {/* Two-column layout - fixed labels on left, scrollable tiles on right */}
@@ -173,7 +179,7 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${statusFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onStatusChange('all')}
+                onClick={() => captureFilter('status', 'all', onStatusChange)}
               >
                 All
               </button>
@@ -181,7 +187,7 @@ export function ChangelogFilters({
                 <button
                   key={status}
                   className={`${styles.filterTile} ${badgeStyles.badge} ${getStatusBadgeClass(status)} ${statusFilter === status ? styles.filterTileActive : ''}`}
-                  onClick={() => onStatusChange(status)}
+                  onClick={() => captureFilter('status', status, onStatusChange)}
                 >
                   {formatLabel(status)}
                 </button>
@@ -198,7 +204,7 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${typeFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onTypeChange('all')}
+                onClick={() => captureFilter('type', 'all', onTypeChange)}
               >
                 All
               </button>
@@ -206,7 +212,7 @@ export function ChangelogFilters({
                 <button
                   key={type}
                   className={`${styles.filterTile} ${badgeStyles.badge} ${getTypeBadgeClass(type)} ${typeFilter === type ? styles.filterTileActive : ''}`}
-                  onClick={() => onTypeChange(type)}
+                  onClick={() => captureFilter('type', type, onTypeChange)}
                 >
                   {formatLabel(type)}
                 </button>
@@ -223,7 +229,7 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${priorityFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onPriorityChange('all')}
+                onClick={() => captureFilter('priority', 'all', onPriorityChange)}
               >
                 All
               </button>
@@ -231,7 +237,7 @@ export function ChangelogFilters({
                 <button
                   key={priority}
                   className={`${styles.filterTile} ${badgeStyles.badge} ${getPriorityBadgeClass(priority)} ${priorityFilter === priority ? styles.filterTileActive : ''}`}
-                  onClick={() => onPriorityChange(priority)}
+                  onClick={() => captureFilter('priority', priority, onPriorityChange)}
                 >
                   {formatLabel(priority)}
                 </button>
@@ -248,19 +254,19 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${categoryFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onCategoryChange('all')}
+                onClick={() => captureFilter('category', 'all', onCategoryChange)}
               >
                 All
               </button>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${categoryFilter === 'content' ? styles.filterTileActive : ''}`}
-                onClick={() => onCategoryChange('content')}
+                onClick={() => captureFilter('category', 'content', onCategoryChange)}
               >
                 Content
               </button>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${categoryFilter === 'development' ? styles.filterTileActive : ''}`}
-                onClick={() => onCategoryChange('development')}
+                onClick={() => captureFilter('category', 'development', onCategoryChange)}
               >
                 Development
               </button>
@@ -276,7 +282,7 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${yearFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onYearChange('all')}
+                onClick={() => captureFilter('year', 'all', onYearChange)}
               >
                 All
               </button>
@@ -284,7 +290,7 @@ export function ChangelogFilters({
                 <button
                   key={year}
                   className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${yearFilter === year.toString() ? styles.filterTileActive : ''}`}
-                  onClick={() => onYearChange(year.toString())}
+                  onClick={() => captureFilter('year', year.toString(), onYearChange)}
                 >
                   {year}
                 </button>
@@ -301,7 +307,7 @@ export function ChangelogFilters({
             <div className={styles.filterTileRow}>
               <button
                 className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${quarterFilter === 'all' ? styles.filterTileActive : ''}`}
-                onClick={() => onQuarterChange('all')}
+                onClick={() => captureFilter('quarter', 'all', onQuarterChange)}
               >
                 All
               </button>
@@ -310,7 +316,7 @@ export function ChangelogFilters({
                   <button
                     key={quarter}
                     className={`${styles.filterTile} ${badgeStyles.badge} ${badgeStyles.badgeDefault} ${quarterFilter === quarter ? styles.filterTileActive : ''}`}
-                    onClick={() => onQuarterChange(quarter)}
+                    onClick={() => captureFilter('quarter', quarter, onQuarterChange)}
                   >
                     {quarter}
                   </button>

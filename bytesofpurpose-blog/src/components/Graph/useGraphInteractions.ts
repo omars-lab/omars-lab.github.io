@@ -7,6 +7,7 @@
  */
 
 import { useCallback, useRef } from 'react';
+import posthog from 'posthog-js';
 import { cleanNodeForSelection, cleanEdgeForSelection, getNodeRadius } from './graphUtils';
 
 export interface GraphInteractionHandlers {
@@ -106,12 +107,20 @@ export function useGraphInteractions(
     setHighlightedNodeId(node.id);
     setSelectedEdge(null);
     setHighlightedEdgeId(null);
-    
+
+    posthog.capture('graph node clicked', {
+      graph_id: graphId,
+      node_id: node.id,
+      node_label: node.label || node.title || node.id,
+      has_children: !!node.hasChildren,
+      action: node.hasChildren ? (expandedNodes.has(node.id) ? 'collapsed' : 'expanded') : 'selected',
+    });
+
     // Update URL fragment
     if (graphId) {
       window.location.hash = `#${graphId}-node-${node.id}`;
     }
-  }, [graphId, setExpandedNodes, setSelectedNode, setHighlightedNodeId, setSelectedEdge, setHighlightedEdgeId, setContextMenu]);
+  }, [graphId, expandedNodes, setExpandedNodes, setSelectedNode, setHighlightedNodeId, setSelectedEdge, setHighlightedEdgeId, setContextMenu]);
 
   const handleNodeRightClick = useCallback((node: any, event: MouseEvent) => {
     event.preventDefault();
@@ -171,6 +180,7 @@ export function useGraphInteractions(
     
     try {
       await navigator.clipboard.writeText(anchorLink);
+      posthog.capture('graph link copied', { graph_id: graphId, node_id: nodeId, edge_id: edgeId });
       setContextMenu(null);
     } catch (err) {
       console.error('Failed to copy link:', err);
@@ -183,9 +193,11 @@ export function useGraphInteractions(
       textArea.select();
       try {
         document.execCommand('copy');
+        posthog.capture('graph link copied', { graph_id: graphId, node_id: nodeId, edge_id: edgeId });
         setContextMenu(null);
       } catch (fallbackErr) {
         console.error('Fallback copy failed:', fallbackErr);
+        posthog.captureException(fallbackErr);
       }
       document.body.removeChild(textArea);
     }

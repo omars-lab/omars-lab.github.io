@@ -51,6 +51,7 @@
  */
 
 import React, { useMemo, useEffect, useRef, useState, useCallback } from 'react';
+import posthog from 'posthog-js';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useColorMode } from '@docusaurus/theme-common';
 import styles from './GraphRenderer.module.css';
@@ -1022,17 +1023,19 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
   const expandAll = useCallback(() => {
     const allNodesWithChildren = getAllNodesWithChildrenWrapper();
     setExpandedNodes(allNodesWithChildren);
-  }, [getAllNodesWithChildrenWrapper]);
+    posthog.capture('graph expanded all', { graph_id: graphId });
+  }, [getAllNodesWithChildrenWrapper, graphId]);
 
   // Collapse all nodes
   const collapseAll = useCallback(() => {
     setExpandedNodes(new Set());
+    posthog.capture('graph collapsed all', { graph_id: graphId });
     // Clear selected edge and node when collapsing all, as they may reference collapsed nodes
     setSelectedEdge(null);
     setSelectedNode(null);
     setHighlightedEdgeId(null);
     setHighlightedNodeId(null);
-  }, []);
+  }, [graphId]);
 
   // Update node positions for floating menu rendering
   const updateNodePositions = useCallback(() => {

@@ -17,6 +17,16 @@ const darkTheme = themes.dracula;
     projectName: 'omars-lab.github.io', // Usually your repo name.
     trailingSlash: false,
     staticDirectories: ['static'],
+    // PostHog analytics: key is a public, write-only project key (safe to ship in
+    // client bundle). Set POSTHOG_KEY / POSTHOG_HOST at build time to enable.
+    customFields: {
+      posthogKey: process.env.POSTHOG_KEY || '',
+      posthogHost: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
+      // Test-only: opt out of PostHog's bot/UA filter so e2e (Playwright) events
+      // reach ingestion. Never set in production builds.
+      posthogTestMode: process.env.POSTHOG_TEST_MODE === '1',
+    },
+    clientModules: [require.resolve('./src/posthog.js')],
     markdown: {
       mermaid: true,
       hooks: {
