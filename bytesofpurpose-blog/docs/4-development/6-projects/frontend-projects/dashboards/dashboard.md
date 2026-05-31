@@ -169,7 +169,7 @@ draft: true
 * https://aws.amazon.com/cloudwatch/pricing/
 * Incoming alert webhook
 	* https://bytesofpurposegroup.slack.com/services/B05N7SDTMU7?added=1
-	* ***REMOVED-ROTATED-CREDENTIAL***
+	* https://hooks.slack.com/services/YOUR/WEBHOOK/URL
 
 # Metrics
 - [ ] Setup slack messages for prometheus

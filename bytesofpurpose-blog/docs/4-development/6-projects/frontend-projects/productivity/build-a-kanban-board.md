@@ -123,13 +123,13 @@ https://trello.com/1/search?query=id.dashboard&partial=true&modelTypes=cards%2Cb
 	- [-] https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
 	- https://trello.com/power-ups/admin/
 - [x] Figure out how to use api key with trello call @done(2023-01-15 07:53 PM)
-	- [-] curl -v https://mysite.atlassian.net --user ***REMOVED-ROTATED-CREDENTIAL*** \
+	- [-] curl -v https://mysite.atlassian.net --user YOUR_EMAIL:YOUR_API_TOKEN \
 		- This method does not work with trello .. only Atlassian ...
 - [x] Get the board @done(2023-01-15 07:53 PM)
 	- https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-get
-	* curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b?key=50042d80b513d91fede9b4a0cc0e3618&token=***REMOVED-ROTATED-CREDENTIAL***' --header 'Accept: application/json' | jq 
+	* curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b?key=YOUR_TRELLO_KEY&token=YOUR_TRELLO_TOKEN' --header 'Accept: application/json' | jq 
 - [x] Get lists of board ... @done(2023-01-20 08:15 AM)
-	- curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b/lists?key=50042d80b513d91fede9b4a0cc0e3618&token=***REMOVED-ROTATED-CREDENTIAL***'  --header 'Accept: application/json' | jq 
+	- curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b/lists?key=YOUR_TRELLO_KEY&token=YOUR_TRELLO_TOKEN'  --header 'Accept: application/json' | jq 
 
 * [ ] add quotes around problematic tags that are commented out in yaml
 
