@@ -1,14 +1,16 @@
 /* Dev/localhost-only "draft" pill shown after a sidebar item's label. */
 .draftBadge {
   display: inline-block;
+  flex: none;
   margin-left: 0.4rem;
-  padding: 0 0.4rem;
+  padding: 0 0.32rem;
+  min-width: 1.15em;
   border-radius: 999px;
   font-size: 0.62rem;
   font-weight: 700;
   line-height: 1.5;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap; /* never wrap "D" to its own line beside long labels */
   vertical-align: middle;
   color: #92400e;
   background: #fde68a;

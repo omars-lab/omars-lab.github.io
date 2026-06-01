@@ -22,9 +22,9 @@ function normalize(href: string): string {
 }
 
 /**
- * Returns true only when the badge should show: on localhost, in a dev build,
- * and the href is a known draft. Safe to call unconditionally (it no-ops in
- * production — the plugin data is empty there and isLocalhost() is false).
+ * True when a LEAF doc link is a draft. Gated to localhost + dev build; no-ops in
+ * production (plugin data is empty there and isLocalhost() is false). Only leaf
+ * doc links are badged — see plugins/draft-docs for why categories aren't.
  */
 export function useIsDraft(href?: string): boolean {
   const drafts = useDraftPermalinks();
@@ -34,9 +34,14 @@ export function useIsDraft(href?: string): boolean {
 }
 
 export function DraftBadge(): JSX.Element {
+  // Single "D" so the pill never wraps next to long sidebar labels; full word
+  // is in the tooltip + aria-label.
   return (
-    <span className={styles.draftBadge} title="Draft — hidden in production">
-      draft
+    <span
+      className={styles.draftBadge}
+      title="Draft — hidden in production"
+      aria-label="draft">
+      D
     </span>
   );
 }

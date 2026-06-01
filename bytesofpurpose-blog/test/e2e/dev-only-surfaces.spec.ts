@@ -26,10 +26,9 @@ test.describe('Dev-only surfaces are absent in the production build', () => {
     // Drafts are excluded from the prod build entirely, AND the badge is gated.
     await page.goto('/docs/welcome/intro', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
-    await expect(page.locator('[data-draft="true"]')).toHaveCount(0);
-    // No "draft" pill anywhere in the sidebar nav.
+    // No draft pill (the "D" badge carries aria-label="draft") anywhere in nav.
     const sidebar = page.locator('nav.menu, .theme-doc-sidebar-container');
-    await expect(sidebar.locator('text=/^draft$/i')).toHaveCount(0);
+    await expect(sidebar.locator('span[aria-label="draft"]')).toHaveCount(0);
   });
 
   test('the draft category itself is gone (Definitions index was draft:true)', async ({

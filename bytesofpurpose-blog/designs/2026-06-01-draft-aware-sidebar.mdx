@@ -76,18 +76,33 @@ route, so a stray badge is impossible. (Docusaurus's client `draftIds` is empty 
 dev and the client doc data carries no `frontMatter`, so reading draft state from
 global data alone isn't possible in dev — hence the plugin.)
 
-### 2. Swizzled `@theme/DocSidebarItem/{Link,Category}` — render the badge
+### 2. Swizzled `@theme/DocSidebarItem/Link` — render the badge
 
 - **`draftBadge` helper** — `useIsDraft(href)` reads the plugin's global data and
   returns `true` only when **all** of: `process.env.NODE_ENV !== 'production'`
   (build-time, tree-shakeable), `isLocalhost()` (runtime, reused from
   `src/experiments.ts`), and the normalized `href` is in the draft set.
-- **`Link` (leaf docs)** — a minimal fork of the upstream component that appends a
-  `<DraftBadge/>` (a small "draft" pill) after the label.
-- **`Category`** — a thin **wrapper** around the upstream component (keeps its
-  collapse/link behavior); when the category's index page is a draft it wraps the
-  output in a `[data-draft]` element and a CSS `::after` appends the pill. Wrapping
-  (vs forking) avoids coupling to the category's complex internals.
+- **`Link` (leaf docs only)** — a minimal fork of the upstream component that appends
+  a `<DraftBadge/>` (a compact "D" pill; full word in `title`/`aria-label`, so it
+  never wraps next to long labels) after the label.
+
+### Leaf docs only — why categories aren't badged
+
+An earlier version also badged categories, but it was both buggy and misleading:
+
+- A folder whose **index** is a draft can still appear in prod if it has any
+  **published child** (e.g. `Definitions` — its index 404s in prod, but the folder
+  shows because one child is published). Badging the folder "draft" implies the whole
+  folder is gone, which is false.
+- A **fully**-draft folder (every descendant draft → folder truly absent from prod)
+  usually has **no index page**, so its sidebar entry's `href` is `undefined`
+  (confirmed by logging `item.href` from the swizzle: index-less categories →
+  `undefined`). With no href there's nothing to match on, so it can't be badged
+  without fragile label/emoji matching.
+
+So categories are left unbadged; only leaf draft docs get the "D". Leaf badging is
+reliable (every draft doc has a stable permalink) and is what actually answers
+"which entries won't ship."
 
 ### Why dev-only is safe (defense in depth)
 
@@ -98,11 +113,11 @@ global data alone isn't possible in dev — hence the plugin.)
 
 ## Testing
 
-- **`test/e2e/draft-sidebar.spec.ts`** (dev project, :3000): draft categories are
-  badged (Definitions/Skills index pages are drafts), a published category
-  (Development) is **not**, and leaf draft badges render.
+- **`test/e2e/draft-sidebar.spec.ts`** (dev project, :3000): a draft leaf doc shows
+  the "D" badge, the badge sits on a leaf link (no category markers), and badging is
+  selective (a published sibling has none).
 - **`test/e2e/dev-only-surfaces.spec.ts`** (prod project, :4173 build): asserts the
-  **absence** in production — no draft badges, no `[data-draft]`, and the draft
+  **absence** in production — no draft badges (`span[aria-label="draft"]`), and draft
   routes 404. This is the localhost-only guarantee, enforced (the same spec also
   guards the DebugMenu FAB).
 

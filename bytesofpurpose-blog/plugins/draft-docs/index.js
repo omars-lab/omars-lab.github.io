@@ -12,7 +12,12 @@ const matter = require('gray-matter');
  * localhost + non-prod, so nothing leaks to the deployed site.
  *
  * Consumed via:
- *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks  // string[]
+ *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks  // string[] — draft doc pages
+ *
+ * Only individual docs with `draft: true` are tracked — the swizzled sidebar
+ * badges the LEAF link. (Category/folder badging was dropped: a fully-draft folder
+ * often has no index page, so its sidebar entry has no href to match on, and a
+ * folder with any published child still shows in prod — badging it would mislead.)
  *
  * Permalink derivation mirrors Docusaurus for this repo's docs plugin
  * (default routeBasePath 'docs'): explicit `slug:` wins (138/140 drafts have
@@ -30,7 +35,7 @@ module.exports = function draftDocsPlugin(context) {
     async loadContent() {
       if (!fs.existsSync(docsDir)) return {draftPermalinks: []};
 
-      const out = new Set();
+      const draftPermalinks = new Set();
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -47,14 +52,14 @@ module.exports = function draftDocsPlugin(context) {
           } catch {
             continue;
           }
-          if (data.draft !== true) continue;
-
-          out.add(toPermalink(full, docsDir, data));
+          if (data.draft === true) {
+            draftPermalinks.add(toPermalink(full, docsDir, data));
+          }
         }
       };
 
       walk(docsDir);
-      return {draftPermalinks: [...out]};
+      return {draftPermalinks: [...draftPermalinks]};
     },
 
     async contentLoaded({content, actions}) {
