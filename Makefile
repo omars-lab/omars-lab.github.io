@@ -210,21 +210,46 @@ test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn sta
 	# PostHog/A-B specs live in a separate project — use `make test-posthog`.
 	( cd ${SITEROOT} && yarn playwright test --project=dev )
 
-test-a11y: ## Run the axe-core accessibility scan (key pages, light + dark)
-	# WCAG 2 A/AA scan of home/blog/docs/post in both color modes. Part of the
-	# "dev" project, so it boots the :3000 dev server automatically.
-	( cd ${SITEROOT} && yarn playwright test --project=dev accessibility )
+test-prod-checks: ## Build + serve on :4173, run the "prod" project (a11y + SEO), tear down
+	# A11y + SEO scans MUST run against a real production build: build-only
+	# transforms (e.g. the task-list aria-label rehype plugin) don't run in the
+	# dev server. Builds once, serves :4173, runs the prod project, then stops it.
+	@PK=$$(grep -E '^POSTHOG_KEY=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PH=$$(grep -E '^POSTHOG_HOST=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	( cd ${SITEROOT} && POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH yarn build >/tmp/prod-checks-build.log 2>&1 ) || { echo "build failed (see /tmp/prod-checks-build.log)"; exit 1; }; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/prod-checks-serve.log 2>&1 & ); \
+	sleep 6; \
+	( cd ${SITEROOT} && CI=1 E2E_PROD_BASE_URL=http://localhost:4173 npx playwright test --project=prod --reporter=list ); \
+	rc=$$?; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	exit $$rc
 
-test-seo: ## Run on-page SEO checks (title, meta description, canonical, OG, link text)
-	# Asserts the SEO essentials Lighthouse's SEO category cares about across the
-	# key pages, so regressions fail in the normal run. Boots :3000 automatically.
-	( cd ${SITEROOT} && yarn playwright test --project=dev seo )
+test-a11y: ## Run the axe-core accessibility scan (a11y spec only, prod build, light + dark)
+	@PK=$$(grep -E '^POSTHOG_KEY=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PH=$$(grep -E '^POSTHOG_HOST=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	( cd ${SITEROOT} && POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH yarn build >/tmp/a11y-build.log 2>&1 ) || { echo "build failed (see /tmp/a11y-build.log)"; exit 1; }; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/a11y-serve.log 2>&1 & ); \
+	sleep 6; \
+	( cd ${SITEROOT} && CI=1 E2E_PROD_BASE_URL=http://localhost:4173 npx playwright test --project=prod accessibility --reporter=list ); \
+	rc=$$?; lsof -ti:4173 | xargs kill -9 2>/dev/null || true; exit $$rc
 
-test-regression: ## Full regression: dev-server specs (graph + a11y) + PostHog/A-B specs
-	# Runs the two E2E projects in sequence. The dev project boots its own :3000
-	# server; test-posthog builds + serves a POSTHOG_TEST_MODE production build on
-	# :4173. Run from the repo root; requires POSTHOG_KEY/HOST in .env.
+test-seo: ## Run on-page SEO checks (prod build: title, description, canonical, OG, link text)
+	@PK=$$(grep -E '^POSTHOG_KEY=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PH=$$(grep -E '^POSTHOG_HOST=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	( cd ${SITEROOT} && POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH yarn build >/tmp/seo-build.log 2>&1 ) || { echo "build failed (see /tmp/seo-build.log)"; exit 1; }; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/seo-serve.log 2>&1 & ); \
+	sleep 6; \
+	( cd ${SITEROOT} && CI=1 E2E_PROD_BASE_URL=http://localhost:4173 npx playwright test --project=prod seo --reporter=list ); \
+	rc=$$?; lsof -ti:4173 | xargs kill -9 2>/dev/null || true; exit $$rc
+
+test-regression: ## Full regression: dev (graph) + prod (a11y/SEO) + PostHog/A-B projects
+	# Runs all three E2E projects. dev boots :3000; prod + posthog build/serve :4173.
+	# Run from the repo root; requires POSTHOG_KEY/HOST in .env.
 	$(MAKE) test-e2e
+	$(MAKE) test-prod-checks
 	$(MAKE) test-posthog
 
 test-e2e-headed: ## Run E2E tests in headed mode (see browser)

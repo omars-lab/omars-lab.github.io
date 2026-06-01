@@ -10,11 +10,13 @@ the GraphRenderer docs tests and the PostHog/A-B analytics tests. They have
 | Project | Specs | Server it talks to | Why |
 |---|---|---|---|
 | `dev` | `graph-*.spec.ts` | Docusaurus **dev** server (`yarn start`, :3000) — auto-started | render docs pages incl. hot/draft content |
+| `prod` | `accessibility`, `seo` | a **production build** served on :4173 | build-only transforms (e.g. the task-list aria-label rehype plugin) DON'T run in `yarn start`, so these must scan a real build |
 | `posthog-prod` | `posthog-events`, `support-ab-test` | a **`POSTHOG_TEST_MODE=1` production build** served on :4173 | PostHog only inits in a prod build; its bot filter must be off for events to land |
 
 The config (`playwright.config.ts`) auto-starts the :3000 dev server for the `dev`
-project, and **skips** it when you run `--project=posthog-prod` alone (those specs
-use an externally-served :4173 build).
+project, and **skips** it when you run only the build-backed projects (`prod` /
+`posthog-prod`) — those use an externally-served :4173 build (the `make` targets
+build + serve + tear it down for you).
 
 ## Setup
 
@@ -29,10 +31,15 @@ yarn playwright install
 # Dev-server specs (graph/docs) — boots :3000 automatically:
 make test-e2e                 # == yarn playwright test --project=dev
 
+# A11y + SEO scans — build, serve :4173, run "prod" project, tear down:
+make test-a11y                # axe WCAG 2 A/AA scan only
+make test-seo                 # on-page SEO checks only
+make test-prod-checks         # both (the whole "prod" project)
+
 # PostHog/A-B specs — builds test-mode, serves :4173, runs, tears down:
 make test-posthog             # == --project=posthog-prod against :4173
 
-# Full regression (both projects, both server modes), from repo root:
+# Full regression (all three projects), from repo root:
 make test-regression
 
 # Interactive / debugging:
@@ -58,9 +65,9 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 - **`posthog-events.spec.ts`** — PostHog init + $pageview/autocapture/scroll (posthog-prod)
 - **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)
 - **`accessibility.spec.ts`** — axe-core WCAG 2 A/AA scan of home/blog/docs/post in
-  **both color modes** (dev). `make test-a11y`.
+  **both color modes** (prod). `make test-a11y`.
 - **`seo.spec.ts`** — on-page SEO essentials (title, meta description, canonical,
-  OG/Twitter tags, no generic link text) across key pages (dev). `make test-seo`.
+  OG/Twitter tags, no generic link text) across key pages (prod). `make test-seo`.
 
 ## Accessibility scanning (axe-core)
 
@@ -69,13 +76,14 @@ WCAG 2.0/2.1 A & AA, in light **and** dark mode (contrast differs by mode — ax
 catches dark-mode issues Lighthouse's default light-only run misses).
 
 - **Zero-tolerance pages:** home, blog index, docs shell — any violation fails.
-- **Baselined pages:** authored articles may carry pre-existing content/theme debt
-  (Prism code-token contrast, markdown task-list `<input>` labels, prose link
-  underlines). Each such page allow-lists specific rule IDs in the spec, so the gate
-  stays green yet still fails on anything **new**. Burn the baseline down (tracked
-  task) and tighten to `[]`.
+- **Baselined pages:** authored articles may carry pre-existing content/theme debt.
+  Each such page allow-lists specific rule IDs in the spec, so the gate stays green
+  yet still fails on anything **new**. Currently only `color-contrast` on the
+  `evolution-of-a-repo` post is baselined (a few decorative Prism string/builtin
+  tokens); task-list labels (rehype plugin) and prose-link underlines are fixed.
 
-Run: `make test-a11y` (boots the :3000 dev server automatically).
+Runs against a **production build** (`make test-a11y` builds + serves :4173), because
+the task-list aria-label rehype plugin only runs at build time, not in `yarn start`.
 
 ## Known flaky / open
 

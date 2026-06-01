@@ -115,6 +115,47 @@ html[data-theme='dark'] .navbar-coffee:hover {
   }
 }
 
+/* WCAG 1.4.1: in-content prose links must be distinguishable without relying on
+   color alone. Underline links inside markdown article content only (navbar /
+   footer / cards have their own affordances and are not .markdown descendants). */
+.markdown a {
+  text-decoration: underline;
+}
+
+/* WCAG 1.4.3 AA: a few Prism (oneLight/oneDark) syntax tokens fall below 4.5:1
+   against the code background. Nudge only the offenders to accessible colors;
+   the rest of each theme's palette is untouched. */
+:root {
+  /* oneLight code background ~#fafafa */
+  --prism-comment-color: #5c6370; /* was #a0a1a7 (2.5:1) -> 5.8:1 */
+  --prism-function-color: #3a66d0; /* was #4078f2 (3.9:1) -> 5.0:1 */
+  --prism-atrule-color: #a55f00; /* was #b76b01 (3.9:1) -> 4.8:1 */
+}
+html[data-theme='dark'] {
+  /* oneDark code background ~#282c34 */
+  --prism-comment-color: #9099ab; /* was #5c6370 (2.3:1) -> 4.9:1 */
+  --prism-property-color: #f08690; /* was #e06c75 (4.4:1) -> 5.7:1 */
+}
+
+.token.comment,
+.token.prolog,
+.token.cdata {
+  color: var(--prism-comment-color) !important;
+}
+html:not([data-theme='dark']) .token.function {
+  color: var(--prism-function-color) !important;
+}
+/* Light mode only — oneDark's atrule already passes; applying the light color
+   (#a55f00) on the dark code bg would fail. */
+html:not([data-theme='dark']) .token.atrule,
+html:not([data-theme='dark']) .token.atrule .token.key {
+  color: var(--prism-atrule-color, inherit) !important;
+}
+html[data-theme='dark'] .token.literal-property.property,
+html[data-theme='dark'] .token.property {
+  color: var(--prism-property-color) !important;
+}
+
 /* "Read more about <title>" — the title part is in the DOM (descriptive link
    text for crawlers/Lighthouse + screen readers) but visually clipped so the
    eye reads just "Read more →". Standard visually-hidden pattern. */

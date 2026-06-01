@@ -29,16 +29,17 @@ const DEV_BASE = process.env.E2E_DEV_BASE_URL || 'http://localhost:3000';
 const PROD_BASE =
   process.env.E2E_PROD_BASE_URL || process.env.PH_BASE_URL || 'http://localhost:4173';
 
-// Only auto-start the dev server when the dev project will actually run. When a
-// developer runs `--project=posthog-prod`, we must NOT spin up :3000 (the prod
-// specs talk to an external :4173), and we must not block on it either.
-// Handle both `--project=posthog-prod` and `--project posthog-prod` arg forms.
+// Only auto-start the :3000 dev server when the dev project will actually run.
+// The build-backed projects (prod, posthog-prod) talk to an external :4173, so
+// we must NOT spin up (or block on) :3000 when only those are selected.
+// Handle both `--project=name` and `--project name` arg forms.
 const argv = process.argv.join(' ');
 const selectedProjects = (argv.match(/--project[= ]([^\s]+)/g) || []).map((m) =>
   m.replace(/--project[= ]/, '')
 );
+const BUILD_BACKED = new Set(['prod', 'posthog-prod']);
 const runningOnlyProd =
-  selectedProjects.length > 0 && selectedProjects.every((p) => p === 'posthog-prod');
+  selectedProjects.length > 0 && selectedProjects.every((p) => BUILD_BACKED.has(p));
 
 export default defineConfig({
   testDir: './test/e2e',
@@ -59,10 +60,20 @@ export default defineConfig({
 
   projects: [
     {
-      // Docs/site specs + the axe accessibility scan, against the dev server (:3000).
+      // Docs/graph specs against the dev server (:3000). The graph renders hot
+      // doc content and doesn't depend on build-only transforms.
       name: 'dev',
-      testMatch: /(graph-.*|accessibility|seo)\.spec\.ts$/,
+      testMatch: /graph-.*\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
+    },
+    {
+      // A11y + SEO scans against a PRODUCTION build (:4173). These MUST run on a
+      // real build, not the dev server, because build-only transforms (e.g. the
+      // task-list aria-label rehype plugin) don't run in `yarn start`. Start the
+      // build/serve first — `make test-a11y` / `make test-seo` handle that.
+      name: 'prod',
+      testMatch: /(accessibility|seo)\.spec\.ts$/,
+      use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
     {
       // PostHog/A-B specs against the test-mode production build (:4173).

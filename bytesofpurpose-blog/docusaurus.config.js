@@ -1,6 +1,11 @@
 const {themes} = require('prism-react-renderer');
-const lightTheme = themes.github;
-const darkTheme = themes.dracula;
+// oneLight/oneDark have higher token contrast than github/dracula (whose comment
+// tokens fail WCAG AA), so syntax-highlighted code meets contrast requirements.
+const lightTheme = themes.oneLight;
+const darkTheme = themes.oneDark;
+
+// A11y: label GFM task-list checkboxes (else axe/WCAG "label" rule fails).
+const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
 
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
@@ -71,13 +76,15 @@ const darkTheme = themes.dracula;
                 // }
               // ],
               sidebarPath: require.resolve('./sidebars.js'),
+              rehypePlugins: [rehypeTaskListLabels],
               // Please change this to your repo.
-              editUrl: 
+              editUrl:
                 'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
             },
             blog: {
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
+              rehypePlugins: [rehypeTaskListLabels],
               // SEO: give the blog index a real title + meta description (the
               // default description was just "Blog" — ~4 chars, fails SEO checks).
               blogTitle: 'Bytes of Purpose — Blog',

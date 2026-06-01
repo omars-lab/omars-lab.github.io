@@ -39,12 +39,15 @@ type PageSpec = {
 const PAGES: PageSpec[] = [
   { name: 'home', path: '/' },
   { name: 'blog-index', path: '/blog' },
-  { name: 'docs-page', path: '/docs/welcome/intro', baseline: ['link-in-text-block'] },
+  { name: 'docs-page', path: '/docs/welcome/intro' },
   {
-    // An authored article: carries content-level debt we don't introduce here.
+    // Authored article. label + link-in-text-block are now fixed; the only
+    // remaining debt is color-contrast on a few decorative Prism syntax tokens
+    // (string/builtin/boolean) in this post's code blocks — comment/function/
+    // property/atrule were already brought to AA. Tracked for full burn-down.
     name: 'blog-post',
     path: '/blog/evolution-of-a-repo',
-    baseline: ['color-contrast', 'label', 'link-in-text-block'],
+    baseline: ['color-contrast'],
   },
 ];
 
