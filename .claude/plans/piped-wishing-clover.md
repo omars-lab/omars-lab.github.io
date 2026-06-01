@@ -261,3 +261,30 @@ per T16). Detail: `.claude/plans/topic-taxonomy-proposal.md`.
   IA audit. Decide skill-vs-fold during T15/T19.
 - **Changelog content has latent dup-route / `.md`+`.mdx` hygiene issues** independent of
   docs — worth a separate sweep, but only the build-blocking ones are fixed here.
+
+### T4 — migration map (DONE) — `.claude/plans/topic-migration-map.tsv`
+- All **289 docs assigned, 0 unassigned, 0 contested.** Counts: development 100 ·
+  blogging 59 · productivity 40 · interview-prep 23 · generative-ai 18 ·
+  personal-growth 13 · companies 12 · scripting 9 · faith 6 · entrepreneurship 2.
+  Plus **7 no-move**: welcome (root) + 6 dissolving bucket READMEs
+  (`2-definitions`, `5-craftsmanship`, `6-techniques`, `7-skills`, `10-prompts` indexes
+  + `10-prompts/future-plans`) — their intro content gets rehomed into the new topic
+  READMEs in T13/T14, not blindly deleted.
+- **Taxonomy decisions locked with Omar (overriding earlier ambiguity):**
+  - career-levels + skills cluster → **Companies/{roles,skills}** (NOT interview-prep).
+    Interview Prep instead gets a **new authored doc** that references level/skill
+    differences as part of prep (track in T8).
+  - `7-skills/refining-soft-skills/` → **Companies/skills** (general-employee skills
+    subfolder, not interview-specific).
+  - `habits-mastering` + `habits-managing-finances` → **Personal Growth**.
+  - Companies sub-structure is now **{roles, culture, skills}**.
+- **Map is the review artifact**; `target_path` column is the *proposed* destination.
+  **Per-topic internal layout is finalized during each Phase-D move** (eyeball sidebar):
+  - drop redundant topic-echoing `*-techniques` subfolders (`3-productivity/
+    organization-techniques/`, `4-blogging/blogging-techniques/`, `5-scripting/
+    scripting-techniques/`) — keep genuinely useful sub-groups (blogging embed-*/adding-*);
+  - **GenAI pulls from 6 source roots** → regroup its 18 docs into ~3 clean sub-groups
+    rather than echoing old folder names;
+  - Faith: reframe the `backend-projects/home-automation` nesting to faith-centric.
+- Builder scripts saved (`build-migration-map.js`, `add-target-paths.js`) so the map
+  regenerates if the inventory changes.
