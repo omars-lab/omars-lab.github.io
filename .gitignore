@@ -17,3 +17,5 @@ cloudflared/*.json
 # Python bytecode (skill helper scripts)
 __pycache__/
 *.pyc
+.claude/plans/routes-before.txt
+.claude/scheduled_tasks.lock
