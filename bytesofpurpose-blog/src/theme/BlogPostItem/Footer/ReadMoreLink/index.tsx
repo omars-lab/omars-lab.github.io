@@ -15,7 +15,7 @@ import type {Props} from '@theme/BlogPostItem/Footer/ReadMoreLink';
  * eye still reads just "Read more →". This satisfies both crawlers/Lighthouse
  * and screen-reader users with one DOM string (no redundant aria-label).
  */
-export default function BlogPostItemFooterReadMoreLink(props: Props): JSX.Element {
+export default function BlogPostItemFooterReadMoreLink(props: Props): React.JSX.Element {
   const {blogPostTitle, ...linkProps} = props;
   return (
     <Link {...linkProps}>

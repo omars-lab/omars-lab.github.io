@@ -38,7 +38,7 @@ function buildBookmarkletHref(key: string, host: string, home: string): string {
   return 'javascript:' + body; // eslint-disable-line no-script-url
 }
 
-function BookmarkletButtonImpl(): JSX.Element {
+function BookmarkletButtonImpl(): React.JSX.Element {
   const [showHelp, setShowHelp] = React.useState(false);
   const {siteConfig} = useDocusaurusContext();
   const {posthogKey, posthogHost} = (siteConfig.customFields || {}) as {
@@ -136,6 +136,6 @@ function BookmarkletButtonImpl(): JSX.Element {
 }
 
 // Client-only: the href embeds window.location.origin and it reacts to runtime clicks.
-export default function BookmarkletButton(): JSX.Element {
+export default function BookmarkletButton(): React.JSX.Element {
   return <BrowserOnly>{() => <BookmarkletButtonImpl />}</BrowserOnly>;
 }

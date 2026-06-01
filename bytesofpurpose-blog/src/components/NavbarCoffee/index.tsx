@@ -24,7 +24,7 @@ function splitCopy(copy: string): {icon: string; label: string} {
   return {icon: emoji, label};
 }
 
-export default function NavbarCoffee(): JSX.Element {
+export default function NavbarCoffee(): React.JSX.Element {
   const [variant, setVariant] = React.useState<string>('control');
   const copy = EXP.variants[variant] || EXP.variants.control;
   const {icon, label} = splitCopy(copy);

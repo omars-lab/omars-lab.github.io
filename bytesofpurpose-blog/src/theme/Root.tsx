@@ -6,7 +6,7 @@ import ToastHost from '@site/src/components/Toast';
 // navigation). The default Root just renders its children; we additionally mount
 // the floating DebugMenu (self-gates to localhost + dev builds — a no-op in prod)
 // and the app-wide ToastHost (renders iOS-style slide-in toasts on demand).
-export default function Root({children}: {children: React.ReactNode}): JSX.Element {
+export default function Root({children}: {children: React.ReactNode}): React.JSX.Element {
   return (
     <>
       {children}

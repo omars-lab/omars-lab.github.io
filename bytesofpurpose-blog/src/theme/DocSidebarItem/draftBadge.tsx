@@ -33,7 +33,7 @@ export function useIsDraft(href?: string): boolean {
   return drafts.has(normalize(href));
 }
 
-export function DraftBadge(): JSX.Element {
+export function DraftBadge(): React.JSX.Element {
   // Single "D" so the pill never wraps next to long sidebar labels; full word
   // is in the tooltip + aria-label.
   return (

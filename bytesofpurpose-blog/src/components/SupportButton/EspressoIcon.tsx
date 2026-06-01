@@ -6,7 +6,7 @@ import styles from './EspressoIcon.module.css';
  * coffee fills the cup, then steam wisps rise. Purely visual (aria-hidden);
  * the button's accessible label comes from its text. Honors reduced-motion.
  */
-export const EspressoIcon = (): JSX.Element => (
+export const EspressoIcon = (): React.JSX.Element => (
   <svg
     className={styles.icon}
     viewBox="0 0 24 24"

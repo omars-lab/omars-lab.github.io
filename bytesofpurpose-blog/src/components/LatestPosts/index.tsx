@@ -23,7 +23,7 @@ function formatDate(iso: string): string {
   }
 }
 
-export default function LatestPosts(): JSX.Element | null {
+export default function LatestPosts(): React.JSX.Element | null {
   // Global data set by plugins/recent-posts at build time.
   const data = useAllPluginInstancesData('recent-posts-plugin') as
     | {default?: {posts?: RecentPost[]}}

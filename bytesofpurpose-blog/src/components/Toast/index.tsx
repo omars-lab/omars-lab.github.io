@@ -23,7 +23,7 @@ export function showToast(message: string, opts: ToastOptions = {}): void {
 
 type ToastItem = {id: number; message: string; icon?: string; durationMs: number; leaving?: boolean};
 
-function ToastHostImpl(): JSX.Element {
+function ToastHostImpl(): React.JSX.Element {
   const [items, setItems] = React.useState<ToastItem[]>([]);
   const nextId = React.useRef(1);
 
@@ -65,6 +65,6 @@ function ToastHostImpl(): JSX.Element {
 }
 
 // Toasts are client-only (they react to runtime events); guard SSR.
-export default function ToastHost(): JSX.Element {
+export default function ToastHost(): React.JSX.Element {
   return <BrowserOnly>{() => <ToastHostImpl />}</BrowserOnly>;
 }

@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -67,6 +67,9 @@ init-site: ## Initialize a new Docusaurus site
 
 check: ## Check MDX files for issues
 	( cd ${SITEROOT} && npx docusaurus-mdx-checker )
+
+typecheck: ## Type-check the site with tsc (swizzled theme + components + pages)
+	( cd ${SITEROOT} && yarn typecheck )
 
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )

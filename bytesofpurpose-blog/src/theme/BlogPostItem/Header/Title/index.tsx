@@ -13,7 +13,7 @@ export default function BlogPostItemHeaderTitle({
   className,
 }: {
   className?: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const {metadata, frontMatter, isBlogPostPage} = useBlogPost();
   const {permalink, title} = metadata;
   const shareDescription =

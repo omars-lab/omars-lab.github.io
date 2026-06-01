@@ -34,6 +34,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine>
       <TimelineItem align="right" variant="primary">
@@ -53,6 +54,7 @@ export const Basic: Story = {
 };
 
 export const WithVariants: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine variant="primary">
       <TimelineItem align="right" variant="white" color="danger">
@@ -84,6 +86,7 @@ export const WithVariants: Story = {
 };
 
 export const ColorVariants: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine variant="success">
       <TimelineItem align="right" variant="primary">
@@ -111,6 +114,7 @@ export const ColorVariants: Story = {
 };
 
 export const TextStyling: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine>
       <TimelineItem align="right" variant="primary" textAlign="left" weight="bold">
@@ -134,6 +138,7 @@ export const TextStyling: Story = {
 };
 
 export const LongContent: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine variant="primary-dark">
       <TimelineItem align="right" variant="primary-lightest" breakWord>
@@ -166,6 +171,7 @@ export const LongContent: Story = {
 };
 
 export const AlternatingAlignment: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine variant="info">
       <TimelineItem align="right" variant="primary">
@@ -189,6 +195,7 @@ export const AlternatingAlignment: Story = {
 };
 
 export const WithLinks: Story = {
+  args: { children: null },
   render: () => (
     <TimeLine variant="primary">
       <TimelineItem align="right" variant="primary-lightest">

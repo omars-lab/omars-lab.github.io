@@ -30,7 +30,7 @@ export default function DocItemContent({
   children,
 }: {
   children: React.ReactNode;
-}): JSX.Element {
+}): React.JSX.Element {
   const syntheticTitle = useSyntheticTitle();
   // Title + summary for the share message (frontmatter description, else doc desc).
   const {metadata, frontMatter} = useDoc();

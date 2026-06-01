@@ -52,6 +52,7 @@ export const WithCustomLabel: Story = {
 };
 
 export const InParagraph: Story = {
+  args: { children: null },
   render: () => (
     <p>
       This is a paragraph with <Highlight label="NEW">new content</Highlight> that is highlighted,

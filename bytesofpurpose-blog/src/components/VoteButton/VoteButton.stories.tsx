@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
 import { Vote } from './index';
 
 const meta = {
@@ -27,7 +26,6 @@ Uses the FancyButton styles with gradient background animation.
       description: 'Optional color override (currently not applied)',
     },
   },
-  args: { onClick: fn() },
 } satisfies Meta<typeof Vote>;
 
 export default meta;
@@ -52,6 +50,8 @@ export const ThumbsUp: Story = {
 };
 
 export const MultipleButtons: Story = {
+  // render supplies its own children; args is unused but required by the type.
+  args: { children: null },
   render: () => (
     <div style={{ display: 'flex', gap: '20px', flexDirection: 'column', alignItems: 'center' }}>
       <Vote>Vote for Feature A</Vote>

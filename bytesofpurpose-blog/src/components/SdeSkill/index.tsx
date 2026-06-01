@@ -245,7 +245,15 @@ function getSDEExpectation(role, skill, level) {
     };
     return expectations[role][skill][level];
 }
-export const SdeSkill = ({children, role, skill, l}) => (
+interface SdeSkillProps {
+  role: string;
+  skill: string;
+  /** Level (e.g. 4–7) used to look up the expectation text. */
+  l: number;
+  children?: React.ReactNode;
+}
+
+export const SdeSkill = ({children, role, skill, l}: SdeSkillProps) => (
     <span 
         className={styles.MDXTableEntry}
     >

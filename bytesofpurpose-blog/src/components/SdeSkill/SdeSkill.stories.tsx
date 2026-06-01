@@ -96,6 +96,7 @@ export const Leadership: Story = {
 };
 
 export const InTable: Story = {
+  args: { role: "", skill: "", l: 0 },
   render: () => (
     <table style={{ borderCollapse: 'collapse', width: '100%' }}>
       <thead>

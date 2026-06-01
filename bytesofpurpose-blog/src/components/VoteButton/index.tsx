@@ -6,7 +6,13 @@ import styles from '../../css/FancyButton.module.css';
 // Cant at this point emit custom events ...
 // https://stackoverflow.com/questions/60165146/docusaurus-track-actions-with-google-analytics
 
-export const Vote = ({children, color}) => (
+interface VoteProps {
+  children: React.ReactNode;
+  /** Optional color override (currently not applied). */
+  color?: string;
+}
+
+export const Vote = ({children, color}: VoteProps) => (
   <button
     className={styles.FancyButton}
     // style={{
