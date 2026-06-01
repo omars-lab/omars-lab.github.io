@@ -12,7 +12,7 @@ I've been experimenting with RAG systems to understand their capabilities and li
 
 # Tinkering
 * [ ] Tinker with Neo4j Vector store 
-	* https://github.com/neo4j-product-examples/genai-workshop/blob/main/customers-and-products/data-load.ipynb
+	* [GitHub — neo4j-product-examples/genai-workshop](https://github.com/neo4j-product-examples/genai-workshop/blob/main/customers-and-products/data-load.ipynb)
 
 
 <!-- truncate -->

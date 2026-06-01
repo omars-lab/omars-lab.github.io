@@ -21,7 +21,7 @@ draft: true
 - [ ] Make a Flic Plugin
 	- [Smart Control - One Button All Functions for Mac - Flic](https://flic.io/mac-app)
 	- [GitHub - 50ButtonsEach/hax-with-flic-osx: Basic Flic application for Mac.](https://github.com/50ButtonsEach/hax-with-flic-osx)
-	- http://macplugins.flic.io/
+	- [macplugins.flic.io](http://macplugins.flic.io/)
 
 ----------------
 
@@ -36,7 +36,7 @@ draft: true
 		- [ ] Need to have at least 10 hooks on Mac - one per key fob + flics ...
 
 - [ ] Get an arm so I can always display home assistant dashboard on side?
-	- https://store.hermanmiller.com/gaming-accessories/ollin-gaming-monitor-arm/2517608.html?lang=en_US
+	- [store.hermanmiller.com — 2517608](https://store.hermanmiller.com/gaming-accessories/ollin-gaming-monitor-arm/2517608.html?lang=en_US)
 
 # Scenes
 - [ ] Figure out how to have an effect of turning my office "on"
@@ -44,29 +44,29 @@ draft: true
 	- [ ] Can I programmatically turndown the brightness? Should have a turn on an off button that lights everything in office up ... including the tiles ...
 
 # Flic
-- [ ] Make a flic plugin ... http://macplugins.flic.io/
+- [ ] Make a flic plugin ... [macplugins.flic.io](http://macplugins.flic.io/)
 
 # Mechanics
 
 - [ ] Figure out how to set log levels of different components / see log traces ...
 	- Logs can be see by tailing log files in /config or checking 
-	- https://www.home-assistant.io/integrations/logger/
-- [ ] https://www.home-assistant.io/docs/configuration/
+	- [home-assistant.io — Logger](https://www.home-assistant.io/integrations/logger/)
+- [ ] [home-assistant.io — Configuration](https://www.home-assistant.io/docs/configuration/)
 
 
 * [ ] Figure out how to sync time with home assistant better … or get date calculation to happen on Mac! .. have home assistant just trigger a Mac app …
 
 - [x] Figure out how to copy stuff in the hass web shell @done(2022-04-14 09:05 AM)
 	- Also copying in ssh hass - contral a + [ , pasting with ]
-	- http://tmuxcheatsheet.com/
+	- [tmuxcheatsheet.com](http://tmuxcheatsheet.com/)
 
 - [x] Figure out how to get hass ssh onto my MacBook and run a command ... @done(2022-04-14 09:06 AM)
 	- [x] Debug the weird directory access problems in hass …  @done(2022-04-14 09:06 AM)
-		- https://community.home-assistant.io/t/cant-access-www-directory-with-hass-io/34312
+		- [community.home-assistant.io — 34312](https://community.home-assistant.io/t/cant-access-www-directory-with-hass-io/34312)
 		- Feels like things are running in a container …
 		- Docker doesn’t show anything though …
 		- But it feels like the /config folder is the only folder that's mounted / accessible by the shell_command component ...
-		- https://www.shellhacks.com/disable-ssh-host-key-checking/
+		- [shellhacks.com — Disable Ssh Host Key Checking](https://www.shellhacks.com/disable-ssh-host-key-checking/)
 
 # Networking
 * [x] Need a good way to get my laptops ip for home assistant to execute remote calls …… may be worth making it a static ip … @done(2022-04-14 12:51 PM)
@@ -78,12 +78,12 @@ draft: true
 # HUB
 * [x] Get more Mac sounds for automation hub ... @done(2022-05-01 06:01 AM)
 	- `find /System/Library/Sounds -type f -exec afplay {} \;`
-	- https://discussions.apple.com/thread/2211774
-	- https://support.apple.com/en-us/HT211996
-	- https://support.apple.com/en-us/HT202768
-	- https://apple.stackexchange.com/questions/295935/how-do-i-find-the-apple-startup-chime-sounds-on-my-computer
-	- https://apple.stackexchange.com/questions/295935/how-do-i-find-the-apple-startup-chime-sounds-on-my-computer
-	- https://apps.apple.com/us/app/mactracker/id430255202
+	- [discussions.apple.com — 2211774](https://discussions.apple.com/thread/2211774)
+	- [support.apple.com — HT211996](https://support.apple.com/en-us/HT211996)
+	- [support.apple.com — HT202768](https://support.apple.com/en-us/HT202768)
+	- [apple.stackexchange.com — How Do I Find The Apple Startup Chime Sounds On My Computer](https://apple.stackexchange.com/questions/295935/how-do-i-find-the-apple-startup-chime-sounds-on-my-computer)
+	- [apple.stackexchange.com — How Do I Find The Apple Startup Chime Sounds On My Computer](https://apple.stackexchange.com/questions/295935/how-do-i-find-the-apple-startup-chime-sounds-on-my-computer)
+	- [apps.apple.com — Id430255202](https://apps.apple.com/us/app/mactracker/id430255202)
 	- /Applications/Mactracker.app/Contents/Resources/Chimes//T2-based_Mac_Startup.m4a
 	- afplay /Applications/Flic.app/Contents/Resources/trigger_click.mp3 &
 
@@ -110,7 +110,7 @@ draft: true
 
 
 # Automations
-- [ ] https://www.reddit.com/r/homeassistant/s/qx5Ih4JIlL
+- [ ] [reddit.com — Qx5Ih4JIlL](https://www.reddit.com/r/homeassistant/s/qx5Ih4JIlL)
 * [ ] Wrap up home assistant on Mac mini
 	* [ ] get button to work
 	* [ ] resetup nanoleaf

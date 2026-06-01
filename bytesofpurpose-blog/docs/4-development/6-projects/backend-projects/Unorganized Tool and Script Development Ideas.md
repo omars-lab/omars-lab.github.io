@@ -14,7 +14,7 @@ draft: true
                 * [ ] Move my reusable work scripts over ...
 * [ ] Make sure I constantly backup my work tasks ... | >2022-04-13
 * [ ] Make a script to export bookmarks over Firefox command line and import in chrome ... | >2022-04-18
-                * https://askubuntu.com/questions/299083/how-to-backup-and-restore-firefox-bookmarks-from-command-line
+                * [askubuntu.com](https://askubuntu.com/questions/299083/how-to-backup-and-restore-firefox-bookmarks-from-command-line)
 * [x] Make a chime tamper monkey script to copy chat rooms! @done(2022-04-13 02:22 PM)
  
 -------
@@ -70,7 +70,7 @@ You should find replacements for the following formulae:
 
 # Monitoring
 - [x] Disable bombardment of Disney gen ...  @done(2021-07-22 11:40 PM)
-	- https://stackoverflow.com/questions/28685156/shell-command-for-getting-mac-address-in-os-x
+	- [Stack Overflow — Shell Command For Getting Mac Address In Os X](https://stackoverflow.com/questions/28685156/shell-command-for-getting-mac-address-in-os-x)
 
 
 # [#Developing] Tools

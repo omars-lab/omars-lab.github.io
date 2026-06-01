@@ -10,6 +10,6 @@ draft: true
 
 # Menu Bar App
 * [ ] What does it take to make a Mac menu bar app with counts of NotePlan's tasks today ... and a shortcut to open note plan?
-	* [ ] https://sarunw.com/posts/how-to-create-macos-app-without-storyboard/
-	* [ ] https://sarunw.com/posts/how-to-make-macos-menu-bar-app/
-	* [ ] https://fleetingpixels.com/blog/2020/6/15/how-to-create-a-mac-menu-bar-app-with-nspopover
+	* [ ] [sarunw.com — How To Create Macos App Without Storyboard](https://sarunw.com/posts/how-to-create-macos-app-without-storyboard/)
+	* [ ] [sarunw.com — How To Make Macos Menu Bar App](https://sarunw.com/posts/how-to-make-macos-menu-bar-app/)
+	* [ ] [fleetingpixels.com — How To Create A Mac Menu Bar App With Nspopover](https://fleetingpixels.com/blog/2020/6/15/how-to-create-a-mac-menu-bar-app-with-nspopover)

@@ -33,7 +33,7 @@ draft: true
 		* [ ] Make script to help move around undone todos to the right files 
 
 
-- [ ] Look into: https://code.visualstudio.com/api/working-with-extensions/publishing-extension#create-a-publisher >2021-09-05
+- [ ] Look into: [code.visualstudio.com — Publishing Extension](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#create-a-publisher) >2021-09-05
 	- [ ] Publish personal extension updates and install through app store - can automate updates through code cli
 	- [ ] Can build CI/CD around things ...
 
@@ -44,7 +44,7 @@ draft: true
 - [ ] Setup vscode shortcut ... to mark stuff as done ...
 
 - [ ] Can I make my own custome compiler to add `@done` tags ever time i recompile? 
-    - https://code.visualstudio.com/docs/languages/markdown
+    - [code.visualstudio.com — Markdown](https://code.visualstudio.com/docs/languages/markdown)
 
 - [ ] Add ability on files ... to copy xcallback link ...
 
@@ -57,8 +57,8 @@ draft: true
 	- [ ] Make l do stuff ... I was expecting l to work ...
 
 # Resources
-- https://code.visualstudio.com/api/references/vscode-api#TextEditor
-- https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix
-- https://code.visualstudio.com/api/working-with-extensions/publishing-extension
-- https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix
-- https://github.com/microsoft/vscode-extension-samples/tree/main/document-editing-sample
+- [code.visualstudio.com — Vscode Api](https://code.visualstudio.com/api/references/vscode-api#TextEditor)
+- [code.visualstudio.com — Extension Marketplace](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix)
+- [code.visualstudio.com — Publishing Extension](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
+- [code.visualstudio.com — Extension Marketplace](https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix)
+- [GitHub — microsoft/vscode-extension-samples](https://github.com/microsoft/vscode-extension-samples/tree/main/document-editing-sample)

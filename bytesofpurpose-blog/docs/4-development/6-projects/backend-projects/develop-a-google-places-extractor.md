@@ -11,4 +11,4 @@ draft: true
 - [ ] Tap into google places api … >2020-02-10
 
 - [ ] I should organize my instagram pages into google sheets ...
-	- https://docs.google.com/spreadsheets/d/1pjafRv6MxtlCNfbrtehPDrvP_cqWXierp3vWQmAUcOw/edit#gid=0
+	- [docs.google.com — Edit](https://docs.google.com/spreadsheets/d/1pjafRv6MxtlCNfbrtehPDrvP_cqWXierp3vWQmAUcOw/edit#gid=0)

@@ -21,4 +21,4 @@ description: Development initiative for building Quip apps
 
 - `quip-cli init -n quip-puml-integration -s quip-amazon.com`
 - Learn more about content security policy ... Content Security Policy: The page’s settings blocked the loading of a resource at
-- https://stackguides.com/questions/37298608/content-security-policy-the-pages-settings-blocked-the-loading-of-a-resource
+- [stackguides.com](https://stackguides.com/questions/37298608/content-security-policy-the-pages-settings-blocked-the-loading-of-a-resource)

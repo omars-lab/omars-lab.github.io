@@ -8,12 +8,12 @@ date: 2025-01-31T10:00
 draft: true
 ---
 
-https://www.howtographql.com/graphql-python/0-introduction/
-https://www.howtographql.com/basics/2-core-concepts/
+[howtographql.com — 0 Introduction](https://www.howtographql.com/graphql-python/0-introduction/)
+[howtographql.com — 2 Core Concepts](https://www.howtographql.com/basics/2-core-concepts/)
 
-https://www.moesif.com/blog/
+[moesif.com — Blog](https://www.moesif.com/blog/)
 
-https://www.howtographql.com/graphql-python/3-mutations/
+[howtographql.com — 3 Mutations](https://www.howtographql.com/graphql-python/3-mutations/)
 
 
 # Mutations ...
@@ -57,19 +57,19 @@ class CreateLink(graphene.Mutation):
     Still same amount of db calls ... unless there is an optimizer ...
 
 
-https://docs.graphene-python.org/en/latest/types/mutations/
+[docs.graphene-python.org — Mutations](https://docs.graphene-python.org/en/latest/types/mutations/)
 
 
 Graphene does not have any rest api basd stuff ...
 Starlete .. takes a schema ... and exposes it as a rest api ...
-https://www.starlette.io/graphql/
+[starlette.io — Graphql](https://www.starlette.io/graphql/)
 
 
 - [ ] Make an example ... without even rest APIs! ... 
-    - https://docs.graphene-python.org/en/latest/quickstart/
+    - [docs.graphene-python.org — Quickstart](https://docs.graphene-python.org/en/latest/quickstart/)
 
 
-https://hasura.io/docs/1.0/graphql/core/queries/multiple-queries.html
+[hasura.io — Multiple Queries](https://hasura.io/docs/1.0/graphql/core/queries/multiple-queries.html)
 
 
-https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55
+[Medium — Graphql Resolvers Best Practices Cd36fdbcef55](https://medium.com/paypal-engineering/graphql-resolvers-best-practices-cd36fdbcef55)

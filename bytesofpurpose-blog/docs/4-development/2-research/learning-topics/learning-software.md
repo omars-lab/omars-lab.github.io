@@ -18,7 +18,7 @@ draft: true
 # Starting Software Practice
 - What does it take to start a software practice?
 - [ ] Take notes on this: 
-	- [ ] https://www.aboutamazon.com/news/company-news/2020-letter-to-shareholders
+	- [ ] [aboutamazon.com — 2020 Letter To Shareholders](https://www.aboutamazon.com/news/company-news/2020-letter-to-shareholders)
 
 # Learning Plan
 * I #need to learn more about software development
@@ -27,13 +27,13 @@ draft: true
 		* manifesto.sofrwarecraftsmanship.org
 		* agilemanifesto.org/principles
 	* I need to learn more about architectural diagrams
-		* [ ] https://modeling-languages.com/list-uml-books/
+		* [ ] [modeling-languages.com — List Uml Books](https://modeling-languages.com/list-uml-books/)
 		* [ ] I need to learn about each of the different architectural diagrams and when to use each ...
-			* [ ] https://www.modernanalyst.com/Resources/Articles/tabid/115/ID/1355/Introduction-to-Context-Diagrams.aspx
+			* [ ] [modernanalyst.com — Introduction To Context Diagrams](https://www.modernanalyst.com/Resources/Articles/tabid/115/ID/1355/Introduction-to-Context-Diagrams.aspx)
 		* [ ] Is there anything we can learn from building architects?
-			* [ ] https://www.archisoup.com/studio-guide/architectural-diagrams
+			* [ ] [archisoup.com — Architectural Diagrams](https://www.archisoup.com/studio-guide/architectural-diagrams)
 		* [ ] What arch diagrams do other expect?
-			* [ ] https://www.researchgate.net/figure/Penetration-testing-architecture_fig4_254036014
+			* [ ] [researchgate.net — Penetration Testing Architecture Fig4 254036014](https://www.researchgate.net/figure/Penetration-testing-architecture_fig4_254036014)
 		* [ ] Which diagrams capture timing flow? ...
 		* [ ] Which diagrams capture category / data type flow / transformations ...
 			* [ ] Which diagrams capture queries ...
@@ -52,10 +52,10 @@ draft: true
 ## Reading Blog Posts
 - Are there general practices I can learn from blog posts?
 
-- https://medium.com/@OmarElgabry
-- https://medium.com/textnowengineering/the-whacking-game-ee3af79c6e13
-- Learn from this dudes blog: https://david-peter.de/
-    - https://github.com/sharkdp?tab=repositories
+- [Medium — @OmarElgabry](https://medium.com/@OmarElgabry)
+- [Medium — The Whacking Game Ee3af79c6e13](https://medium.com/textnowengineering/the-whacking-game-ee3af79c6e13)
+- Learn from this dudes blog: [david-peter.de](https://david-peter.de/)
+    - [GitHub — Sharkdp](https://github.com/sharkdp?tab=repositories)
 
-- [ ] https://www.youtube.com/watch?v=UAKPoAn2cB0
+- [ ] [YouTube — Watch](https://www.youtube.com/watch?v=UAKPoAn2cB0)
 

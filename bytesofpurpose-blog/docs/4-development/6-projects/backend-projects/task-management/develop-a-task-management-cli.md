@@ -96,12 +96,12 @@ Check here to see where hats gets installed ... /usr/local/lib/python3.10/site-p
 
 
 - [ ] Learn more about python installs
-	- https://amir.rachum.com/blog/2017/07/28/python-entry-points/
-	- https://stackoverflow.com/questions/35701131/why-does-setup-py-usually-not-have-a-shebang-line
-	- https://docs.brew.sh/Python-for-Formula-Authors
-	- https://docs.w3cub.com/homebrew/formula-cookbook
-	- https://stackoverflow.com/questions/25333640/pip-python-differences-between-install-option-prefix-and-root-and
-	- https://github.com/mourner/homebrew/blob/master/share/doc/homebrew/Python-for-Formula-Authors.md
+	- [amir.rachum.com — Python Entry Points](https://amir.rachum.com/blog/2017/07/28/python-entry-points/)
+	- [Stack Overflow — Why Does Setup Py Usually Not Have A Shebang Line](https://stackoverflow.com/questions/35701131/why-does-setup-py-usually-not-have-a-shebang-line)
+	- [docs.brew.sh — Python For Formula Authors](https://docs.brew.sh/Python-for-Formula-Authors)
+	- [docs.w3cub.com — Formula Cookbook](https://docs.w3cub.com/homebrew/formula-cookbook)
+	- [Stack Overflow — Pip Python Differences Between Install Option Prefix And Root And](https://stackoverflow.com/questions/25333640/pip-python-differences-between-install-option-prefix-and-root-and)
+	- [GitHub — mourner/homebrew](https://github.com/mourner/homebrew/blob/master/share/doc/homebrew/Python-for-Formula-Authors.md)
 
 - [ ] Figure out who to do multiple python packages with brew ...
 	- [ ] have 1 with all python packages
@@ -114,7 +114,7 @@ Check here to see where hats gets installed ... /usr/local/lib/python3.10/site-p
 	- [ ] should each repo have its own virtual env? yes!
 
 * [x] Can formula depends on casks? - no
-	* [ ] https://docs.brew.sh/Acceptable-Formulae
+	* [ ] [docs.brew.sh — Acceptable Formulae](https://docs.brew.sh/Acceptable-Formulae)
 
 - [ ] even if i make a seperate brew conda env - still finicky ... not true python dev - brew getting in way
 	- Do normal conda stuff ...
@@ -133,8 +133,8 @@ Check here to see where hats gets installed ... /usr/local/lib/python3.10/site-p
 		- don't use brew virtual env ... use conda instead ...
 	- [ ] brews virtual env is super finicky ... 
 	* [ ] is there a way to get conda envs to inherit from each other?
-	* [ ] https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
-		* [ ] be aware of this: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#using-pip-in-an-environment
+	* [ ] [docs.conda.io — Manage Environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+		* [ ] be aware of this: [docs.conda.io — Manage Environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#using-pip-in-an-environment)
 	* [ ] can I use this mechanic to replicate the workspace conda env?
 
 ------

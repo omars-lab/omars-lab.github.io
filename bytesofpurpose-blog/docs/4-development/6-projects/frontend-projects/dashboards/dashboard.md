@@ -52,7 +52,7 @@ draft: true
 - [ ] Add monthly subscriptions to dashboard ...
 * [ ] Continue trying to train spacy model ...
 	* [ ] Broker ... and Company ... and Company Identifier ... and zip code ...
-	* [ ] https://towardsdatascience.com/named-entity-recognition-ner-using-spacy-nlp-part-4-28da2ece57c6
+	* [ ] [towardsdatascience.com](https://towardsdatascience.com/named-entity-recognition-ner-using-spacy-nlp-part-4-28da2ece57c6)
 
 # Metrics / Dashboard
 - [ ] Start off by making excel metrics ...
@@ -107,7 +107,7 @@ draft: true
 
 
 # Google Sheets Integration
-* https://docs.retool.com/docs/google-sheets-integration
+* [docs.retool.com — Google Sheets Integration](https://docs.retool.com/docs/google-sheets-integration)
 * [Google Cloud Platform](https://console.cloud.google.com/iam-admin/serviceaccounts/details/112572266864531726362/permissions?project=project-79121-borrowed)
 - Share [spreadsheet]([Google Sheets: Sign-in](https://docs.google.com/spreadsheets/d/1-85tLI5ifm6vljBuOuyTLov5J1awxIiqzcF1WRGopYw/edit#gid=1919395593)) with service account ... 
 	- retool@project-79121-borrowed.iam.gserviceaccount.com
@@ -119,12 +119,12 @@ draft: true
 
 
 # Initiative: Personal Metrics / Monitoring
-* https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html
+* [AWS Docs — Cdk Pipeline](https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html)
 * Monitoring with CloudWatch
-	* https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudwatch.Alarm.html
+	* [AWS Docs — Aws Cdk Lib.Aws Cloudwatch.Alarm](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudwatch.Alarm.html)
 * Alarms with cloud watch ...
 * Auto Rollback? ...
-* https://aws.amazon.com/codepipeline/features/
+* [AWS — Features](https://aws.amazon.com/codepipeline/features/)
 - [ ] Add metrics to the cronjob ...
 - [ ] Add monitoring stack ...
 
@@ -132,12 +132,12 @@ draft: true
 - [ ] Setup a monitoring stack first to monitor daily cron runs 
 - [ ] Setup a pipeline to auto deploy alarms? 
 	- [ ] See what pipelines are about ...
-	- [ ] Work on Cdk Pipeline https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html
+	- [ ] Work on Cdk Pipeline [AWS Docs — Cdk Pipeline](https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html)
 - [ ] Porting CDK to v2 ...
 * [ ] Just have a single custom cloudwatch metric
 	* [ ] Emits once per minute
 	* [ ] Integrate alarms with slack ...
-	* [ ] https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html
+	* [ ] [AWS Docs — PublishingMetrics](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html)
 * [ ] metric I can track is how many jobs ran in past minute ...
 * [ ] how can I store metrics in an easy way where they can be published to cloud watch or prometheus
 
@@ -147,37 +147,37 @@ draft: true
 	- [ ] Different metric dimensions? 
 	- [ ] Or do it through prometheus ?
 * use prometheus for alerting ...
-	* https://prometheus.io/
+	* [prometheus.io](https://prometheus.io/)
 - [ ] Extract AWS cost and add it to alerting ...
 	- [ ] Using AWS CLI ...
-- https://github.com/prometheus/client_python
-- https://github.com/vegasbrianc/prometheus
-- https://hub.docker.com/r/prom/prometheus
-- https://github.com/prometheus/client_python
-- https://www.pagerduty.com/pricing/incident-response/
-- https://prometheus.io/docs/introduction/overview/
-- https://github.com/prometheus/client_python#exporting-to-a-pushgateway
+- [GitHub — prometheus/client_python](https://github.com/prometheus/client_python)
+- [GitHub — vegasbrianc/prometheus](https://github.com/vegasbrianc/prometheus)
+- [hub.docker.com — Prometheus](https://hub.docker.com/r/prom/prometheus)
+- [GitHub — prometheus/client_python](https://github.com/prometheus/client_python)
+- [pagerduty.com — Incident Response](https://www.pagerduty.com/pricing/incident-response/)
+- [prometheus.io — Overview](https://prometheus.io/docs/introduction/overview/)
+- [GitHub — prometheus/client_python](https://github.com/prometheus/client_python#exporting-to-a-pushgateway)
 
 
 # CDK
-* https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html
+* [AWS Docs — Aws Construct Library](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html)
 * Pipelines
-	* https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html
-	* https://docs.aws.amazon.com/cdk/v2/guide/use_cfn_template.html
+	* [AWS Docs — Cdk Pipeline](https://docs.aws.amazon.com/cdk/v2/guide/cdk_pipeline.html)
+	* [AWS Docs — Use Cfn Template](https://docs.aws.amazon.com/cdk/v2/guide/use_cfn_template.html)
 - [ ] Migrating from 1 to 2 
-	- https://docs.aws.amazon.com/cdk/v2/guide/migrating-v2.html
-* https://aws.amazon.com/cloudwatch/pricing/
+	- [AWS Docs — Migrating V2](https://docs.aws.amazon.com/cdk/v2/guide/migrating-v2.html)
+* [AWS — Pricing](https://aws.amazon.com/cloudwatch/pricing/)
 * Incoming alert webhook
-	* https://bytesofpurposegroup.slack.com/services/B05N7SDTMU7?added=1
-	* https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+	* [bytesofpurposegroup.slack.com — B05N7SDTMU7](https://bytesofpurposegroup.slack.com/services/B05N7SDTMU7?added=1)
+	* [hooks.slack.com — URL](https://hooks.slack.com/services/YOUR/WEBHOOK/URL)
 
 # Metrics
 - [ ] Setup slack messages for prometheus
-	- https://app.slack.com/client/T05NNC30ZHQ/C05NKFA1005
-	- https://bytesofpurposegroup.slack.com/services/B05N7SDTMU7?added=1
-	- https://github.com/omars-lab/prometheus
-	- https://docs.docker.com/engine/swarm/swarm-tutorial/
-	- https://docs.docker.com/compose/gettingstarted/
-	- https://github.com/vegasbrianc/prometheus/blob/master/prometheus/prometheus.yml
-	- https://prometheus.io/docs/introduction/overview/
-	- https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch-metrics-basic-detailed.html
+	- [app.slack.com — C05NKFA1005](https://app.slack.com/client/T05NNC30ZHQ/C05NKFA1005)
+	- [bytesofpurposegroup.slack.com — B05N7SDTMU7](https://bytesofpurposegroup.slack.com/services/B05N7SDTMU7?added=1)
+	- [GitHub — omars-lab/prometheus](https://github.com/omars-lab/prometheus)
+	- [docs.docker.com — Swarm Tutorial](https://docs.docker.com/engine/swarm/swarm-tutorial/)
+	- [docs.docker.com — Gettingstarted](https://docs.docker.com/compose/gettingstarted/)
+	- [GitHub — vegasbrianc/prometheus](https://github.com/vegasbrianc/prometheus/blob/master/prometheus/prometheus.yml)
+	- [prometheus.io — Overview](https://prometheus.io/docs/introduction/overview/)
+	- [AWS Docs — Cloudwatch Metrics Basic Detailed](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch-metrics-basic-detailed.html)

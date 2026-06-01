@@ -8,5 +8,5 @@ date: 2025-01-01T10:00
 draft: true
 ---
 
-* [ ] https://www.instagram.com/p/CMPrdKCBkjc/?igshid=15x9gd5gyu5dz
+* [ ] [instagram.com — CMPrdKCBkjc](https://www.instagram.com/p/CMPrdKCBkjc/?igshid=15x9gd5gyu5dz)
 

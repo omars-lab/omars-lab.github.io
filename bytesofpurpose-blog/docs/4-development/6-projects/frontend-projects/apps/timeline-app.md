@@ -14,7 +14,7 @@ draft: true
   
 - [ ] Continue working on timeline ..
 	- [ ] Use the nested timeline to group thoughts?
-	- [ ] https://github.com/prabhuignoto/react-chrono?tab=readme-ov-file#nested-timelines
+	- [ ] [GitHub — prabhuignoto/react-chrono](https://github.com/prabhuignoto/react-chrono?tab=readme-ov-file#nested-timelines)
 - [ ] Add tabs to timeline ...
 	- [ ] Can also add tabs to switch between thoughts, ideas, etc ...
 
