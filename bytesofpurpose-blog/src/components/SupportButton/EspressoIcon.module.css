@@ -1,0 +1,46 @@
+/* Animated espresso-brewing icon for the Support button.
+   Two animations: liquid filling the cup, and steam rising. Respects
+   prefers-reduced-motion (shows a filled cup, no movement). */
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.45em;
+  width: 1.3em;
+  height: 1.3em;
+  overflow: visible;
+}
+
+/* Coffee filling the cup: clip the liquid rect by animating its height/offset. */
+.liquid {
+  transform-origin: bottom;
+  animation: fill 2.8s ease-in-out infinite;
+}
+
+@keyframes fill {
+  0%   { transform: scaleY(0); }
+  45%  { transform: scaleY(1); }
+  85%  { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+/* Steam wisps rise + fade, staggered. Only visible once the cup is ~full. */
+.steam {
+  opacity: 0;
+  transform-origin: center bottom;
+  animation: steam 2.8s ease-in-out infinite;
+}
+.steam2 { animation-delay: 0.35s; }
+.steam3 { animation-delay: 0.7s; }
+
+@keyframes steam {
+  0%, 40%  { opacity: 0; transform: translateY(2px) scaleY(0.6); }
+  55%      { opacity: 0.7; }
+  80%      { opacity: 0.35; transform: translateY(-3px) scaleY(1.1); }
+  100%     { opacity: 0; transform: translateY(-5px) scaleY(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid { animation: none; transform: scaleY(1); }
+  .steam  { animation: none; opacity: 0.45; }
+}

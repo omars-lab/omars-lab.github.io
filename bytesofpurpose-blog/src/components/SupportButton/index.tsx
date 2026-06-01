@@ -1,6 +1,7 @@
 import React from 'react';
 import posthog from 'posthog-js';
 import {EXPERIMENTS, resolveVariant} from '@site/src/experiments';
+import {EspressoIcon} from './EspressoIcon';
 
 // A/B experiment: which Support button copy drives more clicks?
 //   control = "Buy me a coffee ☕"  |  test = "Support the dev 💜"
@@ -35,6 +36,7 @@ export const Support = ({children}) => {
       <input type="hidden" name="item_name" value="Support a Developer" />
       <input type="hidden" name="currency_code" value="USD" />
       <button type="submit" className="button button--primary" data-testid="support-button">
+        <EspressoIcon />
         {children || label}
       </button>
       <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
