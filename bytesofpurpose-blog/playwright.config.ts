@@ -81,7 +81,7 @@ export default defineConfig({
     {
       // PostHog/A-B specs against the test-mode production build (:4173).
       name: 'posthog-prod',
-      testMatch: /(posthog-events|support-ab-test|ingress-attribution)\.spec\.ts$/,
+      testMatch: /(posthog-events|support-ab-test|ingress-attribution|vote)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
     {
