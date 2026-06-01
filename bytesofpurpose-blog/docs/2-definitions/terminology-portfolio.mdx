@@ -8,14 +8,56 @@ date: 2025-01-31T10:00
 draft: true
 ---
 
-- [ ] Create a mind map def ...
-	- [ ] Showing devs use /confiture systems at build time ... but at runtime ... they churn ...
-	- [ ] Where as applications are used by end users ... at run time ...
-	- [ ] There may be applications to configure systems ...
-	- [ ] Show all of this ...
+The kinds of software artifacts in my portfolio — **systems, services,
+applications, libraries, packages** — distinguished by *when* they run and *who*
+uses them. Three lenses:
 
-- [ ] Difference between a system and a service ... 
-    Multiple systems can be run on the same server ...
-- Libraries vs Packages ... 
-    - librariees are imporoted ...
-    - packages are installable ... but not necissarity importable ...
+1. **[Glossary](#1-glossary)** — each term defined once.
+2. **[Build time vs. runtime](#2-build-time-vs-runtime)** — the axis that separates them.
+3. **[Distinctions](#3-distinctions-x-vs-y)** — the pairs that blur together.
+
+## 1. Glossary
+
+| Term | Definition | Who uses it / when |
+|---|---|---|
+| **System** | A configured environment that other software runs on or against. | Devs configure it at build time. |
+| **Service** | A long-running process that serves requests. | Runs continuously; many can share one server. |
+| **Application** | Software an end user interacts with directly. | End users, at runtime. |
+| **Library** | Reusable code you **import** into your own program. | Devs, at build/dev time. |
+| **Package** | A distributable unit you **install** — not necessarily importable. | Devs install; may or may not be a library. |
+
+## 2. Build time vs. runtime
+
+The cleanest way to tell these apart is *when they're active* and *who's on the
+other end*:
+
+```
+build / dev time            runtime
+─────────────────           ────────────────
+Devs configure Systems      Services run continuously
+Devs import Libraries       Applications serve end users
+Devs install Packages
+```
+
+- **Systems** are *configured* at build time, then mostly churn quietly at
+  runtime — there may even be applications whose job is to configure systems.
+- **Applications** exist for the end user and only matter at runtime.
+- **Libraries** and **packages** are developer-facing build-time concerns.
+
+## 3. Distinctions (X vs. Y)
+
+### System vs. Service — *environment vs. process*
+- A **system** is the configured environment software runs on/against.
+- A **service** is a running process — and **multiple services can run on the
+  same server**.
+
+### Library vs. Package — *imported vs. installed*
+- A **library** is **imported** into your code.
+- A **package** is **installed**, but **not necessarily importable** — e.g. a CLI
+  tool you install but never `import`.
+- So: most libraries ship as packages, but not every package is a library.
+
+### Application vs. Service — *who's on the other end*
+- An **application** faces an **end user** directly.
+- A **service** faces other software (requests/APIs), often behind an
+  application.
