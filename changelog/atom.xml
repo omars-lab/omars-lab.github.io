@@ -2,11 +2,45 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.bytesofpurpose.com/changelog</id>
     <title>Bytes of Purpose Blog</title>
-    <updated>2025-11-20T00:00:00.000Z</updated>
+    <updated>2026-06-01T00:19:04.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.bytesofpurpose.com/changelog"/>
     <subtitle>Bytes of Purpose Blog</subtitle>
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[CLAUDE-CHANGELOG]]></title>
+        <id>https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG</id>
+        <link href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG"/>
+        <updated>2026-06-01T00:19:04.000Z</updated>
+        <summary type="html"><![CDATA[<!--]]></summary>
+        <content type="html"><![CDATA[<p>One-sentence summary of the batch (becomes the card description).</p>
+<ul>
+<li class="">Completed task subject</li>
+<li class="">Completed task subject
+...</li>
+</ul>
+<p>Defaults if meta omitted: type=chore, category=development, priority=medium,
+component=Claude. Date drives the card's execution/inception date.
+--&gt;</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-05-31--ab-experiment-lifecycle--analytics-enablement">2026-05-31 — A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31--ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" title="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
+<p>Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.</p>
+<ul>
+<li class="">A/B test: define support-button-copy experiment</li>
+<li class="">Create PostHog experiment support-button-copy (REST API: create/validate/launch)</li>
+<li class="">Validate A/B variants via Playwright (+ per-variant screenshots)</li>
+<li class="">A/B: add flag injection point in SupportButton</li>
+<li class="">Design experiment timeline folder structure (published lab notebook)</li>
+<li class="">Add experiment entry template + timeline index</li>
+<li class="">Backfill support-button-copy experiment entry</li>
+<li class="">Wire timeline convention into run-ab-test skill</li>
+<li class="">Create design-experiment skill (pre-experiment design doc)</li>
+<li class="">Create analyze-experiment skill (data + recommendation)</li>
+<li class="">Create conclude-experiment skill (execute rollout)</li>
+<li class="">Create decide-experiment skill (decision gates + readout)</li>
+<li class="">Create publish-site skill (draft-readiness triage + deploy)</li>
+<li class="">Rewrite git history to purge rotated credentials (filter-repo) + force-push</li>
+</ul>]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Content Changelog - Missing Features Analysis]]></title>
         <id>https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis</id>
@@ -1203,91 +1237,5 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Blog Structure - Changelog & Roadmap]]></title>
-        <id>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap</id>
-        <link href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap"/>
-        <updated>2025-11-18T15:48:34.000Z</updated>
-        <summary type="html"><![CDATA[Organize and structure the changelog and roadmap sections of the blog]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<p>Organize and structure the changelog and roadmap sections of the blog, including:</p>
-<ul>
-<li class="">Changelog tab/page with GitHub-style heatmap visualization</li>
-<li class="">Structure for changelog entries with frontmatter</li>
-<li class="">Automated changelog data generation from markdown files</li>
-<li class="">Roadmap integration (migrated to changelog entries)</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-changelog-system-completed-2025-01-20">✅ Changelog System Completed (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#-changelog-system-completed-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Changelog System Completed (2025-01-20)" title="Direct link to ✅ Changelog System Completed (2025-01-20)" translate="no">​</a></h3>
-<p><strong>Work Period:</strong> January 20, 2025</p>
-<p><strong>Key Accomplishments:</strong></p>
-<ul>
-<li class="">Created changelog directory structure (<code>changelog/</code>)</li>
-<li class="">Implemented changelog entry format with frontmatter</li>
-<li class="">Built automated changelog data generation script (<code>scripts/generate-changelog-data.js</code>)</li>
-<li class="">Created Changelog React component with heatmap visualization</li>
-<li class="">Implemented GitHub-style month/quarter/year heatmap display</li>
-<li class="">Added changelog page route (<code>/changelog</code>)</li>
-<li class="">Migrated roadmap items to changelog entries</li>
-<li class="">Established naming conventions for changelog entries</li>
-<li class="">Integrated changelog generation into build process (npm lifecycle hooks)</li>
-</ul>
-<p><strong>Components Created:</strong></p>
-<ul>
-<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
-<ul>
-<li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
-<li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
-<li class="">Heatmap visualization with month/quarter/year grouping</li>
-<li class="">Separate rows for content vs development categories</li>
-<li class="">Quarter-based list view with horizontal scrolling</li>
-<li class="">Entry filtering and navigation</li>
-</ul>
-</li>
-<li class=""><strong>Changelog Utilities</strong> (<code>src/components/Changelog/changelogUtils.ts</code>)<!-- -->
-<ul>
-<li class="">Data loading and processing</li>
-</ul>
-</li>
-<li class=""><strong>Changelog Types</strong> (<code>src/components/Changelog/types.ts</code>)<!-- -->
-<ul>
-<li class="">TypeScript interfaces for changelog entries</li>
-</ul>
-</li>
-</ul>
-<p><strong>Scripts Created:</strong></p>
-<ul>
-<li class=""><strong><code>scripts/generate-changelog-data.js</code></strong>: Automatically scans <code>changelog/</code> directory, parses frontmatter, and generates JSON data file<!-- -->
-<ul>
-<li class="">Runs automatically via npm <code>prestart</code> and <code>prebuild</code> hooks</li>
-<li class="">Generates <code>src/components/Changelog/changelog-data.json</code></li>
-</ul>
-</li>
-</ul>
-<p><strong>Documentation Created:</strong></p>
-<ul>
-<li class=""><strong><code>NAMING_CONVENTIONS.md</code></strong>: Comprehensive naming conventions for changelog entries</li>
-<li class=""><strong><code>docs/6-techniques/3-blogging-techniques/changelog-system.md</code></strong>: Changelog entry format and guidelines</li>
-<li class=""><strong><code>prompts/heal/heal-blog-changelog.md</code></strong>: Reusable prompt for inferring and enriching changelog entries from git history</li>
-</ul>
-<p><strong>Related Links:</strong></p>
-<ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog">Changelog Page</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md" target="_blank" rel="noopener noreferrer" class="">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js" target="_blank" rel="noopener noreferrer" class="">Changelog Generation Script</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx" target="_blank" rel="noopener noreferrer" class="">Changelog Component</a></li>
-<li class=""><a href="https://posthog.com/changelog" target="_blank" rel="noopener noreferrer" class="">PostHog Changelog Inspiration</a></li>
-</ul>
-<p><strong>Roadmap Migration:</strong></p>
-<ul>
-<li class="">Migrated all roadmap items from <code>ROADMAP.md</code> files to changelog entries with <code>planned</code> status</li>
-<li class="">Removed deprecated <code>ROADMAP.md</code> files</li>
-<li class="">Roadmap items now tracked as changelog entries</li>
-</ul>
-<p><strong>Status:</strong> Changelog system has been successfully implemented. The blog now has a comprehensive changelog system with automated data generation, GitHub-style visualization, and structured entry format. Roadmap items have been migrated to changelog entries for unified tracking.</p>]]></content>
     </entry>
 </feed>

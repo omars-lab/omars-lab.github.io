@@ -16,9 +16,9 @@
 <link rel="alternate" type="application/rss+xml" href="/designs/rss.xml" title="Bytes of Purpose RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/designs/atom.xml" title="Bytes of Purpose Atom Feed">
 <link rel="alternate" type="application/rss+xml" href="/changelog/rss.xml" title="Bytes of Purpose RSS Feed">
-<link rel="alternate" type="application/atom+xml" href="/changelog/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.36e8f468.css">
-<script src="/assets/js/runtime~main.688ada39.js" defer="defer"></script>
-<script src="/assets/js/main.0da68123.js" defer="defer"></script>
+<link rel="alternate" type="application/atom+xml" href="/changelog/atom.xml" title="Bytes of Purpose Atom Feed"><link rel="stylesheet" href="/assets/css/styles.7136d19c.css">
+<script src="/assets/js/runtime~main.44e9d209.js" defer="defer"></script>
+<script src="/assets/js/main.e4ebf7aa.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -94,11 +94,11 @@ Each row below links to that doc. Lifecycle:
 <table><thead><tr><th>Experiment</th><th>Flag</th><th>Status</th><th>Started</th><th>Outcome</th></tr></thead><tbody><tr><td><a class="" href="/docs/development/projects/experiments/2026-05-31-support-button-copy.md">Support button copy</a></td><td><code>support-button-copy</code></td><td>🟢 running</td><td>2026-05-31</td><td>pending</td></tr></tbody></table>
 <blockquote>
 <p>Add a row when you start an experiment; update its status as it moves through the
-lifecycle. New entry from <code>_TEMPLATE.md</code>. The four skills below each own a phase and
+lifecycle. New entry from <code>_TEMPLATE.md</code>. The five skills below each own a phase and
 keep the doc + this table current.</p>
 </blockquote>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-experiment-lifecycle-skills">The experiment lifecycle (skills)<a href="#the-experiment-lifecycle-skills" class="hash-link" aria-label="Direct link to The experiment lifecycle (skills)" title="Direct link to The experiment lifecycle (skills)" translate="no">​</a></h3>
-<table><thead><tr><th>Phase</th><th>Skill</th><th>Does</th></tr></thead><tbody><tr><td><strong>Design</strong></td><td><code>design-experiment</code></td><td>Writes the pre-experiment design doc (this folder): hypothesis, design, placement rationale.</td></tr><tr><td><strong>Execute</strong></td><td><code>run-ab-test</code></td><td>Adds the code injection point, creates/validates/launches the PostHog experiment, Playwright-validates variants.</td></tr><tr><td><strong>Analyze</strong></td><td><code>analyze-experiment</code></td><td>Pulls the exposure + conversion split, checks significance, writes the Outcome section.</td></tr><tr><td><strong>Decide</strong></td><td><code>conclude-experiment</code></td><td>Acts on the decision — keep control &amp; clean up, or ship treatment for good — and finalizes the doc.</td></tr></tbody></table>
+<table><thead><tr><th>Phase</th><th>Skill</th><th>Does</th></tr></thead><tbody><tr><td><strong>Design</strong></td><td><code>design-experiment</code></td><td>Writes the pre-experiment design doc (this folder): hypothesis, design, placement rationale.</td></tr><tr><td><strong>Execute</strong></td><td><code>run-ab-test</code></td><td>Adds the code injection point, creates/validates/launches the PostHog experiment, Playwright-validates variants.</td></tr><tr><td><strong>Analyze</strong></td><td><code>analyze-experiment</code></td><td>Pulls the exposure + conversion split, checks significance, writes the Outcome + a recommendation.</td></tr><tr><td><strong>Decide</strong></td><td><code>decide-experiment</code></td><td>Applies decision gates (significance/MDE/guardrails) + judgment → a recorded decision readout.</td></tr><tr><td><strong>Roll out</strong></td><td><code>conclude-experiment</code></td><td>Executes the decision — keep control &amp; clean up, or ship treatment for good — and finalizes the doc.</td></tr></tbody></table>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-youll-find-here">What You&#x27;ll Find Here<a href="#what-youll-find-here" class="hash-link" aria-label="Direct link to What You&#x27;ll Find Here" title="Direct link to What You&#x27;ll Find Here" translate="no">​</a></h2>
 <ul>
 <li class="">A/B tests and multivariate tests</li>
