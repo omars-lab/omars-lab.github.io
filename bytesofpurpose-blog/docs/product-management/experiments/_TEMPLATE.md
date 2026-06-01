@@ -3,7 +3,7 @@
 # This doc is BOTH the experiment's design and its living timeline.
 slug: /development/projects/experiments/experiment-<flag-key>
 title: '<Experiment title>'
-description: '<one-line: what we are testing and why>'
+description: 'Template for an experiment doc that captures both the design and the living timeline — copy it per experiment and fill it in.'
 authors: [oeid]
 tags: [experiments, ab-testing]
 draft: true            # flip to false to publish on the blog

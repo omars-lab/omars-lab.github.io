@@ -1,6 +1,6 @@
 ---
 title: 'Terminal Links'
-description: 'How can I embedd a link in terminal output?'
+description: 'How to embed clickable hyperlinks in terminal output using ANSI escape sequences, with cross-shell examples.'
 slug: /techniques/scripting-techniques/mechanic-terminal-links
 authors: [oeid]
 tags: []

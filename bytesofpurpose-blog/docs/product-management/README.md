@@ -1,7 +1,7 @@
 ---
 slug: /product-management
 title: 📋 Product Management
-description: 'The idea-to-ship lifecycle — ideas, research, proof-of-concepts, experiments, initiatives, projects, and roadmaps. What to build and why; the executions live in Software Development.'
+description: 'The idea-to-ship lifecycle — ideas, research, proofs-of-concept, experiments, projects, and roadmaps. What to build and why.'
 authors: [oeid]
 tags: [product-management, ideas, experiments, roadmaps]
 ---

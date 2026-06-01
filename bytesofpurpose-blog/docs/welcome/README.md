@@ -2,7 +2,7 @@
 slug: /welcome/intro
 sidebar_position: 1
 title: Welcome to Bytes of Purpose
-description: 'A topic-organized knowledge base for engineers: generative AI, software development, product management, productivity, blogging, interview prep, companies, entrepreneurship, faith, and personal growth.'
+description: 'A topic-organized knowledge base for engineers: generative AI, software development, product management, productivity, and more.'
 authors: [oeid]
 tags: [welcome, introduction, developer-blog]
 ---

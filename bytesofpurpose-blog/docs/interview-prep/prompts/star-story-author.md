@@ -1,7 +1,7 @@
 ---
 slug: /prompts/author/star-story-author
 title: Star Story Author
-description: Preparing star stories
+description: 'An AI prompt system for drafting and refining STAR-format behavioral interview stories from your real experiences.'
 authors: [oeid]
 tags: []
 draft: true

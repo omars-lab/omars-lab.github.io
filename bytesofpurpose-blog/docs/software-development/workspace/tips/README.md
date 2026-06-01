@@ -1,7 +1,7 @@
 ---
 slug: /craftsmanship/tips/tips
 title: Tips
-description: 'Consolidating my tips.'
+description: 'A collection of development tips for working more efficiently — habits and small techniques that compound over time.'
 authors: [oeid]
 tags: [tips]
 draft: false

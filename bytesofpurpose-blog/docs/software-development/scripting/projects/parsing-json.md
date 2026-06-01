@@ -1,6 +1,6 @@
 ---
 title: 'JQ Mechanics'
-description: 'What JQ mechanics do I commonly leverage?'
+description: 'Powerful jq commands for parsing and transforming JSON — the mechanics I reach for most when processing data on the CLI.'
 slug: /techniques/scripting-techniques/jq-mechanics
 authors: [oeid]
 tags: []

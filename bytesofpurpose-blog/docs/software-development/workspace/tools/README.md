@@ -1,7 +1,7 @@
 ---
 slug: /craftsmanship/tools/tools
 title: Tools
-description: 'Consolidating my tools.'
+description: 'A curated collection of development tools I rely on — including GenAI tools — and what each one is good for.'
 authors: [oeid]
 tags: [tools]
 draft: false
