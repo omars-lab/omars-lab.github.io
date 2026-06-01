@@ -2,7 +2,14 @@
 
 > Purposeful code, one byte at a time.
 
+[![Read the blog](https://img.shields.io/website?url=https%3A%2F%2Fblog.bytesofpurpose.com&up_message=online&down_message=offline&label=blog.bytesofpurpose.com)](https://blog.bytesofpurpose.com)
+[![Built with Docusaurus](https://img.shields.io/badge/built%20with-Docusaurus%203-3ECC5F?logo=docusaurus&logoColor=white)](https://docusaurus.io)
+[![Last commit](https://img.shields.io/github/last-commit/omars-lab/omars-lab.github.io)](https://github.com/omars-lab/omars-lab.github.io/commits/master)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#-license)
+
 A developer blog and documentation site built with Docusaurus, focused on coding challenges, development tools, and technical insights. This repository contains the complete source code, content, and automation tools for the [Bytes of Purpose](https://blog.bytesofpurpose.com) website.
+
+### 👉 [**Read the blog at blog.bytesofpurpose.com**](https://blog.bytesofpurpose.com)
 
 ## 🎯 What You'll Find Here
 
@@ -16,26 +23,36 @@ This repository serves as both a **developer blog** and a **comprehensive docume
 
 ## 🏗️ Repository Structure
 
+The docs are a **topic-based information architecture**: each top-level folder is a
+reader-facing topic (kebab-case, no numeric name prefix — order is set by each
+`_category_.json`'s `position`, and every doc carries an **absolute** `slug:` so a
+folder move never changes a URL).
+
 ```
 omars-lab.github.io/
 ├── bytesofpurpose-blog/          # Main Docusaurus site
 │   ├── blog/                     # Blog posts (publication-ready content)
-│   ├── designs/                  # Design decisions and architectural insights
-│   ├── docs/                     # Comprehensive documentation
-│   │   ├── 1-welcome/           # Site introduction and navigation
-│   │   ├── 2-mechanics/         # Technical implementation guides
-│   │   ├── 3-learning/          # Educational content and coding challenges
-│   │   ├── 4-developing/        # Development projects and experiments
-│   │   ├── 5-interviewing/      # Technical interview preparation
-│   │   ├── 8-habits/            # Development habits and practices
-│   │   └── 9-definitions/       # Terminology and reference materials
-│   ├── src/                      # Custom React components and styling
+│   ├── designs/                  # System designs / architectural insights
+│   ├── docs/                     # Topic-organized knowledge base (see below)
+│   │   ├── welcome/             # Site introduction and how to browse
+│   │   ├── generative-ai/       # GenAI fundamentals + building GenAI systems
+│   │   ├── software-development/ # Dev process: experiments, projects, roadmaps
+│   │   ├── product-management/  # Idea→ship lifecycle (ideas, research, POCs)
+│   │   ├── productivity/        # Organizing/discovering/analyzing/automating
+│   │   ├── blogging/            # Authoring + embedding content in the site
+│   │   ├── interview-prep/      # DS&A, system design, behavioral prep
+│   │   ├── companies/           # Roles, levels, skills, and company culture
+│   │   ├── entrepreneurship/    # Engineer → founder notes
+│   │   ├── personal-growth/     # Habits, reflection, health, finances
+│   │   └── faith/               # Where faith meets craft (Islamic automations)
+│   ├── ideas/                    # Post-idea seeds → generated /vote page data
+│   ├── changelog/                # Changelog seeds → generated /changelog cards
+│   ├── src/                      # Custom React components, theme swizzles, styles
+│   ├── scripts/                  # Build/validation tooling (links, structure, data)
 │   ├── static/                   # Static assets (images, icons, etc.)
-│   ├── prompts/                  # Automation and maintenance tools
-│   │   ├── plans/               # Strategic planning documents
-│   │   └── fix-*.md             # Maintenance automation scripts
 │   └── build/                    # Generated static site (deployment ready)
-├── Makefile                      # Build and deployment automation
+├── .claude/                      # Claude Code skills, hooks, and plans
+├── Makefile                      # Build, validation, and deployment automation
 └── package.json                  # Root package configuration
 ```
 
@@ -45,15 +62,19 @@ omars-lab.github.io/
 The core Docusaurus application containing all content and configuration.
 
 ### `/bytesofpurpose-blog/docs/` - Documentation Hub
-Organized knowledge base with 9 main sections:
+A topic-organized knowledge base. Each top-level folder is a reader-facing topic:
 
-- **`1-welcome/`** - Site introduction, navigation, and getting started
-- **`2-mechanics/`** - Technical implementation guides (Docusaurus, React, tools)
-- **`3-learning/`** - Educational content (coding challenges, algorithms, tutorials)
-- **`4-developing/`** - Development projects, experiments, and POCs
-- **`5-interviewing/`** - Technical interview preparation and system design
-- **`8-habits/`** - Development habits, productivity, and best practices
-- **`9-definitions/`** - Terminology, acronyms, and reference materials
+- **`welcome/`** - Site introduction and how to browse by topic
+- **`generative-ai/`** - GenAI fundamentals and designing/shipping GenAI systems
+- **`software-development/`** - The dev process: experiments, projects, roadmaps
+- **`product-management/`** - The idea→ship lifecycle (ideas, research, POCs, experiments)
+- **`productivity/`** - Organizing, discovering, analyzing, and automating work
+- **`blogging/`** - Authoring and embedding content (components, diagrams, code)
+- **`interview-prep/`** - Data structures, algorithms, system design, behavioral prep
+- **`companies/`** - The roles, levels, skills, and culture inside companies
+- **`entrepreneurship/`** - Notes on going from engineer to founder
+- **`personal-growth/`** - Habits, reflection, reading, mentorship, health, finances
+- **`faith/`** - Where faith meets craft — Islamic automations and trackers
 
 ### `/bytesofpurpose-blog/blog/` - Blog Posts
 Publication-ready articles covering experiences, insights, and lessons learned.
@@ -61,16 +82,20 @@ Publication-ready articles covering experiences, insights, and lessons learned.
 ### `/bytesofpurpose-blog/designs/` - Design Content
 Architectural decisions, design patterns, and system design insights.
 
-### `/bytesofpurpose-blog/prompts/` - Automation Tools
-Maintenance scripts and strategic planning documents:
+### `/bytesofpurpose-blog/scripts/` - Build & Validation Tooling
+Node scripts wired into the build and the `Makefile`:
 
-- **`plans/`** - Strategic planning and improvement roadmaps
-- **`fix-*.md`** - Automated maintenance scripts for common tasks
+- **`generate-changelog-data.js` / `generate-ideas-data.js`** - Turn `changelog/` and `ideas/` seeds into the JSON the `/changelog` and `/vote` pages render
+- **`validate-links.js`** - Source-level link hygiene (bare/long/tracking URLs, broken-internal + link-to-draft)
+- **`validate-docs-structure.js`** - Enforces the topic-folder contract (absolute slugs, naming, depth)
+
+### `/.claude/` - Claude Code Automation
+Skills (the SDLC playbooks), PostToolUse validation hooks, and planning docs.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - Yarn package manager
 
 ### Quick Start
@@ -137,20 +162,20 @@ make build
 
 ## 🔧 Maintenance & Automation
 
-### Automated Tasks
-- **Link Validation** - `prompts/fix-broken-docusaurus-links.md`
-- **Frontmatter Fixing** - `prompts/fix-frontmatter.md`
-- **Content Standards** - Various maintenance scripts in `/prompts/`
+### Validation (run from the repo root)
+- **`make validate-links`** - Link hygiene + broken-internal / link-to-draft checks
+- **`make validate-structure`** - Topic-folder contract (absolute slugs, naming, depth)
+- **`make secret-scan`** - gitleaks scan (also runs as a pre-commit hook)
+- **`make test-regression`** - Playwright e2e (a11y + SEO gates)
 
-### Manual Maintenance
-- Regular content updates and improvements
-- Link health monitoring
-- Performance optimization
-- SEO enhancement
+The same checks run automatically as warn-tier PostToolUse hooks while editing
+(see `.claude/settings.json`).
 
 ## 🌐 Deployment
 
-The site is automatically deployed to GitHub Pages when changes are pushed to the `master` branch. The build process generates static files in `/bytesofpurpose-blog/build/` which are served at [blog.bytesofpurpose.com](https://blog.bytesofpurpose.com).
+Deployment is run manually with **`make deploy`** (from the repo root): it secret-scans,
+builds the Docusaurus site with the PostHog env, and pushes the static output to the
+`gh-pages` branch, which serves [blog.bytesofpurpose.com](https://blog.bytesofpurpose.com).
 
 ## 🤝 Contributing
 
@@ -172,10 +197,9 @@ This repository welcomes contributions in several areas:
 
 ## 📊 Project Status
 
-- **Build Status**: ✅ Passing
-- **Link Health**: ✅ 95%+ resolved (6 edge cases remain)
-- **Content Coverage**: Comprehensive across development topics
-- **Last Updated**: 2025-01-31
+- **Live**: ✅ [blog.bytesofpurpose.com](https://blog.bytesofpurpose.com)
+- **Content Coverage**: Comprehensive across the topics above
+- **Validation**: link hygiene + topic-structure checks run on every edit (warn-tier)
 
 ## 🔗 Links
 
