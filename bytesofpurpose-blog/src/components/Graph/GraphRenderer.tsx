@@ -2512,9 +2512,11 @@ const GraphRendererImpl: React.FC<GraphRendererImplProps> = ({
           </div>
         )}
         {paneVisible && (
-          <div 
+          <div
+            data-testid="graph-info-panel"
+            data-panel={selectedNode ? 'node' : selectedEdge ? 'edge' : 'empty'}
             className={`${styles.sidePanel} ${isDarkMode ? styles.sidePanelDark : styles.sidePanelLight}`}
-            style={{ 
+            style={{
               // On mobile, pane takes 40% of height (below graph); on desktop, takes full height (beside graph)
               height: isMobile ? Math.floor(graphAreaHeight * 0.4) : graphAreaHeight
             }}

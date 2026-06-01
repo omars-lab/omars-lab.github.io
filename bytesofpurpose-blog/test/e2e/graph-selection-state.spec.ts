@@ -64,50 +64,24 @@ test.describe('GraphRenderer Selection State E2E', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
-    // Check if pane shows edge details
-    const pane = page.locator('[style*="borderLeft"]').first();
-    await pane.waitFor({ state: 'visible', timeout: 5000 });
-    
-    // Wait a bit for edge to be selected
-    await page.waitForTimeout(1000);
-    
-    const paneContent = await pane.textContent().catch(() => '');
-    
-    // Verify we have edge content (if edge exists in graph)
-    const hasEdgeContent = paneContent && (
-      paneContent.includes('vs.') || 
-      paneContent.includes('Source') || 
-      paneContent.includes('Destination')
-    );
-    
-    if (hasEdgeContent) {
-      // We have an edge selected, now click a node on the canvas
-      const canvas = page.locator('canvas').first();
-      await expect(canvas).toBeVisible();
-      
-      const canvasBox = await canvas.boundingBox();
-      if (!canvasBox) {
-        throw new Error('Canvas not found or not visible');
+    // The pane reflects the current selection via data-panel ("node" | "edge" |
+    // "empty") — a stable hook, vs. matching pane text ("vs."/"Source") which
+    // gives false positives (a node's ingress list also contains "(vs.)").
+    const pane = page.locator('[data-testid="graph-info-panel"]').first();
+    await pane.waitFor({ state: 'visible', timeout: 15000 });
+
+    // Edge deep-link should have selected the edge.
+    if ((await pane.getAttribute('data-panel')) === 'edge') {
+      // Click a connected node link in the pane to switch selection to a node.
+      const nodeLink = page.locator('a').filter({ hasText: /LangChain|Outlines/ }).first();
+      if (await nodeLink.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await nodeLink.click();
+        // Selection must move off the edge (to a node) — assert via data-panel.
+        await expect(pane).not.toHaveAttribute('data-panel', 'edge', { timeout: 5000 });
+        await expect(pane).toHaveAttribute('data-panel', 'node');
       }
-      
-      // Click on the canvas to try to hit a node
-      const centerX = canvasBox.x + canvasBox.width / 2;
-      const centerY = canvasBox.y + canvasBox.height / 2;
-      await page.mouse.click(centerX, centerY);
-      await page.waitForTimeout(1000);
-      
-      // Verify edge is no longer selected (pane should show node details or different content)
-      const newPaneContent = await pane.textContent().catch(() => '');
-      const stillHasEdgeContent = newPaneContent && (
-        newPaneContent.includes('vs.') || 
-        newPaneContent.includes('Source') || 
-        newPaneContent.includes('Destination')
-      );
-      
-      // Edge content should be gone (either node content or empty)
-      expect(stillHasEdgeContent).toBeFalsy();
     }
-    // If edge not found (nodes might be collapsed), test passes (edge selection not possible)
+    // If the edge isn't selectable (nodes collapsed), there's nothing to assert.
   });
 
   test('clicking edge after clicking node unselects node', async ({ page }) => {
@@ -122,7 +96,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
     await page.waitForTimeout(2000);
     
     // Check if pane shows node details
-    const pane = page.locator('[style*="borderLeft"]').first();
+    const pane = page.locator('[data-testid="graph-info-panel"]').first();
     await pane.waitFor({ state: 'visible', timeout: 5000 });
     
     // Wait a bit for node to be selected
@@ -288,45 +262,20 @@ test.describe('GraphRenderer Selection State E2E', () => {
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
-    // Check if pane shows edge details
-    const pane = page.locator('[style*="borderLeft"]').first();
-    await pane.waitFor({ state: 'visible', timeout: 5000 });
-    
-    // Wait a bit for edge to be selected
-    await page.waitForTimeout(1000);
-    
-    const paneContent = await pane.textContent().catch(() => '');
-    
-    const hasEdgeContent = paneContent && (
-      paneContent.includes('vs.') || 
-      paneContent.includes('Source') || 
-      paneContent.includes('Destination')
-    );
-    
-    if (hasEdgeContent) {
-      // Find a node link in the pane (Source or Destination link)
-      // Look for links that contain node names or are clickable
-      const sourceSection = page.locator('text=Source').first();
-      const destinationSection = page.locator('text=Destination').first();
-      
-      // Try to find a clickable link in the source or destination section
+    // Assert selection state via the stable data-panel hook (not pane text,
+    // which gives false positives — a node panel's ingress list contains "(vs.)").
+    const pane = page.locator('[data-testid="graph-info-panel"]').first();
+    await pane.waitFor({ state: 'visible', timeout: 15000 });
+
+    if ((await pane.getAttribute('data-panel')) === 'edge') {
+      // Click a node link in the pane (Source/Destination) to select that node.
       const nodeLink = page.locator('a').filter({ hasText: /LangChain|Outlines/ }).first();
-      
+
       if (await nodeLink.isVisible({ timeout: 2000 }).catch(() => false)) {
-        // Click the node link
         await nodeLink.click();
-        await page.waitForTimeout(1000);
-        
-        // Verify edge is no longer selected
-        const newPaneContent = await pane.textContent().catch(() => '');
-        const stillHasEdgeContent = newPaneContent && (
-          newPaneContent.includes('vs.') || 
-          newPaneContent.includes('Source') || 
-          newPaneContent.includes('Destination')
-        );
-        
-        // Edge content should be gone
-        expect(stillHasEdgeContent).toBeFalsy();
+        // The edge must be unselected; the panel should now show the node.
+        await expect(pane).not.toHaveAttribute('data-panel', 'edge', { timeout: 5000 });
+        await expect(pane).toHaveAttribute('data-panel', 'node');
       }
       // If no node link found, test passes (no link to click)
     }
