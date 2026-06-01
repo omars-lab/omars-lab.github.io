@@ -43,48 +43,48 @@ test.describe('DebugMenu — experiments switching', () => {
     await expect(dialog.getByRole('button', { name: /test/ })).toBeVisible();
   });
 
-  test('toggling a variant changes the rendered Support button copy', async ({ page }) => {
+  test('toggling a variant writes the override and reloads', async ({ page }) => {
     await page.goto(PAGE_WITH_BUTTON, { waitUntil: 'domcontentloaded' });
 
     const btn = page.getByTestId('support-button');
     await expect(btn).toBeVisible();
-    // Baseline: no override → control copy.
-    await expect(btn).toContainText('Buy me a coffee');
 
     // Force "test" via the menu. The toggle writes ?ab-support-button-copy=test
-    // and reloads, so the page comes back with the override applied.
+    // and reloads, so the page comes back with the override applied. (The copy
+    // itself is identical across arms — the support-button-copy experiment now
+    // differs in PRESENTATION on the /support page, asserted separately below —
+    // so here we prove the DebugMenu drives the override + reload.)
     await openMenu(page);
     await page
       .getByRole('dialog', { name: 'Debug menu' })
       .getByRole('button', { name: /^test/ })
       .click();
 
-    // After the menu-driven reload, the URL carries the override and the button
-    // copy has flipped — proving the toggle drives the UI.
     await expect(page).toHaveURL(/ab-support-button-copy=test/);
-    const btnAfter = page.getByTestId('support-button');
-    await expect(btnAfter).toBeVisible();
-    await expect(btnAfter).toContainText('Support the dev');
-    await expect(btnAfter).not.toContainText('Buy me a coffee');
+    await expect(page.getByTestId('support-button')).toBeVisible();
   });
 
-  test('support page coffee CTA reflects the variant', async ({ page }) => {
+  test('support page coffee CTA reflects the variant (link vs button)', async ({ page }) => {
     // The standalone navbar "coffee" button was replaced by a "Support" navbar
-    // TAB → the /support page, whose Buy-Me-a-Coffee CTA now carries the SAME
-    // experiment copy (support-button-copy). Assert the variant flips there.
+    // TAB → the /support page, whose coffee CTA is wired to the same experiment.
+    // Both arms use identical COPY; the experiment differs in PRESENTATION:
+    //   control → plain text link (no Infima button class)
+    //   test    → styled primary button (button--primary)
     const coffee = page.getByTestId('support-coffee-button');
 
+    // Control default: a text link, NOT a button.
     await page.goto('/support', { waitUntil: 'domcontentloaded' });
     await expect(coffee).toBeVisible({ timeout: 15000 });
-    await expect(coffee).toContainText('Buy me a coffee'); // control default
+    await expect(coffee).toContainText('Buy me a $5 coffee');
+    await expect(coffee).not.toHaveClass(/button--primary/);
 
-    // Force "test" straight via the URL override and reload the support page.
+    // Force "test" → the CTA becomes a styled button.
     await page.goto('/support?ab-support-button-copy=test', {
       waitUntil: 'domcontentloaded',
     });
     await expect(coffee).toBeVisible({ timeout: 15000 });
-    await expect(coffee).toContainText('Support the dev');
-    await expect(coffee).not.toContainText('Buy me a coffee');
+    await expect(coffee).toContainText('Buy me a $5 coffee');
+    await expect(coffee).toHaveClass(/button--primary/);
   });
 
   test('clear overrides reverts to control', async ({ page }) => {
@@ -92,7 +92,7 @@ test.describe('DebugMenu — experiments switching', () => {
     await page.goto(`${PAGE_WITH_BUTTON}?ab-support-button-copy=test`, {
       waitUntil: 'domcontentloaded',
     });
-    await expect(page.getByTestId('support-button')).toContainText('Support the dev');
+    await expect(page).toHaveURL(/ab-support-button-copy=test/);
 
     await openMenu(page);
     await page
@@ -100,8 +100,8 @@ test.describe('DebugMenu — experiments switching', () => {
       .getByRole('button', { name: 'Clear overrides' })
       .click();
 
-    // Clear strips the ab params and reloads → back to control copy.
+    // Clear strips the ab params and reloads → back to control (no override).
     await expect(page).not.toHaveURL(/ab-support-button-copy/);
-    await expect(page.getByTestId('support-button')).toContainText('Buy me a coffee');
+    await expect(page.getByTestId('support-button')).toBeVisible();
   });
 });

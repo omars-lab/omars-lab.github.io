@@ -6,10 +6,12 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import CoffeeButton from '@site/src/components/Support/CoffeeButton';
 import styles from './support.module.css';
 
-// TODO: replace with the real Shopify store URL. While this is the '#' placeholder
-// the Shopify card is omitted (see channels filter below) so we never ship a CTA
-// that opens a blank tab — set a real URL to light it up.
-const SHOPIFY_STORE_URL = '#';
+// The Shopify store. When this is a real URL the Shopify card renders (see the
+// channels filter below); a '#' placeholder would be omitted so we never ship a
+// CTA that opens a blank tab.
+// Typed as `string` (not the literal) so the `!== '#'` placeholder guard below
+// stays meaningful — if this is ever reset to '#', the card is omitted again.
+const SHOPIFY_STORE_URL: string = 'https://bytesofpurpose.myshopify.com/';
 
 const GITHUB_URL = 'https://github.com/omars-lab';
 const LINKEDIN_URL = 'https://www.linkedin.com/in/oeid/';
@@ -24,7 +26,7 @@ type Channel = {
   external?: boolean;
 };
 
-export default function SupportPage(): JSX.Element {
+export default function SupportPage(): React.JSX.Element {
   const headshot = useBaseUrl('/img/headshot.png');
 
   useEffect(() => {
@@ -121,16 +123,24 @@ export default function SupportPage(): JSX.Element {
               <span className={styles.channelCta}>{c.cta} →</span>
             </a>
           ))}
-        </div>
 
-        <div className={styles.coffeeSection}>
-          <h2>…or buy me a coffee ☕</h2>
-          <p>
-            I'm only half-joking about the coffee — it's the fuel behind every
-            late-night post and side project. A small tip keeps the pot full and
-            the writing coming.
-          </p>
-          <CoffeeButton />
+          {/* The coffee CTA is a card in the same grid as the channels — but a
+              <div> (not an <a>), since its action is the CoffeeButton (wired to
+              the support-button-copy A/B experiment), not a single link. */}
+          <div className={styles.channelCard}>
+            <span className={styles.channelIcon} aria-hidden="true">
+              ☕
+            </span>
+            <span className={styles.channelTitle}>…or buy me a coffee</span>
+            <span className={styles.channelBlurb}>
+              I'm only half-joking about the coffee — it's the fuel behind every
+              late-night post and side project. A small tip keeps the pot full
+              and the writing coming.
+            </span>
+            <div className={styles.coffeeCta}>
+              <CoffeeButton linkClassName={styles.channelCta} />
+            </div>
+          </div>
         </div>
       </div>
     </Layout>

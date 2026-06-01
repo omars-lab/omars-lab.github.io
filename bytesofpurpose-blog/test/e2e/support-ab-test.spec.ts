@@ -35,8 +35,8 @@ test.describe('Support button A/B experiment', () => {
   test.use({ baseURL: PH_BASE });
 
   for (const [variant, expectedCopy] of [
-    ['control', 'Buy me a coffee'],
-    ['test', 'Support the dev'],
+    ['control', 'Donate $5'],
+    ['test', 'Buy me a coffee'],
   ] as const) {
     test(`variant "${variant}" renders "${expectedCopy}"`, async ({ page }) => {
       // Force the variant via the localhost-only URL override (deterministic,

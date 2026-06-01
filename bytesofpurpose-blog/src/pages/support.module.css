@@ -68,14 +68,10 @@
   color: var(--ifm-color-primary);
 }
 
-.coffeeSection {
-  text-align: center;
-  padding: 2rem 1rem;
-  border-top: 1px solid var(--ifm-color-emphasis-200);
-}
-
-.coffeeSection p {
-  max-width: 38rem;
-  margin: 0 auto 1.5rem;
-  color: var(--ifm-color-emphasis-700);
+/* The coffee card reuses .channelCard; this wrapper holds the CoffeeButton,
+   which renders as a text link (control) or a styled button (test). Pin it to
+   the bottom like the channel CTAs and left-align either form. */
+.coffeeCta {
+  margin-top: auto;
+  display: flex;
 }
