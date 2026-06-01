@@ -1,0 +1,21 @@
+/* Dev/localhost-only "draft" pill shown after a sidebar item's label. */
+.draftBadge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #92400e;
+  background: #fde68a;
+  border: 1px solid #f59e0b;
+}
+html[data-theme='dark'] .draftBadge {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.18);
+  border-color: #b45309;
+}

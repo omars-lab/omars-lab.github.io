@@ -59,6 +59,11 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 - **`debug-menu.spec.ts`** — the floating localhost-only DebugMenu: renders on
   localhost, lists the registered experiment, and toggling a variant actually
   flips the rendered `<Support/>` copy (control ↔ test) + clear-overrides reverts (dev)
+- **`draft-sidebar.spec.ts`** — dev-only docs-sidebar "draft" badges: draft
+  categories (Definitions/Skills) are badged, published ones (Development) are not,
+  leaf draft badges render (dev). See `designs/design-draft-aware-sidebar`.
+- **`dev-only-surfaces.spec.ts`** — asserts the dev-only surfaces (DebugMenu, draft
+  badges) are ABSENT from the production build, and draft routes 404 (prod)
 - **`graph-renderer.spec.ts`** — general graph rendering / interactions / zoom (dev)
 - **`graph-title-rendering.spec.ts`** — title rendering, ellipsis-only regression (dev)
 - **`graph-selection-state.spec.ts`** — node/edge selection state via the AI-framework

@@ -1,0 +1,26 @@
+/* Dev/localhost-only draft marker for a category whose index page is a draft.
+   The Category component is upstream (wrapped, not forked), so we append the
+   "draft" pill to its collapsible link via ::after rather than JSX. */
+.draftCategory > :global(.menu__list-item) > :global(.menu__link)::after,
+.draftCategory > :global(.menu__list-item) > :global(.menu__list-item-collapsible) > :global(.menu__link)::after {
+  content: 'draft';
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: #92400e;
+  background: #fde68a;
+  border: 1px solid #f59e0b;
+}
+html[data-theme='dark'] .draftCategory > :global(.menu__list-item) > :global(.menu__link)::after,
+html[data-theme='dark'] .draftCategory > :global(.menu__list-item) > :global(.menu__list-item-collapsible) > :global(.menu__link)::after {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.18);
+  border-color: #b45309;
+}

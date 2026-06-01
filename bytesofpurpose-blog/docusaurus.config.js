@@ -134,6 +134,9 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
       // Exposes the 3 most recent published blog posts as global data for the
       // homepage "Latest from the blog" strip (see plugins/recent-posts).
       [require.resolve('./plugins/recent-posts'), {count: 3}],
+      // Exposes draft-doc permalinks as global data so the dev-only sidebar
+      // swizzle can badge drafts (see plugins/draft-docs + theme/DocSidebarItem).
+      require.resolve('./plugins/draft-docs'),
       // https://docusaurus.io/docs/blog#multiple-blogs
       [
         '@docusaurus/plugin-content-blog',
