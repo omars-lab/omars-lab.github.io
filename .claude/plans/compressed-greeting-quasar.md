@@ -18,8 +18,12 @@
 - **IN-FLIGHT SCOPE IS BIGGER THAN FIRST MAPPED.** The uncommitted ingress work also modified
   `CLAUDE.md`, `SKILL.md`, and `validate-docs-structure.js` (description rules) — not just the
   posthog/component files. Track 0, when run, must account for all of these.
-- Next: Track C (bare-urls) is independent of the shared files and safe to do; or pause for the
-  other session to land ingress first.
+- **Track C (bare-urls) — DONE & COMMITTED** (`620fe909` on `feat/ingress-attribution`):
+  `validate-links.js --fix` rewrote all 167 bare URLs → labeled links; 14 weak forum-thread
+  labels hand-improved in the 2 heaviest reference docs. `make validate-links` bare-url 167→0
+  (34 long-url warns remain, separate WARN tier). 35 content files; no shared/ingress files staged.
+- Next ready & independent: Track D (blog revival), Track E (idea↔exec wiring), Track G3 (reader
+  audit). Track B's terminology rename is still uncommitted in the tree (see above).
 
 ## Context (why this plan, and what changed since it was written)
 `.claude/plans/blog-meh-to-great.md` captured the post-restructure priorities to take the
@@ -119,20 +123,13 @@ filenames, so this aligns folder↔file naming.)
   → bare-url count → 0 (long-url warns may remain; triage separately).
 - **T-C3** Commit. (Do this BEFORE any onBrokenLinks:'throw' flip.)
 
-### Track D — Blog revival (P1 from old plan)
-- **T-D1** Decide DFS-vs-BFS post: finish + un-draft, or leave drafted. (It's the one `draft:true`
-  blog post.)
-- **T-D2** Seed 3–5 short dated posts from work already done — strong candidates:
-  "Why I restructured my docs into topics" (Phases A–H narrative), "Idea → execution: linking PM
-  to code", "How I track where my links go" (the ingress-attribution story — ties Track 0 to the
-  blog). Cadence > length. Use `author-blog-post` skill (frontmatter/MDX pitfalls). Author = `oeid`.
-
-### Track E — Idea↔execution wiring (P2 from old plan)
-- **T-E1** Identify 5–10 obvious PM-idea ↔ built-artifact pairs (e.g. PM `ideas/`/`roadmaps/`
-  entries that became `software-development/*/projects/*` docs).
-- **T-E2** Add `## Execution` link in each PM doc → the built artifact; `## Idea` link back in the
-  artifact. The `idea-exec-link` validator keeps them honest (links must resolve).
-- **T-E3** `make validate-structure` → no new `idea-exec-link` warns. Commit.
+### CONTENT TRACKS — MOVED OUT (on hold)
+Content authoring/editing/publishing is **on hold** (user, 2026-06-01) and now lives in its own
+plan: **`.claude/plans/blog-content-review.md`**. Moved there: Track D (blog revival),
+Track E (idea↔execution wiring), the publish sprint (was P0), and the homepage/topic-landing copy
+polish (was T-G1/T-G2). Resume from that plan when the hold lifts. The reader-experience audit
+(T-G3 below) stays here because it's **read-only** — but its *content* findings get triaged into
+the content plan.
 
 ### Track F — Experiment apparatus (P2 from old plan)
 - **T-F1** Decide: run 1–2 real experiments (CTA copy / nav label / topic-landing hero) to
@@ -142,13 +139,12 @@ filenames, so this aligns folder↔file naming.)
   `run-ab-test` → `analyze-experiment` → `decide-experiment` → `conclude-experiment`.
 - **T-F2** If running: keep the experiment doc + README timeline table current per phase.
 
-### Track G — First-impression polish (P3 from old plan)
-- **T-G1** Homepage audit (`src/pages/index.tsx` + `HomepageFeatures`): does it sell the site in
-  5s — who/what/where-to-start? (Avatar is explicitly OUT of scope for homepage per user.)
-- **T-G2** Topic-landing READMEs: make each a real "start here" (2–3 sentence orientation + 3
-  best docs), not an auto-list. High-traffic, hand-crafted.
+### Track G3 — Reader-experience audit (READ-ONLY; stays here)
 - **T-G3** Run `review-reader-experience` end-to-end on the post-restructure site → prioritized
-  reader-eyes report (labels, nav, voice, dead ends) → triage findings into a follow-up.
+  reader-eyes report (labels, nav, voice, dead ends). Read-only, commits nothing. **Triage split:**
+  *structural* findings (labels, nav, IA) → follow-up here; *content* findings (voice, prose, thin
+  landings, dead ends) → `blog-content-review.md`. (Homepage/topic-landing copy polish, formerly
+  T-G1/T-G2, moved to the content plan.)
 
 ### Track H — Tighten the build contract (P3 from old plan; AFTER C + publish)
 - **T-H1** Flip `onBrokenLinks: 'warn' → 'throw'` — but first resolve the changelog-shadows-blog-
@@ -156,27 +152,23 @@ filenames, so this aligns folder↔file naming.)
 - **T-H2** Resolve or formally accept the 2 framing-folder warns (documentation-techniques,
   problem-solving-techniques).
 
-### Track P — Publish sprint (P0 from old plan) — **[hold]**
-User: *"hold on publishing for now."* Keep documented; do NOT flip drafts this round.
-- **[hold] T-P1** When resumed: `draft-triage.tsv` marks ~90 `publish?`, ~30 `keep`, ~10 `delete?`.
-  Read each `publish?` doc for real quality (not word count), publish the ready ones per topic,
-  delete empty stubs, keep thin-but-intentional as drafts. Target 131 → ~60.
-- **[hold] T-P2** Re-run manifest diff after each batch (publishing ADDS the draft's route — verify
-  it's the intended one).
+### Track P — Publish sprint — **MOVED to `blog-content-review.md`** (on hold)
+Publishing drafts is content work → moved to the content plan. Decision recorded there:
+quality-gated per-topic batches when resumed; target 131 → ~60.
 
 ---
 
-## Suggested next-session order
-1. **Track 0** (commit + verify ingress-attribution) — clears the tree first.
-2. **Track A** (avatar) — tiny, self-contained, visible win.
-3. **Track B** (vocabulary → terminology) — structure change; do as one atomic commit
-   (mv + slugs + validator + CLAUDE.md + skill + memory) so docs and checks never drift.
-4. **Track C** (bare-url --fix) — fast polish, makes everything look finished.
-5. **Track D** (blog revival, incl. the ingress-attribution post) — proves the site is alive.
-6. **Track E** (idea↔exec wiring) — makes the PM/SWDev split navigable.
-7. **Track G3** (reader-experience audit) — triage its findings into the following session.
-8. (Stretch) **Track F** (experiment) + **Track H** (onBrokenLinks:'throw').
-9. **Track P** remains on hold until the user lifts it.
+## Suggested next-session order (structural/polish plan only)
+1. ~~**Track A** (avatar)~~ — ✅ DONE (`499c802e`).
+2. ~~**Track C** (bare-url --fix)~~ — ✅ DONE (`620fe909`).
+3. **Track B** (vocabulary → terminology) — ✅ done & verified, **commit pending** the other
+   session's ingress landing (shared files). Commit once ingress is in.
+4. **Track G3** (reader-experience audit) — read-only; run next. Structural findings stay here,
+   content findings → content plan.
+5. (Stretch) **Track F** (experiment) + **Track H** (onBrokenLinks:'throw').
+6. **Track 0** (commit ingress-attribution) — owned by another session.
+7. **Content plan** (`blog-content-review.md`) — Tracks D/E/P + homepage/landing copy — resume
+   when the user lifts the content hold.
 
 ## Guardrails (carried from the restructure — unchanged)
 - All slugs ABSOLUTE/frozen; never reintroduce a relative slug. The only intentional URL change
