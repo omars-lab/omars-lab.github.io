@@ -26,6 +26,24 @@ When the task list reaches **10+ completed tasks**, archive them and prune:
    list stays short. Leave pending/in_progress tasks untouched.
 The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working set.
 
+## ⚠️ Operating convention: structure decisions must update the structure checks
+
+The docs are a **topic-based information architecture** with a recurring folder
+contract (each root topic = a reader-facing topic; each topic has a README landing
+with an **absolute** `slug:`, a `_category_.json`, optional `vocabulary/` first and
+`prompts/` last; kebab-case names; no framing-word/topic-echo folders; depth ≤3; every
+doc carries an **absolute** slug so a move never changes a URL). **Whenever you make a
+decision that changes this structure or its conventions** (add/rename/retire a topic,
+change the recurring shape, add a naming rule, change slug/draft policy), you **must
+update the structure-checking validators + hooks in the same change** so they encode
+the new rule — never let the docs and the checks drift. The validators/hooks live with
+the `maintain-doc-indexes` / structure-lint skill + `scripts/validate-*.js` + the
+PostToolUse `Write|Edit` hooks in `.claude/settings.json` (mirror the existing
+`validate-links-hook.sh` / `validate-draft-hook.sh` style; warn-only first). If the
+validator doesn't exist yet for a rule you just introduced, add the rule to it (or stub
+it) as part of the decision. The owning skill's SKILL.md is the source of truth for the
+contract; keep it and the checks in lockstep.
+
 ## The site
 
 Docusaurus 3 blog/docs (`bytesofpurpose-blog/`) → GitHub Pages (`gh-pages`) →
