@@ -180,7 +180,15 @@ Append `// done <date>: <evidence>` when an item is verified complete.
     duplicated description in a scratch test and is clean otherwise. Reversible — no defer.
   - **defer?:** no.
 
-- [ ] **Q3 — Build the `manage-frontmatter-descriptions` skill.**
+- [x] **Q3 — Build the `manage-frontmatter-descriptions` skill.**
+  // done 2026-06-01: created .claude/skills/manage-frontmatter-descriptions/SKILL.md
+  // (audit→preview→heal workflows, 50–160 contract synced to the validator) + a runnable
+  // share-message previewer scripts/preview-share-message.js that mirrors ShareButton's
+  // composeMessage/shareUrl/intent-URL logic. PROVEN: ran the preview on 3 real pages —
+  // output matches ShareButton wording exactly; length verdicts agree with the validator
+  // (welcome 201ch flagged over-160; the two terminology pages 116/131ch pass). Validator
+  // emits 55 length + 15 duplicate + 0 missing — a real heal work-list. Frontmatter shape
+  // matches sibling skills; loader picks it up next session.
   - **done-when:** `.claude/skills/manage-frontmatter-descriptions/SKILL.md` exists and is
     listed by the skills loader.
   - **work:** judgment work a validator can't do — (a) draft/refresh a description from page
