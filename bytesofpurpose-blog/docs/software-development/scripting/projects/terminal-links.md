@@ -9,7 +9,7 @@ image: https://i.imgur.com/mErPwqL.png
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<!-- https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda -->
+<!-- [GitHub Gist — Eb114294efbcd5adb1944c9f3cb5feda](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda) -->
 
 <Tabs>
 

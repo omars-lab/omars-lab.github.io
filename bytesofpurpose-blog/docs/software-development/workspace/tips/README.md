@@ -10,7 +10,7 @@ draft: false
 # Tips
 
 ## On Efficient Development
-* https://www.jointaro.com/lesson/FPV1gp0rpXcTUZaIkHGF/efficiency-tips-for-engineers-from-an-ai-researcherstanford-phdex-meta-engineer/
+* [jointaro.com](https://www.jointaro.com/lesson/FPV1gp0rpXcTUZaIkHGF/efficiency-tips-for-engineers-from-an-ai-researcherstanford-phdex-meta-engineer/)
 
 
 ## On Project Management

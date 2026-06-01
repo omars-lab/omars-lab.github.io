@@ -14,7 +14,7 @@ priority: 'high'
 * [ ] Make blog Posts that leverage graph .. 
 * [ ] Fix loading demo client side ... Loading demo... sir issues ...
 * [ ] Mimic Graph in deep graph
-	* http://localhost:3001/docs/techniques/blogging-techniques/embed-structural-components/graph
+	* [localhost — Graph](http://localhost:3001/docs/techniques/blogging-techniques/embed-structural-components/graph)
 
 
 ## Execution Plan

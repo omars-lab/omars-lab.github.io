@@ -314,7 +314,7 @@ flowchart TD
 
 ### AWS Services
 * Govern Your Data
-	* https://aws.amazon.com/datazone/?trk=f1a9bceb-ae49-49c6-923d-15295100389e&sc_channel=el
+	* [AWS — Datazone](https://aws.amazon.com/datazone/?trk=f1a9bceb-ae49-49c6-923d-15295100389e&sc_channel=el)
 
 ### Books & Courses
 

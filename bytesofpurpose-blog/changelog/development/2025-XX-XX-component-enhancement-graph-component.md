@@ -13,7 +13,7 @@ priority: 'medium'
 
 # Blogging Mechanisms - Graph Component 
  * [ ] I need to deal with name conflicts in graph highlighting
-	* [ ] https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2
+	* [ ] [blog.bytesofpurpose.com — Graph](https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2)
 * [ ] Mobile friendly graph 
 	* [ ] I need a mobile version of the graph rebderer when the panel is simpler amd under the graph ...
 

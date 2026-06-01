@@ -17,7 +17,7 @@ draft: false
 * I should be constantly finding better ways to make use of my tools ...
 
 # Techniques
-* https://help.figma.com/hc/en-us/articles/360039827514-Dropbox-and-Figma
+* [help.figma.com — 360039827514 Dropbox And Figma](https://help.figma.com/hc/en-us/articles/360039827514-Dropbox-and-Figma)
 
 
 ## Notification Tools
@@ -25,4 +25,4 @@ draft: false
 	- [ ] [Create alarms for custom metrics using Amazon CloudWatch anomaly detection - AWS Prescriptive Guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/create-alarms-for-custom-metrics-using-amazon-cloudwatch-anomaly-detection.html)
 
 # Consolidating Techniques
-https://help.figma.com/hc/en-us/articles/360039827514-Dropbox-and-Figma
+[help.figma.com — 360039827514 Dropbox And Figma](https://help.figma.com/hc/en-us/articles/360039827514-Dropbox-and-Figma)
