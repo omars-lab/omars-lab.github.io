@@ -36,13 +36,15 @@ doc carries an **absolute** slug so a move never changes a URL). **Whenever you 
 decision that changes this structure or its conventions** (add/rename/retire a topic,
 change the recurring shape, add a naming rule, change slug/draft policy), you **must
 update the structure-checking validators + hooks in the same change** so they encode
-the new rule — never let the docs and the checks drift. The validators/hooks live with
-the `maintain-doc-indexes` / structure-lint skill + `scripts/validate-*.js` + the
-PostToolUse `Write|Edit` hooks in `.claude/settings.json` (mirror the existing
-`validate-links-hook.sh` / `validate-draft-hook.sh` style; warn-only first). If the
-validator doesn't exist yet for a rule you just introduced, add the rule to it (or stub
-it) as part of the decision. The owning skill's SKILL.md is the source of truth for the
-contract; keep it and the checks in lockstep.
+the new rule — never let the docs and the checks drift. The contract is owned by the
+`review-reader-experience` skill ("Topic-folder contract + validator" section) and
+enforced by `bytesofpurpose-blog/scripts/validate-docs-structure.js`
+(`make validate-structure`) + the warn-only PostToolUse `Write|Edit` hook
+`.claude/hooks/validate-docs-structure-hook.sh` (registered in `.claude/settings.json`
+alongside `validate-links-hook.sh` / `validate-draft-hook.sh`). Absolute-slug is the
+only ERROR tier; the rest are warn-tier advisories. If the validator doesn't yet encode
+a rule you just introduced, add the rule to it as part of the decision. The skill's
+SKILL.md is the source of truth for the contract; keep it and the checks in lockstep.
 
 ## The site
 

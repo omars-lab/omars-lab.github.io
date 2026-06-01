@@ -122,6 +122,35 @@ installed** (`@docusaurus/plugin-client-redirects` is absent) and `onBrokenLinks
 `'warn'`, so a changed slug value **silently 404s** — no build failure. If a slug must
 change, flag that a manual redirect is needed — call this out as a risk.
 
+#### Topic-folder contract + validator (`validate-docs-structure.js`)
+
+The docs are a **topic-based IA** with a recurring folder contract. This skill owns the
+contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
+(`make validate-structure`, plus a warn-only `Write|Edit` hook). The contract:
+
+- The docs root is `1-welcome/` (the topic index, not a topic) + one `<N>-<topic>/`
+  folder per reader-facing TOPIC. Numeric prefixes set sidebar order.
+- **Every doc has an ABSOLUTE `slug:` (`slug: /…`)** — the URL-freeze guarantee. The
+  validator treats a missing/relative slug as the only **ERROR** tier (exit 2; the
+  hook surfaces it but never blocks). Everything below is **warn** tier (advisory).
+- Each topic folder has a `README.{md,mdx}` landing (absolute slug) + a
+  `_category_.json` (label + position).
+- Every sub-folder that contains docs has a `_category_.json`; none should sit in a
+  folder with no docs and no docs-bearing descendants (orphan category).
+- Names are **kebab-case** (no spaces/uppercase; `_`-prefixed like `_TEMPLATE` exempt).
+- No framing-word / topic-echo folder names (`*-techniques`, `*-craftsmanship`,
+  `definitions`) — use a reader-facing topic noun. (Several `-techniques` folders
+  survive from the pre-reorg tree with frozen slugs; the validator warns on them.)
+- Folder depth ≤ 3 under a topic root.
+- A `vocabulary/` category sorts **first**; a `prompts/` category sorts **last**.
+- The Welcome topic-index cards (`### [Label](/docs/<slug>)`) must match the actual
+  root topic folders + their README slugs (the **welcome-drift** check, formerly T15).
+
+**Operating convention (also in CLAUDE.md):** any decision that changes this structure
+or its conventions (add/rename/retire a topic, change the recurring shape, add a naming
+rule, change slug/draft policy) MUST update this validator + this section in the same
+change, so the docs and the checks never drift.
+
 Survey the tree, then flag:
 - **Over-deep nesting.** Paths 4–5 levels deep (e.g.
   `4-development/6-projects/backend-projects/plugins/…`,

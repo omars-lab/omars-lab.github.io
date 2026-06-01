@@ -71,6 +71,12 @@ check: ## Check MDX files for issues
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
 
+validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, categories, depth, naming)
+	@# exit 2 == ERROR-tier (fail the gate); exit 1 == warn-only (advisory, pass).
+	@( cd ${SITEROOT} && node scripts/validate-docs-structure.js ); rc=$$?; \
+		if [ $$rc -eq 2 ]; then echo "✗ structure: ERROR-tier violations — see above."; exit 1; fi; \
+		exit 0
+
 test-link-hook: ## Integration tests for the validate-links PostToolUse hook + --fix
 	bash ${SITEROOT}/test/integration/validate-links-hook.test.sh
 
