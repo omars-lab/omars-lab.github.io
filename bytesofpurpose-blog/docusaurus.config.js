@@ -309,10 +309,11 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             htmlLabels: true,
           },
         },
-        // Social/OG card. A raster PNG (renders on platforms that ignore SVG
-        // og:image). TODO: replace with a purpose-built 1200x630 card (tracked
-        // in the SEO task) — this 512x512 is a stopgap over the old logo.svg.
-        image: 'img/android-chrome-512x512.png',
+        // Social/OG card — purpose-built 1200x630 landscape card (the standard
+        // large-card size for OG/Twitter). Brand gradient + lightbulb mark +
+        // wordmark/tagline. Source SVG: static/img/social-card.svg, rendered to
+        // PNG via `rsvg-convert -w 1200 -h 630 social-card.svg -o social-card.png`.
+        image: 'img/social-card.png',
       }),
   }
 );

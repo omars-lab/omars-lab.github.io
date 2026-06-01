@@ -41,13 +41,12 @@ const PAGES: PageSpec[] = [
   { name: 'blog-index', path: '/blog' },
   { name: 'docs-page', path: '/docs/welcome/intro' },
   {
-    // Authored article. label + link-in-text-block are now fixed; the only
-    // remaining debt is color-contrast on a few decorative Prism syntax tokens
-    // (string/builtin/boolean) in this post's code blocks — comment/function/
-    // property/atrule were already brought to AA. Tracked for full burn-down.
+    // Authored article — now strict ([] baseline). All Prism syntax-token
+    // contrast debt (comment/function/property/atrule + string/builtin/boolean/
+    // class-name/literal-property) was brought to AA in custom.css, in both
+    // color modes. Fails on any NEW violation.
     name: 'blog-post',
     path: '/blog/evolution-of-a-repo',
-    baseline: ['color-contrast'],
   },
 ];
 

@@ -21,6 +21,23 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## 2026-06-01 — Blog modernization + regression / a11y / SEO harness
+<!-- meta: type=feature category=development priority=high component=Site -->
+Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.
+
+- Fix the two Lighthouse a11y bugs (image-alt + heading-order)
+- Add design-token layer + Inter font to custom.css
+- Redesign homepage hero + feature cards
+- Add Latest posts strip to homepage
+- Polish blog index + navbar (CSS-only)
+- Verify: build, Lighthouse re-run, e2e, deploy
+- Set up regression testing for the site (3-project Playwright model)
+- Set up proper accessibility scans (axe-core WCAG 2 A/AA, light + dark)
+- Set up SEO scan / enhancement (on-page checks + Lighthouse)
+- Fix 3 flaky graph-selection-state E2E cases (deep-link edge selection)
+- Burn down baselined a11y debt (code-token contrast, task-list labels, prose link underlines)
+- SEO enhancements: homepage WebSite/Organization JSON-LD + per-page validity test
+
 ## 2026-05-31 — A/B experiment lifecycle + analytics enablement
 <!-- meta: type=feature category=development priority=high component=Experiments -->
 Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.

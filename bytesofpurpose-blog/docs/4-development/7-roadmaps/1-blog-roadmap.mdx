@@ -40,6 +40,28 @@ This document outlines the roadmap for developing and enhancing the blog platfor
     - entry level
         [https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer,entry%20level%20software%20engineer](https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer,entry%20level%20software%20engineer)
 
+### PostHog: person identification & profiles
+
+> Mature the PostHog setup (instrumentation plan: `src/posthog-integration-plan.md`)
+> beyond anonymous, per-browser events. See PostHog's [capturing person profiles](https://posthog.com/docs/data/persons#capturing-person-profiles)
+> docs. Today every visitor is an anonymous `distinct_id`; these steps tie sessions
+> to people so we can do person-level analysis (return visits, journeys, cohorts).
+
+- [ ] Decide the **person-profile mode** in `src/posthog.js`: `person_profiles: 'identified_only'`
+  (cheaper, privacy-leaning — only creates profiles once `identify()` is called) vs `'always'`
+  (profiles for anonymous users too). Default recommendation: `identified_only` for a public blog.
+- [ ] Call `posthog.identify(distinctId, props)` at the **first meaningful identifying action** —
+  e.g. newsletter signup, leaving a comment, or a support click where an email is captured. Anonymous
+  events from before then auto-alias to the identified person.
+- [ ] Use `posthog.setPersonProperties(set, set_once)` for durable traits (first-seen referrer,
+  preferred topics) — `set_once` for values that should never be overwritten.
+- [ ] Consider **group analytics** if a meaningful entity emerges (e.g. company/team for any future
+  gated content) — otherwise skip; it adds cost and complexity for a personal blog.
+- [ ] Add `posthog.reset()` on any future logout to avoid binding the next visitor to the prior person.
+- [ ] **Privacy review (gate):** the repo is public and the site is behind a Cloudflare Access bypass
+  app — confirm no PII lands in the public bundle, keep `POSTHOG_TEST_MODE` out of production (it
+  disables the bot filter), and document the identify triggers in `posthog-integration-plan.md`.
+
 ## Technical Enhancements
 
 ### Docusaurus Features

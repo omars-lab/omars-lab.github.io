@@ -78,9 +78,10 @@ catches dark-mode issues Lighthouse's default light-only run misses).
 - **Zero-tolerance pages:** home, blog index, docs shell — any violation fails.
 - **Baselined pages:** authored articles may carry pre-existing content/theme debt.
   Each such page allow-lists specific rule IDs in the spec, so the gate stays green
-  yet still fails on anything **new**. Currently only `color-contrast` on the
-  `evolution-of-a-repo` post is baselined (a few decorative Prism string/builtin
-  tokens); task-list labels (rehype plugin) and prose-link underlines are fixed.
+  yet still fails on anything **new**. There are currently **no baselines** — all
+  pages (including the `evolution-of-a-repo` post) are strict `[]`. The former
+  `color-contrast` debt (Prism string/builtin/boolean/class-name/literal-property
+  tokens), task-list labels (rehype plugin), and prose-link underlines are all fixed.
 
 Runs against a **production build** (`make test-a11y` builds + serves :4173), because
 the task-list aria-label rehype plugin only runs at build time, not in `yarn start`.

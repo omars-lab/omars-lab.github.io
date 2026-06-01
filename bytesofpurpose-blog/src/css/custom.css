@@ -130,6 +130,9 @@ html[data-theme='dark'] .navbar-coffee:hover {
   --prism-comment-color: #5c6370; /* was #a0a1a7 (2.5:1) -> 5.8:1 */
   --prism-function-color: #3a66d0; /* was #4078f2 (3.9:1) -> 5.0:1 */
   --prism-atrule-color: #a55f00; /* was #b76b01 (3.9:1) -> 4.8:1 */
+  --prism-string-color: #367c39; /* was #50a14f (3.1:1) -> 4.9:1 */
+  --prism-boolean-color: #a55f00; /* was #b76b01 (3.9:1) -> 4.8:1 */
+  --prism-property-light-color: #c4302a; /* was #e45649 (3.5:1) -> 5.3:1 */
 }
 html[data-theme='dark'] {
   /* oneDark code background ~#282c34 */
@@ -154,6 +157,23 @@ html:not([data-theme='dark']) .token.atrule .token.key {
 html[data-theme='dark'] .token.literal-property.property,
 html[data-theme='dark'] .token.property {
   color: var(--prism-property-color) !important;
+}
+/* Light mode only — oneDark's string/builtin (#98c379, 6.9:1) and boolean/
+   class-name (#e5c07b, 8.1:1) already pass on the dark code bg; only oneLight's
+   #50a14f / #b76b01 fail. Scope light-only so the dark palette is untouched. */
+html:not([data-theme='dark']) .token.string,
+html:not([data-theme='dark']) .token.triple-quoted-string,
+html:not([data-theme='dark']) .token.builtin {
+  color: var(--prism-string-color) !important;
+}
+html:not([data-theme='dark']) .token.boolean,
+html:not([data-theme='dark']) .token.class-name {
+  color: var(--prism-boolean-color) !important;
+}
+/* literal-property.property is red (#e45649) in oneLight; oneDark's property is
+   handled by the dark rule above, so this one is light-only too. */
+html:not([data-theme='dark']) .token.literal-property.property {
+  color: var(--prism-property-light-color) !important;
 }
 
 /* "Read more about <title>" — the title part is in the DOM (descriptive link

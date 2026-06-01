@@ -67,6 +67,15 @@ Workflow + per-experiment task template: `.claude/skills/run-ab-test`. Spec:
 
 ## Open / future ideas
 
+- **Person identification & profiles (roadmap).** Today every visitor is an
+  anonymous per-browser `distinct_id`. Maturing to person-level analysis
+  (`person_profiles` mode, `posthog.identify()` at the first identifying action,
+  `setPersonProperties`, aliasing) is tracked in the
+  [blog roadmap](docs/4-development/7-roadmaps/1-blog-roadmap.mdx) under
+  *Analytics & Tracking → PostHog: person identification & profiles*. Ref:
+  https://posthog.com/docs/data/persons#capturing-person-profiles. Privacy gate:
+  repo is public + site behind Cloudflare Access bypass; never ship PII; keep
+  `POSTHOG_TEST_MODE` out of production.
 - Dashboards & insights created by the wizard live in PostHog (Blog Analytics
   dashboard `1650838`). Consider adding a "content performance" insight: pageviews
   + avg scroll depth + avg time per `$pathname`.
