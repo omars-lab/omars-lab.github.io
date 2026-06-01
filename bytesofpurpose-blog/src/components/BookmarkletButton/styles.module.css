@@ -7,8 +7,12 @@
   gap: 0.4rem;
   padding: 0.45rem 0.85rem;
   border-radius: 0.6rem;
-  border: 1px solid var(--ifm-color-primary);
-  background: var(--ifm-color-primary);
+  /* Use the -darkest primary so #fff text clears WCAG AA (4.5:1) in BOTH themes.
+     In dark mode the lighter primary (#6d9bff) gave only 2.70:1 — a serious axe
+     color-contrast violation on the zero-tolerance docs page; -darkest = 5.24:1
+     (dark) / 8.70:1 (light). Verified by contrast computation. */
+  border: 1px solid var(--ifm-color-primary-darkest);
+  background: var(--ifm-color-primary-darkest);
   color: #fff;
   font-weight: 600;
   font-size: 0.9rem;
