@@ -84,5 +84,31 @@ for (const { name, path } of PAGES) {
         `links with non-descriptive text (bad for SEO): ${JSON.stringify(offenders)}`
       ).toEqual([]);
     });
+
+    test('has valid JSON-LD structured data of the expected type', async ({ page }) => {
+      // Collect + parse every ld+json block (must be valid JSON).
+      const blocks = await page
+        .locator('script[type="application/ld+json"]')
+        .allTextContents();
+      // home + blog-post carry structured data; blog index / docs need not.
+      const expectedType: Record<string, string> = {
+        home: 'WebSite',
+        'blog-post': 'BlogPosting',
+      };
+      const want = expectedType[name];
+      if (!want) return; // no structured-data requirement for this page
+
+      expect(blocks.length, `${name} should emit JSON-LD`).toBeGreaterThan(0);
+      const types = new Set<string>();
+      for (const raw of blocks) {
+        const data = JSON.parse(raw); // throws if invalid → test fails
+        const nodes = data['@graph'] ?? [data];
+        for (const n of nodes) {
+          const t = n['@type'];
+          (Array.isArray(t) ? t : [t]).forEach((x) => types.add(x));
+        }
+      }
+      expect([...types], `${name} JSON-LD types`).toContain(want);
+    });
   });
 }
