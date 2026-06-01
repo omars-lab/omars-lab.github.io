@@ -30,7 +30,7 @@ The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working
 
 The docs are a **topic-based information architecture** with a recurring folder
 contract (each root topic = a reader-facing topic; each topic has a README landing
-with an **absolute** `slug:`, a `_category_.json`, optional `vocabulary/` first and
+with an **absolute** `slug:`, a `_category_.json`, optional `terminology/` first and
 `prompts/` last; kebab-case names with **no numeric name prefix** — order via
 `_category_.json` `position` / `sidebar_position`, never the folder name, so reordering
 stays history-clean; no framing-word/topic-echo folders; depth ≤4; every
@@ -49,9 +49,12 @@ enforced by `bytesofpurpose-blog/scripts/validate-docs-structure.js`
 (`make validate-structure`) + the warn-only PostToolUse `Write|Edit` hook
 `.claude/hooks/validate-docs-structure-hook.sh` (registered in `.claude/settings.json`
 alongside `validate-links-hook.sh` / `validate-draft-hook.sh`). Absolute-slug is the
-only ERROR tier; the rest are warn-tier advisories. If the validator doesn't yet encode
-a rule you just introduced, add the rule to it as part of the decision. The skill's
-SKILL.md is the source of truth for the contract; keep it and the checks in lockstep.
+only ERROR tier; the rest are warn-tier advisories — including the `description-*` rules
+(missing / length ~50–160 / duplicate), which keep each page's `description:` frontmatter
+healthy because it feeds both `og:description` (SEO/social) and the ShareButton share
+message. If the validator doesn't yet encode a rule you just introduced, add the rule to
+it as part of the decision. The skill's SKILL.md is the source of truth for the contract;
+keep it and the checks in lockstep.
 
 ## The site
 

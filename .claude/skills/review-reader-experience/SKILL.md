@@ -150,14 +150,19 @@ contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 - Folder depth ≤ 4 under a topic root (a domain sub-topic with its own
   `projects/<project>` legitimately needs 4, e.g.
   `software-development/backend-development/projects/<proj>`).
-- A `vocabulary/` category sorts **first**; a `prompts/` category sorts **last**.
+- A `terminology/` category sorts **first**; a `prompts/` category sorts **last**.
 - The Welcome topic-index cards (`### [Label](/docs/<slug>)`) must match the actual
   root topic folders + their README slugs (the **welcome-drift** check, formerly T15).
+- Every doc carries a healthy `description:` frontmatter — present, ~50–160 chars, and
+  distinct from other docs. It feeds both `og:description` (SEO/social preview) and the
+  ShareButton "Here's what it covers:" share message. The validator warns via
+  **description-missing / description-length / description-duplicate**. Deeper drafting/
+  refresh + a share-message preview live in the `manage-frontmatter-descriptions` skill.
 
 **Large topics may split into DOMAIN sub-topics** (Phase G). `Software Development`
 (`2-development/`) is organized by build domain — `backend-development/`,
 `frontend-development/`, `scripting/`, `plugins/` — each repeating the recurring shape
-(`research/ projects/ techniques/ tinkering/`); `vocabulary/` + `prompts/` stay at the
+(`research/ projects/ techniques/ tinkering/`); `terminology/` + `prompts/` stay at the
 topic root. The idea→ship LIFECYCLE is a SEPARATE topic, `Product Management`
 (`5-product-management/`, slug `/product-management`): `ideas/ research/ pocs/
 experiments/ initiatives/ projects/

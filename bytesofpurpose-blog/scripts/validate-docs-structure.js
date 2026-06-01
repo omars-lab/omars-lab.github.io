@@ -11,7 +11,7 @@
  *     <N>-<topic>/          ← one root folder per reader-facing TOPIC
  *       README.{md,mdx}     ← topic landing, ABSOLUTE slug, _category_.json
  *       _category_.json     ← label + position
- *       vocabulary/         ← (optional) sorts FIRST
+ *       terminology/        ← (optional) sorts FIRST
  *       <sub-folder>/       ← each carries a _category_.json; kebab-case
  *       prompts/            ← (optional) sorts LAST
  *
@@ -37,7 +37,7 @@
  *   depth           [warn]  folder depth ≤ 4 under a topic root (sub-topic / bucket /
  *                           project legitimately needs 4, e.g.
  *                           software-development/backend-development/projects/<proj>).
- *   vocab-first     [warn]  a `vocabulary/` category sorts first (low position).
+ *   terminology-first [warn]  a `terminology/` category sorts first (low position).
  *   prompts-last    [warn]  a `prompts/` category sorts last (high position).
  *   welcome-drift   [warn]  the Welcome topic-index cards (`### [Label](slug)`) match
  *                           the actual root topic folders + their README slugs.
@@ -46,6 +46,12 @@
  *                           `## Idea`/`## Origin` section (Software Development artifacts)
  *                           must resolve to an existing doc slug. Cross-topic dangling
  *                           cross-refs are warned (never blocks; backfill is incremental).
+ *   description-missing  [warn]  doc has no frontmatter `description:` (feeds og:description
+ *                           for SEO/social + the ShareButton "Here's what it covers:" message).
+ *   description-length   [warn]  description outside ~50–160 chars (too thin for a useful
+ *                           summary, or truncated in search/social cards).
+ *   description-duplicate [warn]  same `description:` reused across docs — each page needs a
+ *                           distinct summary (it's per-page SEO + per-page share text).
  *
  * Usage:
  *   node scripts/validate-docs-structure.js [paths…]   # scan (default: docs/)
@@ -71,12 +77,22 @@ const SEVERITY = {
   'kebab-case': 'warn',
   'framing-folder': 'warn',
   depth: 'warn',
-  'vocab-first': 'warn',
+  'terminology-first': 'warn',
   'prompts-last': 'warn',
   'welcome-drift': 'warn',
   'idea-exec-link': 'warn',
   'numeric-prefix': 'warn',
+  // `description:` frontmatter — feeds both SEO (og:description) and the ShareButton
+  // "Here's what it covers:" share message. All warn-tier (advisory, like the rest).
+  'description-missing': 'warn',
+  'description-length': 'warn',
+  'description-duplicate': 'warn',
 };
+
+// Description length bounds. Lower keeps it meaningful for the share message; upper
+// keeps it within the ~160-char window search engines / social cards display.
+const DESC_MIN = 50;
+const DESC_MAX = 160;
 
 // Folder names that echo a format/framing word instead of a reader topic.
 const FRAMING_RE = /-techniques$|-craftsmanship$|^definitions$/;
@@ -135,6 +151,26 @@ function checkDoc(file) {
   if (typeof data.slug !== 'string' || !data.slug.startsWith('/')) {
     add('absolute-slug', rel(file),
       `slug "${data.slug}" is relative — make it absolute (\`slug: /…\`) so the URL is pinned to a value, not the folder path`);
+  }
+  checkDescription(file, data);
+}
+
+// --- per-doc check: description presence + length -----------------------
+// `description:` powers og:description (SEO/social preview) AND the ShareButton share
+// message ("Here's what it covers: <description>"). See src/ingress-attribution-plan.md.
+function checkDescription(file, data) {
+  const desc = typeof data.description === 'string' ? data.description.trim() : '';
+  if (!desc) {
+    add('description-missing', rel(file),
+      'doc has no frontmatter `description:` — add one (feeds SEO + the share message)');
+    return;
+  }
+  if (desc.length < DESC_MIN) {
+    add('description-length', rel(file),
+      `description is ${desc.length} chars — shorter than ${DESC_MIN}; too thin for a useful SEO/share summary`);
+  } else if (desc.length > DESC_MAX) {
+    add('description-length', rel(file),
+      `description is ${desc.length} chars — longer than ${DESC_MAX}; it will be truncated in search/social cards`);
   }
 }
 
@@ -198,13 +234,13 @@ function walkDir(dir, depthFromTopic, topicName) {
       if (hasCategory(full) && !hasDocsDeep(full)) {
         add('orphan-cat', rel(full), '_category_.json in a folder with no docs and no docs-bearing descendants (orphan)');
       }
-      // vocabulary-first / prompts-last position conventions
+      // terminology-first / prompts-last position conventions
       if (hasCategory(full)) {
         const base = e.name.replace(/^\d+-/, '');
         const cat = readCategory(full);
         const pos = cat && typeof cat.position === 'number' ? cat.position : null;
-        if (base === 'vocabulary' && pos !== null && pos > 2) {
-          add('vocab-first', rel(full), `vocabulary/ has position ${pos} — convention sorts it FIRST (low position)`);
+        if (base === 'terminology' && pos !== null && pos > 2) {
+          add('terminology-first', rel(full), `terminology/ has position ${pos} — convention sorts it FIRST (low position)`);
         }
         if (base === 'prompts' && pos !== null && pos < 5) {
           add('prompts-last', rel(full), `prompts/ has position ${pos} — convention sorts it LAST (high position)`);
@@ -315,6 +351,35 @@ function collectSlugs() {
   return slugs;
 }
 
+/** Corpus-wide: flag identical `description:` values reused across docs (each should be
+ *  a distinct summary, since it feeds per-page SEO + the per-page share message). */
+function checkDuplicateDescriptions() {
+  const byDesc = new Map(); // normalized description → [relPaths]
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) rec(full);
+      else if (isDoc(e.name)) {
+        try {
+          const d = matter(fs.readFileSync(full, 'utf8')).data.description;
+          if (typeof d === 'string' && d.trim()) {
+            const key = d.trim().toLowerCase();
+            (byDesc.get(key) || byDesc.set(key, []).get(key)).push(rel(full));
+          }
+        } catch { /* skip */ }
+      }
+    }
+  })(DOCS);
+  for (const [, paths] of byDesc) {
+    if (paths.length > 1) {
+      for (const p of paths) {
+        add('description-duplicate', p,
+          `description is identical to ${paths.length - 1} other doc(s) (${paths.filter((x) => x !== p).join(', ')}) — each page needs a distinct summary`);
+      }
+    }
+  }
+}
+
 /** Extract the body lines under a `## <heading>` section (until the next `##`). */
 function sectionBody(src, headingRe) {
   const lines = src.split('\n');
@@ -382,6 +447,7 @@ function main() {
     checkTopicRoots();
     checkWelcomeDrift();
     checkIdeaExecLinks(collectSlugs());
+    checkDuplicateDescriptions();
   }
 
   let out = findings;
