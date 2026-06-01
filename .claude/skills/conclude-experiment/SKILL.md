@@ -5,15 +5,16 @@ description: Make and ACT ON the launch decision for a blog A/B experiment — e
 
 # Conclude an experiment (launch decision)
 
-The **decide + act** phase — the end of the lifecycle. Follows `analyze-experiment`
-(which wrote the numbers into the timeline doc). The decision itself is **user-gated**:
-shipping a variant to 100% of real visitors is an outward-facing change.
+The **act** phase — the end of the lifecycle. Follows `decide-experiment` (which recorded
+the formal decision in the timeline doc, downstream of `analyze-experiment`'s numbers +
+recommendation). This skill **executes** that decision; it does not re-litigate it. The
+rollout is **user-gated**: shipping a variant to 100% of real visitors is outward-facing.
 
 ## ▶️ FIRST STEP — create/locate the tracking tasks
 
 ```tasks
-- [ ] Confirm the analysis is written into the timeline doc (Outcome has numbers + significance).
-- [ ] Decide the winner with the user: ship test, keep control, or keep running.
+- [ ] Confirm the Decision block (from decide-experiment) is recorded in the timeline doc.
+- [ ] Confirm the recorded decision with the user before executing.
 - [ ] Roll out: roll_out.py --winner <variant> (pins flag 100%). USER-GATED.
 - [ ] Clean up the loser: revert/remove dead variant code, simplify the component if keeping control.
 - [ ] (Optional) hard-code the winner + retire the flag once stable.
@@ -21,14 +22,13 @@ shipping a variant to 100% of real visitors is an outward-facing change.
 - [ ] Close the experiment's open tasks.
 ```
 
-## Step 1 — Decide (with the user)
+## Step 1 — Confirm the decision
 
-Read the **Outcome** section the analyze phase wrote. Three outcomes:
-- **Ship test** — test beat control at significance.
-- **Keep control** — control won, or test failed to beat it (a valid, useful result).
-- **Keep running** — not yet significant; stop here, revisit later.
-
-Don't decide on a handful of events — defer to PostHog's experiment significance.
+Read the **## 8. Decision** block `decide-experiment` recorded (and the Outcome it rests
+on). This skill executes that decision — if it's missing or stale, go back to
+`decide-experiment` first. Possible decisions: **ship test**, **keep control**, **keep
+running** (nothing to execute yet), or **iterate** (design a v2 — back to
+`design-experiment`). Confirm the recorded decision with the user before acting.
 
 ## Step 2 — Act on it (user-gated rollout)
 

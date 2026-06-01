@@ -74,10 +74,23 @@ Keep variants to a **single changed dimension** so the result is interpretable.
 
 ## 6. Outcome
 
-*(Fill in at conclusion.)* Winner, the numbers (exposure + conversion split, lift,
-significance), the decision made, and what we rolled out / learned.
+*(analyze-experiment fills this.)* Per-variant exposures / conversions / rate, lift,
+significance verdict, one-line read.
+
+## 7. Recommendation
+
+*(analyze-experiment fills this.)*
+**Recommendation:** ship `test` | keep `control` | keep running · **Confidence:** high/med/low
+**Why:** <grounded in the numbers> · **Caveats:** <SRM / low N / novelty / seasonality>
+
+## 8. Decision
+
+*(decide-experiment fills this — the "how we made the call" record.)*
+**Decision:** … · **Date / by:** … · **Gates:** significance/sample/guardrails/SRM
+**Rationale:** <why this option, incl. any override of the recommendation>
+**Action → conclude-experiment:** <flag→100% test | flag→100% control | none yet> · **Revisit:** …
 
 ---
 **Links:** PostHog experiment `<id/url>` · registry `src/experiments.ts` · framework
-[`designs/*-ab-testing-framework`](#) · execution skill `run-ab-test` · design skill
-`design-experiment`.
+[`designs/*-ab-testing-framework`](#) · skills `design-experiment` → `run-ab-test` →
+`analyze-experiment` → `decide-experiment` → `conclude-experiment`.

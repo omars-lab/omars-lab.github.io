@@ -16,8 +16,8 @@ numbers. Pairs with `query-posthog` (the readback mechanism).
 - [ ] Pull exposure split: $feature_flag_called by $feature_flag_response (exclude bots).
 - [ ] Pull conversion split: <conversion event> by variant (exclude bots).
 - [ ] Compute conversion rate per variant + lift; note PostHog's significance verdict.
-- [ ] Write results into the experiment timeline doc (Outcome + log; status → analyzing/concluded).
-- [ ] Recommend a decision, hand off to conclude-experiment (user-gated).
+- [ ] Write results into the experiment timeline doc (Outcome + log; status → analyzing).
+- [ ] Emit a Recommendation block (ship/keep/keep-running + confidence + why); hand off to decide-experiment.
 ```
 
 ## Step 1 — Sanity gates before reading anything
@@ -66,8 +66,28 @@ Open `…/experiments/<date>-<flag-key>.md` and:
 - Append a **timeline log** row (date, state `analyzing` or `concluded`, note).
 - Update the status line + the **README timeline table** row.
 
-Then recommend a decision and hand off to **`conclude-experiment`** (the act-on-it phase).
-Do not flip flags here — analysis is read-only.
+## Step 5 — Emit a recommendation (feeds the decision)
+
+Analysis doesn't just report — it **recommends**, so the decision step has something to
+act on. Write a short **## 7. Recommendation** block in the timeline doc:
+
+```
+**Recommendation:** ship `test` | keep `control` | keep running
+**Confidence:** high | medium | low  (from significance + sample size)
+**Why:** <one or two sentences grounded in the numbers — lift, significance, guardrails>
+**Caveats:** <SRM, low sample, novelty effect, seasonality, anything that weakens it>
+```
+
+Rules for the recommendation:
+- **keep running** if not significant AND sample is still small (most common early).
+- **ship test** only if it beats control at significance with no guardrail regression.
+- **keep control** if control wins, or test ≤ control at significance (null result —
+  still a real, useful outcome).
+- State confidence honestly; a significant result on tiny N is still low-confidence.
+
+This is a **recommendation, not the decision** — it's read-only (don't flip flags here).
+Hand off to **`decide-experiment`**, which applies the decision criteria + human judgment
+and records the formal decision; then **`conclude-experiment`** executes it.
 
 ## Troubleshooting
 | Symptom | Cause | Fix |

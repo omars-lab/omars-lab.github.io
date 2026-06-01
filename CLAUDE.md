@@ -27,8 +27,9 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Analytics queries | `query-posthog` | official @posthog/cli readback, HogQL, confirmations |
 | Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) → timeline entry |
 | A/B testing (execute) | `run-ab-test` | flag injection point, create/validate/launch (REST API), Playwright |
-| Experiment analysis | `analyze-experiment` | pull exposure+conversion split, significance, write Outcome |
-| Experiment decision | `conclude-experiment` | act on winner: roll flag to 100% / keep control, clean up, finalize doc |
+| Experiment analysis | `analyze-experiment` | pull exposure+conversion split, significance, write Outcome + a recommendation |
+| Experiment decision | `decide-experiment` | apply decision gates (significance/MDE/guardrails) + judgment → recorded decision readout |
+| Experiment rollout | `conclude-experiment` | execute the decision: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
@@ -59,5 +60,5 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 - `bytesofpurpose-blog/docs/4-development/6-projects/experiments/` — **one published doc
   per experiment** (design + living status + outcome) + `README.md` timeline table +
   `_TEMPLATE.md`. Lifecycle: `design-experiment` → `run-ab-test` → `analyze-experiment`
-  → `conclude-experiment`. Keep each doc's status + the README table current as an
-  experiment moves through the phases.
+  → `decide-experiment` → `conclude-experiment`. Keep each doc's status + the README
+  table current as an experiment moves through the phases.
