@@ -22,7 +22,7 @@ Building with and learning about GenAI — domain fundamentals, designing produc
 systems, and my own LLM workflow. *For: engineers learning GenAI and anyone designing
 an AI feature.*
 
-### 🧩 [Development](/docs/development/development)
+### 🧩 [Development](/docs/development)
 Technical concepts and the things I build — projects, POCs, tinkering, research, dev &
 security techniques, and roadmaps. *For: software engineers building real things.*
 
@@ -31,12 +31,12 @@ Organizing work and effort — processes, automation, organizing/discovering/ana
 techniques, dashboards, and the vocabulary behind it. *For: anyone building deliberate
 productivity systems.*
 
-### ✍️ [Blogging](/docs/techniques/blogging-techniques/blogging-techniques)
+### ✍️ [Blogging](/docs/blogging)
 Authoring this site — embedding components, diagrams, code, and external content;
 adding posts/docs/designs; plus the prompts I use to write and maintain it. *For:
 people running a Docusaurus blog or technical site.*
 
-### 💻 [Scripting](/docs/techniques/scripting-techniques/scripting-techniques)
+### 💻 [Scripting](/docs/scripting)
 Terminal and automation scripting — shortcuts, parsing (jq/HTML), terminal calendar
 and links. *For: anyone who lives in the terminal and wants to automate it.*
 
