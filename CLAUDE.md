@@ -30,6 +30,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Experiment analysis | `analyze-experiment` | pull exposure+conversion split, significance, write Outcome |
 | Experiment decision | `conclude-experiment` | act on winner: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
+| Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
 | Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |
 
