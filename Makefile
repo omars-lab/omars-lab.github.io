@@ -71,6 +71,9 @@ check: ## Check MDX files for issues
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
 
+test-link-hook: ## Integration tests for the validate-links PostToolUse hook + --fix
+	bash ${SITEROOT}/test/integration/validate-links-hook.test.sh
+
 audit: ## Run security audit on dependencies
 	# ( cd ${SITEROOT} && npx docusaurus-audit )
 	( cd ${SITEROOT} && npm audit )

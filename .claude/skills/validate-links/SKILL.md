@@ -77,6 +77,44 @@ The script prints a `suggest:` line with a cleaned URL to copy. Example:
 `docs/4-development/`. Treat `docs/` and `blog/` as the high-value targets;
 `changelog/` reference-link sections are often intentional citations.
 
+## Fixing in bulk (`--fix`)
+
+`--fix` rewrites bare URLs (and `[url](url)` link text, and MDX-unsafe `<url>`
+autolinks) into `[label](url)` using **tiered labeling**:
+
+- **Tier 0** *(opt-in `--titles`)* — fetch the page `<title>` (5s timeout;
+  dead/404 links fall through). Network, non-deterministic; off by default.
+- **Tier 1** — known host → friendly name + last path segment
+  (`github.com/ClearURLs/Addon` → `[GitHub — ClearURLs/Addon]`). Extend
+  `KNOWN_HOSTS` in the script.
+- **Tier 2** — generic `host — Last-Segment` (`mdxjs.com/docs/getting-started`
+  → `[mdxjs.com — Getting Started]`).
+- **Tier 3** — host only (when no readable segment). Always a real
+  `[host](url)` link — never a bare `<url>` autolink, which **breaks the
+  Docusaurus MDX build** (`<https://…>` is parsed as a JSX tag).
+
+```bash
+( cd bytesofpurpose-blog && node scripts/validate-links.js --fix docs/4-development )
+( cd bytesofpurpose-blog && node scripts/validate-links.js --fix --titles path/to/post.md )
+```
+
+The fix preserves the original URL (params and all); only the `suggest:` output
+in scan mode proposes a cleaned URL. Always re-run `make check` after a bulk fix.
+
+## Claude Code hook (auto-guard on edit)
+
+A PostToolUse hook blocks new ERROR-tier links the moment a `.md`/`.mdx` file is
+edited or written:
+
+- **Hook script:** `.claude/hooks/validate-links-hook.sh`
+- **Registered in:** `.claude/settings.json` → `hooks.PostToolUse` (matcher `Write|Edit`)
+- **Behavior:** runs `validate-links <file> --error-only`; **exit 2** (blocks +
+  feeds stderr to Claude with the `--fix` command) when an ERROR-tier finding is
+  present; silent otherwise. WARN-tier never blocks — catch those with the full
+  `make validate-links`.
+- **Tests:** `bytesofpurpose-blog/test/integration/validate-links-hook.test.sh`
+  (run via `make test-link-hook`).
+
 ## Tuning
 
 Knobs live at the top of `scripts/validate-links.js`:

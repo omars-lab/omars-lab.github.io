@@ -1,32 +1,29 @@
 #!/usr/bin/env node
 
 /**
- * validate-links.js — static link hygiene check for the Bytes of Purpose content.
+ * validate-links.js — static link hygiene check + fixer for Bytes of Purpose content.
  *
  * Scans the markdown/MDX SOURCE (docs/, blog/, changelog/) — before any build —
- * and reports link problems that render as ugly or low-quality links in posts:
+ * and reports (or fixes) link problems that render as ugly or low-quality links:
  *
- *   1. bare-url        A naked http(s):// URL sitting inline instead of a
- *                      [text](url) link. These render as a giant clickable string.
- *   2. long-url        A link whose URL is very long and/or carries tracking
- *                      params (Google `sca_esv`/`ei`/`ved`/`gs_lp`, utm_*, etc.).
- *                      Suggests the minimal form + a descriptive label.
- *   3. url-as-text     A [text](url) whose visible TEXT is itself a raw URL.
- *   4. generic-text    Non-descriptive link text ("click here", "here", "link",
- *                      "read more") — mirrors the Lighthouse link-text rule the
- *                      SEO e2e spec checks on the rendered page (test/e2e/seo.spec.ts).
+ *   bare-url     A naked http(s):// URL inline instead of a [text](url) link.   [ERROR]
+ *   url-as-text  A [text](url) whose visible TEXT is itself a raw URL.          [ERROR]
+ *   long-url     A link URL >120 chars and/or carrying tracking params          [WARN]
+ *                (Google sca_esv/ei/ved/gs_lp, utm_*, …).
+ *   generic-text Non-descriptive link text ("click here", "here", "read more"). [WARN]
+ *                Mirrors the Lighthouse link-text rule the SEO e2e spec checks.
  *
- * This is the SOURCE-level complement to two existing checks:
- *   - Docusaurus `onBrokenLinks` catches broken internal links at build time.
- *   - test/e2e/seo.spec.ts catches generic link text on the RENDERED page.
- * Here we catch the problems in the raw markdown so they never ship.
+ * SOURCE-level complement to: Docusaurus `onBrokenLinks` (broken internal links,
+ * build time) and test/e2e/seo.spec.ts (generic link text on the rendered page).
  *
  * Usage:
- *   node scripts/validate-links.js            # scan default content dirs
- *   node scripts/validate-links.js docs/2-definitions   # scan a subtree
- *   node scripts/validate-links.js --json     # machine-readable output
+ *   node scripts/validate-links.js [paths…]        # scan (default: docs blog changelog)
+ *   node scripts/validate-links.js --json          # machine-readable findings
+ *   node scripts/validate-links.js --error-only    # only ERROR-tier; exit 2 if any (hook)
+ *   node scripts/validate-links.js --fix [paths…]  # rewrite bare URLs → [label](url)
+ *   node scripts/validate-links.js --fix --titles  # …labeling via fetched <title> (network)
  *
- * Exit code: 0 if clean, 1 if any problems were found (CI-friendly).
+ * Exit codes: 0 clean · 1 problems found (scan) · 2 ERROR-tier found (--error-only, for hooks).
  */
 
 const fs = require('fs');
@@ -34,6 +31,14 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const DEFAULT_DIRS = ['docs', 'blog', 'changelog'];
+
+// --- severity tiers ------------------------------------------------------
+const SEVERITY = {
+  'bare-url': 'error',
+  'url-as-text': 'error',
+  'long-url': 'warn',
+  'generic-text': 'warn',
+};
 
 // --- tuning knobs --------------------------------------------------------
 const LONG_URL_THRESHOLD = 120; // chars; above this a URL is "too long" to inline raw
@@ -49,6 +54,25 @@ const GENERIC_LINK_TEXT = new Set([
   'read more', 'click here', 'here', 'link', 'this', 'this link',
   'more', 'see here', 'learn more', 'click', 'go',
 ]);
+// Tier 1: known hosts → friendly display names.
+const KNOWN_HOSTS = {
+  'github.com': 'GitHub',
+  'gist.github.com': 'GitHub Gist',
+  'stackoverflow.com': 'Stack Overflow',
+  'developer.chrome.com': 'Chrome Docs',
+  'developer.mozilla.org': 'MDN',
+  'docs.aws.amazon.com': 'AWS Docs',
+  'aws.amazon.com': 'AWS',
+  'docusaurus.io': 'Docusaurus',
+  'posthog.com': 'PostHog',
+  'www.youtube.com': 'YouTube',
+  'youtube.com': 'YouTube',
+  'youtu.be': 'YouTube',
+  'medium.com': 'Medium',
+  'www.npmjs.com': 'npm',
+  'reactjs.org': 'React',
+  'react.dev': 'React',
+};
 
 // --- helpers -------------------------------------------------------------
 
@@ -78,7 +102,6 @@ function maskCode(line, state) {
     return ''; // the fence line itself carries nothing to check
   }
   if (state.inFence) return '';
-  // blank out inline code spans
   return line.replace(/`[^`]*`/g, (m) => ' '.repeat(m.length));
 }
 
@@ -94,11 +117,10 @@ function trackingParamsIn(url) {
   return found;
 }
 
-/** Suggest a cleaned URL: keep path + the first "meaningful" query param, drop the rest. */
+/** Keep path + the first "content" query param, drop tracking/cruft. */
 function suggestCleanUrl(url) {
   try {
     const u = new URL(url);
-    // Keep only well-known "content" params, drop everything else.
     const keep = ['q', 'v', 'p', 'id'];
     const kept = [];
     for (const k of keep) {
@@ -113,41 +135,87 @@ function suggestCleanUrl(url) {
 
 const isHttp = (s) => /^https?:\/\//i.test(s);
 
+const titleCase = (s) =>
+  s.replace(/[-_]+/g, ' ').trim().replace(/\b\w/g, (c) => c.toUpperCase());
+
+/**
+ * Tiered label derivation (offline). Tier 0 (fetched <title>) is handled
+ * separately in --titles mode and passed in via `fetchedTitle`.
+ *   Tier 1: known host friendly name + last meaningful path segment
+ *   Tier 2: generic host + last segment
+ *   Tier 3: null → caller falls back to an angle-bracket autolink
+ */
+function deriveLabel(url, fetchedTitle) {
+  if (fetchedTitle && fetchedTitle.trim()) return fetchedTitle.trim();
+  let u;
+  try {
+    u = new URL(url);
+  } catch {
+    return null;
+  }
+  const host = u.hostname.replace(/^www\./, '');
+  const segments = u.pathname.split('/').filter(Boolean);
+  let last = segments.length ? segments[segments.length - 1] : '';
+  last = last.replace(/\.(html?|php|aspx?)$/i, ''); // drop file extensions
+  const friendly = KNOWN_HOSTS[u.hostname] || KNOWN_HOSTS[host];
+
+  if (friendly) {
+    // Tier 1. For github repos prefer "owner/repo" if present.
+    if ((host === 'github.com') && segments.length >= 2) {
+      return `${friendly} — ${segments[0]}/${segments[1]}`;
+    }
+    return last ? `${friendly} — ${titleCase(last)}` : friendly;
+  }
+  if (last && last.length <= 60) {
+    // Tier 2: host + readable last segment.
+    return `${host} — ${titleCase(last)}`;
+  }
+  // Tier 3: no good segment (or one too long to read) → just the host.
+  // Always returns a string so we never emit a bare <url> autolink (MDX-unsafe).
+  return host;
+}
+
+/** Build the replacement markdown for a bare URL. Always a [label](url) link. */
+function linkFor(url, fetchedTitle) {
+  const label = deriveLabel(url, fetchedTitle) || url;
+  // Preserve the original URL (don't strip params on a fix — only `suggest` cleans).
+  return `[${label}](${url})`;
+}
+
 // --- the scan ------------------------------------------------------------
 
 const MD_LINK = /\[([^\]]*)\]\(\s*(<)?([^)\s]+?)>?(?:\s+"[^"]*")?\s*\)/g;
 const BARE_URL = /(?<![\(<\["'=])\bhttps?:\/\/[^\s<>)\]]+/g;
 
+/** Returns { problems, bareUrls } where bareUrls lists every bare-url occurrence. */
 function scanFile(file) {
   const rel = path.relative(ROOT, file);
   const problems = [];
+  const bareUrls = [];
   const lines = fs.readFileSync(file, 'utf8').split('\n');
   const state = { inFence: false };
   let inFrontmatter = false;
 
   lines.forEach((raw, i) => {
     const lineNo = i + 1;
-
-    // skip YAML frontmatter block
     if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return; }
     if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return; }
 
     const line = maskCode(raw, state);
     if (!line.trim()) return;
 
-    // 1) markdown links — inspect text + url
     MD_LINK.lastIndex = 0;
     let m;
     const linkSpans = [];
     while ((m = MD_LINK.exec(line)) !== null) {
       const [, text, , url] = m;
       linkSpans.push([m.index, m.index + m[0].length]);
-      if (!isHttp(url) && !url.startsWith('//')) continue; // relative/internal → onBrokenLinks handles it
+      if (!isHttp(url) && !url.startsWith('//')) continue;
 
       const trackers = trackingParamsIn(url);
       if (url.length > LONG_URL_THRESHOLD || trackers.length) {
         problems.push({
-          file: rel, line: lineNo, kind: 'long-url',
+          file: rel, line: lineNo, kind: 'long-url', severity: SEVERITY['long-url'],
           detail: trackers.length
             ? `link URL carries tracking params (${trackers.join(', ')})`
             : `link URL is ${url.length} chars long`,
@@ -156,7 +224,7 @@ function scanFile(file) {
       }
       if (isHttp(text.trim())) {
         problems.push({
-          file: rel, line: lineNo, kind: 'url-as-text',
+          file: rel, line: lineNo, kind: 'url-as-text', severity: SEVERITY['url-as-text'],
           detail: 'link text is a raw URL',
           suggest: 'replace the visible text with a human-readable label',
         });
@@ -164,39 +232,142 @@ function scanFile(file) {
       const norm = text.trim().toLowerCase().replace(/\s*[→›»>]+\s*$/, '');
       if (GENERIC_LINK_TEXT.has(norm)) {
         problems.push({
-          file: rel, line: lineNo, kind: 'generic-text',
+          file: rel, line: lineNo, kind: 'generic-text', severity: SEVERITY['generic-text'],
           detail: `non-descriptive link text "${text.trim()}"`,
           suggest: 'use text that describes the destination (Lighthouse link-text rule)',
         });
       }
     }
 
-    // 2) bare URLs — anything not already inside a markdown link span
     BARE_URL.lastIndex = 0;
     while ((m = BARE_URL.exec(line)) !== null) {
       const idx = m.index;
-      const insideLink = linkSpans.some(([s, e]) => idx >= s && idx < e);
-      if (insideLink) continue;
+      if (linkSpans.some(([s, e]) => idx >= s && idx < e)) continue;
       const url = m[0];
       const trackers = trackingParamsIn(url);
       problems.push({
-        file: rel, line: lineNo, kind: 'bare-url',
+        file: rel, line: lineNo, kind: 'bare-url', severity: SEVERITY['bare-url'],
         detail: trackers.length
           ? `bare URL with tracking params (${trackers.join(', ')})`
           : 'bare URL rendered inline',
         suggest: `wrap as a link: [descriptive label](${suggestCleanUrl(url)})`,
       });
+      bareUrls.push({ url, lineNo });
     }
   });
 
-  return problems;
+  return { problems, bareUrls };
+}
+
+// --- title fetching (Tier 0, opt-in) -------------------------------------
+
+async function fetchTitle(url) {
+  try {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(url, { signal: controller.signal, redirect: 'follow' });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    const html = await res.text();
+    const m = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+    return m ? m[1].replace(/\s+/g, ' ').trim() : null;
+  } catch {
+    return null;
+  }
+}
+
+// --- fix mode ------------------------------------------------------------
+
+/**
+ * Rewrite bare URLs → [label](url) AND fix [url](url) link text → [label](url).
+ * Returns count fixed.
+ */
+async function fixFile(file, { titles }) {
+  const { bareUrls } = scanFile(file);
+
+  // Collect every http(s) URL we might re-label so titles are fetched once:
+  // bare URLs, [url](url) link text, and <url> autolinks.
+  const labelUrls = new Set(bareUrls.map((b) => b.url));
+  {
+    const probe = fs.readFileSync(file, 'utf8');
+    let pm;
+    MD_LINK.lastIndex = 0;
+    while ((pm = MD_LINK.exec(probe)) !== null) {
+      const text = pm[1].trim(), url = pm[3];
+      if (isHttp(url) && isHttp(text)) labelUrls.add(url);
+    }
+    for (const am of probe.matchAll(/<(https?:\/\/[^>\s]+)>/g)) labelUrls.add(am[1]);
+  }
+  if (!labelUrls.size) return 0;
+
+  // Optionally fetch titles up front (dedup by URL).
+  const titleByUrl = {};
+  if (titles) {
+    await Promise.all([...labelUrls].map(async (u) => { titleByUrl[u] = await fetchTitle(u); }));
+  }
+
+  // Operate per line so we only touch the exact bare-URL spans.
+  const lines = fs.readFileSync(file, 'utf8').split('\n');
+  const state = { inFence: false };
+  let inFrontmatter = false;
+  let fixed = 0;
+
+  const out = lines.map((raw, i) => {
+    if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return raw; }
+    if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return raw; }
+    const masked = maskCode(raw, state);
+    if (!masked.trim()) return raw;
+
+    // Find markdown-link spans on this line so we never touch a URL already in a link.
+    const linkSpans = [];
+    MD_LINK.lastIndex = 0;
+    let lm;
+    while ((lm = MD_LINK.exec(masked)) !== null) linkSpans.push([lm.index, lm.index + lm[0].length]);
+
+    // Replace bare URLs right-to-left to keep indices valid.
+    BARE_URL.lastIndex = 0;
+    const hits = [];
+    let bm;
+    while ((bm = BARE_URL.exec(masked)) !== null) {
+      if (linkSpans.some(([s, e]) => bm.index >= s && bm.index < e)) continue;
+      hits.push({ start: bm.index, end: bm.index + bm[0].length, url: bm[0] });
+    }
+    let line = raw;
+    for (let h = hits.length - 1; h >= 0; h--) {
+      const { start, end, url } = hits[h];
+      line = line.slice(0, start) + linkFor(url, titleByUrl[url]) + line.slice(end);
+      fixed++;
+    }
+
+    // Second pass: relabel [url](url) where the visible text is a raw URL.
+    line = line.replace(MD_LINK, (whole, text, _lt, url) => {
+      if (isHttp(url) && isHttp(text.trim())) {
+        const label = deriveLabel(url, titleByUrl[url]);
+        if (label) { fixed++; return `[${label}](${url})`; }
+      }
+      return whole;
+    });
+
+    // Third pass: convert MDX-unsafe <url> autolinks to [label](url).
+    line = line.replace(/<(https?:\/\/[^>\s]+)>/g, (_whole, url) => {
+      fixed++;
+      return linkFor(url, titleByUrl[url]);
+    });
+    return line;
+  });
+
+  if (fixed) fs.writeFileSync(file, out.join('\n'));
+  return fixed;
 }
 
 // --- main ----------------------------------------------------------------
 
-function main() {
+async function main() {
   const args = process.argv.slice(2);
   const json = args.includes('--json');
+  const errorOnly = args.includes('--error-only');
+  const fix = args.includes('--fix');
+  const titles = args.includes('--titles');
   const targets = args.filter((a) => !a.startsWith('--'));
   const dirs = (targets.length ? targets : DEFAULT_DIRS).map((d) =>
     path.isAbsolute(d) ? d : path.join(ROOT, d)
@@ -206,26 +377,44 @@ function main() {
     fs.existsSync(d) && fs.statSync(d).isDirectory() ? walk(d) : (fs.existsSync(d) ? [d] : [])
   );
 
-  const all = files.flatMap(scanFile);
+  // --- fix mode ---
+  if (fix) {
+    let total = 0, touched = 0;
+    for (const f of files) {
+      const n = await fixFile(f, { titles });
+      if (n) { total += n; touched++; console.log(`  fixed ${n} bare URL(s) in ${path.relative(ROOT, f)}`); }
+    }
+    console.log(total
+      ? `\n🔧 fixed ${total} bare URL(s) across ${touched} file(s)${titles ? ' (titles fetched)' : ''}.`
+      : '✅ nothing to fix — no bare URLs found.');
+    process.exit(0);
+  }
+
+  // --- scan mode ---
+  let all = files.flatMap((f) => scanFile(f).problems);
+  if (errorOnly) all = all.filter((p) => p.severity === 'error');
 
   if (json) {
     console.log(JSON.stringify(all, null, 2));
-    process.exit(all.length ? 1 : 0);
+    process.exit(all.length ? (errorOnly ? 2 : 1) : 0);
   }
 
   if (!all.length) {
-    console.log(`✅ link hygiene: scanned ${files.length} files, no problems found.`);
+    if (!errorOnly) console.log(`✅ link hygiene: scanned ${files.length} files, no problems found.`);
     process.exit(0);
   }
 
   const byKind = all.reduce((acc, p) => ((acc[p.kind] = (acc[p.kind] || 0) + 1), acc), {});
-  console.log(`🔗 link hygiene: ${all.length} problem(s) in ${files.length} files scanned\n`);
+  const errs = all.filter((p) => p.severity === 'error').length;
+  console.log(`🔗 link hygiene: ${all.length} problem(s) in ${files.length} files (${errs} error, ${all.length - errs} warn)\n`);
   for (const p of all) {
-    console.log(`  ${p.file}:${p.line}  [${p.kind}] ${p.detail}`);
+    const tag = p.severity === 'error' ? 'ERROR' : 'warn';
+    console.log(`  ${p.file}:${p.line}  [${tag}:${p.kind}] ${p.detail}`);
     console.log(`      ↳ ${p.suggest}`);
   }
   console.log('\nSummary: ' + Object.entries(byKind).map(([k, n]) => `${k}=${n}`).join('  '));
-  process.exit(1);
+  // --error-only exits 2 (hook-block signal); plain scan exits 1.
+  process.exit(errorOnly ? 2 : 1);
 }
 
 main();
