@@ -32,5 +32,4 @@ Security techniques are **methods for protecting sensitive information**:
 ## Key Documents
 
 - [Managing Secrets](/docs/techniques/security-techniques/managing-secrets) - Secure secret management practices and methods
-- [Password Injection](/docs/techniques/security-techniques/password-injection) - Password injection techniques and secure handling
 

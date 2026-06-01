@@ -32,5 +32,4 @@ Discovery techniques are **methods for finding information and resources**:
 ## Key Documents
 
 - [Discovering Content](/docs/techniques/discovery-techniques/discovering-content) - Methods for finding and discovering relevant content
-- [Discovering Tools](/docs/techniques/discovery-techniques/discovering-tools) - Techniques for discovering useful tools and resources
 

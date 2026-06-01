@@ -102,6 +102,10 @@ For the fuller distinction between the first two, see
 - **LinkedIn** — [connect professionally](https://www.linkedin.com/in/oeid/)
 - **Email** — [contact@bytesofpurpose.com](mailto:contact@bytesofpurpose.com)
 
+Want to come back? Drag this to your bookmarks bar:
+
+<BookmarkletButton />
+
 ---
 
 *New here? Pick the topic above that matches what you're after — or skim the
