@@ -197,6 +197,34 @@ test.describe('Ingress attribution (production build)', () => {
     expect(x).toContain('Docs vs Blogs');
   });
 
+  test('X intent text never exceeds the tweet budget (caps long descriptions)', async ({
+    page,
+  }) => {
+    // Independent of any one page's description length: assert the INVARIANT —
+    // the X &text= body is always within the 200-char budget. (The deterministic
+    // truncation behaviour — summary trimmed + ellipsis, title preserved, email
+    // left uncapped — is unit-proven in compose-message.spec.ts.)
+    await page.goto(DOC_URL, { waitUntil: 'domcontentloaded' });
+    test.skip(!(await posthogReady(page)), 'PostHog disabled (no key).');
+    await page.locator('[data-testid="share-x"]').first().waitFor({ state: 'visible' });
+    await page.evaluate(() => {
+      (window as any).__opened = [];
+      (window as any).open = (u: string) => {
+        (window as any).__opened.push(u);
+        return null;
+      };
+    });
+    await page.locator('[data-testid="share-x"]').first().click({ noWaitAfter: true });
+    await expect.poll(() => page.evaluate(() => (window as any).__opened?.length || 0), {
+      timeout: 4000,
+    }).toBeGreaterThanOrEqual(1);
+    const opened: string[] = await page.evaluate(() => (window as any).__opened);
+    const xRaw = opened.find((u) => u.includes('twitter.com')) || '';
+    const xText = decodeURIComponent(new URL(xRaw).searchParams.get('text') || '');
+    expect(xText.length).toBeGreaterThan(0);
+    expect(xText.length).toBeLessThanOrEqual(200);
+  });
+
   // ---- Ingress: read + strip the marker -----------------------------------
   // The landing-time `ingress` capture fires inside posthog's `loaded` callback,
   // which can run before a capture spy could wrap capture(). Rather than race it,

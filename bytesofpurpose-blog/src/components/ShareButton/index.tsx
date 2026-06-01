@@ -41,14 +41,30 @@ function resolveDescription(propDesc?: string): string {
 // "Here's what it covers:" reads cleanly regardless of how the description starts
 // (our descriptions are often verb-first/SEO-style, e.g. "Learn the key differences…").
 // The summary line is included only when a description is available.
-function composeMessage(title: string, description: string): string {
-  let msg = `Hey, check out this post I came across: "${title}".`;
-  if (description) {
-    const summary = description.replace(/\.$/, '');
-    msg += ` Here's what it covers: ${summary}.`;
+//
+// `maxLen` (used for X/Twitter only) caps the whole message: if it would exceed
+// maxLen, the SUMMARY clause is trimmed at a word boundary and given an ellipsis,
+// while the title clause is always preserved. X auto-appends the URL card from
+// &url=, so we budget below the 280 limit (default cap 200) to leave room for it.
+function composeMessage(title: string, description: string, maxLen?: number): string {
+  const head = `Hey, check out this post I came across: "${title}".`;
+  if (!description) return head;
+  const summary = description.replace(/\.$/, '');
+  let full = `${head} Here's what it covers: ${summary}.`;
+  if (maxLen && full.length > maxLen) {
+    // Trim only the summary; keep "Here's what it covers: …".
+    const prefix = `${head} Here's what it covers: `;
+    const room = Math.max(0, maxLen - prefix.length - 1); // -1 for the ellipsis
+    let trimmed = summary.slice(0, room);
+    const lastSpace = trimmed.lastIndexOf(' ');
+    if (lastSpace > 0) trimmed = trimmed.slice(0, lastSpace);
+    full = `${prefix}${trimmed}…`;
   }
-  return msg;
+  return full;
 }
+
+// X/Twitter post text budget — below the 280 limit to leave room for the URL card.
+const X_MAX_LEN = 200;
 
 function capture(channel: Channel, surface: string) {
   posthog.capture('egress_share', {
@@ -134,7 +150,9 @@ export const ShareButton = ({
   };
 
   // The friendly message, computed once per share from the page's title + summary.
-  const message = () => composeMessage(resolveTitle(propTitle), resolveDescription(propDescription));
+  // `maxLen` is passed for X only (to stay under the tweet limit); email has no cap.
+  const message = (maxLen?: number) =>
+    composeMessage(resolveTitle(propTitle), resolveDescription(propDescription), maxLen);
 
   const onEmail = () => {
     const url = shareUrl('share_em');
@@ -166,10 +184,11 @@ export const ShareButton = ({
   const onX = () => {
     const url = shareUrl('share_x');
     // X supports prefilled tweet text — use the friendly message (it auto-appends the
-    // URL card from &url=).
+    // URL card from &url=). Cap the text at X_MAX_LEN so a long description doesn't
+    // blow past the tweet limit; the summary clause is trimmed, the title kept.
     openIntent(
       'share_x',
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message())}`,
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message(X_MAX_LEN))}`,
       'Sharing on X…',
       '𝕏',
     );

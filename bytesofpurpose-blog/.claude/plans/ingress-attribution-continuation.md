@@ -208,6 +208,12 @@ termination summary if reached.
 
 - **Pre-existing `draft-sidebar` failures on master** (3 tests) — proven not ours, red on
   master. Flag for separate fix if wanted.
+  // re-confirmed 2026-06-01: full `make test-regression` on the branch = 24 passed / 3
+  // failed / 1 skipped; the 3 failures are EXACTLY draft-sidebar (dev project). Proof the
+  // branch isn't the cause: `git diff --name-only master..HEAD` matches nothing draft/
+  // sidebar-related (only draft-triage.tsv, a plan file); spec + source are unchanged from
+  // master. prod-checks (a11y/SEO) + posthog-prod (19/19) green. Branch = zero regressions,
+  // PR-ready.
 - **`im` as a session super-property** — attribute all session events to the acquisition
   channel vs. only the landing `ingress` (currently landing-only). Design decision.
 - **Bookmarklet reach** — opt-in; whether to surface beyond the welcome page (footer? a

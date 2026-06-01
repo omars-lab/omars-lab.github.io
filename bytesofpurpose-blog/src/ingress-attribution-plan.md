@@ -206,11 +206,16 @@ sync with the egress affordances.
 - **Built (2026-06-01):** full e2e incl. edge tests (bookmark_intent, clipboard,
   egress_copy) with documented caveats.
 
+**Decided (2026-06-01, cont.):**
+- **`im` as a session super-property → NO.** Keep it landing-only: `?im` tags only the
+  `ingress` event, not every session event. Rationale: cleaner data, no per-event payload
+  bloat, and the `egress_share` → `ingress` funnel already answers "do shared links come
+  back". (If richer cohort attribution is ever wanted, register `ingress_channel` in
+  `captureIngress` — but not by default.)
+
 **Still open:**
 1. Strip `im` on arrival (recommended) vs. keep it visible in the URL?
-2. Set `im` as a session super-property (attribute *all* session events to the channel),
-   or only the landing `ingress` event?
-3. Title affordance presentation: always-visible icon row vs. a single share icon that
+2. Title affordance presentation: always-visible icon row vs. a single share icon that
    opens a small menu of the four channels?
 
 ## Implementation gotchas (learned while building — 2026-06-01)
