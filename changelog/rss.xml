@@ -23,6 +23,22 @@
 <p>Defaults if meta omitted: type=chore, category=development, priority=medium,
 component=Claude. Date drives the card's execution/inception date.
 --&gt;</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-01--blog-modernization--regression--a11y--seo-harness">2026-06-01 — Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01--blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" title="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
+<p>Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.</p>
+<ul>
+<li class="">Fix the two Lighthouse a11y bugs (image-alt + heading-order)</li>
+<li class="">Add design-token layer + Inter font to custom.css</li>
+<li class="">Redesign homepage hero + feature cards</li>
+<li class="">Add Latest posts strip to homepage</li>
+<li class="">Polish blog index + navbar (CSS-only)</li>
+<li class="">Verify: build, Lighthouse re-run, e2e, deploy</li>
+<li class="">Set up regression testing for the site (3-project Playwright model)</li>
+<li class="">Set up proper accessibility scans (axe-core WCAG 2 A/AA, light + dark)</li>
+<li class="">Set up SEO scan / enhancement (on-page checks + Lighthouse)</li>
+<li class="">Fix 3 flaky graph-selection-state E2E cases (deep-link edge selection)</li>
+<li class="">Burn down baselined a11y debt (code-token contrast, task-list labels, prose link underlines)</li>
+<li class="">SEO enhancements: homepage WebSite/Organization JSON-LD + per-page validity test</li>
+</ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-05-31--ab-experiment-lifecycle--analytics-enablement">2026-05-31 — A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31--ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" title="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
 <p>Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.</p>
 <ul>
