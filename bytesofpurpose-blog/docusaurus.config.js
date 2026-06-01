@@ -42,7 +42,14 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
       // reach ingestion. Never set in production builds.
       posthogTestMode: process.env.POSTHOG_TEST_MODE === '1',
     },
-    clientModules: [require.resolve('./src/posthog.js')],
+    // gtag-guard MUST come before posthog (and before the gtag plugin's own
+    // client module): it stubs window.gtag so the plugin's unguarded route-change
+    // call can't throw when an ad-blocker blocks Google Tag, AND it detects that
+    // block + reports it to PostHog ($adblock_detected). See src/gtag-guard.js.
+    clientModules: [
+      require.resolve('./src/gtag-guard.js'),
+      require.resolve('./src/posthog.js'),
+    ],
     // Load the Inter variable font for UI/body text (see --ifm-font-family-base in
     // src/css/custom.css). Preconnect first so the stylesheet fetch is not blocked.
     headTags: [
