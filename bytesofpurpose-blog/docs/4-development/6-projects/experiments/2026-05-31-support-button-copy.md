@@ -60,9 +60,17 @@ placement) is identical, so any difference is attributable to copy.
   so instrumenting it covers every place the button renders with no duplication. The
   conversion event sits on the form submit — as close to the actual donate action as we
   can measure client-side — minimizing confounders between exposure and conversion.
-- **Why NOT the navbar "Buy Me a Coffee?" link:** that's a separate static PayPal link,
-  not the `<Support/>` component; instrumenting it would split the signal and muddy
-  attribution. We deliberately test only the component.
+- **Navbar "Buy Me a Coffee?" link (revised 2026-06-01):** originally a separate static
+  PayPal link left OUT of the test. Revised decision — the static link was converted to
+  the `NavbarCoffee` React component (`src/components/NavbarCoffee`, registered via the
+  `custom-coffee` navbar item type in `src/theme/NavbarItem/ComponentTypes.tsx`) so it
+  reads the **same** `support-button-copy` flag. Why the change: the docs-footer
+  `<Support/>` appears on only one page, so most visitors (incl. the homepage) never saw
+  the experiment — exposure was tiny. Putting the navbar on the same flag makes the
+  variant visible site-wide. Both surfaces tag the conversion with `surface` (`navbar` vs
+  the footer form) + `$feature/support-button-copy`, so attribution is preserved while the
+  variant is shared. Tradeoff accepted: exposure is now dominated by the sitewide navbar,
+  so this primarily measures the label's effect via the navbar surface.
 
 ### Targeting & assignment
 - Split **50/50**. PostHog hashes the visitor's `distinct_id`, so assignment is sticky
@@ -92,6 +100,7 @@ placement) is identical, so any difference is attributable to copy.
 | 2026-05-31 | **running** | launched 19:16:55 UTC (`create_experiment.py --launch`) — now bucketing real traffic 50/50 |
 | 2026-05-31 | live | site deployed to gh-pages (PostHog on, bot filter ON); experiment now collecting real exposures/conversions. This doc kept `draft:true` (hidden). |
 | 2026-05-31 | analyzing | first data read: 3/3 exposure split (clean), 0 conversions. Pipeline confirmed. Recommendation: keep running (low confidence, tiny N). |
+| 2026-06-01 | surface added | navbar "Buy Me a Coffee?" link wired into the **same** flag (`NavbarCoffee` + `custom-coffee` navbar type) so the variant shows site-wide, not just the one docs-footer page. Conversions tagged `surface=navbar/footer`. Broadens exposure (see Placement note + risk below). Covered by `debug-menu.spec.ts` (navbar copy flips on the homepage). |
 
 ## 6. Outcome
 

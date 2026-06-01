@@ -68,6 +68,25 @@ test.describe('DebugMenu — experiments switching', () => {
     await expect(btnAfter).not.toContainText('Buy me a coffee');
   });
 
+  test('navbar coffee link reflects the variant site-wide (on the homepage)', async ({
+    page,
+  }) => {
+    // The navbar "coffee" link is wired into the SAME experiment, so the variant
+    // is visible on EVERY page — including the homepage, which has no <Support/>.
+    // This is the surface the user actually sees first.
+    const coffee = page.locator('a.navbar-coffee');
+
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(coffee).toBeVisible({ timeout: 15000 });
+    await expect(coffee).toContainText('Buy me a coffee'); // control default
+
+    // Force "test" straight via the URL override and reload the homepage.
+    await page.goto('/?ab-support-button-copy=test', { waitUntil: 'domcontentloaded' });
+    await expect(coffee).toBeVisible({ timeout: 15000 });
+    await expect(coffee).toContainText('Support the dev');
+    await expect(coffee).not.toContainText('Buy me a coffee');
+  });
+
   test('clear overrides reverts to control', async ({ page }) => {
     // Start already forced to "test" via the URL override.
     await page.goto(`${PAGE_WITH_BUTTON}?ab-support-button-copy=test`, {

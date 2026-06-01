@@ -234,11 +234,13 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             //   position: 'left'
             // },
             {
-              // Support / "Buy Me a Coffee" link. Rendered as a styled button-like
-              // navbar item (see .navbar-coffee in custom.css). Uses an emoji + text
-              // instead of an <img> so there's no alt-less image (a11y: image-alt).
-              type: 'html',
-              value: '<a class="navbar-coffee" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD" aria-label="Buy me a coffee (support via PayPal)"><span class="navbar-coffee__icon" aria-hidden="true">☕</span><span class="navbar-coffee__label">Buy Me a Coffee?</span></a>',
+              // Support / "Buy Me a Coffee" link, wired into the support-button-copy
+              // A/B experiment so its copy varies site-wide (control "Buy me a
+              // coffee ☕" / test "Support the dev 💜"). Backed by the NavbarCoffee
+              // React component via the custom navbar item type registered in
+              // src/theme/NavbarItem/ComponentTypes.tsx. Styling: .navbar-coffee in
+              // custom.css. Emoji + text (no <img>) keeps it alt-text clean.
+              type: 'custom-coffee',
               position: 'right',
             }
 
