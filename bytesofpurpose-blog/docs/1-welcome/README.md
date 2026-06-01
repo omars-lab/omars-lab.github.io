@@ -2,7 +2,7 @@
 slug: /welcome/intro
 sidebar_position: 1
 title: Welcome to Bytes of Purpose
-description: 'A topic-organized knowledge base for engineers: generative AI, development, productivity, blogging, scripting, interview prep, companies, entrepreneurship, faith, and personal growth.'
+description: 'A topic-organized knowledge base for engineers: generative AI, software development, product management, productivity, blogging, interview prep, companies, entrepreneurship, faith, and personal growth.'
 authors: [oeid]
 tags: [welcome, introduction, developer-blog]
 ---
@@ -22,9 +22,15 @@ Building with and learning about GenAI — domain fundamentals, designing produc
 systems, and my own LLM workflow. *For: engineers learning GenAI and anyone designing
 an AI feature.*
 
-### 🧩 [Development](/docs/development)
-Technical concepts and the things I build — projects, POCs, tinkering, research, dev &
-security techniques, and roadmaps. *For: software engineers building real things.*
+### 🧩 [Software Development](/docs/development)
+What I build and how — organized by domain: **backend**, **frontend**, **scripting**,
+and **plugins**, each with its own projects, research, techniques, and tinkering. *For:
+software engineers building real things.*
+
+### 📋 [Product Management](/docs/product-management)
+What to build and why — the idea→ship lifecycle: ideas, research, proof-of-concepts,
+experiments, initiatives, projects, and roadmaps. Ideas here link to their executions
+over in Software Development. *For: anyone turning ideas into shipped work.*
 
 ### ⚡ [Productivity](/docs/productivity)
 Organizing work and effort — processes, automation, organizing/discovering/analyzing
@@ -35,10 +41,6 @@ productivity systems.*
 Authoring this site — embedding components, diagrams, code, and external content;
 adding posts/docs/designs; plus the prompts I use to write and maintain it. *For:
 people running a Docusaurus blog or technical site.*
-
-### 💻 [Scripting](/docs/scripting)
-Terminal and automation scripting — shortcuts, parsing (jq/HTML), terminal calendar
-and links. *For: anyone who lives in the terminal and wants to automate it.*
 
 ### 🎯 [Interview Prep](/docs/interview-prep)
 The full getting-hired journey — DSA, coding patterns, behavioral & system-design prep,
@@ -73,6 +75,13 @@ Every topic follows the same shape, so once you learn it you can navigate any of
 - **Content pages** — the actual docs, sub-grouped into folders by theme.
 - **Prompts** *(where it exists)* — the AI prompts relevant to that topic, gathered at
   the end.
+
+A couple of topics go deeper. **Software Development** is split by build *domain*
+(backend / frontend / scripting / plugins), each repeating that same shape. And it
+pairs with **Product Management**: ideas and plans live in Product Management, the
+things actually built live in Software Development, and the two link to each other — an
+idea's **Execution** section points to what got built, and a build's **Idea** section
+points back to where it came from.
 
 ## 📄 Docs vs Blog vs Designs vs Changelog
 

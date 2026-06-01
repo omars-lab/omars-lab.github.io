@@ -141,10 +141,29 @@ contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 - No framing-word / topic-echo folder names (`*-techniques`, `*-craftsmanship`,
   `definitions`) — use a reader-facing topic noun. (Several `-techniques` folders
   survive from the pre-reorg tree with frozen slugs; the validator warns on them.)
-- Folder depth ≤ 3 under a topic root.
+- Folder depth ≤ 4 under a topic root (a domain sub-topic with its own
+  `projects/<project>` legitimately needs 4, e.g.
+  `software-development/backend-development/projects/<proj>`).
 - A `vocabulary/` category sorts **first**; a `prompts/` category sorts **last**.
 - The Welcome topic-index cards (`### [Label](/docs/<slug>)`) must match the actual
   root topic folders + their README slugs (the **welcome-drift** check, formerly T15).
+
+**Large topics may split into DOMAIN sub-topics** (Phase G). `Software Development`
+(`2-development/`) is organized by build domain — `backend-development/`,
+`frontend-development/`, `scripting/`, `plugins/` — each repeating the recurring shape
+(`research/ projects/ techniques/ tinkering/`); `vocabulary/` + `prompts/` stay at the
+topic root. The idea→ship LIFECYCLE is a SEPARATE topic, `Product Management`
+(`5-product-management/`, slug `/product-management`): `ideas/ research/ pocs/
+experiments/ initiatives/ projects/
+roadmaps/`. Rule of thumb: *what to build & why* → Product Management; *what I built &
+how* → Software Development.
+
+**Idea↔execution mapping convention** (warn-validated by the `idea-exec-link` check): a
+Product Management idea/initiative doc links to its built artifact(s) under an
+`## Execution` section (absolute `/development/…` links); the Software Development
+artifact links back under an `## Idea` (or `## Origin`) section (absolute
+`/product-management/…`). The validator warns if any such link doesn't resolve to an
+existing slug; it never blocks, and back-links are backfilled incrementally.
 
 **Operating convention (also in CLAUDE.md):** any decision that changes this structure
 or its conventions (add/rename/retire a topic, change the recurring shape, add a naming
@@ -152,10 +171,10 @@ rule, change slug/draft policy) MUST update this validator + this section in the
 change, so the docs and the checks never drift.
 
 Survey the tree, then flag:
-- **Over-deep nesting.** Paths 4–5 levels deep (e.g.
-  `4-development/6-projects/backend-projects/plugins/…`,
-  `6-techniques/…/tool-composition-techniques/storybook-typescript-babel/…`). A
-  reader rarely drills past 3 levels. Propose flattening or collapsing a level.
+- **Over-deep nesting.** Paths 5+ levels deep (e.g.
+  `…/tool-composition-techniques/storybook-typescript-babel/…`). A reader rarely
+  drills past 4 levels (domain sub-topic → bucket → project is the deepest sanctioned
+  shape). Propose flattening or collapsing a level.
 - **Orphan categories (1 doc).** A `_category_.json` folder containing a single doc
   adds a click for no grouping value. Many exist (`10-prompts/*` has several 1-doc
   subcategories; `5-craftsmanship/3-workflows`, `…/6-tips`, etc.). Propose promoting

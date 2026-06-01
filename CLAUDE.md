@@ -31,8 +31,13 @@ The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working
 The docs are a **topic-based information architecture** with a recurring folder
 contract (each root topic = a reader-facing topic; each topic has a README landing
 with an **absolute** `slug:`, a `_category_.json`, optional `vocabulary/` first and
-`prompts/` last; kebab-case names; no framing-word/topic-echo folders; depth ≤3; every
-doc carries an **absolute** slug so a move never changes a URL). **Whenever you make a
+`prompts/` last; kebab-case names; no framing-word/topic-echo folders; depth ≤4; every
+doc carries an **absolute** slug so a move never changes a URL). A large topic may split
+into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
+`frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
+techniques/tinkering/`); the idea→ship LIFECYCLE is the separate `Product Management`
+topic, linked to its executions via the in-body `## Execution`/`## Idea` mapping
+convention (warn-validated). **Whenever you make a
 decision that changes this structure or its conventions** (add/rename/retire a topic,
 change the recurring shape, add a naming rule, change slug/draft policy), you **must
 update the structure-checking validators + hooks in the same change** so they encode

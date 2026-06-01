@@ -29,11 +29,18 @@
  *                           (`_`-prefixed names like _TEMPLATE/_category_ are exempt).
  *   framing-folder  [warn]  no framing-word / topic-echo sub-folder names
  *                           (`*-techniques`, `*-craftsmanship`, `definitions`).
- *   depth           [warn]  folder depth ≤ 3 under a topic root.
+ *   depth           [warn]  folder depth ≤ 4 under a topic root (sub-topic / bucket /
+ *                           project legitimately needs 4, e.g.
+ *                           software-development/backend-development/projects/<proj>).
  *   vocab-first     [warn]  a `vocabulary/` category sorts first (low position).
  *   prompts-last    [warn]  a `prompts/` category sorts last (high position).
  *   welcome-drift   [warn]  the Welcome topic-index cards (`### [Label](slug)`) match
  *                           the actual root topic folders + their README slugs.
+ *   idea-exec-link  [warn]  the idea↔execution mapping convention: links inside an
+ *                           `## Execution` section (Product Management idea docs) or an
+ *                           `## Idea`/`## Origin` section (Software Development artifacts)
+ *                           must resolve to an existing doc slug. Cross-topic dangling
+ *                           cross-refs are warned (never blocks; backfill is incremental).
  *
  * Usage:
  *   node scripts/validate-docs-structure.js [paths…]   # scan (default: docs/)
@@ -62,6 +69,7 @@ const SEVERITY = {
   'vocab-first': 'warn',
   'prompts-last': 'warn',
   'welcome-drift': 'warn',
+  'idea-exec-link': 'warn',
 };
 
 // Folder names that echo a format/framing word instead of a reader topic.
@@ -161,9 +169,9 @@ function walkDir(dir, depthFromTopic, topicName) {
       }
     }
 
-    // depth ≤ 3 under a topic root (topic root = depth 0; flag a folder at depth 4+)
-    if (childDepth >= 4) {
-      add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤3)`);
+    // depth ≤ 4 under a topic root (topic root = depth 0; flag a folder at depth 5+)
+    if (childDepth >= 5) {
+      add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤4)`);
     }
 
     // sub-folder category presence + orphan check
@@ -268,6 +276,73 @@ function checkWelcomeDrift() {
   }
 }
 
+// --- idea↔execution mapping (in-body convention) -------------------------
+
+/** Collect every doc's absolute slug → a Set, for cross-ref resolution. */
+function collectSlugs() {
+  const slugs = new Set();
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) rec(full);
+      else if (isDoc(e.name)) {
+        try {
+          const s = matter(fs.readFileSync(full, 'utf8')).data.slug;
+          if (typeof s === 'string' && s.startsWith('/')) slugs.add(s.replace(/\/$/, ''));
+        } catch { /* skip */ }
+      }
+    }
+  })(DOCS);
+  return slugs;
+}
+
+/** Extract the body lines under a `## <heading>` section (until the next `##`). */
+function sectionBody(src, headingRe) {
+  const lines = src.split('\n');
+  const out = [];
+  let inSec = false;
+  for (const line of lines) {
+    if (/^##\s/.test(line)) {
+      inSec = headingRe.test(line.replace(/^##\s+/, '').trim());
+      continue;
+    }
+    if (inSec) out.push(line);
+  }
+  return out.join('\n');
+}
+
+/** Validate that every internal /docs link inside Execution/Idea sections resolves. */
+function checkIdeaExecLinks(slugs) {
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { rec(full); continue; }
+      if (!isDoc(e.name)) continue;
+      let src;
+      try { src = fs.readFileSync(full, 'utf8'); } catch { continue; }
+      const r = path.relative(DOCS, full);
+      const isPM = r.startsWith('product-management/');
+      const isDev = r.startsWith('2-development/');
+      // PM idea docs carry `## Execution`; SW Dev artifacts carry `## Idea`/`## Origin`.
+      const body = isPM
+        ? sectionBody(src, /^execution$/i)
+        : isDev
+          ? sectionBody(src, /^(idea|origin)$/i)
+          : '';
+      if (!body.trim()) continue;
+      const linkRe = /\]\((\/docs\/[^)\s#]+)/g;
+      let m;
+      while ((m = linkRe.exec(body)) !== null) {
+        const slug = m[1].replace(/^\/docs/, '').replace(/\/$/, '');
+        if (!slugs.has(slug)) {
+          add('idea-exec-link', r,
+            `${isPM ? '## Execution' : '## Idea/Origin'} link ${m[1]} does not resolve to an existing doc slug`);
+        }
+      }
+    }
+  })(DOCS);
+}
+
 // --- main ----------------------------------------------------------------
 
 function main() {
@@ -287,6 +362,7 @@ function main() {
     walkDir(DOCS, -1, null);
     checkTopicRoots();
     checkWelcomeDrift();
+    checkIdeaExecLinks(collectSlugs());
   }
 
   let out = findings;
