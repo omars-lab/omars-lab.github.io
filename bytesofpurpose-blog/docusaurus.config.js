@@ -207,13 +207,13 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
           },
           items: [
             {
-              label: 'Docs',
+              label: 'Learn',
               type: 'doc', docId: 'welcome/README',
               position: 'left',
             },
             {
-              label: 'Posts', 
-              to: '/blog', 
+              label: 'Blog',
+              to: '/blog',
               position: 'left'
             },
             {
