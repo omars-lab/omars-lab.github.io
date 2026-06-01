@@ -309,3 +309,28 @@ per T16). Detail: `.claude/plans/topic-taxonomy-proposal.md`.
 - **Sidebar visual eyeball deferred to a single batched pass at T17** (across all topics)
   rather than per-topic browser spin-up — the per-phase manifest+metadata checks already
   guarantee correctness; visual is for label/ordering polish.
+
+### T6–T9 — all moves DONE (Phase D complete)
+- **T6 Scripting+Faith**, **T7 Blogging (59)**, **T8 Interview Prep** (+ new
+  `understanding-what-companies-expect` doc), **T9 Development+Productivity+Companies+
+  Entrepreneurship+Personal Growth** — all committed, each manifest-verified.
+- **Every framing-word bucket is now dissolved.** Docs root = `1-welcome` + 10 topics.
+- **Habits fan-out + prompts distribution happened inside T5–T9** (so T11 is now just a
+  verification pass — all 26 habits distributed, zero `8-habits` residue; prompts went to
+  blogging/dev/productivity/interview/growth per the map).
+- **2 published routes deliberately RETIRED (user-approved):**
+  `/docs/techniques/techniques` + `/docs/craftsmanship/craftsmanship` (obsolete
+  old-taxonomy index pages). All other 282 moved docs kept frozen URLs. No new broken
+  links. Recorded in `/tmp/deliberate-retirements.txt` → decide redirects at T17.
+- **Several topic READMEs kept ugly frozen slugs** (scripting/blogging READMEs still at
+  `/techniques/.../X-techniques/X-techniques`) — cleaning these in T14 is a slug-VALUE
+  change (URL change, no redirect) → decide per-doc.
+- **Per-phase verification model used throughout:** assert manifest REMOVALS == only the
+  approved retirements; new ADDITIONS == intended topic landings + their tag pages.
+
+### Remaining work → see `.claude/plans/RESTRUCTURE-HANDOFF.md`
+T10 (vocabulary consolidation) · T11 (verify distribution) · T12 (typo, fold into T10) ·
+T13 (Welcome) · T14 (prefixes/labels + bucket-A links + ugly-slug cleanup) · T15
+(index-drift tooling) · T16 (correct slug-claim in skill+memory) · T17 (ship+redirects
+decision) · T18 (draft triage) · T19 (manage-doc-slugs skill) · T20 (structure/naming
+validator hook). T15/T19/T20 likely share one validator implementation.
