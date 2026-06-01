@@ -45,6 +45,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Experiment decision | `decide-experiment` | apply decision gates (significance/MDE/guardrails) + judgment → recorded decision readout |
 | Experiment rollout | `conclude-experiment` | execute the decision: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
+| Link hygiene | `validate-links` | lint source for bare/long/tracking/generic links (`make validate-links`) |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
 | Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |

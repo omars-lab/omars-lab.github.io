@@ -68,6 +68,9 @@ init-site: ## Initialize a new Docusaurus site
 check: ## Check MDX files for issues
 	( cd ${SITEROOT} && npx docusaurus-mdx-checker )
 
+validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
+	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
+
 audit: ## Run security audit on dependencies
 	# ( cd ${SITEROOT} && npx docusaurus-audit )
 	( cd ${SITEROOT} && npm audit )
