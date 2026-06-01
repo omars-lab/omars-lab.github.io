@@ -128,8 +128,14 @@ The docs are a **topic-based IA** with a recurring folder contract. This skill o
 contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 (`make validate-structure`, plus a warn-only `Write|Edit` hook). The contract:
 
-- The docs root is `1-welcome/` (the topic index, not a topic) + one `<N>-<topic>/`
-  folder per reader-facing TOPIC. Numeric prefixes set sidebar order.
+- The docs root is `welcome/` (the topic index, not a topic) + one `<topic>/` folder
+  per reader-facing TOPIC.
+- **Folder NAMES carry no numeric ordering prefix** (no `2-development/`, `6-projects/`).
+  Sidebar order comes from the `_category_.json` `"position"` field (folders) and
+  `sidebar_position` frontmatter (docs) — never the name. *Why:* a name prefix couples
+  *order* to *identity* — reordering a prefixed folder is a `git mv` that rewrites every
+  descendant doc's path (churns history), whereas bumping a `position` is a one-line,
+  history-clean edit. The `numeric-prefix` check warns on any prefixed folder name.
 - **Every doc has an ABSOLUTE `slug:` (`slug: /…`)** — the URL-freeze guarantee. The
   validator treats a missing/relative slug as the only **ERROR** tier (exit 2; the
   hook surfaces it but never blocks). Everything below is **warn** tier (advisory).

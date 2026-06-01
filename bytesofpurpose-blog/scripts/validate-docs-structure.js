@@ -7,7 +7,7 @@
  * review-reader-experience skill, "Topic-folder contract" section, and CLAUDE.md):
  *
  *   docs/
- *     1-welcome/            ← the topic index (Welcome); not itself a topic
+ *     welcome/              ← the topic index (Welcome); not itself a topic
  *     <N>-<topic>/          ← one root folder per reader-facing TOPIC
  *       README.{md,mdx}     ← topic landing, ABSOLUTE slug, _category_.json
  *       _category_.json     ← label + position
@@ -25,6 +25,11 @@
  *   subfolder-cat   [warn]  every sub-folder that contains docs has a _category_.json.
  *   orphan-cat      [warn]  a _category_.json in a dir with no docs AND no
  *                           docs-bearing descendants (pure dead category).
+ *   numeric-prefix  [warn]  folder NAMES carry no numeric ordering prefix (`6-projects`);
+ *                           order comes from `_category_.json` "position", never the
+ *                           name. WHY: a name prefix couples order to identity — bumping
+ *                           a `position` is a 1-line history-clean edit, whereas renaming
+ *                           a prefixed folder rewrites every descendant's path.
  *   kebab-case      [warn]  doc/dir names are kebab-case, no spaces/uppercase
  *                           (`_`-prefixed names like _TEMPLATE/_category_ are exempt).
  *   framing-folder  [warn]  no framing-word / topic-echo sub-folder names
@@ -56,7 +61,7 @@ const matter = require('gray-matter');
 
 const ROOT = path.join(__dirname, '..');
 const DOCS = path.join(ROOT, 'docs');
-const WELCOME = 'docs/1-welcome';
+const WELCOME = 'docs/welcome';
 
 const SEVERITY = {
   'absolute-slug': 'error',
@@ -70,6 +75,7 @@ const SEVERITY = {
   'prompts-last': 'warn',
   'welcome-drift': 'warn',
   'idea-exec-link': 'warn',
+  'numeric-prefix': 'warn',
 };
 
 // Folder names that echo a format/framing word instead of a reader topic.
@@ -155,9 +161,18 @@ function walkDir(dir, depthFromTopic, topicName) {
 
     const childDepth = depthFromTopic + 1;
 
-    // kebab-case on directory names (skip the numbered topic roots at depth 0)
     if (depthFromTopic >= 0 && !e.name.startsWith('_')) {
-      // strip an optional numeric ordering prefix (e.g. 6-projects) before testing
+      // NO numeric ordering prefix in folder NAMES — order comes from the
+      // `_category_.json` "position" field (or doc `sidebar_position`), never the name.
+      // WHY: a name prefix couples *order* to *identity*. Reordering a prefixed folder
+      // is a `git mv` that rewrites every descendant doc's path (churns history, risks
+      // URLs if any slug were relative) — whereas bumping a `position` number is a
+      // one-line, history-clean change. So names stay stable; positions do the ordering.
+      const prefixMatch = e.name.match(/^(\d+)-/);
+      if (prefixMatch) {
+        add('numeric-prefix', rel(full),
+          `folder "${e.name}" carries a numeric name prefix — drop it and order via _category_.json "position" instead (keeps reordering history-clean; names shouldn't encode order)`);
+      }
       const nameNoPrefix = e.name.replace(/^\d+-/, '');
       if (!KEBAB_RE.test(nameNoPrefix)) {
         add('kebab-case', rel(full), `folder "${e.name}" is not kebab-case`);
@@ -205,9 +220,13 @@ function walkDir(dir, depthFromTopic, topicName) {
 
 // --- topic-root checks + Welcome drift -----------------------------------
 
+// A root TOPIC = a direct child dir of docs/ that has a _category_.json (it's a
+// sidebar section), except `welcome` (the index, not a topic). Folder names no longer
+// carry numeric prefixes — order lives in each _category_.json "position" — so topic
+// detection is by structure (has a category), not by a name pattern.
 function topicFolders() {
   return listDir(DOCS)
-    .filter((e) => e.isDirectory() && /^\d+-/.test(e.name) && e.name !== '1-welcome')
+    .filter((e) => e.isDirectory() && e.name !== 'welcome' && hasCategory(path.join(DOCS, e.name)))
     .map((e) => e.name)
     .sort();
 }

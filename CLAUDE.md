@@ -31,7 +31,9 @@ The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working
 The docs are a **topic-based information architecture** with a recurring folder
 contract (each root topic = a reader-facing topic; each topic has a README landing
 with an **absolute** `slug:`, a `_category_.json`, optional `vocabulary/` first and
-`prompts/` last; kebab-case names; no framing-word/topic-echo folders; depth ≤4; every
+`prompts/` last; kebab-case names with **no numeric name prefix** — order via
+`_category_.json` `position` / `sidebar_position`, never the folder name, so reordering
+stays history-clean; no framing-word/topic-echo folders; depth ≤4; every
 doc carries an **absolute** slug so a move never changes a URL). A large topic may split
 into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
 `frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
