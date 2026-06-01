@@ -63,7 +63,10 @@ export default defineConfig({
       // Docs/graph specs against the dev server (:3000). The graph renders hot
       // doc content and doesn't depend on build-only transforms.
       name: 'dev',
-      testMatch: /graph-.*\.spec\.ts$/,
+      // graph-* specs + the DebugMenu spec. The DebugMenu renders ONLY on the
+      // dev server (localhost + non-prod build) — it's stripped from prod — so it
+      // must run here against :3000, not the build-backed projects.
+      testMatch: /(graph-.*|debug-menu)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {

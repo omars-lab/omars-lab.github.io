@@ -1,0 +1,174 @@
+/* Floating, localhost-only DebugMenu. Dev-only surface — never shipped to
+   production (double-gated in index.tsx), so styling is utilitarian. */
+
+.fab {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: #6b21a8;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.fab:hover {
+  background: #581c87;
+}
+
+.panel {
+  position: fixed;
+  bottom: 64px;
+  right: 16px;
+  z-index: 1000;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  max-height: 72vh;
+  overflow: auto;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--ifm-background-surface-color, #fff);
+  color: var(--ifm-font-color-base, #1c1e21);
+  border: 1px solid var(--ifm-color-emphasis-300, #d0d0d0);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.close {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+/* --- Pluggable sections --- */
+.section {
+  border-top: 1px solid var(--ifm-color-emphasis-200, #e6e6e6);
+}
+.sectionHeader {
+  width: 100%;
+  text-align: left;
+  padding: 9px 2px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sectionBody {
+  padding-bottom: 8px;
+}
+
+/* --- Experiments section --- */
+.status {
+  margin: 0 0 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100, #f1f1f1);
+  font-size: 12px;
+  word-break: break-all;
+}
+.statusOk {
+  color: #15803d;
+}
+.statusWarn {
+  color: #b45309;
+}
+
+.exp {
+  padding: 8px 0;
+}
+.expKey {
+  font-family: var(--ifm-font-family-monospace, monospace);
+  font-weight: 700;
+}
+.source {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-left: 6px;
+}
+
+.variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.variant {
+  padding: 5px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-300, #ccc);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+}
+.variant:hover {
+  border-color: var(--ifm-color-primary, #2563eb);
+}
+.active {
+  background: var(--ifm-color-primary, #2563eb);
+  border-color: var(--ifm-color-primary, #2563eb);
+  color: #fff;
+  font-weight: 700;
+}
+.payload {
+  display: block;
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 4px;
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+.clear {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-300, #ccc);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* The panel slides in; honor reduced-motion (matches the EspressoIcon pattern). */
+@media (prefers-reduced-motion: no-preference) {
+  .panel {
+    animation: dbgFade 120ms ease-out;
+  }
+}
+@keyframes dbgFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

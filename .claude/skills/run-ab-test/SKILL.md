@@ -108,9 +108,15 @@ control "Buy me a coffee ☕" / test "Support the dev 💜", conversion
 
 | Who | How | Scope |
 |---|---|---|
-| Test/QA yourself, locally | URL param `?ab=test`, `?ab-<key>=test`, or `?ab=flagA:test,flagB:control` | localhost only |
+| Test/QA yourself, locally | the **floating DebugMenu** (bottom-right on `yarn start`) → Experiments → click a variant; or the URL param `?ab=test`, `?ab-<key>=test`, `?ab=flagA:test,flagB:control` it writes | localhost only |
 | Preview yourself, anywhere | devtools `posthog.featureFlags.overrideFeatureFlags({flags:{'<key>':'test'}})` | your browser |
 | Force a specific customer/cohort | PostHog UI → flag → Release conditions → match email/distinct_id/cohort → 100% variant | server-side, sticky |
+
+The **DebugMenu** (`src/components/DebugMenu`, mounted via the swizzled
+`@theme/Root`) is the easiest QA entry point: it lists every registered experiment,
+shows the resolved variant + its source, and toggles variants by writing the same
+`?ab-<key>=<variant>` URL param. It renders ONLY on localhost in a dev build (it's
+stripped from the production bundle). Covered by `test/e2e/debug-menu.spec.ts`.
 
 ## Step 3 — Create the experiment in PostHog (scripted: create → validate → launch)
 

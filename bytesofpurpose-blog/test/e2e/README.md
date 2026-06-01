@@ -9,7 +9,7 @@ the GraphRenderer docs tests and the PostHog/A-B analytics tests. They have
 
 | Project | Specs | Server it talks to | Why |
 |---|---|---|---|
-| `dev` | `graph-*.spec.ts` | Docusaurus **dev** server (`yarn start`, :3000) — auto-started | render docs pages incl. hot/draft content |
+| `dev` | `graph-*.spec.ts`, `debug-menu.spec.ts` | Docusaurus **dev** server (`yarn start`, :3000) — auto-started | render docs pages incl. hot/draft content; the DebugMenu renders ONLY on localhost+dev (stripped from prod), so it must run here |
 | `prod` | `accessibility`, `seo` | a **production build** served on :4173 | build-only transforms (e.g. the task-list aria-label rehype plugin) DON'T run in `yarn start`, so these must scan a real build |
 | `posthog-prod` | `posthog-events`, `support-ab-test` | a **`POSTHOG_TEST_MODE=1` production build** served on :4173 | PostHog only inits in a prod build; its bot filter must be off for events to land |
 
@@ -56,6 +56,9 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 
 ## Test files
 
+- **`debug-menu.spec.ts`** — the floating localhost-only DebugMenu: renders on
+  localhost, lists the registered experiment, and toggling a variant actually
+  flips the rendered `<Support/>` copy (control ↔ test) + clear-overrides reverts (dev)
 - **`graph-renderer.spec.ts`** — general graph rendering / interactions / zoom (dev)
 - **`graph-title-rendering.spec.ts`** — title rendering, ellipsis-only regression (dev)
 - **`graph-selection-state.spec.ts`** — node/edge selection state via the AI-framework

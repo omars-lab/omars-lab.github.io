@@ -4,6 +4,10 @@
 // helpers for reading the active variant — including a localhost-only URL-param
 // override for testing/QA that works across ALL registered experiments.
 //
+// QA entry point: the floating ExperimentDebugMenu (src/components/
+// ExperimentDebugMenu, mounted via the swizzled @theme/Root) lists every entry
+// here and toggles variants on localhost — a UI over the urlOverride mechanism.
+//
 // Design doc: designs/<date>-ab-testing-framework.mdx
 // Workflow:  .claude/skills/run-ab-test
 import posthog from 'posthog-js';
@@ -28,7 +32,12 @@ export const EXPERIMENTS = {
 
 export type ExperimentKey = keyof typeof EXPERIMENTS;
 
-function isLocalhost(): boolean {
+/**
+ * True only when served from a local dev host. Gates the URL-param override AND
+ * the floating ExperimentDebugMenu — both are manipulation surfaces that must
+ * never be reachable in production. Exported so the menu reuses the exact gate.
+ */
+export function isLocalhost(): boolean {
   if (typeof window === 'undefined') return false;
   const h = window.location.hostname;
   return h === 'localhost' || h === '127.0.0.1' || h === '[::1]';
