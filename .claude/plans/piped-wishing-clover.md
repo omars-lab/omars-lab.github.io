@@ -179,3 +179,85 @@ writer-voice intros (#4), category-name voice call (#7), flatten remaining deep 
 
 Durable prefs: `docs-topic-taxonomy` memory + `review-reader-experience` skill (correct
 per T16). Detail: `.claude/plans/topic-taxonomy-proposal.md`.
+
+---
+
+## Execution findings & considerations (updated live during T1–T3)
+
+### Confirmed numbers (from the actual repo, not estimates)
+- **289 docs total**, every one has a `slug:`. Pre-freeze: **1 absolute** slug
+  (`6-organization-techniques/README.md`), **288 relative**.
+- **149 non-draft (built) + 140 `draft:true` (excluded from prod build) = 289.** This
+  draft split matters: **draft docs do not appear in the prod build manifest or in
+  `.docusaurus` metadata**, so their URLs cannot be read off a build — they must be
+  derived from source logic.
+- Baseline route manifest: **569 total HTML routes** (`find build -name '*.html'`),
+  **502 under `/docs/`** (rest are blog/designs/changelog/tags/storybook). Snapshot at
+  `.claude/plans/routes-before.txt` (gitignored; regenerable from a clean build).
+
+### T1 — baseline (DONE)
+- The committed `build/` was stale; cleared cache + dir and did a fresh `make build` of
+  HEAD. Manifest captured. `make build` writes to `bytesofpurpose-blog/build` — the
+  plan's `find build …` is **relative to `bytesofpurpose-blog/`**, not the repo root.
+  (Gotcha: `cd` does NOT persist between Bash tool calls here — always use absolute
+  paths or a single compound command when capturing the manifest.)
+
+### T2 — URL freeze (DONE, keystone verified)
+- **Derivation source of truth:** `plugins/draft-docs/index.js` → `toPermalink()` already
+  encodes this repo's exact Docusaurus permalink rule (strip `NN-` prefixes; absolute
+  slug `/x` ⇒ `/docs/x`; relative slug renames last segment; README/index ⇒ directory
+  route). I cross-checked it against **all 149 built permalinks from `.docusaurus`
+  metadata → 0 mismatches**, then trusted it to compute the 140 draft permalinks too.
+- Froze every doc's slug to `slug: <permalink-without-/docs>` (absolute). 288 rewritten,
+  1 already absolute, 0 errors. **Post-freeze manifest diff vs baseline = EMPTY (569=569).**
+- **0 permalink collisions** across all 289 — so the plan's feared dup-slug collisions
+  (`readme`×3, `tips`×2) were never route collisions: the folder path disambiguated them,
+  and the freeze makes every slug a unique absolute path. (T3's "resolve dup slugs" step
+  is therefore satisfied by Phase A; nothing to do.)
+- **Working tree was already dirty at session start** (in-flight reader-experience edits:
+  `sidebar_label`/`title` across ~45 docs, the `orgnaization`→`organization` folder typo
+  rename, eval-doc edits, `my-frist`→`my-first` rename, navbar relabel, storybook regen).
+  Per user: **commit everything, in grouped commits.** Landed as: (1) Phase-A freeze +
+  in-flight doc edits, (2) navbar relabel, (3) storybook regen, (4) tooling/skills/plans,
+  (5) gitignore for transient files. All gitleaks-clean.
+
+### T3 — pre-move hygiene (IN PROGRESS)
+- **Renamed** the 2 space-in-filename docs under `backend-projects/` to kebab-case
+  (both drafts w/ absolute slugs → URL-invisible rename).
+- **Broken `/docs/` body links:** audited all 222 hardcoded `/docs/` body links against
+  the baseline manifest. **99 didn't resolve**: 25 point to *draft* docs (valid once
+  published — leave), **74 truly broken**. Split into 3 buckets:
+  - **A (~40 instances, deferred to T14):** links to a category landing page that
+    resolves to an ugly *doubled* route (`/docs/techniques/techniques`,
+    `…/blogging-techniques/blogging-techniques`) because each category README has
+    `slug: <name>` appended under its own dir. Will be repointed when T14 cleans up
+    category-README slugs (avoids fixing twice). Full list: `/tmp/truly-broken-links.txt`
+    (regenerate via the audit script if `/tmp` is wiped). Captured in T14's description.
+  - **B (DONE):** stale-prefix/typo roadmap links (`/docs/development/7-roadmaps/…`,
+    `/docs/developing/…`) → `/docs/development/roadmaps/…`.
+  - **C (DONE):** dead/renamed/slug-mismatch — incl. scripting sub-pages whose **slug
+    differs from filename** (`leveraging-terminal-shortcuts.mdx` → slug
+    `…/terminal-shortcuts`; `parsing-json.md` → slug `…/jq-mechanics`; `terminal-links.md`
+    → slug `…/mechanic-terminal-links`); date-prefixed genai link; `5-initiatives`
+    prefix; and `/docs/NAMING_CONVENTIONS` (no such doc anywhere → links converted to
+    plain text). 16 redirect edits + 2 unlinks across 10 files.
+  - **`onBrokenLinks` stays `'warn'` until T17** (bucket A still open until T14); flip to
+    `'throw'` at ship.
+- **`onDuplicateRoutes:'throw'`** added — and it immediately **caught 2 PRE-EXISTING
+  duplicate routes in the changelog plugin** (the default `'warn'` had hidden them):
+  (1) a duplicate `content-docs-changelog-system-documentation` `.md` AND `.mdx` (identical
+  files) → removed the `.md`, regenerated changelog data; (2) a `/changelog` index
+  collision (under investigation at time of writing). Per user: **fix the dupes now** so
+  the guard stays on through the reorg. This is the kind of latent collision the plan
+  wanted surfaced before folder merges.
+
+### New considerations raised
+- **T19 (new task): evaluate a dedicated `manage-doc-slugs` skill** capturing the
+  slug/URL/draft/404 nuances (relative-vs-absolute slug → URL coupling; the URL-freeze
+  technique + `toPermalink` validation; drafts excluded from prod build so derive URLs
+  from source; `onBrokenLinks:'warn'` + no redirects plugin ⇒ silent 404 on slug-value
+  change; category-README doubled routes; `onDuplicateRoutes` default `'warn'`). Likely
+  folds into / cross-links T15's `maintain-doc-indexes` + the `review-reader-experience`
+  IA audit. Decide skill-vs-fold during T15/T19.
+- **Changelog content has latent dup-route / `.md`+`.mdx` hygiene issues** independent of
+  docs — worth a separate sweep, but only the build-blocking ones are fixed here.
