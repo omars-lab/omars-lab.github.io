@@ -1,55 +1,70 @@
-# GraphRenderer E2E Tests
+# E2E / regression tests
 
-End-to-end tests for the GraphRenderer component using Playwright. These tests verify the actual rendering behavior in a real browser environment.
+End-to-end tests (Playwright, Firefox) for the site. Two kinds of specs live here:
+the GraphRenderer docs tests and the PostHog/A-B analytics tests. They have
+**different server requirements**, so the suite is split into two Playwright
+**projects** — mixing them is what used to produce false failures.
+
+## Two projects (server modes)
+
+| Project | Specs | Server it talks to | Why |
+|---|---|---|---|
+| `dev` | `graph-*.spec.ts` | Docusaurus **dev** server (`yarn start`, :3000) — auto-started | render docs pages incl. hot/draft content |
+| `posthog-prod` | `posthog-events`, `support-ab-test` | a **`POSTHOG_TEST_MODE=1` production build** served on :4173 | PostHog only inits in a prod build; its bot filter must be off for events to land |
+
+The config (`playwright.config.ts`) auto-starts the :3000 dev server for the `dev`
+project, and **skips** it when you run `--project=posthog-prod` alone (those specs
+use an externally-served :4173 build).
 
 ## Setup
 
-1. Install Playwright browsers (first time only):
-   ```bash
-   yarn playwright install
-   ```
-
-2. The development server will start automatically when running tests (via `webServer` config).
-   If you want to run tests against an already-running server, that's fine too - Playwright will reuse it.
-
-## Running Tests
-
-### Run all E2E tests
+Install Playwright browsers (first time only):
 ```bash
-yarn test:e2e
+yarn playwright install
 ```
 
-### Run tests in headed mode (see browser)
+## Running tests
+
 ```bash
-yarn test:e2e:headed
+# Dev-server specs (graph/docs) — boots :3000 automatically:
+make test-e2e                 # == yarn playwright test --project=dev
+
+# PostHog/A-B specs — builds test-mode, serves :4173, runs, tears down:
+make test-posthog             # == --project=posthog-prod against :4173
+
+# Full regression (both projects, both server modes), from repo root:
+make test-regression
+
+# Interactive / debugging:
+yarn test:e2e:ui              # UI mode
+yarn test:e2e:headed          # see the browser
+yarn test:e2e:debug           # step through
 ```
 
-### Run tests with UI mode (interactive)
+To run the prod specs by hand, start the :4173 test-mode build yourself (see the
+spec headers / `make test-posthog`) and:
 ```bash
-yarn test:e2e:ui
+PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 ```
 
-### Debug tests
-```bash
-yarn test:e2e:debug
-```
+## Test files
 
-### Run specific test file
-```bash
-yarn playwright test test/e2e/graph-renderer.spec.ts
-```
+- **`graph-renderer.spec.ts`** — general graph rendering / interactions / zoom (dev)
+- **`graph-title-rendering.spec.ts`** — title rendering, ellipsis-only regression (dev)
+- **`graph-selection-state.spec.ts`** — node/edge selection state via the AI-framework
+  doc graph (dev). Targets the **doc** route
+  `/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape`
+  (NOT `/blog/...` — that was a long-standing wrong path that 404'd).
+- **`posthog-events.spec.ts`** — PostHog init + $pageview/autocapture/scroll (posthog-prod)
+- **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)
 
-### Run tests in specific browser
-```bash
-yarn playwright test --project=chromium
-yarn playwright test --project=firefox
-yarn playwright test --project=webkit
-```
+## Known flaky / open
 
-## Test Files
-
-- **`graph-renderer.spec.ts`**: General E2E tests for graph rendering, interactions, and zoom behavior
-- **`graph-title-rendering.spec.ts`**: Specific tests for title rendering, including ellipsis-only regression test
+- 3 cases in `graph-selection-state.spec.ts` (deep-link edge selection: "clicking
+  node after clicking edge", "clicking edge after clicking node", "selecting node
+  from pane unselects edge") intermittently time out waiting for the edge-details
+  pane after a `#...-edge-...` URL hash. These are graph-component/canvas-timing
+  issues, not infra — the page loads and 17/20 graph cases pass. Track separately.
 
 ## What the Tests Verify
 

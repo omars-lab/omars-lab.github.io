@@ -205,8 +205,17 @@ commit-push: commit push ## Commit and push changes (interactive message)
 
 # Testing Targets
 
-test-e2e: ## Run E2E tests with Playwright
-	( cd ${SITEROOT} && yarn test:e2e )
+test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn start`
+	# The "dev" Playwright project auto-starts the Docusaurus dev server (:3000).
+	# PostHog/A-B specs live in a separate project — use `make test-posthog`.
+	( cd ${SITEROOT} && yarn playwright test --project=dev )
+
+test-regression: ## Full regression: dev-server specs + PostHog/A-B specs (both server modes)
+	# Runs the two E2E projects in sequence. The dev project boots its own :3000
+	# server; test-posthog builds + serves a POSTHOG_TEST_MODE production build on
+	# :4173. Run from the repo root; requires POSTHOG_KEY/HOST in .env.
+	$(MAKE) test-e2e
+	$(MAKE) test-posthog
 
 test-e2e-headed: ## Run E2E tests in headed mode (see browser)
 	( cd ${SITEROOT} && yarn test:e2e:headed )
@@ -231,7 +240,7 @@ test-posthog: ## Validate PostHog events end-to-end against a production build
 	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
 	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/posthog-serve.log 2>&1 & ); \
 	sleep 6; \
-	( cd ${SITEROOT} && CI=1 PH_BASE_URL=http://localhost:4173 npx playwright test posthog-events support-ab-test --reporter=list ); \
+	( cd ${SITEROOT} && CI=1 PH_BASE_URL=http://localhost:4173 npx playwright test --project=posthog-prod --reporter=list ); \
 	rc=$$?; \
 	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
 	exit $$rc
