@@ -67,16 +67,20 @@ function getAllIdeas() {
 
     const fileContent = fs.readFileSync(path.join(ideasDir, item.name), 'utf-8');
     const { frontmatter } = parseFrontmatter(fileContent);
-    const slug = item.name.replace(/\.md$/, '');
+    const fileSlug = item.name.replace(/\.md$/, '');
+
+    // Prefer an explicit frontmatter `slug` (clean, e.g. ai-taught-me-how-to-
+    // manage); fall back to the date-prefixed filename. The slug is the STABLE
+    // identity used to key votes (localStorage + PostHog), so it must not change.
+    const slug = frontmatter.slug || fileSlug;
 
     entries.push({
-      id: frontmatter.id || slug,
+      slug,
       title: frontmatter.title || slug,
       description: frontmatter.description || '',
       type: frontmatter.type || 'post',
       status: frontmatter.status || 'idea',
       date: frontmatter.date || '',
-      slug: slug,
     });
   }
 

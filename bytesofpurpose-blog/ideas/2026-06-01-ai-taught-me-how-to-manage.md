@@ -4,7 +4,7 @@ description: "Lessons in delegation, feedback, and setting context that I learne
 type: post
 status: idea
 date: '2026-06-01'
-id: ai-taught-me-how-to-manage
+slug: ai-taught-me-how-to-manage
 ---
 
 A post idea: the management muscles I built by orchestrating AI agents —

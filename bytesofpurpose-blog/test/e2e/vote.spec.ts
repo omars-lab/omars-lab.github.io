@@ -2,7 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 
 /**
  * Proof that the /vote page's Vote button fires the `idea_voted` PostHog event
- * with the locked properties (idea_id, idea_title, type, page_path).
+ * with the locked properties (idea_slug, idea_title, type, page_path), and that
+ * a vote persists across reload (localStorage dedup).
  *
  * Runs in the `posthog-prod` project: a PRODUCTION build served on :4173, built
  * with POSTHOG_TEST_MODE=1 so PostHog's bot/UA filter is OFF and the synthetic
@@ -76,14 +77,31 @@ test.describe('Vote on Post Ideas page', () => {
     expect(events.length).toBeGreaterThanOrEqual(1);
 
     const props = events[0].props || {};
-    expect(props).toHaveProperty('idea_id');
+    expect(props).toHaveProperty('idea_slug');
     expect(props).toHaveProperty('idea_title');
     expect(props).toHaveProperty('type', 'post');
     expect(props.page_path).toBe('/vote');
-    // idea_id must be one of the two seeds.
+    // idea_slug must be one of the two seeds (clean frontmatter slugs).
     expect([
       'ai-taught-me-how-to-review-code',
       'ai-taught-me-how-to-manage',
-    ]).toContain(props.idea_id);
+    ]).toContain(props.idea_slug);
+  });
+
+  test('a vote persists across reload (localStorage dedup)', async ({ page }) => {
+    await page.goto(VOTE_URL);
+
+    const firstVote = page.getByRole('button', { name: /Vote/ }).first();
+    await expect(firstVote).toContainText('Vote');
+    await firstVote.click();
+    await expect(firstVote).toContainText('Voted');
+    await expect(firstVote).toBeDisabled();
+
+    // Reload — the button must come back as "Voted" (read from localStorage),
+    // not re-enabled, so the same device can't trivially re-vote.
+    await page.reload();
+    const afterReload = page.getByRole('button', { name: /Voted/ }).first();
+    await expect(afterReload).toBeVisible();
+    await expect(afterReload).toBeDisabled();
   });
 });

@@ -1,39 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
-import styles from '../../css/FancyButton.module.css';
 import type { IdeaEntry } from './types';
 
 interface IdeaVoteProps {
   idea: IdeaEntry;
 }
 
+// localStorage (NOT sessionStorage) so "already voted" survives tab close +
+// browser restart — sessionStorage clears on tab close, which would let the
+// same person re-vote from a new tab. This is a soft, per-device dedup; the
+// authoritative demand signal is still the PostHog 'idea_voted' event.
+const votedKey = (id: string) => `idea-voted:${id}`;
+
+function hasVoted(id: string): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.localStorage.getItem(votedKey(id)) === '1';
+  } catch {
+    return false; // storage blocked (private mode / disabled) → just don't dedup
+  }
+}
+
 /**
- * Vote control for a post idea. Mirrors src/components/VoteButton's
- * posthog.capture pattern, but fires the locked `idea_voted` signal with the
- * idea's identifying properties. Votes are signal-only in v1 — there is no
- * persistent count or backend; PostHog is the source of truth for demand.
+ * Vote control for a post idea. Fires the locked `idea_voted` PostHog signal and
+ * remembers the vote in localStorage so the button stays "✓ Voted" across
+ * reloads. Votes remain signal-only in v1 — no live count or backend tally; the
+ * /vote page notes this. localStorage dedup is per-device/browser, best-effort.
  */
 export const IdeaVote: React.FC<IdeaVoteProps> = ({ idea }) => {
   const [voted, setVoted] = useState(false);
 
+  // Read persisted state after mount (avoids SSR/hydration mismatch — the server
+  // has no localStorage, so first paint is "not voted", then we reconcile).
+  useEffect(() => {
+    if (hasVoted(idea.slug)) setVoted(true);
+  }, [idea.slug]);
+
   return (
     <button
-      className={styles.FancyButton}
+      type="button"
+      className="button button--primary button--sm"
       disabled={voted}
       aria-pressed={voted}
       onClick={() => {
         posthog.capture('idea_voted', {
-          idea_id: idea.id,
+          idea_slug: idea.slug,
           idea_title: idea.title,
           type: idea.type,
           page_path: typeof window !== 'undefined' ? window.location.pathname : '/vote',
         });
-        // eslint-disable-next-line no-console
-        console.log('Thanks for voting!', idea.id);
+        try {
+          window.localStorage.setItem(votedKey(idea.slug), '1');
+        } catch {
+          /* storage blocked — vote still fired to PostHog, just not remembered */
+        }
         setVoted(true);
       }}
     >
-      {voted ? '✓ Voted' : '👍 Vote'}
+      {voted ? '✓ Voted' : '🗳️ Vote'}
     </button>
   );
 };

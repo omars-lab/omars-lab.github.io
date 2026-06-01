@@ -41,7 +41,7 @@ export default function VotePage() {
 
         <div className={styles.ideaGrid}>
           {ideas.map((idea) => (
-            <Card key={idea.id} shadow="md" className={styles.ideaCard}>
+            <Card key={idea.slug} shadow="md" className={styles.ideaCard}>
               <CardHeader>
                 <h3 className={styles.ideaTitle}>{idea.title}</h3>
               </CardHeader>

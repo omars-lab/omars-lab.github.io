@@ -4,7 +4,7 @@ description: "How pairing with AI reshaped the way I read diffs, spot bugs, and 
 type: post
 status: idea
 date: '2026-06-01'
-id: ai-taught-me-how-to-review-code
+slug: ai-taught-me-how-to-review-code
 ---
 
 A post idea: what changed in my code-review practice once I started reviewing
