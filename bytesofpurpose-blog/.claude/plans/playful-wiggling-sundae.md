@@ -184,7 +184,7 @@ blocked-on-user (LQ4 push/PR). Send a `PushNotification` one-liner, then stop (n
     pre-change capture → **zero** route changes (slugs frozen); moved docs still render in sidebars.
   - **defer?:** commit after (stage only the moved/renamed docs + `_category_.json`).
 
-- [ ] **LQ3 — Final full regression before PR.**
+- [x] **LQ3 — Final full regression before PR.** // done 2026-06-01: composeMessage 7/7 ✓; test-posthog 21 pass + 1 flaky-pass (window.open race, passed retry #1) = 0 real fails ✓; prod a11y+SEO 35/35 ✓. THREE confounds investigated & cleared, NOT regressions from my work: (1) 3 graph-selection-state dev failures = stale :3000 dev-server webpack error-overlay intercepting clicks — proven by re-running clean on a fresh :3100 server → 6/6 pass; (2) build ENOENT on .docusaurus/*.json = a COMPETING concurrent `docusaurus build` (PID 40323, Track C) corrupting the cache — standalone `yarn build` after `docusaurus clear` compiled clean (exit 0); (3) 3 known draft-sidebar dev failures (pre-existing). ONE real pre-existing a11y blocker FIXED per user: BookmarkletButton #fff-on-primary failed contrast in dark (2.70:1) → primary-darkest (5.24:1 dark / 8.70:1 light), committed 62a9c26e; full prod project re-run 35/35 green. NOTE: `make test-regression` halts at first failing sub-make (test-e2e), so test-prod-checks/test-posthog must be run separately — the chain never reaches them when dev has any failure.
   - **done-when:** `make test-regression` run on the branch, results read: only the 3 known
     `draft-sidebar` dev tests fail (everything else green), AND `make test-posthog` = 19/19, AND
     `cd bytesofpurpose-blog && npx jest test/unit/composeMessage.test.ts` = 7/7.
