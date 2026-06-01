@@ -4,8 +4,11 @@
  * work well for content-centric websites.
  */
 
-/* You can override the default Infima variables here. */
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
 :root {
+  /* Brand palette */
   --ifm-color-primary: #2563eb;
   --ifm-color-primary-dark: #1554e0;
   --ifm-color-primary-darker: #1350d4;
@@ -13,10 +16,130 @@
   --ifm-color-primary-light: #3e75ed;
   --ifm-color-primary-lighter: #4a7eee;
   --ifm-color-primary-lightest: #7098f2;
+
+  /* Tint used behind feature icons / soft surfaces */
+  --ifm-color-primary-contrast-background: rgba(37, 99, 235, 0.08);
+
+  /* Typography — Inter loaded via headTags in docusaurus.config.js */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
+  --ifm-heading-font-weight: 700;
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.7;
   --ifm-code-font-size: 95%;
+
+  /* Shape + elevation */
+  --ifm-global-radius: 0.6rem;
+  --ifm-button-border-radius: 0.5rem;
+  --ifm-card-background-color: #ffffff;
+  --ifm-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --ifm-global-shadow-lw: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Dark mode: lift the primary so links/buttons keep AA contrast on dark
+   surfaces, and define dark equivalents of the custom tokens above. */
+html[data-theme='dark'] {
+  --ifm-color-primary: #6d9bff;
+  --ifm-color-primary-dark: #4a82ff;
+  --ifm-color-primary-darker: #3877ff;
+  --ifm-color-primary-darkest: #155cff;
+  --ifm-color-primary-light: #90b4ff;
+  --ifm-color-primary-lighter: #a2c0ff;
+  --ifm-color-primary-lightest: #c9dbff;
 
+  --ifm-color-primary-contrast-background: rgba(109, 155, 255, 0.12);
+  --ifm-card-background-color: #1c1e21;
+  --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+  --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Tighten heading rhythm a touch for a more modern feel. */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Navbar "Buy Me a Coffee?" button (replaces the old alt-less <img> link)
+   ========================================================================== */
+.navbar-coffee {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--ifm-button-border-radius);
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar-coffee:hover {
+  background: var(--ifm-color-primary-dark);
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.navbar-coffee__icon {
+  font-size: 1.05rem;
+}
+
+@media screen and (max-width: 600px) {
+  /* On small screens drop the label, keep the recognizable cup. */
+  .navbar-coffee__label {
+    display: none;
+  }
+  .navbar-coffee {
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-coffee:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Blog index polish (CSS-only — no swizzle)
+   Frame each post as a card and rein in the oversized title links.
+   ========================================================================== */
+.blog-list-page article {
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-card-background-color);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.blog-list-page article:hover {
+  box-shadow: var(--ifm-global-shadow-md);
+  transform: translateY(-2px);
+}
+
+.blog-list-page article header h2 {
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-list-page article,
+  .blog-list-page article:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Code line highlighting (unchanged)
+   ========================================================================== */
 .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.1);
   display: block;
@@ -28,11 +151,16 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* 
- * https://github.com/facebook/docusaurus/issues/4083
- * https://github.com/facebook/docusaurus/issues/2577
- * https://github.com/facebook/docusaurus/issues/3955
- */
+/* ==========================================================================
+   Doc layout column widths.
+   WARNING: these target Docusaurus' internal DOM structure by position
+   (`> div > div > div`) and are FRAGILE — they can break on a Docusaurus
+   upgrade that changes the layout markup. Kept as-is intentionally; do not
+   expand. See:
+   https://github.com/facebook/docusaurus/issues/4083
+   https://github.com/facebook/docusaurus/issues/2577
+   https://github.com/facebook/docusaurus/issues/3955
+   ========================================================================== */
 
 /* Container */
 #__docusaurus > div.main-wrapper > div {
@@ -75,6 +203,3 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     display: none;
   }
 }
-
-
-

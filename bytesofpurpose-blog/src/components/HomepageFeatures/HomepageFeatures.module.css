@@ -1,12 +1,89 @@
 .features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
+  padding: 3rem 0 4rem;
   width: 100%;
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+.featuresHeading {
+  text-align: center;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.25rem;
 }
 
+.featureCol {
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+/* Each feature is a clickable card with a hover lift. */
+.featureCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-card-background-color);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.featureCard:hover {
+  text-decoration: none;
+  color: inherit;
+  transform: translateY(-4px);
+  box-shadow: var(--ifm-global-shadow-md);
+  border-color: var(--ifm-color-primary-lighter);
+}
+
+.featureCard:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 3px;
+}
+
+/* Tinted circular backdrop so the grey SVGs read as intentional. */
+.featureIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  background: var(--ifm-color-primary-contrast-background, rgba(37, 99, 235, 0.08));
+}
+
+.featureSvg {
+  height: 72px;
+  width: 72px;
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.featureDescription {
+  font-size: 0.95rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.featureButton {
+  margin-top: auto;
+  pointer-events: none; /* the whole card is the link */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featureCard,
+  .featureCard:hover {
+    transition: none;
+    transform: none;
+  }
+}

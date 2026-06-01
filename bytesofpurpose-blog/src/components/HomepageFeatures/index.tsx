@@ -55,26 +55,24 @@ const FeatureList: FeatureItem[] = [
         the design for this very site, and more! 
       </>
     ),
-    to: "/designs/design-blog",
+    to: "/designs",
     buttonText: "Designs"
   },
 ];
 
 function Feature({title, image, description, to, buttonText}: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <img className={styles.featureSvg} alt={title} src={image} />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
-        <Link
-            className="button button--secondary button--lg"
-            to={to}>
-            {buttonText}
-          </Link>
-      </div>
+    <div className={clsx('col col--4', styles.featureCol)}>
+      <Link to={to} className={styles.featureCard}>
+        <div className={styles.featureIconWrap}>
+          <img className={styles.featureSvg} alt="" aria-hidden="true" src={image} />
+        </div>
+        <h3 className={styles.featureTitle}>{title}</h3>
+        <p className={styles.featureDescription}>{description}</p>
+        <span className={clsx('button button--primary button--lg', styles.featureButton)}>
+          {buttonText}
+        </span>
+      </Link>
     </div>
   );
 }
@@ -83,6 +81,8 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
+        {/* h2 keeps the heading order h1 (hero) -> h2 -> h3 (feature titles). */}
+        <h2 className={styles.featuresHeading}>Explore the site</h2>
         <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />

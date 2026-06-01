@@ -27,6 +27,29 @@ const darkTheme = themes.dracula;
       posthogTestMode: process.env.POSTHOG_TEST_MODE === '1',
     },
     clientModules: [require.resolve('./src/posthog.js')],
+    // Load the Inter variable font for UI/body text (see --ifm-font-family-base in
+    // src/css/custom.css). Preconnect first so the stylesheet fetch is not blocked.
+    headTags: [
+      {
+        tagName: 'link',
+        attributes: {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'preconnect',
+          href: 'https://fonts.gstatic.com',
+          crossorigin: 'anonymous',
+        },
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+        },
+      },
+    ],
     markdown: {
       mermaid: true,
       hooks: {
@@ -96,6 +119,9 @@ const darkTheme = themes.dracula;
     ],
 
     plugins: [
+      // Exposes the 3 most recent published blog posts as global data for the
+      // homepage "Latest from the blog" strip (see plugins/recent-posts).
+      [require.resolve('./plugins/recent-posts'), {count: 3}],
       // https://docusaurus.io/docs/blog#multiple-blogs
       [
         '@docusaurus/plugin-content-blog',
@@ -196,13 +222,14 @@ const darkTheme = themes.dracula;
             //   position: 'left'
             // },
             {
-              // label: 'Support',
+              // Support / "Buy Me a Coffee" link. Rendered as a styled button-like
+              // navbar item (see .navbar-coffee in custom.css). Uses an emoji + text
+              // instead of an <img> so there's no alt-less image (a11y: image-alt).
               type: 'html',
-              value: '<a class="navbar__brand" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD"><div class="navbar__logo"><img src="/img/support.svg" class="themedImage_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module themedImage--light_node_modules-@docusaurus-theme-classic-lib-next-theme-ThemedImage-styles-module"></img></div><b class="navbar__title text--truncate">Buy Me a Coffee?</b></a>',
-              // href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
+              value: '<a class="navbar-coffee" href="https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD" aria-label="Buy me a coffee (support via PayPal)"><span class="navbar-coffee__icon" aria-hidden="true">☕</span><span class="navbar-coffee__label">Buy Me a Coffee?</span></a>',
               position: 'right',
             }
-            
+
           ],
         },
         footer: {
