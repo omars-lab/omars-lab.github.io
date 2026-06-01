@@ -104,6 +104,27 @@ control "Buy me a coffee ☕" / test "Support the dev 💜", conversion
 `support button clicked`, on the docs footer page). **Design doc:**
 `designs/2026-05-31-ab-testing-framework.mdx`.
 
+### Putting one experiment on a sitewide surface (e.g. the navbar)
+
+A component embedded in one doc only gets exposure on that page — most visitors
+(incl. the homepage) never see it, so the experiment barely collects data. To make a
+variant visible **sitewide**, put a high-traffic surface on the **same flag**:
+
+- The navbar can't read a flag as a `type:'html'` link (HTML strings can't run
+  hooks). Convert it to a **React component** and register a **custom navbar item
+  type** by swizzling `@theme/NavbarItem/ComponentTypes` (add `'custom-coffee':
+  NavbarCoffee`), then use `{ type: 'custom-coffee', position: 'right' }` in
+  `docusaurus.config.js`. **Reference:** `src/components/NavbarCoffee` + that swizzle
+  — it reads `support-button-copy` via the same `resolveVariant`.
+- When **multiple surfaces** share one flag, tag each conversion with a `surface`
+  prop (e.g. `surface: 'navbar'` vs the footer form) alongside
+  `[`$feature/<key>`]: variant`, so attribution stays separable while the variant is
+  shared. Note the tradeoff: a sitewide surface will **dominate exposure**, so the
+  result mostly measures that surface — record this in the experiment doc (see the
+  2026-06-01 revision in `…/experiments/2026-05-31-support-button-copy.md`).
+- A React navbar component ships in prod (unlike the dev-only DebugMenu), so its
+  change **needs a deploy**; verify with a regression run + `validate-deployment`.
+
 ### Forcing a variant — three mechanisms
 
 | Who | How | Scope |

@@ -49,6 +49,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
 | Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |
+| Regression / E2E | `bytesofpurpose-blog/test/e2e/README.md` (no skill) | Playwright **3-project model** (dev :3000 / prod-build :4173 / posthog-prod test-mode :4173); axe a11y + SEO gates; dev-only-surfaces **absence** test (DebugMenu/draft badges must not ship). `make test-regression`. Build-only transforms (rehype, draft exclusion) need the prod build, not `yarn start`. |
 
 ## Repo-wide gotchas (details live in the linked skill)
 
