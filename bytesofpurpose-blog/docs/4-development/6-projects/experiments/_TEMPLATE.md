@@ -10,7 +10,7 @@ draft: true            # flip to false to publish on the blog
 sidebar_position: 99
 ---
 
-> **Status:** `proposed` · **Owner:** Omar · **Flag:** `<flag-key>` · **Created:** <YYYY-MM-DD>
+> **Status:** `proposed` · **Owner:** Omar · **Flag:** `<flag-key>` · **Created:** `<YYYY-MM-DD>`
 >
 > Lifecycle: `proposed` → `designed` → `draft` → `running` → `analyzing` → `concluded` → `rolled-out` / `abandoned`
 
@@ -37,25 +37,24 @@ reconsider running it.
 ### Variants
 | Variant | What the user sees / gets | Why this variant |
 |---|---|---|
-| `control` | <baseline> | the current behavior |
-| `test` | <change> | <the lever we think matters> |
+| `control` | `<baseline>` | the current behavior |
+| `test` | `<change>` | `<the lever we think matters>` |
 
 Keep variants to a **single changed dimension** so the result is interpretable.
 
 ### Metric
 - **Primary (conversion):** `<event name>` — *why this is the right success signal.*
-- **Guardrail(s):** <metric(s) that must not regress>.
+- **Guardrail(s):** `<metric(s) that must not regress>`.
 - **Exposure:** `$feature_flag_called` (recorded by `getFeatureFlag`).
 
 ### Placement / injection point — *and why here*
 - **Component:** `src/components/<X>` · **Page(s):** `<path>`.
-- **Why this placement:** <why this surface gives a clean, sufficient signal — traffic
-  volume, proximity to the conversion, no confounding elements, etc.>
-- **Why NOT elsewhere:** <surfaces we deliberately did not instrument, and why>.
+- **Why this placement:** `<why this surface gives a clean, sufficient signal — traffic volume, proximity to the conversion, no confounding elements, etc.>`
+- **Why NOT elsewhere:** `<surfaces we deliberately did not instrument, and why>`.
 
 ### Targeting & assignment
-- Split: <e.g. 50/50>. Assignment: PostHog hashes `distinct_id` (sticky per user).
-- Any forced cohorts / release conditions: <none | describe>.
+- Split: `<e.g. 50/50>`. Assignment: PostHog hashes `distinct_id` (sticky per user).
+- Any forced cohorts / release conditions: `<none | describe>`.
 
 ### Sample size & duration
 - Rough traffic estimate, minimum detectable effect, and how long we expect to run
@@ -70,7 +69,7 @@ Keep variants to a **single changed dimension** so the result is interpretable.
 
 | Date | State | Note |
 |---|---|---|
-| <YYYY-MM-DD> | proposed | designed via the `design-experiment` skill |
+| `<YYYY-MM-DD>` | proposed | designed via the `design-experiment` skill |
 
 ## 6. Outcome
 
@@ -81,14 +80,14 @@ significance verdict, one-line read.
 
 *(analyze-experiment fills this.)*
 **Recommendation:** ship `test` | keep `control` | keep running · **Confidence:** high/med/low
-**Why:** <grounded in the numbers> · **Caveats:** <SRM / low N / novelty / seasonality>
+**Why:** `<grounded in the numbers>` · **Caveats:** `<SRM / low N / novelty / seasonality>`
 
 ## 8. Decision
 
 *(decide-experiment fills this — the "how we made the call" record.)*
 **Decision:** … · **Date / by:** … · **Gates:** significance/sample/guardrails/SRM
-**Rationale:** <why this option, incl. any override of the recommendation>
-**Action → conclude-experiment:** <flag→100% test | flag→100% control | none yet> · **Revisit:** …
+**Rationale:** `<why this option, incl. any override of the recommendation>`
+**Action → conclude-experiment:** `<flag→100% test | flag→100% control | none yet>` · **Revisit:** …
 
 ---
 **Links:** PostHog experiment `<id/url>` · registry `src/experiments.ts` · framework

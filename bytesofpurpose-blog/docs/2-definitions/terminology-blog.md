@@ -8,9 +8,12 @@ date: 2025-01-31T10:00
 draft: true
 ---
 
-Functions vs Mechanics vs Techiques vs Strategies ...
-Mechanics are more technical in nature ... lower level
-Strageies are more process oriented in nature ... highter level ...
-techniques are a mix ...
+How I distinguish the building blocks of blog development, ordered from
+lower-level to higher-level.
 
-* [ ] My initiatives are really development initiatives ...
+## Functions vs. Mechanics vs. Techniques vs. Strategies
+
+- **Functions** — _TODO: define._
+- **Mechanics** — the lower-level, more technical pieces.
+- **Techniques** — a mix of the two: applying mechanics in a deliberate way.
+- **Strategies** — higher-level and more process-oriented.
