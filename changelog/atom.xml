@@ -299,8 +299,8 @@ component=Claude. Date drives the card's execution/inception date.
 <p><strong>Status:</strong> Completed</p>
 <p><strong>Files Created:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/_category_.json</code></a> - Category configuration</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx</code></a> - Main index page covering all content types</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/_category_.json</code></a> - Category configuration</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx</code></a> - Main index page covering all content types</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx</code></a> - Comprehensive changelog guide</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-docs"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-docs.mdx</code></a> - Documentation creation guide</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-designs"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-designs.mdx</code></a> - Design posts guide</li>
@@ -308,11 +308,11 @@ component=Claude. Date drives the card's execution/inception date.
 <p><strong>Files Enhanced:</strong></p>
 <ul>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/mx-docx-blog-posts"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-blog-posts.mdx</code></a> - Expanded from basic guide to comprehensive resource</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added "Adding Content" section with links to all guides</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added "Adding Content" section with links to all guides</li>
 </ul>
 <p><strong>Folders Impacted:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/</code></a> - Restructured and enhanced with comprehensive guides</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-content"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/</code></a> - Restructured and enhanced with comprehensive guides</li>
 </ul>
 <p><strong>Key Accomplishments:</strong></p>
 <ol>
@@ -423,86 +423,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Files Enhanced:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added link to changelog system documentation</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx</code></a> - Updated reference to new location</li>
-</ul>
-<p><strong>Files Deleted:</strong></p>
-<ul>
-<li class=""><code>changelog/changelog-system.md</code> - Removed old location</li>
-</ul>
-<p><strong>Key Accomplishments:</strong></p>
-<ol>
-<li class="">
-<p><strong>Documentation Migration</strong></p>
-<ul>
-<li class="">Moved changelog system documentation from <code>changelog/changelog-system.md</code> to <code>docs/6-techniques/3-blogging-techniques/changelog-system.mdx</code></li>
-<li class="">Converted from Markdown to MDX format for consistency</li>
-<li class="">Added proper frontmatter with slug, authors, tags, and description</li>
-</ul>
-</li>
-<li class="">
-<p><strong>Enhanced Documentation</strong></p>
-<ul>
-<li class="">Added overview section explaining the changelog system purpose</li>
-<li class="">Included directory structure section with reference to changelog README</li>
-<li class="">Enhanced frontmatter fields documentation with required/optional indicators</li>
-<li class="">Added related guides section linking to adding-changelog-entries and other resources</li>
-</ul>
-</li>
-<li class="">
-<p><strong>Reference Updates</strong></p>
-<ul>
-<li class="">Fixed broken link in <code>changelog/README.md</code> (now points to correct location)</li>
-<li class="">Added link in blogging techniques README under "Key Documents"</li>
-<li class="">Updated adding-changelog-entries guide to reference new location</li>
-<li class="">All references now point to <code>/docs/techniques/blogging-techniques/changelog-system</code></li>
-</ul>
-</li>
-<li class="">
-<p><strong>Organization Improvements</strong></p>
-<ul>
-<li class="">System documentation now properly located in docs structure</li>
-<li class="">Maintains logical separation: system docs vs. "how to add" guides</li>
-<li class="">Better discoverability through docs sidebar navigation</li>
-<li class="">Consistent with other documentation files in the structure</li>
-</ul>
-</li>
-</ol>
-<p><strong>Impact:</strong></p>
-<ul>
-<li class=""><strong>Fixed broken link</strong>: The reference in <code>changelog/README.md</code> now works correctly</li>
-<li class=""><strong>Improved discoverability</strong>: Changelog system documentation accessible via docs sidebar</li>
-<li class=""><strong>Better organization</strong>: System documentation separated from "how to add" guides</li>
-<li class=""><strong>Consistent structure</strong>: Uses MDX format like other documentation files</li>
-<li class=""><strong>Enhanced navigation</strong>: Users can find changelog system docs alongside related guides</li>
-</ul>
-<p><strong>Status:</strong> Changelog system documentation has been successfully moved to the docs folder and all references have been updated. The documentation is now properly integrated into the documentation structure and accessible via the docs sidebar.</p>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Content Docs - Changelog System Documentation]]></title>
-        <id>https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation</id>
-        <link href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation"/>
-        <updated>2025-11-20T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Move changelog system documentation from changelog directory to docs folder for better discoverability and organization]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<p>Move changelog system documentation from the changelog directory to the docs folder to:</p>
-<ul>
-<li class="">Fix broken link in <code>changelog/README.md</code> that references <code>/docs/techniques/blogging-techniques/changelog-system</code></li>
-<li class="">Improve discoverability by placing system documentation in the docs structure</li>
-<li class="">Maintain logical separation between system documentation and "how to add" guides</li>
-<li class="">Convert to MDX format for consistency with other documentation files</li>
-<li class="">Update all references to point to the new location</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-documentation-moved-2025-11-20">✅ Documentation Moved (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#-documentation-moved-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Documentation Moved (2025-11-20)" title="Direct link to ✅ Documentation Moved (2025-11-20)" translate="no">​</a></h3>
-<p><strong>Status:</strong> Completed</p>
-<p><strong>Files Created:</strong></p>
-<ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-system"><code>docs/6-techniques/3-blogging-techniques/changelog-system.mdx</code></a> - Changelog system documentation in docs folder</li>
-</ul>
-<p><strong>Files Enhanced:</strong></p>
-<ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added link to changelog system documentation</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added link to changelog system documentation</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx</code></a> - Updated reference to new location</li>
 </ul>
 <p><strong>Files Deleted:</strong></p>
@@ -627,12 +548,12 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="">Use this to iterate on mermaid diagrams<!-- -->
 <ul>
-<li class=""><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener noreferrer" class="">https://github.com/mermaid-js/mermaid-cli</a></li>
+<li class=""><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener noreferrer" class="">GitHub — mermaid-js/mermaid-cli</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Explore how to optimize the blog / use the latest features<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/blog/releases/3.6#mermaid" target="_blank" rel="noopener noreferrer" class="">https://docusaurus.io/blog/releases/3.6#mermaid</a></li>
+<li class=""><a href="https://docusaurus.io/blog/releases/3.6#mermaid" target="_blank" rel="noopener noreferrer" class="">Docusaurus — 3.6</a></li>
 </ul>
 </li>
 </ul>
@@ -801,7 +722,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to deal with name conflicts in graph highlighting<!-- -->
 <ul class="contains-task-list containsTaskList_mC6p">
-<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2" target="_blank" rel="noopener noreferrer" class="">https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2</a></li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Graph</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Mobile friendly graph<!-- -->
@@ -948,14 +869,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Leverage this for product analytics<!-- -->
 <ul class="contains-task-list containsTaskList_mC6p">
-<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://us.posthog.com/signup" target="_blank" rel="noopener noreferrer" class="">https://us.posthog.com/signup</a>
+<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://us.posthog.com/signup" target="_blank" rel="noopener noreferrer" class="">us.posthog.com — Signup</a>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Post hot cloud has a free offering ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Embedd it into blog ...</li>
 </ul>
 </li>
-<li class=""><a href="https://posthog.com/" target="_blank" rel="noopener noreferrer" class="">https://posthog.com/</a></li>
-<li class="">See docs on self hosting <a href="https://posthog.com/docs/self-host" target="_blank" rel="noopener noreferrer" class="">https://posthog.com/docs/self-host</a></li>
+<li class=""><a href="https://posthog.com/" target="_blank" rel="noopener noreferrer" class="">PostHog</a></li>
+<li class="">See docs on self hosting <a href="https://posthog.com/docs/self-host" target="_blank" rel="noopener noreferrer" class="">PostHog — Self Host</a></li>
 </ul>
 </li>
 </ul>
@@ -965,10 +886,10 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Can I build a frontend app that has what I need / uses CloudKit with React native</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Tags zzz users that start here and end there ... what do they do ...<!-- -->
 <ul>
-<li class=""><a href="https://www.pendo.io/pendo-vs-fullstory/" target="_blank" rel="noopener noreferrer" class="">https://www.pendo.io/pendo-vs-fullstory/</a></li>
-<li class=""><a href="https://mixpanel.com/releases/startups" target="_blank" rel="noopener noreferrer" class="">https://mixpanel.com/releases/startups</a></li>
-<li class=""><a href="https://openpanel.dev/" target="_blank" rel="noopener noreferrer" class="">https://openpanel.dev/</a></li>
-<li class="">Funnel analyais with oendo ... <a href="https://www.pendo.io/pendo-free/" target="_blank" rel="noopener noreferrer" class="">https://www.pendo.io/pendo-free/</a></li>
+<li class=""><a href="https://www.pendo.io/pendo-vs-fullstory/" target="_blank" rel="noopener noreferrer" class="">pendo.io — Pendo Vs Fullstory</a></li>
+<li class=""><a href="https://mixpanel.com/releases/startups" target="_blank" rel="noopener noreferrer" class="">mixpanel.com — Startups</a></li>
+<li class=""><a href="https://openpanel.dev/" target="_blank" rel="noopener noreferrer" class="">openpanel.dev</a></li>
+<li class="">Funnel analyais with oendo ... <a href="https://www.pendo.io/pendo-free/" target="_blank" rel="noopener noreferrer" class="">pendo.io — Pendo Free</a></li>
 </ul>
 </li>
 </ul>
@@ -989,12 +910,12 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h1>Blogging Mechanism - Link Management</h1>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
-<p><input type="checkbox" disabled="" checked=""> <!-- -->This has broken links ... example ... <a href="https://blog.bytesofpurpose.com/docs/techniques/techniques" target="_blank" rel="noopener noreferrer" class="">https://blog.bytesofpurpose.com/docs/techniques/techniques</a> links to <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques" target="_blank" rel="noopener noreferrer" class="">https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques</a> which shows page not found ... @done(2025-11-17 09:35 AM)</p>
+<p><input type="checkbox" disabled="" checked=""> <!-- -->This has broken links ... example ... <a href="https://blog.bytesofpurpose.com/docs/techniques/techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Techniques</a> links to <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Blogging Techniques</a> which shows page not found ... @done(2025-11-17 09:35 AM)</p>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->Add Link to card mechanism to blog</p>
 <ul>
-<li class=""><a href="https://ogp.me/" target="_blank" rel="noopener noreferrer" class="">https://ogp.me/</a></li>
+<li class=""><a href="https://ogp.me/" target="_blank" rel="noopener noreferrer" class="">ogp.me</a></li>
 </ul>
 </li>
 </ul>
@@ -1012,7 +933,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
         <content type="html"><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Enable official docusaurus search?<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/docs/search" target="_blank" rel="noopener noreferrer" class="">https://docusaurus.io/docs/search</a></li>
+<li class=""><a href="https://docusaurus.io/docs/search" target="_blank" rel="noopener noreferrer" class="">Docusaurus — Search</a></li>
 </ul>
 </li>
 </ul>
@@ -1030,7 +951,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
         <content type="html"><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Link into docusaurus SEO<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/docs/seo" target="_blank" rel="noopener noreferrer" class="">https://docusaurus.io/docs/seo</a></li>
+<li class=""><a href="https://docusaurus.io/docs/seo" target="_blank" rel="noopener noreferrer" class="">Docusaurus — Seo</a></li>
 </ul>
 </li>
 </ul>
@@ -1253,5 +1174,91 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Blog Structure - Changelog & Roadmap]]></title>
+        <id>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap</id>
+        <link href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap"/>
+        <updated>2025-11-18T15:48:34.000Z</updated>
+        <summary type="html"><![CDATA[Organize and structure the changelog and roadmap sections of the blog]]></summary>
+        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<p>Organize and structure the changelog and roadmap sections of the blog, including:</p>
+<ul>
+<li class="">Changelog tab/page with GitHub-style heatmap visualization</li>
+<li class="">Structure for changelog entries with frontmatter</li>
+<li class="">Automated changelog data generation from markdown files</li>
+<li class="">Roadmap integration (migrated to changelog entries)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-changelog-system-completed-2025-01-20">✅ Changelog System Completed (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#-changelog-system-completed-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Changelog System Completed (2025-01-20)" title="Direct link to ✅ Changelog System Completed (2025-01-20)" translate="no">​</a></h3>
+<p><strong>Work Period:</strong> January 20, 2025</p>
+<p><strong>Key Accomplishments:</strong></p>
+<ul>
+<li class="">Created changelog directory structure (<code>changelog/</code>)</li>
+<li class="">Implemented changelog entry format with frontmatter</li>
+<li class="">Built automated changelog data generation script (<code>scripts/generate-changelog-data.js</code>)</li>
+<li class="">Created Changelog React component with heatmap visualization</li>
+<li class="">Implemented GitHub-style month/quarter/year heatmap display</li>
+<li class="">Added changelog page route (<code>/changelog</code>)</li>
+<li class="">Migrated roadmap items to changelog entries</li>
+<li class="">Established naming conventions for changelog entries</li>
+<li class="">Integrated changelog generation into build process (npm lifecycle hooks)</li>
+</ul>
+<p><strong>Components Created:</strong></p>
+<ul>
+<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
+<ul>
+<li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
+<li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
+<li class="">Heatmap visualization with month/quarter/year grouping</li>
+<li class="">Separate rows for content vs development categories</li>
+<li class="">Quarter-based list view with horizontal scrolling</li>
+<li class="">Entry filtering and navigation</li>
+</ul>
+</li>
+<li class=""><strong>Changelog Utilities</strong> (<code>src/components/Changelog/changelogUtils.ts</code>)<!-- -->
+<ul>
+<li class="">Data loading and processing</li>
+</ul>
+</li>
+<li class=""><strong>Changelog Types</strong> (<code>src/components/Changelog/types.ts</code>)<!-- -->
+<ul>
+<li class="">TypeScript interfaces for changelog entries</li>
+</ul>
+</li>
+</ul>
+<p><strong>Scripts Created:</strong></p>
+<ul>
+<li class=""><strong><code>scripts/generate-changelog-data.js</code></strong>: Automatically scans <code>changelog/</code> directory, parses frontmatter, and generates JSON data file<!-- -->
+<ul>
+<li class="">Runs automatically via npm <code>prestart</code> and <code>prebuild</code> hooks</li>
+<li class="">Generates <code>src/components/Changelog/changelog-data.json</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>Documentation Created:</strong></p>
+<ul>
+<li class=""><strong><code>NAMING_CONVENTIONS.md</code></strong>: Comprehensive naming conventions for changelog entries</li>
+<li class=""><strong><code>docs/6-techniques/3-blogging-techniques/changelog-system.md</code></strong>: Changelog entry format and guidelines</li>
+<li class=""><strong><code>prompts/heal/heal-blog-changelog.md</code></strong>: Reusable prompt for inferring and enriching changelog entries from git history</li>
+</ul>
+<p><strong>Related Links:</strong></p>
+<ul>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog">Changelog Page</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/changelog-system">Changelog System Documentation</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md" target="_blank" rel="noopener noreferrer" class="">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js" target="_blank" rel="noopener noreferrer" class="">Changelog Generation Script</a></li>
+<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx" target="_blank" rel="noopener noreferrer" class="">Changelog Component</a></li>
+<li class=""><a href="https://posthog.com/changelog" target="_blank" rel="noopener noreferrer" class="">PostHog Changelog Inspiration</a></li>
+</ul>
+<p><strong>Roadmap Migration:</strong></p>
+<ul>
+<li class="">Migrated all roadmap items from <code>ROADMAP.md</code> files to changelog entries with <code>planned</code> status</li>
+<li class="">Removed deprecated <code>ROADMAP.md</code> files</li>
+<li class="">Roadmap items now tracked as changelog entries</li>
+</ul>
+<p><strong>Status:</strong> Changelog system has been successfully implemented. The blog now has a comprehensive changelog system with automated data generation, GitHub-style visualization, and structured entry format. Roadmap items have been migrated to changelog entries for unified tracking.</p>]]></content>
     </entry>
 </feed>
