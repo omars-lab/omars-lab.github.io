@@ -30,10 +30,9 @@ function HomepageHeader() {
 }
 
 export default function Home(): JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={siteConfig.title}
+      title="Omars Blog"
       description="Software engineering docs, blog posts, and system designs by Omar Eid — purposeful code, one byte at a time.">
       <HomepageHeader />
       <main>
