@@ -75,6 +75,11 @@ function scanDirectory(dir, relativePath = '') {
     if (item.isDirectory()) {
       // Recursively scan subdirectories
       entries.push(...scanDirectory(fullPath, relativeItemPath));
+    } else if (item.isFile() && item.name === 'CLAUDE-CHANGELOG.md') {
+      // Special-cased: a single growing file of dated batches of completed Claude
+      // tasks. Split it into one entry per "## YYYY-MM-DD — Title" batch rather than
+      // treating the whole file as one entry. See parseClaudeChangelog().
+      entries.push(...parseClaudeChangelog(fs.readFileSync(fullPath, 'utf-8')));
     } else if (item.isFile() && item.name.endsWith('.md') && item.name !== 'README.md') {
       // Process markdown file
       const fileContent = fs.readFileSync(fullPath, 'utf-8');
@@ -119,6 +124,62 @@ function scanDirectory(dir, relativePath = '') {
     }
   }
   
+  return entries;
+}
+
+/**
+ * Parse CLAUDE-CHANGELOG.md into one entry per dated batch.
+ *
+ * Batch heading:  ## YYYY-MM-DD — Title   (em-dash or hyphen accepted)
+ * Optional meta:  <!-- meta: type=feature category=development priority=high component=X -->
+ * Body until the next "## " becomes the entry's description fallback isn't needed —
+ * the one-line summary right after meta is used as the description.
+ */
+function parseClaudeChangelog(content) {
+  const entries = [];
+  // Drop the leading HTML comment block (format docs) if present.
+  const withoutLeadingComment = content.replace(/^<!--[\s\S]*?-->\s*/, '');
+  // Split on level-2 headings, keeping the heading with its section.
+  const sections = withoutLeadingComment.split(/\n(?=## )/);
+
+  for (const section of sections) {
+    const headingMatch = section.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*[—-]\s*(.+?)\s*$/m);
+    if (!headingMatch) continue;
+    const date = headingMatch[1];
+    const title = headingMatch[2].trim();
+
+    // Optional meta comment
+    const meta = {};
+    const metaMatch = section.match(/<!--\s*meta:\s*([^>]*?)-->/);
+    if (metaMatch) {
+      metaMatch[1].trim().split(/\s+/).forEach((pair) => {
+        const eq = pair.indexOf('=');
+        if (eq > 0) meta[pair.slice(0, eq)] = pair.slice(eq + 1);
+      });
+    }
+
+    // First non-empty, non-heading, non-comment line = description.
+    let description = '';
+    for (const line of section.split('\n')) {
+      const t = line.trim();
+      if (!t || t.startsWith('##') || t.startsWith('<!--') || t.startsWith('-')) continue;
+      description = t;
+      break;
+    }
+
+    entries.push({
+      title: `Claude Tasks — ${title}`,
+      description,
+      status: 'completed',
+      inception_date: date,
+      execution_date: date,
+      type: meta.type || 'chore',
+      component: meta.component || 'Claude',
+      priority: meta.priority || 'medium',
+      category: meta.category || 'development',
+      slug: `claude-tasks/${date}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`,
+    });
+  }
   return entries;
 }
 

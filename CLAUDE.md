@@ -12,6 +12,20 @@ Each skill is the single source of truth for its domain. If a fact spans areas, 
 it in the most specific skill and cross-link. Update the skill's Troubleshooting
 table when you hit and resolve a new failure mode.
 
+## ⚠️ Operating convention: archive completed tasks to the changelog
+
+When the task list reaches **10+ completed tasks**, archive them and prune:
+1. Append a new dated batch to `bytesofpurpose-blog/changelog/CLAUDE-CHANGELOG.md`
+   (format documented in that file's header): a `## YYYY-MM-DD — Title` heading, a
+   `<!-- meta: ... -->` line, a one-line summary, and the completed task subjects as
+   a bullet list.
+2. Run `node bytesofpurpose-blog/scripts/generate-changelog-data.js` so the entry
+   renders on the site (the generator splits that file into one changelog card per
+   batch — no code change needed per batch).
+3. **Then delete those completed tasks** (TaskUpdate → `deleted`) so the live task
+   list stays short. Leave pending/in_progress tasks untouched.
+The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working set.
+
 ## The site
 
 Docusaurus 3 blog/docs (`bytesofpurpose-blog/`) → GitHub Pages (`gh-pages`) →
