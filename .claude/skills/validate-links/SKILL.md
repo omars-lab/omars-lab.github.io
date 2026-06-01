@@ -1,6 +1,6 @@
 ---
 name: validate-links
-description: Lint markdown/MDX source for link hygiene — bare inline URLs, overly long or tracking-laden URLs (e.g. Google search cruft), raw-URL-as-link-text, and non-descriptive anchor text. Use before deploy or when cleaning up links in posts/docs. Source-level complement to Docusaurus onBrokenLinks (build-time) and the SEO e2e link-text check (rendered page).
+description: Lint markdown/MDX source for link hygiene — bare inline URLs, overly long or tracking-laden URLs (e.g. Google search cruft), raw-URL-as-link-text, non-descriptive anchor text, plus internal-link integrity (broken /docs links + published-page→draft-page links). Use before deploy or when cleaning up links in posts/docs. Source-level complement to Docusaurus onBrokenLinks (build-time) and the SEO e2e link-text check (rendered page).
 ---
 
 # Validate links in Bytes of Purpose content
@@ -37,9 +37,34 @@ two lines per problem, so don't count its lines).
 | `long-url` | link URL > 120 chars or carrying tracking params | shorten the URL + give it descriptive text |
 | `url-as-text` | `[text](url)` where the visible **text** is a raw URL | replace text with a human-readable label |
 | `generic-text` | non-descriptive text ("click here", "here", "read more", …) | describe the destination (Lighthouse link-text rule) |
+| `broken-internal` | a `/docs/…` link that resolves to **no published doc slug** | fix the path, or point at an existing absolute slug |
+| `link-to-draft` | a **published** page links to a `draft: true` page (excluded from the prod build → a build-time broken link) | un-draft the target first, or remove/defer the link |
 
 It skips: YAML frontmatter, fenced/inline code (so example URLs aren't flagged),
-and relative/internal links (those are `onBrokenLinks`' job — see below).
+and external/relative non-`/docs` links beyond the two integrity checks below.
+
+### Internal-link integrity (the `broken-internal` / `link-to-draft` checks)
+
+These two are **cross-file**: the script builds a whole-corpus **slug index**
+(every doc's absolute `slug:` + its `draft:` flag) and resolves each `/docs/…`
+link against it. The docs plugin has no `routeBasePath` override, so a doc with
+`slug: /X` is served at `/docs/X` — that's the mapping used to resolve links.
+
+- **`broken-internal`** is a fast, source-level version of Docusaurus
+  `onBrokenLinks`: it flags a `/docs/…` link with no matching published slug
+  *at authoring time* (in the Write/Edit hook), not only at build time.
+- **`link-to-draft`** encodes a deliberate policy: a **draft→draft** link is
+  *allowed* (both pages ship together later), but a **published→draft** link is
+  flagged — because drafts are excluded from the prod build, so the live page
+  would ship a broken link. The check reads the **source** page's `draft:` flag
+  to decide, and only fires when the source is published.
+
+Both are **warn-tier** (advisory, never block a commit) — a draft may
+intentionally forward-link to a not-yet-published page. (Policy decided
+2026-06-01; surfaced by the LQ2 folder-split, where a published README carried a
+link to a `draft: true` page.) Per the repo's "structure decisions must update
+the structure checks" convention, this skill + `scripts/validate-links.js` are
+kept in lockstep — change one, change the other.
 
 ## The URL-cleanup recipe (for `bare-url` / `long-url`)
 
