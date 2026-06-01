@@ -1,8 +1,9 @@
 # Dependencies
 /node_modules
 
-# Production
-/build
+# Production — Docusaurus build output (default `build/`, plus alternate
+# --out-dir targets like `build-support/`).
+/build*
 
 # Generated files
 .docusaurus

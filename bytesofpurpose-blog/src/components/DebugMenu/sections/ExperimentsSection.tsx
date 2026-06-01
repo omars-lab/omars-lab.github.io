@@ -63,7 +63,7 @@ function clearOverrides(): void {
   window.location.assign(url.toString());
 }
 
-function ExperimentsBody(): JSX.Element {
+function ExperimentsBody(): React.JSX.Element {
   const phReady = typeof window !== 'undefined' && !!window.posthog;
   const distinctId =
     phReady && posthog?.get_distinct_id ? posthog.get_distinct_id() : null;

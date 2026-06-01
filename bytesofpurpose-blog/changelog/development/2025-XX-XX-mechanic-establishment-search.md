@@ -12,7 +12,7 @@ priority: 'medium'
 # Blogging Mechanism - Search
 
 * [ ] Enable official docusaurus search?
-	* https://docusaurus.io/docs/search
+	* [Docusaurus — Search](https://docusaurus.io/docs/search)
 
     
 ## Execution Plan

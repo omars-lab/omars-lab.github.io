@@ -1,0 +1,20 @@
+/* Mirrors the upstream @theme/BlogPostItem/Header/Title styles (the swizzle
+   re-implements the component, so we re-declare its one rule here). */
+
+.title {
+  font-size: 3rem;
+}
+
+@media (max-width: 576px) {
+  .title {
+    font-size: 2rem;
+  }
+}
+
+/* Flex row holding the title + inline share control on the blog post page. */
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}

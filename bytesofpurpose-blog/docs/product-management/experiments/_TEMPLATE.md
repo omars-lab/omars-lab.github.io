@@ -1,0 +1,95 @@
+---
+# Copy this file to <YYYY-MM-DD>-<flag-key>.md and fill it in.
+# This doc is BOTH the experiment's design and its living timeline.
+slug: /development/projects/experiments/experiment-<flag-key>
+title: '<Experiment title>'
+description: 'Template for an experiment doc that captures both the design and the living timeline — copy it per experiment and fill it in.'
+authors: [oeid]
+tags: [experiments, ab-testing]
+draft: true            # flip to false to publish on the blog
+sidebar_position: 99
+---
+
+> **Status:** `proposed` · **Owner:** Omar · **Flag:** `<flag-key>` · **Created:** `<YYYY-MM-DD>`
+>
+> Lifecycle: `proposed` → `designed` → `draft` → `running` → `analyzing` → `concluded` → `rolled-out` / `abandoned`
+
+A one-paragraph summary of the experiment a reader can grasp in 15 seconds:
+what changes between variants, on which surface, and what we hope to learn.
+
+<!-- truncate -->
+
+## 1. Hypothesis
+
+> **We believe** that `<change>` **will cause** `<measurable effect>` **because** `<reasoning>`.
+> **We'll know we're right when** `<success criterion / metric threshold>`.
+
+State it falsifiably. A hypothesis you can't disprove isn't an experiment.
+
+## 2. Why this experiment (motivation)
+
+What prompted it, what decision the result will inform, and what we'll do
+differently depending on the outcome. If the answer doesn't change a decision,
+reconsider running it.
+
+## 3. Design
+
+### Variants
+| Variant | What the user sees / gets | Why this variant |
+|---|---|---|
+| `control` | `<baseline>` | the current behavior |
+| `test` | `<change>` | `<the lever we think matters>` |
+
+Keep variants to a **single changed dimension** so the result is interpretable.
+
+### Metric
+- **Primary (conversion):** `<event name>` — *why this is the right success signal.*
+- **Guardrail(s):** `<metric(s) that must not regress>`.
+- **Exposure:** `$feature_flag_called` (recorded by `getFeatureFlag`).
+
+### Placement / injection point — *and why here*
+- **Component:** `src/components/<X>` · **Page(s):** `<path>`.
+- **Why this placement:** `<why this surface gives a clean, sufficient signal — traffic volume, proximity to the conversion, no confounding elements, etc.>`
+- **Why NOT elsewhere:** `<surfaces we deliberately did not instrument, and why>`.
+
+### Targeting & assignment
+- Split: `<e.g. 50/50>`. Assignment: PostHog hashes `distinct_id` (sticky per user).
+- Any forced cohorts / release conditions: `<none | describe>`.
+
+### Sample size & duration
+- Rough traffic estimate, minimum detectable effect, and how long we expect to run
+  before calling significance. (Don't decide on a handful of events.)
+
+## 4. Risks & decisions
+- SSR shows control first paint (flags resolve client-side) — acceptable?
+- Anything that could confound the result, and how we mitigate it.
+- Rollback plan.
+
+## 5. Timeline / log
+
+| Date | State | Note |
+|---|---|---|
+| `<YYYY-MM-DD>` | proposed | designed via the `design-experiment` skill |
+
+## 6. Outcome
+
+*(analyze-experiment fills this.)* Per-variant exposures / conversions / rate, lift,
+significance verdict, one-line read.
+
+## 7. Recommendation
+
+*(analyze-experiment fills this.)*
+**Recommendation:** ship `test` | keep `control` | keep running · **Confidence:** high/med/low
+**Why:** `<grounded in the numbers>` · **Caveats:** `<SRM / low N / novelty / seasonality>`
+
+## 8. Decision
+
+*(decide-experiment fills this — the "how we made the call" record.)*
+**Decision:** … · **Date / by:** … · **Gates:** significance/sample/guardrails/SRM
+**Rationale:** `<why this option, incl. any override of the recommendation>`
+**Action → conclude-experiment:** `<flag→100% test | flag→100% control | none yet>` · **Revisit:** …
+
+---
+**Links:** PostHog experiment `<id/url>` · registry `src/experiments.ts` · framework
+[`designs/*-ab-testing-framework`](#) · skills `design-experiment` → `run-ab-test` →
+`analyze-experiment` → `decide-experiment` → `conclude-experiment`.

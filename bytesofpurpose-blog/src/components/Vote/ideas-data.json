@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "ai-taught-me-how-to-manage",
+    "title": "AI taught me how to manage",
+    "description": "Lessons in delegation, feedback, and setting context that I learned by managing AI agents — and how they transfer back to managing people.",
+    "type": "post",
+    "status": "idea",
+    "date": "2026-06-01"
+  },
+  {
+    "slug": "ai-taught-me-how-to-review-code",
+    "title": "AI taught me how to review code",
+    "description": "How pairing with AI reshaped the way I read diffs, spot bugs, and give feedback — turning code review from a chore into a learning loop.",
+    "type": "post",
+    "status": "idea",
+    "date": "2026-06-01"
+  }
+]

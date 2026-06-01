@@ -12,6 +12,16 @@
  *                (Google sca_esv/ei/ved/gs_lp, utm_*, …).
  *   generic-text Non-descriptive link text ("click here", "here", "read more"). [WARN]
  *                Mirrors the Lighthouse link-text rule the SEO e2e spec checks.
+ *   broken-internal  A /docs/… link that resolves to no published doc slug.     [WARN]
+ *                    Source-level, fast version of Docusaurus onBrokenLinks.
+ *   link-to-draft    A PUBLISHED page links to a `draft: true` page (which is    [WARN]
+ *                    excluded from the prod build → a build-time broken link).
+ *                    A draft→draft link is allowed (they ship together later).
+ *
+ * The two internal-link checks are cross-file: they build a whole-corpus slug
+ * index (absolute `slug:` + `draft:` per doc) and resolve every /docs/ link
+ * against it. Both are warn-tier by decision — advisory, never blocking, since a
+ * draft may intentionally forward-link to a not-yet-published page.
  *
  * SOURCE-level complement to: Docusaurus `onBrokenLinks` (broken internal links,
  * build time) and test/e2e/seo.spec.ts (generic link text on the rendered page).
@@ -38,7 +48,16 @@ const SEVERITY = {
   'url-as-text': 'error',
   'long-url': 'warn',
   'generic-text': 'warn',
+  // Internal-link integrity (cross-file; needs the whole-corpus slug index).
+  // Both warn-tier by decision: advisory, never blocks a commit — a draft may
+  // intentionally forward-link to a page not yet published.
+  'broken-internal': 'warn', // /docs/... link resolves to no published page
+  'link-to-draft': 'warn',   // a PUBLISHED page links to a draft: true page
 };
+
+// The docs plugin has no routeBasePath override → docs are served under /docs.
+// So an internal link `/docs/<X>` maps to a doc whose absolute slug is `/<X>`.
+const DOCS_ROUTE_PREFIX = '/docs';
 
 // --- tuning knobs --------------------------------------------------------
 const LONG_URL_THRESHOLD = 120; // chars; above this a URL is "too long" to inline raw
@@ -95,6 +114,52 @@ function walk(dir, acc = []) {
   return acc;
 }
 
+/** Read the YAML frontmatter block (between the first two `---`) as raw lines. */
+function readFrontmatter(file) {
+  const lines = fs.readFileSync(file, 'utf8').split('\n');
+  if (lines[0]?.trim() !== '---') return null;
+  const out = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].trim() === '---') return out;
+    out.push(lines[i]);
+  }
+  return null; // unterminated frontmatter → treat as none
+}
+
+/** Pull a scalar frontmatter field's value (single line), stripping quotes. */
+function fmField(fmLines, key) {
+  if (!fmLines) return undefined;
+  const re = new RegExp(`^${key}:\\s*(.+?)\\s*$`);
+  for (const l of fmLines) {
+    const m = l.match(re);
+    if (m) return m[1].replace(/^['"]|['"]$/g, '').trim();
+  }
+  return undefined;
+}
+
+/**
+ * Build the corpus slug index used by the internal-link checks.
+ * Maps a normalized route ("/<slug-without-leading-slash>") → { rel, draft }.
+ * Only docs carry author-controlled absolute slugs we link to via /docs/…, so
+ * we index the docs/ tree (the only space these /docs/ links can target).
+ * Returns { byRoute, hasAnyDoc }.
+ */
+function buildSlugIndex(docsDir) {
+  const byRoute = new Map();
+  const files = walk(docsDir);
+  for (const f of files) {
+    const fm = readFrontmatter(f);
+    const slug = fmField(fm, 'slug');
+    if (!slug || !slug.startsWith('/')) continue; // only absolute-slug docs are addressable
+    const draftRaw = (fmField(fm, 'draft') || '').toLowerCase();
+    const draft = draftRaw === 'true';
+    // Route the doc is served at, minus the /docs prefix, normalized (no trailing slash).
+    const route = (DOCS_ROUTE_PREFIX + slug).replace(/\/+$/, '');
+    byRoute.set(route, { rel: path.relative(ROOT, f), draft });
+  }
+  return { byRoute, hasAnyDoc: files.length > 0 };
+}
+
 /** Strip fenced (```) and inline (`...`) code so we don't flag URLs in examples. */
 function maskCode(line, state) {
   if (/^\s*```/.test(line)) {
@@ -103,6 +168,46 @@ function maskCode(line, state) {
   }
   if (state.inFence) return '';
   return line.replace(/`[^`]*`/g, (m) => ' '.repeat(m.length));
+}
+
+/**
+ * Blank out commented-out content so links inside comments aren't flagged.
+ * Handles HTML comments (<!-- ... -->) and JSX/MDX brace-slash-star comments,
+ * including multi-line spans (tracked via state.inComment). A commented link is an
+ * intentionally-deferred link (e.g. a README item pointing at a not-yet-published
+ * draft) — it ships as nothing, so it must not trip broken-internal/link-to-draft.
+ * Mirrors maskCode's "replace with spaces, preserve column positions" approach.
+ */
+function maskComments(line, state) {
+  let out = '';
+  let i = 0;
+  while (i < line.length) {
+    if (state.inComment) {
+      // Look for whichever closer matches the opener we're inside.
+      const closer = state.inComment === 'html' ? '-->' : '*/';
+      const end = line.indexOf(closer, i);
+      if (end === -1) {
+        out += ' '.repeat(line.length - i);
+        i = line.length;
+      } else {
+        out += ' '.repeat(end - i + closer.length);
+        i = end + closer.length;
+        state.inComment = null;
+      }
+    } else if (line.startsWith('<!--', i)) {
+      state.inComment = 'html';
+      out += '    ';
+      i += 4;
+    } else if (line.startsWith('{/*', i)) {
+      state.inComment = 'jsx';
+      out += '   ';
+      i += 3;
+    } else {
+      out += line[i];
+      i += 1;
+    }
+  }
+  return out;
 }
 
 function trackingParamsIn(url) {
@@ -187,13 +292,22 @@ function linkFor(url, fetchedTitle) {
 const MD_LINK = /\[([^\]]*)\]\(\s*(<)?([^)\s]+?)>?(?:\s+"[^"]*")?\s*\)/g;
 const BARE_URL = /(?<![\(<\["'=])\bhttps?:\/\/[^\s<>)\]]+/g;
 
-/** Returns { problems, bareUrls } where bareUrls lists every bare-url occurrence. */
-function scanFile(file) {
+/**
+ * Returns { problems, bareUrls } where bareUrls lists every bare-url occurrence.
+ * When `slugIndex` is provided, also runs the internal-link integrity checks
+ * (broken-internal + link-to-draft). `slugIndex` is the result of buildSlugIndex.
+ */
+function scanFile(file, slugIndex) {
   const rel = path.relative(ROOT, file);
   const problems = [];
   const bareUrls = [];
+  // Is the SOURCE page itself a draft? A draft linking to a draft is fine
+  // (both ship together later); we only flag a PUBLISHED page → draft link.
+  const srcDraft = slugIndex
+    ? ((fmField(readFrontmatter(file), 'draft') || '').toLowerCase() === 'true')
+    : false;
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  const state = { inFence: false };
+  const state = { inFence: false, inComment: null };
   let inFrontmatter = false;
 
   lines.forEach((raw, i) => {
@@ -201,7 +315,7 @@ function scanFile(file) {
     if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return; }
     if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return; }
 
-    const line = maskCode(raw, state);
+    const line = maskComments(maskCode(raw, state), state);
     if (!line.trim()) return;
 
     MD_LINK.lastIndex = 0;
@@ -210,6 +324,30 @@ function scanFile(file) {
     while ((m = MD_LINK.exec(line)) !== null) {
       const [, text, , url] = m;
       linkSpans.push([m.index, m.index + m[0].length]);
+
+      // --- internal-link integrity (only when we have a slug index) --------
+      // Targets we resolve: site-internal /docs/… links. We ignore external
+      // (http), protocol-relative (//), anchors (#…), and non-/docs internals
+      // (e.g. /blog, /changelog) which other route bases own.
+      if (slugIndex && url.startsWith(DOCS_ROUTE_PREFIX)) {
+        // Normalize: drop #fragment, ?query, trailing slash.
+        const route = url.replace(/[?#].*$/, '').replace(/\/+$/, '');
+        const hit = slugIndex.byRoute.get(route);
+        if (!hit) {
+          problems.push({
+            file: rel, line: lineNo, kind: 'broken-internal', severity: SEVERITY['broken-internal'],
+            detail: `internal link → ${route} resolves to no published doc slug`,
+            suggest: 'fix the path, or point at an existing absolute slug (source-level check of onBrokenLinks)',
+          });
+        } else if (hit.draft && !srcDraft) {
+          problems.push({
+            file: rel, line: lineNo, kind: 'link-to-draft', severity: SEVERITY['link-to-draft'],
+            detail: `published page links to a draft page (${hit.rel} has draft: true)`,
+            suggest: 'un-draft the target before linking from a live page, or remove/defer the link',
+          });
+        }
+      }
+
       if (!isHttp(url) && !url.startsWith('//')) continue;
 
       const trackers = trackingParamsIn(url);
@@ -308,14 +446,14 @@ async function fixFile(file, { titles }) {
 
   // Operate per line so we only touch the exact bare-URL spans.
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  const state = { inFence: false };
+  const state = { inFence: false, inComment: null };
   let inFrontmatter = false;
   let fixed = 0;
 
   const out = lines.map((raw, i) => {
     if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return raw; }
     if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return raw; }
-    const masked = maskCode(raw, state);
+    const masked = maskComments(maskCode(raw, state), state);
     if (!masked.trim()) return raw;
 
     // Find markdown-link spans on this line so we never touch a URL already in a link.
@@ -391,7 +529,11 @@ async function main() {
   }
 
   // --- scan mode ---
-  let all = files.flatMap((f) => scanFile(f).problems);
+  // Build the corpus slug index once (from the full docs/ tree, regardless of
+  // which paths were passed) so internal-link resolution sees every doc.
+  const docsDir = path.join(ROOT, 'docs');
+  const slugIndex = fs.existsSync(docsDir) ? buildSlugIndex(docsDir) : null;
+  let all = files.flatMap((f) => scanFile(f, slugIndex).problems);
   if (errorOnly) all = all.filter((p) => p.severity === 'error');
 
   if (json) {

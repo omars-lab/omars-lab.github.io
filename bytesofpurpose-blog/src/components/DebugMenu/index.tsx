@@ -16,7 +16,7 @@ import styles from './styles.module.css';
 // Section registry — append here to add a debug section.
 const SECTIONS: DebugSection[] = [experimentsSection];
 
-function DebugMenuInner(): JSX.Element {
+function DebugMenuInner(): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState<Record<string, boolean>>({});
 
@@ -84,7 +84,7 @@ function DebugMenuInner(): JSX.Element {
   );
 }
 
-export default function DebugMenu(): JSX.Element | null {
+export default function DebugMenu(): React.JSX.Element | null {
   // Double gate: dev build only (build-time, tree-shakeable) AND localhost
   // (runtime). Either being false → render nothing.
   if (process.env.NODE_ENV === 'production') return null;

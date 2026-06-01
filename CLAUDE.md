@@ -26,6 +26,36 @@ When the task list reaches **10+ completed tasks**, archive them and prune:
    list stays short. Leave pending/in_progress tasks untouched.
 The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working set.
 
+## ⚠️ Operating convention: structure decisions must update the structure checks
+
+The docs are a **topic-based information architecture** with a recurring folder
+contract (each root topic = a reader-facing topic; each topic has a README landing
+with an **absolute** `slug:`, a `_category_.json`, optional `terminology/` first and
+`prompts/` last; kebab-case names with **no numeric name prefix** — order via
+`_category_.json` `position` / `sidebar_position`, never the folder name, so reordering
+stays history-clean; no framing-word/topic-echo folders; depth ≤4; every
+doc carries an **absolute** slug so a move never changes a URL). A large topic may split
+into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
+`frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
+techniques/tinkering/`); the idea→ship LIFECYCLE is the separate `Product Management`
+topic, linked to its executions via the in-body `## Execution`/`## Idea` mapping
+convention (warn-validated). **Whenever you make a
+decision that changes this structure or its conventions** (add/rename/retire a topic,
+change the recurring shape, add a naming rule, change slug/draft policy), you **must
+update the structure-checking validators + hooks in the same change** so they encode
+the new rule — never let the docs and the checks drift. The contract is owned by the
+`review-reader-experience` skill ("Topic-folder contract + validator" section) and
+enforced by `bytesofpurpose-blog/scripts/validate-docs-structure.js`
+(`make validate-structure`) + the warn-only PostToolUse `Write|Edit` hook
+`.claude/hooks/validate-docs-structure-hook.sh` (registered in `.claude/settings.json`
+alongside `validate-links-hook.sh` / `validate-draft-hook.sh`). Absolute-slug is the
+only ERROR tier; the rest are warn-tier advisories — including the `description-*` rules
+(missing / length ~50–160 / duplicate), which keep each page's `description:` frontmatter
+healthy because it feeds both `og:description` (SEO/social) and the ShareButton share
+message. If the validator doesn't yet encode a rule you just introduced, add the rule to
+it as part of the decision. The skill's SKILL.md is the source of truth for the contract;
+keep it and the checks in lockstep.
+
 ## The site
 
 Docusaurus 3 blog/docs (`bytesofpurpose-blog/`) → GitHub Pages (`gh-pages`) →
@@ -45,6 +75,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Experiment decision | `decide-experiment` | apply decision gates (significance/MDE/guardrails) + judgment → recorded decision readout |
 | Experiment rollout | `conclude-experiment` | execute the decision: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
+| Reader-experience audit | `review-reader-experience` | audit the site through the reader's eyes: long/jargony sidebar+navbar labels, confusing layout / ignored buttons, writer-focused voice, file/folder IA (nesting, orphan categories, mis-homed docs, re-org — URL-safe only because every slug is **absolute**; a relative slug bakes the path into the URL, and editing a slug VALUE 404s silently) → prioritized report |
 | Link hygiene | `validate-links` | lint source for bare/long/tracking/generic links (`make validate-links`) |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |

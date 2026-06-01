@@ -1,0 +1,78 @@
+/* iOS-style toast: a stack of cards anchored top-right that slide in from the
+   right edge and auto-dismiss. */
+
+.host {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10000; /* above navbar (var --ifm-z-index-fixed is 200) */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none; /* host is transparent; individual toasts re-enable */
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 13rem;
+  max-width: 22rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.85rem;
+  /* Frosted, iOS-notification look. */
+  background: var(--ifm-background-surface-color, #fff);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  cursor: pointer;
+  animation: slideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.toast.leaving {
+  animation: slideOut 0.26s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+.icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.message {
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(120%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(120%) scale(0.96);
+  }
+}
+
+/* Respect reduced-motion: fade only, no slide. */
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast.leaving {
+    animation: none;
+  }
+}

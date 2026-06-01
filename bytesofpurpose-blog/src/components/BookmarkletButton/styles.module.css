@@ -1,0 +1,122 @@
+/* Draggable bookmarklet button + its drag-instructions modal. */
+
+.btn,
+.dragTarget {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.6rem;
+  /* Use the -darkest primary so #fff text clears WCAG AA (4.5:1) in BOTH themes.
+     In dark mode the lighter primary (#6d9bff) gave only 2.70:1 — a serious axe
+     color-contrast violation on the zero-tolerance docs page; -darkest = 5.24:1
+     (dark) / 8.70:1 (light). Verified by contrast computation. */
+  border: 1px solid var(--ifm-color-primary-darkest);
+  background: var(--ifm-color-primary-darkest);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.btn:hover,
+.dragTarget:hover {
+  text-decoration: none;
+  color: #fff;
+  filter: brightness(1.05);
+}
+
+.pin {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ---- Modal ---------------------------------------------------------------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4.5rem; /* sit high so the upward pointer aims at the bookmarks bar */
+  animation: fade 0.18s ease both;
+}
+
+.modal {
+  position: relative;
+  width: min(28rem, calc(100vw - 2rem));
+  background: var(--ifm-background-surface-color, #fff);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 1rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+  padding: 1.4rem 1.4rem 1.1rem;
+  text-align: center;
+  animation: pop 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.body {
+  margin: 0 0 0.4rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.pointer {
+  font-size: 2rem;
+  line-height: 1;
+  margin: 0.2rem 0 0.5rem;
+  animation: bob 1.1s ease-in-out infinite;
+}
+
+.dragTarget {
+  margin: 0.2rem auto 0.8rem;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.hint kbd {
+  font-size: 0.72rem;
+  padding: 0.05rem 0.3rem;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .modal, .pointer { animation: none; }
+}

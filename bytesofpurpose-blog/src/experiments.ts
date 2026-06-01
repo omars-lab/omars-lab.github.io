@@ -21,11 +21,15 @@ export type Experiment = {
 
 /** Registry — add an entry per experiment. */
 export const EXPERIMENTS = {
+  // Same COPY in both arms — the experiment tests PRESENTATION on the /support
+  // coffee CTA: control renders a plain text LINK, test renders a styled BUTTON
+  // (see src/components/Support/CoffeeButton). The flag key is unchanged so the
+  // historical funnel stays continuous.
   'support-button-copy': {
     key: 'support-button-copy',
     variants: {
-      control: 'Buy me a coffee ☕',
-      test: 'Support the dev 💜',
+      control: 'Buy me a $5 coffee ☕',
+      test: 'Buy me a $5 coffee ☕',
     },
   },
 } satisfies Record<string, Experiment>;

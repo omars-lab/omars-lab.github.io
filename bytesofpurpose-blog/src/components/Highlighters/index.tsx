@@ -1,6 +1,12 @@
 import React from 'react';
 
-export const Highlight = ({children, label}) => (
+interface HighlightProps {
+  children: React.ReactNode;
+  /** Optional trailing label rendered after the highlighted text. */
+  label?: React.ReactNode;
+}
+
+export const Highlight = ({children, label}: HighlightProps) => (
     <mark 
         style={{
             background: 'linear-gradient(90deg, #FFD8CB, #F9D29D)',

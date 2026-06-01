@@ -69,10 +69,10 @@ const ContributionTimeline: React.FC = () => {
 
       svg.addEventListener('click', function(e) {
         console.log('SVG clicked:', e.target);
-        let target = e.target as HTMLElement;
-        
-        while (target && target.tagName !== 'text' && target !== svg) {
-          target = target.parentElement as HTMLElement;
+        let target = e.target as Element;
+
+        while (target && target.tagName !== 'text' && target !== (svg as unknown as Element)) {
+          target = target.parentElement as Element;
         }
         
         if (target && target.tagName === 'text') {

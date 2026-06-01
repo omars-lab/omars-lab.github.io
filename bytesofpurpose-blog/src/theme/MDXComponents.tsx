@@ -8,15 +8,17 @@ import CardHeader from '@site/src/components/Card/CardHeader';
 import CardImage from '@site/src/components/Card/CardImage';
 import Timeline from '@site/src/components/TimeLine';
 import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
+import BookmarkletButton from '@site/src/components/BookmarkletButton';
 
 export default {
   // Reusing the default mapping
   ...MDXComponents,
-  Card, 
-  CardHeader, 
-  CardBody, 
+  Card,
+  CardHeader,
+  CardBody,
   CardFooter,
-  CardImage, 
+  CardImage,
   Timeline,
   TimelineItem,
+  BookmarkletButton,
 };

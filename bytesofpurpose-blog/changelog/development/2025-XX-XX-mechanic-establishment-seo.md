@@ -12,7 +12,7 @@ priority: 'medium'
 # Blogging Mechanism - SEO
 
 * [ ] Link into docusaurus SEO
-	* https://docusaurus.io/docs/seo
+	* [Docusaurus — Seo](https://docusaurus.io/docs/seo)
 
 ## Execution Plan
 

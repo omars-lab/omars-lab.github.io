@@ -37,6 +37,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
+  args: { children: null },
   render: () => (
     <Card>
       <CardBody>
@@ -47,6 +48,7 @@ export const Basic: Story = {
 };
 
 export const WithShadow: Story = {
+  args: { children: null },
   render: () => (
     <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
       <Card shadow="lw">
@@ -72,6 +74,7 @@ export const WithShadow: Story = {
 };
 
 export const CompleteCard: Story = {
+  args: { children: null },
   render: () => (
     <Card shadow="tl">
       <CardHeader>
@@ -88,6 +91,7 @@ export const CompleteCard: Story = {
 };
 
 export const WithImage: Story = {
+  args: { children: null },
   render: () => (
     <Card shadow="md">
       <CardImage
@@ -107,6 +111,7 @@ export const WithImage: Story = {
 };
 
 export const StyledCard: Story = {
+  args: { children: null },
   render: () => (
     <Card>
       <CardHeader style={{ backgroundColor: '#205d3b', color: 'white' }}>
@@ -132,6 +137,7 @@ export const StyledCard: Story = {
 };
 
 export const TextVariants: Story = {
+  args: { children: null },
   render: () => (
     <div style={{ display: 'flex', gap: '20px', flexDirection: 'column', maxWidth: '400px' }}>
       <Card>
@@ -169,6 +175,7 @@ export const TextVariants: Story = {
 };
 
 export const ImageOnly: Story = {
+  args: { children: null },
   render: () => (
     <Card>
       <CardImage

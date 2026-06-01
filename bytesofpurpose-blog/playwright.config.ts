@@ -37,7 +37,7 @@ const argv = process.argv.join(' ');
 const selectedProjects = (argv.match(/--project[= ]([^\s]+)/g) || []).map((m) =>
   m.replace(/--project[= ]/, '')
 );
-const BUILD_BACKED = new Set(['prod', 'posthog-prod']);
+const BUILD_BACKED = new Set(['prod', 'posthog-prod', 'bookmark-proof']);
 const runningOnlyProd =
   selectedProjects.length > 0 && selectedProjects.every((p) => BUILD_BACKED.has(p));
 
@@ -81,8 +81,17 @@ export default defineConfig({
     {
       // PostHog/A-B specs against the test-mode production build (:4173).
       name: 'posthog-prod',
-      testMatch: /(posthog-events|support-ab-test)\.spec\.ts$/,
+      testMatch: /(posthog-events|support-ab-test|ingress-attribution|vote|support-page)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
+    },
+    {
+      // Manual proof harness: launches its OWN real headed Chrome (ignores this
+      // project's browser) to read the on-disk bookmark store. Gated behind
+      // PROVE_BOOKMARK=1 inside the spec; NOT part of `make test-regression`.
+      // Run: PROVE_BOOKMARK=1 npx playwright test --project=bookmark-proof
+      name: 'bookmark-proof',
+      testMatch: /(bookmark-rewrite-proof|bookmarklet-proof)\.spec\.ts$/,
+      use: { baseURL: PROD_BASE },
     },
   ],
 

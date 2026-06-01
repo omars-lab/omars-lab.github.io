@@ -17,6 +17,17 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
     baseUrl: '/',
     // onBrokenLinks: 'throw',
     onBrokenLinks: 'warn',
+    // Left as 'warn' (the default) on purpose: src/pages/changelog.tsx deliberately
+    // SHADOWS the changelog blog-instance's auto-generated index at /changelog (the
+    // custom React page is the intended view; the blog plugin only exists to serve
+    // the individual /changelog/<entry> pages, and Docusaurus has no flag to suppress
+    // a blog instance's index route). That intentional page-over-blog shadow would
+    // make 'throw' fail every build. Accidental DOC route collisions from the topic
+    // reorg are caught instead by the per-phase route-manifest diff (find build
+    // -name '*.html' vs baseline), which is exact and doesn't false-positive on this
+    // intentional shadow. The genuinely-accidental dup this surfaced (a duplicate
+    // content-docs-changelog-system-documentation .md AND .mdx) was removed.
+    // onDuplicateRoutes: 'throw',
     favicon: 'img/favicon.ico',
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
     projectName: 'omars-lab.github.io', // Usually your repo name.
@@ -31,7 +42,14 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
       // reach ingestion. Never set in production builds.
       posthogTestMode: process.env.POSTHOG_TEST_MODE === '1',
     },
-    clientModules: [require.resolve('./src/posthog.js')],
+    // gtag-guard MUST come before posthog (and before the gtag plugin's own
+    // client module): it stubs window.gtag so the plugin's unguarded route-change
+    // call can't throw when an ad-blocker blocks Google Tag, AND it detects that
+    // block + reports it to PostHog ($adblock_detected). See src/gtag-guard.js.
+    clientModules: [
+      require.resolve('./src/gtag-guard.js'),
+      require.resolve('./src/posthog.js'),
+    ],
     // Load the Inter variable font for UI/body text (see --ifm-font-family-base in
     // src/css/custom.css). Preconnect first so the stylesheet fetch is not blocked.
     headTags: [
@@ -207,45 +225,47 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
           },
           items: [
             {
-              label: 'Docs',
+              label: 'Learn',
               type: 'doc', docId: 'welcome/README',
               position: 'left',
             },
             {
-              label: 'Posts', 
-              to: '/blog', 
+              label: 'Blog',
+              to: '/blog',
               position: 'left'
             },
             {
-              label: 'Designs', 
-              to: '/designs', 
+              label: 'System Designs',
+              to: '/designs',
+              position: 'left'
+            },
+            // 'Components' (Storybook) moved OUT of the navbar to the footer as
+            // "Blob UI Kit Building Blocks" — a builder surface, not a primary
+            // reader destination. See footer "Other Works".
+            {
+              // Reader-facing "Vote on Post Ideas" page (/vote) — lets readers
+              // signal which upcoming posts they want next (PostHog 'idea_voted').
+              label: 'Vote',
+              to: '/vote',
               position: 'left'
             },
             {
-              label: 'Components', 
-              to: '/storybook/', 
+              // "Support" tab → the dedicated /support page (headshot + the ways
+              // to support: Shopify store, GitHub, LinkedIn, Buy Me a Coffee).
+              // Replaces the old standalone "Buy Me a Coffee" navbar button; the
+              // support-button-copy A/B experiment now lives on that page's coffee
+              // CTA (see src/components/Support).
+              label: 'Support',
+              to: '/support',
               position: 'left'
             },
-            {
-              label: 'Changelog', 
-              to: '/changelog', 
-              position: 'left'
-            },
+            // 'What's New' (/changelog) moved OUT of the navbar to the footer
+            // ("More" column) — a secondary destination, not primary reader nav.
             // {
-            //   label: 'Ideas', 
-            //   to: '/blog/process-blog-post-ideation', 
+            //   label: 'Ideas',
+            //   to: '/blog/process-blog-post-ideation',
             //   position: 'left'
             // },
-            {
-              // Support / "Buy Me a Coffee" link, wired into the support-button-copy
-              // A/B experiment so its copy varies site-wide (control "Buy me a
-              // coffee ☕" / test "Support the dev 💜"). Backed by the NavbarCoffee
-              // React component via the custom navbar item type registered in
-              // src/theme/NavbarItem/ComponentTypes.tsx. Styling: .navbar-coffee in
-              // custom.css. Emoji + text (no <img>) keeps it alt-text clean.
-              type: 'custom-coffee',
-              position: 'right',
-            }
 
           ],
         },
@@ -281,6 +301,13 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
               title: 'Other Works',
               items: [
                 {
+                  // "What's New" (changelog) — moved here from the navbar; a
+                  // secondary destination rather than primary reader nav.
+                  label: "What's New",
+                  to: '/changelog',
+                  position: 'right',
+                },
+                {
                   label: 'Portfolio',
                   href: 'https://www.bytesofpurpose.com',
                   position: 'right',
@@ -288,6 +315,14 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
                 {
                   label: 'Resume',
                   href: 'https://www.bytesofpurpose.com/resume.pdf',
+                  position: 'right',
+                },
+                {
+                  // Storybook component library — a builder surface, moved here
+                  // from the navbar (reader-facing nav stays focused on Learn /
+                  // Blog / System Designs / What's New).
+                  label: 'Blob UI Kit Building Blocks',
+                  to: '/storybook/',
                   position: 'right',
                 },
               ],

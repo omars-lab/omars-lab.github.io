@@ -1,0 +1,478 @@
+#!/usr/bin/env node
+
+/**
+ * validate-docs-structure.js — lints the topic-based docs information architecture.
+ *
+ * The docs/ tree is a TOPIC-based IA with a recurring folder contract (see the
+ * review-reader-experience skill, "Topic-folder contract" section, and CLAUDE.md):
+ *
+ *   docs/
+ *     welcome/              ← the topic index (Welcome); not itself a topic
+ *     <N>-<topic>/          ← one root folder per reader-facing TOPIC
+ *       README.{md,mdx}     ← topic landing, ABSOLUTE slug, _category_.json
+ *       _category_.json     ← label + position
+ *       terminology/        ← (optional) sorts FIRST
+ *       <sub-folder>/       ← each carries a _category_.json; kebab-case
+ *       prompts/            ← (optional) sorts LAST
+ *
+ * Invariants this checks (severity in []):
+ *   absolute-slug   [ERROR] every doc has frontmatter `slug:` and it is ABSOLUTE (`/…`).
+ *                           This is the whole URL-freeze guarantee — a relative slug
+ *                           silently re-couples the URL to the folder path, so moving
+ *                           the file moves the URL. Hook-blocking tier.
+ *   topic-readme    [warn]  each root topic folder has a README.{md,mdx} with an
+ *                           absolute slug + a _category_.json (label + position).
+ *   subfolder-cat   [warn]  every sub-folder that contains docs has a _category_.json.
+ *   orphan-cat      [warn]  a _category_.json in a dir with no docs AND no
+ *                           docs-bearing descendants (pure dead category).
+ *   numeric-prefix  [warn]  folder NAMES carry no numeric ordering prefix (`6-projects`);
+ *                           order comes from `_category_.json` "position", never the
+ *                           name. WHY: a name prefix couples order to identity — bumping
+ *                           a `position` is a 1-line history-clean edit, whereas renaming
+ *                           a prefixed folder rewrites every descendant's path.
+ *   kebab-case      [warn]  doc/dir names are kebab-case, no spaces/uppercase
+ *                           (`_`-prefixed names like _TEMPLATE/_category_ are exempt).
+ *   framing-folder  [warn]  no framing-word / topic-echo sub-folder names
+ *                           (`*-techniques`, `*-craftsmanship`, `definitions`).
+ *   depth           [warn]  folder depth ≤ 4 under a topic root (sub-topic / bucket /
+ *                           project legitimately needs 4, e.g.
+ *                           software-development/backend-development/projects/<proj>).
+ *   terminology-first [warn]  a `terminology/` category sorts first (low position).
+ *   prompts-last    [warn]  a `prompts/` category sorts last (high position).
+ *   welcome-drift   [warn]  the Welcome topic-index cards (`### [Label](slug)`) match
+ *                           the actual root topic folders + their README slugs.
+ *   idea-exec-link  [warn]  the idea↔execution mapping convention: links inside an
+ *                           `## Execution` section (Product Management idea docs) or an
+ *                           `## Idea`/`## Origin` section (Software Development artifacts)
+ *                           must resolve to an existing doc slug. Cross-topic dangling
+ *                           cross-refs are warned (never blocks; backfill is incremental).
+ *   description-missing  [warn]  doc has no frontmatter `description:` (feeds og:description
+ *                           for SEO/social + the ShareButton "Here's what it covers:" message).
+ *   description-length   [warn]  description outside ~50–160 chars (too thin for a useful
+ *                           summary, or truncated in search/social cards).
+ *   description-duplicate [warn]  same `description:` reused across docs — each page needs a
+ *                           distinct summary (it's per-page SEO + per-page share text).
+ *
+ * Usage:
+ *   node scripts/validate-docs-structure.js [paths…]   # scan (default: docs/)
+ *   node scripts/validate-docs-structure.js --json      # machine-readable findings
+ *   node scripts/validate-docs-structure.js --error-only # ERROR-tier only; exit 2 (hook)
+ *
+ * Exit codes: 0 clean · 1 problems found (scan) · 2 ERROR-tier found (--error-only).
+ */
+
+const fs = require('fs');
+const path = require('path');
+const matter = require('gray-matter');
+
+const ROOT = path.join(__dirname, '..');
+const DOCS = path.join(ROOT, 'docs');
+const WELCOME = 'docs/welcome';
+
+const SEVERITY = {
+  'absolute-slug': 'error',
+  'topic-readme': 'warn',
+  'subfolder-cat': 'warn',
+  'orphan-cat': 'warn',
+  'kebab-case': 'warn',
+  'framing-folder': 'warn',
+  depth: 'warn',
+  'terminology-first': 'warn',
+  'prompts-last': 'warn',
+  'welcome-drift': 'warn',
+  'idea-exec-link': 'warn',
+  'numeric-prefix': 'warn',
+  // `description:` frontmatter — feeds both SEO (og:description) and the ShareButton
+  // "Here's what it covers:" share message. All warn-tier (advisory, like the rest).
+  'description-missing': 'warn',
+  'description-length': 'warn',
+  'description-duplicate': 'warn',
+};
+
+// Description length bounds. Lower keeps it meaningful for the share message; upper
+// keeps it within the ~160-char window search engines / social cards display.
+const DESC_MIN = 50;
+const DESC_MAX = 160;
+
+// Folder names that echo a format/framing word instead of a reader topic.
+const FRAMING_RE = /-techniques$|-craftsmanship$|^definitions$/;
+const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const isDoc = (n) => /\.mdx?$/.test(n);
+const isReadme = (n) => /^README\.mdx?$/.test(n);
+
+const findings = [];
+const add = (kind, loc, detail) =>
+  findings.push({ kind, severity: SEVERITY[kind], loc, detail });
+
+// --- fs helpers ----------------------------------------------------------
+
+function listDir(dir) {
+  try {
+    return fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+}
+const rel = (p) => path.relative(ROOT, p);
+
+/** docs directly in dir (md/mdx, excluding nothing — README counts as a doc). */
+function docsIn(dir) {
+  return listDir(dir).filter((e) => e.isFile() && isDoc(e.name));
+}
+/** any doc in dir or any descendant. */
+function hasDocsDeep(dir) {
+  const entries = listDir(dir);
+  if (entries.some((e) => e.isFile() && isDoc(e.name))) return true;
+  return entries.some((e) => e.isDirectory() && hasDocsDeep(path.join(dir, e.name)));
+}
+const hasCategory = (dir) => fs.existsSync(path.join(dir, '_category_.json'));
+
+function readCategory(dir) {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(dir, '_category_.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+// --- per-doc check: absolute slug ---------------------------------------
+
+function checkDoc(file) {
+  let data;
+  try {
+    data = matter(fs.readFileSync(file, 'utf8')).data;
+  } catch {
+    return; // unparseable frontmatter — leave to MDX build
+  }
+  if (!('slug' in data) || data.slug === undefined || data.slug === null || data.slug === '') {
+    add('absolute-slug', rel(file), 'doc has no frontmatter `slug:` — add an absolute slug (`slug: /…`)');
+    return;
+  }
+  if (typeof data.slug !== 'string' || !data.slug.startsWith('/')) {
+    add('absolute-slug', rel(file),
+      `slug "${data.slug}" is relative — make it absolute (\`slug: /…\`) so the URL is pinned to a value, not the folder path`);
+  }
+  checkDescription(file, data);
+}
+
+// --- per-doc check: description presence + length -----------------------
+// `description:` powers og:description (SEO/social preview) AND the ShareButton share
+// message ("Here's what it covers: <description>"). See src/ingress-attribution-plan.md.
+function checkDescription(file, data) {
+  const desc = typeof data.description === 'string' ? data.description.trim() : '';
+  if (!desc) {
+    add('description-missing', rel(file),
+      'doc has no frontmatter `description:` — add one (feeds SEO + the share message)');
+    return;
+  }
+  if (desc.length < DESC_MIN) {
+    add('description-length', rel(file),
+      `description is ${desc.length} chars — shorter than ${DESC_MIN}; too thin for a useful SEO/share summary`);
+  } else if (desc.length > DESC_MAX) {
+    add('description-length', rel(file),
+      `description is ${desc.length} chars — longer than ${DESC_MAX}; it will be truncated in search/social cards`);
+  }
+}
+
+// --- recurse the tree, applying structural checks ------------------------
+
+/** Walk every dir under docs/, collecting structural findings. depthFromTopic:
+ *  -1 above topics, 0 at a topic root, 1+ inside. */
+function walkDir(dir, depthFromTopic, topicName) {
+  const entries = listDir(dir);
+
+  for (const e of entries) {
+    const full = path.join(dir, e.name);
+    if (e.isFile()) {
+      if (!isDoc(e.name)) continue; // only lint markdown/MDX docs (ignore .DS_Store, assets, etc.)
+      checkDoc(full);
+      // kebab-case on doc filenames (drop extension; exempt _-prefixed + README)
+      const base = e.name.replace(/\.mdx?$/, '');
+      if (!base.startsWith('_') && !isReadme(e.name) && !KEBAB_RE.test(base)) {
+        add('kebab-case', rel(full), `filename "${e.name}" is not kebab-case`);
+      }
+      continue;
+    }
+    if (!e.isDirectory()) continue;
+
+    const childDepth = depthFromTopic + 1;
+
+    if (depthFromTopic >= 0 && !e.name.startsWith('_')) {
+      // NO numeric ordering prefix in folder NAMES — order comes from the
+      // `_category_.json` "position" field (or doc `sidebar_position`), never the name.
+      // WHY: a name prefix couples *order* to *identity*. Reordering a prefixed folder
+      // is a `git mv` that rewrites every descendant doc's path (churns history, risks
+      // URLs if any slug were relative) — whereas bumping a `position` number is a
+      // one-line, history-clean change. So names stay stable; positions do the ordering.
+      const prefixMatch = e.name.match(/^(\d+)-/);
+      if (prefixMatch) {
+        add('numeric-prefix', rel(full),
+          `folder "${e.name}" carries a numeric name prefix — drop it and order via _category_.json "position" instead (keeps reordering history-clean; names shouldn't encode order)`);
+      }
+      const nameNoPrefix = e.name.replace(/^\d+-/, '');
+      if (!KEBAB_RE.test(nameNoPrefix)) {
+        add('kebab-case', rel(full), `folder "${e.name}" is not kebab-case`);
+      }
+      // framing-word / topic-echo folder names
+      if (FRAMING_RE.test(nameNoPrefix)) {
+        add('framing-folder', rel(full),
+          `folder "${e.name}" is a framing-word/topic-echo name — prefer a reader-facing topic noun`);
+      }
+    }
+
+    // depth ≤ 4 under a topic root (topic root = depth 0; flag a folder at depth 5+)
+    if (childDepth >= 5) {
+      add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤4)`);
+    }
+
+    // sub-folder category presence + orphan check
+    if (childDepth >= 1) {
+      const directDocs = docsIn(full).length;
+      if (directDocs > 0 && !hasCategory(full)) {
+        add('subfolder-cat', rel(full), 'sub-folder contains docs but has no _category_.json');
+      }
+      if (hasCategory(full) && !hasDocsDeep(full)) {
+        add('orphan-cat', rel(full), '_category_.json in a folder with no docs and no docs-bearing descendants (orphan)');
+      }
+      // terminology-first / prompts-last position conventions
+      if (hasCategory(full)) {
+        const base = e.name.replace(/^\d+-/, '');
+        const cat = readCategory(full);
+        const pos = cat && typeof cat.position === 'number' ? cat.position : null;
+        if (base === 'terminology' && pos !== null && pos > 2) {
+          add('terminology-first', rel(full), `terminology/ has position ${pos} — convention sorts it FIRST (low position)`);
+        }
+        if (base === 'prompts' && pos !== null && pos < 5) {
+          add('prompts-last', rel(full), `prompts/ has position ${pos} — convention sorts it LAST (high position)`);
+        }
+      }
+    }
+
+    // When descending from above-topics (depth -1) the child IS the topic root.
+    const childTopic = depthFromTopic === -1 ? e.name : topicName;
+    walkDir(full, childDepth, childTopic);
+  }
+}
+
+// --- topic-root checks + Welcome drift -----------------------------------
+
+// A root TOPIC = a direct child dir of docs/ that has a _category_.json (it's a
+// sidebar section), except `welcome` (the index, not a topic). Folder names no longer
+// carry numeric prefixes — order lives in each _category_.json "position" — so topic
+// detection is by structure (has a category), not by a name pattern.
+function topicFolders() {
+  return listDir(DOCS)
+    .filter((e) => e.isDirectory() && e.name !== 'welcome' && hasCategory(path.join(DOCS, e.name)))
+    .map((e) => e.name)
+    .sort();
+}
+
+function topicReadmeSlug(topic) {
+  for (const r of ['README.md', 'README.mdx']) {
+    const f = path.join(DOCS, topic, r);
+    if (fs.existsSync(f)) {
+      try {
+        return matter(fs.readFileSync(f, 'utf8')).data.slug || null;
+      } catch {
+        return null;
+      }
+    }
+  }
+  return undefined; // no README at all
+}
+
+function checkTopicRoots() {
+  for (const topic of topicFolders()) {
+    const dir = path.join(DOCS, topic);
+    const slug = topicReadmeSlug(topic);
+    if (slug === undefined) {
+      add('topic-readme', rel(dir), 'topic folder has no README.{md,mdx} landing page');
+    } else if (!slug || typeof slug !== 'string' || !slug.startsWith('/')) {
+      add('topic-readme', rel(dir), `topic README slug "${slug}" is missing or not absolute`);
+    }
+    if (!hasCategory(dir)) {
+      add('topic-readme', rel(dir), 'topic folder has no _category_.json (label + position)');
+    }
+  }
+}
+
+/** Welcome cards: `### …[Label](/docs/<slug>)`. Drift vs topic README slugs. */
+function checkWelcomeDrift() {
+  const welcomeDir = path.join(ROOT, WELCOME);
+  let readme;
+  for (const r of ['README.md', 'README.mdx']) {
+    if (fs.existsSync(path.join(welcomeDir, r))) { readme = path.join(welcomeDir, r); break; }
+  }
+  if (!readme) {
+    add('welcome-drift', WELCOME, 'no Welcome README to compare topic cards against');
+    return;
+  }
+  const src = fs.readFileSync(readme, 'utf8');
+  const cardSlugs = new Set();
+  const re = /^###\s+.*\]\((\/docs\/[^)\s]+)\)/gm;
+  let m;
+  while ((m = re.exec(src)) !== null) {
+    cardSlugs.add(m[1].replace(/^\/docs/, '')); // → /generative-ai etc.
+  }
+  const topicSlugs = new Set();
+  for (const topic of topicFolders()) {
+    const s = topicReadmeSlug(topic);
+    if (typeof s === 'string') topicSlugs.add(s);
+  }
+  for (const s of topicSlugs) {
+    if (!cardSlugs.has(s)) {
+      add('welcome-drift', `${WELCOME}/README`, `topic slug ${s} has no matching card in the Welcome index`);
+    }
+  }
+  for (const s of cardSlugs) {
+    if (!topicSlugs.has(s)) {
+      add('welcome-drift', `${WELCOME}/README`, `Welcome card links /docs${s} but no topic README owns that slug`);
+    }
+  }
+}
+
+// --- idea↔execution mapping (in-body convention) -------------------------
+
+/** Collect every doc's absolute slug → a Set, for cross-ref resolution. */
+function collectSlugs() {
+  const slugs = new Set();
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) rec(full);
+      else if (isDoc(e.name)) {
+        try {
+          const s = matter(fs.readFileSync(full, 'utf8')).data.slug;
+          if (typeof s === 'string' && s.startsWith('/')) slugs.add(s.replace(/\/$/, ''));
+        } catch { /* skip */ }
+      }
+    }
+  })(DOCS);
+  return slugs;
+}
+
+/** Corpus-wide: flag identical `description:` values reused across docs (each should be
+ *  a distinct summary, since it feeds per-page SEO + the per-page share message). */
+function checkDuplicateDescriptions() {
+  const byDesc = new Map(); // normalized description → [relPaths]
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) rec(full);
+      else if (isDoc(e.name)) {
+        try {
+          const d = matter(fs.readFileSync(full, 'utf8')).data.description;
+          if (typeof d === 'string' && d.trim()) {
+            const key = d.trim().toLowerCase();
+            (byDesc.get(key) || byDesc.set(key, []).get(key)).push(rel(full));
+          }
+        } catch { /* skip */ }
+      }
+    }
+  })(DOCS);
+  for (const [, paths] of byDesc) {
+    if (paths.length > 1) {
+      for (const p of paths) {
+        add('description-duplicate', p,
+          `description is identical to ${paths.length - 1} other doc(s) (${paths.filter((x) => x !== p).join(', ')}) — each page needs a distinct summary`);
+      }
+    }
+  }
+}
+
+/** Extract the body lines under a `## <heading>` section (until the next `##`). */
+function sectionBody(src, headingRe) {
+  const lines = src.split('\n');
+  const out = [];
+  let inSec = false;
+  for (const line of lines) {
+    if (/^##\s/.test(line)) {
+      inSec = headingRe.test(line.replace(/^##\s+/, '').trim());
+      continue;
+    }
+    if (inSec) out.push(line);
+  }
+  return out.join('\n');
+}
+
+/** Validate that every internal /docs link inside Execution/Idea sections resolves. */
+function checkIdeaExecLinks(slugs) {
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { rec(full); continue; }
+      if (!isDoc(e.name)) continue;
+      let src;
+      try { src = fs.readFileSync(full, 'utf8'); } catch { continue; }
+      const r = path.relative(DOCS, full);
+      const isPM = r.startsWith('product-management/');
+      const isDev = r.startsWith('2-development/');
+      // PM idea docs carry `## Execution`; SW Dev artifacts carry `## Idea`/`## Origin`.
+      const body = isPM
+        ? sectionBody(src, /^execution$/i)
+        : isDev
+          ? sectionBody(src, /^(idea|origin)$/i)
+          : '';
+      if (!body.trim()) continue;
+      const linkRe = /\]\((\/docs\/[^)\s#]+)/g;
+      let m;
+      while ((m = linkRe.exec(body)) !== null) {
+        const slug = m[1].replace(/^\/docs/, '').replace(/\/$/, '');
+        if (!slugs.has(slug)) {
+          add('idea-exec-link', r,
+            `${isPM ? '## Execution' : '## Idea/Origin'} link ${m[1]} does not resolve to an existing doc slug`);
+        }
+      }
+    }
+  })(DOCS);
+}
+
+// --- main ----------------------------------------------------------------
+
+function main() {
+  const args = process.argv.slice(2);
+  const json = args.includes('--json');
+  const errorOnly = args.includes('--error-only');
+  const targets = args.filter((a) => !a.startsWith('--'));
+
+  if (targets.length) {
+    // Scoped run (hook): only per-doc slug checks on the given files (fast, no tree walk).
+    for (const t of targets) {
+      const abs = path.isAbsolute(t) ? t : path.join(process.cwd(), t);
+      if (fs.existsSync(abs) && fs.statSync(abs).isFile() && isDoc(abs)) checkDoc(abs);
+    }
+  } else {
+    // Full run.
+    walkDir(DOCS, -1, null);
+    checkTopicRoots();
+    checkWelcomeDrift();
+    checkIdeaExecLinks(collectSlugs());
+    checkDuplicateDescriptions();
+  }
+
+  let out = findings;
+  if (errorOnly) out = out.filter((f) => f.severity === 'error');
+
+  if (json) {
+    console.log(JSON.stringify(out, null, 2));
+    process.exit(out.length ? (errorOnly ? 2 : 1) : 0);
+  }
+
+  if (!out.length) {
+    if (!errorOnly) console.log('✅ docs structure: no problems found.');
+    process.exit(0);
+  }
+
+  const errs = out.filter((f) => f.severity === 'error').length;
+  console.log(`🏗  docs structure: ${out.length} problem(s) (${errs} error, ${out.length - errs} warn)\n`);
+  const byKind = {};
+  for (const f of out) {
+    byKind[f.kind] = (byKind[f.kind] || 0) + 1;
+    const tag = f.severity === 'error' ? 'ERROR' : 'warn';
+    console.log(`  ${f.loc}  [${tag}:${f.kind}] ${f.detail}`);
+  }
+  console.log('\nSummary: ' + Object.entries(byKind).map(([k, n]) => `${k}=${n}`).join('  '));
+  process.exit(errorOnly ? 2 : 1);
+}
+
+main();
