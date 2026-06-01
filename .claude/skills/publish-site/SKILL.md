@@ -9,6 +9,23 @@ Wraps the **deploy** with an editorial step: surface drafts that are actually re
 publish the ones the user approves, then deploy. Pairs with `deploy-site` (the mechanical
 deploy), `author-blog-post` (frontmatter/MDX), `validate-deployment` (post-deploy checks).
 
+## Draft convention (single source of truth: the `draft:` field)
+
+- **Every doc/post declares `draft:` explicitly** — `draft: true` (work in progress,
+  excluded from the production build) or `draft: false` (ready to ship). A **missing**
+  `draft:` field silently defaults to PUBLISHED, which is how unfinished stubs leak out.
+- `draft: true` is the **single source of truth** — don't duplicate it into a second
+  field (e.g. `sidebar_custom_props.draft`); tooling reads `draft:` directly.
+- **Tooling that relies on this convention:**
+  - `draft_readiness.py` (below) triages `draft: true` files into ready/review/stub.
+  - The dev-only **draft-aware sidebar** badges draft docs on localhost
+    (`plugins/draft-docs` + the `DocSidebarItem` swizzle; design:
+    `designs/design-draft-aware-sidebar`).
+  - A **warn-only Claude hook** (`.claude/hooks/validate-draft-hook.sh`, wired in
+    `.claude/settings.json` as a `Write|Edit` PostToolUse) flags any blog `.md`/`.mdx`
+    whose frontmatter omits `draft:`. It advises only — never blocks — since some index
+    pages are legitimately always-published.
+
 ## ▶️ FIRST STEP — create the tracking tasks
 
 ```tasks
