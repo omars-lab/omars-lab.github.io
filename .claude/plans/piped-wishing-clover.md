@@ -288,3 +288,24 @@ per T16). Detail: `.claude/plans/topic-taxonomy-proposal.md`.
   - Faith: reframe the `backend-projects/home-automation` nesting to faith-centric.
 - Builder scripts saved (`build-migration-map.js`, `add-target-paths.js`) so the map
   regenerates if the inventory changes.
+
+### T5 — GenAI pilot move (DONE) — pipeline proven
+- Moved 18 docs from 6 source roots into `1-generative-ai/{fundamentals,building-systems,
+  my-genai-workflow}` (+ `my-genai-workflow/initiatives/`). Added topic README
+  (`slug: /generative-ai`) + 5 `_category_.json` labels; removed 2 orphaned source
+  category files + emptied dirs.
+- **Verification model established (use for every Phase-D topic):**
+  1. `git mv` per topic move-list (helper: `/tmp/do-moves.sh <tsv>`).
+  2. Remove orphaned `_category_.json` + `rmdir` emptied source dirs.
+  3. Add new topic README (absolute slug) + `_category_.json` for topic & sub-groups.
+  4. Rebuild; assert **manifest == baseline + expected new landing routes** (NOT just
+     "empty diff" — each topic README adds exactly one new landing route). Cumulative
+     expected-new-landings tracked in `/tmp/expected-new-routes.txt`
+     (baseline `/tmp/routes-before.txt`; GenAI added `build/docs/generative-ai.html`).
+  5. Confirm moved docs' permalinks UNCHANGED via `.docusaurus` metadata.
+- **Proven:** moved docs keep frozen URLs (e.g. genai docs still resolve at
+  `/docs/skills/solving-system-design/...`, `/docs/mental-models/...`); manifest delta
+  was exactly +1. The reorg is cosmetic-only, as designed.
+- **Sidebar visual eyeball deferred to a single batched pass at T17** (across all topics)
+  rather than per-topic browser spin-up — the per-phase manifest+metadata checks already
+  guarantee correctness; visual is for label/ordering polish.
