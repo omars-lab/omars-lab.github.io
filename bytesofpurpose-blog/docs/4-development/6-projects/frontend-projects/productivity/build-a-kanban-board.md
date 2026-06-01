@@ -1,5 +1,5 @@
 ---
-slug: build-a-kanban-board
+slug: /development/projects/frontend-projects/productivity/build-a-kanban-board
 title: Build a Kanban Board
 description: 'Building and automating a Kanban board for organizing initiatives and managing project cards with Jira integration.'
 authors: [oeid]

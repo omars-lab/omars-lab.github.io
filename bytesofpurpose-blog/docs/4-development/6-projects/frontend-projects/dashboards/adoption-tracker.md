@@ -1,5 +1,5 @@
 ---
-slug: adoption-tracker
+slug: /development/projects/frontend-projects/dashboards/adoption-tracker
 title: Adoption Tracker
 description: 'Developing tools to track app usage, script usage, and file modification metrics for productivity analysis.'
 authors: [oeid]

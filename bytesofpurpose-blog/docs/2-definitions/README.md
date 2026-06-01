@@ -1,5 +1,5 @@
 ---
-slug: definitions
+slug: /definitions/definitions
 title: Definitions
 description: 'Consolidating my definitions to ensure consistent use across all documentation.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: intro
+slug: /welcome/intro
 sidebar_position: 1
 title: Welcome to Bytes of Purpose
 description: 'A developer blog focused on coding challenges, development tools, and technical insights. Explore algorithms, local development setup, and practical programming guides.'

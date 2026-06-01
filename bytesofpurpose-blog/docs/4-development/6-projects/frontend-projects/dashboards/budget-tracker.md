@@ -1,5 +1,5 @@
 ---
-slug: budget-tracker
+slug: /development/projects/frontend-projects/dashboards/budget-tracker
 title: 'Budget Tracker'
 description: 'Development of personal budgeting notebooks with secure data access and account management'
 authors: [oeid]

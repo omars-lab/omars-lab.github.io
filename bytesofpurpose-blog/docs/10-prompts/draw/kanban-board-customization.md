@@ -4,7 +4,7 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "project-management", "visualization", "kanban"]
 description: "How I use AI to create custom Kanban board SVGs with personalized workflows, task cards, and priority systems for visual project management"
 author: "Omar Eid"
-slug: kanban-board-customization
+slug: /prompts/draw/kanban-board-customization
 authors: [oeid]
 ---
 

@@ -1,5 +1,5 @@
 ---
-slug: website-blog
+slug: /development/projects/frontend-projects/sites/website-blog
 title: My Blog
 description: 'Developing a Docusaurus-based blog with automation tools, voting features, and content integration.'
 authors: [oeid]

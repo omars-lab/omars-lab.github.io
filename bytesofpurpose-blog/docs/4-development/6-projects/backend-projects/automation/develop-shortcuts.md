@@ -1,5 +1,5 @@
 ---
-slug: develop-shortcuts
+slug: /development/projects/backend-projects/automation/develop-shortcuts
 title: Develop Shortcuts
 description: 'Developing iPhone and macOS shortcuts for automation, note-taking, and productivity workflows.'
 authors: [oeid]

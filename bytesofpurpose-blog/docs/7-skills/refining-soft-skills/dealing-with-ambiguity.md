@@ -1,5 +1,5 @@
 ---
-slug: dealing-with-ambiguity
+slug: /skills/refining-soft-skills/dealing-with-ambiguity
 title: 'Dealing with Ambiguity'
 description: 'Practical approaches for navigating unclear goals, evolving customer needs, and uncertain situations in software development and leadership.'
 authors: [oeid]

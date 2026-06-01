@@ -1,5 +1,5 @@
 ---
-slug: tinker-timeouts
+slug: /development/tinkering/tinker-timeouts
 title: Tinker Timeouts
 description: 'Experimenting with different timeout patterns in web applications and socket connections.'
 authors: [oeid]

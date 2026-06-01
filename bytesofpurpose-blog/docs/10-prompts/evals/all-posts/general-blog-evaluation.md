@@ -1,5 +1,5 @@
 ---
-slug: general-blog-evaluation
+slug: /prompts/evals/all-posts/general-blog-evaluation
 title: "General Blog Post Evaluation"
 description: "Universal evaluation rubric applicable to all blog posts for content quality and professional positioning"
 authors: [oeid]

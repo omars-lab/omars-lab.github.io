@@ -1,5 +1,5 @@
 ---
-slug: discovery-techniques
+slug: /techniques/discovery-techniques/discovery-techniques
 title: 'Discovery Techniques'
 description: 'Methods for discovering content, tools, and resources to stay informed and find the right solutions for your needs.'
 authors: [oeid]

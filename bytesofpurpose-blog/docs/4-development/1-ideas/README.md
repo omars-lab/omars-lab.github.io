@@ -1,5 +1,5 @@
 ---
-slug: ideas
+slug: /development/ideas/ideas
 title: Ideas
 description: 'What ideas have I had?'
 authors: [oeid]

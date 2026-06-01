@@ -1,5 +1,5 @@
 ---
-slug: tips
+slug: /craftsmanship/tips/tips
 title: Tips
 description: 'Consolidating my tips.'
 authors: [oeid]

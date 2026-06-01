@@ -1,5 +1,5 @@
 ---
-slug: automate-text-replacements
+slug: /development/roadmaps/productivity-scripts/automate-text-replacements
 title: Automate Text Replacements
 description: 'Automating text expansion and shortcut management across devices with iCloud synchronization.'
 authors: [oeid]

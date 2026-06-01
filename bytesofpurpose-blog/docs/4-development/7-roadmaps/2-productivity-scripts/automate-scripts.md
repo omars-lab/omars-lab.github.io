@@ -1,5 +1,5 @@
 ---
-slug: automate-scripts
+slug: /development/roadmaps/productivity-scripts/automate-scripts
 title: 'Automate Scripts'
 description: 'Roadmap for automating scripts including cron job setup and multi-laptop automation mechanics'
 authors: [oeid]

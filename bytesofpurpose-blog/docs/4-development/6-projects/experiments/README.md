@@ -1,5 +1,5 @@
 ---
-slug: experiments
+slug: /development/projects/experiments/experiments
 title: 'Experiments'
 description: 'Structured experiments using scientific methods including A/B testing, randomized controlled trials (RCTs), and hypothesis-driven experimentation.'
 authors: [oeid]

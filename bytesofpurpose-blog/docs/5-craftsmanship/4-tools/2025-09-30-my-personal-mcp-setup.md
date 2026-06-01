@@ -1,5 +1,5 @@
 ---
-slug: my-personal-mcp-setup
+slug: /craftsmanship/tools/my-personal-mcp-setup
 title: "🔧 My Personal MCP Setup"
 description: "A detailed look at my custom Model Context Protocol (MCP) server configuration, tools, and workflow for enhanced AI productivity."
 authors: [oeid, cursor]

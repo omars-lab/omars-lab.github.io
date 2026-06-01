@@ -1,5 +1,5 @@
 ---
-slug: automate-tagging
+slug: /development/projects/backend-projects/automation/automate-tagging
 title: Automate Tagging
 description: 'Automating the tagging process for notes with automatic ID assignment, hashtag generation, and note ingestion workflows.'
 authors: [oeid]

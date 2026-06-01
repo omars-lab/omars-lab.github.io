@@ -1,5 +1,5 @@
 ---
-slug: initiatives
+slug: /development/initiatives/initiatives
 title: Initiatives
 description: 'Initiatives ready to get started - have blueprints, designs, and proper execution structure but not yet active projects.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: understanding-zapier-values
+slug: /mental-models/understanding-cultural-values/understanding-zapier-values
 title: "⚡ Zapier's Values"
 description: "An analysis of Zapier's five core values and what they teach us about building effective remote-first teams and customer-focused organizations."
 authors: [oeid]

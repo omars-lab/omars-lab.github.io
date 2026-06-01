@@ -1,5 +1,5 @@
 ---
-slug: terminology-blog
+slug: /definitions/terminology-blog
 title: '🪪 Blog Terms'
 description: 'Definitions and distinctions between functions, mechanics, techniques, and strategies in blog development'
 authors: [oeid]

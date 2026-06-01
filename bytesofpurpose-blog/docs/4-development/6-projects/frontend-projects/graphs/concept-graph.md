@@ -1,5 +1,5 @@
 ---
-slug: concept-graph
+slug: /development/projects/frontend-projects/graphs/concept-graph
 title: Concept Graph
 description: 'Building a tool to visualize and manage concept relationships using dependency graphs and PlantUML mind maps.'
 authors: [oeid]

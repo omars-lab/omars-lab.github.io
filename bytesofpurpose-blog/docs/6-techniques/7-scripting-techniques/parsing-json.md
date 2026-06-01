@@ -1,7 +1,7 @@
 ---
 title: 'JQ Mechanics'
 description: 'What JQ mechanics do I commonly leverage?'
-slug: jq-mechanics
+slug: /techniques/scripting-techniques/jq-mechanics
 authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png

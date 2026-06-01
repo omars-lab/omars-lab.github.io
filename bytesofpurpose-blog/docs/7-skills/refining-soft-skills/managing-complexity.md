@@ -1,5 +1,5 @@
 ---
-slug: managing-complexity
+slug: /skills/refining-soft-skills/managing-complexity
 title: 'Managing Complexity'
 description: 'Strategies for balancing simplicity, speed, and maintainability in complex systems. Essential for staff-level engineering roles.'
 authors: [oeid]

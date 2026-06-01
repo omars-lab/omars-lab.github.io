@@ -1,5 +1,5 @@
 ---
-slug: metric-tracker
+slug: /development/projects/frontend-projects/dashboards/metric-tracker
 title: Metric Tracker
 description: 'Developing tools to automatically track personal metrics including prayer times and habit monitoring.'
 authors: [oeid]

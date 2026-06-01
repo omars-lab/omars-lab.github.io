@@ -1,5 +1,5 @@
 ---
-slug: website-portfolio
+slug: /development/projects/frontend-projects/sites/website-portfolio
 title: My Portfolio
 description: 'Developing a comprehensive portfolio website with React, AWS deployment, and automated CI/CD pipeline.'
 authors: [oeid]

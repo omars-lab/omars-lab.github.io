@@ -1,6 +1,7 @@
 ---
-slug: develop-a-google-places-extractor
+slug: /development/projects/backend-projects/develop-a-google-places-extractor
 title: Develop a Google Places Extractor
+sidebar_label: 'Google Places Extractor'
 description: 'Building a tool to extract and organize places from Google Maps and Instagram into Google Sheets.'
 authors: [oeid]
 tags: [google-places, google-maps, instagram, google-sheets, data-extraction, development]

@@ -1,5 +1,5 @@
 ---
-slug: terminal-calendar
+slug: /techniques/scripting-techniques/terminal-calendar
 title: Terminal Calendar
 description: 'How to print a calendar in the terminal with x-callbacks.'
 authors: [oeid]

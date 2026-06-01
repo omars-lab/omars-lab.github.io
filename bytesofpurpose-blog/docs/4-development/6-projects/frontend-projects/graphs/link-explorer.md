@@ -1,5 +1,5 @@
 ---
-slug: link-explorer
+slug: /development/projects/frontend-projects/graphs/link-explorer
 title: Link Explorer
 description: 'Developing a tool to analyze and visualize links using Neo4j graph database and network analysis techniques.'
 authors: [oeid]

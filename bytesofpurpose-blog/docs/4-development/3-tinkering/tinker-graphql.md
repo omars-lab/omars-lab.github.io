@@ -1,5 +1,5 @@
 ---
-slug: tinker-graphql
+slug: /development/tinkering/tinker-graphql
 title: 'Tinkering with GraphQL'
 description: 'Experiments and learning notes for GraphQL implementation using Python and Graphene'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: running-llms-locally
+slug: /craftsmanship/workspace/running-llms-locally
 title: Running LLMs Locally
 description: How do I run an LLM locally?
 authors: [oeid]

@@ -4,7 +4,7 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "personal-organization", "life-management"]
 description: "How I use AI to intelligently organize personal content across 10+ directories, route tasks to appropriate life areas, and maintain a comprehensive personal knowledge system"
 author: "Omar Eid"
-slug: personal-life-content-organizer
+slug: /prompts/organize/personal-life-content-organizer
 authors: [oeid]
 ---
 

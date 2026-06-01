@@ -1,5 +1,5 @@
 ---
-slug: projects
+slug: /development/projects/projects
 title: Projects
 description: 'Active development projects - initiatives that are now being actively worked on with ongoing implementation and progress tracking.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: learning-business
+slug: /development/research/learning-topics/learning-business
 title: Learning Business
 description: 'Learning goals and resources for business concepts, entrepreneurship, and management.'
 authors: [oeid]

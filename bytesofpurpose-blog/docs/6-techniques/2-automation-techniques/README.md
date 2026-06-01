@@ -1,5 +1,5 @@
 ---
-slug: automation-techniques
+slug: /techniques/automation-techniques/automation-techniques
 title: 'Automation Techniques'
 description: 'Methods for creating and using automation shortcuts to streamline workflows and improve productivity.'
 authors: [oeid]

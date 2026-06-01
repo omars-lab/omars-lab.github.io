@@ -1,5 +1,5 @@
 ---
-slug: hifz-graph
+slug: /development/projects/frontend-projects/graphs/hifz-graph
 title: 'Hifz Graph'
 description: 'Graph visualization for tracking common hops across surahs in Quran memorization (Hifz)'
 authors: [oeid]

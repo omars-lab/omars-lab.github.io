@@ -1,5 +1,5 @@
 ---
-slug: roadmaps
+slug: /development/roadmaps/roadmaps
 title: Roadmaps
 description: 'How am I making my existing setup better? What have I tried to improve?'
 authors: [oeid]

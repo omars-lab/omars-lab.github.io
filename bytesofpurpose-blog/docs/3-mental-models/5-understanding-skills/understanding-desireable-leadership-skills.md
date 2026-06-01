@@ -1,5 +1,5 @@
 ---
-slug: 'leadership-principles-companies-look-for'
+slug: /mental-models/understanding-skills/leadership-principles-companies-look-for
 title: 'Leadership Principles'
 description: 'A comprehensive guide to the leadership principles companies actually evaluate, why they matter, and how to demonstrate them in interviews'
 authors: [oeid]

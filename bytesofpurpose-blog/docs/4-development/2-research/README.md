@@ -1,5 +1,5 @@
 ---
-slug: research
+slug: /development/research/research
 title: Research
 description: 'Research planning and investigation to inform decisions about ideas - what must I research to act on my ideas?'
 authors: [oeid]

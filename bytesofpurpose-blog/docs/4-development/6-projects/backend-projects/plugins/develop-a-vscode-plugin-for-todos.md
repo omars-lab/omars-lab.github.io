@@ -1,6 +1,7 @@
 ---
-slug: develop-a-vscode-plugin-for-todos
+slug: /development/projects/backend-projects/plugins/develop-a-vscode-plugin-for-todos
 title: Develop a VSCode Plugin for Todos
+sidebar_label: 'VSCode Todos Plugin'
 description: 'Building a VSCode extension called Flavorful Tasks for managing todos with keyboard shortcuts and automation features.'
 authors: [oeid]
 tags: [vscode, plugin, extension, todos, tasks, automation, productivity, development]

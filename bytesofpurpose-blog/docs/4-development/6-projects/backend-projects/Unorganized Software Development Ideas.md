@@ -1,5 +1,5 @@
 ---
-slug: unorganized-software-development-ideas
+slug: /development/projects/backend-projects/unorganized-software-development-ideas
 title: Unorganized Software Development Ideas
 description: 'What stuff do I want to make? A collection of software development ideas and projects.'
 authors: [oeid]

@@ -1,6 +1,7 @@
 ---
-slug: evaluating-my-contributions
+slug: /prompts/evals/specific-posts/evaluating-my-contributions
 title: "Evaluating My Contributions Blog Post"
+sidebar_label: 'My Contributions'
 description: "Evaluation rubric for the 'My Contributions' blog post - focused on timeline structure, STAR summaries, and professional impact demonstration"
 authors: [oeid]
 tags: [rubric, my-contributions, timeline, star-summaries, professional-impact, evaluation]

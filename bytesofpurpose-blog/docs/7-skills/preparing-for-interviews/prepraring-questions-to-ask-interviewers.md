@@ -1,5 +1,5 @@
 ---
-slug: 'prepraring-questions-to-ask-interviewers'
+slug: /skills/preparing-for-interviews/prepraring-questions-to-ask-interviewers
 title: 'Interviewing the Interviewer'
 description: 'A comprehensive guide to preparing strategic questions that help you evaluate roles, growth opportunities, and company culture while demonstrating your value'
 authors: [oeid]

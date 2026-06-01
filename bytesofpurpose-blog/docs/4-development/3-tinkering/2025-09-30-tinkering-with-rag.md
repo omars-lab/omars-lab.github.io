@@ -1,5 +1,5 @@
 ---
-slug: tinkering-with-rag
+slug: /development/tinkering/tinkering-with-rag
 title: "🔍 Tinkering with RAG"
 description: "My experiments and learnings with Retrieval Augmented Generation (RAG) systems, from basic implementations to advanced patterns and optimizations."
 authors: [oeid, cursor]

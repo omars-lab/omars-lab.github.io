@@ -1,6 +1,7 @@
 ---
-slug: tinker-browser-automation
+slug: /development/tinkering/tinker-browser-automation
 title: 'Tinkering with Browser Automation'
+sidebar_label: 'Browser Automation'
 description: 'Experiments with browser automation tools like Automa for workflow automation'
 authors: [oeid]
 tags: [browser-automation, automa, chrome-extension, automation, experiments, tinkering]

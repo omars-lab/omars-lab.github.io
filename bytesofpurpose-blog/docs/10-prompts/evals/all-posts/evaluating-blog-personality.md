@@ -1,5 +1,5 @@
 ---
-slug: evaluating-blog-personality
+slug: /prompts/evals/all-posts/evaluating-blog-personality
 title: "Evaluating Blog Personality"
 description: "Universal evaluation rubric for assessing writing personality, voice, and general writing techniques in blog posts"
 authors: [oeid]

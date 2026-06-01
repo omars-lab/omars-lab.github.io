@@ -1,6 +1,7 @@
 ---
-slug: develop-an-initiative-calendar-app
+slug: /development/projects/frontend-projects/productivity/develop-an-initiative-calendar-app
 title: Develop an Initiative Calendar App
+sidebar_label: 'Initiative Calendar App'
 description: 'Building a calendar application to organize initiatives and replace NotePlan limitations.'
 authors: [oeid]
 tags: [calendar, app, initiatives, organization, productivity, development]

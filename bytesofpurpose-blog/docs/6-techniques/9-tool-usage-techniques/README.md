@@ -1,5 +1,5 @@
 ---
-slug: tool-usage-techniques
+slug: /techniques/tool-usage-techniques/tool-usage-techniques
 title: 'Tool Usage Techniques'
 description: 'Methods for establishing effective tool usage patterns and maximizing productivity with development tools and workflows.'
 authors: [oeid]

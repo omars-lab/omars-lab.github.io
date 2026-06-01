@@ -1,6 +1,7 @@
 ---
-slug: develop-a-xcallback-link-hopping-tools-glue
+slug: /development/projects/backend-projects/link-management/develop-a-xcallback-link-hopping-tools-glue
 title: Develop a XCallback Link Hopping Tools Glue
+sidebar_label: 'XCallback Link Hopping'
 description: 'Building a glue system for managing xcallback URLs and cross-app navigation with custom resolving functions.'
 authors: [oeid]
 tags: [glue, xcallback, links, navigation, cross-app, automation, development]

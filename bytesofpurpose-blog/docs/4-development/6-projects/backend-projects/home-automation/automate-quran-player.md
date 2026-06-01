@@ -1,5 +1,5 @@
 ---
-slug: automate-quran-player
+slug: /development/projects/backend-projects/home-automation/automate-quran-player
 title: Automate Quran Player
 description: 'Automating Quran playback in the home using smart speakers and containerized applications.'
 authors: [oeid]

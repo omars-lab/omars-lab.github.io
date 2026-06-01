@@ -1,5 +1,5 @@
 ---
-slug: dashboard
+slug: /development/projects/frontend-projects/dashboards/dashboard
 title: Dashboard
 description: 'Developing a comprehensive personal dashboard for tracking finances, productivity, habits, and business metrics with monitoring and alerting.'
 authors: [oeid]

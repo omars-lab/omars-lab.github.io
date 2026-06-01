@@ -1,5 +1,5 @@
 ---
-slug: security-techniques
+slug: /techniques/security-techniques/security-techniques
 title: 'Security Techniques'
 description: 'Methods for managing secrets, handling passwords securely, and implementing security best practices in development workflows.'
 authors: [oeid]

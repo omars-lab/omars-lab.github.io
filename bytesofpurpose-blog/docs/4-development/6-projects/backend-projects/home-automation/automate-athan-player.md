@@ -1,5 +1,5 @@
 ---
-slug: automate-athan-player
+slug: /development/projects/backend-projects/home-automation/automate-athan-player
 title: Automate Athan Player
 description: 'Automating Athan (Islamic call to prayer) playback using smart speakers and home automation systems.'
 authors: [oeid]

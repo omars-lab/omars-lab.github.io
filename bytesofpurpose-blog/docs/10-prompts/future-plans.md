@@ -1,5 +1,5 @@
 ---
-slug: future-plans
+slug: /prompts/future-plans
 title: Future Plans
 description: Future plans and ideas
 authors: [oeid]

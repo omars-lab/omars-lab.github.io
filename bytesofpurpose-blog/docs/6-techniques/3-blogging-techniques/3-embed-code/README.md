@@ -1,5 +1,5 @@
 ---
-slug: embed-code
+slug: /techniques/blogging-techniques/embed-code/embed-code
 title: 'Embedding Code'
 description: 'Methods for embedding code examples, snippets, and interactive code cells including GitHub Gists and Jupyter notebooks in blog posts and documentation.'
 authors: [oeid]

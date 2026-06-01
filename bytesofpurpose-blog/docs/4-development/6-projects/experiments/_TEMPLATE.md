@@ -1,7 +1,7 @@
 ---
 # Copy this file to <YYYY-MM-DD>-<flag-key>.md and fill it in.
 # This doc is BOTH the experiment's design and its living timeline.
-slug: experiment-<flag-key>
+slug: /development/projects/experiments/experiment-<flag-key>
 title: '<Experiment title>'
 description: '<one-line: what we are testing and why>'
 authors: [oeid]

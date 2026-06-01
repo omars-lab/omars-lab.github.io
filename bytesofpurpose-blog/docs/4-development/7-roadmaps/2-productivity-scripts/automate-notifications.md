@@ -1,5 +1,5 @@
 ---
-slug: automate-notifications
+slug: /development/roadmaps/productivity-scripts/automate-notifications
 title: Automate Notifications
 description: 'Automating notification systems for monitoring changes in listings and other automated alerts.'
 authors: [oeid]

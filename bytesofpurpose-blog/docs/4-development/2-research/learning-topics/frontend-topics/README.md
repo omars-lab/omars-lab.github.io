@@ -1,5 +1,5 @@
 ---
-slug: learning-topics
+slug: /development/research/learning-topics/frontend-topics/learning-topics
 title: Learning Topics
 description: 'What do I want to learn more about? What do I want to tinker with? What do I want to discover?'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: 'technical-skills-interview-evaluation'
+slug: /mental-models/understanding-skills/technical-skills-interview-evaluation
 title: 'Technical Skills Evaluation'
 description: 'A comprehensive guide to technical skills companies evaluate in interviews, including concerns, strengths, and progression expectations for different SDE levels'
 authors: [oeid]

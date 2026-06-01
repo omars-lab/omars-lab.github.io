@@ -1,5 +1,5 @@
 ---
-slug: tinker-mac-automation
+slug: /development/tinkering/tinker-mac-automation
 title: 'Tinkering with Mac Automation'
 description: 'Experiments with Mac automation including LaunchAgents, Automator services, and clipboard sharing'
 authors: [oeid]

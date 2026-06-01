@@ -1,5 +1,5 @@
 ---
-slug: note-explore-er
+slug: /development/projects/frontend-projects/graphs/note-explore-er
 title: Note Explore-er
 description: 'Building a tool to traverse and explore notes with dependency visualization and fuzzy search capabilities.'
 authors: [oeid]

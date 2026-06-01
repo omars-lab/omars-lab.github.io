@@ -1,7 +1,7 @@
 ---
 title: 'Terminal Links'
 description: 'How can I embedd a link in terminal output?'
-slug: mechanic-terminal-links
+slug: /techniques/scripting-techniques/mechanic-terminal-links
 authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png

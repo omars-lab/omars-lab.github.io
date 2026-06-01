@@ -1,5 +1,5 @@
 ---
-slug: workspace
+slug: /craftsmanship/workspace/workspace
 title: Workspace
 description: 'Consolidating my workspace.'
 authors: [oeid]

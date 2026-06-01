@@ -1,5 +1,5 @@
 ---
-slug: learning-web-design
+slug: /development/research/learning-topics/frontend-topics/learning-web-design
 title: Learning Web Design
 description: 'Learning goals and resources for web design principles, UI/UX, and design systems.'
 authors: [oeid]

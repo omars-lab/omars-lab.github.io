@@ -1,6 +1,7 @@
 ---
-slug: evaluating-docs-vs-blogs
+slug: /prompts/evals/specific-posts/evaluating-docs-vs-blogs
 title: "Evaluating Docs vs Blogs Blog Post"
+sidebar_label: 'Docs vs Blogs'
 description: "Evaluation rubric for the 'Docs vs Blog Posts' blog post - focused on content strategy and format selection"
 authors: [oeid]
 tags: [rubric, docs-vs-blogs, content-strategy, evaluation]

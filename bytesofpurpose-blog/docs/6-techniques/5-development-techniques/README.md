@@ -1,5 +1,5 @@
 ---
-slug: development-techniques
+slug: /techniques/development-techniques/development-techniques
 title: 'Development Techniques'
 description: 'Practical methods and approaches for developing software effectively, including CI/CD, build processes, and development workflows.'
 authors: [oeid]

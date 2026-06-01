@@ -1,5 +1,5 @@
 ---
-slug: star-story-author
+slug: /prompts/author/star-story-author
 title: Star Story Author
 description: Preparing star stories
 authors: [oeid]

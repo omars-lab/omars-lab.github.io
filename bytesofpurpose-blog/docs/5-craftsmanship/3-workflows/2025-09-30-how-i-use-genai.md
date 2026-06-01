@@ -1,5 +1,5 @@
 ---
-slug: how-i-use-genai
+slug: /craftsmanship/workflows/how-i-use-genai
 title: "🤖 How I Use GenAI"
 description: "My practical GenAI workflow for development, writing, and problem-solving."
 tags: [genai, productivity, workflow, tools]

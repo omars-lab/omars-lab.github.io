@@ -1,5 +1,5 @@
 ---
-slug: developing-quip-app
+slug: /development/projects/backend-projects/plugins/developing-quip-app
 title: 'Development Initiative: Quip App'
 authors: [oeid]
 tags: []

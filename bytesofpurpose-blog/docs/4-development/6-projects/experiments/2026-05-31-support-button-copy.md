@@ -1,5 +1,5 @@
 ---
-slug: experiment-support-button-copy
+slug: /development/projects/experiments/experiment-support-button-copy
 title: 'Support button copy'
 description: 'A/B test: does "Support the dev 💜" drive more PayPal clicks than "Buy me a coffee ☕"?'
 authors: [oeid]

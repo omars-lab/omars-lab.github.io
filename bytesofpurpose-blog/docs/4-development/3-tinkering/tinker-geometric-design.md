@@ -1,5 +1,5 @@
 ---
-slug: tinker-geometric-design
+slug: /development/tinkering/tinker-geometric-design
 title: 'Tinkering with Geometric Design'
 description: 'Experiments and pitfalls in geometric design patterns, focusing on hexagons and polygon abstractions'
 authors: [oeid]

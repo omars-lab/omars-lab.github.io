@@ -1,5 +1,5 @@
 ---
-slug: learning-about-genai
+slug: /mental-models/understanding-the-genai-domain/learning-about-genai
 title: '💡 GenAI Learning Guide'
 description: 'A comprehensive learning path for mastering Generative AI, from fundamentals to production systems.'
 authors: [oeid]

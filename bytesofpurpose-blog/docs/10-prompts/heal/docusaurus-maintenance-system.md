@@ -4,7 +4,7 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "maintenance", "docusaurus", "documentation", "blogging"]
 description: "How I use AI to systematically fix frontmatter issues and broken links across entire Docusaurus documentation sites, ensuring clean builds and proper content organization"
 author: "Omar Eid"
-slug: docusaurus-maintenance-system
+slug: /prompts/heal/docusaurus-maintenance-system
 authors: [oeid]
 ---
 

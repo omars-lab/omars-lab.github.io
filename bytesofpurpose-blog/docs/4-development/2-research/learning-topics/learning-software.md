@@ -1,5 +1,5 @@
 ---
-slug: learning-software
+slug: /development/research/learning-topics/learning-software
 title: Learning Software
 description: 'Learning goals and resources for software development best practices, architecture, and scaling.'
 authors: [oeid]

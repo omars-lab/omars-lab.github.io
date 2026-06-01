@@ -1,5 +1,5 @@
 ---
-slug: tools
+slug: /craftsmanship/tools/tools
 title: Tools
 description: 'Consolidating my tools.'
 authors: [oeid]

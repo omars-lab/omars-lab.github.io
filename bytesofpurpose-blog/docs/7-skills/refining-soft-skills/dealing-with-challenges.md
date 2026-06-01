@@ -1,5 +1,5 @@
 ---
-slug: dealing-with-challenges
+slug: /skills/refining-soft-skills/dealing-with-challenges
 title: 'Dealing with Challenges'
 description: 'Frameworks and approaches for addressing and communicating about technical and professional challenges. Essential for interview preparation and professional growth.'
 authors: [oeid]
