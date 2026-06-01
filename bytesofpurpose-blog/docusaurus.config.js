@@ -236,32 +236,29 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             // "Blob UI Kit Building Blocks" — a builder surface, not a primary
             // reader destination. See footer "Other Works".
             {
-              label: "What's New",
-              to: '/changelog',
-              position: 'left'
-            },
-            {
               // Reader-facing "Vote on Post Ideas" page (/vote) — lets readers
               // signal which upcoming posts they want next (PostHog 'idea_voted').
               label: 'Vote',
               to: '/vote',
               position: 'left'
             },
+            {
+              // "Support" tab → the dedicated /support page (headshot + the ways
+              // to support: Shopify store, GitHub, LinkedIn, Buy Me a Coffee).
+              // Replaces the old standalone "Buy Me a Coffee" navbar button; the
+              // support-button-copy A/B experiment now lives on that page's coffee
+              // CTA (see src/components/Support).
+              label: 'Support',
+              to: '/support',
+              position: 'left'
+            },
+            // 'What's New' (/changelog) moved OUT of the navbar to the footer
+            // ("More" column) — a secondary destination, not primary reader nav.
             // {
             //   label: 'Ideas',
-            //   to: '/blog/process-blog-post-ideation', 
+            //   to: '/blog/process-blog-post-ideation',
             //   position: 'left'
             // },
-            {
-              // Support / "Buy Me a Coffee" link, wired into the support-button-copy
-              // A/B experiment so its copy varies site-wide (control "Buy me a
-              // coffee ☕" / test "Support the dev 💜"). Backed by the NavbarCoffee
-              // React component via the custom navbar item type registered in
-              // src/theme/NavbarItem/ComponentTypes.tsx. Styling: .navbar-coffee in
-              // custom.css. Emoji + text (no <img>) keeps it alt-text clean.
-              type: 'custom-coffee',
-              position: 'right',
-            }
 
           ],
         },
@@ -296,6 +293,13 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             {
               title: 'Other Works',
               items: [
+                {
+                  // "What's New" (changelog) — moved here from the navbar; a
+                  // secondary destination rather than primary reader nav.
+                  label: "What's New",
+                  to: '/changelog',
+                  position: 'right',
+                },
                 {
                   label: 'Portfolio',
                   href: 'https://www.bytesofpurpose.com',
