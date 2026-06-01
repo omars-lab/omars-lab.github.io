@@ -210,7 +210,12 @@ test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn sta
 	# PostHog/A-B specs live in a separate project — use `make test-posthog`.
 	( cd ${SITEROOT} && yarn playwright test --project=dev )
 
-test-regression: ## Full regression: dev-server specs + PostHog/A-B specs (both server modes)
+test-a11y: ## Run the axe-core accessibility scan (key pages, light + dark)
+	# WCAG 2 A/AA scan of home/blog/docs/post in both color modes. Part of the
+	# "dev" project, so it boots the :3000 dev server automatically.
+	( cd ${SITEROOT} && yarn playwright test --project=dev accessibility )
+
+test-regression: ## Full regression: dev-server specs (graph + a11y) + PostHog/A-B specs
 	# Runs the two E2E projects in sequence. The dev project boots its own :3000
 	# server; test-posthog builds + serves a POSTHOG_TEST_MODE production build on
 	# :4173. Run from the repo root; requires POSTHOG_KEY/HOST in .env.

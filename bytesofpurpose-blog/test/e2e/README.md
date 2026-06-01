@@ -57,6 +57,23 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
   (NOT `/blog/...` — that was a long-standing wrong path that 404'd).
 - **`posthog-events.spec.ts`** — PostHog init + $pageview/autocapture/scroll (posthog-prod)
 - **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)
+- **`accessibility.spec.ts`** — axe-core WCAG 2 A/AA scan of home/blog/docs/post in
+  **both color modes** (dev). `make test-a11y`.
+
+## Accessibility scanning (axe-core)
+
+`accessibility.spec.ts` scans the key templates with `@axe-core/playwright` against
+WCAG 2.0/2.1 A & AA, in light **and** dark mode (contrast differs by mode — axe
+catches dark-mode issues Lighthouse's default light-only run misses).
+
+- **Zero-tolerance pages:** home, blog index, docs shell — any violation fails.
+- **Baselined pages:** authored articles may carry pre-existing content/theme debt
+  (Prism code-token contrast, markdown task-list `<input>` labels, prose link
+  underlines). Each such page allow-lists specific rule IDs in the spec, so the gate
+  stays green yet still fails on anything **new**. Burn the baseline down (tracked
+  task) and tighten to `[]`.
+
+Run: `make test-a11y` (boots the :3000 dev server automatically).
 
 ## Known flaky / open
 
