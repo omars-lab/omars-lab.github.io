@@ -215,6 +215,11 @@ test-a11y: ## Run the axe-core accessibility scan (key pages, light + dark)
 	# "dev" project, so it boots the :3000 dev server automatically.
 	( cd ${SITEROOT} && yarn playwright test --project=dev accessibility )
 
+test-seo: ## Run on-page SEO checks (title, meta description, canonical, OG, link text)
+	# Asserts the SEO essentials Lighthouse's SEO category cares about across the
+	# key pages, so regressions fail in the normal run. Boots :3000 automatically.
+	( cd ${SITEROOT} && yarn playwright test --project=dev seo )
+
 test-regression: ## Full regression: dev-server specs (graph + a11y) + PostHog/A-B specs
 	# Runs the two E2E projects in sequence. The dev project boots its own :3000
 	# server; test-posthog builds + serves a POSTHOG_TEST_MODE production build on

@@ -115,6 +115,21 @@ html[data-theme='dark'] .navbar-coffee:hover {
   }
 }
 
+/* "Read more about <title>" — the title part is in the DOM (descriptive link
+   text for crawlers/Lighthouse + screen readers) but visually clipped so the
+   eye reads just "Read more →". Standard visually-hidden pattern. */
+.readMoreVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ==========================================================================
    Blog index polish (CSS-only — no swizzle)
    Frame each post as a card and rein in the oversized title links.

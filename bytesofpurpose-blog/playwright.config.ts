@@ -61,7 +61,7 @@ export default defineConfig({
     {
       // Docs/site specs + the axe accessibility scan, against the dev server (:3000).
       name: 'dev',
-      testMatch: /(graph-.*|accessibility)\.spec\.ts$/,
+      testMatch: /(graph-.*|accessibility|seo)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {

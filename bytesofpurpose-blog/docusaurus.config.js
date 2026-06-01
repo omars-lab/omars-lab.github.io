@@ -78,6 +78,11 @@ const darkTheme = themes.dracula;
             blog: {
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
+              // SEO: give the blog index a real title + meta description (the
+              // default description was just "Blog" — ~4 chars, fails SEO checks).
+              blogTitle: 'Bytes of Purpose — Blog',
+              blogDescription:
+                'Software engineering blog posts by Omar Eid: practical techniques, system design, GenAI, and lessons from building real-world software.',
 	            // remarkPlugins: [require('mdx-mermaid')],
               showReadingTime: true,
               editUrl:
@@ -297,7 +302,10 @@ const darkTheme = themes.dracula;
             htmlLabels: true,
           },
         },
-        image: 'img/logo.svg',
+        // Social/OG card. A raster PNG (renders on platforms that ignore SVG
+        // og:image). TODO: replace with a purpose-built 1200x630 card (tracked
+        // in the SEO task) — this 512x512 is a stopgap over the old logo.svg.
+        image: 'img/android-chrome-512x512.png',
       }),
   }
 );

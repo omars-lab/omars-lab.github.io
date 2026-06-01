@@ -59,6 +59,8 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 - **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)
 - **`accessibility.spec.ts`** — axe-core WCAG 2 A/AA scan of home/blog/docs/post in
   **both color modes** (dev). `make test-a11y`.
+- **`seo.spec.ts`** — on-page SEO essentials (title, meta description, canonical,
+  OG/Twitter tags, no generic link text) across key pages (dev). `make test-seo`.
 
 ## Accessibility scanning (axe-core)
 
