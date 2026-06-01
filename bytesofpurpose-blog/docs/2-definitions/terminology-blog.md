@@ -8,12 +8,35 @@ date: 2025-01-31T10:00
 draft: true
 ---
 
-How I distinguish the building blocks of blog development, ordered from
-lower-level to higher-level.
+The building blocks of blog development, distinguished mainly by *altitude* —
+from low-level technical pieces up to high-level process. Two lenses:
 
-## Functions vs. Mechanics vs. Techniques vs. Strategies
+1. **[Glossary](#1-glossary)** — each term defined once.
+2. **[The altitude axis](#2-the-altitude-axis)** — how they line up from low-level to high-level.
 
-- **Functions** — _TODO: define._
-- **Mechanics** — the lower-level, more technical pieces.
-- **Techniques** — a mix of the two: applying mechanics in a deliberate way.
-- **Strategies** — higher-level and more process-oriented.
+## 1. Glossary
+
+| Term | Definition | Altitude |
+|---|---|---|
+| **Function** | _TODO: define._ | _TBD_ |
+| **Mechanic** | A lower-level, technical piece — the raw moving part. | Lowest |
+| **Technique** | A deliberate way of applying mechanics; a mix of low and high. | Middle |
+| **Strategy** | A higher-level, process-oriented approach. | Highest |
+
+## 2. The altitude axis
+
+The three defined terms differ mostly by how technical vs. process-oriented they
+are:
+
+```
+high / process-oriented   Strategy
+                          Technique   (a mix)
+low / technical           Mechanic
+```
+
+- **Mechanics** are the lower-level, more technical pieces.
+- **Techniques** sit in between — applying mechanics in a deliberate way.
+- **Strategies** are higher-level and more process-oriented.
+
+> **Functions** still needs a definition and a place on this axis — see the
+> glossary TODO above.
