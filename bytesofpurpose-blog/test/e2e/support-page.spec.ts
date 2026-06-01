@@ -2,10 +2,12 @@ import { test, expect, Page } from '@playwright/test';
 
 /**
  * Proof for the dedicated /support page (replaces the standalone navbar coffee
- * button). Asserts: the page renders the headshot + the three support channels
- * (Shopify / GitHub / LinkedIn) + the Buy-Me-a-Coffee CTA; clicking the coffee
- * CTA fires 'support button clicked' (surface: support-page) and clicking a
- * channel fires 'support channel clicked'.
+ * button). Asserts: the page renders the headshot + the live support channels
+ * (GitHub / LinkedIn) + the Buy-Me-a-Coffee CTA; clicking the coffee CTA fires
+ * 'support button clicked' (surface: support-page) and clicking a channel fires
+ * 'support channel clicked'. The Shopify card is intentionally HIDDEN while its
+ * URL is the '#' placeholder (no dead "Visit the store" CTA ships) — assert its
+ * absence so re-enabling it (a real URL) is a deliberate, tested change.
  *
  * Runs in the posthog-prod project (POSTHOG_TEST_MODE=1 prod build on :4173).
  * Uses the same in-page capture spy as ingress-attribution / vote specs.
@@ -54,13 +56,13 @@ test.describe('Support page', () => {
   test('renders headshot, channels, and coffee CTA', async ({ page }) => {
     await page.goto(SUPPORT_URL);
     await expect(page.locator('img[alt*="Omar"]')).toBeVisible();
-    // All three support channels render. Each title appears in both the card's
-    // aria-label and an inner span, so assert "at least one" rather than exactly
-    // one. Presence (not in-viewport visibility) is what "renders" means here —
-    // the third card can sit below the fold at the default viewport.
-    expect(await page.getByText('Check out my Shopify store').count()).toBeGreaterThan(0);
+    // The live support channels render (presence, not in-viewport visibility —
+    // a card can sit below the fold at the default viewport).
     expect(await page.getByText('Follow me on GitHub').count()).toBeGreaterThan(0);
     expect(await page.getByText('Connect on LinkedIn').count()).toBeGreaterThan(0);
+    // The Shopify card is gated behind a real store URL — while the '#'
+    // placeholder is in effect it must NOT render (no dead CTA in a new tab).
+    expect(await page.getByText('Check out my Shopify store').count()).toBe(0);
     // The coffee CTA scrolls into view and is visible.
     const coffee = page.getByTestId('support-coffee-button');
     await coffee.scrollIntoViewIfNeeded();

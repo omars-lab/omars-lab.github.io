@@ -6,7 +6,9 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import CoffeeButton from '@site/src/components/Support/CoffeeButton';
 import styles from './support.module.css';
 
-// TODO: replace with the real Shopify store URL.
+// TODO: replace with the real Shopify store URL. While this is the '#' placeholder
+// the Shopify card is omitted (see channels filter below) so we never ship a CTA
+// that opens a blank tab — set a real URL to light it up.
 const SHOPIFY_STORE_URL = '#';
 
 const GITHUB_URL = 'https://github.com/omars-lab';
@@ -37,16 +39,22 @@ export default function SupportPage(): JSX.Element {
     });
 
   const channels: Channel[] = [
-    {
-      key: 'shopify',
-      icon: '🛍️',
-      title: 'Check out my Shopify store',
-      blurb:
-        "I design and sell things I'd want to own myself — grabbing something is a real, tangible way to support the work here.",
-      href: SHOPIFY_STORE_URL,
-      cta: 'Visit the store',
-      external: true,
-    },
+    // Shopify card is only shown once SHOPIFY_STORE_URL is a real link — a '#'
+    // placeholder would render a "Visit the store" CTA that opens a blank tab.
+    ...(SHOPIFY_STORE_URL !== '#'
+      ? [
+          {
+            key: 'shopify',
+            icon: '🛍️',
+            title: 'Check out my Shopify store',
+            blurb:
+              "I design and sell things I'd want to own myself — grabbing something is a real, tangible way to support the work here.",
+            href: SHOPIFY_STORE_URL,
+            cta: 'Visit the store',
+            external: true,
+          },
+        ]
+      : []),
     {
       key: 'github',
       icon: '⭐',
