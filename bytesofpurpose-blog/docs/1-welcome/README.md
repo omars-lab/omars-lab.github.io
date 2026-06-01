@@ -20,7 +20,7 @@ You'll find a comprehensive collection of documentation and blog posts that you 
 - **[Coding Challenges](/docs/skills/solving-coding-challenges/coding-challenges)** - Algorithm problems and solutions
 - **[Development](/docs/development)** - Setup guides and development workflows
 - **[Interviewing](/docs/skills/preparing-for-interviews/interview-preparation-guide)** - Technical interview preparation
-- **[Deep Dives](/docs/development/5-initiatives)** - In-depth technical explorations
+- **[Deep Dives](/docs/development/initiatives/initiatives)** - In-depth technical explorations
 
 ### 📝 Blog Posts
 - **[Latest Posts](/blog/)** - Recent thoughts and experiences

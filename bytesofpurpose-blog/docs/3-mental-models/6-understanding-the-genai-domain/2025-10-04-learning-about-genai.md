@@ -376,7 +376,7 @@ flowchart TD
 ## 🔗 Related Content
 
 - **[Fundamentals Guide](/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems)** - Core concepts glossary
-- **[Framework Landscape](/docs/mental-models/understanding-the-genai-domain/2025-11-10-ai-framework-landscape)** - Interactive framework comparison
+- **[Framework Landscape](/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape)** - Interactive framework comparison
 - **[System Design Guide](/docs/skills/solving-system-design/framework-for-designing-genai-systems)** - Complete design framework
 - **[Local LLMs](/docs/craftsmanship/workspace/running-llms-locally)** - Running LLMs locally
 
