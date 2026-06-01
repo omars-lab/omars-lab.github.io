@@ -2,92 +2,98 @@
 slug: /welcome/intro
 sidebar_position: 1
 title: Welcome to Bytes of Purpose
-description: 'A developer blog focused on coding challenges, development tools, and technical insights. Explore algorithms, local development setup, and practical programming guides.'
+description: 'A topic-organized knowledge base for engineers: generative AI, development, productivity, blogging, scripting, interview prep, companies, entrepreneurship, faith, and personal growth.'
 authors: [oeid]
 tags: [welcome, introduction, developer-blog]
 ---
 
 # Welcome to Bytes of Purpose
 
-Welcome to my developer blog! This is a place where I share my thoughts, learnings, and practical insights about programming, development tools, and problem-solving techniques.
+This is where I share what I'm learning and building. The docs are organized by
+**topic** — pick the one that matches what you're after and dive in. Below: the topics,
+how each one is laid out, and how docs differ from the blog.
 
-## What You'll Find Here
+## 📚 Browse by topic
 
-You'll find a comprehensive collection of documentation and blog posts that you can navigate using the sidebar. The content is organized into several key areas:
+Each card says what lives there and who it's for.
 
-### 📚 Documentation Sections
-- **[Techniques](/docs/techniques)** - Technical implementation details and tools
-- **[Coding Challenges](/docs/skills/solving-coding-challenges/coding-challenges)** - Algorithm problems and solutions
-- **[Development](/docs/development)** - Setup guides and development workflows
-- **[Interviewing](/docs/skills/preparing-for-interviews/interview-preparation-guide)** - Technical interview preparation
-- **[Deep Dives](/docs/development/initiatives/initiatives)** - In-depth technical explorations
+### 🤖 [Generative AI](/docs/generative-ai)
+Building with and learning about GenAI — domain fundamentals, designing production
+systems, and my own LLM workflow. *For: engineers learning GenAI and anyone designing
+an AI feature.*
 
-### 📝 Blog Posts
-- **[Latest Posts](/blog/)** - Recent thoughts and experiences
-- **[Design Posts](/designs/)** - Design decisions and architectural insights
+### 🧩 [Development](/docs/development/development)
+Technical concepts and the things I build — projects, POCs, tinkering, research, dev &
+security techniques, and roadmaps. *For: software engineers building real things.*
 
-## Content Philosophy
+### ⚡ [Productivity](/docs/productivity)
+Organizing work and effort — processes, automation, organizing/discovering/analyzing
+techniques, dashboards, and the vocabulary behind it. *For: anyone building deliberate
+productivity systems.*
 
-This blog follows a structured approach to content creation:
+### ✍️ [Blogging](/docs/techniques/blogging-techniques/blogging-techniques)
+Authoring this site — embedding components, diagrams, code, and external content;
+adding posts/docs/designs; plus the prompts I use to write and maintain it. *For:
+people running a Docusaurus blog or technical site.*
 
-### Documentation vs Blog Posts
-I maintain a clear distinction between [documentation and blog posts](/blog/docs-vs-blog-posts):
-- **Documentation** provides durable, reference material for solving specific problems
-- **Blog posts** capture experiences, lessons learned, and evolving perspectives
+### 💻 [Scripting](/docs/techniques/scripting-techniques/scripting-techniques)
+Terminal and automation scripting — shortcuts, parsing (jq/HTML), terminal calendar
+and links. *For: anyone who lives in the terminal and wants to automate it.*
 
-### Quality Standards
-- All content is thoroughly reviewed for accuracy and clarity
-- Code examples are tested and working
-- Links are verified and maintained
-- Content is regularly updated to reflect current best practices
+### 🎯 [Interview Prep](/docs/interview-prep)
+The full getting-hired journey — DSA, coding patterns, behavioral & system-design prep,
+and what companies expect at each level. *For: job-seekers and anyone leveling up.*
 
-## How to Navigate
+### 🏢 [Companies](/docs/companies)
+How companies work from the inside — roles and levels, the skills they evaluate, and
+how culture differs. *For: engineers navigating their careers and the curious about
+how tech companies operate.*
 
-- **Use the sidebar** to explore different sections
-- **Search functionality** helps you find specific topics quickly
-- **Tags** allow you to filter content by topic
-- **Related posts** suggest additional reading
+### 🚀 [Entrepreneurship](/docs/entrepreneurship)
+Notes on going from engineer to founder — business fundamentals and the habits behind
+it. *For: engineers weighing the leap into building a business.*
 
-## Getting the Most Value
+### 🕌 [Faith](/docs/faith)
+Where faith meets craft — Islamic automations (athan, Qurʾan, tasbeeh), prayer and
+hifz trackers, and spiritual-growth habits. *For: Muslims who build, and anyone curious
+how faith and software meet.*
 
-### For Readers
-- **Thumbs up** useful content to help me understand what's most valuable
-- **Edit button** lets you suggest improvements directly
-- **Share** content that helps your team or community
+### 🌱 [Personal Growth](/docs/personal-growth)
+The habits behind growing personally and professionally — building habits, reflecting,
+reading, mentorship, health, and finances. *For: anyone working deliberately on
+themselves.*
 
-### For Contributors
-- All content is open source and welcomes contributions
-- Use the edit links to propose improvements
-- Check the [ideation process](#blog-post-ideation-process) for contributing new ideas
+## 🧭 How each topic is laid out
 
-## Content Structure
+Every topic follows the same shape, so once you learn it you can navigate any of them:
 
-### Blog Post Ideation Process
-I maintain a transparent content creation process:
+- **Overview** — the topic's landing page (what's here + who it's for).
+- **Vocabulary** *(where it exists)* — the terms used across that topic, grouped in one
+  place.
+- **Content pages** — the actual docs, sub-grouped into folders by theme.
+- **Prompts** *(where it exists)* — the AI prompts relevant to that topic, gathered at
+  the end.
 
-1. **Idea Collection** - All blog post ideas are tracked in the repository
-2. **Sneak Peaks** - Incomplete posts are published as drafts to gauge interest
-3. **View Analytics** - Popular topics get prioritized for completion
-4. **Quality Review** - All content is scrubbed for accuracy, removing work-specific information and ensuring proper formatting
+## 📄 Docs vs Blog vs Designs vs Changelog
 
-### Future Content
-I have a section of future ideas that you can vote on, helping me prioritize what content would be most valuable to create next.
+The site has four kinds of content — here's what goes where:
 
-## Technical Focus Areas
+- **[Docs](/docs/welcome/intro)** — evergreen, reference/learning material organized by
+  topic (what you're reading now). Built to be returned to.
+- **[Blog](/blog/)** — dated posts: thoughts, experiences, and lessons learned over time.
+- **[Designs](/designs/)** — design write-ups and architectural decisions.
+- **[Changelog](/changelog)** — the running history of changes to this site.
 
-This blog covers several key technical areas:
+For the fuller distinction between the first two, see
+[Docs vs Blog Posts](/blog/docs-vs-blog-posts).
 
-- **Algorithm Problem Solving** - Coding challenge solutions and problem-solving techniques
-- **Local Development Setup** - From [running LLMs locally](/docs/craftsmanship/workspace/running-llms-locally) to development environment configuration
-- **Development Tools** - Docusaurus setup, VS Code plugins, and productivity tools
-- **Technical Interviewing** - System design expectations and problem-solving frameworks
+## Stay connected
 
-## Stay Connected
-
-- **GitHub** - [View the source code](https://github.com/omars-lab/omars-lab.github.io)
-- **LinkedIn** - [Connect professionally](https://www.linkedin.com/in/oeid/)
-- **Email** - [contact@bytesofpurpose.com](mailto:contact@bytesofpurpose.com)
+- **GitHub** — [view the source](https://github.com/omars-lab/omars-lab.github.io)
+- **LinkedIn** — [connect professionally](https://www.linkedin.com/in/oeid/)
+- **Email** — [contact@bytesofpurpose.com](mailto:contact@bytesofpurpose.com)
 
 ---
 
-*Ready to explore? Start with the [Techniques section](/docs/techniques) for technical implementation details, or check out the [latest blog posts](/blog/) for recent insights and experiences.*
+*New here? Pick the topic above that matches what you're after — or skim the
+[latest blog posts](/blog/) for recent thinking.*
