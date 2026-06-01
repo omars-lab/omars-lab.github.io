@@ -44,6 +44,18 @@ needed. Revisit (`mask_all_text`) if any authenticated/PII surface is ever added
 | `graph expanded all` / `graph collapsed all` | expand/collapse all nodes | `src/components/Graph/GraphRenderer.tsx` |
 | `changelog filter changed` | change a changelog filter | `src/components/Changelog/Filters/ChangelogFilters.tsx` |
 | `changelog viewed` | land on the changelog page | `src/pages/changelog.tsx` |
+| `egress_share` | click a share channel (copy/email/LinkedIn/X) in the title | `src/components/ShareButton/index.tsx` |
+| `egress_copy` | any in-page copy (payload untouched) | `src/posthog.js` |
+| `bookmark_intent` | ⌘D/Ctrl+D pressed (event only; can't tag the bookmark) | `src/posthog.js` |
+| `ingress` | arrival with `?im=<marker>` (then stripped), or untagged direct deep arrival (`direct_or_bookmark`) | `src/posthog.js` |
+| `bookmarklet_used` | the saved bookmarklet is clicked (beaconed straight to PostHog, survives the redirect) | `src/components/BookmarkletButton/index.tsx` (embedded `javascript:`) |
+| `bookmarklet_help_opened` / `bookmarklet_dragged` | user opens the drag-instructions modal / drags the bookmarklet | `src/components/BookmarkletButton/index.tsx` |
+
+**Ingress-attribution layer:** the `egress_*` / `bookmark_intent` / `ingress` events
+form a "how a URL left and came back" loop. The ShareButton (mounted in the doc/blog H1
+via swizzled `@theme/DocItem/Content` + `@theme/BlogPostItem/Header/Title`) tags outgoing
+URLs with `?im=<share_cp|share_em|share_li|share_x>`; `posthog.js` reads + strips `im` on
+arrival. Full design + feasibility notes: `./ingress-attribution-plan.md`.
 
 ## Decision log
 
@@ -73,7 +85,7 @@ Workflow + per-experiment task template: `.claude/skills/run-ab-test`. Spec:
   `setPersonProperties`, aliasing) is tracked in the
   [blog roadmap](docs/4-development/7-roadmaps/1-blog-roadmap.mdx) under
   *Analytics & Tracking → PostHog: person identification & profiles*. Ref:
-  https://posthog.com/docs/data/persons#capturing-person-profiles. Privacy gate:
+  [PostHog: capturing person profiles](https://posthog.com/docs/data/persons#capturing-person-profiles). Privacy gate:
   repo is public + site behind Cloudflare Access bypass; never ship PII; keep
   `POSTHOG_TEST_MODE` out of production.
 - Dashboards & insights created by the wizard live in PostHog (Blog Analytics
