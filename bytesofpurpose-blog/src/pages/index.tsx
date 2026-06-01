@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -32,8 +33,12 @@ function HomepageHeader() {
 export default function Home(): JSX.Element {
   return (
     <Layout
-      title="Omars Blog"
       description="Software engineering docs, blog posts, and system designs by Omar Eid — purposeful code, one byte at a time.">
+      {/* Raw <title> overrides Docusaurus' templated "<title> | <siteTitle>" so
+          the homepage browser tab reads exactly "Omars Blog". */}
+      <Head>
+        <title>Omars Blog</title>
+      </Head>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
