@@ -5,7 +5,7 @@ description: "An analysis of Zapier's five core values and what they teach us ab
 authors: [oeid]
 tags: [company-culture, remote-work, values, leadership, team-building]
 date: '2025-09-25T22:51'
-draft: true
+draft: false
 ---
 
 I wanted to understand better Zapier's cultural values and related them to the values of other tech companies; thus I made this post.

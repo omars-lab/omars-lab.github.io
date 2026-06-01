@@ -31,7 +31,7 @@ Organization techniques are **methods for structuring and organizing information
 
 ## Key Documents
 
-- [Leveraging Text Replacements](/docs/techniques/organization-techniques/leveraging-text-replacements) - Using text replacement for efficiency and productivity
-- [Linking](/docs/techniques/organization-techniques/linking) - Effective linking strategies and approaches
-- [Tagging](/docs/techniques/organization-techniques/tagging) - Tagging and categorization methods
+<!-- - [Leveraging Text Replacements](/docs/techniques/organization-techniques/leveraging-text-replacements) - Using text replacement for efficiency and productivity -->
+<!-- - [Linking](/docs/techniques/organization-techniques/linking) - Effective linking strategies and approaches -->
+<!-- - [Tagging](/docs/techniques/organization-techniques/tagging) - Tagging and categorization methods -->
 

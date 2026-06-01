@@ -47,6 +47,6 @@ Blogging diagram embedding emphasizes visual presentation, while documentation t
 - [Google Drawing](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-google-drawings) - Using Google Drawings for diagrams
 - [Kanban Customization](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-kanban-customization) - Customizing and embedding Kanban boards
 - [Mermaid Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
-- [MindNode](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-mindnode-diagrams) - Mind mapping with MindNode
+<!-- - [MindNode](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-mindnode-diagrams) - Mind mapping with MindNode -->
 - [PlantUML Sequence Diagrams](/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-sequence-diagrams) - Creating sequence diagrams with PlantUML
 

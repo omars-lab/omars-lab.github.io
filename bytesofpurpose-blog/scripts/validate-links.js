@@ -170,6 +170,46 @@ function maskCode(line, state) {
   return line.replace(/`[^`]*`/g, (m) => ' '.repeat(m.length));
 }
 
+/**
+ * Blank out commented-out content so links inside comments aren't flagged.
+ * Handles HTML comments (<!-- ... -->) and JSX/MDX brace-slash-star comments,
+ * including multi-line spans (tracked via state.inComment). A commented link is an
+ * intentionally-deferred link (e.g. a README item pointing at a not-yet-published
+ * draft) — it ships as nothing, so it must not trip broken-internal/link-to-draft.
+ * Mirrors maskCode's "replace with spaces, preserve column positions" approach.
+ */
+function maskComments(line, state) {
+  let out = '';
+  let i = 0;
+  while (i < line.length) {
+    if (state.inComment) {
+      // Look for whichever closer matches the opener we're inside.
+      const closer = state.inComment === 'html' ? '-->' : '*/';
+      const end = line.indexOf(closer, i);
+      if (end === -1) {
+        out += ' '.repeat(line.length - i);
+        i = line.length;
+      } else {
+        out += ' '.repeat(end - i + closer.length);
+        i = end + closer.length;
+        state.inComment = null;
+      }
+    } else if (line.startsWith('<!--', i)) {
+      state.inComment = 'html';
+      out += '    ';
+      i += 4;
+    } else if (line.startsWith('{/*', i)) {
+      state.inComment = 'jsx';
+      out += '   ';
+      i += 3;
+    } else {
+      out += line[i];
+      i += 1;
+    }
+  }
+  return out;
+}
+
 function trackingParamsIn(url) {
   const q = url.indexOf('?');
   if (q === -1) return [];
@@ -267,7 +307,7 @@ function scanFile(file, slugIndex) {
     ? ((fmField(readFrontmatter(file), 'draft') || '').toLowerCase() === 'true')
     : false;
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  const state = { inFence: false };
+  const state = { inFence: false, inComment: null };
   let inFrontmatter = false;
 
   lines.forEach((raw, i) => {
@@ -275,7 +315,7 @@ function scanFile(file, slugIndex) {
     if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return; }
     if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return; }
 
-    const line = maskCode(raw, state);
+    const line = maskComments(maskCode(raw, state), state);
     if (!line.trim()) return;
 
     MD_LINK.lastIndex = 0;
@@ -406,14 +446,14 @@ async function fixFile(file, { titles }) {
 
   // Operate per line so we only touch the exact bare-URL spans.
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  const state = { inFence: false };
+  const state = { inFence: false, inComment: null };
   let inFrontmatter = false;
   let fixed = 0;
 
   const out = lines.map((raw, i) => {
     if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return raw; }
     if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return raw; }
-    const masked = maskCode(raw, state);
+    const masked = maskComments(maskCode(raw, state), state);
     if (!masked.trim()) return raw;
 
     // Find markdown-link spans on this line so we never touch a URL already in a link.

@@ -95,6 +95,18 @@ node "$VALIDATOR" --fix "$f" >/dev/null 2>&1
 ! grep -qE '<https?://' "$f" && ok "--fix → no bare <url> autolinks (MDX-safe)" || bad "--fix → emitted an <url> autolink"
 grep -qE '\]\(https?://' "$f" && ok "--fix → Tier-3 still a proper [label](url)" || bad "--fix → Tier-3 not a markdown link"
 
+# --- 9. commented-out content is ignored (HTML + JSX, single + multi-line) ---
+# A link/URL inside a comment ships as nothing → must NOT be flagged; an
+# identical one outside a comment MUST still be flagged.
+f="$TMP/comments.md"
+printf -- '---\ntitle: t\n---\n\n<!-- https://github.com/ClearURLs/Addon -->\n{/* https://github.com/ClearURLs/Addon */}\n<!--\nhttps://github.com/ClearURLs/Addon\n-->\n' > "$f"
+node "$VALIDATOR" "$f" --error-only >/dev/null 2>&1
+[ $? -eq 0 ] && ok "commented bare URLs → not flagged (exit 0)" || bad "commented bare URLs → unexpectedly flagged"
+# Now add a real (uncommented) bare URL → must flag (exit non-zero).
+printf -- '\n* https://github.com/ClearURLs/Addon\n' >> "$f"
+node "$VALIDATOR" "$f" --error-only >/dev/null 2>&1
+[ $? -ne 0 ] && ok "uncommented bare URL alongside comments → still flagged" || bad "uncommented bare URL → not flagged (comment masking too greedy)"
+
 # --- summary -------------------------------------------------------------
 echo ""
 echo "  $pass passed, $fail failed"

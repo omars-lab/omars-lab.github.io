@@ -31,6 +31,6 @@ Analysis techniques are **methods for examining and interpreting data**:
 
 ## Key Documents
 
-- [Analyzing Popularity](/docs/techniques/analysis-techniques/analyzing-popularity) - Methods for analyzing and measuring popularity
+<!-- - [Analyzing Popularity](/docs/techniques/analysis-techniques/analyzing-popularity) - Methods for analyzing and measuring popularity -->
 - [Leveraging Google Analytics](/docs/techniques/analysis-techniques/leveraging-google-analytics) - Using Google Analytics effectively for tracking and analysis
 

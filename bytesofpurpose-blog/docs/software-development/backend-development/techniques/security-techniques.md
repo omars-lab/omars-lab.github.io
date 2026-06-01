@@ -31,5 +31,5 @@ Security techniques are **methods for protecting sensitive information**:
 
 ## Key Documents
 
-- [Managing Secrets](/docs/techniques/security-techniques/managing-secrets) - Secure secret management practices and methods
+<!-- - [Managing Secrets](/docs/techniques/security-techniques/managing-secrets) - Secure secret management practices and methods -->
 

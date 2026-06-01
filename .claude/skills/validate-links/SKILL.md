@@ -41,7 +41,11 @@ two lines per problem, so don't count its lines).
 | `link-to-draft` | a **published** page links to a `draft: true` page (excluded from the prod build → a build-time broken link) | un-draft the target first, or remove/defer the link |
 
 It skips: YAML frontmatter, fenced/inline code (so example URLs aren't flagged),
-and external/relative non-`/docs` links beyond the two integrity checks below.
+**commented-out content** (HTML `<!-- … -->` and JSX/MDX brace-star comments,
+incl. multi-line — a commented link ships as nothing, so it's intentionally
+deferred and must not trip any check), and external/relative non-`/docs` links
+beyond the two integrity checks below. (Masking lives in `maskCode` +
+`maskComments`; both the scan and `--fix` paths apply them.)
 
 ### Internal-link integrity (the `broken-internal` / `link-to-draft` checks)
 
