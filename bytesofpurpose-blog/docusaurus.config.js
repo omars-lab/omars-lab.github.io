@@ -17,6 +17,17 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
     baseUrl: '/',
     // onBrokenLinks: 'throw',
     onBrokenLinks: 'warn',
+    // Left as 'warn' (the default) on purpose: src/pages/changelog.tsx deliberately
+    // SHADOWS the changelog blog-instance's auto-generated index at /changelog (the
+    // custom React page is the intended view; the blog plugin only exists to serve
+    // the individual /changelog/<entry> pages, and Docusaurus has no flag to suppress
+    // a blog instance's index route). That intentional page-over-blog shadow would
+    // make 'throw' fail every build. Accidental DOC route collisions from the topic
+    // reorg are caught instead by the per-phase route-manifest diff (find build
+    // -name '*.html' vs baseline), which is exact and doesn't false-positive on this
+    // intentional shadow. The genuinely-accidental dup this surfaced (a duplicate
+    // content-docs-changelog-system-documentation .md AND .mdx) was removed.
+    // onDuplicateRoutes: 'throw',
     favicon: 'img/favicon.ico',
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
     projectName: 'omars-lab.github.io', // Usually your repo name.
