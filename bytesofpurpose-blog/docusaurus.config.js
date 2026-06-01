@@ -228,18 +228,16 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
               position: 'left'
             },
             {
-              label: 'Designs', 
-              to: '/designs', 
+              label: 'System Designs',
+              to: '/designs',
               position: 'left'
             },
+            // 'Components' (Storybook) moved OUT of the navbar to the footer as
+            // "Blob UI Kit Building Blocks" — a builder surface, not a primary
+            // reader destination. See footer "Other Works".
             {
-              label: 'Components', 
-              to: '/storybook/', 
-              position: 'left'
-            },
-            {
-              label: 'Changelog', 
-              to: '/changelog', 
+              label: "What's New",
+              to: '/changelog',
               position: 'left'
             },
             // {
@@ -299,6 +297,14 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
                 {
                   label: 'Resume',
                   href: 'https://www.bytesofpurpose.com/resume.pdf',
+                  position: 'right',
+                },
+                {
+                  // Storybook component library — a builder surface, moved here
+                  // from the navbar (reader-facing nav stays focused on Learn /
+                  // Blog / System Designs / What's New).
+                  label: 'Blob UI Kit Building Blocks',
+                  to: '/storybook/',
                   position: 'right',
                 },
               ],
