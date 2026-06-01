@@ -194,7 +194,7 @@ blocked-on-user (LQ4 push/PR). Send a `PushNotification` one-liner, then stop (n
     within the tick or record the blocker and stop.
   - **defer?:** no (read-only validation).
 
-- [~] **LQ4 — Push + open PR. [HARD STOP — blocked-on-user]** // BLOCKED-ON-USER 2026-06-01: LQ1–LQ3 all done+verified. Branch feat/ingress-attribution has NO upstream (not pushed). Ready command: `git push -u origin feat/ingress-attribution` then open PR (base: master). Held for explicit user go per loop protocol. NOTE: working tree still has Track C's uncommitted files (docusaurus.config.js, playwright.config.ts, debug-menu.spec.ts, src/components/Support/, support.tsx, support-page.spec.ts) — a plain `git push` only pushes COMMITTED work (clean, isolated), but confirm with user before pushing in case Track C wants to land first.
+- [x] **LQ4 — Push + open PR.** // done 2026-06-01: user gave explicit "push pr" go. Secret scan FIRST (gitleaks all 31 commits + targeted pattern grep + env/key-file check) → no leaks. Pushed `git push -u origin feat/ingress-attribution` (upstream set). PR #2 opened (base: master): [PR #2](https://github.com/omars-lab/omars-lab.github.io/pull/2) — bundles ingress feature + docs IA + a11y fix + validate-links + Track A avatar + Track C support/nav (all committed on branch by push time).
   - **done-when:** branch pushed + PR open.
   - **work:** push `feat/ingress-attribution`; open a PR summarizing the ingress feature + this
     follow-up batch. **Do NOT run autonomously** — prepare the push command + PR body, mark
