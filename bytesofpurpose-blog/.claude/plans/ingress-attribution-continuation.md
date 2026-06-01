@@ -140,7 +140,14 @@ Each item: `[ ]` checkbox · **done-when** (the idempotent check the loop runs f
 **work** · **verify** (the gate) · **defer?** (whether it hard-stops on the user).
 Append `// done <date>: <evidence>` when an item is verified complete.
 
-- [ ] **Q1 — Commit the ingress feature.**
+- [x] **Q1 — Commit the ingress feature.**
+  // done 2026-06-01: user explicitly authorized committing in logical groups (overriding
+  // the defer gate) and asked to include other-session work in its own groups. Committed
+  // 3 isolated groups: 3098e945 feat(ingress-attribution) — 18 files, reorg cleanly
+  // excluded (verified via git show --name-only); 03817c2a refactor(docs) vocabulary→
+  // terminology rename + Q2 description validator checks; 7dc31eab docs(plans) scratch
+  // artifacts. Proof gate first: make test-posthog → 19/19 green (14 ingress). gitleaks
+  // ran on each commit (no leaks). Working tree clean. PR is still a separate user call.
   - **done-when:** `git log --oneline -5` shows an ingress-attribution commit on
     `feat/ingress-attribution` AND `git status --porcelain` shows the ingress files no
     longer untracked/modified.
