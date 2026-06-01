@@ -1,0 +1,138 @@
+path	topic	title	last_modified	words	recommendation
+blogging/embed-diagrams/diagrams-mindnode.mdx	blogging	Embedded MindNode Diagrams	2026-06-01	0	delete?
+blogging/embed-external-components/html.mdx	blogging	Embedded HTML	2026-06-01	0	delete?
+blogging/embed-external-components/images-pngs.mdx	blogging	Embedded PNGs	2026-06-01	2	delete?
+blogging/embed-structural-components/adding-frontmatter.mdx	blogging	Frontmatter	2026-06-01	7	delete?
+blogging/documentation-techniques/leveraging-google-app-scripts.mdx	blogging	Leveraging Google App Scripts	2026-06-01	13	keep
+blogging/habits-blogging.mdx	blogging	✍️ Blogging	2026-06-01	664	publish?
+companies/culture/2025-09-25-understanding-zapier-values.md	companies	⚡ Zapier's Values	2026-06-01	1177	publish?
+entrepreneurship/learning-business.md	entrepreneurship	Learning Business	2026-06-01	15	keep
+entrepreneurship/habits-entrepreneurship.mdx	entrepreneurship	🚀 Entrepreneurship	2026-06-01	376	publish?
+faith/apps/hifz-graph.md	faith	Hifz Graph	2026-06-01	12	keep
+faith/apps/prayer-tracking-apple-watch-app.md	faith	Prayer Tracking Apple Watch App	2026-06-01	272	publish?
+faith/automations/automate-athan-player.md	faith	Automate Athan Player	2026-06-01	117	publish?
+faith/automations/automate-quran-player.md	faith	Automate Quran Player	2026-06-01	67	publish?
+faith/automations/automate-tasbeeh-tracking.md	faith	Automate Tasbeeh Tracking	2026-06-01	496	publish?
+faith/habits-growing-spiritually.mdx	faith	🕌 Growing Spiritually	2026-06-01	827	publish?
+generative-ai/my-genai-workflow/2025-09-30-how-i-use-genai.md	generative-ai	🤖 How I Use GenAI	2026-06-01	228	publish?
+generative-ai/my-genai-workflow/2025-09-30-my-personal-mcp-setup.md	generative-ai	🔧 My Personal MCP Setup	2026-06-01	434	publish?
+generative-ai/my-genai-workflow/2025-09-30-tinkering-with-rag.md	generative-ai	🔍 Tinkering with RAG	2026-06-01	390	publish?
+generative-ai/my-genai-workflow/initiatives/llm-move.mdx	generative-ai	LLM Move Initiative	2026-06-01	72	publish?
+generative-ai/my-genai-workflow/initiatives/llm-plant.mdx	generative-ai	LLM Plant Initiative	2026-06-01	164	publish?
+generative-ai/my-genai-workflow/initiatives/llm-productivity-tools.mdx	generative-ai	LLM Productivity Tools Initiative	2026-06-01	122	publish?
+interview-prep/prompts/star-story-author.md	interview-prep	Star Story Author	2026-06-01	12	keep
+interview-prep/coding-challenges/solutions/README.mdx	interview-prep	👉🏻 Start Here	2026-06-01	1	keep-flesh
+personal-growth/habits-building-habits.mdx	personal-growth	🏗️ Building Habits	2026-06-01	438	publish?
+personal-growth/habits-content-discovery.mdx	personal-growth	🔍 Discovering Content	2026-06-01	478	publish?
+personal-growth/habits-developing.mdx	personal-growth	💻 Developing	2026-06-01	420	publish?
+personal-growth/habits-growing-personally.mdx	personal-growth	🌱 Growing Personally	2026-06-01	593	publish?
+personal-growth/habits-growing-professionally.mdx	personal-growth	📈 Growing Professionally	2026-06-01	589	publish?
+personal-growth/habits-maintaining-health.mdx	personal-growth	💪 Maintaining Health	2026-06-01	442	publish?
+personal-growth/habits-managing-finances.mdx	personal-growth	💰 Managing Finances	2026-06-01	477	publish?
+personal-growth/habits-mastering.mdx	personal-growth	📈 Mastering	2026-06-01	589	publish?
+personal-growth/habits-mentorship.mdx	personal-growth	👥 Mentorship	2026-06-01	503	publish?
+personal-growth/habits-pursuing-interests.mdx	personal-growth	🎨 Pursuing Interests	2026-06-01	455	publish?
+personal-growth/habits-reading.mdx	personal-growth	📚 Reading	2026-06-01	322	publish?
+personal-growth/habits-reflecting.mdx	personal-growth	🤔 Reflecting	2026-06-01	384	publish?
+personal-growth/habits-tinkering.mdx	personal-growth	🔧 Tinkering	2026-06-01	372	publish?
+product-management/ideas/my-first-intellij-plugin.mdx	product-management	My First IntelliJ Plugin	2026-06-01	7	delete?
+product-management/ideas/my-first-react-app.mdx	product-management	My First React App	2026-06-01	9	delete?
+product-management/ideas/tinker-browser-automation.md	product-management	Tinkering with Browser Automation	2026-06-01	15	keep
+product-management/roadmaps/automation-hub-enhancements.mdx	product-management	Automation Hub Enhancements	2026-06-01	26	keep
+product-management/roadmaps/jira-setup-enhancements.mdx	product-management	Jira Setup Enhancements	2026-06-01	19	keep
+product-management/roadmaps/profile-enhancements.mdx	product-management	Profile Enhancements	2026-06-01	16	keep
+product-management/ideas/README.md	product-management	Ideas	2026-06-01	0	keep-flesh
+product-management/roadmaps/README.md	product-management	Roadmaps	2026-06-01	14	keep-flesh
+product-management/experiments/_TEMPLATE.md	product-management	<Experiment title>	2026-06-01	432	publish?
+product-management/experiments/2026-05-31-support-button-copy.md	product-management	Support button copy	2026-06-01	886	publish?
+product-management/ideas/my-first-ios-app.md	product-management	My First iOS App	2026-06-01	131	publish?
+product-management/ideas/my-first-mac-menubar-app.md	product-management	My First Mac Menu Bar App	2026-06-01	67	publish?
+product-management/ideas/my-first-noteplan-plugin.mdx	product-management	My First NotePlan Plugin	2026-06-01	341	publish?
+product-management/ideas/unorganized-software-development-ideas.md	product-management	Unorganized Software Development Ideas	2026-06-01	339	publish?
+product-management/ideas/unorganized-tool-script-development-ideas.md	product-management	Unorganized Tool and Script Development Ideas	2026-06-01	425	publish?
+product-management/research/learning-software.md	product-management	Learning Software	2026-06-01	336	publish?
+product-management/roadmaps/vscode-plugin-enhancements.mdx	product-management	VSCode Plugin Enhancements	2026-06-01	60	publish?
+productivity/discovering/discovering-tools.mdx	productivity	Discovering Tools	2026-06-01	4	delete?
+productivity/analyzing/analyzing-popularity.mdx	productivity	Analyzing Popularity	2026-06-01	30	keep
+productivity/dashboards/habit-board.md	productivity	Habit Board	2026-06-01	11	keep
+productivity/dashboards/metric-tracker.md	productivity	Metric Tracker	2026-06-01	30	keep
+productivity/vocabulary/acronyms.mdx	productivity	Acronyms	2026-06-01	29	keep
+productivity/apps/build-a-kanban-board.md	productivity	Build a Kanban Board	2026-06-01	948	publish?
+productivity/apps/develop-an-initiative-calendar-app.md	productivity	Develop an Initiative Calendar App	2026-06-01	172	publish?
+productivity/dashboards/adoption-tracker.md	productivity	Adoption Tracker	2026-06-01	212	publish?
+productivity/dashboards/budget-tracker.md	productivity	Budget Tracker	2026-06-01	55	publish?
+productivity/dashboards/dashboard.md	productivity	Dashboard	2026-06-01	1016	publish?
+productivity/discovering/discovering-content.mdx	productivity	Finding Educational Content	2026-06-01	48	publish?
+productivity/habits-consolidating.mdx	productivity	🔗 Consolidating	2026-06-01	465	publish?
+productivity/habits-managing-time.mdx	productivity	⏰ Managing Time	2026-06-01	502	publish?
+productivity/habits-organizing.mdx	productivity	🗂️ Organizing	2026-06-01	623	publish?
+productivity/habits-planning.mdx	productivity	📋 Planning	2026-06-01	446	publish?
+productivity/habits-prioritizing.mdx	productivity	🎯 Prioritizing	2026-06-01	754	publish?
+productivity/habits-process-engineering.mdx	productivity	⚙️ Process Engineering	2026-06-01	395	publish?
+productivity/habits-reviewing.mdx	productivity	📊 Reviewing	2026-06-01	541	publish?
+productivity/habits-tracking.mdx	productivity	Tracking	2026-06-01	469	publish?
+productivity/organizing/leveraging-text-replacements.mdx	productivity	Leveraging Text Replacements	2026-06-01	58	publish?
+productivity/organizing/linking.mdx	productivity	Linking	2026-06-01	84	publish?
+productivity/organizing/tagging.mdx	productivity	Tagging	2026-06-01	471	publish?
+productivity/processes/process-ideation.mdx	productivity	💡 The Process of Ideation	2026-06-01	1615	publish?
+productivity/vocabulary/terminology-cli.mdx	productivity	🪪 CLI Terms	2026-06-01	436	publish?
+productivity/vocabulary/terminology-development.mdx	productivity	🪪 Development Terms	2026-06-01	564	publish?
+productivity/vocabulary/terminology-project-management.mdx	productivity	🪪 Project Management Terms	2026-06-01	399	publish?
+software-development/backend-development/research/learning-python.mdx	software-development	Learning Python	2026-06-01	4	delete?
+software-development/backend-development/techniques/password-injection.mdx	software-development	Password Injection	2026-06-01	6	delete?
+software-development/frontend-development/research/learning-web-design.md	software-development	Learning Web Design	2026-06-01	6	delete?
+software-development/backend-development/projects/develop-a-google-places-extractor.md	software-development	Develop a Google Places Extractor	2026-06-01	27	keep
+software-development/backend-development/projects/develop-validation-scripts.md	software-development	Develop Validation Scripts	2026-06-01	14	keep
+software-development/backend-development/research/learning-docker.mdx	software-development	Learning Docker	2026-06-01	26	keep
+software-development/backend-development/research/learning-graphql.mdx	software-development	Learning GraphQL	2026-06-01	25	keep
+software-development/backend-development/research/learning-linear-algebra.mdx	software-development	Learning Linear Algebra	2026-06-01	37	keep
+software-development/backend-development/techniques/managing-secrets.mdx	software-development	Secrets	2026-06-01	14	keep
+software-development/frontend-development/research/learning-frontend-eslint.md	software-development	Learning ESLint	2026-06-01	18	keep
+software-development/scripting/projects/automate-scripts.md	software-development	Automate Scripts	2026-06-01	36	keep
+software-development/scripting/projects/parsing-html.mdx	software-development	Parsing HTML	2026-06-01	16	keep
+software-development/scripting/tinkering/tinker-linux.md	software-development	Tinkering with Linux	2026-06-01	22	keep
+software-development/workspace/bookmarks/README.mdx	software-development	Bookmarks	2026-06-01	0	keep-flesh
+software-development/workspace/setup/README.md	software-development	Workspace	2026-06-01	0	keep-flesh
+software-development/backend-development/projects/develop-a-markdown-catter.md	software-development	Develop a Markdown Catter	2026-06-01	103	publish?
+software-development/backend-development/projects/develop-a-mind-map-generator.md	software-development	Develop a Mind Map Generator	2026-06-01	146	publish?
+software-development/backend-development/projects/develop-a-task-management-cli.md	software-development	Develop a Task Management CLI	2026-06-01	1168	publish?
+software-development/backend-development/projects/develop-a-url-shortner.md	software-development	Develop a URL Shortener	2026-06-01	58	publish?
+software-development/backend-development/projects/develop-a-xcallback-link-hopping-tools-glue.md	software-development	Develop a XCallback Link Hopping Tools Glue	2026-06-01	323	publish?
+software-development/backend-development/projects/develop-automation-hub.md	software-development	Develop Automation Hub	2026-06-01	832	publish?
+software-development/backend-development/research/learning-aws.mdx	software-development	Learning AWS	2026-06-01	487	publish?
+software-development/backend-development/research/learning-http.mdx	software-development	Learning HTTP	2026-06-01	49	publish?
+software-development/backend-development/research/learning-java-spring.mdx	software-development	Learning Java Spring	2026-06-01	199	publish?
+software-development/backend-development/research/learning-java.mdx	software-development	Learning Java	2026-06-01	153	publish?
+software-development/backend-development/research/learning-oauth.mdx	software-development	Learning OAuth	2026-06-01	59	publish?
+software-development/backend-development/tinkering/tinker-graphql.md	software-development	Tinkering with GraphQL	2026-06-01	173	publish?
+software-development/backend-development/tinkering/tinker-timeouts.md	software-development	Tinker Timeouts	2026-06-01	223	publish?
+software-development/backend-development/tinkering/tinker-type-projections.md	software-development	Tinker Type Projections	2026-06-01	190	publish?
+software-development/frontend-development/projects/concept-graph.md	software-development	Concept Graph	2026-06-01	77	publish?
+software-development/frontend-development/projects/lametric-motivational-app.md	software-development	Develop a LaMetric App for Motivation	2026-06-01	778	publish?
+software-development/frontend-development/projects/link-explorer.md	software-development	Link Explorer	2026-06-01	217	publish?
+software-development/frontend-development/projects/note-explore-er.md	software-development	Note Explore-er	2026-06-01	102	publish?
+software-development/frontend-development/projects/notebooks-with-leetcode-solutions.md	software-development	Notebooks with LeetCode Solutions	2026-06-01	210	publish?
+software-development/frontend-development/projects/timeline-app.md	software-development	Develop a Timeline App	2026-06-01	92	publish?
+software-development/frontend-development/projects/website-art.md	software-development	Website Art	2026-06-01	40	publish?
+software-development/frontend-development/research/learning-frontend-webpack.md	software-development	Learning Frontend Webpack	2026-06-01	90	publish?
+software-development/frontend-development/research/README.md	software-development	Learning Topics	2026-06-01	94	publish?
+software-development/frontend-development/tinkering/tinker-geometric-design.md	software-development	Tinkering with Geometric Design	2026-06-01	62	publish?
+software-development/plugins/projects/develop-a-quip-plugin.md	software-development	Development Initiative: Quip App	2026-06-01	112	publish?
+software-development/plugins/projects/develop-a-vim-plugin-for-todos.md	software-development	Develop a Vim Plugin for Todos	2026-06-01	81	publish?
+software-development/plugins/projects/develop-a-vscode-plugin-for-todos.md	software-development	Develop a VSCode Plugin for Todos	2026-06-01	406	publish?
+software-development/plugins/projects/develop-brew-plugins-for-workspace.md	software-development	Develop Brew Plugins for Workspace	2026-06-01	326	publish?
+software-development/plugins/projects/develop-tampermonkey-scripts.md	software-development	Develop Tampermonkey Scripts	2026-06-01	101	publish?
+software-development/plugins/tinkering/my-first-brew-plugin.mdx	software-development	My First Brew Plugin	2026-06-01	243	publish?
+software-development/plugins/tinkering/my-first-chrome-plugin.mdx	software-development	My First Chrome Plugin	2026-06-01	457	publish?
+software-development/plugins/tinkering/my-first-vscode-plugin.mdx	software-development	My First VSCode Plugin	2026-06-01	61	publish?
+software-development/scripting/projects/automate-backups.md	software-development	Automate Backups	2026-06-01	69	publish?
+software-development/scripting/projects/automate-email-filtering.md	software-development	Automate Email Filtering	2026-06-01	437	publish?
+software-development/scripting/projects/automate-notifications.md	software-development	Automate Notifications	2026-06-01	54	publish?
+software-development/scripting/projects/automate-tagging.md	software-development	Automate Tagging	2026-06-01	189	publish?
+software-development/scripting/projects/automate-text-replacements.md	software-development	Automate Text Replacements	2026-06-01	78	publish?
+software-development/scripting/projects/develop-shortcuts.md	software-development	Develop Shortcuts	2026-06-01	421	publish?
+software-development/scripting/research/learning-bash.mdx	software-development	Learning Bash	2026-06-01	81	publish?
+software-development/scripting/tinkering/tinker-applescript.md	software-development	Tinkering with AppleScript	2026-06-01	256	publish?
+software-development/scripting/tinkering/tinker-mac-automation.md	software-development	Tinkering with Mac Automation	2026-06-01	110	publish?
+software-development/vocabulary/terminology-blog.md	software-development	🪪 Blog Terms	2026-06-01	172	publish?
+software-development/vocabulary/terminology-portfolio.mdx	software-development	🪪 Portfolio Terms	2026-06-01	333	publish?
