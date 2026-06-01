@@ -5,8 +5,9 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "generate-changelog": "node scripts/generate-changelog-data.js",
-    "prestart": "npm run generate-changelog",
-    "prebuild": "npm run generate-changelog",
+    "generate-ideas": "node scripts/generate-ideas-data.js",
+    "prestart": "npm run generate-changelog && npm run generate-ideas",
+    "prebuild": "npm run generate-changelog && npm run generate-ideas",
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
