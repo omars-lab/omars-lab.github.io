@@ -240,8 +240,15 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
               to: '/changelog',
               position: 'left'
             },
+            {
+              // Reader-facing "Vote on Post Ideas" page (/vote) — lets readers
+              // signal which upcoming posts they want next (PostHog 'idea_voted').
+              label: 'Vote',
+              to: '/vote',
+              position: 'left'
+            },
             // {
-            //   label: 'Ideas', 
+            //   label: 'Ideas',
             //   to: '/blog/process-blog-post-ideation', 
             //   position: 'left'
             // },
