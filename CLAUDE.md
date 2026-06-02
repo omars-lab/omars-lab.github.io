@@ -99,6 +99,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Area | Skill | Owns |
 |---|---|---|
 | Cloudflare Access | `manage-cloudflare-access` | make subdomains public/private; account/wildcard model |
+| Premium infra setup | `manage-infrastructure` | provision the premium Worker: scope CF_API_TOKEN (confirm-token-scopes.sh), set STATICRYPT_PASSPHRASE in .env, wrangler deploy + verify; `make rotate-premium-secret` |
 | Analytics setup | `setup-posthog` | obtain/place the 4 PostHog keys; CLI install; key gotchas |
 | Analytics queries | `query-posthog` | official @posthog/cli readback, HogQL, confirmations |
 | Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) → timeline entry |

@@ -27,7 +27,10 @@ export interface EncryptedPayload {
 
 const te = new TextEncoder();
 
-function hexToBytes(hex: string): Uint8Array {
+// Return type is pinned to Uint8Array<ArrayBuffer> (not the default ArrayBufferLike,
+// which TS widens to include SharedArrayBuffer) so WebCrypto's BufferSource overloads
+// accept the result directly. `new Uint8Array(number)` is always ArrayBuffer-backed.
+function hexToBytes(hex: string): Uint8Array<ArrayBuffer> {
   const out = new Uint8Array(hex.length / 2);
   for (let i = 0; i < hex.length; i += 2) out[i / 2] = parseInt(hex.substr(i, 2), 16);
   return out;

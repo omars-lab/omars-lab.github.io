@@ -119,12 +119,23 @@ test('access-gate JWT gate', async (t) => {
     assert.equal(r.status, 401);
   });
 
-  await t.test('valid signature but no email claim → 401', async () => {
+  await t.test('valid signature but no email claim → /api/me 401', async () => {
     const jwt = await mint({sub: 'no-email-here'});
     const r = await call('/api/me', {'Cf-Access-Jwt-Assertion': jwt});
     assert.equal(r.status, 401);
     const body = await r.json();
     assert.equal(body.error, 'no_email');
+  });
+
+  // Service tokens are non-identity (no email claim). They are admitted by the
+  // /api/* app's Service Auth policy (the dev/localhost auth path), and MUST be
+  // able to vend the unlock key even though they can't use /api/me.
+  await t.test('no email claim (service token) → /api/unlock-key still vends', async () => {
+    const jwt = await mint({sub: 'service-token', common_name: 'blog-dev'});
+    const r = await call('/api/unlock-key', {'Cf-Access-Jwt-Assertion': jwt});
+    assert.equal(r.status, 200);
+    const body = await r.json();
+    assert.equal(body.passphrase, 'super-secret-passphrase');
   });
 
   await t.test('token via CF_Authorization cookie also works', async () => {

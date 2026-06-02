@@ -164,7 +164,9 @@ The site uses that email to swap the navbar to an avatar and to call PostHog's
   `PremiumGate` page gate + `<Premium>` inline component, the themed sign-in modal,
   the sidebar lock badge, the Worker, the Access app.
 - **Dev-only (never in the prod bundle):** the floating DebugMenu (incl. its Links
-  section).
+  section); the `/api/*` dev proxy + its injected CF Access **service-token** headers
+  (`plugins/dev-api-proxy`, active only under `yarn start`, credentials in gitignored
+  `.env`).
 - **A blocking safety gate guards every deploy.** Because the encrypt step is fallible
   (a missing passphrase, a stale build cache, a frontmatter typo), a verifier
   (`scripts/verify-premium-encrypted.js`) scans the whole built output — HTML *and* JS
@@ -186,12 +188,11 @@ experience didn't match the live gate, which was confusing. The parity rules are
 
 2. **Dev pulls the key from the *real* Worker.** There is **no dev-only key and no
    client-side fallback.** The dev server **proxies `/api/*` to the deployed Cloudflare
-   Worker** (`https://blog.bytesofpurpose.com/api/*`), carrying the reader's real
-   Cloudflare Access cookie (sign in once on the domain). So `localhost` unlocks premium
-   through the exact same `/api/unlock-key` path as prod — the client code uses relative
-   `/api/*` URLs unchanged, and the proxy bridges the origin. (This replaces the previous
-   localhost "Sign in shows a toast" graceful-degrade — it's no longer needed, because
-   `/api/*` now works in dev.)
+   Worker** (`https://blog.bytesofpurpose.com/api/*`, `changeOrigin` so Cloudflare routes
+   it). The client code uses relative `/api/*` URLs unchanged; the proxy bridges the
+   origin. So `localhost` unlocks premium through the exact same `/api/unlock-key` path
+   as prod. (This replaces the previous localhost "Sign in shows a toast" graceful-degrade
+   — no longer needed, because `/api/*` now reaches the real Worker in dev.)
 
 3. **Both dev and prod passphrases live in the gitignored `.env`.** `STATICRYPT_PASSPHRASE`
    is a real secret in `.env` (and must equal the Worker's `PREMIUM_PASSPHRASE`); it is
@@ -200,6 +201,46 @@ experience didn't match the live gate, which was confusing. The parity rules are
 > **Prerequisite:** dev parity depends on the Worker being **deployed** (the dev proxy
 > targets it) — until `wrangler deploy` runs, `/api/unlock-key` returns nothing in dev
 > *and* prod alike, so even there the two stay consistent.
+
+### The one real difference: how dev vs prod *authenticates* to the Worker
+
+Encryption, the client code, the `/api/*` paths, and the key source are all identical.
+**The only thing that differs is how the unlock request proves who you are** — and it
+differs because of an unavoidable browser-security boundary, not a design shortcut:
+
+| | **Prod** (`blog.bytesofpurpose.com`) | **Dev** (`localhost:3000`) |
+|---|---|---|
+| Identity to Access | LinkedIn login → `CF_Authorization` **cookie** | CF Access **service token** (static `Cf-Access-Client-Id`/`-Secret` header pair) |
+| Who supplies it | the reader's browser, automatically | the dev `/api/*` proxy injects it (values from gitignored `.env`) |
+| Browser login needed? | yes (once) | **no** — headless |
+
+**Why dev can't just reuse the prod cookie.** The first instinct — "sign in on the
+domain, let the proxy forward your `CF_Authorization` cookie to localhost" — **cannot
+work**, and we proved it both ways:
+
+- **The login can't run through the proxy.** Access's login nonce is bound to the origin
+  that *started* the flow. Start it from `localhost` and the callback lands on
+  `blog.bytesofpurpose.com` with a nonce the browser no longer presents → Cloudflare
+  shows **"Invalid login session."**
+- **A valid cookie still won't reach localhost.** `CF_Authorization` is `HttpOnly` and
+  **domain-scoped to `blog.bytesofpurpose.com`**. Browsers attach cookies by domain, and
+  `localhost` is a different domain — so the browser never sends it to the dev server, and
+  the proxy has nothing to forward. Rewriting the upstream `Host` can't change which cookie
+  the *browser* chooses to send.
+
+So dev uses Cloudflare's **documented** answer for headless/localhost testing behind
+Access: a **service token**. We add a second policy (action **Service Auth**) to the same
+`/api/*` Access app that admits the token; the LinkedIn policy stays untouched, so **prod
+browser behavior is unchanged** (a request is admitted if it carries *either* a LinkedIn
+session *or* the service-token headers). The dev proxy attaches
+`Cf-Access-Client-Id` + `Cf-Access-Client-Secret` (from `.env`) to every proxied `/api/*`
+request, Access mints the same JWT the Worker already validates, and dev decrypts with **no
+browser login at all** — strictly better than the cookie idea it replaces.
+
+> Service-token credentials are DEV-ONLY and live in the gitignored `.env`
+> (`CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`). They are injected only by the dev
+> proxy, which `yarn build` never runs — so they never touch the production bundle. A
+> reader on the live site authenticates with LinkedIn exactly as before.
 
 ## FAQ
 
@@ -258,11 +299,15 @@ or the public bundle.
 
 **Yes — local dev is designed to behave identically to production** (see *Dev/prod
 parity* above). `yarn start` encrypts premium bodies the same way the prod build does,
-and the dev server **proxies `/api/*` to the deployed Worker**, so signing in (once, on
-the real domain) lets `localhost` unlock premium through the exact same path as prod.
+and the dev server **proxies `/api/*` to the deployed Worker**, so `localhost` unlocks
+premium through the exact same `/api/unlock-key` path as prod. The encryption, client
+code, and key source are identical; the **only** difference is authentication — dev
+uses a CF Access **service token** (headers injected by the proxy, no browser login)
+rather than a LinkedIn cookie, because an `HttpOnly` domain-scoped cookie can't cross to
+`localhost` and the login nonce is origin-bound (see *The one real difference* above).
 There is no dev-only key and no "it no-ops locally" caveat. The `?internal=1` analytics
-opt-in also works in dev. *(Parity requires the Worker to be deployed; until then
-`/api/unlock-key` returns nothing in dev and prod alike — still consistent.)*
+opt-in also works in dev. *(Parity requires the Worker to be deployed **and** the dev
+service token configured; until then `/api/unlock-key` can't vend locally.)*
 
 ## One more thing
 

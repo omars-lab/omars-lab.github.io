@@ -1,5 +1,4 @@
 import React from 'react';
-import {showToast} from '@site/src/components/Toast';
 
 // Shared auth context for the LinkedIn-via-Cloudflare-Access sign-in.
 //
@@ -8,11 +7,15 @@ import {showToast} from '@site/src/components/Toast';
 // premium page gate, the <Premium> block, and the sign-in modal all read the
 // result through useAuth() instead of each firing their own request.
 //
-// Graceful degradation is the contract: on localhost there is no Worker (the
-// dev server answers /api/me with the SPA fallback HTML → r.json() throws),
-// and anonymous visitors get a 401 (Access redirects before the Worker runs).
-// Either way we resolve to {status:'anonymous'} and the UI shows the signed-out
-// affordances. Nothing here ever throws into the React tree.
+// Graceful degradation is the contract: anonymous visitors get a 401 (Access
+// redirects before the Worker runs), so we resolve to {status:'anonymous'} and
+// the UI shows the signed-out affordances. Nothing here ever throws into the
+// React tree.
+//
+// Dev/prod parity: `make start` proxies localhost/api/* → the real prod Worker
+// (plugins/dev-api-proxy), so /api/* is reachable in dev too — no localhost
+// special-casing here. Sign in once on https://blog.bytesofpurpose.com so the
+// browser holds the CF_Authorization cookie; the proxy forwards it upstream.
 //
 // Cloudflare Access entry/exit points (no password, no custom backend):
 //   sign in  → hitting any /api/* path triggers the Access → LinkedIn redirect.
@@ -20,24 +23,6 @@ import {showToast} from '@site/src/components/Toast';
 
 export const ACCESS_LOGIN_PATH = '/api/me';
 export const ACCESS_LOGOUT_PATH = '/cdn-cgi/access/logout';
-
-/**
- * True when there is no Cloudflare Worker to talk to — i.e. local dev. On
- * localhost the dev server answers /api/* with the SPA-fallback HTML, so
- * navigating to the Access login path is a dead end (it never reaches LinkedIn).
- * signIn() uses this to show an explanatory toast instead of a broken redirect.
- */
-export function isApiUnreachable(): boolean {
-  if (typeof window === 'undefined') return true;
-  const h = window.location.hostname;
-  return (
-    h === 'localhost' ||
-    h === '127.0.0.1' ||
-    h === '0.0.0.0' ||
-    h === '[::1]' ||
-    h.endsWith('.local')
-  );
-}
 
 export interface AuthUser {
   email: string;
@@ -68,13 +53,9 @@ export function signIn(next: string = typeof window !== 'undefined'
   ? window.location.pathname + window.location.search
   : '/'): void {
   if (typeof window === 'undefined') return;
-  // In local dev there is no Worker/Access in front of /api/*, so the redirect
-  // would dead-end on the SPA-fallback HTML. Explain instead of navigating away.
-  if (isApiUnreachable()) {
-    showToast('Sign-in works on the live site, not localhost.', {icon: '🔒'});
-    return;
-  }
-  // redirect_url is honoured by Access on the way back from the IdP.
+  // /api/* is reachable in both prod and dev (the dev server proxies it to the
+  // real Worker), so navigate unconditionally. redirect_url is honoured by
+  // Access on the way back from the IdP.
   const url = `${ACCESS_LOGIN_PATH}?redirect_url=${encodeURIComponent(next)}`;
   window.location.assign(url);
 }
@@ -87,15 +68,15 @@ export function signOut(): void {
 
 /**
  * Fetch /api/me ONCE. Resolves to a user (authenticated) or null (anonymous /
- * localhost / unreachable). Never rejects — every failure mode maps to null.
+ * unreachable). Never rejects — every failure mode maps to null.
  */
 async function fetchMe(): Promise<AuthUser | null> {
   try {
     const r = await fetch('/api/me', {credentials: 'include'});
     if (!r.ok) return null;
     const ct = r.headers.get('content-type') || '';
-    // Localhost dev server answers /api/me with a 200 + SPA-fallback HTML; only
-    // trust a JSON response from the real Worker.
+    // Only trust a JSON response from the real Worker (a non-JSON body would be
+    // an unexpected redirect/error page).
     if (!ct.includes('application/json')) return null;
     const data = (await r.json()) as Partial<AuthUser> | null;
     if (!data?.email) return null;
@@ -140,7 +121,7 @@ export function useAuth(): AuthState {
 /**
  * Fetch the StatiCrypt passphrase the Worker vends at /api/unlock-key (gated by the
  * same Access JWT as /api/me). Resolves to the passphrase for a signed-in reader, or
- * null otherwise (401 / localhost HTML fallback / unreachable). Never throws.
+ * null otherwise (401 / unreachable). Never throws.
  *
  * The premium page gate + <Premium> blocks call this once they know the reader is
  * authenticated, then hand the passphrase to decryptPremium(). The passphrase is held
@@ -152,8 +133,8 @@ export async function fetchUnlockKey(): Promise<string | null> {
     if (!r.ok) return null;
     const ct = r.headers.get('content-type') || '';
     // The Worker returns the passphrase as JSON {passphrase} (see
-    // workers/access-gate/src/index.ts). Localhost answers with the SPA HTML fallback
-    // (not JSON) — guard so we never treat HTML as a key.
+    // workers/access-gate/src/index.ts) — guard so we never treat a non-JSON
+    // body (an unexpected redirect/error page) as a key.
     if (!ct.includes('application/json')) return null;
     const data = (await r.json()) as {passphrase?: string} | null;
     return data?.passphrase || null;
