@@ -62,27 +62,14 @@ This document outlines the roadmap for developing and enhancing the blog platfor
   app — confirm no PII lands in the public bundle, keep `POSTHOG_TEST_MODE` out of production (it
   disables the bot filter), and document the identify triggers in `posthog-integration-plan.md`.
 
-### Feature request: ingress `im` marker as a session super-property
+### Ingress attribution follow-ups
 
-> **Status: proposed (not implemented) — needs a design decision before any work.** Today the
-> ingress `im` marker (set on outbound URLs by the ShareButton, read on arrival in
-> `src/posthog.js` → `captureIngress`) is attributed **only to the landing `ingress` event**.
-> The acquisition channel therefore does not travel with the rest of the session's events.
-
-- [ ] **Proposal:** register `im` as a PostHog **session super-property** (via
-  `posthog.register({ ingress_marker })` once captured on arrival) so **every** event in that
-  session — pageviews, scroll-depth milestones, `support button clicked`, etc. — carries the
-  acquisition channel, enabling channel-segmented funnels without joining back to the landing event.
-- [ ] **Why it's a decision, not a chore:** this **changes attribution semantics** — events
-  mid-session would inherit the *landing* marker, which is intentional for first-touch attribution
-  but conflates multi-tab / returning sessions. Decide first-touch vs. last-touch, session vs.
-  persistent (`register` lives for the browser session unless persisted), and whether
-  `direct_or_bookmark` should also be registered or left null.
-- [ ] **Scope note:** register inside `captureIngress` *after* the marker is read but *before* it's
-  stripped from the URL; guard so SPA navigations don't overwrite the first-touch value. Keep it out
-  of the public bundle's PII surface (the marker is a non-PII channel tag, so this is low-risk).
-- [ ] Reference: `src/posthog.js` (`captureIngress`) + the ingress-attribution design notes. Was
-  backlog item **B1** in the 2026-06-01 post-ingress follow-ups.
+> Open follow-ups from the ingress-attribution + support-page work (incl. the `im`
+> session-super-property feature request) live in their own scoped roadmap,
+> **Ingress Attribution Enhancements**
+> (`docs/product-management/roadmaps/ingress-attribution-enhancements.mdx`). It is
+> currently `draft: true`; once published it lives at
+> `/development/roadmaps/enhancements/ingress-attribution-enhancements`.
 
 ## Technical Enhancements
 
