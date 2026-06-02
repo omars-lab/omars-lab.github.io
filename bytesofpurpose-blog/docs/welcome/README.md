@@ -2,99 +2,45 @@
 slug: /welcome/intro
 sidebar_position: 1
 title: Welcome to Bytes of Purpose
-description: 'A topic-organized knowledge base for engineers: generative AI, software development, product management, productivity, and more.'
+description: 'Two journeys, one site: Craft — what I learned mastering my craft, shared with the world — and Self — the inward work of fulfilling my full potential.'
 authors: [oeid]
 tags: [welcome, introduction, developer-blog]
 ---
 
 # Welcome to Bytes of Purpose
 
-This is where I share what I'm learning and building. The docs split into two halves:
-**[🛠️ Craft](/docs/craft)** — how I see the world, the professional topics others can
-use — and **[🪞 Self](/docs/self)** — how I see myself, more personal reference material.
-Pick the topic that matches what you're after and dive in.
+This is where I share what I'm learning and building. It's two journeys at once:
 
-## 🛠️ Craft
+- **[🛠️ Craft](/docs/craft)** is *outrospective* — the outward pursuit of mastery in
+  the things I build and practice, written down so others can use it too.
+- **[🪞 Self](/docs/self)** is *introspective* — the inward pursuit of my full
+  potential: faith, habits, and growing into who I want to become.
 
-How I see the world — the professional topics, and who each is for.
+Pick the journey you came for:
 
-### 🤖 [Generative AI](/docs/craft/generative-ai)
-Building with and learning about GenAI — domain fundamentals, designing production
-systems, and my own LLM workflow. *For: engineers learning GenAI and anyone designing
-an AI feature.*
-
-### 🧩 [Software Development](/docs/craft/software-development)
-What I build and how — organized by domain: **backend**, **frontend**, **scripting**,
-and **plugins**, each with its own projects, research, techniques, and tinkering. *For:
-software engineers building real things.*
-
-### 📋 [Product Management](/docs/craft/product-management)
-What to build and why — the idea→ship lifecycle: ideas, research, proof-of-concepts,
-experiments, initiatives, projects, and roadmaps. Ideas here link to their executions
-over in Software Development. *For: anyone turning ideas into shipped work.*
-
-### ⚡ [Productivity](/docs/craft/productivity)
-Organizing work and effort — processes, automation, organizing/discovering/analyzing
-techniques, dashboards, and the vocabulary behind it. *For: anyone building deliberate
-productivity systems.*
-
-### ✍️ [Blogging](/docs/craft/blogging)
-Authoring this site — embedding components, diagrams, code, and external content;
-adding posts/docs/designs; plus the prompts I use to write and maintain it. *For:
-people running a Docusaurus blog or technical site.*
-
-### 🎯 [Interview Prep](/docs/craft/interview-prep)
-The full getting-hired journey — DSA, coding patterns, behavioral & system-design prep,
-and what companies expect at each level. *For: job-seekers and anyone leveling up.*
-
-### 🏢 [Companies](/docs/craft/companies)
-How companies work from the inside — roles and levels, the skills they evaluate, and
-how culture differs. *For: engineers navigating their careers and the curious about
-how tech companies operate.*
-
-### 🚀 [Entrepreneurship](/docs/craft/entrepreneurship)
-Notes on going from engineer to founder — business fundamentals and the habits behind
-it. *For: engineers weighing the leap into building a business.*
-
-## 🪞 Self
-
-How I see myself — more personal, mainly a reference for me, but public in case it's
-useful to you.
-
-### 🕌 [Faith](/docs/self/faith)
-Where faith meets craft — Islamic automations (athan, Qurʾan, tasbeeh), prayer and
-hifz trackers, and spiritual-growth habits. *For: Muslims who build, and anyone curious
-how faith and software meet.*
-
-### 🌱 [Personal Growth](/docs/self/personal-growth)
-The habits behind growing personally and professionally — building habits, reflecting,
-reading, mentorship, health, and finances. *For: anyone working deliberately on
-themselves.*
-
-## 🧭 How each topic is laid out
-
-Every topic follows the same shape, so once you learn it you can navigate any of them:
-
-- **Overview** — the topic's landing page (what's here + who it's for).
-- **Vocabulary** *(where it exists)* — the terms used across that topic, grouped in one
-  place.
-- **Content pages** — the actual docs, sub-grouped into folders by theme.
-- **Prompts** *(where it exists)* — the AI prompts relevant to that topic, gathered at
-  the end.
-
-A couple of topics go deeper. **Software Development** is split by build *domain*
-(backend / frontend / scripting / plugins), each repeating that same shape. And it
-pairs with **Product Management**: ideas and plans live in Product Management, the
-things actually built live in Software Development, and the two link to each other — an
-idea's **Execution** section points to what got built, and a build's **Idea** section
-points back to where it came from.
+<div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', margin: '1.5rem 0'}}>
+  <a href="/docs/craft" style={{flex: '1 1 240px', textDecoration: 'none'}}>
+    <Card shadow="md">
+      <CardHeader><h3>🛠️ Discover my world</h3></CardHeader>
+      <CardBody>What I learned on the journey to master my craft — generative AI,
+      software, product, productivity, and more. The outward work, shared.</CardBody>
+    </Card>
+  </a>
+  <a href="/docs/self" style={{flex: '1 1 240px', textDecoration: 'none'}}>
+    <Card shadow="md">
+      <CardHeader><h3>🪞 Observe what I discovered about myself</h3></CardHeader>
+      <CardBody>The inward journey to fulfill my full potential — faith and personal
+      growth. Mostly for me, kept public in case it helps you.</CardBody>
+    </Card>
+  </a>
+</div>
 
 ## 📄 Docs vs Blog vs Designs vs Changelog
 
 The site has four kinds of content — here's what goes where:
 
-- **[Docs](/docs/welcome/intro)** — evergreen, reference/learning material organized by
-  topic (what you're reading now). Built to be returned to.
+- **[Docs](/docs/welcome/intro)** — evergreen, reference/learning material split into
+  Craft and Self (what you're reading now). Built to be returned to.
 - **[Blog](/blog/)** — dated posts: thoughts, experiences, and lessons learned over time.
 - **[Designs](/designs/)** — design write-ups and architectural decisions.
 - **[Changelog](/changelog)** — the running history of changes to this site.
@@ -114,5 +60,5 @@ Want to come back? Drag this to your bookmarks bar:
 
 ---
 
-*New here? Pick the topic above that matches what you're after — or skim the
-[latest blog posts](/blog/) for recent thinking.*
+*New here? Pick a journey above — or skim the [latest blog posts](/blog/) for recent
+thinking.*
