@@ -52,6 +52,15 @@
  *                           summary, or truncated in search/social cards).
  *   description-duplicate [warn]  same `description:` reused across docs — each page needs a
  *                           distinct summary (it's per-page SEO + per-page share text).
+ *   blog-trigger-vocab [warn]  a doc's `blog_trigger:` value is outside the controlled
+ *                           vocabulary (see BLOG_TRIGGERS). The blog-post-triggers doc
+ *                           owns this taxonomy; an unknown trigger means the doc and the
+ *                           taxonomy have drifted.
+ *   blog-post-exists  [warn]  a doc sets `blog_post:` but no `/blog/` post carries that
+ *                           slug — the companion-post back-reference dangles.
+ *   blog-post-orphan  [warn]  a `/blog/` post links a `/docs/<slug>` whose doc has no
+ *                           matching `blog_post:` back-reference — wire the loop closed
+ *                           (the doc should point back at its companion post).
  *
  * Usage:
  *   node scripts/validate-docs-structure.js [paths…]   # scan (default: docs/)
@@ -87,7 +96,19 @@ const SEVERITY = {
   'description-missing': 'warn',
   'description-length': 'warn',
   'description-duplicate': 'warn',
+  // blog↔doc trigger convention — see docs/blogging/blog-post-triggers.mdx. A doc that
+  // marks itself post-worthy (`blog_trigger:`) gets a companion post in /blog/ that links
+  // back to it; these rules keep the taxonomy + the doc↔post back-reference honest.
+  'blog-trigger-vocab': 'warn',
+  'blog-post-exists': 'warn',
+  'blog-post-orphan': 'warn',
 };
+
+// Controlled vocabulary for the `blog_trigger:` frontmatter key. The blog-post-triggers
+// doc (docs/blogging/blog-post-triggers.mdx) is the source of truth for this taxonomy —
+// keep the two in lockstep (it's the same "structure decisions update the checks" rule).
+const BLOG_TRIGGERS = new Set(['conference', 'book', 'solution', 'poc', 'milestone', 'opinion']);
+const BLOG = path.join(ROOT, 'blog');
 
 // Description length bounds. Lower keeps it meaningful for the share message; upper
 // keeps it within the ~160-char window search engines / social cards display.
@@ -135,6 +156,24 @@ function readCategory(dir) {
   }
 }
 
+// --- blog post slugs (companion-post resolution) ------------------------
+// Memoized: blog posts declare a (relative) `slug:` in frontmatter. We resolve a doc's
+// `blog_post:` back-reference against this set. Lazy so scoped/hook runs pay nothing
+// unless a doc actually carries `blog_post:`.
+let _blogSlugs = null;
+function blogPostSlugs() {
+  if (_blogSlugs) return _blogSlugs;
+  _blogSlugs = new Set();
+  for (const e of listDir(BLOG)) {
+    if (!e.isFile() || !isDoc(e.name)) continue;
+    try {
+      const s = matter(fs.readFileSync(path.join(BLOG, e.name), 'utf8')).data.slug;
+      if (typeof s === 'string' && s.trim()) _blogSlugs.add(s.trim().replace(/^\/+/, '').replace(/\/$/, ''));
+    } catch { /* skip unparseable */ }
+  }
+  return _blogSlugs;
+}
+
 // --- per-doc check: absolute slug ---------------------------------------
 
 function checkDoc(file) {
@@ -153,6 +192,26 @@ function checkDoc(file) {
       `slug "${data.slug}" is relative — make it absolute (\`slug: /…\`) so the URL is pinned to a value, not the folder path`);
   }
   checkDescription(file, data);
+  checkBlogTrigger(file, data);
+}
+
+// --- per-doc check: blog↔doc trigger convention -------------------------
+// See docs/blogging/blog-post-triggers.mdx. `blog_trigger:` marks a doc as post-worthy;
+// `blog_post:` is the back-reference to its companion /blog/ post.
+function checkBlogTrigger(file, data) {
+  if ('blog_trigger' in data && data.blog_trigger != null && data.blog_trigger !== '') {
+    if (!BLOG_TRIGGERS.has(String(data.blog_trigger))) {
+      add('blog-trigger-vocab', rel(file),
+        `blog_trigger "${data.blog_trigger}" is outside the controlled vocabulary (${[...BLOG_TRIGGERS].join(', ')}) — see docs/blogging/blog-post-triggers.mdx`);
+    }
+  }
+  if ('blog_post' in data && typeof data.blog_post === 'string' && data.blog_post.trim()) {
+    const want = data.blog_post.trim().replace(/^\/+/, '').replace(/\/$/, '');
+    if (!blogPostSlugs().has(want)) {
+      add('blog-post-exists', rel(file),
+        `blog_post "${data.blog_post}" has no matching post in /blog/ (no post declares that slug) — generate it (\`make generate-blog-stub DOC=…\`) or fix the slug`);
+    }
+  }
 }
 
 // --- per-doc check: description presence + length -----------------------
@@ -380,6 +439,62 @@ function checkDuplicateDescriptions() {
   }
 }
 
+/** Map every doc's absolute slug → its `blog_post:` back-reference (or null). Used to
+ *  verify the doc↔post loop is closed from the post side. */
+function collectDocBackRefs() {
+  const bySlug = new Map(); // docSlug (no leading /) → blog_post value (normalized) | null
+  (function rec(dir) {
+    for (const e of listDir(dir)) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { rec(full); continue; }
+      if (!isDoc(e.name)) continue;
+      try {
+        const d = matter(fs.readFileSync(full, 'utf8')).data;
+        if (typeof d.slug !== 'string' || !d.slug.startsWith('/')) continue;
+        const slug = d.slug.replace(/^\/+/, '').replace(/\/$/, '');
+        const back = typeof d.blog_post === 'string' && d.blog_post.trim()
+          ? d.blog_post.trim().replace(/^\/+/, '').replace(/\/$/, '')
+          : null;
+        bySlug.set(slug, back);
+      } catch { /* skip */ }
+    }
+  })(DOCS);
+  return bySlug;
+}
+
+/** From the post side: a /blog/ post links a /docs/<slug>; the linked doc should carry a
+ *  `blog_post:` back-reference to this post. Flag docs that are linked-to but don't point
+ *  back (the loop is half-open). */
+function checkBlogPostOrphans() {
+  const backRefs = collectDocBackRefs();
+  for (const e of listDir(BLOG)) {
+    if (!e.isFile() || !isDoc(e.name)) continue;
+    const full = path.join(BLOG, e.name);
+    let parsed;
+    try { parsed = matter(fs.readFileSync(full, 'utf8')); } catch { continue; }
+    const postSlug = typeof parsed.data.slug === 'string'
+      ? parsed.data.slug.trim().replace(/^\/+/, '').replace(/\/$/, '')
+      : null;
+    const linkRe = /\]\(\/docs\/([^)\s#]+)/g;
+    let m;
+    const seen = new Set();
+    while ((m = linkRe.exec(parsed.content)) !== null) {
+      const docSlug = m[1].replace(/\/$/, '');
+      if (seen.has(docSlug)) continue;
+      seen.add(docSlug);
+      if (!backRefs.has(docSlug)) continue; // link to a non-doc or unknown slug — out of scope here
+      const back = backRefs.get(docSlug);
+      if (back === null) {
+        add('blog-post-orphan', `blog/${e.name}`,
+          `post links /docs/${docSlug} but that doc has no \`blog_post:\` back-reference — add \`blog_post: ${postSlug || '<this-post-slug>'}\` to close the loop`);
+      } else if (postSlug && back !== postSlug) {
+        add('blog-post-orphan', `blog/${e.name}`,
+          `post links /docs/${docSlug}, whose \`blog_post:\` is "${back}" — expected "${postSlug}" (the doc points back at a different post)`);
+      }
+    }
+  }
+}
+
 /** Extract the body lines under a `## <heading>` section (until the next `##`). */
 function sectionBody(src, headingRe) {
   const lines = src.split('\n');
@@ -448,6 +563,7 @@ function main() {
     checkWelcomeDrift();
     checkIdeaExecLinks(collectSlugs());
     checkDuplicateDescriptions();
+    checkBlogPostOrphans();
   }
 
   let out = findings;
