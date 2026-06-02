@@ -6,6 +6,9 @@ authors: [oeid]
 tags: [ai-engineering, conference, genai, tools, trends, networking]
 date: '2025-06-15T10:00'
 draft: false
+blog_trigger: conference
+blog_post: ai-engineer-world-fair-2025
+blog_status: published
 ---
 
 I attended the AI Engineer World Fair in June 2025. Here are the key insights and trends I discovered.

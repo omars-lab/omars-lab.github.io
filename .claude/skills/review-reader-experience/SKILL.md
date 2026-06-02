@@ -176,6 +176,21 @@ artifact links back under an `## Idea` (or `## Origin`) section (absolute
 `/product-management/…`). The validator warns if any such link doesn't resolve to an
 existing slug; it never blocks, and back-links are backfilled incrementally.
 
+**Blog↔doc trigger convention** (warn-validated; owned by
+`docs/blogging/blog-post-triggers.mdx`, which is the source of truth for the taxonomy): a
+doc that marks a *moment worth announcing* carries an optional `blog_*` frontmatter block —
+`blog_trigger:` (one of the controlled vocab `conference | book | solution | poc |
+milestone | opinion`), `blog_post:` (slug of the companion `/blog/` post), `blog_status:`
+(`planned | drafted | published`). The doc stays the durable reference; the post is the
+point-in-time announcement that links back to it. Scaffold the post with
+`make generate-blog-stub DOC=…` (read-only on the source doc; refuses to overwrite);
+`make blog-pending` lists post-worthy docs that still owe a post. The validator warns via
+three rules: **blog-trigger-vocab** (value outside the controlled set), **blog-post-exists**
+(`blog_post:` resolves to no `/blog/` post), **blog-post-orphan** (a `/blog/` post links a
+`/docs/<slug>` whose doc lacks the matching `blog_post:` back-reference). Keep the
+controlled vocab in `validate-docs-structure.js` (`BLOG_TRIGGERS`) in lockstep with the
+taxonomy table in the triggers doc.
+
 **Operating convention (also in CLAUDE.md):** any decision that changes this structure
 or its conventions (add/rename/retire a topic, change the recurring shape, add a naming
 rule, change slug/draft policy) MUST update this validator + this section in the same

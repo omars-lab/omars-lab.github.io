@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -82,6 +82,15 @@ validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, ca
 
 test-link-hook: ## Integration tests for the validate-links PostToolUse hook + --fix
 	bash ${SITEROOT}/test/integration/validate-links-hook.test.sh
+
+generate-blog-stub: ## Scaffold a companion /blog/ post for a post-worthy doc (DOC=docs/path/to/doc.md)
+	@# The doc must carry `blog_trigger:` frontmatter (see docs/blogging/blog-post-triggers.mdx).
+	@# Read-only on the source doc; refuses to overwrite an existing post.
+	@test -n "$(DOC)" || { echo "Usage: make generate-blog-stub DOC=docs/path/to/doc.md"; exit 1; }
+	( cd ${SITEROOT} && node scripts/generate-blog-post.js "$(DOC)" )
+
+blog-pending: ## List docs that are post-worthy (carry blog_trigger) and still owe a post
+	( cd ${SITEROOT} && node scripts/generate-blog-post.js --all-pending )
 
 audit: ## Run security audit on dependencies
 	# ( cd ${SITEROOT} && npx docusaurus-audit )
