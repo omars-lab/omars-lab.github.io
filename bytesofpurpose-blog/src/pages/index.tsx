@@ -20,7 +20,7 @@ function HomepageHeader() {
             inward journey). Pick a journey, or skim the blog below the link. */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
-            <div className={styles.chooserCardTitle}>🛠️ Discover my world</div>
+            <div className={styles.chooserCardTitle}>💻 Discover my world</div>
             <p className={styles.chooserCardBody}>
               What I learned on the journey to master my craft — generative AI,
               software, product, productivity, and more. The outward work, shared.
