@@ -15,9 +15,14 @@
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 
-# Only content markdown/MDX under the blog's docs dir (the only place the contract applies).
+# Scope: content markdown/MDX OR a sidebar `_category_.json`, under the blog's docs dir (the
+# only place the contract applies). Docs get the full ERROR-tier slug check; `_category_.json`
+# gets the emoji advisory (sidebar section labels lead with an emoji).
+is_doc=false
+is_category=false
 case "$file_path" in
-  *.md|*.mdx) ;;
+  *.md|*.mdx) is_doc=true ;;
+  */_category_.json) is_category=true ;;
   *) exit 0 ;;
 esac
 case "$file_path" in
@@ -31,21 +36,60 @@ proj="${CLAUDE_PROJECT_DIR:-$(printf '%s' "$input" | jq -r '.cwd // empty')}"
 script="$proj/bytesofpurpose-blog/scripts/validate-docs-structure.js"
 [ -f "$script" ] || exit 0   # not this repo / not set up → stay out of the way
 
-# ERROR-tier only, scoped to the one changed file. Exit 2 from the script == findings.
-out=$(node "$script" "$file_path" --error-only 2>&1)
-rc=$?
+# ERROR-tier slug check — docs only (the validator's scoped mode lints markdown/MDX, not JSON).
+if [ "$is_doc" = true ]; then
+  out=$(node "$script" "$file_path" --error-only 2>&1)
+  rc=$?
+  if [ "$rc" -eq 2 ]; then
+    rel="${file_path##*/bytesofpurpose-blog/}"
+    {
+      echo "🏗  Docs structure: ERROR-tier issue in '$rel'"
+      echo "$out"
+      echo ""
+      echo "   The whole IA relies on every doc carrying an ABSOLUTE slug (\`slug: /…\`):"
+      echo "   a relative/missing slug re-couples the URL to the folder path, so a later"
+      echo "   move silently 404s (onBrokenLinks:'warn', no redirects plugin)."
+      echo "   (advice only — not blocking. Run \`make validate-structure\` for the full contract.)"
+    } >&2
+  fi
+fi
 
-if [ "$rc" -eq 2 ]; then
-  rel="${file_path##*/bytesofpurpose-blog/}"
-  {
-    echo "🏗  Docs structure: ERROR-tier issue in '$rel'"
-    echo "$out"
-    echo ""
-    echo "   The whole IA relies on every doc carrying an ABSOLUTE slug (\`slug: /…\`):"
-    echo "   a relative/missing slug re-couples the URL to the folder path, so a later"
-    echo "   move silently 404s (onBrokenLinks:'warn', no redirects plugin)."
-    echo "   (advice only — not blocking. Run \`make validate-structure\` for the full contract.)"
-  } >&2
+# Emoji advisory: a sidebar section label should LEAD with an emoji (visual scanning). Fires
+# when a `_category_.json` label, or a doc's resolved sidebar label (sidebar_label||title),
+# has no leading emoji. Same emoji-range test as startsWithEmoji() in the validator — keep in
+# lockstep. Advisory only; never blocks. (jq tests the first code point against the emoji ranges.)
+emoji_label=""
+if [ "$is_category" = true ]; then
+  emoji_label=$(jq -r '.label // empty' "$file_path" 2>/dev/null)
+elif [ "$is_doc" = true ]; then
+  # resolved sidebar label = sidebar_label || title, pulled from YAML frontmatter
+  emoji_label=$(awk '/^---[[:space:]]*$/{c++; next} c==1{print} c>=2{exit}' "$file_path" \
+    | grep -iE '^(sidebar_label|title):' | sort -r | head -1 \
+    | sed -E "s/^[a-zA-Z_]+:[[:space:]]*//; s/^[\"']//; s/[\"'][[:space:]]*$//")
+fi
+if [ -n "$emoji_label" ]; then
+  # jq has no 0x literals → use decimal code points. Drop leading variation selectors
+  # (U+FE0E=65038 / U+FE0F=65039), then test the first code point against the emoji ranges:
+  # SMP planes (>=U+1F000=126976), symbols/arrows (U+2190..U+2BFF=8592..11263), dingbats
+  # (U+2600..U+27BF=9728..10175), star (U+2B50=11088), sparkles (U+2728=10024).
+  leads_emoji=$(printf '%s' "$emoji_label" | jq -Rr '
+    explode
+    | map(select(. != 65038 and . != 65039))
+    | if length==0 then "no"
+      else .[0] as $cp
+        | if $cp>=126976 or ($cp>=8592 and $cp<=11263) or ($cp>=9728 and $cp<=10175) or $cp==11088 or $cp==10024
+          then "yes" else "no" end
+      end' 2>/dev/null)
+  if [ "$leads_emoji" = "no" ]; then
+    rel="${file_path##*/bytesofpurpose-blog/}"
+    {
+      echo "🎨 Docs structure: sidebar label has no leading emoji in '$rel'"
+      echo "   Label: \"$emoji_label\""
+      echo "   Convention: every sidebar section leads with one emoji so the sidebar scans"
+      echo "   visually. Pick one from the topic→emoji map (/definitions/emojis-for-activities)"
+      echo "   that's consistent with sibling sections. (advice only — not blocking.)"
+    } >&2
+  fi
 fi
 
 # Numeric-prefix advisory: flag if the changed doc lives under a folder whose NAME
