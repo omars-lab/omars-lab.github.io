@@ -42,8 +42,8 @@ I want to see what it will take to change what google says about my website(s). 
 - Generic descriptions that could apply to any technical blog
 - Missing professional credibility indicators
 
-* [Google Search: What is the bytesofpurpose site about](https://www.google.com/search?q=What+is+the+bytesofpurpose+site+about&sca_esv=dad87895c19efbc5&sxsrf=AE3TifPLHwLRweXM8S7otitodY4W9EKmxQ%3A1757544649501&source=hp&ei=yQDCaO2NHJSHqtsPpOz4OA&iflsig=AOw8s4IAAAAAaMIO2fUS67-gzU_6UyLONHf5ZOZVYExT&ved=0ahUKEwitloiEpM-PAxWUg2oFHSQ2HgcQ4dUDCCw&uact=5&oq=What+is+the+bytesofpurpose+site+about&gs_lp=Egdnd3Mtd2l6IiVXaGF0IGlzIHRoZSBieXRlc29mcHVycG9zZSBzaXRlIGFib3V0MgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCMgcQIxgnGOoCSPI6UIcEWLs5cAF4AJABAJgBAKABAKoBALgBA8gBAPgBAZgCAaACBKgCCpgDBPEFI9_HCpSr1huSBwExoAcAsgcAuAcAwgcDMi0xyAcD&sclient=gws-wiz)
-* [Google Search: site:bytesofpurpose.com](https://www.google.com/search?q=site%3Abytesofpurpose.com&num=10&sca_esv=dad87895c19efbc5&sxsrf=AE3TifOql9oiFyAK-kDB7xROBqgZ0MRXYg%3A1757544678035&ei=5gDCaK3zAcqtmtkP5tbnuQU&ved=0ahUKEwit_teRpM-PAxXKliYFHWbrOVcQ4dUDCBI&uact=5&oq=site%3Abytesofpurpose.com&gs_lp=Egxnd3Mtd2l6LXNlcnAiF3NpdGU6Ynl0ZXNvZnB1cnBvc2UuY29tMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHMgoQABiwAxjWBBhHSLQhUIQFWJEgcAF4AZABAJgBAKABAKoBALgBA8gBAPgBAZgCAaACB5gDAOIDBRIBMSBAiAYBkAYIkgcBMaAHALIHALgHAMIHAzItMcgHBA&sclient=gws-wiz-serp)
+* [Google Search: What is the bytesofpurpose site about](https://www.google.com/search?q=What+is+the+bytesofpurpose+site+about)
+* [Google Search: site:bytesofpurpose.com](https://www.google.com/search?q=site%3Abytesofpurpose.com)
 
 
 ## Changes
@@ -87,8 +87,8 @@ I want to see what it will take to change what google says about my website(s). 
 - **Site Cohesion**: Google understands the relationship between blog and portfolio sections
 - **Professional Authority**: Search results establish the site owner as a credible professional
 
-* [Google Search: What is the bytesofpurpose site about](https://www.google.com/search?q=What+is+the+bytesofpurpose+site+about&sca_esv=a41ed8ea23771f3d&sxsrf=AE3TifPksX3C6X3aD9DPYBnN3JvIk5dtbA%3A1757563765855&source=hp&ei=dUvCaKKkMtuyqtsP7aO3-Qw&iflsig=AOw8s4IAAAAAaMJZhd5vMM1U7keQ0J4sYKwVxEXUgzIA&ved=0ahUKEwjisrqf68-PAxVbmWoFHe3RLc8Q4dUDCCw&uact=5&oq=What+is+the+bytesofpurpose+site+about&gs_lp=Egdnd3Mtd2l6IiVXaGF0IGlzIHRoZSBieXRlc29mcHVycG9zZSBzaXRlIGFib3V0MgcQIxiwAhgnMggQABiiBBiJBTIFEAAY7wUyCBAAGIAEGKIEMgUQABjvBTIFEAAY7wVItAFQAFgAcAB4AJABAJgBVaABVaoBATG4AQPIAQD4AQL4AQGYAgGgAlmYAwDiAwUSATEgQJIHATGgB5kGsgcBMbgHWcIHAzItMcgHAw&sclient=gws-wiz)
-* [Google Search: what is bytesofpurpose website about](https://www.google.com/search?q=what+is+bytesofpurpose+website+about&sca_esv=a41ed8ea23771f3d&sxsrf=AE3TifOJeVZCwbdsMHZ4Vz86Y6fmPV-f2w%3A1757563251423&source=hp&ei=c0nCaLbVF6ykqtsPmfyg2AU&iflsig=AOw8s4IAAAAAaMJXg9N2T6FWQDouoBVeAcd_NrfCM7j0&ved=0ahUKEwj22pOq6c-PAxUskmoFHRk-CFsQ4dUDCCw&uact=5&oq=what+is+bytesofpurpose+website+about&gs_lp=Egdnd3Mtd2l6IiR3aGF0IGlzIGJ5dGVzb2ZwdXJwb3NlIHdlYnNpdGUgYWJvdXQyBBAjGCcyCBAAGKIEGIkFMggQABiABBiiBDIIEAAYgAQYogQyCBAAGKIEGIkFMgUQABjvBUj0AVAAWABwAHgAkAEAmAFCoAFCqgEBMbgBA8gBAPgBAvgBAZgCAaACRpgDAOIDBRIBMSBAkgcBMaAHpwayBwExuAdGwgcDMi0xyAcD&sclient=gws-wiz)
+* [Google Search: What is the bytesofpurpose site about](https://www.google.com/search?q=What+is+the+bytesofpurpose+site+about)
+* [Google Search: what is bytesofpurpose website about](https://www.google.com/search?q=what+is+bytesofpurpose+website+about)
 
 
 ## Background
@@ -114,4 +114,4 @@ I want to see what it will take to change what google says about my website(s). 
 # Motviation
 * [ ] I should do a proof of concept updating the auto generated response for my website
 * [ ] [semrush.com — Google Sge](https://www.semrush.com/blog/google-sge/)
-* [ ] [google.com — Search](https://www.google.com/search?q=what+os+the+bytesofpurose+website+about&client=safari&sca_esv=e126eb4d051b0442&hl=en-us&sxsrf=AE3TifMpUO3LnC7qts8f_hKbt0pWSR06Cg%3A1757513541156&ei=RYfBaPmwCfunmtkPifmssQ0&oq=what+os+the+bytesofpurose+website+about&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIid3aGF0IG9zIHRoZSBieXRlc29mcHVyb3NlIHdlYnNpdGUgYWJvdXQyBxAhGKABGAoyBxAhGKABGApI-AlQtAdY_AhwA3gBkAEAmAGLAaABiwGqAQMwLjG4AQPIAQD4AQGYAgSgApwBwgIKEAAYsAMY1gQYR8ICDRAAGLADGNYEGEcYyQPCAg4QABiABBiwAxiSAxiKBZgDAOIDBRIBMSBAiAYBkAYIkgcDMy4xoAerA7IHAzAuMbgHjgHCBwUwLjEuM8gHDg&sclient=mobile-gws-wiz-serp)
+* [ ] [google.com — Search](https://www.google.com/search?q=what+os+the+bytesofpurose+website+about)

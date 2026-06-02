@@ -55,7 +55,7 @@ draft: true
 
 - [x] Make an la metric app @done(2021-11-03T00:46:29-05:00)
 - [x] Creating a Privacy Policy  @done(2021-11-03T00:41:34-05:00)
-	- [websitepolicies.com — Privacy Policy](https://www.websitepolicies.com/create/privacy-policy?gclid=Cj0KCQjwv5uKBhD6ARIsAGv9a-wHUSg3UUq8s2n4ZC3T37V7Q_DKu4iJ1YLWiZUilED-hOCQQDOKEGUaAqC4EALw_wcB)
+	- [websitepolicies.com — Privacy Policy](https://www.websitepolicies.com/create/privacy-policy)
 
 # Stack v2 - Using Dropbox
 

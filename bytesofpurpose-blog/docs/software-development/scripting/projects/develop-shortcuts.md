@@ -24,7 +24,7 @@ draft: true
 
 - [x] Setup shortcut on iphone to capture todos ... @done(2022-04-04T17:02:59-05:00)
 * [x] Look into: Get the shortcuts thing to work with get url ... >2022-01-30 @done(2022-01-31 12:57 AM)
-	* [x] Look into:  [reddit.com — Open Xcallback Url Doesnt End Why](https://www.reddit.com/r/shortcuts/comments/q6fcco/open_xcallback_url_doesnt_end_why/?utm_source=share&utm_medium=ios_app&utm_name=iossmf) >2022-01-30 @done(2022-01-31 12:57 AM)
+	* [x] Look into:  [reddit.com — Open Xcallback Url Doesnt End Why](https://www.reddit.com/r/shortcuts/comments/q6fcco/open_xcallback_url_doesnt_end_why/) >2022-01-30 @done(2022-01-31 12:57 AM)
 
 ## Automation 
 * [ ] [reddit.com — Append To Notes Error Error Error](https://www.reddit.com/r/shortcuts/comments/b7m6ti/append_to_notes_error_error_error/)
