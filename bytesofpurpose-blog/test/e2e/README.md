@@ -115,6 +115,15 @@ time at least once):
   `#webpack-dev-server-client-overlay` iframe intercepts every click → all click-based
   specs fail spuriously. **Fix:** start a fresh server on another port and point specs at
   it via `E2E_DEV_BASE_URL=http://localhost:3100` (don't fight the user's :3000).
+- **Stale production `.docusaurus/` cache → draft-less sidebar.** `yarn build` sets
+  `NODE_ENV=production` and writes content artifacts to `.docusaurus/` that EXCLUDE draft
+  docs (`isDraft = isProduction(env) && draft`). A dev server (`yarn start`) that reuses
+  that cache serves a **draft-less sidebar**, so `draft-sidebar.spec.ts` (and anything
+  depending on draft docs appearing) fails — looking flaky/order-dependent when it isn't.
+  **Fix:** `yarn docusaurus clear` before the dev e2e run. `make test-e2e` already does
+  this; if you run the `dev` project by hand after a build, clear first. Verify the dev
+  cache is correct: `grep -c habits-reading .docusaurus/routes.js` should be > 0 (drafts
+  present in dev). Drafts ARE kept in dev — the trap is purely the leftover prod cache.
 - **Test hardcodes a moved slug.** A spec's `goto('/docs/<old-slug>')` after an IA move
   lands on the redirect **stub** (no canvas/content) → timeout. `make validate-links`
   catches this (`test-stale-slug`); fix the spec to the new slug.
