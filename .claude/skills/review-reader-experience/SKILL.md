@@ -117,10 +117,20 @@ This repo froze every doc to an **absolute** slug (the Phase-A URL-freeze; verif
 `grep -c '^slug: /'` vs `grep -c '^slug:'` — counts should match), so here *moving a
 file to a new folder reshuffles the sidebar but does NOT change its URL.* Two things
 STILL break a URL even with absolute slugs: (1) **editing a slug's VALUE**, and (2)
-moving a doc whose slug is relative/path-derived. **There is no redirects plugin
-installed** (`@docusaurus/plugin-client-redirects` is absent) and `onBrokenLinks` is
-`'warn'`, so a changed slug value **silently 404s** — no build failure. If a slug must
-change, flag that a manual redirect is needed — call this out as a risk.
+moving a doc whose slug is relative/path-derived. `onBrokenLinks` is `'warn'`, so a
+changed slug value **silently 404s** — no build failure. **A redirects plugin IS now
+installed** (`@docusaurus/plugin-client-redirects`, added 2026-06-02 by the
+mental-models migration; pin it to the EXACT `@docusaurus/core` version, not `^`, or
+the build throws a version-mismatch error). So when a slug VALUE must change, the fix
+is: add a `{from: '/docs/<old>', to: '/docs/<new>'}` entry to the `redirects` array in
+`docusaurus.config.js` (targets use the real served `/docs/…` path) AND repoint inbound
+links. Flag both as required follow-ups whenever you propose a slug-value change.
+
+**When you move a slug, grep `test/` too — not just `docs/ blog/ src/`.** e2e specs
+hardcode doc slugs in `goto('/docs/…')`; a redirect keeps real users working but lands
+the test on the redirect **stub** (no content) → spurious timeout that looks like a
+broken component. `make validate-links` now catches this (`test-stale-slug` rule), but
+include `test/` in your own sweep so you fix it up front.
 
 #### Topic-folder contract + validator (`validate-docs-structure.js`)
 
@@ -141,6 +151,13 @@ contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
   hook surfaces it but never blocks). Everything below is **warn** tier (advisory).
 - Each topic folder has a `README.{md,mdx}` landing (absolute slug) + a
   `_category_.json` (label + position).
+- **Every `_category_.json` `label` LEADS with an emoji** so the sidebar scans visually.
+  The validator warns via **emoji-prefix-category**; the hook nudges on a `_category_.json`
+  save without one. Reuse the emoji a sibling of the same kind uses (🔬/🔨/🛠️/🔧/💬/📖/🧠/💻
+  …) — the topic→emoji map at `/definitions/emojis-for-activities`
+  (`docs/productivity/terminology/emojis.mdx`) is the source of truth. Doc leaf labels lead
+  with an emoji too where natural (rolled up as **emoji-prefix-doc**, `--emoji` to expand); a
+  doc with NO `title`/`sidebar_label` falls back to its filename — **sidebar-label-missing**.
 - Every sub-folder that contains docs has a `_category_.json`; none should sit in a
   folder with no docs and no docs-bearing descendants (orphan category).
 - Names are **kebab-case** (no spaces/uppercase; `_`-prefixed like `_TEMPLATE` exempt).

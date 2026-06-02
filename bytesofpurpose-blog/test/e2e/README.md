@@ -101,6 +101,42 @@ the task-list aria-label rehype plugin only runs at build time, not in `yarn sta
   from pane unselects edge") intermittently time out waiting for the edge-details
   pane after a `#...-edge-...` URL hash. These are graph-component/canvas-timing
   issues, not infra — the page loads and 17/20 graph cases pass. Track separately.
+- `draft-sidebar.spec.ts` navigates to a now-missing `definitions` index route expecting
+  draft badges, but no such doc exists (fixture drift). Pre-existing; surfaced by the
+  `test-stale-slug` validate-links rule. Needs a fixture/route fix by its owner.
+
+## Gotchas that look like failures (but aren't)
+
+Before calling any failure a code regression, rule these out (each cost real debugging
+time at least once):
+
+- **Stale `:3000` dev server.** The `dev` project uses `reuseExistingServer: !CI`, so it
+  attaches to whatever is already on :3000. If that server is mid-compile-error, its
+  `#webpack-dev-server-client-overlay` iframe intercepts every click → all click-based
+  specs fail spuriously. **Fix:** start a fresh server on another port and point specs at
+  it via `E2E_DEV_BASE_URL=http://localhost:3100` (don't fight the user's :3000).
+- **Test hardcodes a moved slug.** A spec's `goto('/docs/<old-slug>')` after an IA move
+  lands on the redirect **stub** (no canvas/content) → timeout. `make validate-links`
+  catches this (`test-stale-slug`); fix the spec to the new slug.
+- **`make test-regression` STOPS at the first failing project**, so a `dev` failure hides
+  the `prod`/`posthog` results entirely. Run `make test-a11y` / `make test-posthog`
+  directly to see them.
+
+### Verification mechanics (serve/build URL shapes)
+
+- The **docs** plugin has no `routeBasePath` override → docs serve under **`/docs`**.
+  (The `routeBasePath: '/'` in `docusaurus.config.js` is on the **`pages`** preset, not
+  docs — don't conflate them.) Redirect `to:`/`from:` and doc↔doc links use `/docs/<slug>`.
+- The prod build emits **`build/docs/<slug>.html`**, NOT `build/docs/<slug>/index.html`.
+  Checking for the wrong shape makes real pages look "missing."
+- `docusaurus serve` **301-redirects a trailing slash** to the non-slash form. When
+  curling, hit the path **without** a trailing `/` (or follow redirects) — else every
+  request looks like a 301 regardless of the real status. Client redirects are
+  HTTP-200 pages with a `<meta http-equiv="refresh" … url=…>` tag — grep that to confirm
+  the target.
+- **`@docusaurus/plugin-client-redirects` must pin to the EXACT `@docusaurus/core`
+  version** (e.g. `3.9.2`, not `^3.9.1`) — a `^` range can resolve to a newer minor and
+  the build throws `Invalid name=… version number=…`.
 
 ## What the Tests Verify
 
