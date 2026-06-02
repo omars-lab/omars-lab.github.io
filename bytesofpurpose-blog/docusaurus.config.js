@@ -236,6 +236,7 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
         '@docusaurus/plugin-client-redirects',
         {
           redirects: [
+            {from: "/welcome", to: "/"},
             // Two-instance split (craft @ /craft, self @ /self): preserve BOTH prior URL
             // generations (original themed slugs AND interim /docs/craft|self/* slugs) →
             // final /craft|self/* permalinks. draft:true targets omitted (prod-excluded).

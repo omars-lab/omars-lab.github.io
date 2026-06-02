@@ -467,21 +467,22 @@ function checkTopicRoots() {
 
 /**
  * Welcome drift: Craft and Self are two SEPARATE docs instances (routeBasePath /craft,
- * /self). The Welcome page is a STANDALONE chooser (src/pages/welcome.mdx — in neither
- * instance) that must route readers into BOTH halves: it must link to /craft AND /self.
+ * /self). The CHOOSER was folded into the homepage (`src/pages/index.tsx`) — its two CTA
+ * cards must route readers into BOTH halves: the homepage must link to /craft AND /self.
+ * (A `to="/craft"` Link or an href both count.)
  */
 function checkWelcomeDrift() {
-  const welcome = path.join(ROOT, 'src', 'pages', 'welcome.mdx');
-  if (!fs.existsSync(welcome)) {
-    add('welcome-drift', 'src/pages/welcome.mdx', 'no standalone Welcome chooser page found');
+  const home = path.join(ROOT, 'src', 'pages', 'index.tsx');
+  if (!fs.existsSync(home)) {
+    add('welcome-drift', 'src/pages/index.tsx', 'no homepage to check the Craft/Self chooser against');
     return;
   }
-  const src = fs.readFileSync(welcome, 'utf8');
+  const src = fs.readFileSync(home, 'utf8');
   for (const half of ['/craft', '/self']) {
-    // a link/href to the instance root (or any page under it) counts as "leads in"
-    const re = new RegExp(`(?:\\]\\(|href=["'])${half}(?=[/"')\\s#?]|$)`);
+    // a to="/craft", ](/craft), or href="/craft" all count as "leads into this half"
+    const re = new RegExp(`(?:to=|\\]\\(|href=)["']${half}(?=[/"')\\s#?]|$)`);
     if (!re.test(src)) {
-      add('welcome-drift', 'src/pages/welcome.mdx', `Welcome chooser does not link into ${half} (it must lead into both halves)`);
+      add('welcome-drift', 'src/pages/index.tsx', `homepage chooser does not link into ${half} (it must lead into both halves)`);
     }
   }
 }
