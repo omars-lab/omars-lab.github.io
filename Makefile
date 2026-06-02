@@ -232,7 +232,13 @@ commit-push: commit push ## Commit and push changes (interactive message)
 test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn start`
 	# The "dev" Playwright project auto-starts the Docusaurus dev server (:3000).
 	# PostHog/A-B specs live in a separate project — use `make test-posthog`.
-	( cd ${SITEROOT} && yarn playwright test --project=dev )
+	#
+	# IMPORTANT: clear .docusaurus first. A prior `yarn build` (e.g. test-prod-checks)
+	# writes PRODUCTION content artifacts there — and production EXCLUDES draft docs.
+	# A dev server that reuses that stale cache serves a draft-less sidebar, which makes
+	# draft-sidebar.spec.ts (and anything depending on drafts) fail spuriously. Clearing
+	# guarantees the dev server regenerates the dev manifest (drafts kept in dev).
+	( cd ${SITEROOT} && yarn docusaurus clear && yarn playwright test --project=dev )
 
 test-prod-checks: ## Build + serve on :4173, run the "prod" project (a11y + SEO), tear down
 	# A11y + SEO scans MUST run against a real production build: build-only

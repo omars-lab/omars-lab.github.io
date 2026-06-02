@@ -465,7 +465,13 @@ function checkTopicRoots() {
   }
 }
 
-/** Welcome cards: `### …[Label](/docs/<slug>)`. Drift vs topic README slugs. */
+/**
+ * Welcome drift: the Welcome page is the two-half CHOOSER. It must route readers into
+ * BOTH halves — every craft/self topic ROOT (e.g. /craft, /self) must be reachable from
+ * a Welcome link, and no Welcome /docs link may dangle. We scan ALL /docs links (the
+ * two CTA cards link to /docs/craft + /docs/self; markdown `](...)` and HTML `href=`
+ * both count) — not just `###`-heading cards, since the chooser uses CTA buttons.
+ */
 function checkWelcomeDrift() {
   const welcomeDir = path.join(ROOT, WELCOME);
   let readme;
@@ -473,35 +479,35 @@ function checkWelcomeDrift() {
     if (fs.existsSync(path.join(welcomeDir, r))) { readme = path.join(welcomeDir, r); break; }
   }
   if (!readme) {
-    add('welcome-drift', WELCOME, 'no Welcome README to compare topic cards against');
+    add('welcome-drift', WELCOME, 'no Welcome README to compare topic links against');
     return;
   }
   const src = fs.readFileSync(readme, 'utf8');
-  const cardSlugs = new Set();
-  const re = /^###\s+.*\]\((\/docs\/[^)\s]+)\)/gm;
+  const linkSlugs = new Set();
+  // Markdown links ](/docs/...) AND HTML href="/docs/..." (the CTA cards).
+  const re = /(?:\]\(|href=["'])(\/docs\/[^)"'\s#?]+)/g;
   let m;
   while ((m = re.exec(src)) !== null) {
-    cardSlugs.add(m[1].replace(/^\/docs/, '')); // → /craft/generative-ai etc.
+    linkSlugs.add(m[1].replace(/^\/docs/, '')); // → /craft, /self, /welcome/intro, …
   }
-  // Two-tier IA: topicFolders() are the craft/self ROOTS, but the Welcome index
-  // lists the per-domain SUB-topics (e.g. /craft/generative-ai). So a card is valid
-  // if it points at ANY real README slug under a topic root, and we require the two
-  // top-level roots (/craft, /self) to each have at least one card pointing under them.
-  const allReadmeSlugs = collectReadmeSlugs(); // Set of every README's absolute slug
+  const allReadmeSlugs = collectReadmeSlugs(); // every README's absolute slug
+  // Each topic ROOT (craft/self) must be reachable from a Welcome link (the root
+  // itself or any sub-topic under it) — the chooser must lead into both halves.
   const rootSlugs = new Set();
   for (const topic of topicFolders()) {
     const s = topicReadmeSlug(topic);
     if (typeof s === 'string') rootSlugs.add(s); // /craft, /self
   }
   for (const root of rootSlugs) {
-    const covered = [...cardSlugs].some((c) => c === root || c.startsWith(root + '/'));
+    const covered = [...linkSlugs].some((c) => c === root || c.startsWith(root + '/'));
     if (!covered) {
-      add('welcome-drift', `${WELCOME}/README`, `topic root ${root} has no card (or sub-topic card) in the Welcome index`);
+      add('welcome-drift', `${WELCOME}/README`, `topic root ${root} is not reachable from any Welcome link (the chooser must lead into both halves)`);
     }
   }
-  for (const s of cardSlugs) {
-    if (!allReadmeSlugs.has(s)) {
-      add('welcome-drift', `${WELCOME}/README`, `Welcome card links /docs${s} but no README owns that slug`);
+  // No Welcome /docs link may point at a slug no doc owns (welcome/intro is itself a doc).
+  for (const s of linkSlugs) {
+    if (!allReadmeSlugs.has(s) && !collectSlugs().has(s)) {
+      add('welcome-drift', `${WELCOME}/README`, `Welcome links /docs${s} but no doc owns that slug`);
     }
   }
 }
