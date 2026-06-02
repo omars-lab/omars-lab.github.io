@@ -1,0 +1,186 @@
+---
+slug: /craft/productivity/terminology/emojis
+title: Emoji Usage
+description: 'A personal guide to the emojis I use to categorize and represent different types of activities in my workflow and documentation.'
+authors: [oeid]
+tags: [emojis, productivity, workflow, organization, visual-communication]
+date: 2025-01-31T10:00
+---
+
+# Emojis Usage
+
+Over time, I've developed a comprehensive emoji system to organize my personal life, work, and projects in NotePlan. This visual shorthand helps me quickly categorize and identify different types of activities across all aspects of my life.
+
+The same instinct shapes this site: every sidebar section leads with an emoji so the navigation scans at a glance. That convention is documented (and enforced) below, followed by my broader personal activity-emoji system.
+
+## 🧭 Sidebar Topic Emojis
+
+**The rule:** every sidebar section — every `_category_.json` `label` — leads with **one emoji**, so a reader scanning the sidebar can find a topic by its shape before reading a word. Leaf docs may carry an emoji in their `title` too, but it's the section labels that matter most.
+
+This is enforced (warn-tier) by `scripts/validate-docs-structure.js` (`make validate-structure` → `emoji-prefix-category`) and surfaced as an advisory by the `Write|Edit` docs-structure hook the moment you save a `_category_.json` without a leading emoji. The `review-reader-experience` reader-experience audit also checks it and suggests an emoji from the map below.
+
+### Picking an emoji
+
+When you add a section, reuse an emoji already used for the same **kind** of thing, so siblings stay visually consistent. The recurring conventions:
+
+| Emoji | Section kind | Used by |
+|---|---|---|
+| 🧠 | Mental Models | every topic's `mental-models/` |
+| 🔬 | Research | research buckets |
+| 🔨 | Projects | shipped project buckets |
+| 🛠️ | Techniques / Tools / Skills | how-to + tooling buckets |
+| 🔧 | Tinkering | experiments / scratch buckets |
+| 💬 | Prompts | every topic's `prompts/` |
+| 📖 | Terminology | every topic's `terminology/` |
+| 💻 | Code / Scripting / Workspace | dev-machine + code buckets |
+| 🤖 | Automation / GenAI | automation + AI buckets |
+
+### Root topics (the top-level sidebar)
+
+| Emoji | Topic |
+|---|---|
+| 👋 | Welcome |
+| 🤖 | Generative AI |
+| 🧩 | Software Development |
+| 📋 | Product Management |
+| ⚡ | Productivity |
+| ✍️ | Blogging |
+| 🎯 | Interview Prep |
+| 🏢 | Companies |
+| 🚀 | Entrepreneurship |
+| 🕌 | Faith |
+| 🌱 | Personal Growth |
+
+### Sub-topics that previously had no emoji
+
+These were backfilled to satisfy the convention — listed so the choices are reusable for siblings:
+
+| Emoji | Sub-topic |
+|---|---|
+| 🏗️ | Building GenAI Systems |
+| 🔄 | My GenAI Workflow |
+| 🚀 | LLM Initiatives |
+| 📖 | Terminology (Software Development, Productivity) |
+| 💬 | Prompts (Software Development, Blogging, Interview Prep, Personal Growth, Productivity) |
+| 📚 | Storybook + TypeScript + Babel |
+| 📝 | Preparing for Interviews |
+| ⚙️ | Automations (Faith) |
+| 📱 | Apps & Trackers (Faith) |
+| 🛠️ | Skills (Companies) |
+| 🤝 | Cultural Values |
+| 📈 | Career Levels |
+
+---
+
+The rest of this page is my broader **personal activity-emoji system** (NotePlan), which the sidebar palette above draws from.
+
+## 🏡 **Personal Life Management**
+
+### 🎯 **Goals & Aspirations**
+- **🎯** - Personal goals and long-term aspirations
+- **🎯✨** - Pursuing perfection in various life areas
+- **🎯👨🏻‍💼** - Entrepreneurship goals and business aspirations
+- **🎯🧎🏻** - Spiritual goals and religious pursuits
+- **🎯🧑🏻‍💻** - Development and technical mastery goals
+- **🎯🧙🏻** - Software mastery and expertise goals
+
+### 📆 **Planning & Organization**
+- **📆** - General planning and scheduling
+- **⚖️** - Decision-making processes
+- **⚙️** - Automation and system setup
+- **🧮** - Prioritization and resource allocation
+- **🗑️** - Organization and decluttering
+
+## 👨🏻‍💻 **Professional Development**
+
+### 🧑🏻‍💻 **Development Work**
+- **👨🏻‍💻** - Software development and coding
+- **🤖** - GenAI and AI-related development projects
+- **👨🏻‍🔧** - Fixing and troubleshooting technical issues
+- **🧰** - Craftsmanship and quality work
+
+### 🏢 **Career & Business**
+- **🏢** - Career planning and professional development
+- **👨🏻‍💼** - Entrepreneurship and business ventures
+- **👨🏻‍🏫** - Mentorship and teaching others
+- **🧠** - Brainstorming and strategic thinking
+
+## 🧎🏻 **Spiritual & Personal Growth**
+
+### 🧎🏻 **Spirituality**
+- **🧎🏻** - Islamic studies, prayer, and spiritual practices
+- **🚦** - Establishing religious habits and routines
+- **🪞** - Self-reflection and personal introspection
+
+### 💊 **Health & Wellness**
+- **💊** - Health planning and wellness activities
+- **🏠** - Home maintenance and improvements
+- **🧑‍🧑‍🧒‍🧒** - Family activities and relationships
+
+## 📝 **Content & Communication**
+
+### 📝 **Writing & Documentation**
+- **📝** - Blogging and content creation
+- **📝** - Authoring and writing projects
+- **📋** - Lists, backlogs, and reference materials
+- **📑** - Paperwork and administrative tasks
+
+### 💭 **Thinking & Discovery**
+- **💭** - Personal thoughts and reflections
+- **🔍** - Discovery and exploration of new topics
+- **❓** - Questions and decision points
+
+## 🎉 **Life Activities**
+
+### ✈️ **Travel & Experiences**
+- **✈️** - Travel planning and trips
+- **🎒** - Activities and experiences
+- **🎉** - Celebrations and special events
+
+### 🛒 **Practical Life**
+- **🛒** - Shopping and purchasing decisions
+- **💰** - Financial planning and asset management
+- **📊** - Tracking and monitoring various metrics
+
+## Key Insights from My System
+
+### **Emoji Combinations**
+I use compound emojis (like 🎯✨, 🎯👨🏻‍💼) to create subcategories within broader themes, allowing for more granular organization while maintaining visual hierarchy.
+
+### **Life Integration**
+Unlike typical productivity systems focused only on work, my emoji system encompasses all aspects of life - spiritual, personal, professional, and family - creating a unified organizational approach.
+
+### **Spiritual Integration**
+The inclusion of 🧎🏻 (prayer/spirituality) and 🚦 (establishing habits) shows how I integrate religious practices into my organizational system, reflecting my values in my productivity approach.
+
+## Why This System Works for Me
+
+### **Holistic Organization**
+By using emojis across all life areas, I can quickly scan and understand the context of any note or task, whether it's work-related, personal, or spiritual.
+
+### **Visual Memory**
+The combination of emojis creates strong visual associations that help me remember and categorize information more effectively than text alone.
+
+### **Emotional Context**
+Emojis add emotional context to my planning - seeing 🧎🏻 immediately reminds me of the spiritual importance of certain activities, while 👨🏻‍💻 signals technical work.
+
+### **Cross-Platform Consistency**
+Since I use NotePlan across devices, the emoji system maintains consistency whether I'm planning on my phone, tablet, or computer.
+
+## Implementation Lessons
+
+### **Start with Core Areas**
+I began with major life areas (🏡 Personal, 👨🏻‍💻 Development, 🧎🏻 Spirituality) and gradually added more specific emojis as my system evolved.
+
+### **Use Compound Emojis**
+Combining emojis (like 🎯 + specific activity emoji) allows for both broad categorization and specific identification.
+
+### **Reflect Your Values**
+My system includes spiritual and family emojis because these are core parts of my life - your system should reflect what matters most to you.
+
+### **Regular Review**
+I periodically review my emoji usage to ensure consistency and make adjustments as my life and priorities evolve.
+
+---
+
+*This emoji system has become the foundation of my personal organization, helping me maintain clarity and purpose across all aspects of my life - from spiritual practices to technical projects to family planning.*

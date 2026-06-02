@@ -9,58 +9,64 @@ tags: [welcome, introduction, developer-blog]
 
 # Welcome to Bytes of Purpose
 
-This is where I share what I'm learning and building. The docs are organized by
-**topic** — pick the one that matches what you're after and dive in. Below: the topics,
-how each one is laid out, and how docs differ from the blog.
+This is where I share what I'm learning and building. The docs split into two halves:
+**[🛠️ Craft](/docs/craft)** — how I see the world, the professional topics others can
+use — and **[🪞 Self](/docs/self)** — how I see myself, more personal reference material.
+Pick the topic that matches what you're after and dive in.
 
-## 📚 Browse by topic
+## 🛠️ Craft
 
-Each card says what lives there and who it's for.
+How I see the world — the professional topics, and who each is for.
 
-### 🤖 [Generative AI](/docs/generative-ai)
+### 🤖 [Generative AI](/docs/craft/generative-ai)
 Building with and learning about GenAI — domain fundamentals, designing production
 systems, and my own LLM workflow. *For: engineers learning GenAI and anyone designing
 an AI feature.*
 
-### 🧩 [Software Development](/docs/development)
+### 🧩 [Software Development](/docs/craft/software-development)
 What I build and how — organized by domain: **backend**, **frontend**, **scripting**,
 and **plugins**, each with its own projects, research, techniques, and tinkering. *For:
 software engineers building real things.*
 
-### 📋 [Product Management](/docs/product-management)
+### 📋 [Product Management](/docs/craft/product-management)
 What to build and why — the idea→ship lifecycle: ideas, research, proof-of-concepts,
 experiments, initiatives, projects, and roadmaps. Ideas here link to their executions
 over in Software Development. *For: anyone turning ideas into shipped work.*
 
-### ⚡ [Productivity](/docs/productivity)
+### ⚡ [Productivity](/docs/craft/productivity)
 Organizing work and effort — processes, automation, organizing/discovering/analyzing
 techniques, dashboards, and the vocabulary behind it. *For: anyone building deliberate
 productivity systems.*
 
-### ✍️ [Blogging](/docs/blogging)
+### ✍️ [Blogging](/docs/craft/blogging)
 Authoring this site — embedding components, diagrams, code, and external content;
 adding posts/docs/designs; plus the prompts I use to write and maintain it. *For:
 people running a Docusaurus blog or technical site.*
 
-### 🎯 [Interview Prep](/docs/interview-prep)
+### 🎯 [Interview Prep](/docs/craft/interview-prep)
 The full getting-hired journey — DSA, coding patterns, behavioral & system-design prep,
 and what companies expect at each level. *For: job-seekers and anyone leveling up.*
 
-### 🏢 [Companies](/docs/companies)
+### 🏢 [Companies](/docs/craft/companies)
 How companies work from the inside — roles and levels, the skills they evaluate, and
 how culture differs. *For: engineers navigating their careers and the curious about
 how tech companies operate.*
 
-### 🚀 [Entrepreneurship](/docs/entrepreneurship)
+### 🚀 [Entrepreneurship](/docs/craft/entrepreneurship)
 Notes on going from engineer to founder — business fundamentals and the habits behind
 it. *For: engineers weighing the leap into building a business.*
 
-### 🕌 [Faith](/docs/faith)
+## 🪞 Self
+
+How I see myself — more personal, mainly a reference for me, but public in case it's
+useful to you.
+
+### 🕌 [Faith](/docs/self/faith)
 Where faith meets craft — Islamic automations (athan, Qurʾan, tasbeeh), prayer and
 hifz trackers, and spiritual-growth habits. *For: Muslims who build, and anyone curious
 how faith and software meet.*
 
-### 🌱 [Personal Growth](/docs/personal-growth)
+### 🌱 [Personal Growth](/docs/self/personal-growth)
 The habits behind growing personally and professionally — building habits, reflecting,
 reading, mentorship, health, and finances. *For: anyone working deliberately on
 themselves.*
@@ -94,7 +100,7 @@ The site has four kinds of content — here's what goes where:
 - **[Changelog](/changelog)** — the running history of changes to this site.
 
 For the fuller distinction between the first two, see
-[Docs vs Blog Posts](/docs/techniques/blogging-techniques/docs-vs-blog-posts).
+[Docs vs Blog Posts](/docs/craft/blogging/docs-vs-blog-posts).
 
 ## Stay connected
 

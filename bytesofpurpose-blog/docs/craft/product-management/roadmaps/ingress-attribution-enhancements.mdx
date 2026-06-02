@@ -1,0 +1,97 @@
+---
+slug: /craft/product-management/roadmaps/ingress-attribution-enhancements
+title: 'Ingress Attribution Enhancements'
+description: 'Open follow-ups from the ingress-attribution + support-page work: im super-property, bookmarklet reach, link cleanup, and analytics monitoring.'
+authors: [oeid]
+tags: [ingress, attribution, posthog, analytics, enhancements, roadmap]
+date: 2026-06-01T10:00
+draft: true
+---
+
+Open follow-ups left after the ingress-attribution + support-page + docs-IA work shipped
+(PR #2, merged & deployed 2026-06-01). The shipped pieces are done; this tracks the
+**deferred / decision-gated** remainder so it isn't lost. Each item notes whether it needs
+a human decision before any work.
+
+<!-- truncate -->
+
+## Feature requests (decision-gated — decide before building)
+
+### B1 — register the ingress `im` marker as a session super-property
+
+> **Status: proposed (not implemented) — needs a design decision first.** Today the ingress
+> `im` marker (set on outbound URLs by the ShareButton, read on arrival in `src/posthog.js`
+> → `captureIngress`) is attributed **only to the landing `ingress` event**. The acquisition
+> channel therefore does not travel with the rest of the session's events.
+
+- [ ] **Proposal:** register `im` as a PostHog **session super-property** (via
+  `posthog.register({ ingress_marker })` once captured on arrival) so **every** event in that
+  session — pageviews, scroll-depth milestones, `support button clicked`, etc. — carries the
+  acquisition channel, enabling channel-segmented funnels without joining back to the landing event.
+- [ ] **Why it's a decision, not a chore:** this **changes attribution semantics** — events
+  mid-session would inherit the *landing* marker, which is intentional for first-touch attribution
+  but conflates multi-tab / returning sessions. Decide first-touch vs. last-touch, session vs.
+  persistent (`register` lives for the browser session unless persisted), and whether
+  `direct_or_bookmark` should also be registered or left null.
+- [ ] **Scope note:** register inside `captureIngress` *after* the marker is read but *before* it's
+  stripped from the URL; guard so SPA navigations don't overwrite the first-touch value. Keep it out
+  of the public bundle's PII surface (the marker is a non-PII channel tag, so this is low-risk).
+- [ ] Reference: `src/posthog.js` (`captureIngress`) + the ingress-attribution design notes.
+
+### B2 — surface the bookmarklet beyond the welcome page
+
+> **Status: parked (2026-06-01) — placement decision deferred.** The bookmarklet affordance
+> (`<BookmarkletButton />`, an MDX component) currently appears only on the welcome page.
+
+- [ ] Decide where else (if anywhere) to surface it. Options + trade-offs:
+  - **/support page** — add as another "ways to engage" CTA; reversible, reader-facing, no theme
+    swizzle (one-line JSX add).
+  - **Site footer (global)** — every page, highest reach, but requires swizzling the Footer theme
+    component; harder to undo, layout-regression risk.
+  - **New /subscribe page** — dedicated "stay connected" page; net-new scaffolding + nav entry.
+- [ ] Current decision: **leave welcome-only** for now. Revisit if bookmarklet adoption matters.
+
+## Cleanup (do-able, but lower priority)
+
+### B3 — remaining `onBrokenLinks: 'warn'` build warnings
+
+> The clear reader-facing 404s were fixed 2026-06-01 (8 `my-contributions` anchor links + a
+> stale rel-link example); build broken-links dropped 21→13. The remainder is **not** simple
+> text fixes:
+
+- [ ] **`blog-components` category-slug collision** — `docs/blogging/embed-structural-components/
+  README.mdx` declares a custom `slug` (`.../blog-components`) that Docusaurus drops because the
+  folder auto-generates a category index at the folder URL. Two links in `docs/blogging/README.mdx`
+  point at the dropped slug. **Fix needs a structure decision** (add a `link` to `_category_.json`
+  vs. drop the custom slug) **+ a validator update** per the CLAUDE.md structure-checks convention.
+- [ ] **Experiments → draft self-link** — `experiments/README.md` → `2026-05-31-support-button-copy.md`
+  builds broken only because the target is `draft: true`. Resolves on un-draft (separate gated call).
+- [ ] **Generated / template changelog cross-refs** — `/changelog/2025/...`, `XX-XX` placeholder
+  dates, and 2 `/blogging` refs come from the changelog generator + template stubs (historical
+  records). Not hand-editable source bugs; clean up only if the generator is reworked.
+
+### B4 — remaining `long-url` link-hygiene warnings
+
+> 8 tracking/session-cruft links were stripped 2026-06-01 (Google `sca_esv/ei/ved/gs_lp/...`,
+> `gclid`, `utm_*`); long-url dropped 34→26 and tracking-params to 0.
+
+- [ ] The remaining 26 are **legitimately long but functional** destination URLs (docs deep links,
+  API/console links, personal mail/Trello search queries) that can't be shortened without breaking
+  them. Accepted as warn-tier as-is unless a given link can carry a shorter descriptive label.
+
+## Monitoring (confirm with live data — not code work)
+
+### M1 — confirm `adblock_detected` reaches PostHog on live traffic
+
+- [ ] Shipped 2026-06-01 (super-property + per-session `adblock_state` event + person property).
+  A local probe proved the detection flips correctly, but the report only fires once
+  `window.posthog` initializes. **Confirm in PostHog that live events actually carry the
+  `adblock_detected` property** — needs ~a day of real traffic to be meaningful.
+
+### M2 — `support button clicked` funnel discontinuity
+
+- [ ] The conversion event NAME stayed the same across the 2026-06-01 copy→presentation re-scope,
+  so the historical funnel is continuous but its **meaning changed on 2026-06-01**. Any analysis
+  must **split on that date** (pre-2026-06-01 = OLD copy test; on/after = presentation test). See
+  the [support-CTA experiment doc](../experiments/2026-05-31-support-button-copy.md). Discipline
+  note, not a code change.

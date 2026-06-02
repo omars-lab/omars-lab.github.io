@@ -12,9 +12,23 @@ Each skill is the single source of truth for its domain. If a fact spans areas, 
 it in the most specific skill and cross-link. Update the skill's Troubleshooting
 table when you hit and resolve a new failure mode.
 
+## ⚠️ Operating convention: track our work as tasks
+
+**Track non-trivial work as tasks** (TaskCreate/TaskUpdate). Any request that is more
+than a one-off edit — a feature, a multi-step change, an investigation, a reorg — gets
+broken into tasks before starting: create them up front, mark each `in_progress` when
+you pick it up and `completed` the moment it's done. This is what feeds the changelog
+(below): the completed-task subjects ARE the changelog bullets, so disciplined task
+tracking is what makes the archive step possible. Don't leave finished work untracked
+or tasks stuck `in_progress` after they're done — the live list should always reflect
+reality. Trivial single-step asks don't need a task.
+
 ## ⚠️ Operating convention: archive completed tasks to the changelog
 
-When the task list reaches **10+ completed tasks**, archive them and prune:
+When the task list reaches **10+ completed tasks**, archive them and prune (a `Stop`
+hook — `.claude/hooks/changelog-archive-reminder.sh` — reminds you when you cross the
+threshold; it counts completed tasks from the transcript and nudges, but does NOT do
+the work):
 1. Append a new dated batch to `bytesofpurpose-blog/changelog/CLAUDE-CHANGELOG.md`
    (format documented in that file's header): a `## YYYY-MM-DD — Title` heading, a
    `<!-- meta: ... -->` line, a one-line summary, and the completed task subjects as
@@ -23,18 +37,28 @@ When the task list reaches **10+ completed tasks**, archive them and prune:
    renders on the site (the generator splits that file into one changelog card per
    batch — no code change needed per batch).
 3. **Then delete those completed tasks** (TaskUpdate → `deleted`) so the live task
-   list stays short. Leave pending/in_progress tasks untouched.
+   list stays short. The archive is only half-done until the move is followed by the
+   delete. Leave pending/in_progress tasks untouched.
 The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working set.
 
 ## ⚠️ Operating convention: structure decisions must update the structure checks
 
-The docs are a **topic-based information architecture** with a recurring folder
-contract (each root topic = a reader-facing topic; each topic has a README landing
+The docs are a **two-tier topic-based information architecture**: the top tier is two
+containers — **`craft/`** (how I see the world — the professional topics: generative-ai,
+software-development, product-management, productivity, blogging, interview-prep,
+companies, entrepreneurship) and **`self/`** (how I see myself — faith, personal-growth)
+— each surfaced as its own navbar item (`docSidebar` → `craftSidebar` / `selfSidebar` in
+`sidebars.js`) with `welcome/` shown first in both. Below that is the recurring per-topic
+folder contract (each topic = a reader-facing topic; each topic has a README landing
 with an **absolute** `slug:`, a `_category_.json`, optional `terminology/` first and
 `prompts/` last; kebab-case names with **no numeric name prefix** — order via
 `_category_.json` `position` / `sidebar_position`, never the folder name, so reordering
-stays history-clean; no framing-word/topic-echo folders; depth ≤4; every
-doc carries an **absolute** slug so a move never changes a URL). A large topic may split
+stays history-clean; no framing-word/topic-echo folders; depth ≤5 (the craft/self tier
+adds one container level above the former topics); slugs are **folder-path mirrored** —
+a doc's absolute slug equals its folder path under `/craft|self/...`, and every
+doc carries an **absolute** slug so a move never changes a URL via a redirect).
+`craft/` and `self/` are themselves topic roots (each has a `README` with absolute slug
+`/craft` / `/self` and an emoji `_category_.json`). A large topic may split
 into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
 `frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
 techniques/tinkering/`); the idea→ship LIFECYCLE is the separate `Product Management`

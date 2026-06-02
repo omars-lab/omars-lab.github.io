@@ -60,5 +60,5 @@ The generation script automatically handles subdirectories, so slugs will includ
 ## See Also
 
 - [Naming Conventions](https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md)
-- [Changelog System Documentation](/docs/techniques/blogging-techniques/changelog-system)
+- [Changelog System Documentation](/docs/craft/blogging/changelog-system)
 

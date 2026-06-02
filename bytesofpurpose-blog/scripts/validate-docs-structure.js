@@ -34,9 +34,11 @@
  *                           (`_`-prefixed names like _TEMPLATE/_category_ are exempt).
  *   framing-folder  [warn]  no framing-word / topic-echo sub-folder names
  *                           (`*-techniques`, `*-craftsmanship`, `definitions`).
- *   depth           [warn]  folder depth ≤ 4 under a topic root (sub-topic / bucket /
- *                           project legitimately needs 4, e.g.
- *                           software-development/backend-development/projects/<proj>).
+ *   depth           [warn]  folder depth ≤ 5 under a topic root. The Craft/Self
+ *                           split adds one container tier above the former topics
+ *                           (craft = topic root → software-development → frontend-
+ *                           development → techniques → <doc> is a legitimate depth-5
+ *                           chain), so the contract is ≤5 from the craft/self root.
  *   terminology-first [warn]  a `terminology/` category sorts first (low position).
  *   prompts-last    [warn]  a `prompts/` category sorts last (high position).
  *   welcome-drift   [warn]  the Welcome topic-index cards (`### [Label](slug)`) match
@@ -383,9 +385,10 @@ function walkDir(dir, depthFromTopic, topicName) {
       }
     }
 
-    // depth ≤ 4 under a topic root (topic root = depth 0; flag a folder at depth 5+)
-    if (childDepth >= 5) {
-      add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤4)`);
+    // depth ≤ 5 under a topic root (topic root = depth 0; flag a folder at depth 6+).
+    // craft/self add one container tier above the former topics — see header.
+    if (childDepth >= 6) {
+      add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤5)`);
     }
 
     // sub-folder category presence + orphan check
@@ -478,23 +481,49 @@ function checkWelcomeDrift() {
   const re = /^###\s+.*\]\((\/docs\/[^)\s]+)\)/gm;
   let m;
   while ((m = re.exec(src)) !== null) {
-    cardSlugs.add(m[1].replace(/^\/docs/, '')); // → /generative-ai etc.
+    cardSlugs.add(m[1].replace(/^\/docs/, '')); // → /craft/generative-ai etc.
   }
-  const topicSlugs = new Set();
+  // Two-tier IA: topicFolders() are the craft/self ROOTS, but the Welcome index
+  // lists the per-domain SUB-topics (e.g. /craft/generative-ai). So a card is valid
+  // if it points at ANY real README slug under a topic root, and we require the two
+  // top-level roots (/craft, /self) to each have at least one card pointing under them.
+  const allReadmeSlugs = collectReadmeSlugs(); // Set of every README's absolute slug
+  const rootSlugs = new Set();
   for (const topic of topicFolders()) {
     const s = topicReadmeSlug(topic);
-    if (typeof s === 'string') topicSlugs.add(s);
+    if (typeof s === 'string') rootSlugs.add(s); // /craft, /self
   }
-  for (const s of topicSlugs) {
-    if (!cardSlugs.has(s)) {
-      add('welcome-drift', `${WELCOME}/README`, `topic slug ${s} has no matching card in the Welcome index`);
+  for (const root of rootSlugs) {
+    const covered = [...cardSlugs].some((c) => c === root || c.startsWith(root + '/'));
+    if (!covered) {
+      add('welcome-drift', `${WELCOME}/README`, `topic root ${root} has no card (or sub-topic card) in the Welcome index`);
     }
   }
   for (const s of cardSlugs) {
-    if (!topicSlugs.has(s)) {
-      add('welcome-drift', `${WELCOME}/README`, `Welcome card links /docs${s} but no topic README owns that slug`);
+    if (!allReadmeSlugs.has(s)) {
+      add('welcome-drift', `${WELCOME}/README`, `Welcome card links /docs${s} but no README owns that slug`);
     }
   }
+}
+
+/** Every README.{md,mdx}'s absolute slug across the whole docs tree (for drift checks). */
+function collectReadmeSlugs() {
+  const out = new Set();
+  const walk = (dir) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.name.startsWith('.')) continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (/^README\.mdx?$/i.test(e.name)) {
+        try {
+          const s = matter(fs.readFileSync(full, 'utf8')).data.slug;
+          if (typeof s === 'string') out.add(s);
+        } catch { /* unparseable frontmatter — skip */ }
+      }
+    }
+  };
+  walk(DOCS);
+  return out;
 }
 
 // --- idea↔execution mapping (in-body convention) -------------------------

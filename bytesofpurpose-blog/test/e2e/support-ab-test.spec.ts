@@ -20,7 +20,7 @@ const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 // A docs page that embeds <Support/>. Override with PH_AB_PAGE if it moves.
 const PAGE_WITH_BUTTON =
   process.env.PH_AB_PAGE ||
-  '/docs/techniques/blogging-techniques/embed-structural-components/footer';
+  '/docs/craft/blogging/embed-structural-components/footer';
 
 async function posthogReady(page: Page) {
   try {

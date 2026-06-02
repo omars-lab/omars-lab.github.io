@@ -19,7 +19,7 @@ import {
 test.describe('GraphRenderer Title Rendering E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the graph component page
-    const response = await page.goto('/docs/techniques/blogging-techniques/embed-structural-components/graph', {
+    const response = await page.goto('/docs/craft/blogging/embed-structural-components/graph', {
       waitUntil: 'domcontentloaded',
     });
     

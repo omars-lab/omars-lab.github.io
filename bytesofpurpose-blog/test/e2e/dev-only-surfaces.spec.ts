@@ -31,12 +31,13 @@ test.describe('Dev-only surfaces are absent in the production build', () => {
     await expect(sidebar.locator('span[aria-label="draft"]')).toHaveCount(0);
   });
 
-  test('the draft category itself is gone (Definitions index was draft:true)', async ({
+  test('a draft doc is gone from prod (learning-business is draft:true)', async ({
     page,
   }) => {
-    // /docs/definitions/definitions is draft → 404 in prod (not just unbadged).
-    // validate-links-ignore: this route is INTENTIONALLY absent (the assertion is the 404).
-    const res = await page.goto('/docs/definitions/definitions', {
+    // /docs/craft/entrepreneurship/learning-business is draft → 404 in prod (not just
+    // unbadged). validate-links-ignore: this route is INTENTIONALLY absent in prod
+    // (the assertion is the 404).
+    const res = await page.goto('/docs/craft/entrepreneurship/learning-business', {
       waitUntil: 'domcontentloaded',
     });
     expect(res?.status(), 'draft doc should not exist in prod').toBe(404);
