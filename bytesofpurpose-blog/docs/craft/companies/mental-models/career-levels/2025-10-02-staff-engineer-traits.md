@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/mental-models/career-levels/2025-10-02-staff-engineer-traits
+slug: /companies/mental-models/career-levels/2025-10-02-staff-engineer-traits
 title: '📈 Key Traits of a Staff Engineer'
 description: 'A breakdown of the key traits and expectations for Staff Engineers, from technical excellence to strategic thinking.'
 authors: [oeid]

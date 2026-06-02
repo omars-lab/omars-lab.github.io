@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/research/learning-frontend-eslint
+slug: /software-development/frontend-development/research/learning-frontend-eslint
 title: 'Learning ESLint'
 description: 'Learning ESLint configuration and best practices for frontend development'
 authors: [oeid]

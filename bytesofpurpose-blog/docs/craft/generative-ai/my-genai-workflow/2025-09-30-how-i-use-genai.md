@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/my-genai-workflow/2025-09-30-how-i-use-genai
+slug: /generative-ai/my-genai-workflow/2025-09-30-how-i-use-genai
 title: "🤖 How I Use GenAI"
 description: "My practical GenAI workflow for development, writing, and problem-solving."
 tags: [genai, productivity, workflow, tools]

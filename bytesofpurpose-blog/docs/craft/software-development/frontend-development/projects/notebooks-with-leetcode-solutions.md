@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/notebooks-with-leetcode-solutions
+slug: /software-development/frontend-development/projects/notebooks-with-leetcode-solutions
 title: 'Notebooks with LeetCode Solutions'
 sidebar_label: 'LeetCode Notebooks'
 description: 'Development of Jupyter notebooks for solving LeetCode problems with graph visualization and hosting solutions'

@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/automating
+slug: /productivity/automating
 title: 'Automation Techniques'
 description: 'Methods for creating and using automation shortcuts to streamline workflows and improve productivity.'
 authors: [oeid]
@@ -31,5 +31,5 @@ Automation techniques are **methods for automating tasks and workflows**:
 
 ## Key Documents
 
-- [Leveraging Shortcuts](/docs/craft/productivity/automating/leveraging-shortcuts) - Creating and using automation shortcuts effectively
+- [Leveraging Shortcuts](/craft/productivity/automating/leveraging-shortcuts) - Creating and using automation shortcuts effectively
 

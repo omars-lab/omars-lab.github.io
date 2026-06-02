@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/my-genai-workflow/running-llms-locally
+slug: /generative-ai/my-genai-workflow/running-llms-locally
 title: Running LLMs Locally
 description: 'The main platforms and steps for running large language models locally on your own machine, and the trade-offs of each.'
 authors: [oeid]

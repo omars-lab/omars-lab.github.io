@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/analyzing
+slug: /productivity/analyzing
 title: 'Analysis Techniques'
 description: 'Methods for analyzing data, metrics, and popularity to gain insights and make data-driven decisions.'
 authors: [oeid]
@@ -31,6 +31,6 @@ Analysis techniques are **methods for examining and interpreting data**:
 
 ## Key Documents
 
-<!-- - [Analyzing Popularity](/docs/craft/productivity/analyzing/analyzing-popularity) - Methods for analyzing and measuring popularity -->
-- [Leveraging Google Analytics](/docs/craft/productivity/analyzing/leveraging-google-analytics) - Using Google Analytics effectively for tracking and analysis
+<!-- - [Analyzing Popularity](/craft/productivity/analyzing/analyzing-popularity) - Methods for analyzing and measuring popularity -->
+- [Leveraging Google Analytics](/craft/productivity/analyzing/leveraging-google-analytics) - Using Google Analytics effectively for tracking and analysis
 

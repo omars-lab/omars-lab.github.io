@@ -68,7 +68,7 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 - **`graph-title-rendering.spec.ts`** — title rendering, ellipsis-only regression (dev)
 - **`graph-selection-state.spec.ts`** — node/edge selection state via the AI-framework
   doc graph (dev). Targets the **doc** route
-  `/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape`
+  `/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape`
   (NOT `/blog/...` — that was a long-standing wrong path that 404'd).
 - **`posthog-events.spec.ts`** — PostHog init + $pageview/autocapture/scroll (posthog-prod)
 - **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)
@@ -101,9 +101,10 @@ the task-list aria-label rehype plugin only runs at build time, not in `yarn sta
   from pane unselects edge") intermittently time out waiting for the edge-details
   pane after a `#...-edge-...` URL hash. These are graph-component/canvas-timing
   issues, not infra — the page loads and 17/20 graph cases pass. Track separately.
-- `draft-sidebar.spec.ts` navigates to a now-missing `definitions` index route expecting
-  draft badges, but no such doc exists (fixture drift). Pre-existing; surfaced by the
-  `test-stale-slug` validate-links rule. Needs a fixture/route fix by its owner.
+- `draft-sidebar.spec.ts` lands on `/self/personal-growth` (a published README whose Self
+  sidebar carries ~13 draft `habits-*` leaves) and asserts the dev-only "D" badge. It is
+  green on a CLEAN dev server; if it fails, suspect a stale prod `.docusaurus/` cache
+  (see the cache gotcha below) before anything else.
 
 ## Gotchas that look like failures (but aren't)
 
@@ -133,11 +134,13 @@ time at least once):
 
 ### Verification mechanics (serve/build URL shapes)
 
-- The **docs** plugin has no `routeBasePath` override → docs serve under **`/docs`**.
-  (The `routeBasePath: '/'` in `docusaurus.config.js` is on the **`pages`** preset, not
-  docs — don't conflate them.) Redirect `to:`/`from:` and doc↔doc links use `/docs/<slug>`.
-- The prod build emits **`build/docs/<slug>.html`**, NOT `build/docs/<slug>/index.html`.
-  Checking for the wrong shape makes real pages look "missing."
+- The docs are **two separate instances**: `craft` (routeBasePath **`/craft`**) and
+  `self` (routeBasePath **`/self`**) — there is NO `/docs` route anymore. Doc↔doc links
+  and redirect `to:` use `/craft/<slug>` / `/self/<slug>`; slugs in frontmatter are
+  instance-RELATIVE (a topic README has `slug: /`, a nested doc `slug: /generative-ai`).
+  The Welcome chooser is a standalone page at **`/welcome`** (in neither instance).
+- The prod build emits **`build/craft/<slug>.html`** / **`build/self/<slug>.html`**, NOT
+  `.../index.html`. Checking for the wrong shape makes real pages look "missing."
 - `docusaurus serve` **301-redirects a trailing slash** to the non-slash form. When
   curling, hit the path **without** a trailing `/` (or follow redirects) — else every
   request looks like a 301 regardless of the real status. Client redirects are

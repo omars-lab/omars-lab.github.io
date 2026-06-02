@@ -1,5 +1,5 @@
 ---
-slug: /craft/entrepreneurship/learning-business
+slug: /entrepreneurship/learning-business
 title: Learning Business
 description: 'Learning goals and resources for business concepts, entrepreneurship, and management.'
 authors: [oeid]

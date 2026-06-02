@@ -1,5 +1,5 @@
 ---
-slug: /craft/interview-prep/preparing
+slug: /interview-prep/preparing
 title: 'Complete Interview Preparation Guide'
 sidebar_label: 'Interview Prep Guide'
 description: 'A systematic approach to preparing for technical and behavioral interviews using proven frameworks and personal story banks'
@@ -39,22 +39,22 @@ Interview preparation is not just about memorizing answers—it's about developi
 Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
-- [ ] **Read [Interview Process](/docs/craft/interview-prep/mental-models/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
-- [ ] **Study [SDE Skill Differences](/docs/craft/companies/mental-models/career-levels/understanding-differences-in-skills)** - Understand the differences between SDE levels and expectations
-- [ ] **Review [Leadership Principles](/docs/craft/companies/mental-models/skills/understanding-desireable-leadership-skills)** - Master the 10 core leadership principles and what interviewers look for
-- [ ] **Study [Technical Skills Evaluation](/docs/craft/companies/mental-models/skills/understanding-desireable-tech-skills)** - Learn the technical evaluation criteria
-- [ ] **Review [Soft Skills Evaluation](/docs/craft/companies/mental-models/skills/understanding-desireable-soft-skills)** - Learn the soft skills evaluation criteria
+- [ ] **Read [Interview Process](/craft/interview-prep/mental-models/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
+- [ ] **Study [SDE Skill Differences](/craft/companies/mental-models/career-levels/understanding-differences-in-skills)** - Understand the differences between SDE levels and expectations
+- [ ] **Review [Leadership Principles](/craft/companies/mental-models/skills/understanding-desireable-leadership-skills)** - Master the 10 core leadership principles and what interviewers look for
+- [ ] **Study [Technical Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-tech-skills)** - Learn the technical evaluation criteria
+- [ ] **Review [Soft Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-soft-skills)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
-- [ ] **Review your [🚀 My Contributions](/docs/self/personal-growth/my-contributions)** - A portfolio of real impact to ground your interview stories
-- [ ] **Build your [Personal Story Bank](/docs/craft/interview-prep/preparing/personal-story-bank)** - Develop 2-3 STAR stories for each leadership principle
-- [ ] **Practice [Leadership Interview Prep](/docs/craft/interview-prep/preparing/pre-meditating-responses-for-leadership-questions)** - Master the behavioral interview format
-- [ ] **Prepare [Interviewing the Interviewer](/docs/craft/interview-prep/preparing/prepraring-questions-to-ask-interviewers)** - Develop thoughtful questions that demonstrate your interest
+- [ ] **Review your [🚀 My Contributions](/self/personal-growth/my-contributions)** - A portfolio of real impact to ground your interview stories
+- [ ] **Build your [Personal Story Bank](/craft/interview-prep/preparing/personal-story-bank)** - Develop 2-3 STAR stories for each leadership principle
+- [ ] **Practice [Leadership Interview Prep](/craft/interview-prep/preparing/pre-meditating-responses-for-leadership-questions)** - Master the behavioral interview format
+- [ ] **Prepare [Interviewing the Interviewer](/craft/interview-prep/preparing/prepraring-questions-to-ask-interviewers)** - Develop thoughtful questions that demonstrate your interest
 
 ### Phase 3: Technical Preparation
-- [ ] **Master [Preparing for Coding Questions](/docs/craft/interview-prep/preparing/preparing-for-coding-questions)** - Learn systematic approach to coding problems and algorithms
-- [ ] **Study [Technical Skills Evaluation](/docs/craft/companies/mental-models/skills/understanding-desireable-tech-skills)** - Understand what companies evaluate in technical interviews
-- [ ] **Study [Preparing for System Design Questions](/docs/craft/interview-prep/preparing/preparing-for-system-design-questions)** - Learn how to approach architecture and design questions
+- [ ] **Master [Preparing for Coding Questions](/craft/interview-prep/preparing/preparing-for-coding-questions)** - Learn systematic approach to coding problems and algorithms
+- [ ] **Study [Technical Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-tech-skills)** - Understand what companies evaluate in technical interviews
+- [ ] **Study [Preparing for System Design Questions](/craft/interview-prep/preparing/preparing-for-system-design-questions)** - Learn how to approach architecture and design questions
 
 ### Phase 4: Practice and Refinement
 - [ ] **Practice telling your stories** - Time yourself to ensure 2-3 minute responses

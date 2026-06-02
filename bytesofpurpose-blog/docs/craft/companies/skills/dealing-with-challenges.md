@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/skills/dealing-with-challenges
+slug: /companies/skills/dealing-with-challenges
 title: 'Dealing with Challenges'
 description: 'Frameworks for addressing and communicating about technical and professional challenges — useful for interviews and growth.'
 authors: [oeid]
@@ -124,6 +124,6 @@ Practice telling these stories using the STAR method, keeping responses to 2-3 m
 
 ## Related Content
 
-- **[Dealing with Ambiguity](/docs/craft/companies/skills/dealing-with-ambiguity)** - Navigating unclear situations
-- **[Managing Complexity](/docs/craft/companies/skills/managing-complexity)** - Balancing simplicity and functionality
-- **[Preparing for Technical Questions](/docs/craft/interview-prep/preparing/preparing-for-tech-questions)** - Technical interview preparation
+- **[Dealing with Ambiguity](/craft/companies/skills/dealing-with-ambiguity)** - Navigating unclear situations
+- **[Managing Complexity](/craft/companies/skills/managing-complexity)** - Balancing simplicity and functionality
+- **[Preparing for Technical Questions](/craft/interview-prep/preparing/preparing-for-tech-questions)** - Technical interview preparation

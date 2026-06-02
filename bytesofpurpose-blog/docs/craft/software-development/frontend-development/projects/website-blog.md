@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/website-blog
+slug: /software-development/frontend-development/projects/website-blog
 title: My Blog
 description: 'Developing a Docusaurus-based blog with automation tools, voting features, and content integration.'
 authors: [oeid]
@@ -14,7 +14,7 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 
 # Content
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for content planning, strategy, structure, and features.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for content planning, strategy, structure, and features.*
 
 # Blog Infrastructure
 
@@ -45,7 +45,7 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 
 ## Docusaurus Configuration
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for future Docusaurus features and plugins.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for future Docusaurus features and plugins.*
 
 ### Learnings
 * Learning - pointing to a draft page will throw an error ...
@@ -74,11 +74,11 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 -  I need to see how people are engaging with the blog!
 	-  Make sure I can track usage in google analytics! @done(2021-09-15T22:29:53-05:00)
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for analytics setup, dashboard, SEO, and ingress analysis planning.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for analytics setup, dashboard, SEO, and ingress analysis planning.*
 
 # User Engagement
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for voting features, support mechanisms, and monetization plans.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for voting features, support mechanisms, and monetization plans.*
 
 # Design & Theme
 
@@ -87,11 +87,11 @@ I need my own blog ... this document serves as my initial plan to put one togeth
 - [x] Get favicon for site ... @done(2022-05-14 10:47 PM)
 		- [how-to-add-a-favicon-to-a-website-ico-format](https://favicon.io/tutorials/how-to-add-a-favicon-to-a-website-ico-format/)
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for future design enhancements, images, and icons.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for future design enhancements, images, and icons.*
 
 # Productivity & Workflow
 
-*See [Blog Roadmap](/docs/craft/product-management/roadmaps/1-blog-roadmap) for productivity features and workflow improvements.*
+*See [Blog Roadmap](/craft/product-management/roadmaps/1-blog-roadmap) for productivity features and workflow improvements.*
 
 # Appendix
 

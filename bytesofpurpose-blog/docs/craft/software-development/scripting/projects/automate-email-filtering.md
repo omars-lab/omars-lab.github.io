@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-email-filtering
+slug: /software-development/scripting/projects/automate-email-filtering
 title: Automate Email Filtering
 description: 'Automating email filtering and organization using Yahoo Mail filters and Tampermonkey scripts.'
 authors: [oeid]

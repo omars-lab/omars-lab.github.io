@@ -23,7 +23,7 @@ test.describe('Docs sidebar — draft markers (dev only)', () => {
     // Self sidebar with ~13 draft habits-* leaf siblings, which the dev-only swizzle
     // badges with a compact "D". (Draft docs 404 if visited directly, so the landing
     // must be a published page in the same sidebar — not a draft leaf itself.)
-    await page.goto('/docs/self/personal-growth', {
+    await page.goto('/self/personal-growth', {
       waitUntil: 'domcontentloaded',
     });
     // Badges render after hydration (the plugin data is read client-side).

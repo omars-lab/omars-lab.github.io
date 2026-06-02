@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/initiatives
+slug: /product-management/initiatives
 title: Initiatives
 description: 'Initiatives ready to get started - have blueprints, designs, and proper execution structure but not yet active projects.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/mental-models/skills/understanding-desireable-leadership-skills
+slug: /companies/mental-models/skills/understanding-desireable-leadership-skills
 title: 'Leadership Principles'
 description: 'A comprehensive guide to the leadership principles companies actually evaluate, why they matter, and how to demonstrate them in interviews'
 authors: [oeid]

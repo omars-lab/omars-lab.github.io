@@ -25,7 +25,7 @@ import { test, expect, Page } from '@playwright/test';
 const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 
 // Docs are served under the /docs route prefix (see the navbar "Learn" link).
-const DOC_URL = '/docs/welcome/intro';
+const DOC_URL = '/welcome';
 const BLOG_URL = '/blog/docs-vs-blog-posts';
 
 /**
@@ -313,6 +313,6 @@ test.describe('Ingress attribution (production build)', () => {
     await expect(page.locator('[data-testid="bookmarklet-modal"]')).toBeVisible();
     await expect(page.locator('[data-testid="bookmarklet-drag-target"]')).toBeVisible();
     // Still on the same page (no in-place bookmarklet execution / navigation).
-    expect(page.url()).toContain('/docs/welcome/intro');
+    expect(page.url()).toContain('/welcome');
   });
 });

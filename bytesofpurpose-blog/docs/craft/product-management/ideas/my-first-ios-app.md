@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/ideas/my-first-ios-app
+slug: /product-management/ideas/my-first-ios-app
 title: My First iOS App
 sidebar_label: 'iOS App'
 description: 'Learning to develop iOS applications with Swift, focusing on calendar and dashboard functionality.'

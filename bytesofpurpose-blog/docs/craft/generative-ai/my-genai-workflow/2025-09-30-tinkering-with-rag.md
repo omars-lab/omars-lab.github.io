@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/my-genai-workflow/2025-09-30-tinkering-with-rag
+slug: /generative-ai/my-genai-workflow/2025-09-30-tinkering-with-rag
 title: "🔍 Tinkering with RAG"
 description: "My experiments and learnings with Retrieval Augmented Generation (RAG) systems, from basic implementations to advanced patterns and optimizations."
 authors: [oeid, cursor]

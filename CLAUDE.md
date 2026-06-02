@@ -43,22 +43,30 @@ The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working
 
 ## ⚠️ Operating convention: structure decisions must update the structure checks
 
-The docs are a **two-tier topic-based information architecture**: the top tier is two
-containers — **`craft/`** (how I see the world — the professional topics: generative-ai,
+The docs are **two SEPARATE Docusaurus docs instances** (not one `/docs` instance):
+**`craft`** (how I see the world — the professional topics: generative-ai,
 software-development, product-management, productivity, blogging, interview-prep,
-companies, entrepreneurship) and **`self/`** (how I see myself — faith, personal-growth)
-— each surfaced as its own navbar item (`docSidebar` → `craftSidebar` / `selfSidebar` in
-`sidebars.js`) with `welcome/` shown first in both. Below that is the recurring per-topic
-folder contract (each topic = a reader-facing topic; each topic has a README landing
+companies, entrepreneurship) and **`self`** (how I see myself — faith, personal-growth).
+Each is registered as its own `@docusaurus/plugin-content-docs` in `docusaurus.config.js`
+(`id: 'craft'` path `docs/craft` routeBasePath `/craft` sidebar `sidebars-craft.js`;
+`id: 'self'` path `docs/self` routeBasePath `/self` sidebar `sidebars-self.js`), and the
+preset's default docs is **disabled** (`docs: false`). Each navbar item is a `docSidebar`
+with its own `docsPluginId`, so **clicking Craft shows ONLY craft topics and Self ONLY
+self topics** — the two never mix. The **Welcome chooser is a standalone page**
+(`src/pages/welcome.mdx`, served at `/welcome`, in NEITHER instance) with two CTAs
+("discover my world" → `/craft`, "observe what I discovered about myself" → `/self`); it
+is the homepage CTA target. Below the instance level is the recurring per-topic folder
+contract (each topic = a reader-facing topic; each topic has a README landing
 with an **absolute** `slug:`, a `_category_.json`, optional `terminology/` first and
 `prompts/` last; kebab-case names with **no numeric name prefix** — order via
 `_category_.json` `position` / `sidebar_position`, never the folder name, so reordering
-stays history-clean; no framing-word/topic-echo folders; depth ≤5 (the craft/self tier
-adds one container level above the former topics); slugs are **folder-path mirrored** —
-a doc's absolute slug equals its folder path under `/craft|self/...`, and every
-doc carries an **absolute** slug so a move never changes a URL via a redirect).
-`craft/` and `self/` are themselves topic roots (each has a `README` with absolute slug
-`/craft` / `/self` and an emoji `_category_.json`). A large topic may split
+stays history-clean; no framing-word/topic-echo folders; depth ≤5). Slugs are now
+**instance-relative**: a doc's `slug:` is relative to its instance root (a topic README
+has `slug: /` → permalink `/craft`; a nested doc `slug: /generative-ai` → `/craft/
+generative-ai`). Every doc still carries an absolute (leading-slash) slug, and a move is
+paired with a `{from,to}` client-redirect so old URLs never break. The `draft-docs`
+plugin computes permalinks per-instance (first path segment under `docs/` = the
+instance routeBasePath) — keep it in lockstep if the instance layout changes.
 into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
 `frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
 techniques/tinkering/`); the idea→ship LIFECYCLE is the separate `Product Management`

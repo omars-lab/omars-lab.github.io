@@ -466,48 +466,22 @@ function checkTopicRoots() {
 }
 
 /**
- * Welcome drift: the Welcome page is the two-half CHOOSER. It must route readers into
- * BOTH halves — every craft/self topic ROOT (e.g. /craft, /self) must be reachable from
- * a Welcome link, and no Welcome /docs link may dangle. We scan ALL /docs links (the
- * two CTA cards link to /docs/craft + /docs/self; markdown `](...)` and HTML `href=`
- * both count) — not just `###`-heading cards, since the chooser uses CTA buttons.
+ * Welcome drift: Craft and Self are two SEPARATE docs instances (routeBasePath /craft,
+ * /self). The Welcome page is a STANDALONE chooser (src/pages/welcome.mdx — in neither
+ * instance) that must route readers into BOTH halves: it must link to /craft AND /self.
  */
 function checkWelcomeDrift() {
-  const welcomeDir = path.join(ROOT, WELCOME);
-  let readme;
-  for (const r of ['README.md', 'README.mdx']) {
-    if (fs.existsSync(path.join(welcomeDir, r))) { readme = path.join(welcomeDir, r); break; }
-  }
-  if (!readme) {
-    add('welcome-drift', WELCOME, 'no Welcome README to compare topic links against');
+  const welcome = path.join(ROOT, 'src', 'pages', 'welcome.mdx');
+  if (!fs.existsSync(welcome)) {
+    add('welcome-drift', 'src/pages/welcome.mdx', 'no standalone Welcome chooser page found');
     return;
   }
-  const src = fs.readFileSync(readme, 'utf8');
-  const linkSlugs = new Set();
-  // Markdown links ](/docs/...) AND HTML href="/docs/..." (the CTA cards).
-  const re = /(?:\]\(|href=["'])(\/docs\/[^)"'\s#?]+)/g;
-  let m;
-  while ((m = re.exec(src)) !== null) {
-    linkSlugs.add(m[1].replace(/^\/docs/, '')); // → /craft, /self, /welcome/intro, …
-  }
-  const allReadmeSlugs = collectReadmeSlugs(); // every README's absolute slug
-  // Each topic ROOT (craft/self) must be reachable from a Welcome link (the root
-  // itself or any sub-topic under it) — the chooser must lead into both halves.
-  const rootSlugs = new Set();
-  for (const topic of topicFolders()) {
-    const s = topicReadmeSlug(topic);
-    if (typeof s === 'string') rootSlugs.add(s); // /craft, /self
-  }
-  for (const root of rootSlugs) {
-    const covered = [...linkSlugs].some((c) => c === root || c.startsWith(root + '/'));
-    if (!covered) {
-      add('welcome-drift', `${WELCOME}/README`, `topic root ${root} is not reachable from any Welcome link (the chooser must lead into both halves)`);
-    }
-  }
-  // No Welcome /docs link may point at a slug no doc owns (welcome/intro is itself a doc).
-  for (const s of linkSlugs) {
-    if (!allReadmeSlugs.has(s) && !collectSlugs().has(s)) {
-      add('welcome-drift', `${WELCOME}/README`, `Welcome links /docs${s} but no doc owns that slug`);
+  const src = fs.readFileSync(welcome, 'utf8');
+  for (const half of ['/craft', '/self']) {
+    // a link/href to the instance root (or any page under it) counts as "leads in"
+    const re = new RegExp(`(?:\\]\\(|href=["'])${half}(?=[/"')\\s#?]|$)`);
+    if (!re.test(src)) {
+      add('welcome-drift', 'src/pages/welcome.mdx', `Welcome chooser does not link into ${half} (it must lead into both halves)`);
     }
   }
 }

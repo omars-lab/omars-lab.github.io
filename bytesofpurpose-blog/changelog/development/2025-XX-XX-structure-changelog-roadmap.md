@@ -63,7 +63,7 @@ Organize and structure the changelog and roadmap sections of the blog, including
 - [Changelog Component Creation](/changelog/2025/01/20/development/component-creation-changelog-component) - Detailed component architecture and implementation
 - [Changelog Page](/changelog)
 - [Naming Conventions](https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md)
-- [Changelog System Documentation](/docs/craft/blogging/changelog-system)
+- [Changelog System Documentation](/craft/blogging/changelog-system)
 - [Heal Changelog Prompt](https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md) - Reusable prompt for inferring and enriching changelog entries
 - [Changelog Generation Script](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js)
 - [Changelog Component](https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx)

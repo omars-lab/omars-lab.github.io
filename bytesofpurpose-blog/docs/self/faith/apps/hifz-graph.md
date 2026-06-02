@@ -1,5 +1,5 @@
 ---
-slug: /self/faith/apps/hifz-graph
+slug: /faith/apps/hifz-graph
 title: 'Hifz Graph'
 description: 'Graph visualization for tracking common hops across surahs in Quran memorization (Hifz)'
 authors: [oeid]

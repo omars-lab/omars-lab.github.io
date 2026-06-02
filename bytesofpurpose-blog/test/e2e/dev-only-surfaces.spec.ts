@@ -24,7 +24,7 @@ test.describe('Dev-only surfaces are absent in the production build', () => {
 
   test('no draft badges in the docs sidebar', async ({ page }) => {
     // Drafts are excluded from the prod build entirely, AND the badge is gated.
-    await page.goto('/docs/welcome/intro', { waitUntil: 'domcontentloaded' });
+    await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
     // No draft pill (the "D" badge carries aria-label="draft") anywhere in nav.
     const sidebar = page.locator('nav.menu, .theme-doc-sidebar-container');
@@ -34,10 +34,10 @@ test.describe('Dev-only surfaces are absent in the production build', () => {
   test('a draft doc is gone from prod (learning-business is draft:true)', async ({
     page,
   }) => {
-    // /docs/craft/entrepreneurship/learning-business is draft → 404 in prod (not just
+    // /craft/entrepreneurship/learning-business is draft → 404 in prod (not just
     // unbadged). validate-links-ignore: this route is INTENTIONALLY absent in prod
     // (the assertion is the 404).
-    const res = await page.goto('/docs/craft/entrepreneurship/learning-business', {
+    const res = await page.goto('/craft/entrepreneurship/learning-business', {
       waitUntil: 'domcontentloaded',
     });
     expect(res?.status(), 'draft doc should not exist in prod').toBe(404);

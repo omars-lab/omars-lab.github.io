@@ -4,7 +4,7 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "role-management", "organization", "personal-development"]
 description: 'An AI prompt system that refactors personal role definitions, separating generic frameworks from actionable personal items.'
 author: "Omar Eid"
-slug: /craft/blogging/prompts/role-refactoring-system
+slug: /blogging/prompts/role-refactoring-system
 authors: [oeid]
 ---
 

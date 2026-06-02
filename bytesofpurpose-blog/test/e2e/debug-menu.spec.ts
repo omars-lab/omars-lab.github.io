@@ -21,7 +21,7 @@ import { test, expect, Page } from '@playwright/test';
 // A docs page that embeds <Support/> (same page support-ab-test.spec.ts uses).
 const PAGE_WITH_BUTTON =
   process.env.AB_PAGE ||
-  '/docs/craft/blogging/embed-structural-components/footer';
+  '/craft/blogging/embed-structural-components/footer';
 
 async function openMenu(page: Page) {
   const fab = page.getByRole('button', { name: 'Open debug menu' });

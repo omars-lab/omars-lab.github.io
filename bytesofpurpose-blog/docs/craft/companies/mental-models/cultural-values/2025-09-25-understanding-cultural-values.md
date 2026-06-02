@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/mental-models/cultural-values/2025-09-25-understanding-cultural-values
+slug: /companies/mental-models/cultural-values/2025-09-25-understanding-cultural-values
 title: "🏢 Company Culture"
 description: 'How company size and structure shape cultural values across tech — from remote teams like Zapier to giants like Meta and Amazon.'
 authors: [oeid]

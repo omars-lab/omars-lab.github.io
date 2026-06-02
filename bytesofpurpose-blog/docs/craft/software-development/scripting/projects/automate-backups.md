@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-backups
+slug: /software-development/scripting/projects/automate-backups
 title: Automate Backups
 description: 'Automating backup processes for NotePlan and other data using rsync and git-like synchronization.'
 authors: [oeid]

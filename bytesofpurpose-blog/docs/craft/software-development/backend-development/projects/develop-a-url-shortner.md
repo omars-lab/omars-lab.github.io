@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/backend-development/projects/develop-a-url-shortner
+slug: /software-development/backend-development/projects/develop-a-url-shortner
 title: Develop a URL Shortener
 description: 'Building a custom URL shortener that integrates with glue links and xcallback URLs for cross-platform navigation.'
 authors: [oeid]

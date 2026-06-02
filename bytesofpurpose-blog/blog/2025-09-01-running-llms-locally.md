@@ -13,7 +13,7 @@ per-token bill, just my machine. Here's what I tried and what actually worked.
 
 <!-- truncate -->
 
-> **Read the full notes → [Running LLMs Locally](/docs/craft/generative-ai/my-genai-workflow/running-llms-locally)**
+> **Read the full notes → [Running LLMs Locally](/craft/generative-ai/my-genai-workflow/running-llms-locally)**
 
 ## Takeaways
 

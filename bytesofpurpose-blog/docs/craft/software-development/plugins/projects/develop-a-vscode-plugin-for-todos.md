@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/plugins/projects/develop-a-vscode-plugin-for-todos
+slug: /software-development/plugins/projects/develop-a-vscode-plugin-for-todos
 title: Develop a VSCode Plugin for Todos
 sidebar_label: 'VSCode Todos Plugin'
 description: 'Building a VSCode extension called Flavorful Tasks for managing todos with keyboard shortcuts and automation features.'

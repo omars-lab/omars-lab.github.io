@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/backend-development/tinkering/tinker-type-projections
+slug: /software-development/backend-development/tinkering/tinker-type-projections
 title: Tinker Type Projections
 description: 'Experimenting with type projection systems and building type-based operations for ETL processes.'
 authors: [oeid]

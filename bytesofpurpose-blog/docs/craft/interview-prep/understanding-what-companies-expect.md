@@ -1,5 +1,5 @@
 ---
-slug: /craft/interview-prep/understanding-what-companies-expect
+slug: /interview-prep/understanding-what-companies-expect
 title: 'Understanding What Companies Expect'
 description: 'Before you prep, know the target: how engineering levels and competencies differ, and which skills companies actually evaluate in interviews.'
 authors: [oeid]
@@ -14,16 +14,16 @@ Effective interview prep starts with knowing the target. Companies hire against 
 **level** (with rising expectations) and evaluate a consistent set of **competencies**.
 Understanding both up front tells you what to demonstrate — and at what bar.
 
-This doc is a jumping-off point into the deeper [Companies](/docs/craft/companies) material
+This doc is a jumping-off point into the deeper [Companies](/craft/companies) material
 on roles and skills.
 
 ## Know the level you're targeting
 
 Expectations scale with level — scope, autonomy, and influence all increase. Start here:
 
-- [Understanding SDE Levels](/docs/craft/companies/mental-models/career-levels/understanding-differences-in-skills)
+- [Understanding SDE Levels](/craft/companies/mental-models/career-levels/understanding-differences-in-skills)
   — how competency requirements differ across engineer levels.
-- [Staff Engineer Traits](/docs/craft/companies/mental-models/career-levels/2025-10-02-staff-engineer-traits)
+- [Staff Engineer Traits](/craft/companies/mental-models/career-levels/2025-10-02-staff-engineer-traits)
   — what "senior+" looks like in practice.
 
 ## Know the skills they evaluate
@@ -31,15 +31,15 @@ Expectations scale with level — scope, autonomy, and influence all increase. S
 Across levels, companies assess a recurring set of skills. Map your stories and
 preparation to these:
 
-- [Leadership Principles Companies Look For](/docs/craft/companies/mental-models/skills/understanding-desireable-leadership-skills)
+- [Leadership Principles Companies Look For](/craft/companies/mental-models/skills/understanding-desireable-leadership-skills)
   — the behavioral bar and how to demonstrate it.
-- [Technical Skills Evaluation](/docs/craft/companies/mental-models/skills/understanding-desireable-tech-skills)
+- [Technical Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-tech-skills)
   — the technical criteria interviewers score against.
-- [Soft Skills Evaluation](/docs/craft/companies/mental-models/skills/understanding-desireable-soft-skills)
+- [Soft Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-soft-skills)
   — communication, collaboration, and judgment under ambiguity.
 
 ## Then prepare deliberately
 
-With the target clear, move on to [Preparing for Interviews](/docs/craft/interview-prep/preparing)
-and build a [Personal Story Bank](/docs/craft/interview-prep/preparing/personal-story-bank)
+With the target clear, move on to [Preparing for Interviews](/craft/interview-prep/preparing)
+and build a [Personal Story Bank](/craft/interview-prep/preparing/personal-story-bank)
 mapped to the competencies above.

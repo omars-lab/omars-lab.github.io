@@ -1,5 +1,5 @@
 ---
-slug: /craft/blogging/embed-diagrams
+slug: /blogging/embed-diagrams
 title: 'Embedding Diagrams'
 description: 'Methods for embedding various types of diagrams including Figma, Mermaid, PlantUML, flow charts, and mind maps in blog posts and documentation.'
 authors: [oeid]
@@ -42,11 +42,11 @@ Blogging diagram embedding emphasizes visual presentation, while documentation t
 
 ## Key Documents
 
-- [Figma Diagrams](/docs/craft/blogging/embed-diagrams/diagrams-figma) - Embedding Figma designs and prototypes
-- [Flow Charts](/docs/craft/blogging/embed-diagrams/diagrams-flow-charts) - Creating and embedding flow charts
-- [Google Drawing](/docs/craft/blogging/embed-diagrams/diagrams-google-drawing) - Using Google Drawings for diagrams
-- [Kanban Customization](/docs/craft/blogging/embed-diagrams/diagrams-kanban-customization) - Customizing and embedding Kanban boards
-- [Mermaid Diagrams](/docs/craft/blogging/embed-diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
-<!-- - [MindNode](/docs/craft/blogging/embed-diagrams/diagrams-mindnode) - Mind mapping with MindNode -->
-- [PlantUML Sequence Diagrams](/docs/craft/blogging/embed-diagrams/diagrams-puml-sequence) - Creating sequence diagrams with PlantUML
+- [Figma Diagrams](/craft/blogging/embed-diagrams/diagrams-figma) - Embedding Figma designs and prototypes
+- [Flow Charts](/craft/blogging/embed-diagrams/diagrams-flow-charts) - Creating and embedding flow charts
+- [Google Drawing](/craft/blogging/embed-diagrams/diagrams-google-drawing) - Using Google Drawings for diagrams
+- [Kanban Customization](/craft/blogging/embed-diagrams/diagrams-kanban-customization) - Customizing and embedding Kanban boards
+- [Mermaid Diagrams](/craft/blogging/embed-diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
+<!-- - [MindNode](/craft/blogging/embed-diagrams/diagrams-mindnode) - Mind mapping with MindNode -->
+- [PlantUML Sequence Diagrams](/craft/blogging/embed-diagrams/diagrams-puml-sequence) - Creating sequence diagrams with PlantUML
 

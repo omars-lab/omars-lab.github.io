@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/experiments/2026-05-31-support-button-copy
+slug: /product-management/experiments/2026-05-31-support-button-copy
 title: 'Support CTA: link vs button'
 description: 'A/B test: does a styled button draw more PayPal donate clicks than a plain text link, with identical "$5 coffee" copy?'
 authors: [oeid]

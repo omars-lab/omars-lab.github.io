@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/backend-development/techniques/security-techniques
+slug: /software-development/backend-development/techniques/security-techniques
 title: 'Security Techniques'
 description: 'Methods for managing secrets, handling passwords securely, and implementing security best practices in development workflows.'
 authors: [oeid]
@@ -31,5 +31,5 @@ Security techniques are **methods for protecting sensitive information**:
 
 ## Key Documents
 
-<!-- - [Managing Secrets](/docs/craft/software-development/backend-development/techniques/managing-secrets) - Secure secret management practices and methods -->
+<!-- - [Managing Secrets](/craft/software-development/backend-development/techniques/managing-secrets) - Secure secret management practices and methods -->
 

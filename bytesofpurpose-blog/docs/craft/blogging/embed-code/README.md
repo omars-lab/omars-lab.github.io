@@ -1,5 +1,5 @@
 ---
-slug: /craft/blogging/embed-code
+slug: /blogging/embed-code
 title: 'Embedding Code'
 description: 'Methods for embedding code examples, snippets, and interactive code cells including GitHub Gists and Jupyter notebooks in blog posts and documentation.'
 authors: [oeid]
@@ -31,7 +31,7 @@ Code embedding techniques are **methods for adding code to content**:
 
 ## Key Documents
 
-- [Code Cells](/docs/craft/blogging/embed-code/code-cells) - Creating and embedding interactive code cells
-- [Code Gists](/docs/craft/blogging/embed-code/code-gists) - GitHub Gist integration and embedding
-- [Jupyter Notebooks](/docs/craft/blogging/embed-code/code-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
+- [Code Cells](/craft/blogging/embed-code/code-cells) - Creating and embedding interactive code cells
+- [Code Gists](/craft/blogging/embed-code/code-gists) - GitHub Gist integration and embedding
+- [Jupyter Notebooks](/craft/blogging/embed-code/code-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
 

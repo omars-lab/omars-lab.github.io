@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-notifications
+slug: /software-development/scripting/projects/automate-notifications
 title: Automate Notifications
 description: 'Automating notification systems for monitoring changes in listings and other automated alerts.'
 authors: [oeid]
