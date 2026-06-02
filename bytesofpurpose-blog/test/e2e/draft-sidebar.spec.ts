@@ -18,7 +18,12 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Docs sidebar — draft markers (dev only)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/docs/definitions/definitions', {
+    // Land on a PUBLISHED topic README whose sidebar branch contains draft leaf
+    // docs. personal-growth (slug /self/personal-growth, draft:false) sits in the
+    // Self sidebar with ~13 draft habits-* leaf siblings, which the dev-only swizzle
+    // badges with a compact "D". (Draft docs 404 if visited directly, so the landing
+    // must be a published page in the same sidebar — not a draft leaf itself.)
+    await page.goto('/docs/self/personal-growth', {
       waitUntil: 'domcontentloaded',
     });
     // Badges render after hydration (the plugin data is read client-side).
@@ -26,8 +31,8 @@ test.describe('Docs sidebar — draft markers (dev only)', () => {
   });
 
   test('a draft leaf doc shows the "D" badge', async ({ page }) => {
-    // Landing inside Definitions expands its branch; it contains draft leaf docs.
-    // The badge carries aria-label="draft" (the visible glyph is a compact "D").
+    // Landing on a draft leaf expands its branch; personal-growth has many draft
+    // leaf docs. The badge carries aria-label="draft" (the visible glyph is a compact "D").
     const badges = page.locator('.menu__link span[aria-label="draft"]');
     await expect(badges.first()).toBeVisible({ timeout: 15000 });
   });
@@ -44,8 +49,8 @@ test.describe('Docs sidebar — draft markers (dev only)', () => {
   });
 
   test('a published doc has no draft badge', async ({ page }) => {
-    // The active Definitions index is itself a draft, but at least one sibling is
-    // published; assert not every link is badged (sanity that badging is selective).
+    // The Self sidebar has both draft and published docs; assert not every link is
+    // badged (sanity that badging is selective).
     const allLinks = await page.locator('nav.menu .menu__link').count();
     const badged = await page
       .locator('.menu__link span[aria-label="draft"]')

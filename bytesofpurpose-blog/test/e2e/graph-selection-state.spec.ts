@@ -14,7 +14,7 @@ import { test, expect } from '@playwright/test';
 test.describe('GraphRenderer Selection State E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the AI framework landscape doc (embeds <AIFrameworkGraph/>)
-    const response = await page.goto('/docs/generative-ai/mental-models/ai-framework-landscape', {
+    const response = await page.goto('/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape', {
       waitUntil: 'domcontentloaded',
     });
     
@@ -56,7 +56,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
   test('clicking node after clicking edge unselects edge', async ({ page }) => {
     // Navigate to URL with edge hash to ensure we have an edge selected
     const edgeHash = '#ai-framework-graph-edge-compare-LangChain-Outlines-reverse';
-    await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${edgeHash}`, {
+    await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${edgeHash}`, {
       waitUntil: 'domcontentloaded',
     });
     
@@ -87,7 +87,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
   test('clicking edge after clicking node unselects node', async ({ page }) => {
     // Navigate to URL with node hash to ensure we have a node selected
     const nodeHash = '#ai-framework-graph-node-LangChain';
-    await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${nodeHash}`, {
+    await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${nodeHash}`, {
       waitUntil: 'domcontentloaded',
     });
     
@@ -114,7 +114,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
     if (hasNodeContent) {
       // We have a node selected, now navigate to an edge URL
       const edgeHash = '#ai-framework-graph-edge-compare-LangChain-Outlines-reverse';
-      await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${edgeHash}`, {
+      await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${edgeHash}`, {
         waitUntil: 'domcontentloaded',
       });
       
@@ -215,7 +215,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
     
     // Navigate to URL with edge hash (using a comparison edge)
     const edgeHash = '#ai-framework-graph-edge-compare-LangChain-Outlines-reverse';
-    await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${edgeHash}`, {
+    await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${edgeHash}`, {
       waitUntil: 'domcontentloaded',
     });
     
@@ -254,7 +254,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
   test('selecting node from pane unselects edge', async ({ page }) => {
     // Navigate to URL with edge hash to ensure we have an edge selected
     const edgeHash = '#ai-framework-graph-edge-compare-LangChain-Outlines-reverse';
-    await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${edgeHash}`, {
+    await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${edgeHash}`, {
       waitUntil: 'domcontentloaded',
     });
     
@@ -285,7 +285,7 @@ test.describe('GraphRenderer Selection State E2E', () => {
   test('collapse all with edge URL hash does not error', async ({ page }) => {
     // Navigate to URL with edge hash first
     const edgeHash = '#ai-framework-graph-edge-compare-LangChain-Outlines-reverse';
-    await page.goto(`/docs/generative-ai/mental-models/ai-framework-landscape${edgeHash}`, {
+    await page.goto(`/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape${edgeHash}`, {
       waitUntil: 'domcontentloaded',
     });
     

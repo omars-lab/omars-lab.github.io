@@ -55,18 +55,18 @@ Create comprehensive documentation guides for adding different types of content 
 **Status:** Completed
 
 **Files Created:**
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/_category_.json`](/docs/techniques/blogging-techniques/adding-content/adding-content) - Category configuration
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx`](/docs/techniques/blogging-techniques/adding-content/adding-content) - Main index page covering all content types
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx`](/docs/techniques/blogging-techniques/adding-content/adding-changelog-entries) - Comprehensive changelog guide
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-docs.mdx`](/docs/techniques/blogging-techniques/adding-content/adding-docs) - Documentation creation guide
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-designs.mdx`](/docs/techniques/blogging-techniques/adding-content/adding-designs) - Design posts guide
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/_category_.json`](/docs/craft/blogging/adding-content) - Category configuration
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/README.mdx`](/docs/craft/blogging/adding-content) - Main index page covering all content types
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx`](/docs/craft/blogging/adding-content/adding-changelog-entries) - Comprehensive changelog guide
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-docs.mdx`](/docs/craft/blogging/adding-content/adding-docs) - Documentation creation guide
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-designs.mdx`](/docs/craft/blogging/adding-content/adding-designs) - Design posts guide
 
 **Files Enhanced:**
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-blog-posts.mdx`](/docs/techniques/blogging-techniques/adding-content/mx-docx-blog-posts) - Expanded from basic guide to comprehensive resource
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-blog-posts.mdx`](/docs/craft/blogging/adding-content/adding-blog-posts) - Expanded from basic guide to comprehensive resource
 - [`docs/6-techniques/3-blogging-techniques/README.mdx`](/blogging) - Added "Adding Content" section with links to all guides
 
 **Folders Impacted:**
-- [`docs/6-techniques/3-blogging-techniques/5-adding-content/`](/docs/techniques/blogging-techniques/adding-content/adding-content) - Restructured and enhanced with comprehensive guides
+- [`docs/6-techniques/3-blogging-techniques/5-adding-content/`](/docs/craft/blogging/adding-content) - Restructured and enhanced with comprehensive guides
 
 **Key Accomplishments:**
 

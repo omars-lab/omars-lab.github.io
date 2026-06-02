@@ -1,0 +1,28 @@
+---
+slug: /craft/blogging/embed-diagrams/diagrams-flow-charts
+title: Embedded Flow Charts
+description: Embedding flow-chart diagrams in a Docusaurus post to visualize decisions, branches, and process steps.
+authors: [oeid]
+tags: [docusaurus, tools]
+date: 2025-01-30T10:00
+draft: false
+---
+
+# Flow Chart
+<div id="flowchart_diagram">
+  <script>
+    var code = `
+      st=>start: Start
+      op=>operation: Perform Operation
+      cond=>condition: Is condition met?
+      e=>end: End
+
+      st->op->cond
+      cond(yes)->e
+      cond(no)->op
+    `;
+
+    var diagram = flowchart.parse(code);
+    diagram.drawSVG('diagram');
+  </script>
+</div>

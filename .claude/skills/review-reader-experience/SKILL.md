@@ -153,12 +153,17 @@ include `test/` in your own sweep so you fix it up front.
 
 #### Topic-folder contract + validator (`validate-docs-structure.js`)
 
-The docs are a **topic-based IA** with a recurring folder contract. This skill owns the
-contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
+The docs are a **two-tier topic-based IA** with a recurring folder contract. This skill
+owns the contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 (`make validate-structure`, plus a warn-only `Write|Edit` hook). The contract:
 
-- The docs root is `welcome/` (the topic index, not a topic) + one `<topic>/` folder
-  per reader-facing TOPIC.
+- The docs root is `welcome/` (the topic index, not a topic) + exactly two container
+  topics: **`craft/`** (professional topics — how I see the world) and **`self/`**
+  (personal topics — how I see myself). Each reader-facing TOPIC lives one level down,
+  under `craft/<topic>/` or `self/<topic>/`. `craft/` and `self/` are themselves topic
+  roots (each has a `README` with absolute slug `/craft` / `/self` + an emoji
+  `_category_.json`), and each is surfaced as its own navbar item via `docSidebar`
+  (`craftSidebar` / `selfSidebar` in `sidebars.js`), with `welcome/` listed first in both.
 - **Folder NAMES carry no numeric ordering prefix** (no `2-development/`, `6-projects/`).
   Sidebar order comes from the `_category_.json` `"position"` field (folders) and
   `sidebar_position` frontmatter (docs) — never the name. *Why:* a name prefix couples
@@ -168,6 +173,13 @@ contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 - **Every doc has an ABSOLUTE `slug:` (`slug: /…`)** — the URL-freeze guarantee. The
   validator treats a missing/relative slug as the only **ERROR** tier (exit 2; the
   hook surfaces it but never blocks). Everything below is **warn** tier (advisory).
+- **Slugs are FOLDER-PATH MIRRORED**: a doc's absolute slug equals its folder path
+  under `/craft|self/...` (a README maps to its folder, no doubling; e.g.
+  `docs/craft/blogging/adding-content/README.mdx` → `/craft/blogging/adding-content`).
+  When you move/reorg a doc, update its slug to match the new path and add a
+  `{from,to}` client-redirect so the old URL still resolves —
+  `scripts/migrate-ia.js` is the reference engine for a bulk move (computes the
+  old→new map, rewrites slugs + cross-links, emits redirects).
 - Each topic folder has a `README.{md,mdx}` landing (absolute slug) + a
   `_category_.json` (label + position).
 - **Every `_category_.json` `label` LEADS with an emoji** so the sidebar scans visually.
@@ -183,12 +195,15 @@ contract; `bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it
 - No framing-word / topic-echo folder names (`*-techniques`, `*-craftsmanship`,
   `definitions`) — use a reader-facing topic noun. (Several `-techniques` folders
   survive from the pre-reorg tree with frozen slugs; the validator warns on them.)
-- Folder depth ≤ 4 under a topic root (a domain sub-topic with its own
-  `projects/<project>` legitimately needs 4, e.g.
-  `software-development/backend-development/projects/<proj>`).
+- Folder depth ≤ 5 under a topic root (the `craft/`/`self/` container tier adds one
+  level above the former topics, so a domain sub-topic with its own
+  `projects/<project>` legitimately reaches 5, e.g.
+  `craft/software-development/frontend-development/techniques/<doc>`).
 - A `terminology/` category sorts **first**; a `prompts/` category sorts **last**.
-- The Welcome topic-index cards (`### [Label](/docs/<slug>)`) must match the actual
-  root topic folders + their README slugs (the **welcome-drift** check, formerly T15).
+- The Welcome topic-index cards (`### [Label](/docs/<slug>)`) must each point at a real
+  README slug, and the two roots (`/craft`, `/self`) must each be covered by at least one
+  card (a card on the root or any sub-topic under it). The **welcome-drift** check
+  (formerly T15) enforces this against every README slug in the tree.
 - Every doc carries a healthy `description:` frontmatter — present, ~50–160 chars, and
   distinct from other docs. It feeds both `og:description` (SEO/social preview) and the
   ShareButton "Here's what it covers:" share message. The validator warns via
