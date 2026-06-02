@@ -75,6 +75,21 @@ function main() {
   const buildFiles = indexBuild(buildDir);
   const failures = [];
 
+  // 0. The passphrase itself must NEVER ship. It's a build-time secret (encrypts
+  //    bodies) and the Worker's vended key — if it appeared in build/, anyone could
+  //    decrypt every premium body offline. When STATICRYPT_PASSPHRASE is set (it is
+  //    during `make build-premium`), assert its value is absent from the whole build.
+  const passphrase = process.env.STATICRYPT_PASSPHRASE;
+  if (passphrase && passphrase.length >= 8) {
+    const leak = buildFiles.find((f) => f.text.includes(passphrase));
+    if (leak) {
+      failures.push(
+        `PASSPHRASE LEAKED into ${path.relative(buildDir, leak.path)} — the decryption key ` +
+          `shipped to the public bundle. Every premium body is now readable offline.`,
+      );
+    }
+  }
+
   for (const doc of premiumDocs) {
     const src = path.relative(SITE_ROOT, doc.source);
 
@@ -126,8 +141,9 @@ function main() {
     process.exit(2);
   }
 
+  const keyNote = process.env.STATICRYPT_PASSPHRASE ? ' + passphrase absent' : '';
   console.log(
-    `🔒 verify-premium: all ${premiumDocs.length} premium body(ies) absent from build HTML/JS + sidecars present. OK.`,
+    `🔒 verify-premium: all ${premiumDocs.length} premium body(ies) absent from build HTML/JS + sidecars present${keyNote}. OK.`,
   );
   process.exit(0);
 }
