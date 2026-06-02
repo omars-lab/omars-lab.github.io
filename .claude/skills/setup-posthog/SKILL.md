@@ -67,6 +67,32 @@ python3 .claude/skills/manage-cloudflare-access/posthog_stats.py pages --days 7
 > `401 Personal API key … is invalid`. Personal keys start with `phx_` and are
 > created under **Settings → Personal API keys** (different page from the project key).
 
+## Internal-user filtering (keep your own + testers' traffic out of the numbers)
+
+PostHog drops bot UAs but has no native notion of "internal." We tag internal traffic
+two ways and add matching **internal-user filters** in the project so reports exclude it.
+
+**The two signals we emit** (both in `src/posthog.js` / `src/lib/auth.tsx`):
+
+1. **`is_internal` super-property** — set when either holds:
+   - the visitor opted in via **`?internal=1`** (a one-time per-browser marker:
+     `posthog.js` reads it, persists `localStorage.bop_internal=1`, calls
+     `ph.register({is_internal: true})`, then strips `internal` from the URL); or
+   - a signed-in reader's email is on the **internal-tester list**
+     (`src/internal-testers.ts`) — `/api/me` → `identify(email)` →
+     `if (isInternalTester(email)) ph.register({is_internal: true})`.
+2. **`$host`** — PostHog's built-in property; on local dev it's `localhost` / `127.0.0.1`.
+
+**Configure the filters (PostHog UI, project `448205`):**
+Settings → Project → Product analytics → **Internal & test users** → add filters:
+- `Host` (`$host`) **equals** `localhost` **or** `127.0.0.1` — strips dev traffic.
+- `is_internal` **equals** `true` — strips the author + tagged testers.
+
+These are *report* filters (the events are still ingested; they're hidden from insights
+by default). Confirm with `query-posthog`: a tagged event has `properties.is_internal=true`;
+a fresh isolated browser has no such prop. The `?internal=1` convention is the quick
+pre-sign-in layer; the tester-list is the durable post-sign-in layer.
+
 ## Tracking is build-time
 
 `POSTHOG_KEY`/`POSTHOG_HOST` are read by `docusaurus.config.js` during `yarn build`.

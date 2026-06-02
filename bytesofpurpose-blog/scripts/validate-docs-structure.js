@@ -125,6 +125,15 @@ const SEVERITY = {
   // dissolved into per-topic mental-models/ subdirs (topic-first slugs); the old URLs
   // live on via client redirects. New docs must NOT reintroduce a /mental-models/* slug.
   'legacy-namespace': 'warn',
+  // Premium-content gating (see the premium-content-gating design + manage-premium-content
+  // skill). `premium: true` marks a doc whose body is ENCRYPTED at build time and gated
+  // client-side (sign in with LinkedIn → Worker vends the key → in-browser decrypt). These
+  // keep the frontmatter healthy + mutually-sane with `draft`. All warn-tier (advisory) —
+  // the BLOCKING guarantee (no premium plaintext ever ships) is the separate ERROR-tier
+  // deploy gate scripts/verify-premium-encrypted.js, not a lint rule.
+  'premium-type': 'warn',
+  'premium-draft-conflict': 'warn',
+  'premium-needs-teaser': 'warn',
   // Sidebar-label emoji convention — every sidebar section (`_category_.json` label) leads
   // with one emoji so the sidebar scans visually (the topic→emoji map lives in
   // docs/.../emojis.mdx, slug /definitions/emojis-for-activities). All warn-tier (advisory).
@@ -280,6 +289,40 @@ function checkDoc(file) {
   checkDescription(file, data);
   checkBlogTrigger(file, data);
   checkSidebarLabel(file, data);
+  checkPremium(file, data);
+}
+
+// --- per-doc check: premium-content gating frontmatter ------------------
+// `premium: true` marks a doc whose body is encrypted at build time (the encrypt
+// pipeline + the client gate read this exact flag, as does the draft-docs plugin's
+// premiumPermalinks). These rules keep the flag well-formed and mutually-sane with
+// `draft`. See the premium-content-gating design + the manage-premium-content skill.
+function checkPremium(file, data) {
+  if (!('premium' in data)) return; // not a premium doc — nothing to check
+  if (typeof data.premium !== 'boolean') {
+    add('premium-type', rel(file),
+      `premium "${data.premium}" must be a boolean (\`premium: true\` or \`premium: false\`) — the encrypt pipeline + client gate test \`premium === true\``);
+    return;
+  }
+  if (data.premium !== true) return; // premium:false is a no-op (explicitly not gated)
+
+  // A premium doc ships its body ENCRYPTED to prod; a draft doc doesn't ship at all.
+  // Marking a doc BOTH is contradictory — the encrypt step would never see it (drafts
+  // are excluded from the prod build), so it would silently never get gated.
+  if (data.draft === true) {
+    add('premium-draft-conflict', rel(file),
+      'doc is both `premium: true` and `draft: true` — contradictory: drafts are excluded from the production build, so the premium body would never be encrypted/gated. Pick one (publish it as premium, or keep it a draft).');
+  }
+
+  // Anonymous readers see a sneak-peek before the lock. Without a `premium_teaser:`
+  // (or a `description:` to fall back on) the locked page has nothing to show — a bare
+  // lock with no hook. Warn so every premium page has an enticing preview.
+  const teaser = typeof data.premium_teaser === 'string' ? data.premium_teaser.trim() : '';
+  const desc = typeof data.description === 'string' ? data.description.trim() : '';
+  if (!teaser && !desc) {
+    add('premium-needs-teaser', rel(file),
+      'premium doc has no `premium_teaser:` (nor a `description:` to fall back on) — anonymous readers would see a bare lock with no preview. Add a `premium_teaser:` sneak-peek that entices sign-in.');
+  }
 }
 
 // --- per-doc check: sidebar label (filename-leak guard + emoji convention) ---

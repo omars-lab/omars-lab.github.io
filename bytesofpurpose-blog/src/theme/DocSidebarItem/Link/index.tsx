@@ -6,6 +6,7 @@ import Link from '@docusaurus/Link';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';
 import {useIsDraft, DraftBadge} from '../draftBadge';
+import {useIsPremium, LockBadge} from '../lockBadge';
 import styles from './styles.module.css';
 
 // Swizzled (forked) DocSidebarItem/Link — identical to the upstream component
@@ -31,6 +32,7 @@ export default function DocSidebarItemLink({
   const isActive = isActiveSidebarItem(item, activePath);
   const isInternalLink = isInternalUrl(href);
   const isDraft = useIsDraft(href);
+  const isPremium = useIsPremium(href);
   return (
     <li
       className={clsx(
@@ -57,6 +59,7 @@ export default function DocSidebarItemLink({
         {...props}>
         <LinkLabel label={label} />
         {isDraft && <DraftBadge />}
+        {isPremium && <LockBadge />}
         {!isInternalLink && <IconExternalLink />}
       </Link>
     </li>

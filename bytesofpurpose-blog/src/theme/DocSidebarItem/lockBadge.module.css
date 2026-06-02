@@ -1,0 +1,10 @@
+/* "premium" lock badge shown after a sidebar item's label (ships to production). */
+.lockBadge {
+  display: inline-block;
+  flex: none;
+  margin-left: 0.4rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  vertical-align: middle;
+  white-space: nowrap; /* never wrap the lock to its own line beside long labels */
+}

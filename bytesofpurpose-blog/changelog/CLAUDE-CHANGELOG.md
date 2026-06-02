@@ -21,6 +21,29 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering
+<!-- meta: type=feature category=development priority=high component=Site -->
+Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access — so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e. Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).
+
+- Phase A — DebugMenu Links section
+- Phase B — Layered internal-analytics filtering (?internal=1 + tester list)
+- Phase C — Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)
+- Decrypt-crux prototype (StatiCrypt codec, fixed passphrase, no prompt UI)
+- Phase D — PostHog identify() + internal-email filter wired to auth
+- Phase E — Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider
+- Phase F core — encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)
+- M1 — premium-gating-architecture memory
+- S2 — PostHog internal-user filtering docs ($host + is_internal)
+- SignInModal "track interest" button → premium_interest PostHog event
+- Localhost sign-in graceful-degrade (toast instead of dead redirect)
+- Cache-bust premium encryption in deploy (make build-premium + cache gotcha docs)
+- Theme the premium gate + SignInModal to the blog brand
+- Playwright-verify the themed premium surfaces render (brand styling assertions)
+- S4 — author-blog-post: how to mark content premium (hard vs soft gate)
+- S5 — new manage-premium-content skill (editorial policy)
+- Easter egg + honest caveat in the System Design (premium is free via public repo)
+- Phase G — finalize + reconcile the premium-content-gating design doc
+
 ## 2026-06-01 — Blog modernization + regression / a11y / SEO harness
 <!-- meta: type=feature category=development priority=high component=Site -->
 Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.

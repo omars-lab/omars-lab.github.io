@@ -1,0 +1,46 @@
+/* Premium page/section gate: teaser + lock placeholder shown to anonymous readers. */
+
+.gate {
+  margin: 1.5rem 0;
+  padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  /* Brand accent rail on the left so the gate reads as an intentional blog surface. */
+  border-left: 4px solid var(--ifm-color-primary);
+  border-radius: 0.6rem;
+  background: var(--ifm-color-primary-contrast-background);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.gate:hover,
+.gate:focus-visible {
+  border-color: var(--ifm-color-primary);
+  box-shadow: var(--ifm-global-shadow-md);
+  outline: none;
+}
+
+.teaser {
+  margin: 0 0 1rem;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.lockRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+}
+.lockIcon {
+  font-size: 1.15rem;
+}
+.lockLabel {
+  font-size: 0.95rem;
+}
+
+.status {
+  margin: 1.5rem 0;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}

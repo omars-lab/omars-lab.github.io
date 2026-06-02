@@ -66,7 +66,7 @@ export default defineConfig({
       // graph-* specs + the DebugMenu spec. The DebugMenu renders ONLY on the
       // dev server (localhost + non-prod build) — it's stripped from prod — so it
       // must run here against :3000, not the build-backed projects.
-      testMatch: /(graph-.*|debug-menu|draft-sidebar|craft-self-split)\.spec\.ts$/,
+      testMatch: /(graph-.*|debug-menu|draft-sidebar|craft-self-split|navbar-auth)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {
@@ -92,6 +92,15 @@ export default defineConfig({
       name: 'bookmark-proof',
       testMatch: /(bookmark-rewrite-proof|bookmarklet-proof)\.spec\.ts$/,
       use: { baseURL: PROD_BASE },
+    },
+    {
+      // Premium hard-gate proof against an ENCRYPTED production build (:4173). Asserts the
+      // gated body is ciphertext when anonymous (V3) and decrypts when signed in (round-trip).
+      // The build MUST be produced with STATICRYPT_PASSPHRASE=e2e-premium-passphrase (the spec
+      // stubs /api/unlock-key with that value). Run via `make test-premium-e2e`.
+      name: 'premium',
+      testMatch: /premium-gating\.spec\.ts$/,
+      use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
   ],
 

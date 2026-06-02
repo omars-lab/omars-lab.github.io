@@ -9,6 +9,8 @@ import CardImage from '@site/src/components/Card/CardImage';
 import Timeline from '@site/src/components/TimeLine';
 import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
+import PremiumGate from '@site/src/components/PremiumGate';
+import Premium from '@site/src/components/Premium';
 
 export default {
   // Reusing the default mapping
@@ -21,4 +23,8 @@ export default {
   Timeline,
   TimelineItem,
   BookmarkletButton,
+  // Premium gating: <PremiumGate> is injected by the rehype-premium-encrypt plugin in
+  // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
+  PremiumGate,
+  Premium,
 };

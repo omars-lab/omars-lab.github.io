@@ -1,5 +1,6 @@
 import ComponentTypes from '@theme-original/NavbarItem/ComponentTypes';
 import NavbarCoffee from '@site/src/components/NavbarCoffee';
+import AuthNavbarItem from '@site/src/components/AuthNavbarItem';
 
 // Register a custom navbar item type so the "Buy Me a Coffee?" link can be a
 // React component (reads the support-button-copy A/B flag) instead of a static
@@ -13,4 +14,8 @@ import NavbarCoffee from '@site/src/components/NavbarCoffee';
 export default {
   ...ComponentTypes,
   'custom-coffee': NavbarCoffee,
+  // LinkedIn-via-Cloudflare-Access auth control (button ⇆ avatar). Use in
+  // docusaurus.config.js navbar items via { type: 'custom-auth', position:
+  // 'right' } so it renders beside the color-mode toggle.
+  'custom-auth': AuthNavbarItem,
 };

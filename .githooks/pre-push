@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Premium hard-gate guard (V5) + defense-in-depth on push.
+#
+# The PRIMARY enforcement is in the deploy-site flow (step 3b runs
+# verify-premium-encrypted.js after build, before `yarn deploy`). This pre-push hook is a
+# second line of defense: if a built `build/` tree is present at push time, assert that no
+# `premium: true` doc's body shipped in cleartext (HTML or JS) before the push proceeds.
+#
+# It is intentionally a NO-OP when there's no build/ (a normal source push doesn't build,
+# and gh-pages deploy bypasses pre-push anyway) — so it never blocks ordinary pushes.
+# Enable with:  git config core.hooksPath .githooks   (or: make install-hooks)
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+VERIFY="$REPO_ROOT/bytesofpurpose-blog/scripts/verify-premium-encrypted.js"
+BUILD_DIR="$REPO_ROOT/bytesofpurpose-blog/build"
+
+# Only meaningful if both the verifier and a built tree exist.
+[ -f "$VERIFY" ] || exit 0
+[ -d "$BUILD_DIR" ] || exit 0
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "⚠️  node not found — skipping premium-encryption verify (pre-push)."
+  exit 0
+fi
+
+echo "🔒 pre-push: verifying premium content is encrypted in build/ …"
+if ! node "$VERIFY"; then
+  echo
+  echo "❌ PUSH BLOCKED: a \`premium: true\` doc's body is NOT encrypted in build/."
+  echo "   Unencrypted premium content must never ship. Rebuild with STATICRYPT_PASSPHRASE"
+  echo "   set, or remove the stale build/ before pushing. (See the deploy-site skill.)"
+  exit 1
+fi
+echo "✅ premium content verified encrypted."
