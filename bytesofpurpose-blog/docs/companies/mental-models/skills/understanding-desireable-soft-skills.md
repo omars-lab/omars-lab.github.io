@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-skills/soft-skills-interview-evaluation
+slug: /companies/mental-models/skills/soft-skills-interview-evaluation
 title: 'Soft Skills Evaluation'
 description: 'A comprehensive guide to soft skills companies evaluate in interviews, including stakeholder management, dealing with ambiguity, and decision making'
 authors: [oeid]

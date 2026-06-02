@@ -39,11 +39,11 @@ Interview preparation is not just about memorizing answers—it's about developi
 Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
-- [ ] **Read [Interview Process](/docs/mental-models/understanding-processes/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
-- [ ] **Study [SDE Skill Differences](/docs/mental-models/understanding-career-levels/understanding-sde-levels)** - Understand the differences between SDE levels and expectations
-- [ ] **Review [Leadership Principles](/docs/mental-models/understanding-skills/leadership-principles-companies-look-for)** - Master the 10 core leadership principles and what interviewers look for
-- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/technical-skills-interview-evaluation)** - Learn the technical evaluation criteria
-- [ ] **Review [Soft Skills Evaluation](/docs/mental-models/understanding-skills/soft-skills-interview-evaluation)** - Learn the soft skills evaluation criteria
+- [ ] **Read [Interview Process](/docs/interview-prep/mental-models/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
+- [ ] **Study [SDE Skill Differences](/docs/companies/mental-models/career-levels/understanding-sde-levels)** - Understand the differences between SDE levels and expectations
+- [ ] **Review [Leadership Principles](/docs/companies/mental-models/skills/leadership-principles-companies-look-for)** - Master the 10 core leadership principles and what interviewers look for
+- [ ] **Study [Technical Skills Evaluation](/docs/companies/mental-models/skills/technical-skills-interview-evaluation)** - Learn the technical evaluation criteria
+- [ ] **Review [Soft Skills Evaluation](/docs/companies/mental-models/skills/soft-skills-interview-evaluation)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
 - [ ] **Review your [🚀 My Contributions](/docs/personal-growth/my-contributions)** - A portfolio of real impact to ground your interview stories
@@ -53,7 +53,7 @@ Follow this systematic approach to maximize your interview success:
 
 ### Phase 3: Technical Preparation
 - [ ] **Master [Preparing for Coding Questions](/docs/skills/preparing-for-interviews/preparing-for-coding-questions)** - Learn systematic approach to coding problems and algorithms
-- [ ] **Study [Technical Skills Evaluation](/docs/mental-models/understanding-skills/technical-skills-interview-evaluation)** - Understand what companies evaluate in technical interviews
+- [ ] **Study [Technical Skills Evaluation](/docs/companies/mental-models/skills/technical-skills-interview-evaluation)** - Understand what companies evaluate in technical interviews
 - [ ] **Study [Preparing for System Design Questions](/docs/skills/preparing-for-interviews/preparing-for-system-design-questions)** - Learn how to approach architecture and design questions
 
 ### Phase 4: Practice and Refinement

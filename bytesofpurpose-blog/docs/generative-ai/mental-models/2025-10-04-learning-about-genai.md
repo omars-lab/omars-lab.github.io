@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-the-genai-domain/learning-about-genai
+slug: /generative-ai/mental-models/learning-about-genai
 title: '💡 GenAI Learning Guide'
 description: 'A comprehensive learning path for mastering Generative AI, from fundamentals to production systems.'
 authors: [oeid]
@@ -85,7 +85,7 @@ flowchart TD
 
 ### Essential Reading
 
-- **[The Fundamentals of Agentic Systems](/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems)** - Comprehensive glossary covering:
+- **[The Fundamentals of Agentic Systems](/docs/generative-ai/mental-models/understanding-fundamentals-of-genai-systems)** - Comprehensive glossary covering:
   - Foundation Models (LLMs)
   - Prompting techniques
   - RAG (Retrieval-Augmented Generation)
@@ -174,7 +174,7 @@ flowchart TD
 
 ### Framework Comparison
 
-- **[The AI Framework Landscape](/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape)** - Interactive guide covering:
+- **[The AI Framework Landscape](/docs/generative-ai/mental-models/ai-framework-landscape)** - Interactive guide covering:
   - **Frameworks**: LangChain, LangGraph, Haystack, Semantic Kernel
   - **Specialized Libraries**: LlamaIndex, Guidance, Outlines, Instructor
   - **Multi-Agent**: AutoGen, CrewAI
@@ -375,8 +375,8 @@ flowchart TD
 
 ## 🔗 Related Content
 
-- **[Fundamentals Guide](/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems)** - Core concepts glossary
-- **[Framework Landscape](/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape)** - Interactive framework comparison
+- **[Fundamentals Guide](/docs/generative-ai/mental-models/understanding-fundamentals-of-genai-systems)** - Core concepts glossary
+- **[Framework Landscape](/docs/generative-ai/mental-models/ai-framework-landscape)** - Interactive framework comparison
 - **[System Design Guide](/docs/skills/solving-system-design/framework-for-designing-genai-systems)** - Complete design framework
 - **[Local LLMs](/docs/craftsmanship/workspace/running-llms-locally)** - Running LLMs locally
 

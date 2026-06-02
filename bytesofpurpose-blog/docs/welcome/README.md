@@ -94,7 +94,7 @@ The site has four kinds of content — here's what goes where:
 - **[Changelog](/changelog)** — the running history of changes to this site.
 
 For the fuller distinction between the first two, see
-[Docs vs Blog Posts](/blog/docs-vs-blog-posts).
+[Docs vs Blog Posts](/docs/techniques/blogging-techniques/docs-vs-blog-posts).
 
 ## Stay connected
 

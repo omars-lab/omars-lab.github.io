@@ -14,7 +14,7 @@ I attended the AI Engineer World Fair in June 2025. Here are the key insights an
 
 # AI Engineer World Fair 2025
 
-> **Read the full notes → [AI Engineer World Fair 2025](/docs/mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025)**
+> **Read the full notes → [AI Engineer World Fair 2025](/docs/generative-ai/mental-models/ai-engineer-world-fair-2025)**
 
 A few themes stood out across the talks and hallway conversations:
 

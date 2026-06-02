@@ -68,7 +68,7 @@ PH_BASE_URL=http://localhost:4173 yarn playwright test --project=posthog-prod
 - **`graph-title-rendering.spec.ts`** — title rendering, ellipsis-only regression (dev)
 - **`graph-selection-state.spec.ts`** — node/edge selection state via the AI-framework
   doc graph (dev). Targets the **doc** route
-  `/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape`
+  `/docs/generative-ai/mental-models/ai-framework-landscape`
   (NOT `/blog/...` — that was a long-standing wrong path that 404'd).
 - **`posthog-events.spec.ts`** — PostHog init + $pageview/autocapture/scroll (posthog-prod)
 - **`support-ab-test.spec.ts`** — Support-button A/B variant rendering (posthog-prod)

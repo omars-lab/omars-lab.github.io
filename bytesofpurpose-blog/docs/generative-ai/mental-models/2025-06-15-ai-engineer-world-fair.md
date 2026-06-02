@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025
+slug: /generative-ai/mental-models/ai-engineer-world-fair-2025
 title: "🌍 AI Engineer World Fair 2025"
 description: "My experience attending the AI Engineer World Fair in June 2025 - key insights, tools, and trends shaping the future of AI engineering."
 authors: [oeid]

@@ -4,7 +4,11 @@ title: Running LLMs Locally
 description: 'The main platforms and steps for running large language models locally on your own machine, and the trade-offs of each.'
 authors: [oeid]
 tags: [llm, local, ollama, lmstudio]
+date: 2025-09-01T10:00
 draft: false
+blog_trigger: poc
+blog_post: running-llms-locally
+blog_status: drafted
 ---
 
 # Running LLMs Locally

@@ -61,11 +61,28 @@
  *   blog-post-orphan  [warn]  a `/blog/` post links a `/docs/<slug>` whose doc has no
  *                           matching `blog_post:` back-reference — wire the loop closed
  *                           (the doc should point back at its companion post).
+ *   legacy-namespace  [warn]  a doc's slug starts with a retired root namespace (e.g.
+ *                           `/mental-models/`). That cross-cutting namespace was dissolved
+ *                           into per-topic mental-models/ subdirs; new docs must be
+ *                           topic-first (old URLs are preserved via client redirects).
+ *   emoji-prefix-category [warn]  a `_category_.json` `label` (sidebar section) does not start
+ *                           with an emoji. Convention: every sidebar section leads with one
+ *                           emoji so the sidebar scans visually (see the topic→emoji map in
+ *                           docs/.../emojis.mdx, slug /definitions/emojis-for-activities).
+ *   emoji-prefix-doc  [warn]  AGGREGATE — count of docs whose resolved sidebar label
+ *                           (`sidebar_label` || `title`) lacks a leading emoji. Emitted as a
+ *                           single rolled-up finding (most leaf docs have no emoji today, so a
+ *                           per-doc warn would bury the category findings). `--emoji` lists them.
+ *   sidebar-label-missing [warn]  a doc has NEITHER `title` NOR `sidebar_label`, so its sidebar
+ *                           entry falls back to the raw FILENAME. Regression guard (0 today).
  *
  * Usage:
  *   node scripts/validate-docs-structure.js [paths…]   # scan (default: docs/)
  *   node scripts/validate-docs-structure.js --json      # machine-readable findings
  *   node scripts/validate-docs-structure.js --error-only # ERROR-tier only; exit 2 (hook)
+ *   node scripts/validate-docs-structure.js --emoji      # expand emoji-prefix-doc to one
+ *                                                          finding per offending doc (else
+ *                                                          rolled up into a single count)
  *
  * Exit codes: 0 clean · 1 problems found (scan) · 2 ERROR-tier found (--error-only).
  */
@@ -102,7 +119,25 @@ const SEVERITY = {
   'blog-trigger-vocab': 'warn',
   'blog-post-exists': 'warn',
   'blog-post-orphan': 'warn',
+  // Retired URL namespace. The cross-cutting /mental-models/* root slug namespace was
+  // dissolved into per-topic mental-models/ subdirs (topic-first slugs); the old URLs
+  // live on via client redirects. New docs must NOT reintroduce a /mental-models/* slug.
+  'legacy-namespace': 'warn',
+  // Sidebar-label emoji convention — every sidebar section (`_category_.json` label) leads
+  // with one emoji so the sidebar scans visually (the topic→emoji map lives in
+  // docs/.../emojis.mdx, slug /definitions/emojis-for-activities). All warn-tier (advisory).
+  // emoji-prefix-doc is AGGREGATED into one finding by default (most leaf docs lack emoji);
+  // `--emoji` expands it per-doc. sidebar-label-missing guards against a doc with no
+  // title/sidebar_label falling back to its raw filename in the sidebar.
+  'emoji-prefix-category': 'warn',
+  'emoji-prefix-doc': 'warn',
+  'sidebar-label-missing': 'warn',
 };
+
+// Retired root slug namespaces. A slug starting with any of these is a leftover from a
+// dissolved cross-cutting namespace — new docs must be topic-first. (mental-models/* was
+// dissolved into per-topic mental-models/ subdirs; old URLs preserved via redirects.)
+const LEGACY_SLUG_PREFIXES = ['/mental-models/'];
 
 // Controlled vocabulary for the `blog_trigger:` frontmatter key. The blog-post-triggers
 // doc (docs/blogging/blog-post-triggers.mdx) is the source of truth for this taxonomy —
@@ -120,6 +155,37 @@ const FRAMING_RE = /-techniques$|-craftsmanship$|^definitions$/;
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const isDoc = (n) => /\.mdx?$/.test(n);
 const isReadme = (n) => /^README\.mdx?$/.test(n);
+
+// Does a label LEAD with an emoji? Used for the sidebar-label emoji convention. We skip a
+// leading variation selector (U+FE0E/U+FE0F) — rare but harmless — then test the first real
+// code point against the common emoji ranges: Misc-Symbols/Dingbats/arrows (U+2190–U+2BFF),
+// the dingbat block (U+2600–U+27BF, subset of the prior range but kept explicit), the
+// standalone star/sparkle (U+2B50/U+2728), and the full SMP emoji planes (>= U+1F000).
+// NOTE: keep this in lockstep with the inline check in validate-docs-structure-hook.sh.
+function startsWithEmoji(str) {
+  if (!str) return false;
+  let s = String(str).trim();
+  if (!s) return false;
+  let cp = s.codePointAt(0);
+  if (cp === 0xfe0e || cp === 0xfe0f) {
+    // leading variation selector — look at the next code point
+    s = s.slice(s.codePointAt(0) > 0xffff ? 2 : 1);
+    cp = s.codePointAt(0);
+    if (cp === undefined) return false;
+  }
+  return (
+    cp >= 0x1f000 ||
+    (cp >= 0x2190 && cp <= 0x2bff) ||
+    (cp >= 0x2600 && cp <= 0x27bf) ||
+    cp === 0x2b50 ||
+    cp === 0x2728
+  );
+}
+
+// Docs whose resolved sidebar label (`sidebar_label` || `title`) lacks a leading emoji.
+// Collected during the walk, then rolled up into ONE `emoji-prefix-doc` finding (or expanded
+// per-doc under --emoji). Module-level so checkDoc can push without threading state.
+const docsMissingEmoji = [];
 
 const findings = [];
 const add = (kind, loc, detail) =>
@@ -190,9 +256,35 @@ function checkDoc(file) {
   if (typeof data.slug !== 'string' || !data.slug.startsWith('/')) {
     add('absolute-slug', rel(file),
       `slug "${data.slug}" is relative — make it absolute (\`slug: /…\`) so the URL is pinned to a value, not the folder path`);
+  } else {
+    const legacy = LEGACY_SLUG_PREFIXES.find((p) => data.slug.startsWith(p));
+    if (legacy) {
+      add('legacy-namespace', rel(file),
+        `slug "${data.slug}" uses the retired "${legacy}" namespace — that cross-cutting namespace was dissolved into per-topic mental-models/ subdirs; use a topic-first slug (the old URLs are preserved via client redirects)`);
+    }
   }
   checkDescription(file, data);
   checkBlogTrigger(file, data);
+  checkSidebarLabel(file, data);
+}
+
+// --- per-doc check: sidebar label (filename-leak guard + emoji convention) ---
+// The sidebar entry's text resolves to `sidebar_label` || `title`; with NEITHER, Docusaurus
+// falls back to the raw doc-id (filename) — the `habits-mastering`-as-label symptom. We also
+// collect docs whose resolved label lacks a leading emoji (rolled up later — see
+// docsMissingEmoji / emoji-prefix-doc).
+function checkSidebarLabel(file, data) {
+  const sidebar = typeof data.sidebar_label === 'string' ? data.sidebar_label.trim() : '';
+  const title = typeof data.title === 'string' ? data.title.trim() : '';
+  const label = sidebar || title;
+  if (!label) {
+    add('sidebar-label-missing', rel(file),
+      'doc has neither `title:` nor `sidebar_label:` — its sidebar entry falls back to the raw filename; add a `title:` (or `sidebar_label:`)');
+    return;
+  }
+  if (!startsWithEmoji(label)) {
+    docsMissingEmoji.push({ loc: rel(file), label });
+  }
 }
 
 // --- per-doc check: blog↔doc trigger convention -------------------------
@@ -293,7 +385,7 @@ function walkDir(dir, depthFromTopic, topicName) {
       if (hasCategory(full) && !hasDocsDeep(full)) {
         add('orphan-cat', rel(full), '_category_.json in a folder with no docs and no docs-bearing descendants (orphan)');
       }
-      // terminology-first / prompts-last position conventions
+      // terminology-first / prompts-last position conventions + emoji-prefix on the label
       if (hasCategory(full)) {
         const base = e.name.replace(/^\d+-/, '');
         const cat = readCategory(full);
@@ -304,6 +396,7 @@ function walkDir(dir, depthFromTopic, topicName) {
         if (base === 'prompts' && pos !== null && pos < 5) {
           add('prompts-last', rel(full), `prompts/ has position ${pos} — convention sorts it LAST (high position)`);
         }
+        checkCategoryEmoji(full, cat);
       }
     }
 

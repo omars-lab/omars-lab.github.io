@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-the-genai-domain/ai-framework-landscape
+slug: /generative-ai/mental-models/ai-framework-landscape
 title: '🗺️ The AI Framework Landscape'
 description: 'An interactive tour of AI frameworks, tools, and platforms — comparing features and use cases to help you choose the right one.'
 authors: [oeid]

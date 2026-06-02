@@ -21,9 +21,9 @@ on roles and skills.
 
 Expectations scale with level — scope, autonomy, and influence all increase. Start here:
 
-- [Understanding SDE Levels](/docs/mental-models/understanding-career-levels/understanding-sde-levels)
+- [Understanding SDE Levels](/docs/companies/mental-models/career-levels/understanding-sde-levels)
   — how competency requirements differ across engineer levels.
-- [Staff Engineer Traits](/docs/mental-models/understanding-career-levels/staff-engineer-traits)
+- [Staff Engineer Traits](/docs/companies/mental-models/career-levels/staff-engineer-traits)
   — what "senior+" looks like in practice.
 
 ## Know the skills they evaluate
@@ -31,11 +31,11 @@ Expectations scale with level — scope, autonomy, and influence all increase. S
 Across levels, companies assess a recurring set of skills. Map your stories and
 preparation to these:
 
-- [Leadership Principles Companies Look For](/docs/mental-models/understanding-skills/leadership-principles-companies-look-for)
+- [Leadership Principles Companies Look For](/docs/companies/mental-models/skills/leadership-principles-companies-look-for)
   — the behavioral bar and how to demonstrate it.
-- [Technical Skills Evaluation](/docs/mental-models/understanding-skills/technical-skills-interview-evaluation)
+- [Technical Skills Evaluation](/docs/companies/mental-models/skills/technical-skills-interview-evaluation)
   — the technical criteria interviewers score against.
-- [Soft Skills Evaluation](/docs/mental-models/understanding-skills/soft-skills-interview-evaluation)
+- [Soft Skills Evaluation](/docs/companies/mental-models/skills/soft-skills-interview-evaluation)
   — communication, collaboration, and judgment under ambiguity.
 
 ## Then prepare deliberately
