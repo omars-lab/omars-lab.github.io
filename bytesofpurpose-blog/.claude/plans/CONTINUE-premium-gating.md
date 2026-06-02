@@ -1,138 +1,91 @@
-# Continuation prompt — Premium gating + auth (resume in a fresh session)
+# CONTINUE — premium-gating: dev/prod parity + go-live (resume in a fresh session)
 
-Paste the block below as the first message of a new Claude Code session. It is
-self-contained: it points at the binding docs, states exactly what's DONE vs OPEN, and
-lists every open task with its dependencies.
+**Last updated 2026-06-02.** Read this first, then `delightful-giggling-scroll.md`
+(full plan + STATUS block) and the memory `premium-gating-architecture.md`. Recreate the
+task list (the live list is per-session) from the OPEN TASKS below.
 
----
+## Where we are
 
-Continue implementing the approved plan at
-`bytesofpurpose-blog/.claude/plans/delightful-giggling-scroll.md`.
+The premium-gating feature is **code-complete and committed** to branch
+`feat/premium-content-gating` (commit `d874e9a9`, NOT pushed). It is **verified locally**
+(premium e2e 2/2, navbar 2/2, Worker JWT 7/7, V5 clean on a cache-busted encrypted build,
+383 MDX compile, validate-structure 0 errors, validate-links clean) but **not live**.
 
-START by reading, in full:
-1. `CLAUDE.md` (repo root) — operating conventions are BINDING (track work as tasks;
-   archive ≥10 completed tasks to the changelog then delete; "info goes in the proper
-   skill"; "structure decisions update the structure checks" in the SAME change).
-2. `bytesofpurpose-blog/.claude/plans/delightful-giggling-scroll.md` — read the "⏱ STATUS"
-   block at the top FIRST, especially the "⚙️ Phase F progress" + "⚠️ CACHE GOTCHA" blocks.
-3. The memory `premium-gating-architecture.md` (in the auto-memory dir) — the architecture
-   + the proven crux finding (encrypt at MDX-compile, not post-build).
+Since the commit, the user changed the dev/prod design. The conflicting half-edits were
+reverted — the working tree only has the design-doc update pending (commit it). The new
+direction is documented but **NOT yet implemented**:
 
-Then recreate the task list with TaskCreate (the live list is per-session). Create COMPLETED
-tasks for the done work and PENDING tasks (with deps) for what's left — see both lists below.
+### NEW DECISIONS (user-confirmed 2026-06-02) — implement these
 
-## What is DONE & PROVEN (do NOT redo — verify by reading the files)
-- **Phase A/B/C, decrypt-crux, S1** — from prior sessions (see plan STATUS).
-- **Phase D** — `/api/me` → `identify()` + internal-tester filter in `src/posthog.js`
-  (localhost 200+HTML → `r.json()` throws → `.catch` no-ops; verified live, 0 console errors).
-- **Phase E (+V4)** — `src/lib/auth.tsx` (`AuthProvider`/`useAuth`/`signIn`/`signOut`/
-  `fetchUnlockKey`, one shared `/api/me` in `Root.tsx`); `src/components/AuthNavbarItem`
-  (button⇆avatar); `'custom-auth'` navbar item position:right. e2e
-  `test/e2e/navbar-auth.spec.ts` 2/2 (dev project). Verified live.
-- **M1** — memory `premium-gating-architecture.md` + MEMORY.md pointer.
-- **Phase F core (the hard gate) — PROVEN:**
-  - `plugins/rehype-premium-encrypt.js` — encrypts `premium:true` body HTML at the rehype
-    stage → `static/premium/<id>.json`; replaces body with `<PremiumGate payload teaser/>`;
-    preserves top-level `mdxjsEsm` nodes. No-ops without `STATICRYPT_PASSPHRASE` (dev).
-  - `src/lib/premium-crypto.ts` — pure-WebCrypto decrypt, byte-compatible with staticrypt's
-    `encode()` (proven). (Client must NOT import staticrypt's engine → it `require`s
-    `node:crypto`, unbundlable.)
-  - `src/components/PremiumGate` (fetch key+payload → decrypt → inject), `src/components/
-    Premium` (inline SOFT-gate blur), both in `src/theme/MDXComponents.tsx`;
-    `src/components/SignInModal` (+ host in `Root.tsx`); sidebar `LockBadge`
-    (`src/theme/DocSidebarItem/lockBadge.tsx`, prod-visible) wired into `…/Link/index.tsx`.
-  - **V1+V2+hook lockstep:** `scripts/validate-docs-structure.js` premium-type/
-    premium-draft-conflict/premium-needs-teaser; `plugins/draft-docs/index.js`
-    `premiumPermalinks`; `.claude/hooks/validate-docs-structure-hook.sh` premium advisory.
-    Verified with fixtures.
-  - **V5 blocking gate** `scripts/verify-premium-encrypted.js` — greps WHOLE build (HTML+JS+
-    JSON) for each premium doc's body fingerprints (must be absent) + sidecar ciphertext.
-    PROVEN to catch an injected leak (exit 2) + pass clean (exit 0). Wired: deploy-site
-    step 3b, `.githooks/pre-push`, `make verify-premium`. Shared enum: `scripts/lib/
-    premium-docs.js` (payloadId in lockstep with the plugin).
-  - **e2e** `test/e2e/premium-gating.spec.ts` + `premium` Playwright project +
-    `make test-premium-e2e`: **2/2 PASS** — anonymous body absent from HTML+all JS chunks
-    (V3); signed-in decrypt round-trip works against the real encrypted build.
-  - **S3** deploy-site skill updated (STATICRYPT_PASSPHRASE env, V5 gate, token scope).
-  - Demo fixture `docs/craft/premium-gating-demo.mdx` (sentinels PREMIUMSENTINELBODY/CODE).
-  - HARD-GATE PROVEN on a clean cache-cleared build: sentinel in neither HTML nor JS.
+1. **Dev must behave like prod for premium.** `yarn start` should ENCRYPT premium bodies
+   (ciphertext in dev source too) so the gate looks identical locally.
+2. **Dev pulls the unlock key from the REAL Worker** — NOT a dev-only key, NO client
+   fallback. Mechanism: a **Docusaurus dev-server proxy** forwarding `localhost/api/*` →
+   `https://blog.bytesofpurpose.com/api/*`, carrying the reader's real Access cookie
+   (sign in once on the domain). Client keeps using relative `/api/*`.
+3. **Both dev + prod `STATICRYPT_PASSPHRASE` live in the gitignored `.env`** — never a
+   hardcoded constant.
+4. **Remove the localhost toast / `isApiUnreachable` short-circuit** in `src/lib/auth.tsx`
+   (it was the #17 work) — no longer needed once `/api/*` works in dev via the proxy.
+   `signIn()` goes back to navigating to the Access login path unconditionally.
+5. Captured in the design doc (`designs/2026-06-02-premium-content-gating.mdx` → new
+   "Dev/prod parity" section + corrected localhost FAQ + reworded prod/dev bullet). This is
+   the pending working-tree change — commit it.
 
-## Ground rules / gotchas to respect
-- **Repo is PUBLIC + gitleaks hook.** Never commit secrets (`STATICRYPT_PASSPHRASE`,
-  `PREMIUM_PASSPHRASE`, LinkedIn secret) — CF / Worker secrets / gitignored `.env` only.
-  Don't commit or push unless asked; branch off master first.
-- **CACHE GOTCHA (dangerous):** `node_modules/.cache` + `.docusaurus` can serve a premium
-  doc's STALE compiled output so the rehype plugin doesn't re-run → no sidecar → V5 aborts
-  (good) but a naive build looks done while it would ship plaintext. Always clear
-  `node_modules/.cache` before an encrypted build (`make test-premium-e2e` already does;
-  deploy-site must too — task #18).
-- **Verification discipline:** prove every claim with a runnable test/output. The hard-gate
-  proof is `make test-premium-e2e` (2/2) + `make verify-premium` after a built `STATICRYPT_
-  PASSPHRASE=…` build. Clear caches before declaring bundle-cleanliness.
-- A live dev `yarn start` (:3000) hot-reloads; config/plugin changes need a RESTART. In dev
-  `STATICRYPT_PASSPHRASE` is unset so premium bodies render in clear (authoring) — that's
-  correct; the gate is a prod concern.
+## OPEN TASKS (recreate with these subjects + deps)
 
-## OPEN tasks (recreate with these subjects + deps)
-Pending, no deps (can start immediately):
-- **S2 — PostHog internal-filter docs (with B0):** `setup-posthog` skill: `$host`
-  (localhost/127.0.0.1) + `is_internal` internal-user filters; `?internal=1` convention.
+**Implementation (mine, in order):**
+- **#25 Dev encrypts (key from .env):** Makefile `start` target must extract
+  `STATICRYPT_PASSPHRASE` from `.env` (per-var `xenv` pattern — same as `make test-posthog`
+  / the `build-premium` deploy flow) and export it for `yarn start`. Do NOT hardcode.
+- **#26 Dev `/api/*` proxy → real Worker:** add the dev-server proxy. VERIFY the exact
+  Docusaurus-3 mechanism — likely a tiny local plugin returning
+  `{ configureWebpack: () => ({ devServer: { proxy: [{ context:['/api'],
+  target:'https://blog.bytesofpurpose.com', changeOrigin:true, secure:true }] } }) }`.
+  Watch httpOnly + domain-scoped + SameSite cookie forwarding — it may NOT forward the
+  Access cookie cross-origin; if it doesn't, STOP and ask the user how to auth dev (a CF
+  Access *service token* was offered and NOT chosen, so re-confirm). PROVE the unlock works
+  end-to-end. Then REVERT the localhost toast in `auth.tsx`. **Blocked by #21** (Worker must
+  be deployed for the proxy to reach anything).
+- **#27 Verify dev==prod:** dev `yarn start` shows the encrypted gate (sentinel absent from
+  dev page source); dev unlock via the proxy works after a domain sign-in; grep proves no
+  dev-only key exists anywhere. Extend the e2e if feasible. **Blocked by #25, #26, #21.**
+- **#28 (DONE, pending commit):** design-doc parity decisions captured.
+- **#23 Deploy:** run `deploy-site` → `make build-premium` (cache-bust + encrypt + V5
+  blocking gate) → `make deploy` (gh-pages) → `validate-deployment`. **Blocked by #20.**
+- **#24 (optional):** un-draft `designs/2026-06-02-premium-content-gating.mdx`.
 
-Pending, BLOCKED BY Phase-F-finalize (do these as the remaining F work, then unblock):
-- **#16 (USER) SignInModal "track interest" button → PostHog:** add a button on the modal
-  (shown when a locked/sneak-peek surface is pressed) to register interest in making this
-  content public; fires `posthog.capture('premium_interest', {path, what})`; document it in
-  `src/posthog-integration-plan.md`. Distinct from the LinkedIn sign-in CTA.
-- **#17 (USER) localhost sign-in graceful-degrade:** clicking "Sign in" on :3000 navigates
-  to `/api/me?redirect_url=…` which 404s (no Worker in dev). `signIn()` should detect
-  localhost / no-`/api/*` and show a toast/note instead of a dead nav. Applies to
-  `AuthNavbarItem` + `SignInModal`.
-- **#18 (USER) cache-bust premium encryption:** clear `node_modules/.cache` in deploy-site
-  (and confirm in test-premium-e2e — done); consider a companion `postBuild` plugin that
-  copies `static/premium`→`build/premium` AND hard-fails if a premium doc lacks a sidecar;
-  document the cache gotcha in the deploy-site skill + premium memory.
-- **#15 (USER) theme the premium gate + SignInModal to feel part of the blog:** branded
-  fonts/colors/voice; align with `review-reader-experience`. NB the arch uses NO staticrypt
-  password page (Worker vends the key machine-to-machine) — the reader-facing surfaces are
-  `PremiumGate` + `SignInModal`. Theme staticrypt `password_template.html` only if a no-JS
-  fallback is later wanted. (Clarify which surface the user means if ambiguous.)
-- **S4 + S5 skills:** S4 `author-blog-post` — how to mark a doc `premium` (+ `premium_teaser`),
-  soft `<Premium>` vs hard whole-doc gate. S5 NEW skill `manage-premium-content` — the
-  editorial POLICY (what's premium vs free vs draft; teaser selection; tiering checklist;
-  composes with `draft`); cross-link V1/V5.
+**USER-OWED — go-live blockers (call out, do NOT attempt):**
+- **#19** Add `Workers Scripts: Edit` + `Workers Routes: Edit` to `CF_API_TOKEN`.
+- **#20** Put a REAL `STATICRYPT_PASSPHRASE` in gitignored `.env` (MUST equal the Worker
+  secret).
+- **#21** `cd workers/access-gate && npx wrangler secret put PREMIUM_PASSPHRASE` (== #20)
+  `&& npx wrangler deploy`. **Until done, `/api/unlock-key` 404s — so the dev proxy (#26)
+  AND prod both have nothing to vend.** Blocked by #19 + #20.
 
-Pending, BLOCKED BY Phase F complete:
-- **#14 (USER) easter-egg in the System Design** (`designs/2026-06-02-premium-content-
-  gating.mdx`): white-on-white text revealing premium content is free via the public GitHub
-  repo (source MDX is public; only the BUILT site encrypts). Honest + playful. Also document
-  the HONEST CAVEAT: the hard-gate protects the deployed site, not the source.
-- **#11 Phase G finalize** the design doc after F settles; reconcile against the shipped
-  implementation; final `make validate-structure` / `make validate-links`.
+Dep summary: #26←#21 · #27←#25,#26,#21 · #21←#19,#20 · #23←#20.
 
-## Build order from here
-1. Finish the user-requested F polish: #16 (interest button), #17 (localhost degrade),
-   #18 (cache-bust deploy), #15 (theme gate/modal). Re-run `make test-premium-e2e` (keep
-   2/2) + `make verify-premium` after each.
-2. S4 + S5 skills; S2 PostHog docs.
-3. Phase G finalize incl. the #14 easter egg + honest caveat.
-4. When ≥10 completed tasks accumulate, archive to `bytesofpurpose-blog/changelog/
-   CLAUDE-CHANGELOG.md`, run `node bytesofpurpose-blog/scripts/generate-changelog-data.js`,
-   then delete them (per CLAUDE.md).
+## Gotchas to respect
 
-## Manual steps the USER owes (call out, don't attempt) — only these block go-live
-- Add `Workers Scripts: Edit` + `Workers Routes: Edit` to `CF_API_TOKEN`.
-- `cd workers/access-gate && npx wrangler secret put PREMIUM_PASSPHRASE` (MUST equal the
-  `STATICRYPT_PASSPHRASE` used at build) `&& npx wrangler deploy`.
+- Repo PUBLIC + gitleaks pre-commit/pre-push. `.env` is the ONLY home for
+  `STATICRYPT_PASSPHRASE`. Branch off master; commit/push only when asked.
+- **CACHE GOTCHA:** clear `node_modules/.cache` + `.docusaurus` before any encrypted build
+  (`make build-premium` + `make test-premium-e2e` already do).
+- Dev server hot-reloads source but NOT config/plugin changes → the proxy plugin needs a
+  RESTART.
+- Verification discipline: prove every claim with a runnable test/output (repo tenet).
+- CLAUDE.md conventions are BINDING: track work as tasks; archive ≥10 completed to the
+  changelog then delete; info goes in the proper skill; structure decisions update the
+  structure checks in the SAME change.
 
-## Uncommitted state at handoff
-Many new/modified files (none committed — awaiting user). New: `src/lib/auth.tsx`,
-`src/lib/premium-crypto.ts`, `src/components/{AuthNavbarItem,SignInModal,PremiumGate,
-Premium}`, `src/theme/DocSidebarItem/lockBadge.*`, `plugins/rehype-premium-encrypt.js`,
-`scripts/lib/premium-docs.js`, `scripts/verify-premium-encrypted.js`,
-`test/e2e/{navbar-auth,premium-gating}.spec.ts`, `.githooks/pre-push`,
-`docs/craft/premium-gating-demo.mdx`. Modified: `posthog.js`, `Root.tsx`,
-`MDXComponents.tsx`, `NavbarItem/ComponentTypes.tsx`, `DocSidebarItem/Link/index.tsx`,
-`docusaurus.config.js`, `playwright.config.ts`, `Makefile`, `validate-docs-structure.js`
-(+ hook), `draft-docs/index.js`, `deploy-site/SKILL.md`. staticrypt + hast-util-to-html
-added as devDeps. Leftover: `build/`, `static/premium/` from the last e2e build (gitignored
-or removable).
+## Proof commands
+
+- `make test-premium-e2e` → expect 2/2 (hard-gate ciphertext-absence + decrypt round-trip
+  + theming assertions).
+- `STATICRYPT_PASSPHRASE=… make build-premium` → V5 "all premium body(ies) absent… OK".
+- `make validate-structure` (0 errors) · `make validate-links` · `npx docusaurus-mdx-checker`.
+
+## Current branch / commit
+
+`feat/premium-content-gating` @ `d874e9a9` (54 files, gitleaks-clean, NOT pushed).
+Pending working-tree change: the design-doc dev/prod-parity edits (#28) — commit them.
