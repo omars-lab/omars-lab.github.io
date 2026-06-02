@@ -169,6 +169,18 @@ experiments/ initiatives/ projects/
 roadmaps/`. Rule of thumb: *what to build & why* → Product Management; *what I built &
 how* → Software Development.
 
+**`mental-models/` is a PER-TOPIC subdir, not a root namespace** (warn-validated by the
+`legacy-namespace` check). A topic's "how to think about X" content lives in a
+`mental-models/` subdir *under that topic* with a topic-first slug —
+`interview-prep/mental-models/…`, `companies/mental-models/{career-levels,skills,cultural-values}/…`,
+`generative-ai/mental-models/…`. It is NOT a cross-cutting `/mental-models/*` root URL
+namespace: that earlier shape was an orphan URL tree (a folder organized by topic, a URL
+tree organized by a "understanding-X" lens) with no landing page to climb to. The
+`/mental-models/*` URLs were dissolved into the per-topic subdirs and the old URLs are
+preserved via `@docusaurus/plugin-client-redirects` (the redirect list lives in
+`docusaurus.config.js`; keep it in lockstep with any future slug move). The
+`legacy-namespace` rule warns if any NEW doc reintroduces a `/mental-models/*` slug.
+
 **Idea↔execution mapping convention** (warn-validated by the `idea-exec-link` check): a
 Product Management idea/initiative doc links to its built artifact(s) under an
 `## Execution` section (absolute `/development/…` links); the Software Development

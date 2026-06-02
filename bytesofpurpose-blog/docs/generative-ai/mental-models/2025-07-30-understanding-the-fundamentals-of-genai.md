@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems
+slug: /generative-ai/mental-models/understanding-fundamentals-of-genai-systems
 title: '🤖 The Fundamentals of Agentic Systems'
 sidebar_label: '🤖 Agentic Systems'
 description: 'A comprehensive glossary of GenAI concepts with practical definitions and key differences between commonly confused components.'

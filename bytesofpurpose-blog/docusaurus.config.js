@@ -206,6 +206,42 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/changelog/',
         },
       ],
+      // Preserve old URLs after the mental-models IA migration. The cross-cutting
+      // /mental-models/* slug namespace was dissolved into per-topic mental-models/
+      // subdirs; docs are served under the /docs route prefix, so the live old URLs
+      // are /docs/mental-models/... — redirect each to its new topic-first slug. Also
+      // redirects the Docs-vs-Blogs post that moved from /blog/ into the blogging docs.
+      // (Keep this list in lockstep with the slug edits; the legacy-namespace validator
+      // rule prevents NEW /mental-models/* slugs from reappearing.)
+      [
+        '@docusaurus/plugin-client-redirects',
+        {
+          redirects: [
+            // A. interview-prep — DS&A + process
+            {from: '/docs/mental-models/understanding-data-structs-and-algos/understanding-trees', to: '/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-trees'},
+            {from: '/docs/mental-models/understanding-data-structs-and-algos/understanding-graphs', to: '/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-graphs'},
+            {from: '/docs/mental-models/understanding-data-structs-and-algos/understanding-heaps', to: '/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-heaps'},
+            {from: '/docs/mental-models/understanding-data-structs-and-algos/understanding-lists', to: '/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-lists'},
+            {from: '/docs/mental-models/understanding-data-structs-and-algos/understanding-dynamic-programming', to: '/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-dynamic-programming'},
+            {from: '/docs/mental-models/understanding-processes/understanding-the-interview-process', to: '/docs/interview-prep/mental-models/understanding-the-interview-process'},
+            // B. companies — career-levels / skills / cultural-values
+            {from: '/docs/mental-models/understanding-career-levels/staff-engineer-traits', to: '/docs/companies/mental-models/career-levels/staff-engineer-traits'},
+            {from: '/docs/mental-models/understanding-career-levels/understanding-sde-levels', to: '/docs/companies/mental-models/career-levels/understanding-sde-levels'},
+            {from: '/docs/mental-models/understanding-skills/leadership-principles-companies-look-for', to: '/docs/companies/mental-models/skills/leadership-principles-companies-look-for'},
+            {from: '/docs/mental-models/understanding-skills/technical-skills-interview-evaluation', to: '/docs/companies/mental-models/skills/technical-skills-interview-evaluation'},
+            {from: '/docs/mental-models/understanding-skills/soft-skills-interview-evaluation', to: '/docs/companies/mental-models/skills/soft-skills-interview-evaluation'},
+            {from: '/docs/mental-models/understanding-cultural-values/understanding-tech-company-culture', to: '/docs/companies/mental-models/cultural-values/understanding-tech-company-culture'},
+            {from: '/docs/mental-models/understanding-cultural-values/understanding-zapier-values', to: '/docs/companies/mental-models/cultural-values/understanding-zapier-values'},
+            // C. generative-ai — fundamentals → mental-models
+            {from: '/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems', to: '/docs/generative-ai/mental-models/understanding-fundamentals-of-genai-systems'},
+            {from: '/docs/mental-models/understanding-the-genai-domain/ai-engineer-world-fair-2025', to: '/docs/generative-ai/mental-models/ai-engineer-world-fair-2025'},
+            {from: '/docs/mental-models/understanding-the-genai-domain/learning-about-genai', to: '/docs/generative-ai/mental-models/learning-about-genai'},
+            {from: '/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape', to: '/docs/generative-ai/mental-models/ai-framework-landscape'},
+            // D. Docs-vs-Blogs post → blogging docs
+            {from: '/blog/docs-vs-blog-posts', to: '/docs/techniques/blogging-techniques/docs-vs-blog-posts'},
+          ],
+        },
+      ],
     ],
 
     themes: [

@@ -1,5 +1,5 @@
 ---
-slug: /mental-models/understanding-cultural-values/understanding-tech-company-culture
+slug: /companies/mental-models/cultural-values/understanding-tech-company-culture
 title: "🏢 Company Culture"
 description: 'How company size and structure shape cultural values across tech — from remote teams like Zapier to giants like Meta and Amazon.'
 authors: [oeid]
