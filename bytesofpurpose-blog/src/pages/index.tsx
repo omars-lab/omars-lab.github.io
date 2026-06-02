@@ -15,16 +15,30 @@ function HomepageHeader() {
       <div className="container">
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link className="button button--primary button--lg" to="/blog">
-            Read the blog
+        {/* Two-journey chooser (folded in from the old /welcome page): Craft is
+            outrospective (the outward work, shared); Self is introspective (the
+            inward journey). Pick a journey, or skim the blog below the link. */}
+        <div className={styles.chooser}>
+          <Link className={styles.chooserCard} to="/craft">
+            <div className={styles.chooserCardTitle}>🛠️ Discover my world</div>
+            <p className={styles.chooserCardBody}>
+              What I learned on the journey to master my craft — generative AI,
+              software, product, productivity, and more. The outward work, shared.
+            </p>
           </Link>
-          <Link
-            className="button button--secondary button--lg"
-            to="/welcome">
-            Browse the docs
+          <Link className={styles.chooserCard} to="/self">
+            <div className={styles.chooserCardTitle}>
+              🪞 Observe what I discovered about myself
+            </div>
+            <p className={styles.chooserCardBody}>
+              The inward journey to fulfill my full potential — faith and personal
+              growth. Mostly for me, kept public in case it helps you.
+            </p>
           </Link>
         </div>
+        <p className={styles.secondaryLinks}>
+          Or skim the <Link to="/blog">latest blog posts</Link> for recent thinking.
+        </p>
       </div>
     </header>
   );

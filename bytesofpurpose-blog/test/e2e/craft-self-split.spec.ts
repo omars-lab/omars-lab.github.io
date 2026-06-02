@@ -48,7 +48,7 @@ async function sidebarLabels(page: Page): Promise<string[]> {
 
 test.describe('Craft/Self — navbar', () => {
   test('navbar shows Craft and Self (and not the old "Learn")', async ({ page }) => {
-    await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     const navbar = page.locator('.navbar');
     await expect(navbar.getByRole('link', { name: 'Craft', exact: true })).toBeVisible();
     await expect(navbar.getByRole('link', { name: 'Self', exact: true })).toBeVisible();
@@ -111,11 +111,16 @@ test.describe('Craft/Self — distinct section welcomes', () => {
   });
 });
 
-test.describe('Craft/Self — Welcome chooser', () => {
-  test('Welcome links into BOTH halves', async ({ page }) => {
-    await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
-    const main = page.locator('main');
-    await expect(main.locator('a[href$="/craft"]').first()).toBeVisible();
-    await expect(main.locator('a[href$="/self"]').first()).toBeVisible();
+test.describe('Homepage chooser', () => {
+  test('homepage links into BOTH halves (Craft + Self)', async ({ page }) => {
+    // The /welcome chooser was folded into the homepage hero; /welcome now → /.
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('a[href$="/craft"]').first()).toBeVisible();
+    await expect(page.locator('a[href$="/self"]').first()).toBeVisible();
   });
+
+  // NOTE: /welcome → / is a client redirect from @docusaurus/plugin-client-redirects,
+  // which only emits stubs in a PRODUCTION build (not `yarn start`). So we don't assert
+  // it in the dev project — it's verified at build time (build/welcome/index.html →
+  // meta-refresh url=/). See the e2e README "verification mechanics".
 });
