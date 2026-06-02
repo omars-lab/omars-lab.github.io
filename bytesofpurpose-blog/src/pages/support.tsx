@@ -85,7 +85,7 @@ export default function SupportPage(): React.JSX.Element {
       description="Ways to support my work — visit my Shopify store, follow on GitHub or LinkedIn, or buy me a coffee."
       noFooter={false}
     >
-      <div className="container margin-vert--lg">
+      <div className={`container margin-vert--lg ${styles.page}`}>
         <div className={styles.hero}>
           <img
             className={styles.headshot}
