@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/my-genai-workflow/2025-09-30-my-personal-mcp-setup
+slug: /generative-ai/my-genai-workflow/2025-09-30-my-personal-mcp-setup
 title: "🔧 My Personal MCP Setup"
 description: "A detailed look at my custom Model Context Protocol (MCP) server configuration, tools, and workflow for enhanced AI productivity."
 authors: [oeid, cursor]

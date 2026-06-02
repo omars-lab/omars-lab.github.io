@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/experiments
+slug: /product-management/experiments
 title: 'Experiments'
 description: 'Structured experiments using scientific methods including A/B testing, randomized controlled trials (RCTs), and hypothesis-driven experimentation.'
 authors: [oeid]

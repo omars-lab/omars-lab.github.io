@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/apps/develop-an-initiative-calendar-app
+slug: /productivity/apps/develop-an-initiative-calendar-app
 title: Develop an Initiative Calendar App
 sidebar_label: 'Initiative Calendar App'
 description: 'Building a calendar application to organize initiatives and replace NotePlan limitations.'

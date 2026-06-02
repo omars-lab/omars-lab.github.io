@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/lametric-motivational-app
+slug: /software-development/frontend-development/projects/lametric-motivational-app
 title: Develop a LaMetric App for Motivation
 sidebar_label: 'LaMetric Motivation App'
 description: 'Building a LaMetric clock app to display motivational quotes with AWS Lambda, DynamoDB, and OAuth integration.'

@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/apps/build-a-kanban-board
+slug: /productivity/apps/build-a-kanban-board
 title: Build a Kanban Board
 description: 'Building and automating a Kanban board for organizing initiatives and managing project cards with Jira integration.'
 authors: [oeid]

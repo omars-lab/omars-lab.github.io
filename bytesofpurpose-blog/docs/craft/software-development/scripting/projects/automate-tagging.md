@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-tagging
+slug: /software-development/scripting/projects/automate-tagging
 title: Automate Tagging
 description: 'Automating the tagging process for notes with automatic ID assignment, hashtag generation, and note ingestion workflows.'
 authors: [oeid]

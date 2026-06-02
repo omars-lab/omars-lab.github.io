@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/roadmaps
+slug: /product-management/roadmaps
 title: Roadmaps
 description: 'How am I making my existing setup better? What have I tried to improve?'
 authors: [oeid]

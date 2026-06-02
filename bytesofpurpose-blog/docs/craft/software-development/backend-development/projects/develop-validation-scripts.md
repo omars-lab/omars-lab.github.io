@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/backend-development/projects/develop-validation-scripts
+slug: /software-development/backend-development/projects/develop-validation-scripts
 title: 'Develop Validation Scripts'
 description: 'Enhancement of bad-links script to validate NotePlan references and improve link validation'
 authors: [oeid]

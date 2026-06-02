@@ -20,7 +20,7 @@ const PAGES = [
   { name: 'home', path: '/' },
   { name: 'blog-index', path: '/blog' },
   { name: 'blog-post', path: '/blog/evolution-of-a-repo' },
-  { name: 'docs-page', path: '/docs/welcome/intro' },
+  { name: 'docs-page', path: '/welcome' },
 ];
 
 const GENERIC_LINK_TEXT = [

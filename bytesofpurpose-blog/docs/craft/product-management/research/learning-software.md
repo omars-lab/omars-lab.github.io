@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/research/learning-software
+slug: /product-management/research/learning-software
 title: Learning Software
 description: 'Learning goals and resources for software development best practices, architecture, and scaling.'
 authors: [oeid]

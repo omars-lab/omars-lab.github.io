@@ -20,7 +20,7 @@ import { join } from 'path';
  */
 
 const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
-const TARGET = `${PH_BASE}/docs/welcome/intro`;
+const TARGET = `${PH_BASE}/welcome`;
 
 function readBookmarkUrls(userDataDir: string): string[] {
   const file = join(userDataDir, 'Default', 'Bookmarks');

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/workspace/setup/running-ha-on-mac-mini
+slug: /software-development/workspace/setup/running-ha-on-mac-mini
 title: 'Running Home Assistant on Mac Mini'
 sidebar_label: 'Home Assistant on Mac Mini'
 description: 'Experiment with installing and configuring Home Assistant container on Mac mini including Docker management, audio support, and automation setup'

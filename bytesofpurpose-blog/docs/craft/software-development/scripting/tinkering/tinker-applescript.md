@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/tinkering/tinker-applescript
+slug: /software-development/scripting/tinkering/tinker-applescript
 title: 'Tinkering with AppleScript'
 description: 'Experiments and automation scripts using AppleScript for Mac automation and user switching'
 authors: [oeid]

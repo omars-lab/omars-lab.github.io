@@ -1,5 +1,5 @@
 ---
-slug: /self/faith/automations/automate-athan-player
+slug: /faith/automations/automate-athan-player
 title: Automate Athan Player
 description: 'Automating Athan (Islamic call to prayer) playback using smart speakers and home automation systems.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /self/faith/automations/automate-tasbeeh-tracking
+slug: /faith/automations/automate-tasbeeh-tracking
 title: Automate Tasbeeh Tracking
 description: 'Project to develop a smart clicker system for tracking tasbeeh using home automation and IoT devices.'
 authors: [oeid]

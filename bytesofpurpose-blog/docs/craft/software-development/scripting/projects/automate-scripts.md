@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-scripts
+slug: /software-development/scripting/projects/automate-scripts
 title: 'Automate Scripts'
 description: 'Roadmap for automating scripts including cron job setup and multi-laptop automation mechanics'
 authors: [oeid]

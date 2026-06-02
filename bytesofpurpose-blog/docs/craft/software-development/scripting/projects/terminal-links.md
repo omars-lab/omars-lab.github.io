@@ -1,7 +1,7 @@
 ---
 title: 'Terminal Links'
 description: 'How to embed clickable hyperlinks in terminal output using ANSI escape sequences, with cross-shell examples.'
-slug: /craft/software-development/scripting/projects/terminal-links
+slug: /software-development/scripting/projects/terminal-links
 authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png

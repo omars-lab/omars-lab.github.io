@@ -1,5 +1,5 @@
 ---
-slug: /craft/blogging/prompts/evals/all-posts/audience-impression-check
+slug: /blogging/prompts/evals/all-posts/audience-impression-check
 title: "Audience Impression Check"
 description: "Universal evaluation rubric for simulating external audience perceptions and targeting specific professional audiences"
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/develop-shortcuts
+slug: /software-development/scripting/projects/develop-shortcuts
 title: Develop Shortcuts
 description: 'Developing iPhone and macOS shortcuts for automation, note-taking, and productivity workflows.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/plugins/projects/develop-a-vim-plugin-for-todos
+slug: /software-development/plugins/projects/develop-a-vim-plugin-for-todos
 title: Develop a Vim Plugin for Todos
 description: 'Building Vim plugins for todo management with keyboard shortcuts and markdown link automation.'
 authors: [oeid]

@@ -22,10 +22,9 @@ const matter = require('gray-matter');
  * Permalink derivation mirrors Docusaurus for this repo's docs plugin
  * (default routeBasePath 'docs'): explicit `slug:` wins (138/140 drafts have
  * one); else we derive from the path, stripping the conventional `NN-` ordering
- * prefixes. All permalinks are prefixed with the docs base ('/docs').
+ * prefixes. Permalinks are prefixed with the doc's INSTANCE base ('/craft' or
+ * '/self') — the first path segment under docs/, which is that instance's routeBasePath.
  */
-const DOCS_BASE = '/docs';
-
 module.exports = function draftDocsPlugin(context) {
   const docsDir = path.join(context.siteDir, 'docs');
 
@@ -75,28 +74,34 @@ function stripPrefix(seg) {
 }
 
 function toPermalink(fullPath, docsDir, data) {
-  // Docs are served under '/docs' (default routeBasePath). Build from the file's
-  // DIRECTORY path (prefixes stripped); a `slug:` only renames the LAST segment,
-  // it does not replace the whole path. So:
-  //   2-definitions/README.md  (slug: definitions) -> /docs/definitions/definitions
-  //   4-development/foo.md      (no slug)           -> /docs/development/foo
+  // Docs are TWO separate instances: docs/craft/* serves under routeBasePath /craft,
+  // docs/self/* under /self (there is no /docs route). The first path segment under
+  // docs/ IS the instance == its routeBasePath. A doc's permalink is
+  //   /<instance> + <slug>           when slug is instance-relative (leading-slash), or
+  //   /<instance>/<dir...>/<slug>    when slug renames just the last segment, or
+  //   /<instance>/<dir...>           for an index file with no slug.
+  // e.g. docs/self/personal-growth/habits-reading.mdx (slug /personal-growth/habits-reading)
+  //        -> /self/personal-growth/habits-reading
+  //      docs/craft/README.mdx (slug /)  -> /craft
   const rel = path.relative(docsDir, fullPath).replace(/\.mdx?$/, '');
   const segs = rel.split(path.sep).map(stripPrefix);
 
-  const fileSeg = segs.pop(); // the filename segment (or README/index)
-  const isIndex = /^(readme|index)$/i.test(fileSeg);
+  const instance = segs[0]; // 'craft' | 'self' — the routeBasePath
+  const base = `/${instance}`;
+  const bodySegs = segs.slice(1); // path within the instance
+
+  const fileSeg = bodySegs.pop(); // filename segment (or README/index); may be undefined
+  const isIndex = fileSeg === undefined || /^(readme|index)$/i.test(fileSeg);
 
   if (data.slug) {
-    // A leading-slash slug is doc-root-absolute (under the docs base): it
-    // replaces the whole trailing path. Otherwise it renames the last segment
-    // (for index files, it's appended under the directory).
+    // Instance-relative leading-slash slug replaces the whole within-instance path.
     const slug = String(data.slug);
-    if (slug.startsWith('/')) return `${DOCS_BASE}${slug}`;
-    const dirSegs = isIndex ? segs : segs; // dir segments (file already popped)
-    return [DOCS_BASE, ...dirSegs, slug].join('/');
+    if (slug.startsWith('/')) {
+      return slug === '/' ? base : `${base}${slug}`;
+    }
+    return [base, ...bodySegs, slug].join('/');
   }
 
-  // No slug: index resolves to its directory; otherwise keep the filename.
-  if (isIndex) return [DOCS_BASE, ...segs].join('/');
-  return [DOCS_BASE, ...segs, fileSeg].join('/');
+  if (isIndex) return [base, ...bodySegs].join('/') || base;
+  return [base, ...bodySegs, fileSeg].join('/');
 }

@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/tool-usage
+slug: /productivity/tool-usage
 title: 'Tool Usage Techniques'
 description: 'Methods for establishing effective tool usage patterns and maximizing productivity with development tools and workflows.'
 authors: [oeid]
@@ -31,5 +31,5 @@ Tool usage techniques are **methods for using tools effectively**:
 
 ## Key Documents
 
-- [Establishing Tool Usage Patterns](/docs/craft/productivity/tool-usage/establishing-tool-usage-patterns) - Creating consistent and effective tool usage patterns
+- [Establishing Tool Usage Patterns](/craft/productivity/tool-usage/establishing-tool-usage-patterns) - Creating consistent and effective tool usage patterns
 

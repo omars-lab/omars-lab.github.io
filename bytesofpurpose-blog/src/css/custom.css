@@ -116,9 +116,13 @@ html[data-theme='dark'] .navbar-coffee:hover {
 }
 
 /* WCAG 1.4.1: in-content prose links must be distinguishable without relying on
-   color alone. Underline links inside markdown article content only (navbar /
-   footer / cards have their own affordances and are not .markdown descendants). */
-.markdown a {
+   color alone. Underline links inside markdown article content (navbar / footer /
+   cards have their own affordances and are not .markdown descendants), AND inside
+   standalone MDX pages like /welcome (which render in .theme-doc-markdown? no — in a
+   .mdxPageWrapper, not .markdown). The CTA cards on /welcome carry an inline
+   `text-decoration:none` so they stay un-underlined; only prose links pick this up. */
+.markdown a,
+[class*='mdxPageWrapper'] a {
   text-decoration: underline;
 }
 

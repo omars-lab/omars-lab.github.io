@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/mental-models/skills/understanding-desireable-soft-skills
+slug: /companies/mental-models/skills/understanding-desireable-soft-skills
 title: 'Soft Skills Evaluation'
 description: 'A comprehensive guide to soft skills companies evaluate in interviews, including stakeholder management, dealing with ambiguity, and decision making'
 authors: [oeid]

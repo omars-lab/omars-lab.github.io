@@ -1,5 +1,5 @@
 ---
-slug: /craft/interview-prep/preparing/preparing-for-tech-questions
+slug: /interview-prep/preparing/preparing-for-tech-questions
 title: 'Technical Interview Prep'
 description: 'A strategic guide for preparing methodical answers to technical interview questions with systematic problem-solving approaches'
 authors: [oeid]

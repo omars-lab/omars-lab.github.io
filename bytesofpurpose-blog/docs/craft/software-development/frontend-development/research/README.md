@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/research
+slug: /software-development/frontend-development/research
 title: Learning Topics
 description: 'What do I want to learn more about? What do I want to tinker with? What do I want to discover?'
 authors: [oeid]

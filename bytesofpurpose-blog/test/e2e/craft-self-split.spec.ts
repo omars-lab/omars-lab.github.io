@@ -4,8 +4,8 @@ import { test, expect, Page } from '@playwright/test';
  * Craft/Self two-tier IA (dev project, :3000).
  *
  * The docs split into two halves, each its own navbar item + sidebar:
- *   - Craft (/docs/craft) — outrospective: the professional topics.
- *   - Self  (/docs/self)  — introspective: faith + personal growth.
+ *   - Craft (/craft) — outrospective: the professional topics.
+ *   - Self  (/self)  — introspective: faith + personal growth.
  *
  * What this proves:
  *   1. The navbar has BOTH "Craft" and "Self" (and no legacy "Learn").
@@ -48,7 +48,7 @@ async function sidebarLabels(page: Page): Promise<string[]> {
 
 test.describe('Craft/Self — navbar', () => {
   test('navbar shows Craft and Self (and not the old "Learn")', async ({ page }) => {
-    await page.goto('/docs/welcome/intro', { waitUntil: 'domcontentloaded' });
+    await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
     const navbar = page.locator('.navbar');
     await expect(navbar.getByRole('link', { name: 'Craft', exact: true })).toBeVisible();
     await expect(navbar.getByRole('link', { name: 'Self', exact: true })).toBeVisible();
@@ -60,7 +60,7 @@ test.describe('Craft/Self — sidebar isolation', () => {
   test('Craft sidebar shows ONLY craft topics (no Self bleed-through)', async ({
     page,
   }) => {
-    await page.goto('/docs/craft', { waitUntil: 'domcontentloaded' });
+    await page.goto('/craft', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
     const labels = await sidebarLabels(page);
     const joined = labels.join(' | ');
@@ -77,7 +77,7 @@ test.describe('Craft/Self — sidebar isolation', () => {
   test('Self sidebar shows ONLY self topics (no Craft bleed-through)', async ({
     page,
   }) => {
-    await page.goto('/docs/self', { waitUntil: 'domcontentloaded' });
+    await page.goto('/self', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
     const labels = await sidebarLabels(page);
     const joined = labels.join(' | ');
@@ -94,13 +94,13 @@ test.describe('Craft/Self — distinct section welcomes', () => {
   test('Craft landing is outrospective; Self landing is introspective', async ({
     page,
   }) => {
-    await page.goto('/docs/craft', { waitUntil: 'domcontentloaded' });
+    await page.goto('/craft', { waitUntil: 'domcontentloaded' });
     const craftMain = page.locator('main');
     await expect(craftMain).toContainText('outrospective');
     await expect(craftMain).toContainText(/mastery of my craft/i);
     await expect(craftMain).toContainText(/outward/i);
 
-    await page.goto('/docs/self', { waitUntil: 'domcontentloaded' });
+    await page.goto('/self', { waitUntil: 'domcontentloaded' });
     const selfMain = page.locator('main');
     await expect(selfMain).toContainText('introspective');
     await expect(selfMain).toContainText(/full potential|master(ing)? myself/i);
@@ -113,9 +113,9 @@ test.describe('Craft/Self — distinct section welcomes', () => {
 
 test.describe('Craft/Self — Welcome chooser', () => {
   test('Welcome links into BOTH halves', async ({ page }) => {
-    await page.goto('/docs/welcome/intro', { waitUntil: 'domcontentloaded' });
+    await page.goto('/welcome', { waitUntil: 'domcontentloaded' });
     const main = page.locator('main');
-    await expect(main.locator('a[href$="/docs/craft"]').first()).toBeVisible();
-    await expect(main.locator('a[href$="/docs/self"]').first()).toBeVisible();
+    await expect(main.locator('a[href$="/craft"]').first()).toBeVisible();
+    await expect(main.locator('a[href$="/self"]').first()).toBeVisible();
   });
 });

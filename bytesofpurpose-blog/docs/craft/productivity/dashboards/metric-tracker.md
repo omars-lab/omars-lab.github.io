@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/dashboards/metric-tracker
+slug: /productivity/dashboards/metric-tracker
 title: Metric Tracker
 description: 'Developing tools to automatically track personal metrics including prayer times and habit monitoring.'
 authors: [oeid]

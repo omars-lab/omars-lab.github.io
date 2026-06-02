@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/ideas/unorganized-software-development-ideas
+slug: /product-management/ideas/unorganized-software-development-ideas
 title: Unorganized Software Development Ideas
 description: 'What stuff do I want to make? A collection of software development ideas and projects.'
 authors: [oeid]

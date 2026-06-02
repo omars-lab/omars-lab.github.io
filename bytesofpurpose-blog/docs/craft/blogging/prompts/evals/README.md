@@ -1,5 +1,5 @@
 ---
-slug: /craft/blogging/prompts/evals
+slug: /blogging/prompts/evals
 title: "Blog Post Evaluation System"
 description: "A comprehensive system for evaluating individual blog posts and determining if they are ready to be moved from draft state to published."
 authors: [oeid]

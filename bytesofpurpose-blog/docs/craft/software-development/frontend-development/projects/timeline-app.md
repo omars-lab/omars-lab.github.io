@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/timeline-app
+slug: /software-development/frontend-development/projects/timeline-app
 title: Develop a Timeline App
 description: 'Building a timeline application to visualize thoughts, ideas, and historical influences.'
 authors: [oeid]

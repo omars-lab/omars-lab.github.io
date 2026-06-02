@@ -1,5 +1,5 @@
 ---
-slug: /self/faith/automations/automate-quran-player
+slug: /faith/automations/automate-quran-player
 title: Automate Quran Player
 description: 'Automating Quran playback in the home using smart speakers and containerized applications.'
 authors: [oeid]

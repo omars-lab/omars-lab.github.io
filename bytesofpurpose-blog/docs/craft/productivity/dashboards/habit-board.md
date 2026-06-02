@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/dashboards/habit-board
+slug: /productivity/dashboards/habit-board
 title: Habit Board
 description: 'Developing a habit tracking board to monitor and reflect on personal habit development and future role planning.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/dashboards/dashboard
+slug: /productivity/dashboards/dashboard
 title: Dashboard
 description: 'Developing a comprehensive personal dashboard for tracking finances, productivity, habits, and business metrics with monitoring and alerting.'
 authors: [oeid]

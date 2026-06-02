@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/plugins/projects/develop-tampermonkey-scripts
+slug: /software-development/plugins/projects/develop-tampermonkey-scripts
 title: Develop Tampermonkey Scripts
 description: 'Developing Tampermonkey browser extension scripts for web automation and productivity enhancement.'
 authors: [oeid]

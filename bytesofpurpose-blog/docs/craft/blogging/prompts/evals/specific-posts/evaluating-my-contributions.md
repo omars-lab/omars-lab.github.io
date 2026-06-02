@@ -1,5 +1,5 @@
 ---
-slug: /craft/blogging/prompts/evals/specific-posts/evaluating-my-contributions
+slug: /blogging/prompts/evals/specific-posts/evaluating-my-contributions
 title: "Evaluating My Contributions Blog Post"
 sidebar_label: 'My Contributions'
 description: "Evaluation rubric for the 'My Contributions' blog post - focused on timeline structure, STAR summaries, and professional impact demonstration"

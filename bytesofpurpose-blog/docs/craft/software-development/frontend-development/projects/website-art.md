@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/website-art
+slug: /software-development/frontend-development/projects/website-art
 title: Website Art
 description: 'Creating an art-focused website to showcase geometric and Islamic-inspired artwork and patterns.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/research/learning-frontend-webpack
+slug: /software-development/frontend-development/research/learning-frontend-webpack
 title: Learning Frontend Webpack
 description: 'Learning goals and resources for Webpack bundling, configuration, and build optimization.'
 authors: [oeid]

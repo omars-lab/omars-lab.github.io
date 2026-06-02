@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai
+slug: /generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai
 title: '🤖 The Fundamentals of Agentic Systems'
 sidebar_label: '🤖 Agentic Systems'
 description: 'A comprehensive glossary of GenAI concepts with practical definitions and key differences between commonly confused components.'
@@ -1024,8 +1024,8 @@ Think of building an AI system like building a house:
 ## Next Steps
 
 Ready to dive deeper? Check out:
-- [Designing GenAI Systems](/docs/craft/generative-ai/building-systems/designing-genai-systems) for architectural decisions
-- [Preparing GenAI Systems for Production](/docs/craft/generative-ai/building-systems/preparing-genai-systems-for-production) for production readiness
+- [Designing GenAI Systems](/craft/generative-ai/building-systems/designing-genai-systems) for architectural decisions
+- [Preparing GenAI Systems for Production](/craft/generative-ai/building-systems/preparing-genai-systems-for-production) for production readiness
 
 ---
 

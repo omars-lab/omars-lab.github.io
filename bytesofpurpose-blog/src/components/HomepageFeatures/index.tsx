@@ -29,7 +29,7 @@ const FeatureList: FeatureItem[] = [
         automations, scripts, etc. 
       </>
     ),
-    to: "/docs/welcome/intro",
+    to: "/welcome",
     buttonText: "Docs"
   },
   {

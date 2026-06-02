@@ -39,7 +39,7 @@ type PageSpec = {
 const PAGES: PageSpec[] = [
   { name: 'home', path: '/' },
   { name: 'blog-index', path: '/blog' },
-  { name: 'docs-page', path: '/docs/welcome/intro' },
+  { name: 'docs-page', path: '/welcome' },
   {
     // Authored article — now strict ([] baseline). All Prism syntax-token
     // contrast debt (comment/function/property/atrule + string/builtin/boolean/

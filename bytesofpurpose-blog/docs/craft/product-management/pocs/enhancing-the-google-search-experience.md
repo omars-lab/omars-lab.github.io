@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/pocs/enhancing-the-google-search-experience
+slug: /product-management/pocs/enhancing-the-google-search-experience
 title: Enhancing the Google Search Experience
 sidebar_label: 'Google Search Experience'
 description: 'A proof of concept exploring ways to improve Google search results, especially the SGE Generative AI Responses.'

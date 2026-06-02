@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management/tinkering
+slug: /product-management/tinkering
 title: 'Tinkering'
 description: 'Exploratory, informal experiments and hands-on learning through trial and error.'
 authors: [oeid]

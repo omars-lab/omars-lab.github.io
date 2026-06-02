@@ -1,5 +1,5 @@
 ---
-slug: /craft/productivity/dashboards/budget-tracker
+slug: /productivity/dashboards/budget-tracker
 title: 'Budget Tracker'
 description: 'Development of personal budgeting notebooks with secure data access and account management'
 authors: [oeid]

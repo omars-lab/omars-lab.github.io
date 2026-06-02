@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape
+slug: /generative-ai/mental-models/2025-11-10-ai-framework-landscape
 title: '🗺️ The AI Framework Landscape'
 description: 'An interactive tour of AI frameworks, tools, and platforms — comparing features and use cases to help you choose the right one.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/backend-development/techniques
+slug: /software-development/backend-development/techniques
 title: 'Development Techniques'
 description: 'Practical methods and approaches for developing software effectively, including CI/CD, build processes, and development workflows.'
 authors: [oeid]
@@ -43,4 +43,4 @@ Development techniques are specifically about the software development lifecycle
 
 ## Key Documents
 
-- [CI/CD Techniques](/docs/craft/software-development/backend-development/techniques/ci-cd-techniques) - Comprehensive guide to continuous integration and deployment methods, including pipeline optimization, testing strategies, deployment approaches, security practices, and environment management
+- [CI/CD Techniques](/craft/software-development/backend-development/techniques/ci-cd-techniques) - Comprehensive guide to continuous integration and deployment methods, including pipeline optimization, testing strategies, deployment approaches, security practices, and environment management

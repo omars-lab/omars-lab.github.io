@@ -1,5 +1,5 @@
 ---
-slug: /craft/companies/skills/managing-complexity
+slug: /companies/skills/managing-complexity
 title: 'Managing Complexity'
 description: 'Strategies for balancing simplicity, speed, and maintainability in complex systems. Essential for staff-level engineering roles.'
 authors: [oeid]

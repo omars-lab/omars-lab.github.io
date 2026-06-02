@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/plugins/projects/develop-brew-plugins-for-workspace
+slug: /software-development/plugins/projects/develop-brew-plugins-for-workspace
 title: Develop Brew Plugins for Workspace
 sidebar_label: 'Brew Plugins'
 description: 'Creating Homebrew formulas and packages for workspace setup, vim plugins, and automation scripts.'

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/frontend-development/projects/website-portfolio
+slug: /software-development/frontend-development/projects/website-portfolio
 title: My Portfolio
 description: 'Developing a comprehensive portfolio website with React, AWS deployment, and automated CI/CD pipeline.'
 authors: [oeid]
@@ -12,7 +12,7 @@ draft: false
 
 I need a portfolio website ... this document serves as my initial plan to put one together.
 
-*See [Portfolio Roadmap](/docs/craft/product-management/roadmaps/2-portfolio-roadmap) for future enhancements and strategic planning.*
+*See [Portfolio Roadmap](/craft/product-management/roadmaps/2-portfolio-roadmap) for future enhancements and strategic planning.*
 
 # Completed Work
 

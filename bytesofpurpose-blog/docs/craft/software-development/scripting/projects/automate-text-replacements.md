@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/projects/automate-text-replacements
+slug: /software-development/scripting/projects/automate-text-replacements
 title: Automate Text Replacements
 description: 'Automating text expansion and shortcut management across devices with iCloud synchronization.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/generative-ai/mental-models/2025-10-04-learning-about-genai
+slug: /generative-ai/mental-models/2025-10-04-learning-about-genai
 title: '💡 GenAI Learning Guide'
 description: 'A comprehensive learning path for mastering Generative AI, from fundamentals to production systems.'
 authors: [oeid]
@@ -85,7 +85,7 @@ flowchart TD
 
 ### Essential Reading
 
-- **[The Fundamentals of Agentic Systems](/docs/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai)** - Comprehensive glossary covering:
+- **[The Fundamentals of Agentic Systems](/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai)** - Comprehensive glossary covering:
   - Foundation Models (LLMs)
   - Prompting techniques
   - RAG (Retrieval-Augmented Generation)
@@ -134,7 +134,7 @@ flowchart TD
 
 ### Running LLMs Locally
 
-- **[Running LLMs Locally](/docs/craft/generative-ai/my-genai-workflow/running-llms-locally)** - Complete guide covering:
+- **[Running LLMs Locally](/craft/generative-ai/my-genai-workflow/running-llms-locally)** - Complete guide covering:
   - **LM Studio**: User-friendly local LLM interface
   - **Ollama**: Command-line LLM runner
   - Tool support and CLI integration
@@ -174,7 +174,7 @@ flowchart TD
 
 ### Framework Comparison
 
-- **[The AI Framework Landscape](/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape)** - Interactive guide covering:
+- **[The AI Framework Landscape](/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape)** - Interactive guide covering:
   - **Frameworks**: LangChain, LangGraph, Haystack, Semantic Kernel
   - **Specialized Libraries**: LlamaIndex, Guidance, Outlines, Instructor
   - **Multi-Agent**: AutoGen, CrewAI
@@ -219,7 +219,7 @@ flowchart TD
 
 ### Design Framework
 
-- **[Designing GenAI Systems](/docs/craft/generative-ai/building-systems/designing-genai-systems)** - Complete decision framework covering:
+- **[Designing GenAI Systems](/craft/generative-ai/building-systems/designing-genai-systems)** - Complete decision framework covering:
   - **Foundation Decisions**: RAG vs. prompting, memory, fine-tuning, model selection
   - **Architecture Decisions**: Single vs. multi-agent, vector DB selection, evaluation strategy
   - **Advanced Decisions**: Specialized databases, processing patterns, runtime environments
@@ -375,10 +375,10 @@ flowchart TD
 
 ## 🔗 Related Content
 
-- **[Fundamentals Guide](/docs/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai)** - Core concepts glossary
-- **[Framework Landscape](/docs/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape)** - Interactive framework comparison
-- **[System Design Guide](/docs/craft/generative-ai/building-systems/designing-genai-systems)** - Complete design framework
-- **[Local LLMs](/docs/craft/generative-ai/my-genai-workflow/running-llms-locally)** - Running LLMs locally
+- **[Fundamentals Guide](/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai)** - Core concepts glossary
+- **[Framework Landscape](/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape)** - Interactive framework comparison
+- **[System Design Guide](/craft/generative-ai/building-systems/designing-genai-systems)** - Complete design framework
+- **[Local LLMs](/craft/generative-ai/my-genai-workflow/running-llms-locally)** - Running LLMs locally
 
 ---
 

@@ -23,7 +23,7 @@ import { join } from 'path';
  */
 
 const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
-const TARGET = `${PH_BASE}/docs/welcome/intro`;
+const TARGET = `${PH_BASE}/welcome`;
 
 test('PROOF: bookmarklet javascript: can beacon + redirect with ?im=bookmarklet', async () => {
   test.skip(
@@ -85,7 +85,7 @@ test('PROOF: bookmarklet javascript: can beacon + redirect with ?im=bookmarklet'
     // stripped on arrival — which only happens inside the `if (marker)` branch
     // right after posthog.capture('ingress', …).)
     await page.evaluate((base) => {
-      location.href = base + '/docs/welcome/intro?im=bookmarklet';
+      location.href = base + '/welcome?im=bookmarklet';
     }, PH_BASE);
     await page.waitForLoadState('domcontentloaded');
     await page.waitForFunction(() => typeof (window as any).posthog === 'object', {

@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/scripting/tinkering/tinker-linux
+slug: /software-development/scripting/tinkering/tinker-linux
 title: 'Tinkering with Linux'
 description: 'Experiments and tinkering with Linux commands, sed, and shell scripting techniques.'
 authors: [oeid]

@@ -1,5 +1,5 @@
 ---
-slug: /craft/product-management
+slug: /product-management
 title: 📋 Product Management
 description: 'The idea-to-ship lifecycle — ideas, research, proofs-of-concept, experiments, projects, and roadmaps. What to build and why.'
 authors: [oeid]
@@ -10,7 +10,7 @@ tags: [product-management, ideas, experiments, roadmaps]
 
 **What to build, and why.** This topic is the idea→ship lifecycle — the place where
 work is shaped before (and while) it gets built. The things actually built live over in
-[Software Development](/docs/craft/software-development); ideas here link to their executions there.
+[Software Development](/craft/software-development); ideas here link to their executions there.
 
 ## The lifecycle
 
@@ -27,5 +27,5 @@ Work moves through stages, roughly in this order:
 ## Idea ↔ execution mapping
 
 An idea here links to what got built under an **`## Execution`** section; the built
-artifact in [Software Development](/docs/craft/software-development) links back under an **`## Idea`**
+artifact in [Software Development](/craft/software-development) links back under an **`## Idea`**
 section. That way you can trace any idea to its execution and vice-versa.

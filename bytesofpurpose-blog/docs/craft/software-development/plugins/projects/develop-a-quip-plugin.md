@@ -1,5 +1,5 @@
 ---
-slug: /craft/software-development/plugins/projects/develop-a-quip-plugin
+slug: /software-development/plugins/projects/develop-a-quip-plugin
 title: 'Development Initiative: Quip App'
 authors: [oeid]
 tags: []

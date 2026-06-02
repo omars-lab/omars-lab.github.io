@@ -4,7 +4,7 @@ date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "sql", "database", "documentation", "analysis"]
 description: 'An AI prompt system that analyzes complex SQL queries, generates docs and diagrams, and produces clean, readable code.'
 author: "Omar Eid"
-slug: /craft/software-development/prompts/sql-query-analyzer
+slug: /software-development/prompts/sql-query-analyzer
 authors: [oeid]
 ---
 
