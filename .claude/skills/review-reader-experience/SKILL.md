@@ -64,6 +64,25 @@ Flag and fix:
   ("Craftsmanship", "Techniques") rather than reader benefit. Keep an emoji prefix
   (it aids scanning) but prefer a word the reader would search for. Propose, don't
   force — taxonomy is the author's voice; surface it as a recommendation.
+- **Emoji prefix on section labels.** Every `_category_.json` `label` should LEAD with an
+  emoji so the sidebar scans visually (this is a hard convention — the validator emits
+  `emoji-prefix-category`; `make validate-structure` lists offenders). When one is missing,
+  **suggest** an emoji by looking it up in the topic→emoji map at
+  `/definitions/emojis-for-activities` (`docs/productivity/terminology/emojis.mdx`) — a
+  deterministic lookup, *not* free model-classification: reuse the emoji a sibling of the same
+  *kind* already uses (🔬 Research, 🔨 Projects, 🛠️ Techniques/Tools/Skills, 🔧 Tinkering,
+  💬 Prompts, 📖 Terminology, 🧠 Mental Models, 💻 Code/Scripting/Workspace) so siblings stay
+  consistent. List the offenders + apply a fix:
+    ```bash
+    # list category labels missing a leading emoji
+    cd bytesofpurpose-blog && node scripts/validate-docs-structure.js 2>&1 | grep emoji-prefix-category
+    # prepend an emoji to one label (JSON-safe; structure untouched). Pick EMOJI from the map.
+    node -e 'const f=process.argv[1],e=process.argv[2],j=require(require("path").resolve(f));j.label=e+" "+j.label;require("fs").writeFileSync(f,JSON.stringify(j,null,2)+"\n")' docs/<topic>/<sub>/_category_.json '📖'
+    ```
+  Doc leaf labels (`sidebar_label`/`title`) ideally lead with an emoji too, but most don't
+  today — the validator rolls those into one `emoji-prefix-doc` count (`--emoji` to expand);
+  don't mass-flag them. Also watch for **`sidebar-label-missing`**: a doc with neither `title`
+  nor `sidebar_label` shows its raw FILENAME in the sidebar — always fix that (add a `title:`).
 - **Builder words in the navbar.** "Docs", "Components", "Changelog" are builder
   words. Reader-facing: "Learn", and consider "What's New" for Changelog. The navbar
   is brand-voice — **propose options, let the user pick** (don't unilaterally edit).

@@ -11,6 +11,69 @@ date: 2025-01-31T10:00
 
 Over time, I've developed a comprehensive emoji system to organize my personal life, work, and projects in NotePlan. This visual shorthand helps me quickly categorize and identify different types of activities across all aspects of my life.
 
+The same instinct shapes this site: every sidebar section leads with an emoji so the navigation scans at a glance. That convention is documented (and enforced) below, followed by my broader personal activity-emoji system.
+
+## 🧭 Sidebar Topic Emojis
+
+**The rule:** every sidebar section — every `_category_.json` `label` — leads with **one emoji**, so a reader scanning the sidebar can find a topic by its shape before reading a word. Leaf docs may carry an emoji in their `title` too, but it's the section labels that matter most.
+
+This is enforced (warn-tier) by `scripts/validate-docs-structure.js` (`make validate-structure` → `emoji-prefix-category`) and surfaced as an advisory by the `Write|Edit` docs-structure hook the moment you save a `_category_.json` without a leading emoji. The `review-reader-experience` reader-experience audit also checks it and suggests an emoji from the map below.
+
+### Picking an emoji
+
+When you add a section, reuse an emoji already used for the same **kind** of thing, so siblings stay visually consistent. The recurring conventions:
+
+| Emoji | Section kind | Used by |
+|---|---|---|
+| 🧠 | Mental Models | every topic's `mental-models/` |
+| 🔬 | Research | research buckets |
+| 🔨 | Projects | shipped project buckets |
+| 🛠️ | Techniques / Tools / Skills | how-to + tooling buckets |
+| 🔧 | Tinkering | experiments / scratch buckets |
+| 💬 | Prompts | every topic's `prompts/` |
+| 📖 | Terminology | every topic's `terminology/` |
+| 💻 | Code / Scripting / Workspace | dev-machine + code buckets |
+| 🤖 | Automation / GenAI | automation + AI buckets |
+
+### Root topics (the top-level sidebar)
+
+| Emoji | Topic |
+|---|---|
+| 👋 | Welcome |
+| 🤖 | Generative AI |
+| 🧩 | Software Development |
+| 📋 | Product Management |
+| ⚡ | Productivity |
+| ✍️ | Blogging |
+| 🎯 | Interview Prep |
+| 🏢 | Companies |
+| 🚀 | Entrepreneurship |
+| 🕌 | Faith |
+| 🌱 | Personal Growth |
+
+### Sub-topics that previously had no emoji
+
+These were backfilled to satisfy the convention — listed so the choices are reusable for siblings:
+
+| Emoji | Sub-topic |
+|---|---|
+| 🏗️ | Building GenAI Systems |
+| 🔄 | My GenAI Workflow |
+| 🚀 | LLM Initiatives |
+| 📖 | Terminology (Software Development, Productivity) |
+| 💬 | Prompts (Software Development, Blogging, Interview Prep, Personal Growth, Productivity) |
+| 📚 | Storybook + TypeScript + Babel |
+| 📝 | Preparing for Interviews |
+| ⚙️ | Automations (Faith) |
+| 📱 | Apps & Trackers (Faith) |
+| 🛠️ | Skills (Companies) |
+| 🤝 | Cultural Values |
+| 📈 | Career Levels |
+
+---
+
+The rest of this page is my broader **personal activity-emoji system** (NotePlan), which the sidebar palette above draws from.
+
 ## 🏡 **Personal Life Management**
 
 ### 🎯 **Goals & Aspirations**

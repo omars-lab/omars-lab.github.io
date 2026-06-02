@@ -222,6 +222,18 @@ function readCategory(dir) {
   }
 }
 
+// A `_category_.json` label is a sidebar SECTION header; by convention it leads with an emoji
+// so the sidebar scans visually (topic→emoji map: /definitions/emojis-for-activities). Flag a
+// label that doesn't. `cat` may be pre-read (the caller already has it) or null → re-read.
+function checkCategoryEmoji(dir, cat) {
+  const c = cat || readCategory(dir);
+  const label = c && typeof c.label === 'string' ? c.label : '';
+  if (label && !startsWithEmoji(label)) {
+    add('emoji-prefix-category', rel(path.join(dir, '_category_.json')),
+      `category label "${label}" has no leading emoji — sidebar sections lead with one for visual scanning; pick one from the topic→emoji map (/definitions/emojis-for-activities)`);
+  }
+}
+
 // --- blog post slugs (companion-post resolution) ------------------------
 // Memoized: blog posts declare a (relative) `slug:` in frontmatter. We resolve a doc's
 // `blog_post:` back-reference against this set. Lazy so scoped/hook runs pay nothing
@@ -444,6 +456,8 @@ function checkTopicRoots() {
     }
     if (!hasCategory(dir)) {
       add('topic-readme', rel(dir), 'topic folder has no _category_.json (label + position)');
+    } else {
+      checkCategoryEmoji(dir, null); // root topics also lead with an emoji
     }
   }
 }
@@ -641,10 +655,14 @@ function main() {
   const args = process.argv.slice(2);
   const json = args.includes('--json');
   const errorOnly = args.includes('--error-only');
+  const emoji = args.includes('--emoji');
   const targets = args.filter((a) => !a.startsWith('--'));
 
   if (targets.length) {
     // Scoped run (hook): only per-doc slug checks on the given files (fast, no tree walk).
+    // NOTE: checkDoc collects doc-emoji misses into docsMissingEmoji, but we deliberately do
+    // NOT emit the emoji-prefix-doc finding here — it's a corpus-wide aggregate, meaningless
+    // for a single file, and the hook is --error-only anyway (warn-tier never surfaces there).
     for (const t of targets) {
       const abs = path.isAbsolute(t) ? t : path.join(process.cwd(), t);
       if (fs.existsSync(abs) && fs.statSync(abs).isFile() && isDoc(abs)) checkDoc(abs);
@@ -657,6 +675,19 @@ function main() {
     checkIdeaExecLinks(collectSlugs());
     checkDuplicateDescriptions();
     checkBlogPostOrphans();
+    // Roll up doc-label emoji misses. Default: ONE aggregate finding (most leaf docs have no
+    // emoji today; a per-doc warn would bury the actionable category findings). `--emoji`
+    // expands to one finding per offending doc for when you actually want the full list.
+    if (docsMissingEmoji.length) {
+      if (emoji) {
+        for (const d of docsMissingEmoji) {
+          add('emoji-prefix-doc', d.loc, `sidebar label "${d.label}" has no leading emoji`);
+        }
+      } else {
+        add('emoji-prefix-doc', 'docs/',
+          `${docsMissingEmoji.length} doc label(s) lack a leading emoji — re-run with --emoji to list them (category labels are reported individually above)`);
+      }
+    }
   }
 
   let out = findings;
