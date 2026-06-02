@@ -56,3 +56,21 @@ Built the end-to-end A/B experimentation system (PostHog), launched the first ex
 - Create decide-experiment skill (decision gates + readout)
 - Create publish-site skill (draft-readiness triage + deploy)
 - Rewrite git history to purge rotated credentials (filter-repo) + force-push
+
+## 2026-06-02 — Two-tier Craft/Self docs IA
+<!-- meta: type=feature category=development priority=high component=Site -->
+Split the docs into two top-level halves — Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey) — each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.
+
+- Move 10 topic folders under docs/craft/ and docs/self/ (git mv)
+- Rewrite 297 doc slugs to folder-path-mirrored + 232 cross-doc links
+- Preserve old URLs via 187 client redirects (draft targets omitted)
+- Add craft/ + self/ topic-root scaffolding + two-tier sidebars + navbar
+- Isolate Craft/Self sidebars (each shows only its own half)
+- Rewrite section welcomes with distinct outrospective/introspective framing
+- Turn Welcome into a two-CTA chooser into both halves
+- Author scripts/migrate-ia.js migration engine (plan/slugs/links/redirects)
+- Update validate-docs-structure (depth ≤5, welcome-drift) + CLAUDE.md + skill
+- Repoint hardcoded slugs in e2e specs; fix stale draft-sidebar fixture
+- Add test/e2e/craft-self-split.spec.ts validating the split
+- Fix dev-e2e stale .docusaurus cache trap (clear before test-e2e)
+- Add changelog-archive Stop hook + "track work as tasks" convention
