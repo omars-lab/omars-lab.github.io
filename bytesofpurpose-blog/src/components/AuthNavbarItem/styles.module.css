@@ -1,0 +1,124 @@
+/* Navbar auth control: "Sign in" button (anonymous) ⇆ avatar + dropdown
+   (signed in). Sized to sit beside the color-mode toggle without enlarging the
+   navbar row. */
+
+.placeholder {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+}
+
+/* ---- Sign in button ---- */
+.signIn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ifm-navbar-link-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.signIn:hover {
+  background: var(--ifm-color-primary);
+  color: #fff;
+}
+.signInIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 3px;
+  background: #0a66c2; /* LinkedIn blue */
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: lowercase;
+}
+/* Collapse the text label on narrow viewports; the LinkedIn "in" mark stays. */
+@media (max-width: 600px) {
+  .signInLabel {
+    display: none;
+  }
+  .signIn {
+    padding: 0.3rem 0.45rem;
+  }
+}
+
+/* ---- Profile avatar + dropdown ---- */
+.profile {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.avatarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+}
+.avatarButton:hover {
+  border-color: var(--ifm-color-primary);
+}
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.avatarInitials {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 12rem;
+  padding: 0.4rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.5rem;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  z-index: var(--ifm-z-index-dropdown, 100);
+}
+.dropdownEmail {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.78rem;
+  color: var(--ifm-color-emphasis-700);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 0.3rem;
+}
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--ifm-navbar-link-color);
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+.dropdownItem:hover {
+  background: var(--ifm-color-emphasis-100);
+}

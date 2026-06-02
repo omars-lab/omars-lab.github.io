@@ -141,6 +141,22 @@
   margin-top: 4px;
 }
 
+/* --- Links section --- */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.link {
+  color: var(--ifm-color-primary, #2563eb);
+  font-size: 12px;
+  text-decoration: none;
+  word-break: break-all;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
 .actions {
   margin-top: 12px;
   display: flex;

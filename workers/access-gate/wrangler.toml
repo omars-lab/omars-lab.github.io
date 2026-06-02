@@ -1,0 +1,33 @@
+# access-gate Worker — vends LinkedIn identity (/api/me) and the StatiCrypt
+# premium passphrase (/api/unlock-key), gated by a Cloudflare Access app.
+#
+# Deploy:  cd workers/access-gate && npx wrangler deploy
+# Secret:  npx wrangler secret put PREMIUM_PASSPHRASE   (the StatiCrypt passphrase;
+#          MUST equal STATICRYPT_PASSPHRASE used by scripts/encrypt-premium.js)
+#
+# CF_API_TOKEN needs `Workers Scripts: Edit` added to its scope for `wrangler deploy`
+# (it currently has Access:Edit + Zone DNS/Tunnel). See manage-cloudflare-access.
+name = "access-gate"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+account_id = "e22f4531704a3141ddb150ac47eabc87"
+
+# Route the two API paths on the live blog host to this Worker. The same host is
+# fronted by GitHub Pages for everything else; only /api/* hits the Worker.
+routes = [
+  { pattern = "blog.bytesofpurpose.com/api/me", zone_name = "bytesofpurpose.com" },
+  { pattern = "blog.bytesofpurpose.com/api/unlock-key", zone_name = "bytesofpurpose.com" },
+]
+
+# Public (non-secret) vars. TEAM_DOMAIN is the Zero Trust team domain (verified
+# live: its JWKS at /cdn-cgi/access/certs returns 200). POLICY_AUD is the AUD tag
+# `cf_access.py create-gated-app` prints — fill it after running that command.
+[vars]
+TEAM_DOMAIN = "bytesofpurpose.cloudflareaccess.com"
+# AUD of the consolidated "Access Gate (blog /api/*)" app (id 844eef3a-…), which
+# covers BOTH /api/me and /api/unlock-key → one AUD. Created 2026-06-02 via
+# `cf_access.py create-gated-app`. Re-run that command to re-print it.
+POLICY_AUD = "fe391e80ed513298c3bd38a0c10765691337d568cf495c09d54d631a63555326"
+
+# PREMIUM_PASSPHRASE is a SECRET — never put it here. Set via:
+#   npx wrangler secret put PREMIUM_PASSPHRASE

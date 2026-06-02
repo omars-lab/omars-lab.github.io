@@ -7,6 +7,11 @@ const darkTheme = themes.oneDark;
 // A11y: label GFM task-list checkboxes (else axe/WCAG "label" rule fails).
 const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
 
+// Premium hard-gate: encrypt `premium: true` doc bodies at MDX-compile time (rehype stage)
+// so plaintext is in NEITHER the built HTML NOR the JS bundle. No-ops without
+// STATICRYPT_PASSPHRASE (dev/authoring). See the premium-content-gating design.
+const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
+
 // With JSDoc @type annotations, IDEs can provide config autocompletion
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (
@@ -156,7 +161,7 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
           path: 'docs/craft',
           routeBasePath: 'craft',
           sidebarPath: require.resolve('./sidebars-craft.js'),
-          rehypePlugins: [rehypeTaskListLabels],
+          rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
@@ -169,7 +174,7 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
           path: 'docs/self',
           routeBasePath: 'self',
           sidebarPath: require.resolve('./sidebars-self.js'),
-          rehypePlugins: [rehypeTaskListLabels],
+          rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
@@ -667,6 +672,17 @@ const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
             //   to: '/blog/process-blog-post-ideation',
             //   position: 'left'
             // },
+
+            {
+              // LinkedIn-via-Cloudflare-Access auth control: "Sign in" button
+              // when anonymous, profile avatar + dropdown when signed in. A
+              // position:'right' custom item lands next to the color-mode toggle
+              // (Docusaurus places the toggle at the very end of the right
+              // group). Component: src/components/AuthNavbarItem; registered as
+              // 'custom-auth' in src/theme/NavbarItem/ComponentTypes.tsx.
+              type: 'custom-auth',
+              position: 'right',
+            },
 
           ],
         },

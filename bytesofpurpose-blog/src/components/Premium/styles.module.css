@@ -1,0 +1,41 @@
+/* Inline <Premium> soft-gate: blurred sneak-peek + lock overlay (anonymous). */
+
+.wrap {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 0.35rem;
+}
+.wrap:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.blurred {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* The label renders as a branded pill so it stays legible over the blurred text. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  background: var(--ifm-color-primary);
+  box-shadow: var(--ifm-global-shadow-md);
+}

@@ -4,15 +4,19 @@ const matter = require('gray-matter');
 
 /**
  * Local Docusaurus plugin: collects the permalink of every DRAFT doc
- * (`draft: true` frontmatter) and exposes it as global data so the (dev-only)
- * swizzled sidebar can badge draft entries.
+ * (`draft: true` frontmatter) and of every PREMIUM doc (`premium: true`), and
+ * exposes both as global data so the swizzled sidebar can badge those entries.
  *
- * Drafts are excluded from PRODUCTION builds entirely, so this map is only
- * meaningful on `yarn start` — the sidebar swizzle additionally gates on
- * localhost + non-prod, so nothing leaks to the deployed site.
+ * Drafts are excluded from PRODUCTION builds entirely, so the draft map is only
+ * meaningful on `yarn start` — the draft sidebar badge additionally gates on
+ * localhost + non-prod, so nothing leaks to the deployed site. PREMIUM docs, by
+ * contrast, DO ship to production (their body is encrypted at build time and
+ * gated client-side), so the premium map + its lock badge are meaningful in
+ * prod too. (V2 of the premium-content-gating design — mirrors the draft path.)
  *
  * Consumed via:
- *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks  // string[] — draft doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks    // string[] — draft doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.premiumPermalinks  // string[] — premium doc pages
  *
  * Only individual docs with `draft: true` are tracked — the swizzled sidebar
  * badges the LEAF link. (Category/folder badging was dropped: a fully-draft folder
@@ -32,9 +36,10 @@ module.exports = function draftDocsPlugin(context) {
     name: 'draft-docs-plugin',
 
     async loadContent() {
-      if (!fs.existsSync(docsDir)) return {draftPermalinks: []};
+      if (!fs.existsSync(docsDir)) return {draftPermalinks: [], premiumPermalinks: []};
 
       const draftPermalinks = new Set();
+      const premiumPermalinks = new Set();
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -54,11 +59,17 @@ module.exports = function draftDocsPlugin(context) {
           if (data.draft === true) {
             draftPermalinks.add(toPermalink(full, docsDir, data));
           }
+          if (data.premium === true) {
+            premiumPermalinks.add(toPermalink(full, docsDir, data));
+          }
         }
       };
 
       walk(docsDir);
-      return {draftPermalinks: [...draftPermalinks]};
+      return {
+        draftPermalinks: [...draftPermalinks],
+        premiumPermalinks: [...premiumPermalinks],
+      };
     },
 
     async contentLoaded({content, actions}) {

@@ -80,6 +80,24 @@ validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, ca
 		if [ $$rc -eq 2 ]; then echo "✗ structure: ERROR-tier violations — see above."; exit 1; fi; \
 		exit 0
 
+verify-premium: ## BLOCKING premium hard-gate check: no `premium:true` body cleartext in build/ (HTML or JS)
+	@# Run AFTER a build. Exit 2 (deploy-aborting) if any premium body leaked, or a sidecar
+	@# is missing. Also wired into deploy-site step 3b + the .githooks/pre-push hook.
+	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js )
+
+build-premium: build-storybook ## Cache-busted ENCRYPTED production build (premium docs encrypted) + V5 gate
+	@# THE production build path when any doc is `premium: true`. Clears node_modules/.cache
+	@# + .docusaurus FIRST — webpack/Docusaurus can otherwise serve a premium doc's STALE
+	@# compiled output so rehype-premium-encrypt.js never re-runs → no sidecar → a naive
+	@# build looks done while it would ship PLAINTEXT (the cache gotcha). Requires
+	@# STATICRYPT_PASSPHRASE exported (gitignored .env; MUST equal the Worker's
+	@# PREMIUM_PASSPHRASE). Then runs V5 (verify-premium) as a blocking gate. deploy-site
+	@# uses this instead of a bare `yarn build` whenever premium content exists.
+	@[ -n "$$STATICRYPT_PASSPHRASE" ] || { echo "❌ STATICRYPT_PASSPHRASE empty — premium would ship in clear; aborting"; exit 1; }
+	( cd ${SITEROOT} && rm -rf node_modules/.cache .docusaurus && yarn build )
+	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js ) \
+		|| { echo "❌ premium content not safely gated — aborting"; exit 2; }
+
 test-link-hook: ## Integration tests for the validate-links PostToolUse hook + --fix
 	bash ${SITEROOT}/test/integration/validate-links-hook.test.sh
 
@@ -239,6 +257,21 @@ test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn sta
 	# draft-sidebar.spec.ts (and anything depending on drafts) fail spuriously. Clearing
 	# guarantees the dev server regenerates the dev manifest (drafts kept in dev).
 	( cd ${SITEROOT} && yarn docusaurus clear && yarn playwright test --project=dev )
+
+test-premium-e2e: ## Build (encrypted) + serve :4173, run the premium hard-gate e2e (V3 + round-trip), tear down
+	# Premium gating MUST be verified against an ENCRYPTED production build: the encrypt
+	# happens at MDX-compile only when STATICRYPT_PASSPHRASE is set, and the spec stubs
+	# /api/unlock-key with that same value. Also runs V5 (verify-premium-encrypted) as a
+	# pre-flight so a leak fails fast before the browser even starts.
+	@( cd ${SITEROOT} && rm -rf node_modules/.cache .docusaurus build static/premium && \
+		STATICRYPT_PASSPHRASE=e2e-premium-passphrase yarn build >/tmp/premium-e2e-build.log 2>&1 ) \
+		|| { echo "build failed (see /tmp/premium-e2e-build.log)"; exit 1; }; \
+	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js ) || { echo "✗ V5 premium gate failed"; exit 1; }; \
+	lsof -ti:4173 | xargs kill -9 2>/dev/null || true; \
+	( cd ${SITEROOT} && yarn serve --port 4173 --no-open >/tmp/premium-e2e-serve.log 2>&1 & ); \
+	sleep 6; \
+	( cd ${SITEROOT} && CI=1 E2E_PROD_BASE_URL=http://localhost:4173 npx playwright test --project=premium --reporter=list ); \
+	rc=$$?; lsof -ti:4173 | xargs kill -9 2>/dev/null || true; exit $$rc
 
 test-prod-checks: ## Build + serve on :4173, run the "prod" project (a11y + SEO), tear down
 	# A11y + SEO scans MUST run against a real production build: build-only

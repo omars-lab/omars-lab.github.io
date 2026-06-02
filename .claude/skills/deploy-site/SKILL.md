@@ -22,6 +22,25 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 2. **`POSTHOG_TEST_MODE` must NEVER be set for a production deploy.** It disables
    PostHog's bot filter (only for e2e). Explicitly `unset` it before building.
 3. **`make deploy` runs `make secret-scan` first** — a leaked secret aborts deploy.
+3a. **Premium content needs `STATICRYPT_PASSPHRASE` at BUILD time, a CACHE-BUSTED build,
+   and a BLOCKING verify gate before publish.** `premium: true` docs are encrypted at
+   MDX-compile by `plugins/rehype-premium-encrypt.js`, which reads `STATICRYPT_PASSPHRASE`
+   (gitignored `.env`; MUST equal the Worker's `PREMIUM_PASSPHRASE` secret). If the
+   passphrase is unset the build leaves premium bodies in CLEAR.
+   **🔴 CACHE GOTCHA (dangerous):** webpack's `node_modules/.cache` + `.docusaurus` can
+   serve a premium doc's STALE compiled output, so `rehype-premium-encrypt.js` never
+   re-runs → no `static/premium/<id>.json` sidecar → a naive `yarn build` looks done while
+   it would ship PLAINTEXT. **Always clear `node_modules/.cache` + `.docusaurus` before an
+   encrypted build.** Use the dedicated **`make build-premium`** target — it clears both
+   caches, requires `STATICRYPT_PASSPHRASE`, builds, and runs V5; it is the production
+   build path whenever any doc is premium. (V5 also catches the stale-cache case: a missing
+   sidecar → non-zero exit → deploy aborts.) After building you MUST run
+   `node bytesofpurpose-blog/scripts/verify-premium-encrypted.js` (V5) — `make build-premium`
+   does this for you — it scans the built output and **exits non-zero (deploy aborts)** if
+   any `premium: true` body's plaintext is present in the HTML or JS chunks, or a sidecar is
+   missing. Never skip it. (It also runs as a pre-push hook.) The deploy token also needs
+   `Workers Scripts: Edit` + `Workers Routes: Edit` for the Worker deploy — see
+   `manage-cloudflare-access`.
 4. **MDX content bugs fail the build late** (during SSR), e.g. bare `<br>` (use
    `<br/>`) or unescaped `{word}` in `.mdx` (wrap in backticks). Run `make check`
    and a full build before deploying. See the `author-blog-post` skill.
@@ -39,6 +58,7 @@ don't persist to the next.
 xenv() { grep -E "^$1=" .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''; }
 export POSTHOG_KEY="$(xenv POSTHOG_KEY)"
 export POSTHOG_HOST="$(xenv POSTHOG_HOST)"
+export STATICRYPT_PASSPHRASE="$(xenv STATICRYPT_PASSPHRASE)"   # premium encrypt (gotcha #3a)
 unset POSTHOG_TEST_MODE                      # gotcha #2: never in prod
 # Hard-fail rather than silently ship an analytics-less bundle:
 [ -n "$POSTHOG_KEY" ] || { echo "❌ POSTHOG_KEY empty — aborting"; return 1 2>/dev/null || exit 1; }
@@ -47,8 +67,13 @@ echo "PostHog: enabled (${POSTHOG_KEY:0:8}…), TEST_MODE off"
 # 2. Secret scan (also runs automatically inside `make deploy`).
 make secret-scan
 
-# 3. Clean build — the real gate; fix any MDX/SSR errors before deploying.
-( cd bytesofpurpose-blog && yarn build )
+# 3. Cache-busted ENCRYPTED build + V5 gate in one target — the real gate; fix any MDX/SSR
+#    errors before deploying. `make build-premium` clears node_modules/.cache + .docusaurus
+#    (the cache gotcha — see #3a), requires STATICRYPT_PASSPHRASE, builds (premium bodies
+#    encrypted at compile time), then runs the blocking V5 gate. If there is NO premium
+#    content you can use a plain `( cd bytesofpurpose-blog && yarn build )` instead.
+make build-premium \
+  || { echo "❌ build or premium gate failed — aborting deploy"; return 1 2>/dev/null || exit 1; }
 
 # 4. Deploy to GitHub Pages (gh-pages branch).
 make deploy

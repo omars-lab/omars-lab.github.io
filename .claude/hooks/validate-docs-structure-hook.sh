@@ -92,6 +92,37 @@ if [ -n "$emoji_label" ]; then
   fi
 fi
 
+# Premium advisory: a `premium: true` doc ships its body ENCRYPTED to prod and is gated
+# client-side (sign in with LinkedIn → Worker vends the key → in-browser decrypt). Two
+# things to nudge at edit time (both warn-tier in the validator, surfaced here because the
+# hook runs --error-only and these are worth seeing as you write):
+#   1. premium + draft is contradictory — drafts are excluded from the prod build, so the
+#      premium body would never be encrypted/gated. Pick one.
+#   2. a premium doc with no `premium_teaser:` (and no `description:`) shows a bare lock
+#      with no preview to entice sign-in.
+# See the premium-content-gating design + the manage-premium-content skill. Advisory only.
+if [ "$is_doc" = true ] && [ "$(head -1 "$file_path")" = "---" ]; then
+  fm=$(awk '/^---[[:space:]]*$/{c++; next} c==1{print} c>=2{exit}' "$file_path")
+  if printf '%s\n' "$fm" | grep -iqE '^premium:[[:space:]]*true[[:space:]]*$'; then
+    rel="${file_path##*/bytesofpurpose-blog/}"
+    if printf '%s\n' "$fm" | grep -iqE '^draft:[[:space:]]*true[[:space:]]*$'; then
+      {
+        echo "🔒 Premium gating: '$rel' is BOTH \`premium: true\` and \`draft: true\` — contradictory."
+        echo "   Drafts are excluded from the production build, so the premium body would never"
+        echo "   be encrypted/gated. Pick one: publish it as premium, or keep it a draft."
+        echo "   (advice only — not blocking. See the premium-content-gating design.)"
+      } >&2
+    fi
+    if ! printf '%s\n' "$fm" | grep -iqE '^(premium_teaser|description):[[:space:]]*\S'; then
+      {
+        echo "🔒 Premium gating: '$rel' has no \`premium_teaser:\` (nor a \`description:\`)."
+        echo "   Anonymous readers would see a bare lock with no preview. Add a"
+        echo "   \`premium_teaser:\` sneak-peek that entices sign-in. (advice only — not blocking.)"
+      } >&2
+    fi
+  fi
+fi
+
 # Numeric-prefix advisory: flag if the changed doc lives under a folder whose NAME
 # carries a numeric ordering prefix (e.g. docs/software-development/6-projects/…).
 # WHY surface it here: folder renames happen via `git mv` (no Write/Edit hook fires),

@@ -1,0 +1,157 @@
+/* App-wide sign-in modal opened from any locked premium surface. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  padding: 2.25rem 1.75rem 1.5rem;
+  border-radius: 0.9rem;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  /* A thin brand band along the top so the modal reads as "ours", not a generic dialog. */
+  border-top: 4px solid var(--ifm-color-primary);
+  animation: popIn 0.18s ease;
+}
+@keyframes popIn {
+  from {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.close:hover {
+  color: var(--ifm-color-emphasis-900);
+}
+
+.lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 0.7rem;
+  font-size: 1.6rem;
+  border-radius: 50%;
+  /* Brand-tinted disc behind the lock — picks up the same accent as buttons/links. */
+  background: var(--ifm-color-primary-contrast-background);
+}
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+  font-weight: var(--ifm-heading-font-weight, 700);
+}
+.body {
+  margin: 0 0 1.3rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #0a66c2; /* LinkedIn blue */
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.cta:hover {
+  background: #004182;
+}
+.ctaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 3px;
+  background: #fff;
+  color: #0a66c2;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: lowercase;
+}
+
+.interest {
+  display: block;
+  width: 100%;
+  margin-top: 0.7rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.interest:hover:not(:disabled) {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+.interest:disabled {
+  cursor: default;
+  color: var(--ifm-color-success, #2e8555);
+  border-color: var(--ifm-color-success, #2e8555);
+}
+
+.dismiss {
+  display: block;
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.dismiss:hover {
+  color: var(--ifm-color-emphasis-900);
+  text-decoration: underline;
+}
