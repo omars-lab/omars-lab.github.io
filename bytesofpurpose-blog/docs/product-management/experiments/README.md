@@ -79,7 +79,7 @@ Each row below links to that doc. Lifecycle:
 
 | Experiment | Flag | Status | Started | Outcome |
 |---|---|---|---|---|
-| [Support button copy](./2026-05-31-support-button-copy.md) | `support-button-copy` | 🟢 running | 2026-05-31 | pending |
+| [Support CTA: link vs button](./2026-05-31-support-button-copy.md) | `support-button-copy` | 🟢 running | 2026-06-01 (re-scoped) | pending |
 
 > Add a row when you start an experiment; update its status as it moves through the
 > lifecycle. New entry from `_TEMPLATE.md`. The five skills below each own a phase and
