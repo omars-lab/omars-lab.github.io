@@ -15,25 +15,16 @@ function HomepageHeader() {
       <div className="container">
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        {/* Two-journey chooser (folded in from the old /welcome page): Craft is
-            outrospective (the outward work, shared); Self is introspective (the
-            inward journey). Pick a journey, or skim the blog below the link. */}
+        {/* Two-space chooser (folded in from the old /welcome page): Craft = what I
+            impact (the outward work, shared); Self = who I am (the inward journey). */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
-            <div className={styles.chooserCardTitle}>💻 Discover my world</div>
-            <p className={styles.chooserCardBody}>
-              What I learned on the journey to master my craft — generative AI,
-              software, product, productivity, and more. The outward work, shared.
-            </p>
+            <div className={styles.chooserCardTitle}>💻 Discover My Craft</div>
+            <p className={styles.chooserCardBody}>What I build — and share.</p>
           </Link>
           <Link className={styles.chooserCard} to="/self">
-            <div className={styles.chooserCardTitle}>
-              🪞 Observe what I discovered about myself
-            </div>
-            <p className={styles.chooserCardBody}>
-              The inward journey to fulfill my full potential — faith and personal
-              growth. Mostly for me, kept public in case it helps you.
-            </p>
+            <div className={styles.chooserCardTitle}>🪞 Discover My Journey</div>
+            <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
         </div>
         <p className={styles.secondaryLinks}>

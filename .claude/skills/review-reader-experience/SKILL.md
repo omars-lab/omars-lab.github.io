@@ -22,6 +22,16 @@ seen the site, or does it serve the person who built it?"** Writer-focused artif
 optimize for completeness, SEO, and the author's mental taxonomy. Reader-focused
 ones optimize for *scanning, orientation, and the next click*.
 
+**Corollary — fewer, simpler, more impactful words win.** Especially for the things a
+reader scans first (CTAs, card titles, nav labels, hero copy, section intros): cut to
+the shortest phrasing that still lands. A two-line CTA title that wraps, a body
+paragraph where a 4-word line would do, "Observe what I discovered about myself" where
+"Discover My Journey" says it — these are writer-voice tells. Prefer punchy parallel
+phrasing (e.g. paired CTAs that mirror each other: "Discover My Craft" / "Discover My
+Journey" — separating *what I impact* from *who I am*). When you trim, keep the one
+distinct idea per element; don't merge two cards' meanings into vague mush. If a label
+or CTA spans more than a short line, that's a flag — propose the tighter version.
+
 ## Five audits
 
 Run the audits relevant to the request. Default to all five for a broad "make it
