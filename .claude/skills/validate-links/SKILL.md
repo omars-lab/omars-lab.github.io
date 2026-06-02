@@ -39,6 +39,7 @@ two lines per problem, so don't count its lines).
 | `generic-text` | non-descriptive text ("click here", "here", "read more", …) | describe the destination (Lighthouse link-text rule) |
 | `broken-internal` | a `/docs/…` link that resolves to **no published doc slug** | fix the path, or point at an existing absolute slug |
 | `link-to-draft` | a **published** page links to a `draft: true` page (excluded from the prod build → a build-time broken link) | un-draft the target first, or remove/defer the link |
+| `test-stale-slug` | a `test/e2e/` file (`goto('/docs/…')`, or the README) references a `/docs/<slug>` that resolves to no doc | point the test at the new slug — a redirect keeps users working but lands the test on the redirect **stub** (no content) → spurious timeout |
 
 It skips: YAML frontmatter, fenced/inline code (so example URLs aren't flagged),
 **commented-out content** (HTML `<!-- … -->` and JSX/MDX brace-star comments,
@@ -69,6 +70,29 @@ intentionally forward-link to a not-yet-published page. (Policy decided
 link to a `draft: true` page.) Per the repo's "structure decisions must update
 the structure checks" convention, this skill + `scripts/validate-links.js` are
 kept in lockstep — change one, change the other.
+
+### Test-slug integrity (the `test-stale-slug` check)
+
+e2e specs **hardcode doc slugs** in `goto('/docs/…')` / `baseURL` refs. When an IA
+move changes a slug, the redirect plugin keeps *real users* working — but a test
+that navigates to the **old** slug lands on the redirect **stub** (a meta-refresh
+page with no canvas/content), so it times out waiting for an element. The failure
+looks like a flaky/broken component, miles from the real cause. (Surfaced 2026-06-02
+by the mental-models namespace migration: `graph-selection-state.spec.ts` hardcoded
+`/docs/mental-models/.../ai-framework-landscape`; the move turned that into a
+redirect → 6 specs timed out on `canvas`.)
+
+The check scans `test/e2e/*.spec.ts` + the test README, extracts each `/docs/<slug>`
+appearing **inside a quote or backtick** (so prose like "home/blog/docs/post" isn't
+matched), and resolves it against the same slug index. It runs **only on a full
+default scan** (not when you pass explicit paths), so the Write/Edit hook stays
+scoped. **Lesson it encodes: when you move a slug, grep `test/` too — not just
+`docs/ blog/ src/`.**
+
+**Escape hatch:** a test that *deliberately* navigates to a missing/draft route
+(e.g. asserting a 404) opts out with a `validate-links-ignore` comment on the line
+or the line above. Use it only for intentional dead-route assertions — a genuine
+stale slug should be **fixed**, not ignored.
 
 ## The URL-cleanup recipe (for `bare-url` / `long-url`)
 

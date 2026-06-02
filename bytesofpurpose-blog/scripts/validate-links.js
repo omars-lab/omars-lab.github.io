@@ -17,6 +17,10 @@
  *   link-to-draft    A PUBLISHED page links to a `draft: true` page (which is    [WARN]
  *                    excluded from the prod build → a build-time broken link).
  *                    A draft→draft link is allowed (they ship together later).
+ *   test-stale-slug  A test/e2e file (`goto('/docs/…')`, README) references a     [WARN]
+ *                    /docs/<slug> that resolves to no doc — an IA move changed it.
+ *                    A redirect keeps users working but lands the test on the
+ *                    redirect STUB → spurious timeout. Catch it here, not in CI.
  *
  * The two internal-link checks are cross-file: they build a whole-corpus slug
  * index (absolute `slug:` + `draft:` per doc) and resolve every /docs/ link
@@ -53,6 +57,11 @@ const SEVERITY = {
   // intentionally forward-link to a page not yet published.
   'broken-internal': 'warn', // /docs/... link resolves to no published page
   'link-to-draft': 'warn',   // a PUBLISHED page links to a draft: true page
+  // e2e specs hardcode doc slugs in goto()/baseURL refs. When an IA move changes a
+  // slug, a redirect keeps real users working but lands the test on the redirect
+  // STUB (no canvas/content) → spurious timeout. Catch the stale slug here, at
+  // `make validate-links` time, instead of in a multi-minute regression run.
+  'test-stale-slug': 'warn', // a test/ file references a /docs/<slug> that no longer exists
 };
 
 // The docs plugin has no routeBasePath override → docs are served under /docs.
@@ -95,7 +104,7 @@ const KNOWN_HOSTS = {
 
 // --- helpers -------------------------------------------------------------
 
-function walk(dir, acc = []) {
+function walk(dir, acc = [], ext = /\.mdx?$/) {
   let entries;
   try {
     entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -106,8 +115,8 @@ function walk(dir, acc = []) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) {
       if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
-      walk(full, acc);
-    } else if (/\.mdx?$/.test(e.name)) {
+      walk(full, acc, ext);
+    } else if (ext.test(e.name)) {
       acc.push(full);
     }
   }
@@ -158,6 +167,47 @@ function buildSlugIndex(docsDir) {
     byRoute.set(route, { rel: path.relative(ROOT, f), draft });
   }
   return { byRoute, hasAnyDoc: files.length > 0 };
+}
+
+/**
+ * Validate /docs/<slug> references hardcoded in e2e tests + the test README against
+ * the corpus slug index. Playwright specs `goto('/docs/…')` at literal slugs; an IA
+ * move that changes a slug leaves the test pointing at a redirect stub (no real page
+ * content) → spurious timeout in regression. We resolve each referenced route the same
+ * way the markdown check does, tolerating a trailing `${hash}`/template tail and a
+ * trailing slash. Scans test/e2e/*.spec.ts + test/e2e/*.md (README) only.
+ */
+function checkTestSlugs(slugIndex) {
+  const problems = [];
+  if (!slugIndex || !slugIndex.byRoute.size) return problems;
+  const testDir = path.join(ROOT, 'test', 'e2e');
+  if (!fs.existsSync(testDir)) return problems;
+  const files = walk(testDir, [], /\.(spec\.ts|md|mdx)$/);
+  // Only flag /docs/<path> inside a QUOTE or BACKTICK — i.e. an actual navigated URL
+  // (goto('/docs/…'), `/docs/…${hash}`), not prose like "home/blog/docs/post". The
+  // opening quote/backtick is captured so we don't match bare slashes in sentences.
+  const re = /['"`](\/docs\/[A-Za-z0-9/_-]+)/g;
+  for (const f of files) {
+    const lines = fs.readFileSync(f, 'utf8').split('\n');
+    lines.forEach((line, i) => {
+      // Escape hatch: a test that DELIBERATELY navigates to a missing/draft route
+      // (e.g. asserting a 404) opts out with a `validate-links-ignore` comment on the
+      // line or the line above.
+      if (/validate-links-ignore/.test(line) || /validate-links-ignore/.test(lines[i - 1] || '')) return;
+      let m;
+      while ((m = re.exec(line)) !== null) {
+        const route = m[1].replace(/\/+$/, '');
+        if (slugIndex.byRoute.has(route)) continue;       // resolves to a real doc ✓
+        problems.push({
+          file: path.relative(ROOT, f), line: i + 1, kind: 'test-stale-slug',
+          severity: SEVERITY['test-stale-slug'],
+          detail: `test references ${m[1]} which resolves to no published doc slug — an IA move likely changed it`,
+          suggest: 'point the test at the new slug (a redirect keeps users working but lands the test on the stub → timeout)',
+        });
+      }
+    });
+  }
+  return problems;
 }
 
 /** Strip fenced (```) and inline (`...`) code so we don't flag URLs in examples. */
@@ -534,6 +584,9 @@ async function main() {
   const docsDir = path.join(ROOT, 'docs');
   const slugIndex = fs.existsSync(docsDir) ? buildSlugIndex(docsDir) : null;
   let all = files.flatMap((f) => scanFile(f, slugIndex).problems);
+  // Stale-slug guard over the e2e tests (only on a full default scan — skip when the
+  // caller passed explicit target paths, so a scoped/hook run stays scoped).
+  if (!targets.length) all = all.concat(checkTestSlugs(slugIndex));
   if (errorOnly) all = all.filter((p) => p.severity === 'error');
 
   if (json) {

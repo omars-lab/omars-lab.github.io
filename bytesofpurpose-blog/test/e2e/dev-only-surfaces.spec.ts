@@ -35,6 +35,7 @@ test.describe('Dev-only surfaces are absent in the production build', () => {
     page,
   }) => {
     // /docs/definitions/definitions is draft → 404 in prod (not just unbadged).
+    // validate-links-ignore: this route is INTENTIONALLY absent (the assertion is the 404).
     const res = await page.goto('/docs/definitions/definitions', {
       waitUntil: 'domcontentloaded',
     });
