@@ -164,15 +164,42 @@ The site uses that email to swap the navbar to an avatar and to call PostHog's
   `PremiumGate` page gate + `<Premium>` inline component, the themed sign-in modal,
   the sidebar lock badge, the Worker, the Access app.
 - **Dev-only (never in the prod bundle):** the floating DebugMenu (incl. its Links
-  section). On `localhost` the `/api/*` endpoints don't exist, so auth/identify/
-  decrypt no-op and the page shows the sneak-peek — by design (and "Sign in" shows a
-  toast instead of a dead redirect).
+  section).
 - **A blocking safety gate guards every deploy.** Because the encrypt step is fallible
   (a missing passphrase, a stale build cache, a frontmatter typo), a verifier
   (`scripts/verify-premium-encrypted.js`) scans the whole built output — HTML *and* JS
   *and* the sidecar payloads — for any premium body's cleartext and **aborts the deploy**
   (non-zero exit) if a single premium doc leaked. It runs in `deploy-site` and as a
   pre-push hook, so unencrypted premium can never ship silently.
+
+## Dev/prod parity (design decision)
+
+**Decision: local dev must behave identically to production — same encryption, same
+key source.** Earlier iterations left premium bodies in clear on `localhost` (encryption
+no-op'd without a passphrase) and made "Sign in" show a toast; that meant the dev
+experience didn't match the live gate, which was confusing. The parity rules are:
+
+1. **Dev encrypts too.** `yarn start` runs the same compile-time encryption as a prod
+   build, so the premium body is **ciphertext in the dev page source as well** — the
+   gate (teaser + lock) looks identical locally. The dev server reads
+   `STATICRYPT_PASSPHRASE` the same way the prod build does.
+
+2. **Dev pulls the key from the *real* Worker.** There is **no dev-only key and no
+   client-side fallback.** The dev server **proxies `/api/*` to the deployed Cloudflare
+   Worker** (`https://blog.bytesofpurpose.com/api/*`), carrying the reader's real
+   Cloudflare Access cookie (sign in once on the domain). So `localhost` unlocks premium
+   through the exact same `/api/unlock-key` path as prod — the client code uses relative
+   `/api/*` URLs unchanged, and the proxy bridges the origin. (This replaces the previous
+   localhost "Sign in shows a toast" graceful-degrade — it's no longer needed, because
+   `/api/*` now works in dev.)
+
+3. **Both dev and prod passphrases live in the gitignored `.env`.** `STATICRYPT_PASSPHRASE`
+   is a real secret in `.env` (and must equal the Worker's `PREMIUM_PASSPHRASE`); it is
+   **never** a hardcoded constant. The dev build and prod build both source it from `.env`.
+
+> **Prerequisite:** dev parity depends on the Worker being **deployed** (the dev proxy
+> targets it) — until `wrangler deploy` runs, `/api/unlock-key` returns nothing in dev
+> *and* prod alike, so even there the two stay consistent.
 
 ## FAQ
 
@@ -229,9 +256,13 @@ or the public bundle.
 
 ### Does this work on localhost?
 
-Auth, identify, and decrypt **no-op** on `localhost` because `/api/*` doesn't exist
-there — the page shows the sneak-peek. This is expected, not a bug. The
-`?internal=1` analytics opt-in still works in dev.
+**Yes — local dev is designed to behave identically to production** (see *Dev/prod
+parity* above). `yarn start` encrypts premium bodies the same way the prod build does,
+and the dev server **proxies `/api/*` to the deployed Worker**, so signing in (once, on
+the real domain) lets `localhost` unlock premium through the exact same path as prod.
+There is no dev-only key and no "it no-ops locally" caveat. The `?internal=1` analytics
+opt-in also works in dev. *(Parity requires the Worker to be deployed; until then
+`/api/unlock-key` returns nothing in dev and prod alike — still consistent.)*
 
 ## One more thing
 
