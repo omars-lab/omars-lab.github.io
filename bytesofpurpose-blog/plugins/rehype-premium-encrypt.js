@@ -25,8 +25,10 @@ const codec = require('staticrypt/lib/codec.js').init(cryptoEngine);
  *   4. REPLACES the body with a single <PremiumGate payload teaser/> MDX JSX element. The
  *      compiled chunk now contains only the gate — never the plaintext HTML.
  *
- * When STATICRYPT_PASSPHRASE is unset (local `yarn start`, authoring), the body is left
- * untouched so premium pages render normally in dev — the gate is a PROD concern.
+ * Encryption is keyed on STATICRYPT_PASSPHRASE being set. `make start` now exports it from
+ * .env (dev/prod parity — the gate looks identical locally; the dev /api/* proxy vends the
+ * real key for decryption). When the var is UNSET (a bare `yarn start`, or .env lacks it),
+ * the body is left untouched so premium pages render plaintext — an authoring-only fallback.
  * verify-premium-encrypted.js (V5) is the blocking deploy gate that guarantees no premium
  * plaintext ever ships (it scans the built HTML AND the JS chunks).
  *

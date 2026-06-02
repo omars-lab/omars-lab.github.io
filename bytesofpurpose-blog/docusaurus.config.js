@@ -151,6 +151,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
       // Exposes draft-doc permalinks as global data so the dev-only sidebar
       // swizzle can badge drafts (see plugins/draft-docs + theme/DocSidebarItem).
       require.resolve('./plugins/draft-docs'),
+      // DEV ONLY: proxy /api/* → the real prod Worker so localhost behaves like
+      // prod for premium gating (the Worker vends the unlock key). No-op in
+      // `yarn build` (see plugins/dev-api-proxy).
+      require.resolve('./plugins/dev-api-proxy'),
       // 🛠️ Craft — its OWN docs instance (outrospective: the professional topics).
       // Separate instance + route root (/craft) + sidebar so clicking Craft shows ONLY
       // craft topics; Self is a different instance entirely.

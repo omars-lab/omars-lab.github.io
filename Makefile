@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret validate-dev-service-token
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -98,6 +98,52 @@ build-premium: build-storybook ## Cache-busted ENCRYPTED production build (premi
 	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js ) \
 		|| { echo "❌ premium content not safely gated — aborting"; exit 2; }
 
+validate-dev-service-token: ## Verify the CF Access service token unlocks the Worker (dev /api/* auth)
+	@# Proves the dev-only service token (CF_ACCESS_CLIENT_ID/SECRET in .env) is admitted by
+	@# the /api/* Access app's Service Auth policy and that the Worker vends the key. This is
+	@# the headless equivalent of the browser LinkedIn unlock — no browser needed. If it 302s,
+	@# the Service Auth policy isn't live on the app yet (add it / wait for propagation).
+	@CID=$$(grep -E '^CF_ACCESS_CLIENT_ID=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	CSEC=$$(grep -E '^CF_ACCESS_CLIENT_SECRET=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	if [ -z "$$CID" ] || [ -z "$$CSEC" ] || [ "$${CID#<PASTE}" != "$$CID" ]; then \
+		echo "❌ CF_ACCESS_CLIENT_ID/SECRET not set in .env (or still a placeholder)."; exit 1; fi; \
+	echo "🔑 Testing service token $${CID%%.*}… against the Worker"; \
+	KEY=$$(curl -s -H "CF-Access-Client-Id: $$CID" -H "CF-Access-Client-Secret: $$CSEC" https://blog.bytesofpurpose.com/api/unlock-key); \
+	if printf '%s' "$$KEY" | grep -q '"passphrase"'; then \
+		echo "✅ /api/unlock-key vended a passphrase — service token admitted. Dev can decrypt headlessly."; \
+		echo "   (Note: /api/me correctly 401s for a service token — it has no email; the dev path uses /api/unlock-key.)"; \
+	else \
+		echo "❌ /api/unlock-key did not return a passphrase. Response: $$KEY"; \
+		echo "   → If 302/401: add a Service Auth policy (Include: Service Token) to the 'Access Gate (blog /api/*)' app, or wait for propagation."; \
+		exit 2; \
+	fi
+
+rotate-premium-secret: ## Rotate the premium passphrase in BOTH .env and the Worker (then re-encrypt+deploy)
+	@# Rotation MUST keep two copies equal: STATICRYPT_PASSPHRASE in .env (encrypts at
+	@# build time) and the access-gate Worker's PREMIUM_PASSPHRASE (vended to readers).
+	@# This target generates one new value, writes it to .env, pushes it to the Worker,
+	@# and redeploys the Worker so it picks the new secret up. ⚠️ AFTER this, already-
+	@# published premium content was encrypted with the OLD passphrase and will no longer
+	@# decrypt — you MUST re-encrypt + redeploy the SITE (`make build-premium && make
+	@# deploy`) or premium readers get garbage. This target reminds you; it does not do
+	@# the site deploy for you (that's deploy-site's job).
+	@# Per-var extraction of the token (NOT `source .env` — shell-special chars).
+	@TOKEN=$$(grep -E '^CF_API_TOKEN=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	if [ -z "$$TOKEN" ]; then echo "❌ CF_API_TOKEN not found in .env — aborting."; exit 1; fi; \
+	NEW=$$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 44); \
+	[ $${#NEW} -eq 44 ] || { echo "❌ passphrase generation failed"; exit 1; }; \
+	echo "🔑 Generated new 44-char passphrase. Writing to .env…"; \
+	python3 -c 'import sys,pathlib; p=pathlib.Path(".env"); L=p.read_text().splitlines(); \
+out=[("STATICRYPT_PASSPHRASE="+sys.argv[1]) if l.startswith("STATICRYPT_PASSPHRASE=") else l for l in L]; \
+assert any(l.startswith("STATICRYPT_PASSPHRASE=") for l in out), "no STATICRYPT_PASSPHRASE line in .env"; \
+p.write_text("\n".join(out)+"\n")' "$$NEW"; \
+	echo "🚀 Pushing PREMIUM_PASSPHRASE to the Worker + redeploying…"; \
+	( cd workers/access-gate && printf '%s' "$$NEW" | CLOUDFLARE_API_TOKEN=$$TOKEN npx wrangler secret put PREMIUM_PASSPHRASE && CLOUDFLARE_API_TOKEN=$$TOKEN npx wrangler deploy ) \
+		|| { echo "❌ Worker secret/deploy failed — .env now holds the NEW value but the Worker may still vend the OLD one. Re-run to resync."; exit 2; }; \
+	echo "✅ Rotated. .env + Worker now share the new passphrase."; \
+	echo "⚠️  NEXT: re-encrypt + redeploy the SITE so published premium content matches:"; \
+	echo "       make build-premium && make deploy   (or run the deploy-site skill)"
+
 test-link-hook: ## Integration tests for the validate-links PostToolUse hook + --fix
 	bash ${SITEROOT}/test/integration/validate-links-hook.test.sh
 
@@ -123,7 +169,21 @@ start: build-storybook ## Start the development server (use PORT=8080 to specify
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	# Builds Storybook first so it's available at /storybook/
 	# Changelog data is auto-generated via npm 'prestart' hook before starting
-	( cd ${SITEROOT} && yarn start --port ${PORT} )
+	@# Dev/prod parity for premium: export STATICRYPT_PASSPHRASE from the gitignored .env so
+	@# the rehype-premium-encrypt plugin ENCRYPTS premium bodies in dev too — the gate looks
+	@# identical to prod locally. NOT hardcoded; per-var extraction (NOT `source .env` —
+	@# shell-special chars). Empty if .env lacks it → dev silently renders premium plaintext
+	@# (authoring fallback), so we warn. The unlock key comes from the REAL Worker via the
+	@# dev /api/* proxy (#26), so a domain sign-in is needed to decrypt locally.
+	@# Also export the CF Access SERVICE TOKEN (dev-only) so plugins/dev-api-proxy can
+	@# authenticate /api/* to the real Worker headlessly (no browser login) — the documented
+	@# CF localhost-dev path. Absent → proxy still forwards but can't unlock (premium stays
+	@# gated in dev); the plugin warns.
+	@SP=$$(grep -E '^STATICRYPT_PASSPHRASE=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	CID=$$(grep -E '^CF_ACCESS_CLIENT_ID=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	CSEC=$$(grep -E '^CF_ACCESS_CLIENT_SECRET=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	if [ -z "$$SP" ]; then echo "⚠️  STATICRYPT_PASSPHRASE not in .env — premium will render in CLEAR in dev (no gate)."; fi; \
+	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP CF_ACCESS_CLIENT_ID=$$CID CF_ACCESS_CLIENT_SECRET=$$CSEC yarn start --port ${PORT} )
 
 PORT ?= 3000
 start-prod: ## Start the development server with NODE_ENV=production

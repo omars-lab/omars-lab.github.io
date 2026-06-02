@@ -128,16 +128,26 @@ export default {
       return json({error: 'method_not_allowed'}, 405, req);
     }
 
+    // A valid Access JWT means the caller was admitted by an Access policy —
+    // either a LinkedIn-identity user OR a non-identity service token (the
+    // dev/localhost auth path). This is sufficient to vend the unlock key.
     const payload = await verifyAccessJwt(req, env);
     if (!payload) return json({error: 'unauthorized'}, 401, req);
 
-    // Access puts the verified identity email in the JWT `email` claim.
-    const email =
-      (payload.email as string | undefined) ||
-      (payload['custom'] as {email?: string} | undefined)?.email;
-    if (!email) return json({error: 'no_email'}, 401, req);
+    if (url.pathname === '/api/unlock-key') {
+      // No email required — the key isn't tied to a person. Any admitted caller
+      // (LinkedIn user or the dev service token) may decrypt premium content.
+      return json({passphrase: env.PREMIUM_PASSPHRASE}, 200, req);
+    }
 
     if (url.pathname === '/api/me') {
+      // /api/me reports the signed-in identity, so it DOES need an email claim.
+      // Service tokens have none (they're non-identity) → 401 no_email, which is
+      // correct: the dev proxy uses /api/unlock-key, not /api/me, for identity.
+      const email =
+        (payload.email as string | undefined) ||
+        (payload['custom'] as {email?: string} | undefined)?.email;
+      if (!email) return json({error: 'no_email'}, 401, req);
       return json(
         {
           email,
@@ -147,10 +157,6 @@ export default {
         200,
         req,
       );
-    }
-
-    if (url.pathname === '/api/unlock-key') {
-      return json({passphrase: env.PREMIUM_PASSPHRASE}, 200, req);
     }
 
     return json({error: 'not_found'}, 404, req);
