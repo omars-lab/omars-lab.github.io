@@ -89,7 +89,11 @@
 .cardCtaPrimary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  /* min-height 44px keeps this a comfortable touch target on mobile — it's the premium
+     conversion action (audit-mobile #18: was rendering 36px tall). */
+  min-height: 44px;
   padding: 0.55rem 1rem;
   border: 0;
   border-radius: 0.5rem;
@@ -122,6 +126,7 @@
 
 /* Secondary CTA — gold outline (the "make it free" demand signal). */
 .cardCtaSecondary {
+  min-height: 44px;   /* match the primary CTA's touch-target floor (audit-mobile #18) */
   padding: 0.55rem 1rem;
   border: 1.5px solid var(--premium-gold-bright);
   border-radius: 0.5rem;
