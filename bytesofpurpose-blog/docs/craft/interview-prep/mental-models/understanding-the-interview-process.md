@@ -1,6 +1,6 @@
 ---
 slug: /interview-prep/mental-models/understanding-the-interview-process
-title: 'Interview Process'
+title: '🧠 Interview Process'
 description: 'A comprehensive guide to understanding how technical interviews are structured, what to expect, and how to navigate different interview phases effectively'
 authors: [oeid]
 tags: [interviewing, process, structure, preparation, navigation]

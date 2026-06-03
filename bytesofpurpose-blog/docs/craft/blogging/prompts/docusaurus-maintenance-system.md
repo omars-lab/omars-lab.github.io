@@ -1,5 +1,5 @@
 ---
-title: "Docusaurus Maintenance System"
+title: "💬 Docusaurus Maintenance System"
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "maintenance", "docusaurus", "documentation", "blogging"]
 description: 'An AI prompt system that systematically fixes frontmatter and broken links across a Docusaurus site for clean, organized builds.'

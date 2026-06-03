@@ -1,7 +1,7 @@
 ---
 slug: /blogging/prompts/evals/specific-posts/evaluating-zapier-values
-title: "Evaluating Zapier Values Blog Post"
-sidebar_label: 'Zapier Values'
+title: "📏 Evaluating Zapier Values Blog Post"
+sidebar_label: '📏 Zapier Values'
 description: "Evaluation rubric for the 'Understanding Zapier Values' blog post - focused on company culture analysis and insights"
 authors: [oeid]
 tags: [rubric, zapier-values, company-culture, evaluation]

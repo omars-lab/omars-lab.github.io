@@ -1,6 +1,6 @@
 ---
 slug: /product-management/initiatives
-title: Initiatives
+title: '🚀 Initiatives'
 description: 'Initiatives ready to get started - have blueprints, designs, and proper execution structure but not yet active projects.'
 authors: [oeid]
 tags: [initiatives, blueprints, development, execution, tools, apps]

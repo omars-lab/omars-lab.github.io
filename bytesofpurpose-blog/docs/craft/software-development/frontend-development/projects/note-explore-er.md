@@ -1,6 +1,6 @@
 ---
 slug: /software-development/frontend-development/projects/note-explore-er
-title: Note Explore-er
+title: '🔨 Note Explore-er'
 description: 'Building a tool to traverse and explore notes with dependency visualization and fuzzy search capabilities.'
 authors: [oeid]
 tags: [notes, explorer, dependencies, fuzzy-search, mind-node, plantuml, development]

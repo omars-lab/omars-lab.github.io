@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/projects/automate-scripts
-title: 'Automate Scripts'
+title: '🔨 Automate Scripts'
 description: 'Roadmap for automating scripts including cron job setup and multi-laptop automation mechanics'
 authors: [oeid]
 tags: [automation, scripts, cron-jobs, productivity-scripts, roadmap, multi-laptop]

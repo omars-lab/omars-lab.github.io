@@ -1,6 +1,6 @@
 ---
 slug: /blogging/embed-code
-title: 'Embedding Code'
+title: '💻 Embedding Code'
 description: 'Methods for embedding code examples, snippets, and interactive code cells including GitHub Gists and Jupyter notebooks in blog posts and documentation.'
 authors: [oeid]
 tags: [blogging, code, embedding, gists, jupyter, interactive]

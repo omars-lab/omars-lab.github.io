@@ -1,6 +1,6 @@
 ---
 slug: /product-management/pocs
-title: Proof of Concepts
+title: '🛠️ Proof of Concepts'
 description: 'A collection of proof of concepts and innovative solutions exploring cutting-edge technologies and methodologies.'
 authors: [oeid]
 tags: [pocs, proof-of-concepts, experimental, innovation, prototypes]

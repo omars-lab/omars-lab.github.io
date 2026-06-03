@@ -1,0 +1,119 @@
+---
+slug: design-sidebar-emoji-system
+sidebar_position: 6
+title: Sidebar Emoji System (self-maintaining)
+draft: true
+---
+
+How every sidebar entry on the site comes to lead with one emoji, and how that stays
+true as new docs and folders are added, without anyone having to remember a convention.
+
+<!-- truncate -->
+
+## Problem
+
+The docs sidebar scans best when each entry leads with a single emoji: a reader finds a
+topic by its shape before reading a word. The convention was already enforced for
+section labels (`_category_.json`), but ~229 leaf docs still had emoji-less sidebar
+labels, and the convention itself lived only as prose in one doc. Two gaps:
+
+1. **No single source of truth.** The topic-to-emoji map was prose in
+   `docs/craft/productivity/terminology/emojis.mdx`. A validator, a hook, and any future
+   tooling each had to re-encode it, so they could drift.
+2. **No path to keep it true.** Backfilling 229 docs once is a chore; the harder problem
+   is that the *next* folder someone adds reintroduces the gap. We wanted the system to
+   notice a new emoji-less folder and walk the author through fixing it, learning the
+   choice so siblings stay consistent.
+
+## Background: what "standard" means
+
+Folders fall into two buckets:
+
+- **Standard:** the folder is a known **kind** (`research`, `projects`, `prompts`,
+  `terminology`, `mental-models`, ...) whose emoji is fixed by convention so all
+  siblings of that kind match (🔬 research, 🔨 projects, 💬 prompts, and so on), or it is
+  a topic **root** (`craft/blogging` leads with ✍️). These need no human decision: the
+  emoji is implied by the folder's name or position.
+- **Non-standard:** a grab-bag folder that is not a recognized kind (e.g.
+  `craft/blogging/embed-diagrams`, `craft/product-management/roadmaps`). There is no
+  convention to inherit, so a human picks a fitting emoji once, and the system records
+  it so the folder becomes "known" thereafter.
+
+This is the hybrid policy: consistent where a kind exists, expressive (per-folder
+chosen) where it does not. 111 of the 229 flagged docs resolved automatically from the
+kind-map; 118 lived in 31 non-standard folders needing a one-time choice.
+
+## Approach
+
+Three artifacts share one config, mirroring the repo tenet that structure decisions and
+the checks that enforce them move together.
+
+### 1. `scripts/lib/emoji-map.json` (single source of truth)
+
+Three sections: `kinds` (kind-folder name to emoji), `roots` (instance/topic to emoji),
+and `folders` (learned per-folder overrides, keyed by a path relative to `docs/`). The
+prose doc and this design doc are mirrors; the JSON is authoritative.
+
+### 2. `scripts/lib/emoji-map.js` (shared resolver)
+
+`resolveFolderEmoji(relDir)` answers "what emoji should this folder's docs lead with?"
+in a fixed precedence: learned override, then the kind of the last path segment, then
+the topic root **only when `relDir` IS the root** (so a nested grab-bag does not silently
+inherit the topic emoji and skip the ask flow). Returns `null` for a non-standard folder.
+`isStandardFolder(relDir)` is just `resolveFolderEmoji() !== null`. The validator, the
+hook, and the skill all import this one module, so they cannot disagree.
+
+### 3. Validator + hook + skill, all config-driven
+
+- **`validate-docs-structure.js`** (warn-tier, unchanged severity): for each emoji-less
+  leaf doc it now prints either "prepend X (folder resolves to it)" or "folder is
+  non-standard, run `/suggest-emoji <folder>`". The aggregate finding reports how many of
+  the misses are in non-standard folders. `--error-only` stays exit 0 (never blocks).
+- **`.claude/hooks/validate-docs-structure-hook.sh`** (PostToolUse, advisory): when a
+  saved doc/`_category_.json` has an emoji-less label, it calls the resolver and nudges
+  with the concrete emoji (standard) or the `/suggest-emoji` command (non-standard).
+  Never blocks (exit 0). Hooks cannot open an interactive picker, so the hook only
+  *detects and points*; the skill does the asking.
+- **`/suggest-emoji` skill**: the interactive half. For a non-standard folder it reads
+  the docs, proposes 2 to 4 fitting candidate emojis via AskUserQuestion, then applies
+  the choice and learns it. For a standard folder it applies the resolved emoji directly.
+
+### 4. `scripts/apply-folder-emoji.js` (deterministic mutation)
+
+The skill chooses; this script changes files, so the edits are exact, idempotent, and
+testable. It stamps the emoji onto BOTH `title:` and `sidebar_label:` (the validator
+reads `sidebar_label || title`, so `sidebar_label` is what clears the warning; the title
+keeps the sidebar and SEO consistent, which is the chosen policy), includes the folder's
+`_category_.json`, supports per-doc `--override`s, and with `--learn` records the folder
+into `emoji-map.json`. It is non-recursive (each subfolder is its own folder) and
+idempotent (it skips any label that already leads with an emoji), and it edits only the
+YAML frontmatter block, so it never introduces the repo's MDX build-breakers.
+
+## Why both fields, and why learn
+
+- **Both `title` + `sidebar_label`:** the emoji is visible in the sidebar, the H1, the
+  browser tab, and social/SEO metadata, chosen for maximum visibility over a cleaner SEO
+  title. If that trade ever flips, only `apply-folder-emoji.js` changes.
+- **Learning non-standard folders:** once a grab-bag folder is decided, recording it in
+  `folders` means the next doc added there resolves automatically (the hook suggests the
+  learned emoji instead of re-asking), so the convention compounds instead of decaying.
+
+## Testing
+
+- **Resolver:** verified against the live tree that kind folders resolve to their kind
+  emoji, grab-bag subfolders return null (trigger the ask), and a topic root resolves
+  only for its own README.
+- **Apply script:** dry-run then real run on a standard folder stamped all docs and the
+  category, a second run changed 0 files (idempotent), and an `--override` applied a
+  distinct per-doc emoji.
+- **Validator/hook:** the flagged count dropped exactly by the number of docs stamped,
+  the stamped folder is no longer flagged, `--error-only` stays exit 0, and the hook
+  prints the right branch (concrete emoji vs `/suggest-emoji`) for standard vs
+  non-standard folders.
+
+## Future / open
+
+- **Promote a repeated folder to a kind.** If the same non-standard folder name recurs
+  across topics, lift it from `folders` into `kinds` so it resolves everywhere.
+- **CI surfacing.** The aggregate warn count could be tracked over time so the backfill
+  does not silently regress.

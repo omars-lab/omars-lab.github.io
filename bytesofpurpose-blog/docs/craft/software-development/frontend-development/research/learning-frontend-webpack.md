@@ -1,6 +1,6 @@
 ---
 slug: /software-development/frontend-development/research/learning-frontend-webpack
-title: Learning Frontend Webpack
+title: '🔬 Learning Frontend Webpack'
 description: 'Learning goals and resources for Webpack bundling, configuration, and build optimization.'
 authors: [oeid]
 tags: [webpack, frontend, bundling, build-tools, learning]

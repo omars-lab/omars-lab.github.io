@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/projects/develop-a-task-management-cli
-title: Develop a Task Management CLI
+title: '🔨 Develop a Task Management CLI'
 description: 'Building a personal CLI tool for task management, validation, and productivity analysis with role-based organization.'
 authors: [oeid]
 tags: [cli, task-management, validation, productivity, roles, automation, development]

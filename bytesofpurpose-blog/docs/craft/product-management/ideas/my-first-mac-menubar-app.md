@@ -1,7 +1,7 @@
 ---
 slug: /product-management/ideas/my-first-mac-menubar-app
-title: My First Mac Menu Bar App
-sidebar_label: 'Mac Menu Bar App'
+title: '💡 My First Mac Menu Bar App'
+sidebar_label: '💡 Mac Menu Bar App'
 description: 'Learning to create a macOS menu bar application with NotePlan task integration.'
 authors: [oeid]
 tags: [macos, menu-bar, app, noteplan, swift, development]

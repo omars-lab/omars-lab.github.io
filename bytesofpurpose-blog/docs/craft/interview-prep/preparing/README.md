@@ -1,7 +1,7 @@
 ---
 slug: /interview-prep/preparing
-title: 'Complete Interview Preparation Guide'
-sidebar_label: 'Interview Prep Guide'
+title: '🎓 Complete Interview Preparation Guide'
+sidebar_label: '🎓 Interview Prep Guide'
 description: 'A systematic approach to preparing for technical and behavioral interviews using proven frameworks and personal story banks'
 authors: [oeid]
 tags: [interviewing, preparation, leadership, technical, behavioral]

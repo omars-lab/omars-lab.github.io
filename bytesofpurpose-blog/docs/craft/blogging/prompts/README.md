@@ -1,5 +1,5 @@
 ---
-title: "AI Prompts Use Case Overview"
+title: "💬 AI Prompts Use Case Overview"
 date: 2025-01-31
 tags: ["ai", "prompts", "overview", "use-cases", "workflow", "automation", "productivity"]
 description: "Comprehensive overview of AI prompt use cases covering analysis, content creation, maintenance, organization, and quality assessment workflows"

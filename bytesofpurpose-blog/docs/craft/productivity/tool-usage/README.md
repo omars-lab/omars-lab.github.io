@@ -1,6 +1,6 @@
 ---
 slug: /productivity/tool-usage
-title: 'Tool Usage Techniques'
+title: '🧰 Tool Usage Techniques'
 description: 'Methods for establishing effective tool usage patterns and maximizing productivity with development tools and workflows.'
 authors: [oeid]
 tags: [tool-usage, techniques, productivity, workflows, patterns]

@@ -1,6 +1,6 @@
 ---
 slug: /companies/mental-models/skills/understanding-desireable-leadership-skills
-title: 'Leadership Principles'
+title: '🛠️ Leadership Principles'
 description: 'A comprehensive guide to the leadership principles companies actually evaluate, why they matter, and how to demonstrate them in interviews'
 authors: [oeid]
 tags: [leadership, interviewing, career, management, principles]

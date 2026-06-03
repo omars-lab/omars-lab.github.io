@@ -1,5 +1,5 @@
 ---
-title: 'Terminal Links'
+title: '🔨 Terminal Links'
 description: 'How to embed clickable hyperlinks in terminal output using ANSI escape sequences, with cross-shell examples.'
 slug: /software-development/scripting/projects/terminal-links
 authors: [oeid]

@@ -1,6 +1,6 @@
 ---
 slug: /productivity/automating
-title: 'Automation Techniques'
+title: '⚙️ Automation Techniques'
 description: 'Methods for creating and using automation shortcuts to streamline workflows and improve productivity.'
 authors: [oeid]
 tags: [automation, techniques, shortcuts, productivity, workflows]

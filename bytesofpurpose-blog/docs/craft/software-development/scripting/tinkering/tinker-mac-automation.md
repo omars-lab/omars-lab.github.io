@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/tinkering/tinker-mac-automation
-title: 'Tinkering with Mac Automation'
+title: '🔧 Tinkering with Mac Automation'
 description: 'Experiments with Mac automation including LaunchAgents, Automator services, and clipboard sharing'
 authors: [oeid]
 tags: [mac-automation, launchagents, automator, clipboard, services, experiments, tinkering]

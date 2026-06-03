@@ -1,6 +1,6 @@
 ---
 slug: /software-development/frontend-development/projects/website-blog
-title: My Blog
+title: '🔨 My Blog'
 description: 'Developing a Docusaurus-based blog with automation tools, voting features, and content integration.'
 authors: [oeid]
 tags: [blog, docusaurus, automation, voting, content, development]

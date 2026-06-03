@@ -1,6 +1,6 @@
 ---
 slug: /companies/skills/managing-complexity
-title: 'Managing Complexity'
+title: '🛠️ Managing Complexity'
 description: 'Strategies for balancing simplicity, speed, and maintainability in complex systems. Essential for staff-level engineering roles.'
 authors: [oeid]
 tags: [complexity, soft-skills, architecture, system-design, leadership, trade-offs]

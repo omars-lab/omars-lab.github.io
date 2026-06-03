@@ -1,6 +1,6 @@
 ---
 slug: /software-development/workspace/tools
-title: Tools
+title: '🛠️ Tools'
 description: 'A curated collection of development tools I rely on, including GenAI tools, and what each one is good for.'
 authors: [oeid]
 tags: [tools]

@@ -1,6 +1,6 @@
 ---
 slug: /productivity/dashboards/metric-tracker
-title: Metric Tracker
+title: '📈 Metric Tracker'
 description: 'Developing tools to automatically track personal metrics including prayer times and habit monitoring.'
 authors: [oeid]
 tags: [metrics, tracking, apple-watch, prayer, habits, automation, development]

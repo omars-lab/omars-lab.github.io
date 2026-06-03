@@ -1,7 +1,7 @@
 ---
 slug: /software-development/frontend-development/projects/lametric-motivational-app
-title: Develop a LaMetric App for Motivation
-sidebar_label: 'LaMetric Motivation App'
+title: '🔨 Develop a LaMetric App for Motivation'
+sidebar_label: '🔨 LaMetric Motivation App'
 description: 'Building a LaMetric clock app to display motivational quotes with AWS Lambda, DynamoDB, and OAuth integration.'
 authors: [oeid]
 tags: [lametric, motivation, quotes, aws, lambda, dynamodb, oauth, cognito, development]

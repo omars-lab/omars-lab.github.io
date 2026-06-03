@@ -1,6 +1,6 @@
 ---
 slug: /product-management/projects
-title: Projects
+title: '🔨 Projects'
 description: 'Active development projects - initiatives that are now being actively worked on with ongoing implementation and progress tracking.'
 authors: [oeid]
 tags: [projects, development, execution, tools, apps, active-work]

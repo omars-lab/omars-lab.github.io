@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/projects/automate-notifications
-title: Automate Notifications
+title: '🔨 Automate Notifications'
 description: 'Automating notification systems for monitoring changes in listings and other automated alerts.'
 authors: [oeid]
 tags: [notifications, automation, monitoring, alerts, cron, development]

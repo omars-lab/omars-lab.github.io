@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/tinkering/tinker-timeouts
-title: Tinker Timeouts
+title: '🔧 Tinker Timeouts'
 description: 'Experimenting with different timeout patterns in web applications and socket connections.'
 authors: [oeid]
 tags: [timeouts, sockets, spring-boot, networking, experiments, learning]

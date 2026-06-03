@@ -1,6 +1,6 @@
 ---
 slug: /product-management/research
-title: Research
+title: '🔬 Research'
 description: 'Research planning and investigation to inform decisions about ideas - what must I research to act on my ideas?'
 authors: [oeid]
 tags: [research, planning, investigation, decision-making, ideas]

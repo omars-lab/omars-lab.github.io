@@ -1,6 +1,6 @@
 ---
 slug: /blogging/prompts/evals/specific-posts/evaluating-my-approach
-title: "Evaluating My Approach Blog Post"
+title: "📏 Evaluating My Approach Blog Post"
 description: "Evaluation rubric for the 'My Approach' blog post - focused on problem-solving methodology demonstration"
 authors: [oeid]
 tags: [rubric, my-approach, problem-solving, methodology, evaluation]

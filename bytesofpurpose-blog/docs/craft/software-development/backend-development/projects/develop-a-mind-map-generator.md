@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/projects/develop-a-mind-map-generator
-title: Develop a Mind Map Generator
+title: '🔨 Develop a Mind Map Generator'
 description: 'Building a tool to automatically generate mind maps from notes using AI categorization and graph visualization.'
 authors: [oeid]
 tags: [mind-map, generator, ai, categorization, notes, visualization, development]

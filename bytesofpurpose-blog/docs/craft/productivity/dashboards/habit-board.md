@@ -1,6 +1,6 @@
 ---
 slug: /productivity/dashboards/habit-board
-title: Habit Board
+title: '📈 Habit Board'
 description: 'Developing a habit tracking board to monitor and reflect on personal habit development and future role planning.'
 authors: [oeid]
 tags: [habits, tracking, board, reflection, personal-development, development]

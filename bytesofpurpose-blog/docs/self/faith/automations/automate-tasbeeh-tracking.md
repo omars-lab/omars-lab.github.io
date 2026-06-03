@@ -1,6 +1,6 @@
 ---
 slug: /faith/automations/automate-tasbeeh-tracking
-title: Automate Tasbeeh Tracking
+title: '⚙️ Automate Tasbeeh Tracking'
 description: 'Project to develop a smart clicker system for tracking tasbeeh using home automation and IoT devices.'
 authors: [oeid]
 tags: [home-automation, iot, tasbeeh, tracking, smart-clicker, home-assistant]

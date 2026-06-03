@@ -2,7 +2,7 @@
 # Copy this file to <YYYY-MM-DD>-<flag-key>.md and fill it in.
 # This doc is BOTH the experiment's design and its living timeline.
 slug: /development/projects/experiments/experiment-<flag-key>
-title: '<Experiment title>'
+title: '🔬 <Experiment title>'
 description: 'Template for an experiment doc that captures both the design and the living timeline, copy it per experiment and fill it in.'
 authors: [oeid]
 tags: [experiments, ab-testing]

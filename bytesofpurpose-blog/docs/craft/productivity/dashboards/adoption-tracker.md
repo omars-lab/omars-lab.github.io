@@ -1,6 +1,6 @@
 ---
 slug: /productivity/dashboards/adoption-tracker
-title: Adoption Tracker
+title: '📈 Adoption Tracker'
 description: 'Developing tools to track app usage, script usage, and file modification metrics for productivity analysis.'
 authors: [oeid]
 tags: [adoption, tracking, metrics, app-usage, productivity, analysis, development]
