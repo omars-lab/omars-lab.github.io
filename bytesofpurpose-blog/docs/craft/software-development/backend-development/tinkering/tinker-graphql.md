@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/tinkering/tinker-graphql
-title: 'Tinkering with GraphQL'
+title: '🔧 Tinkering with GraphQL'
 description: 'Experiments and learning notes for GraphQL implementation using Python and Graphene'
 authors: [oeid]
 tags: [graphql, python, graphene, mutations, resolvers, experiments, tinkering]

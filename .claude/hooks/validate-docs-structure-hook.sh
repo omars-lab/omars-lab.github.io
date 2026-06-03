@@ -82,12 +82,30 @@ if [ -n "$emoji_label" ]; then
       end' 2>/dev/null)
   if [ "$leads_emoji" = "no" ]; then
     rel="${file_path##*/bytesofpurpose-blog/}"
+    # Ask the shared emoji-map config what THIS folder resolves to. A standard folder
+    # (known kind / learned override / root) yields a concrete emoji to prepend; a
+    # non-standard folder yields nothing → point the author at /suggest-emoji so the
+    # choice is made once for the folder and recorded back into emoji-map.json.
+    rel_dir="${file_path#*/bytesofpurpose-blog/docs/}"
+    rel_dir="${rel_dir%/*}"
+    resolver="$proj/bytesofpurpose-blog/scripts/lib/emoji-map.js"
+    suggested=""
+    if [ -f "$resolver" ]; then
+      suggested=$(node -e 'const{resolveFolderEmoji}=require(process.argv[1]);process.stdout.write(resolveFolderEmoji(process.argv[2])||"")' "$resolver" "$rel_dir" 2>/dev/null)
+    fi
     {
       echo "🎨 Docs structure: sidebar label has no leading emoji in '$rel'"
       echo "   Label: \"$emoji_label\""
-      echo "   Convention: every sidebar section leads with one emoji so the sidebar scans"
-      echo "   visually. Pick one from the topic→emoji map (/definitions/emojis-for-activities)"
-      echo "   that's consistent with sibling sections. (advice only — not blocking.)"
+      if [ -n "$suggested" ]; then
+        echo "   Suggested: prepend \"$suggested\" — the folder '$rel_dir' resolves to it"
+        echo "   (kind-map / learned override). Add it to BOTH title and sidebar_label."
+      else
+        echo "   Folder '$rel_dir' is NON-STANDARD (no kind/learned/root match)."
+        echo "   Run \`/suggest-emoji $rel_dir\` to pick a fitting emoji once for the folder;"
+        echo "   it records the choice in emoji-map.json so siblings stay consistent."
+      fi
+      echo "   (Convention: every sidebar entry leads with one emoji so the sidebar scans"
+      echo "   visually — see /definitions/emojis-for-activities. Advice only — not blocking.)"
     } >&2
   fi
 fi

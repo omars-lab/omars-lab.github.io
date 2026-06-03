@@ -1,6 +1,6 @@
 ---
 slug: /entrepreneurship/learning-business
-title: Learning Business
+title: '🚀 Learning Business'
 description: 'Learning goals and resources for business concepts, entrepreneurship, and management.'
 authors: [oeid]
 tags: [business, entrepreneurship, management, learning]

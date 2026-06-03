@@ -1,6 +1,6 @@
 ---
 slug: /blogging/embed-diagrams
-title: 'Embedding Diagrams'
+title: '📊 Embedding Diagrams'
 description: 'Methods for embedding various types of diagrams including Figma, Mermaid, PlantUML, flow charts, and mind maps in blog posts and documentation.'
 authors: [oeid]
 tags: [blogging, diagrams, embedding, visualization, figma, mermaid, plantuml]

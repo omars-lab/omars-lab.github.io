@@ -1,6 +1,6 @@
 ---
 slug: /interview-prep/preparing/prepraring-questions-to-ask-interviewers
-title: 'Interviewing the Interviewer'
+title: '🎓 Interviewing the Interviewer'
 description: 'A comprehensive guide to preparing strategic questions that help you evaluate roles, growth opportunities, and company culture while demonstrating your value'
 authors: [oeid]
 tags: [interviewing, career, questions, evaluation, strategy]

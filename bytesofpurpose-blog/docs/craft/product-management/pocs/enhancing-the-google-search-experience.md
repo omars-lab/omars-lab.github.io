@@ -1,7 +1,7 @@
 ---
 slug: /product-management/pocs/enhancing-the-google-search-experience
-title: Enhancing the Google Search Experience
-sidebar_label: 'Google Search Experience'
+title: '🛠️ Enhancing the Google Search Experience'
+sidebar_label: '🛠️ Google Search Experience'
 description: 'A proof of concept exploring ways to improve Google search results, especially the SGE Generative AI Responses.'
 authors: [oeid]
 tags: [pocs, google-search, browser-extension, ai-filtering, search-optimization, user-experience, seo, sge]

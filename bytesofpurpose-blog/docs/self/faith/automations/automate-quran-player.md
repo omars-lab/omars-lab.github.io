@@ -1,6 +1,6 @@
 ---
 slug: /faith/automations/automate-quran-player
-title: Automate Quran Player
+title: '⚙️ Automate Quran Player'
 description: 'Automating Quran playback in the home using smart speakers and containerized applications.'
 authors: [oeid]
 tags: [quran, automation, smart-speakers, home-automation, islamic, containers, development]

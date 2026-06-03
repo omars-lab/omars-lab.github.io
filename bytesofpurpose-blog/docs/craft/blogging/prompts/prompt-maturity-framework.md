@@ -1,5 +1,5 @@
 ---
-title: "Prompt Maturity Framework"
+title: "💬 Prompt Maturity Framework"
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "quality-assessment", "maturity", "evaluation"]
 description: "How I use AI to systematically evaluate prompt maturity across multiple dimensions, identifying improvement opportunities and ensuring production-ready quality"

@@ -1,6 +1,6 @@
 ---
 slug: /interview-prep/understanding-what-companies-expect
-title: 'Understanding What Companies Expect'
+title: '🎯 Understanding What Companies Expect'
 description: 'Before you prep, know the target: how engineering levels and competencies differ, and which skills companies actually evaluate in interviews.'
 authors: [oeid]
 tags: [interview-prep, career-levels, skills, expectations]

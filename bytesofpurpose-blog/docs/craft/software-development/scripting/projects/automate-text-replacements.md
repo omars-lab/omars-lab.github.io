@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/projects/automate-text-replacements
-title: Automate Text Replacements
+title: '🔨 Automate Text Replacements'
 description: 'Automating text expansion and shortcut management across devices with iCloud synchronization.'
 authors: [oeid]
 tags: [text-expansion, shortcuts, automation, icloud, productivity, development]

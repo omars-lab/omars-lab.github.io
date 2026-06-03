@@ -1,6 +1,6 @@
 ---
 slug: /companies/skills/dealing-with-ambiguity
-title: 'Dealing with Ambiguity'
+title: '🛠️ Dealing with Ambiguity'
 description: 'Practical approaches for navigating unclear goals, evolving customer needs, and uncertain situations in software development and leadership.'
 authors: [oeid]
 tags: [ambiguity, soft-skills, problem-solving, leadership, uncertainty, iteration]

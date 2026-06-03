@@ -1,6 +1,6 @@
 ---
 slug: /faith/automations/automate-athan-player
-title: Automate Athan Player
+title: '⚙️ Automate Athan Player'
 description: 'Automating Athan (Islamic call to prayer) playback using smart speakers and home automation systems.'
 authors: [oeid]
 tags: [athan, automation, smart-speakers, home-automation, islamic, scheduling, development]

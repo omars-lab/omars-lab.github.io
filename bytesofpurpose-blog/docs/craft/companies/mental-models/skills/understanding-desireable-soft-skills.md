@@ -1,6 +1,6 @@
 ---
 slug: /companies/mental-models/skills/understanding-desireable-soft-skills
-title: 'Soft Skills Evaluation'
+title: '🛠️ Soft Skills Evaluation'
 description: 'A comprehensive guide to soft skills companies evaluate in interviews, including stakeholder management, dealing with ambiguity, and decision making'
 authors: [oeid]
 tags: [soft-skills, interviewing, stakeholder-management, ambiguity, decision-making, career]

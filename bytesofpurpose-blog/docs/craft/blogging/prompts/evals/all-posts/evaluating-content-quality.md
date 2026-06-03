@@ -1,6 +1,6 @@
 ---
 slug: /blogging/prompts/evals/all-posts/evaluating-content-quality
-title: "Evaluating Content Quality"
+title: "📏 Evaluating Content Quality"
 description: "Universal evaluation rubric for assessing wordiness, focus, truthfulness, and content grounding in blog posts"
 authors: [oeid]
 tags: [evaluation, general, content-quality, wordiness, focus, truthfulness, content-grounding, universal-rubric]

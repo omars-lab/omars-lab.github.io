@@ -1,6 +1,6 @@
 ---
 slug: /product-management/research/learning-software
-title: Learning Software
+title: '🔬 Learning Software'
 description: 'Learning goals and resources for software development best practices, architecture, and scaling.'
 authors: [oeid]
 tags: [software-development, architecture, best-practices, learning, scaling]

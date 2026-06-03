@@ -1,5 +1,5 @@
 ---
-title: "Role Refactoring System"
+title: "💬 Role Refactoring System"
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "role-management", "organization", "personal-development"]
 description: 'An AI prompt system that refactors personal role definitions, separating generic frameworks from actionable personal items.'

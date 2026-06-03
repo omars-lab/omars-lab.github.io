@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/projects/develop-a-markdown-catter
-title: Develop a Markdown Catter
+title: '🔨 Develop a Markdown Catter'
 description: 'Building a command-line tool to display markdown files with terminal links and color-coded output.'
 authors: [oeid]
 tags: [markdown, terminal, links, color-coding, cli, development]

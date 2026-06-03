@@ -1,6 +1,6 @@
 ---
 slug: /faith/apps/hifz-graph
-title: 'Hifz Graph'
+title: '📱 Hifz Graph'
 description: 'Graph visualization for tracking common hops across surahs in Quran memorization (Hifz)'
 authors: [oeid]
 tags: [hifz-graph, quran-memorization, surah-tracking, graphs, frontend-projects]

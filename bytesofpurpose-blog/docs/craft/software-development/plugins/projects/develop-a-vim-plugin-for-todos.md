@@ -1,6 +1,6 @@
 ---
 slug: /software-development/plugins/projects/develop-a-vim-plugin-for-todos
-title: Develop a Vim Plugin for Todos
+title: '🔨 Develop a Vim Plugin for Todos'
 description: 'Building Vim plugins for todo management with keyboard shortcuts and markdown link automation.'
 authors: [oeid]
 tags: [vim, plugin, todos, markdown, shortcuts, automation, development]

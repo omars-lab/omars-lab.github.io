@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/tinkering/tinker-applescript
-title: 'Tinkering with AppleScript'
+title: '🔧 Tinkering with AppleScript'
 description: 'Experiments and automation scripts using AppleScript for Mac automation and user switching'
 authors: [oeid]
 tags: [applescript, mac-automation, user-switching, clipboard, automator, experiments, tinkering]

@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/techniques
-title: 'Development Techniques'
+title: '🛠️ Development Techniques'
 description: 'Practical methods and approaches for developing software effectively, including CI/CD, build processes, and development workflows.'
 authors: [oeid]
 tags: [development, techniques, ci-cd, build-processes, workflows]

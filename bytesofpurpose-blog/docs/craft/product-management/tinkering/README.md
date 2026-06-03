@@ -1,6 +1,6 @@
 ---
 slug: /product-management/tinkering
-title: 'Tinkering'
+title: '🔧 Tinkering'
 description: 'Exploratory, informal experiments and hands-on learning through trial and error.'
 authors: [oeid]
 tags: [tinkering, exploration, learning, hands-on, informal-experiments]

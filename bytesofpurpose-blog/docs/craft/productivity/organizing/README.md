@@ -1,6 +1,6 @@
 ---
 slug: /productivity/organizing
-title: 'Organization Techniques'
+title: '🗂️ Organization Techniques'
 description: 'Methods for organizing information, content, and workflows through linking, tagging, and text replacements to improve findability and efficiency.'
 authors: [oeid]
 tags: [organization, techniques, linking, tagging, text-replacements, efficiency]

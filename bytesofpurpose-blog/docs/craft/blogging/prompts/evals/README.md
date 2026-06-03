@@ -1,6 +1,6 @@
 ---
 slug: /blogging/prompts/evals
-title: "Blog Post Evaluation System"
+title: "🧪 Blog Post Evaluation System"
 description: "A comprehensive system for evaluating individual blog posts and determining if they are ready to be moved from draft state to published."
 authors: [oeid]
 tags: [blog-evaluation, quality-gates, content-assessment, publishing-criteria, evaluation-rubrics]

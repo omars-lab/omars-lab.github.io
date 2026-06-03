@@ -1,6 +1,6 @@
 ---
 slug: /product-management/ideas/unorganized-software-development-ideas
-title: Unorganized Software Development Ideas
+title: '💡 Unorganized Software Development Ideas'
 description: 'What stuff do I want to make? A collection of software development ideas and projects.'
 authors: [oeid]
 tags: [software-development, ideas, projects, scripts, organization]

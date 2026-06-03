@@ -1,6 +1,6 @@
 ---
 slug: /product-management/experiments
-title: 'Experiments'
+title: '🔬 Experiments'
 description: 'Structured experiments using scientific methods including A/B testing, randomized controlled trials (RCTs), and hypothesis-driven experimentation.'
 authors: [oeid]
 tags: [experiments, ab-testing, rct, randomized-controlled-trials, hypothesis-testing, data-driven, scientific-method, projects]

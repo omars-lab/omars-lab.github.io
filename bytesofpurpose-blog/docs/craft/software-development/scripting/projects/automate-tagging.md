@@ -1,6 +1,6 @@
 ---
 slug: /software-development/scripting/projects/automate-tagging
-title: Automate Tagging
+title: '🔨 Automate Tagging'
 description: 'Automating the tagging process for notes with automatic ID assignment, hashtag generation, and note ingestion workflows.'
 authors: [oeid]
 tags: [tagging, automation, notes, hashtags, noteplan, ingestion, development]

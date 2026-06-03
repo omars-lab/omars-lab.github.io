@@ -92,6 +92,9 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+// Single source of truth for the sidebar-emoji convention (kind-map + learned per-folder
+// overrides + root topics). Shared with the detection hook and the /suggest-emoji skill.
+const { resolveFolderEmoji, isStandardFolder } = require('./lib/emoji-map.js');
 
 const ROOT = path.join(__dirname, '..');
 const DOCS = path.join(ROOT, 'docs');
@@ -240,8 +243,13 @@ function checkCategoryEmoji(dir, cat) {
   const c = cat || readCategory(dir);
   const label = c && typeof c.label === 'string' ? c.label : '';
   if (label && !startsWithEmoji(label)) {
+    const relDir = rel(dir).replace(/^docs\//, '');
+    const resolved = resolveFolderEmoji(relDir);
+    const hint = resolved
+      ? `prepend "${resolved}" (folder resolves to it)`
+      : `folder is non-standard — run \`/suggest-emoji ${relDir}\` to pick one and record it`;
     add('emoji-prefix-category', rel(path.join(dir, '_category_.json')),
-      `category label "${label}" has no leading emoji — sidebar sections lead with one for visual scanning; pick one from the topic→emoji map (/definitions/emojis-for-activities)`);
+      `category label "${label}" has no leading emoji — sidebar sections lead with one for visual scanning; ${hint}`);
   }
 }
 
@@ -340,7 +348,12 @@ function checkSidebarLabel(file, data) {
     return;
   }
   if (!startsWithEmoji(label)) {
-    docsMissingEmoji.push({ loc: rel(file), label });
+    // Suggest the emoji this doc's FOLDER resolves to (kind-map / learned override / root).
+    // null → the folder is non-standard: point the author at /suggest-emoji instead of
+    // guessing, so the choice is made once per folder and recorded in emoji-map.json.
+    const relDir = path.dirname(rel(file)).replace(/^docs\//, '');
+    const suggestion = resolveFolderEmoji(relDir);
+    docsMissingEmoji.push({ loc: rel(file), label, suggestion, relDir });
   }
 }
 
@@ -734,11 +747,18 @@ function main() {
     if (docsMissingEmoji.length) {
       if (emoji) {
         for (const d of docsMissingEmoji) {
-          add('emoji-prefix-doc', d.loc, `sidebar label "${d.label}" has no leading emoji`);
+          const hint = d.suggestion
+            ? `suggested: prepend "${d.suggestion}" (folder ${d.relDir} resolves to it)`
+            : `folder ${d.relDir} is non-standard — run \`/suggest-emoji ${d.relDir}\` to pick one and record it`;
+          add('emoji-prefix-doc', d.loc, `sidebar label "${d.label}" has no leading emoji — ${hint}`);
         }
       } else {
+        const ask = docsMissingEmoji.filter((d) => !d.suggestion).length;
+        const askNote = ask
+          ? ` (${ask} are in non-standard folders — run \`/suggest-emoji\` for those)`
+          : '';
         add('emoji-prefix-doc', 'docs/',
-          `${docsMissingEmoji.length} doc label(s) lack a leading emoji — re-run with --emoji to list them (category labels are reported individually above)`);
+          `${docsMissingEmoji.length} doc label(s) lack a leading emoji${askNote} — re-run with --emoji to list them with per-doc suggestions (category labels are reported individually above)`);
       }
     }
   }

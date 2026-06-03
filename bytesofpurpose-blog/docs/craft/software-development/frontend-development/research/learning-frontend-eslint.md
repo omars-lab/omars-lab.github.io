@@ -1,6 +1,6 @@
 ---
 slug: /software-development/frontend-development/research/learning-frontend-eslint
-title: 'Learning ESLint'
+title: '🔬 Learning ESLint'
 description: 'Learning ESLint configuration and best practices for frontend development'
 authors: [oeid]
 tags: [learning, frontend, eslint, javascript, linting, code-quality, configuration]

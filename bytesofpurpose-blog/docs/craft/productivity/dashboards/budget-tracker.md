@@ -1,6 +1,6 @@
 ---
 slug: /productivity/dashboards/budget-tracker
-title: 'Budget Tracker'
+title: '📈 Budget Tracker'
 description: 'Development of personal budgeting notebooks with secure data access and account management'
 authors: [oeid]
 tags: [budget-tracker, dashboards, personal-finance, data-security, csv-export, frontend-projects]

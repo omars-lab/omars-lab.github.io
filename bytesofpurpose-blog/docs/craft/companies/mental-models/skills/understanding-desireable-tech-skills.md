@@ -1,6 +1,6 @@
 ---
 slug: /companies/mental-models/skills/understanding-desireable-tech-skills
-title: 'Technical Skills Evaluation'
+title: '🛠️ Technical Skills Evaluation'
 description: 'A comprehensive guide to technical skills companies evaluate in interviews, including concerns, strengths, and progression expectations for different SDE levels'
 authors: [oeid]
 tags: [technical-skills, interviewing, coding, system-design, problem-solving, career]

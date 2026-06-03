@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/techniques/security-techniques
-title: 'Security Techniques'
+title: '🛠️ Security Techniques'
 description: 'Methods for managing secrets, handling passwords securely, and implementing security best practices in development workflows.'
 authors: [oeid]
 tags: [security, techniques, secrets, passwords, best-practices]

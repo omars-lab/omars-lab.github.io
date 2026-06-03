@@ -1,6 +1,6 @@
 ---
 slug: /software-development/backend-development/projects/develop-automation-hub
-title: Develop Automation Hub
+title: '🔨 Develop Automation Hub'
 description: 'Building a comprehensive home automation hub using Home Assistant, Flic buttons, and smart device integration.'
 authors: [oeid]
 tags: [home-automation, home-assistant, flic, smart-devices, hub, development]

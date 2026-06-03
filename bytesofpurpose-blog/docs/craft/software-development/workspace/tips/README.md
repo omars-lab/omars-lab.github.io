@@ -1,6 +1,6 @@
 ---
 slug: /software-development/workspace/tips
-title: Tips
+title: '🧰 Tips'
 description: 'A collection of development tips for working more efficiently, habits and small techniques that compound over time.'
 authors: [oeid]
 tags: [tips]

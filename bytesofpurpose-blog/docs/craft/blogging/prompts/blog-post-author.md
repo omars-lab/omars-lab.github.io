@@ -1,5 +1,5 @@
 ---
-title: "Blog Post Author"
+title: "💬 Blog Post Author"
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "content-creation", "blogging", "documentation"]
 description: "How I use AI to transform technical prompts into engaging blog posts with comprehensive documentation, visual diagrams, and professional formatting"

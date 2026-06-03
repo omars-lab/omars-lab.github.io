@@ -1,6 +1,6 @@
 ---
 slug: /software-development/plugins/projects/develop-a-quip-plugin
-title: 'Development Initiative: Quip App'
+title: '🔨 Development Initiative: Quip App'
 authors: [oeid]
 tags: []
 draft: true

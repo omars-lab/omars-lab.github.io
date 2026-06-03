@@ -1,5 +1,5 @@
 ---
-title: "Personal Life Content Organizer"
+title: "💬 Personal Life Content Organizer"
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "personal-organization", "life-management"]
 description: 'An AI prompt system that organizes personal content across many directories and routes tasks to the right life areas.'
