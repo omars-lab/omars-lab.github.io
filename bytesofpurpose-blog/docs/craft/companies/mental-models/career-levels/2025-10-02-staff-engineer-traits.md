@@ -7,7 +7,7 @@ tags: [career, staff-engineer, leadership, engineering]
 date: '2025-10-02T00:00'
 draft: false
 ---
-Yes — and this is a really sharp question, because once you’re interviewing at the staff level, companies are evaluating you less on whether you can build things and more on whether you can multiply impact across people, systems, and strategy.
+Yes, and this is a really sharp question, because once you’re interviewing at the staff level, companies are evaluating you less on whether you can build things and more on whether you can multiply impact across people, systems, and strategy.
 
 Here are the key traits most companies (including Zapier) look for in Staff Engineers, broken down into buckets:
 
@@ -31,7 +31,7 @@ Understand customer needs deeply and prioritize simplicity in the experience.
 
 Don’t just build features → ensure they deliver measurable outcomes (adoption, retention, satisfaction).
 
-Push back gracefully when product wants everything at once — by framing tradeoffs in terms of impact, not just effort.
+Push back gracefully when product wants everything at once, by framing tradeoffs in terms of impact, not just effort.
 
 ⚡ What they listen for: “They think like a product owner, not just an engineer.”
 
@@ -47,7 +47,7 @@ Building consensus around hard tradeoffs.
 
 You raise the floor: proactively reduce tech debt, build reusable patterns, improve processes.
 
-⚡ What they listen for: “Teams get better when this engineer is in the room — they unblock, align, and elevate others.”
+⚡ What they listen for: “Teams get better when this engineer is in the room, they unblock, align, and elevate others.”
 
 4. Navigating Ambiguity
 
@@ -71,7 +71,7 @@ Have opinions on where technology is going, but grounded in delivering business/
 
 6. Communication
 
-Clear, concise storytelling — technical and non-technical audiences.
+Clear, concise storytelling, technical and non-technical audiences.
 
 Document decisions and tradeoffs in a way others can follow.
 `
@@ -91,15 +91,15 @@ Willing to take accountability when things don’t land, and extract lessons for
 
 ✅ If you put it all together, the Staff Engineer archetype is:
 
-A highly credible technologist who raises the level of the team, makes strong judgment calls, thrives in ambiguity, and drives projects from concept to customer impact — not just through code, but through influence and clarity.
+A highly credible technologist who raises the level of the team, makes strong judgment calls, thrives in ambiguity, and drives projects from concept to customer impact, not just through code, but through influence and clarity.
 
-Omar — would you like me to make a checklist / scorecard of these traits (like what interviewers are silently grading you against)? That way, you’d have a one-pager to prep with and sanity-check your stories against before the interview.
+Omar, would you like me to make a checklist / scorecard of these traits (like what interviewers are silently grading you against)? That way, you’d have a one-pager to prep with and sanity-check your stories against before the interview.
 
 
 # --------------
 
 
-Perfect — here’s a Staff Engineer Interview Scorecard / Checklist you can use as a prep tool. Think of this like the rubric hiring managers will use (explicitly or implicitly). You can use it to sanity-check your stories and answers.
+Perfect, here’s a Staff Engineer Interview Scorecard / Checklist you can use as a prep tool. Think of this like the rubric hiring managers will use (explicitly or implicitly). You can use it to sanity-check your stories and answers.
 
 Staff Engineer Interview Prep Scorecard
 1. Technical Judgment & Execution

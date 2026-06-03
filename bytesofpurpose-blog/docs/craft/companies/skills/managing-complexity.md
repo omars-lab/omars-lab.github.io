@@ -48,7 +48,7 @@ Ask: **What is the simplest thing that delivers customer value?**
 
 **Example**: Instead of building a full fine-tuned model pipeline, start with prompting + off-the-shelf embeddings, then harden once adoption is proven.
 
-This aligns with "Move Fast Forward" principles—validate before over-engineering.
+This aligns with "Move Fast Forward" principles, validate before over-engineering.
 
 ### 3. Choose the Right Level of Abstraction
 
@@ -87,7 +87,7 @@ Complexity is justified only if it's invisible to the customer and enables simpl
 
 ## Real-World Example
 
-**Starting Simple**: We started with intent detection and a form—only introducing complexity as customers truly needed it.
+**Starting Simple**: We started with intent detection and a form, only introducing complexity as customers truly needed it.
 
 ## Interview Framework
 
@@ -95,7 +95,7 @@ Complexity is justified only if it's invisible to the customer and enables simpl
 
 "When I manage complexity, I focus on reducing it to what's essential for customer value. For example, in building an AI-powered feature, we initially debated fine-tuning vs. prompting. To avoid premature complexity, I proposed starting with a lightweight prompt-engineering prototype behind an abstraction layer.
 
-This let us validate demand within 2 weeks. Once adoption proved strong, we gradually hardened the system — adding monitoring, fallback strategies, and eventually a retraining pipeline. By sequencing the work this way, we delivered immediate value while ensuring the system could evolve long-term.
+This let us validate demand within 2 weeks. Once adoption proved strong, we gradually hardened the system, adding monitoring, fallback strategies, and eventually a retraining pipeline. By sequencing the work this way, we delivered immediate value while ensuring the system could evolve long-term.
 
 The outcome was a feature that scaled to thousands of users with minimal support overhead. More importantly, the approach reduced engineering drag and kept the team aligned with product outcomes."
 

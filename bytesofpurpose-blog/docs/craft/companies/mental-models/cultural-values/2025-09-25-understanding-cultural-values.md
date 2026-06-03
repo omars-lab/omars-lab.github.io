@@ -1,7 +1,7 @@
 ---
 slug: /companies/mental-models/cultural-values/2025-09-25-understanding-cultural-values
 title: "🏢 Company Culture"
-description: 'How company size and structure shape cultural values across tech — from remote teams like Zapier to giants like Meta and Amazon.'
+description: 'How company size and structure shape cultural values across tech, from remote teams like Zapier to giants like Meta and Amazon.'
 authors: [oeid]
 tags: [company-culture, remote-work, values, leadership, team-building, organizational-design]
 date: '2025-09-25T22:51'
@@ -46,9 +46,9 @@ Zapier represents the mid-size remote company archetype with their [five core va
 
 ### 1. Default to Action
 
-**Core Principle:** "Delivering something real today—and learning from it—is typically better than delivering something of questionably better quality next week."
+**Core Principle:** "Delivering something real today, and learning from it, is typically better than delivering something of questionably better quality next week."
 
-This value emphasizes the importance of moving quickly and learning through doing. However, it's not about reckless action—it's about taking action that connects to clear priorities and outcomes, especially what's best for their mission and customers.
+This value emphasizes the importance of moving quickly and learning through doing. However, it's not about reckless action, it's about taking action that connects to clear priorities and outcomes, especially what's best for their mission and customers.
 
 **Key Insights:**
 - Action should be connected to clear priorities and outcomes
@@ -58,7 +58,7 @@ This value emphasizes the importance of moving quickly and learning through doin
 
 ### 2. Default to Transparency
 
-**Core Principle:** "We do our best work when we make projects, processes, and systems available to everyone who needs them—inclusive of our customers."
+**Core Principle:** "We do our best work when we make projects, processes, and systems available to everyone who needs them, inclusive of our customers."
 
 For a distributed team across more than a dozen time zones, transparency is essential. It promotes equity and inclusion within their team and customer base. The key is working in public, having discussions in the open, and documenting work.
 
@@ -94,7 +94,7 @@ This value emphasizes the importance of understanding customers and teammates as
 
 ### 5. Build the Robot
 
-**Core Principle:** "Find ways to work better—whether through automation, simplification, or prioritization—so that we can spend more time doing what humans do best."
+**Core Principle:** "Find ways to work better, whether through automation, simplification, or prioritization, so that we can spend more time doing what humans do best."
 
 This value is about finding ways to eliminate repetitive work through automation, simplification, or prioritization. However, it's important to automate the right processes and outcomes.
 
@@ -110,7 +110,7 @@ This value is about finding ways to eliminate repetitive work through automation
 Each value includes detailed examples of what to do and what not to do. This removes ambiguity and provides clear guidance for team members.
 
 ### 2. **Customer and Team Focus**
-Every value connects back to either customer impact or team collaboration. This ensures that values aren't just internal—they drive external results.
+Every value connects back to either customer impact or team collaboration. This ensures that values aren't just internal, they drive external results.
 
 ### 3. **Practical Application**
 The values aren't abstract concepts. They provide concrete behaviors and decision-making frameworks that can be applied in daily work.
@@ -144,7 +144,7 @@ Zapier's values represent a modern approach to organizational culture that's par
 - **Growing companies** that need scalable cultural practices
 - **Tech companies** that value both innovation and execution
 
-Their emphasis on action, transparency, feedback, empathy, and automation creates a culture that's both human-centered and efficiency-focused—a combination that's essential for modern organizations.
+Their emphasis on action, transparency, feedback, empathy, and automation creates a culture that's both human-centered and efficiency-focused, a combination that's essential for modern organizations.
 
 ## Meta: The Large Tech Giant Model
 
@@ -222,7 +222,7 @@ Amazon represents the mega-corporation archetype with their [16 Leadership Princ
 
 ## Conclusion: Culture as a Strategic Choice
 
-The cultural values of tech companies aren't arbitrary—they're strategic choices that reflect organizational size, structure, and goals. Understanding these patterns helps both job seekers and company builders make better decisions.
+The cultural values of tech companies aren't arbitrary, they're strategic choices that reflect organizational size, structure, and goals. Understanding these patterns helps both job seekers and company builders make better decisions.
 
 ### **Key Insights:**
 
@@ -247,7 +247,7 @@ Choose companies whose cultural values align with your work style and career goa
 ### **For Company Builders:**
 Design your culture based on your current size and growth trajectory. Don't try to be Amazon when you're Zapier's size, or Zapier when you're Meta's scale. Each model has proven effective for its organizational stage.
 
-The most successful tech companies understand that culture isn't just about values—it's about creating systems that support your organization's unique challenges and opportunities.
+The most successful tech companies understand that culture isn't just about values, it's about creating systems that support your organization's unique challenges and opportunities.
 
 ---
 

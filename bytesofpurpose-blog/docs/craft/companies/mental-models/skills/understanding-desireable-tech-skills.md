@@ -275,7 +275,7 @@ This section contains specific action items that readers can take to enhance the
 
 ## Conclusion
 
-Technical skills evaluation goes beyond coding ability—it assesses how you approach problems, make decisions, and communicate technical concepts. By understanding what companies look for and preparing stories that demonstrate these competencies, you can showcase your technical expertise effectively in interviews.
+Technical skills evaluation goes beyond coding ability, it assesses how you approach problems, make decisions, and communicate technical concepts. By understanding what companies look for and preparing stories that demonstrate these competencies, you can showcase your technical expertise effectively in interviews.
 
 Remember: Companies want to see not just what you can build, but how you think, adapt, and collaborate to solve real-world technical challenges.
 

@@ -27,7 +27,7 @@ The goal is to transform interview anxiety into confidence through systematic pr
 
 ## Why Interview Preparation Matters
 
-Interview preparation is not just about memorizing answers—it's about developing the ability to articulate your experiences, demonstrate your thinking process, and showcase your potential value to the organization. The documents in this folder provide a comprehensive framework for:
+Interview preparation is not just about memorizing answers, it's about developing the ability to articulate your experiences, demonstrate your thinking process, and showcase your potential value to the organization. The documents in this folder provide a comprehensive framework for:
 
 - **Understanding expectations** across different interview types
 - **Structuring responses** using proven methodologies

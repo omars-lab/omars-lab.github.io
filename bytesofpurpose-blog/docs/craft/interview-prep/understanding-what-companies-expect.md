@@ -12,19 +12,19 @@ draft: false
 
 Effective interview prep starts with knowing the target. Companies hire against a
 **level** (with rising expectations) and evaluate a consistent set of **competencies**.
-Understanding both up front tells you what to demonstrate — and at what bar.
+Understanding both up front tells you what to demonstrate, and at what bar.
 
 This doc is a jumping-off point into the deeper [Companies](/craft/companies) material
 on roles and skills.
 
 ## Know the level you're targeting
 
-Expectations scale with level — scope, autonomy, and influence all increase. Start here:
+Expectations scale with level, scope, autonomy, and influence all increase. Start here:
 
 - [Understanding SDE Levels](/craft/companies/mental-models/career-levels/understanding-differences-in-skills)
-  — how competency requirements differ across engineer levels.
+ , how competency requirements differ across engineer levels.
 - [Staff Engineer Traits](/craft/companies/mental-models/career-levels/2025-10-02-staff-engineer-traits)
-  — what "senior+" looks like in practice.
+ , what "senior+" looks like in practice.
 
 ## Know the skills they evaluate
 
@@ -32,11 +32,11 @@ Across levels, companies assess a recurring set of skills. Map your stories and
 preparation to these:
 
 - [Leadership Principles Companies Look For](/craft/companies/mental-models/skills/understanding-desireable-leadership-skills)
-  — the behavioral bar and how to demonstrate it.
+ , the behavioral bar and how to demonstrate it.
 - [Technical Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-tech-skills)
-  — the technical criteria interviewers score against.
+ , the technical criteria interviewers score against.
 - [Soft Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-soft-skills)
-  — communication, collaboration, and judgment under ambiguity.
+ , communication, collaboration, and judgment under ambiguity.
 
 ## Then prepare deliberately
 

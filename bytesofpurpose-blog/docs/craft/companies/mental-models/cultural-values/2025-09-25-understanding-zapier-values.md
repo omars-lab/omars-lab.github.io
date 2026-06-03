@@ -14,7 +14,7 @@ I wanted to understand better Zapier's cultural values and related them to the v
 
 # Understanding Zapier's Cultural Values: A Deep Dive into Remote-First Culture
 
-Zapier has built one of the most successful remote-first companies in the tech industry, serving millions of users with their automation platform. Their success isn't just about their product—it's deeply rooted in their cultural values that guide how they work, make decisions, and serve their customers.
+Zapier has built one of the most successful remote-first companies in the tech industry, serving millions of users with their automation platform. Their success isn't just about their product, it's deeply rooted in their cultural values that guide how they work, make decisions, and serve their customers.
 
 Based on their [Culture and Values page](https://zapier.com/jobs/culture-and-values-at-zapier), Zapier has five core values that have evolved over their 10+ year journey. Let's explore what each value means and what we can learn from their approach.
 
@@ -22,9 +22,9 @@ Based on their [Culture and Values page](https://zapier.com/jobs/culture-and-val
 
 ### 1. Default to Action
 
-**Core Principle:** "Delivering something real today—and learning from it—is typically better than delivering something of questionably better quality next week."
+**Core Principle:** "Delivering something real today, and learning from it, is typically better than delivering something of questionably better quality next week."
 
-This value emphasizes the importance of moving quickly and learning through doing. However, it's not about reckless action—it's about taking action that connects to clear priorities and outcomes, especially what's best for their mission and customers.
+This value emphasizes the importance of moving quickly and learning through doing. However, it's not about reckless action, it's about taking action that connects to clear priorities and outcomes, especially what's best for their mission and customers.
 
 **Key Insights:**
 - Action should be connected to clear priorities and outcomes
@@ -34,7 +34,7 @@ This value emphasizes the importance of moving quickly and learning through doin
 
 ### 2. Default to Transparency
 
-**Core Principle:** "We do our best work when we make projects, processes, and systems available to everyone who needs them—inclusive of our customers."
+**Core Principle:** "We do our best work when we make projects, processes, and systems available to everyone who needs them, inclusive of our customers."
 
 For a distributed team across more than a dozen time zones, transparency is essential. It promotes equity and inclusion within their team and customer base. The key is working in public, having discussions in the open, and documenting work.
 
@@ -70,7 +70,7 @@ This value emphasizes the importance of understanding customers and teammates as
 
 ### 5. Build the Robot
 
-**Core Principle:** "Find ways to work better—whether through automation, simplification, or prioritization—so that we can spend more time doing what humans do best."
+**Core Principle:** "Find ways to work better, whether through automation, simplification, or prioritization, so that we can spend more time doing what humans do best."
 
 This value is about finding ways to eliminate repetitive work through automation, simplification, or prioritization. However, it's important to automate the right processes and outcomes.
 
@@ -86,7 +86,7 @@ This value is about finding ways to eliminate repetitive work through automation
 Each value includes detailed examples of what to do and what not to do. This removes ambiguity and provides clear guidance for team members.
 
 ### 2. **Customer and Team Focus**
-Every value connects back to either customer impact or team collaboration. This ensures that values aren't just internal—they drive external results.
+Every value connects back to either customer impact or team collaboration. This ensures that values aren't just internal, they drive external results.
 
 ### 3. **Practical Application**
 The values aren't abstract concepts. They provide concrete behaviors and decision-making frameworks that can be applied in daily work.
@@ -120,7 +120,7 @@ Zapier's values represent a modern approach to organizational culture that's par
 - **Growing companies** that need scalable cultural practices
 - **Tech companies** that value both innovation and execution
 
-Their emphasis on action, transparency, feedback, empathy, and automation creates a culture that's both human-centered and efficiency-focused—a combination that's essential for modern organizations.
+Their emphasis on action, transparency, feedback, empathy, and automation creates a culture that's both human-centered and efficiency-focused, a combination that's essential for modern organizations.
 
 ## How Zapier Compares to Tech Giants
 

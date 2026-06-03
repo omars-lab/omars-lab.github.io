@@ -92,7 +92,7 @@ I want to see what it will take to change what google says about my website(s). 
 
 
 ## Background
-* [blog.google — Generative Ai Search](https://blog.google/products/search/generative-ai-search/)
+* [blog.google: Generative Ai Search](https://blog.google/products/search/generative-ai-search/)
 - [Google Search Central](https://developers.google.com/search)
 	- [Google SEO starter guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
 		- [Control how Google crawls and indexes your site](https://developers.google.com/search/docs/fundamentals/get-started#crawling_indexing)
@@ -102,16 +102,16 @@ I want to see what it will take to change what google says about my website(s). 
 ## Deep Dives
 
 * How do we test how google views our website?
-	* [support.google.com — 9012289](https://support.google.com/webmasters/answer/9012289)
-	* [search.google.com — Inspect](https://search.google.com/search-console/inspect?resource_id=sc-domain%3Abytesofpurpose.com&id=3ss7ng-Bbbjs7zpTEDbtTA&alt_id=njgBsHfedFr3vU9Rignrxg&panel_tab=2)
-    * [search.google.com — Insights](https://search.google.com/search-console/performance/insights?resource_id=sc-domain%3Abytesofpurpose.com)
+	* [support.google.com: 9012289](https://support.google.com/webmasters/answer/9012289)
+	* [search.google.com: Inspect](https://search.google.com/search-console/inspect?resource_id=sc-domain%3Abytesofpurpose.com&id=3ss7ng-Bbbjs7zpTEDbtTA&alt_id=njgBsHfedFr3vU9Rignrxg&panel_tab=2)
+    * [search.google.com: Insights](https://search.google.com/search-console/performance/insights?resource_id=sc-domain%3Abytesofpurpose.com)
 * How do educate google on our site / give it content to use when formulating a search result / SGE response? 
-    * [developers.google.com — Visual Elements Gallery](https://developers.google.com/search/docs/appearance/visual-elements-gallery)
-    * [developers.google.com — Snippet](https://developers.google.com/search/docs/appearance/snippet#meta-descriptions)
-    * [developers.google.com — Profile Page](https://developers.google.com/search/docs/appearance/structured-data/profile-page)
+    * [developers.google.com: Visual Elements Gallery](https://developers.google.com/search/docs/appearance/visual-elements-gallery)
+    * [developers.google.com: Snippet](https://developers.google.com/search/docs/appearance/snippet#meta-descriptions)
+    * [developers.google.com: Profile Page](https://developers.google.com/search/docs/appearance/structured-data/profile-page)
 
 
 # Motviation
 * [ ] I should do a proof of concept updating the auto generated response for my website
-* [ ] [semrush.com — Google Sge](https://www.semrush.com/blog/google-sge/)
-* [ ] [google.com — Search](https://www.google.com/search?q=what+os+the+bytesofpurose+website+about)
+* [ ] [semrush.com: Google Sge](https://www.semrush.com/blog/google-sge/)
+* [ ] [google.com: Search](https://www.google.com/search?q=what+os+the+bytesofpurose+website+about)

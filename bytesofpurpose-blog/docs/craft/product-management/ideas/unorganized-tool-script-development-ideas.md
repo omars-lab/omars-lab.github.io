@@ -70,7 +70,7 @@ You should find replacements for the following formulae:
 
 # Monitoring
 - [x] Disable bombardment of Disney gen ...  @done(2021-07-22 11:40 PM)
-	- [Stack Overflow — Shell Command For Getting Mac Address In Os X](https://stackoverflow.com/questions/28685156/shell-command-for-getting-mac-address-in-os-x)
+	- [Stack Overflow: Shell Command For Getting Mac Address In Os X](https://stackoverflow.com/questions/28685156/shell-command-for-getting-mac-address-in-os-x)
 
 
 # [#Developing] Tools

@@ -192,7 +192,7 @@ This section contains specific action items that readers can take to enhance the
 
 ## Conclusion
 
-Soft skills evaluation goes beyond technical ability—it assesses how you collaborate, communicate, and lead in complex, ambiguous situations. By understanding what companies look for and preparing stories that demonstrate these competencies, you can showcase your ability to work effectively with others and drive results through influence and sound decision-making.
+Soft skills evaluation goes beyond technical ability, it assesses how you collaborate, communicate, and lead in complex, ambiguous situations. By understanding what companies look for and preparing stories that demonstrate these competencies, you can showcase your ability to work effectively with others and drive results through influence and sound decision-making.
 
 Remember: Companies want to see not just what you can build technically, but how you work with others, handle uncertainty, and make decisions that drive business success.
 

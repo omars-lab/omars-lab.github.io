@@ -29,13 +29,13 @@ The goal is to transform the "Do you have any questions for us?" moment from an 
 The questions you ask during an interview serve multiple purposes:
 
 ### 1. **Demonstrates Strategic Thinking**
-Great questions show you're thinking beyond just getting the job—you're considering how to succeed in it and contribute to the company's goals.
+Great questions show you're thinking beyond just getting the job, you're considering how to succeed in it and contribute to the company's goals.
 
 ### 2. **Reveals Your Priorities**
 The topics you choose to ask about reveal what you value most in a role and company, helping interviewers assess cultural fit.
 
 ### 3. **Gathers Critical Information**
-You're making a major life decision—you need real information to evaluate whether this opportunity aligns with your goals.
+You're making a major life decision, you need real information to evaluate whether this opportunity aligns with your goals.
 
 ### 4. **Shows Engagement and Interest**
 Thoughtful questions demonstrate genuine interest in the role and company, which can differentiate you from other candidates.
