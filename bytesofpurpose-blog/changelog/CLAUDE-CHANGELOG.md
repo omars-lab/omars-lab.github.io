@@ -21,6 +21,19 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## 2026-06-02 — Premium go-live: dev/prod parity, secure deploy, server-side internal flag
+<!-- meta: type=feature category=development priority=high component=Site -->
+Took the premium hard-gate from code-complete to LIVE: provisioned the Cloudflare infra (token scopes, Worker deploy, passphrase), gave `yarn start` true dev/prod parity (dev encrypts + a service-token-authed `/api/*` proxy, after proving cookie-forwarding impossible), made `make deploy` fail-closed (aborts on missing passphrase, re-runs the V5 leak gate, which now also asserts the passphrase never ships), and moved the internal-tester roster server-side so author emails no longer leak in the public bundle. Added a `manage-infrastructure` skill, a secure-by-default tenet, and post-deploy live verification.
+
+- #19/#20/#21 — Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker
+- #25 — Dev encrypts premium (key from .env via `make start`)
+- #26 — Dev `/api/*` proxy to the real Worker + revert the localhost toast
+- #27 — Verify dev==prod parity (headless service-token unlock proven)
+- #23 — Deploy premium live (encrypted build → gh-pages → validate), secure-by-default fail-closed deploy + V5 passphrase-absence gate
+- #11 — Move the internal-tester allowlist into the Worker; `/api/me` vends `isInternal` (email no longer in the public bundle)
+- Fix pre-existing premium-crypto.ts Uint8Array/ArrayBuffer typecheck errors
+- New `manage-infrastructure` skill (Worker provisioning runbook + confirm-token-scopes.sh) + `make rotate-premium-secret` / `validate-dev-service-token` / `validate-deployment`
+
 ## 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering
 <!-- meta: type=feature category=development priority=high component=Site -->
 Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access — so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e. Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).
