@@ -141,6 +141,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Experiment rollout | `conclude-experiment` | execute the decision: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`) |
 | Reader-experience audit | `review-reader-experience` | audit the site through the reader's eyes: long/jargony sidebar+navbar labels, confusing layout / ignored buttons, writer-focused voice, file/folder IA (nesting, orphan categories, mis-homed docs, re-org — URL-safe only because every slug is **absolute**; a relative slug bakes the path into the URL, and editing a slug VALUE 404s silently) → prioritized report |
+| Mobile-experience audit | `audit-mobile-experience` | confirm the site is a TRUE mobile experience (tap targets, thumb reach, content parity, no horizontal overflow, working touch, mobile perf/a11y) — not a shrunk desktop; drives chrome-devtools MCP on the served prod build (:4173) with copy-paste probes → prioritized P0/P1/P2 report (report-only, no auto-edit) |
 | Link hygiene | `validate-links` | lint source for bare/long/tracking/generic links (`make validate-links`) |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
