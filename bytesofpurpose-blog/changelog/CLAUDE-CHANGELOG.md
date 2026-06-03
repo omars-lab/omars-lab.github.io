@@ -1,15 +1,15 @@
 <!--
-  Claude task archive — append-only log of completed Claude Code tasks.
+  Claude task archive: append-only log of completed Claude Code tasks.
 
   CONVENTION (see root CLAUDE.md): when 10+ tasks are completed, append a new
   batch here, then delete those tasks from the task list. This file is the
   durable record so the live task list stays short.
 
-  FORMAT — one "## " batch per archive event; the changelog generator
+  FORMAT: one "## " batch per archive event; the changelog generator
   (scripts/generate-changelog-data.js) splits on these headings and renders one
   changelog card per batch. Keep the structure:
 
-  ## YYYY-MM-DD — Short batch title
+  ## [YYYY-MM-DD] Short batch title
   <!-- meta: type=feature category=development priority=medium component=Claude -->
   One-sentence summary of the batch (becomes the card description).
 
@@ -21,45 +21,56 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
-## 2026-06-02 — Premium go-live: dev/prod parity, secure deploy, server-side internal flag
+## [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)
+<!-- meta: type=feature category=development priority=medium component=Docs -->
+Formalized the unwritten "every sidebar section leads with an emoji" convention into a documented, enforced contract, and backfilled the ~18 category labels that had drifted. The validator now warns on emoji-less `_category_.json` labels (and rolls leaf-doc misses into one count), the docs-structure hook nudges on save, and `emojis.mdx` carries the topic→emoji map as the source of truth. Also trimmed two over-long page descriptions to the SEO/share window.
+
+- Validator: emoji-prefix-category (per-finding) + emoji-prefix-doc (aggregate, --emoji expands) + sidebar-label-missing guard
+- Hook: emoji advisory on a _category_.json / doc save without a leading emoji (warn-only)
+- emojis.mdx: "Sidebar Topic Emojis" section + topic→emoji map (slug /definitions/emojis-for-activities)
+- review-reader-experience SKILL: emoji consistency as a first-class audit item (map-driven suggestion)
+- Backfilled leading emojis on ~18 drifted category labels (📈 Career Levels, 🛠️ Skills, 🤝 Cultural Values, 📖 Terminology, 💬 Prompts, …)
+- Trimmed 2 over-160-char descriptions (my-problem-solving-approach, my-contributions) + resolved em-dash voice flags
+
+## [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag
 <!-- meta: type=feature category=development priority=high component=Site -->
 Took the premium hard-gate from code-complete to LIVE: provisioned the Cloudflare infra (token scopes, Worker deploy, passphrase), gave `yarn start` true dev/prod parity (dev encrypts + a service-token-authed `/api/*` proxy, after proving cookie-forwarding impossible), made `make deploy` fail-closed (aborts on missing passphrase, re-runs the V5 leak gate, which now also asserts the passphrase never ships), and moved the internal-tester roster server-side so author emails no longer leak in the public bundle. Added a `manage-infrastructure` skill, a secure-by-default tenet, and post-deploy live verification.
 
-- #19/#20/#21 — Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker
-- #25 — Dev encrypts premium (key from .env via `make start`)
-- #26 — Dev `/api/*` proxy to the real Worker + revert the localhost toast
-- #27 — Verify dev==prod parity (headless service-token unlock proven)
-- #23 — Deploy premium live (encrypted build → gh-pages → validate), secure-by-default fail-closed deploy + V5 passphrase-absence gate
-- #11 — Move the internal-tester allowlist into the Worker; `/api/me` vends `isInternal` (email no longer in the public bundle)
+- #19/#20/#21: Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker
+- #25: Dev encrypts premium (key from .env via `make start`)
+- #26: Dev `/api/*` proxy to the real Worker + revert the localhost toast
+- #27: Verify dev==prod parity (headless service-token unlock proven)
+- #23: Deploy premium live (encrypted build → gh-pages → validate), secure-by-default fail-closed deploy + V5 passphrase-absence gate
+- #11: Move the internal-tester allowlist into the Worker; `/api/me` vends `isInternal` (email no longer in the public bundle)
 - Fix pre-existing premium-crypto.ts Uint8Array/ArrayBuffer typecheck errors
 - New `manage-infrastructure` skill (Worker provisioning runbook + confirm-token-scopes.sh) + `make rotate-premium-secret` / `validate-dev-service-token` / `validate-deployment`
 
-## 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering
+## [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering
 <!-- meta: type=feature category=development priority=high component=Site -->
-Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access — so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e. Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).
+Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access (so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e). Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).
 
-- Phase A — DebugMenu Links section
-- Phase B — Layered internal-analytics filtering (?internal=1 + tester list)
-- Phase C — Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)
+- Phase A: DebugMenu Links section
+- Phase B: Layered internal-analytics filtering (?internal=1 + tester list)
+- Phase C: Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)
 - Decrypt-crux prototype (StatiCrypt codec, fixed passphrase, no prompt UI)
-- Phase D — PostHog identify() + internal-email filter wired to auth
-- Phase E — Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider
-- Phase F core — encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)
-- M1 — premium-gating-architecture memory
-- S2 — PostHog internal-user filtering docs ($host + is_internal)
+- Phase D: PostHog identify() + internal-email filter wired to auth
+- Phase E: Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider
+- Phase F core: encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)
+- M1: premium-gating-architecture memory
+- S2: PostHog internal-user filtering docs ($host + is_internal)
 - SignInModal "track interest" button → premium_interest PostHog event
 - Localhost sign-in graceful-degrade (toast instead of dead redirect)
 - Cache-bust premium encryption in deploy (make build-premium + cache gotcha docs)
 - Theme the premium gate + SignInModal to the blog brand
 - Playwright-verify the themed premium surfaces render (brand styling assertions)
-- S4 — author-blog-post: how to mark content premium (hard vs soft gate)
-- S5 — new manage-premium-content skill (editorial policy)
+- S4: author-blog-post: how to mark content premium (hard vs soft gate)
+- S5: new manage-premium-content skill (editorial policy)
 - Easter egg + honest caveat in the System Design (premium is free via public repo)
-- Phase G — finalize + reconcile the premium-content-gating design doc
+- Phase G: finalize + reconcile the premium-content-gating design doc
 
-## 2026-06-01 — Blog modernization + regression / a11y / SEO harness
+## [2026-06-01] Blog modernization + regression / a11y / SEO harness
 <!-- meta: type=feature category=development priority=high component=Site -->
-Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.
+Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates), then burned down the resulting test/a11y debt.
 
 - Fix the two Lighthouse a11y bugs (image-alt + heading-order)
 - Add design-token layer + Inter font to custom.css
@@ -74,7 +85,7 @@ Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip
 - Burn down baselined a11y debt (code-token contrast, task-list labels, prose link underlines)
 - SEO enhancements: homepage WebSite/Organization JSON-LD + per-page validity test
 
-## 2026-05-31 — A/B experiment lifecycle + analytics enablement
+## [2026-05-31] A/B experiment lifecycle + analytics enablement
 <!-- meta: type=feature category=development priority=high component=Experiments -->
 Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.
 
@@ -93,9 +104,9 @@ Built the end-to-end A/B experimentation system (PostHog), launched the first ex
 - Create publish-site skill (draft-readiness triage + deploy)
 - Rewrite git history to purge rotated credentials (filter-repo) + force-push
 
-## 2026-06-02 — Two-tier Craft/Self docs IA
+## [2026-06-02] Two-tier Craft/Self docs IA
 <!-- meta: type=feature category=development priority=high component=Site -->
-Split the docs into two top-level halves — Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey) — each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.
+Split the docs into two top-level halves: Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey), each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.
 
 - Move 10 topic folders under docs/craft/ and docs/self/ (git mv)
 - Rewrite 297 doc slugs to folder-path-mirrored + 232 cross-doc links

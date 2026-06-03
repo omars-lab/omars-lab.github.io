@@ -130,10 +130,11 @@ function scanDirectory(dir, relativePath = '') {
 /**
  * Parse CLAUDE-CHANGELOG.md into one entry per dated batch.
  *
- * Batch heading:  ## YYYY-MM-DD — Title   (em-dash or hyphen accepted)
+ * Batch heading:  ## [YYYY-MM-DD] Title   (brackets optional; a legacy em-dash or
+ *                 hyphen separator after a bare date is still accepted).
  * Optional meta:  <!-- meta: type=feature category=development priority=high component=X -->
- * Body until the next "## " becomes the entry's description fallback isn't needed —
- * the one-line summary right after meta is used as the description.
+ * Body until the next "## " becomes the entry's description; the one-line summary
+ * right after meta is used as the description.
  */
 function parseClaudeChangelog(content) {
   const entries = [];
@@ -143,10 +144,12 @@ function parseClaudeChangelog(content) {
   const sections = withoutLeadingComment.split(/\n(?=## )/);
 
   for (const section of sections) {
-    const headingMatch = section.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*[—-]\s*(.+?)\s*$/m);
+    // Accept the bracketed form `## [YYYY-MM-DD] Title` (current convention) and the
+    // legacy `## YYYY-MM-DD - Title` / `## YYYY-MM-DD — Title` (bare date + separator).
+    const headingMatch = section.match(/^##\s+(?:\[(\d{4}-\d{2}-\d{2})\]|(\d{4}-\d{2}-\d{2})\s*[—-])\s*(.+?)\s*$/m);
     if (!headingMatch) continue;
-    const date = headingMatch[1];
-    const title = headingMatch[2].trim();
+    const date = headingMatch[1] || headingMatch[2];
+    const title = headingMatch[3].trim();
 
     // Optional meta comment
     const meta = {};
@@ -168,7 +171,7 @@ function parseClaudeChangelog(content) {
     }
 
     entries.push({
-      title: `Claude Tasks — ${title}`,
+      title: `Claude Tasks: ${title}`,
       description,
       status: 'completed',
       inception_date: date,
