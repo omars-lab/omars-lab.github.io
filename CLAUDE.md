@@ -38,6 +38,20 @@ tracking is what makes the archive step possible. Don't leave finished work untr
 or tasks stuck `in_progress` after they're done — the live list should always reflect
 reality. Trivial single-step asks don't need a task.
 
+## ⚠️ Operating convention: commit → PR → ask to merge → squash on approval
+
+**Never commit to `master` directly.** The standing workflow for any non-trivial change is:
+**commit** to a feature branch → **push + open a PR** (one PR per independent workstream;
+verify locally first and put the evidence in the PR body) → **ask the user to merge** (do
+NOT self-merge; merging is outward-facing and the user's call) → on the user's approval,
+**squash-merge** (`gh pr merge --squash --delete-branch`, matching the repo's squash
+history) → **sync master** (`git checkout master && git pull --ff-only`; if local `master`
+lost its upstream tracking, `git merge --ff-only origin/master`) → **continue** with the
+next workstream (rebase its branch on the freshly-merged master so it stays current).
+Independent workstreams get independent branches/PRs and can merge in either order; merge
+the smaller/isolated one first when sequencing matters. Confirm the merge method + branch
+deletion with the user before executing (see AskUserQuestion).
+
 ## ⚠️ Operating convention: archive completed tasks to the changelog
 
 When the task list reaches **10+ completed tasks**, archive them and prune (a `Stop`

@@ -33,6 +33,15 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     // intentional shadow. The genuinely-accidental dup this surfaced (a duplicate
     // content-docs-changelog-system-documentation .md AND .mdx) was removed.
     // onDuplicateRoutes: 'throw',
+    // onBrokenAnchors stays 'warn' (default) for a SECOND intentional reason: the
+    // premium-gating-demo page (premium: true) has its body encrypted at MDX-compile,
+    // which removes the "The gated body" heading from the public HTML while its
+    // auto-generated table-of-contents anchor (#the-gated-body) remains. That is the
+    // gate working as designed (the heading returns once a signed-in reader decrypts),
+    // so it surfaces ONLY in the encrypted (build-premium) build and must not be
+    // "fixed" by editing the doc — a stray comment/word in a premium body leaks into
+    // the JS bundle and trips the V5 leak gate. Left as a known, expected warning.
+    onBrokenAnchors: 'warn',
     favicon: 'img/favicon.ico',
     organizationName: 'omars-lab', // Usually your GitHub org/user name.
     projectName: 'omars-lab.github.io', // Usually your repo name.

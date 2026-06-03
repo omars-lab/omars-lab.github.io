@@ -64,9 +64,12 @@ test.describe('Premium hard-gate (V3 + round-trip)', () => {
     expect(leftBorder).toBe('4px');
 
     // Two CTA cards live in the BODY (not the disclaimer). The sign-in card has a direct
-    // LinkedIn button; the "make it free" card has its own demand-signal button.
+    // LinkedIn button; the "make it free" card has its own demand-signal button. Scope the
+    // sign-in assertion to the gate-card container so it can't silently pass on the signed-out
+    // NAVBAR's "sign in with linkedin" button (which exposes the same accessible name).
+    const gateCards = page.locator("[class*='cards']");
     await expect(
-      page.getByRole('button', {name: /sign in with linkedin/i}).last(),
+      gateCards.getByRole('button', {name: /sign in with linkedin/i}),
     ).toBeVisible();
     const freeBtn = page.getByRole('button', {name: /make this free/i});
     await expect(freeBtn).toBeVisible();

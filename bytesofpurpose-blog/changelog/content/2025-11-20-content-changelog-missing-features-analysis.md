@@ -36,13 +36,13 @@ Analyze git commit history to identify major features and mechanics that should 
 **Work Period:** November 20, 2025
 
 **Files/Folders Impacted:**
-- [`changelog/content/2025-11-20-content-changelog-missing-features-analysis.md`](/changelog/content/2025-11-20-content-changelog-missing-features-analysis) - This analysis entry
-- [`changelog/development/2025-11-16-mechanic-establishment-storybook.md`](/changelog/development/2025-11-16-mechanic-establishment-storybook) - Storybook entry verified
+- [`changelog/content/2025-11-20-content-changelog-missing-features-analysis.md`](/changelog/2025/11/20/content/content-changelog-missing-features-analysis) - This analysis entry
+- [`changelog/development/2025-11-16-mechanic-establishment-storybook.md`](/changelog/2025/11/16/development/mechanic-establishment-storybook) - Storybook entry verified
 - [`changelog/development/2025-XX-XX-mechanic-establishment-seo.md`](/changelog/development/2025-XX-XX-mechanic-establishment-seo) - SEO entry verified
-- [`changelog/development/2025-09-23-component-creation-card-timeline.md`](/changelog/development/2025-09-23-component-creation-card-timeline) - Card/Timeline entry verified
+- [`changelog/development/2025-09-23-component-creation-card-timeline.md`](/changelog/2025/09/23/development/component-creation-card-timeline) - Card/Timeline entry verified
 - [`changelog/development/2025-XX-XX-structure-changelog-roadmap.md`](/changelog/development/2025-XX-XX-structure-changelog-roadmap) - Changelog system entry verified
-- [`changelog/development/2025-11-16-component-creation-changelog-component.md`](/changelog/development/2025-11-16-component-creation-changelog-component) - Changelog component entry verified
-- [`changelog/development/2025-09-10-mechanic-establishment-frontmatter-management.md`](/changelog/development/2025-09-10-mechanic-establishment-frontmatter-management) - Frontmatter entry verified
+- [`changelog/development/2025-11-16-component-creation-changelog-component.md`](/changelog/2025/11/16/development/component-creation-changelog-component) - Changelog component entry verified
+- [`changelog/development/2025-09-10-mechanic-establishment-frontmatter-management.md`](/changelog/2025/09/10/development/mechanic-establishment-frontmatter-management) - Frontmatter entry verified
 - [`changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration.md`](/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration) - CDK entry reviewed
 
 **Analysis Findings:**
