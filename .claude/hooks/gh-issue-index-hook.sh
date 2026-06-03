@@ -26,26 +26,29 @@ out=$(printf '%s' "$input" | jq -r '
   | if type=="string" then . else tostring end
 ' 2>/dev/null)
 
-url=$(printf '%s' "$out" | grep -oE 'https://github\.com/[^ ]+/issues/[0-9]+' | head -1)
-[ -n "$url" ] || exit 0    # couldn't find the URL (maybe a dry run / failure) → skip silently
+# A single Bash call may create MORE THAN ONE issue (chained `gh issue create`), so
+# capture EVERY issue URL in the output, not just the first.
+urls=$(printf '%s' "$out" | grep -oE 'https://github\.com/[^ ]+/issues/[0-9]+' | sort -u)
+[ -n "$urls" ] || exit 0    # no URL (dry run / failure) → skip silently
 
-num=$(printf '%s' "$url" | grep -oE '[0-9]+$')
+recorded=""
+while IFS= read -r url; do
+  [ -n "$url" ] || continue
+  num=$(printf '%s' "$url" | grep -oE '[0-9]+$')
+  # Already indexed? (idempotent — don't double-append if the hook re-fires.)
+  grep -qE "^\| $num \|" "$index" 2>/dev/null && continue
+  printf '| %s | open | _(set key)_ | [#%s](%s) | _(set source)_ | _(set path)_ |\n' \
+    "$num" "$num" "$url" >> "$index"
+  recorded="$recorded #$num"
+done <<EOF
+$urls
+EOF
 
-# Already indexed? (idempotent — don't double-append if the hook re-fires.)
-if grep -qE "^\| $num \|" "$index" 2>/dev/null; then
-  exit 0
-fi
-
-# Append a row. Title/key/source are filled in by Claude when it edits ISSUES.md;
-# the hook guarantees at least the number+URL are recorded so nothing is lost.
-printf '| %s | open | _(set key)_ | [#%s](%s) | _(set source)_ | _(set path)_ |\n' \
-  "$num" "$num" "$url" >> "$index"
-
-# Surface a reminder so Claude fills in the human columns (key/title/source/screenshot).
+[ -n "$recorded" ] || exit 0
 {
-  echo "🗂️  Recorded issue #$num in ISSUES.md ($url)."
+  echo "🗂️  Recorded issue(s)$recorded in ISSUES.md."
   echo "    Fill in the finding-key, title, source skill, and Dropbox screenshot path"
-  echo "    for that row so the dedup index is searchable."
+  echo "    for each row so the dedup index is searchable."
 } >&2
 
 exit 0
