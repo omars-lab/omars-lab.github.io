@@ -23,6 +23,28 @@
 <p>Defaults if meta omitted: type=chore, category=development, priority=medium,
 component=Claude. Date drives the card's execution/inception date.
 --&gt;</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02--linkedin-gated-premium-content--internal-analytics-filtering">2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02--linkedin-gated-premium-content--internal-analytics-filtering" class="hash-link" aria-label="Direct link to 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering" title="Direct link to 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering" translate="no">​</a></h2>
+<p>Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access — so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e. Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).</p>
+<ul>
+<li class="">Phase A — DebugMenu Links section</li>
+<li class="">Phase B — Layered internal-analytics filtering (?internal=1 + tester list)</li>
+<li class="">Phase C — Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)</li>
+<li class="">Decrypt-crux prototype (StatiCrypt codec, fixed passphrase, no prompt UI)</li>
+<li class="">Phase D — PostHog identify() + internal-email filter wired to auth</li>
+<li class="">Phase E — Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider</li>
+<li class="">Phase F core — encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)</li>
+<li class="">M1 — premium-gating-architecture memory</li>
+<li class="">S2 — PostHog internal-user filtering docs ($host + is_internal)</li>
+<li class="">SignInModal "track interest" button → premium_interest PostHog event</li>
+<li class="">Localhost sign-in graceful-degrade (toast instead of dead redirect)</li>
+<li class="">Cache-bust premium encryption in deploy (make build-premium + cache gotcha docs)</li>
+<li class="">Theme the premium gate + SignInModal to the blog brand</li>
+<li class="">Playwright-verify the themed premium surfaces render (brand styling assertions)</li>
+<li class="">S4 — author-blog-post: how to mark content premium (hard vs soft gate)</li>
+<li class="">S5 — new manage-premium-content skill (editorial policy)</li>
+<li class="">Easter egg + honest caveat in the System Design (premium is free via public repo)</li>
+<li class="">Phase G — finalize + reconcile the premium-content-gating design doc</li>
+</ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-01--blog-modernization--regression--a11y--seo-harness">2026-06-01 — Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01--blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" title="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
 <p>Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.</p>
 <ul>
