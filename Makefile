@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret validate-dev-service-token
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret validate-dev-service-token validate-deployment
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -97,6 +97,13 @@ build-premium: build-storybook ## Cache-busted ENCRYPTED production build (premi
 	( cd ${SITEROOT} && rm -rf node_modules/.cache .docusaurus && yarn build )
 	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js ) \
 		|| { echo "❌ premium content not safely gated — aborting"; exit 2; }
+
+validate-deployment: ## Post-deploy smoke checks on the LIVE site (reachable/public, PostHog, premium gate safe)
+	@# Wraps the validate-deployment skill's check.sh: retries through GitHub Pages /
+	@# Cloudflare propagation, asserts the right commit shipped, PostHog key in the bundle,
+	@# social card + JSON-LD resolve, AND the premium hard-gate is live + leak-free (body
+	@# ciphertext, passphrase absent from live JS, /api/unlock-key gated). Run after `make deploy`.
+	bash .claude/skills/validate-deployment/check.sh "$(or $(URL),https://blog.bytesofpurpose.com)"
 
 validate-dev-service-token: ## Verify the CF Access service token unlocks the Worker (dev /api/* auth)
 	@# Proves the dev-only service token (CF_ACCESS_CLIENT_ID/SECRET in .env) is admitted by
