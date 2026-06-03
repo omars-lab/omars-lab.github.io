@@ -35,6 +35,22 @@
   --ifm-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   --ifm-global-shadow-lw: 0 1px 3px rgba(0, 0, 0, 0.08);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.1);
+
+  /* Premium ("gold") palette — shared by the sidebar lock items, the locked
+     info pane, and the CTA cards so every premium surface reads consistently.
+     A metallic gold: a saturated base for text/icons, a gradient pair for the
+     sheen, a faint wash for backgrounds, and a border tint. */
+  --premium-gold: #9a7b1f; /* readable gold for text on light bg (AA on white) */
+  --premium-gold-strong: #7a5f12;
+  --premium-gold-bright: #d4af37; /* classic metallic gold (icons/sheen) */
+  --premium-gold-sheen-1: #e8cd6a;
+  --premium-gold-sheen-2: #b8860b;
+  --premium-gold-border: rgba(201, 162, 39, 0.55);
+  --premium-gold-wash: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.1),
+    rgba(184, 134, 11, 0.05)
+  );
 }
 
 /* Dark mode: lift the primary so links/buttons keep AA contrast on dark
@@ -52,6 +68,19 @@ html[data-theme='dark'] {
   --ifm-card-background-color: #1c1e21;
   --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
+
+  /* Premium gold, lifted for contrast on dark surfaces. */
+  --premium-gold: #e2c466; /* readable gold text on dark bg */
+  --premium-gold-strong: #f0d27a;
+  --premium-gold-bright: #f1cf5b;
+  --premium-gold-sheen-1: #ffe9a3;
+  --premium-gold-sheen-2: #c9a227;
+  --premium-gold-border: rgba(212, 175, 55, 0.5);
+  --premium-gold-wash: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.14),
+    rgba(184, 134, 11, 0.06)
+  );
 }
 
 /* Tighten heading rhythm a touch for a more modern feel. */
@@ -291,4 +320,32 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   #__docusaurus > div.main-wrapper > div > div > div {
     display: none;
   }
+}
+
+/* ==========================================================================
+   Navbar right cluster: color-mode toggle to the LEFT of the auth control,
+   with breathing room between the two. The auth item is the custom 'custom-auth'
+   navbar item (position:right); Docusaurus renders the color-mode toggle after
+   it by default, so we reorder via flex `order` and add a gap.
+   ========================================================================== */
+.navbar__items--right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* Order: search (0) · color-mode toggle (1) · auth control (2, far right).
+   The auth control carries a stable `.navbarAuthItem` wrapper so we can target it
+   regardless of its CSS-module-hashed inner classes. */
+.navbar__items--right [class*='colorModeToggle'] {
+  order: 1;
+  /* Breathing room between the toggle and the profile/sign-in. */
+  margin-right: 0.5rem;
+}
+.navbar__items--right .navbarAuthItem {
+  order: 2;
+  display: inline-flex;
+  align-items: center;
+}
+.navbar__items--right [class*='navbarSearchContainer'] {
+  order: 0;
 }

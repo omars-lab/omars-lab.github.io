@@ -1,10 +1,22 @@
-/* "premium" lock badge shown after a sidebar item's label (ships to production). */
+/* "premium" lock badge shown after a sidebar item's label (ships to production).
+   A small gold sheen pill behind the lock gives the metallic-premium read. */
 .lockBadge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   flex: none;
   margin-left: 0.4rem;
+  padding: 0.05rem 0.28rem;
   font-size: 0.72rem;
   line-height: 1.5;
   vertical-align: middle;
   white-space: nowrap; /* never wrap the lock to its own line beside long labels */
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    135deg,
+    var(--premium-gold-sheen-1),
+    var(--premium-gold-sheen-2)
+  );
+  border: 1px solid var(--premium-gold-border);
+  /* Slightly desaturate the emoji's own color so it blends with the gold pill. */
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45);
 }

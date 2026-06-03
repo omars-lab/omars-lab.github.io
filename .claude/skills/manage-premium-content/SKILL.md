@@ -45,13 +45,25 @@ mediocre post costs more goodwill than it earns.
 
 ## Choosing the teaser (the sneak-peek)
 
-The teaser is the only part of a premium doc that ships in clear — it's the hook.
+The teaser is the only part of a premium doc that ships in clear — it's the hook. It also
+populates the gate's gold **disclaimer pane** (the locked-state info box rendered by
+`PremiumGate`), so it must read as reader-facing copy.
 
 - Set **`premium_teaser`** in frontmatter (1–2 sentences). If absent, the gate falls back
   to `description`, so a real `description` is the minimum.
-- Make it a genuine hook: the question the piece answers or the payoff, not "this is
-  premium content." Write it like the first line of the post, because that's what it is.
+- Make it a genuine hook: the question the piece answers or the payoff. Write it like the
+  first line of the post, because that's what it is.
+- **Reader-facing only — never expose the mechanics.** Don't mention encryption, "the
+  published bundle", build-time anything, StatiCrypt, the Worker, or how the gate works.
+  The reader only needs to know it's **premium content that unlocks when they sign in with
+  LinkedIn**. Mechanics belong in the design doc, not on the page. (Same rule for the doc's
+  `description` and the `PremiumGate` fallback string — keep all three jargon-free.)
 - Keep it honest — it should accurately preview the gated body, not oversell it.
+
+  Good: *"This is premium content — sign in with LinkedIn to read the rest."* · a real
+  one-line hook for the piece.
+  Bad: *"Everything below is encrypted in the published bundle and decrypts once you sign
+  in."* (leaks implementation; reads like a system note, not an invitation).
 
 ## Soft `<Premium>` vs hard whole-doc gate (policy view)
 

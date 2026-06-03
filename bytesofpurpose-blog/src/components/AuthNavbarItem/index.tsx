@@ -104,9 +104,13 @@ function AuthControl(): React.JSX.Element {
 }
 
 export default function AuthNavbarItem(): React.JSX.Element {
+  // The stable `navbarAuthItem` class lets custom.css order this AFTER the color-mode
+  // toggle in the navbar-right cluster (toggle on the left, profile/sign-in on the right).
   return (
-    <BrowserOnly fallback={<span className={styles.placeholder} aria-hidden="true" />}>
-      {() => <AuthControl />}
-    </BrowserOnly>
+    <span className="navbarAuthItem">
+      <BrowserOnly fallback={<span className={styles.placeholder} aria-hidden="true" />}>
+        {() => <AuthControl />}
+      </BrowserOnly>
+    </span>
   );
 }

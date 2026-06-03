@@ -45,8 +45,9 @@ test.describe('Premium hard-gate (V3 + round-trip)', () => {
     await page.goto(DEMO, {waitUntil: 'networkidle'});
     const bodyText = await page.locator('body').innerText();
     expect(bodyText).not.toContain(SENTINEL);
-    await expect(page.getByText(/sign in with linkedin to read the rest/i)).toBeVisible();
-    await expect(page.getByText(/live demo of premium gating/i)).toBeVisible(); // teaser
+    // Disclaimer-only info pane says ONLY that this is premium (the teaser text).
+    await expect(page.getByText(/premium content/i).first()).toBeVisible();
+    await expect(page.getByText(/this is premium content/i)).toBeVisible(); // teaser
 
     // None of the loaded JS chunks may contain the gated sentinel.
     for (const u of jsUrls) {
@@ -54,29 +55,26 @@ test.describe('Premium hard-gate (V3 + round-trip)', () => {
       expect(js, `JS chunk leaked the sentinel: ${u}`).not.toContain(SENTINEL);
     }
 
-    // THEMED, not generic: the gate carries the brand accent (a non-transparent left
-    // border rail in the brand colour) — proves #15 styling actually shipped.
-    const gate = page.locator('[class*="gate"]').first();
-    const leftBorder = await gate.evaluate(
+    // GOLD info pane, not generic: a non-transparent left rail in the premium-gold
+    // colour — proves the gold tint shipped.
+    const notice = page.locator('[class*="notice"]').first();
+    const leftBorder = await notice.evaluate(
       (el) => getComputedStyle(el).borderLeftWidth,
     );
     expect(leftBorder).toBe('4px');
 
-    // Clicking the lock opens the THEMED sign-in modal.
-    await gate.click();
-    const dialog = page.getByRole('dialog');
-    await expect(dialog).toBeVisible();
+    // Two CTA cards live in the BODY (not the disclaimer). The sign-in card has a direct
+    // LinkedIn button; the "make it free" card has its own demand-signal button.
     await expect(
-      page.getByRole('button', {name: /sign in with linkedin to unlock/i}),
+      page.getByRole('button', {name: /sign in with linkedin/i}).last(),
     ).toBeVisible();
-    // The "I'd rather this were free" interest button is present (distinct CTA, #16).
-    await expect(page.getByRole('button', {name: /rather this were free/i})).toBeVisible();
-    // Modal is branded: a 4px brand top-band on the modal card.
-    const topBand = await dialog
-      .locator('[class*="modal"]')
-      .first()
-      .evaluate((el) => getComputedStyle(el).borderTopWidth);
-    expect(topBand).toBe('4px');
+    const freeBtn = page.getByRole('button', {name: /make this free/i});
+    await expect(freeBtn).toBeVisible();
+
+    // The "make it free" CTA records a demand signal + flips to a thank-you state
+    // (idempotent — can't be spammed).
+    await freeBtn.click();
+    await expect(page.getByRole('button', {name: /thanks for the nudge/i})).toBeVisible();
   });
 
   test('unlocked: signed-in reader decrypts the body in-browser (round-trip)', async ({
@@ -103,9 +101,7 @@ test.describe('Premium hard-gate (V3 + round-trip)', () => {
     // The gate fetches the key + payload, decrypts client-side, injects the body. The
     // sentinel — absent from HTML/JS — now appears in the rendered DOM.
     await expect(page.getByText(new RegExp(SENTINEL))).toBeVisible({timeout: 15000});
-    // The lock prompt is gone once unlocked.
-    await expect(
-      page.getByText(/sign in with linkedin to read the rest/i),
-    ).toHaveCount(0);
+    // The locked CTA cards are gone once unlocked.
+    await expect(page.getByRole('button', {name: /make this free/i})).toHaveCount(0);
   });
 });

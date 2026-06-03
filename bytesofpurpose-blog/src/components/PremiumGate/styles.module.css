@@ -1,42 +1,152 @@
-/* Premium page/section gate: teaser + lock placeholder shown to anonymous readers. */
+/* Premium page gate (anonymous view): a gold disclaimer pane + two CTA cards.
+   Shares the --premium-gold token set with the sidebar lock items (custom.css)
+   so every premium surface reads consistently. */
 
-.gate {
+.wrap {
   margin: 1.5rem 0;
-  padding: 1.5rem 1.5rem 1.5rem 1.75rem;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  /* Brand accent rail on the left so the gate reads as an intentional blog surface. */
-  border-left: 4px solid var(--ifm-color-primary);
-  border-radius: 0.6rem;
-  background: var(--ifm-color-primary-contrast-background);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
-.gate:hover,
-.gate:focus-visible {
-  border-color: var(--ifm-color-primary);
+
+/* ---- Disclaimer-only info pane (gold). Says ONLY that this is premium. ---- */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--premium-gold-border);
+  /* Gold rail on the left + faint gold wash, matching the sidebar gold tint. */
+  border-left: 4px solid var(--premium-gold-bright);
+  border-radius: 0.6rem;
+  background: var(--premium-gold-wash);
+}
+.noticeLock {
+  font-size: 1.3rem;
+  line-height: 1.4;
+  flex: none;
+}
+.noticeTitle {
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--premium-gold-strong);
+  letter-spacing: 0.01em;
+}
+.noticeBody {
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ---- The two CTA cards ---- */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.25rem 1.25rem 1.35rem;
+  border: 1px solid var(--premium-gold-border);
+  border-radius: 0.7rem;
+  background: var(--ifm-card-background-color);
+  box-shadow: var(--ifm-global-shadow-lw);
+  /* A thin gold top accent so the cards read as part of the premium surface. */
+  border-top: 3px solid var(--premium-gold-bright);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.card:hover {
+  box-shadow: var(--ifm-global-shadow-md);
+  transform: translateY(-1px);
+}
+.cardIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.cardTitle {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.cardText {
+  margin: 0 0 1rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  flex: 1 1 auto;
+}
+
+/* Primary CTA — LinkedIn brand-blue (it's a LinkedIn action). */
+.cardCtaPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #0a66c2; /* LinkedIn blue */
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+.cardCtaPrimary:hover,
+.cardCtaPrimary:focus-visible {
+  background: #084e96;
   box-shadow: var(--ifm-global-shadow-md);
   outline: none;
 }
-
-.teaser {
-  margin: 0 0 1rem;
-  color: var(--ifm-color-emphasis-800);
-  font-size: 1.02rem;
-  line-height: 1.6;
-}
-
-.lockRow {
-  display: flex;
+.inMark {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 0.2rem;
+  background: #fff;
+  color: #0a66c2;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Secondary CTA — gold outline (the "make it free" demand signal). */
+.cardCtaSecondary {
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--premium-gold-bright);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--premium-gold-strong);
   font-weight: 600;
-  color: var(--ifm-color-primary);
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.lockIcon {
-  font-size: 1.15rem;
+.cardCtaSecondary:hover:not(:disabled),
+.cardCtaSecondary:focus-visible:not(:disabled) {
+  background: var(--premium-gold-wash);
+  outline: none;
 }
-.lockLabel {
-  font-size: 0.95rem;
+.cardCtaSecondary:disabled {
+  cursor: default;
+  opacity: 0.85;
+  border-color: var(--premium-gold-border);
+}
+
+.cardHint {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ifm-color-emphasis-600);
 }
 
 .status {
