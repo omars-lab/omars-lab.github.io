@@ -32,4 +32,4 @@ I need a script that orchestrates smart speakers to play the athan at the right 
 # Automating Athan
 * [x] Change athkar time >2021-12-07  @done(2022-01-20 10:40 PM)
 * [x] Fix athan ... @done(2021-12-15 01:49 PM)
-	* [Stack Overflow — Git Is Not Working After Macos Update Xcrun Error Invalid Active Developer Pa](https://stackoverflow.com/questions/52522565/git-is-not-working-after-macos-update-xcrun-error-invalid-active-developer-pa)
+	* [Stack Overflow: Git Is Not Working After Macos Update Xcrun Error Invalid Active Developer Pa](https://stackoverflow.com/questions/52522565/git-is-not-working-after-macos-update-xcrun-error-invalid-active-developer-pa)
