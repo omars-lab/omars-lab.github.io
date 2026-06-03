@@ -177,6 +177,13 @@ async function verifyAccessJwt(
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
+    // Normalize a single trailing slash so /api/redirect/ == /api/redirect. The
+    // Worker route patterns end in `*` (they must — a CF route matches the query
+    // string, so a bare path misses `?redirect_url=…`), which means a trailing-slash
+    // variant also REACHES the Worker; without this it would fall to the exact-match
+    // checks below and 404. Keep "/" itself intact.
+    const pathname =
+      url.pathname.length > 1 ? url.pathname.replace(/\/+$/, '') : url.pathname;
 
     if (req.method === 'OPTIONS') {
       return new Response(null, {status: 204, headers: corsHeaders(req)});
@@ -191,13 +198,13 @@ export default {
     const payload = await verifyAccessJwt(req, env);
     if (!payload) return json({error: 'unauthorized'}, 401, req);
 
-    if (url.pathname === '/api/unlock-key') {
+    if (pathname === '/api/unlock-key') {
       // No email required — the key isn't tied to a person. Any admitted caller
       // (LinkedIn user or the dev service token) may decrypt premium content.
       return json({passphrase: env.PREMIUM_PASSPHRASE}, 200, req);
     }
 
-    if (url.pathname === '/api/redirect') {
+    if (pathname === '/api/redirect') {
       // Post-sign-in bounce. The browser navigated here (Access already admitted the
       // request — this code only runs authenticated), so 303 it onward to the
       // same-origin content page it wanted. safeRedirectPath blocks open-redirect /
@@ -212,7 +219,7 @@ export default {
       });
     }
 
-    if (url.pathname === '/api/me') {
+    if (pathname === '/api/me') {
       // /api/me reports the signed-in identity, so it DOES need an email claim.
       // Service tokens have none (they're non-identity) → 401 no_email, which is
       // correct: the dev proxy uses /api/unlock-key, not /api/me, for identity.

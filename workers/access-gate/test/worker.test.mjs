@@ -221,4 +221,32 @@ test('access-gate JWT gate', async (t) => {
       'https://blog.bytesofpurpose.com/craft/x?a=1&b=2#frag',
     );
   });
+
+  // A trailing slash on the endpoint path must still route (the CF route `*` reaches
+  // the Worker for /api/redirect/ too; the Worker normalizes so it doesn't 404).
+  await t.test('/api/redirect/ (trailing slash) still 303s', async () => {
+    const jwt = await mint({email: 'reader@example.com'});
+    const r = await worker.fetch(
+      new Request(
+        'https://blog.bytesofpurpose.com/api/redirect/?redirect_url=%2Fcraft%2Fx',
+        {method: 'GET', headers: {'Cf-Access-Jwt-Assertion': jwt}},
+      ),
+      env,
+    );
+    assert.equal(r.status, 303);
+    assert.equal(r.headers.get('Location'), 'https://blog.bytesofpurpose.com/craft/x');
+  });
+
+  await t.test('/api/me/ (trailing slash) still returns identity', async () => {
+    const jwt = await mint({email: 'reader@example.com'});
+    const r = await worker.fetch(
+      new Request('https://blog.bytesofpurpose.com/api/me/', {
+        method: 'GET',
+        headers: {'Cf-Access-Jwt-Assertion': jwt},
+      }),
+      env,
+    );
+    assert.equal(r.status, 200);
+    assert.equal((await r.json()).email, 'reader@example.com');
+  });
 });

@@ -188,6 +188,29 @@ sequenceDiagram
     App->>W: (now) GET /api/me + /api/unlock-key → gate unlocks
 ```
 
+### Deployment & routing gotchas (hard-won)
+
+The Worker lives on the **same hostname as the static site** (`blog.bytesofpurpose.com`),
+which is otherwise served by GitHub Pages. Only the `/api/*` paths are peeled off to the
+Worker by **explicit per-path Worker routes**. That split is the source of several traps —
+each cost a debugging round, so they're recorded here:
+
+| Gotcha | Symptom | Rule |
+|---|---|---|
+| **A Worker route pattern matches the QUERY STRING too.** `…/api/redirect` (no star) does **not** match `…/api/redirect?redirect_url=…`. | The request **falls through to GitHub Pages** → its `text/html` 404 page (the "Page Not Found" the SPA renders), even though the route "exists". | **Every route MUST end in `*`** — `…/api/redirect*`. `/api/redirect` is *always* hit with a `?redirect_url=` query (it's the sign-in bounce), so a bare pattern is guaranteed to miss. |
+| **Per-path routes, no `/api/*` wildcard.** Each endpoint is its own route. | A *new* endpoint that isn't added to `wrangler.toml` 404s at the GitHub Pages origin (no Worker ever sees it). | Adding an endpoint = add its route to `wrangler.toml` (with `*`) **and** gate it on the Access app (below). The Worker also handles a trailing slash (`/api/redirect/` ≡ `/api/redirect`) by normalizing `pathname`. |
+| **Where a 404 comes from tells you which layer failed.** | `content-type: text/html` + `server: cloudflare` = the **GitHub Pages** 404 (routing missed the Worker). `content-type: application/json` = the **Worker's own** `not_found` (routing worked; the path/branch didn't match). | Always check the 404's `content-type` first when an `/api/*` path misbehaves — it localizes the bug to routing vs. Worker logic in one curl. |
+| **Two separate "does this path exist" gates.** The Access app's destinations gate it (anonymous → LinkedIn); the Worker route binds it (request → Worker). | If a path is route-bound but NOT an Access destination, anonymous skips the LinkedIn flow. If it's an Access destination but not route-bound, it 404s at origin. | A new endpoint needs **both**: `cf_access.py add-destination <app-id> <host/path>` **and** the `wrangler.toml` route. |
+| **The Access app edit is a full-object PUT, not PATCH.** | `PATCH /access/apps/{id}` → `10405 "Method not allowed for this authentication scheme"` under API-token auth. | `cf_access.py add-destination` GETs the app, appends the path to `self_hosted_domains` + `destinations`, strips read-only keys (`id`/`aud`/timestamps), and **PUTs the whole object** — preserving the AUD and existing policies. **AUD must not change** or the Worker's `POLICY_AUD` breaks. |
+
+> **Why these matter to the design, not just ops:** the gate's correctness depends on the
+> request actually reaching the Worker. A routing miss doesn't fail safe with an error — it
+> silently serves the *static origin* (the SPA 404, or worse, a static asset), bypassing the
+> Worker entirely. The `*`-suffixed routes + the dual Access/route registration are therefore
+> part of the security contract, not incidental config. (Build-side fail-closed guarantees —
+> the V5 leak gate, the cache-busted encrypted build — are covered under *Verification &
+> assurance* and *What ships to prod vs dev-only*.)
+
 ## Why StatiCrypt + Worker key-vend
 
 [StatiCrypt](https://github.com/robinmoisson/staticrypt) encrypts an HTML body
