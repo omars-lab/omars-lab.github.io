@@ -11,3 +11,14 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+
+/* Premium (gated) sidebar entries read in metallic gold so a reader can spot
+   which docs are premium at a glance. Tints the label text; the lock badge
+   carries the gold sheen (see lockBadge.module.css). The active state keeps the
+   brand-blue highlight so "you are here" still wins. */
+.premiumLink:not(.menu__link--active) {
+  color: var(--premium-gold);
+}
+.premiumLink:not(.menu__link--active):hover {
+  color: var(--premium-gold-strong);
+}

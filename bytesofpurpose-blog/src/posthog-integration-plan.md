@@ -50,7 +50,8 @@ needed. Revisit (`mask_all_text`) if any authenticated/PII surface is ever added
 | `ingress` | arrival with `?im=<marker>` (then stripped), or untagged direct deep arrival (`direct_or_bookmark`) | `src/posthog.js` |
 | `bookmarklet_used` | the saved bookmarklet is clicked (beaconed straight to PostHog, survives the redirect) | `src/components/BookmarkletButton/index.tsx` (embedded `javascript:`) |
 | `bookmarklet_help_opened` / `bookmarklet_dragged` | user opens the drag-instructions modal / drags the bookmarklet | `src/components/BookmarkletButton/index.tsx` |
-| `premium_interest` | reader presses "I'd rather this were free" on the premium sign-in modal — a demand signal for un-gating a doc (props: `path`, `what`). Distinct from the LinkedIn sign-in CTA, which is an unlock, not a vote. | `src/components/SignInModal/index.tsx` |
+| `premium_interest` | reader asks for a premium doc to be made free — a demand signal for un-gating (props: `path`, plus `what` from the modal or `source: 'gate_card'` from the page gate's "Ask me to make this free" card). Distinct from the LinkedIn sign-in CTA, which is an unlock, not a vote. | `src/components/SignInModal/index.tsx`, `src/components/PremiumGate/index.tsx` |
+| `premium_signin_click` | reader clicks "Sign in with LinkedIn" on a premium page gate's unlock CTA card — intent to unlock (props: `path`). Fires just before the Access/LinkedIn redirect. | `src/components/PremiumGate/index.tsx` |
 
 **Ingress-attribution layer:** the `egress_*` / `bookmark_intent` / `ingress` events
 form a "how a URL left and came back" loop. The ShareButton (mounted in the doc/blog H1

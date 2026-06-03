@@ -48,10 +48,9 @@ test.describe('Sign-in redirect flow', () => {
 
     await page.goto(DEMO, {waitUntil: 'networkidle'});
 
-    // Open the gate's sign-in modal and click the LinkedIn button.
-    await page.locator('[class*="gate"]').first().click();
-    await expect(page.getByRole('dialog')).toBeVisible();
-    await page.getByRole('button', {name: /sign in with linkedin to unlock/i}).click();
+    // The premium gate's "Unlock with LinkedIn" card has a direct sign-in button
+    // (no intermediate modal) — clicking it kicks off signIn() → /api/redirect.
+    await page.getByRole('button', {name: /sign in with linkedin/i}).last().click();
 
     await expect.poll(() => loginUrl, {timeout: 5000}).not.toBeNull();
     expect(hitApiMeAsNavigation, 'sign-in must NOT navigate to /api/me').toBe(false);
