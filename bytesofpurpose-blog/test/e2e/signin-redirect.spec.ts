@@ -86,6 +86,6 @@ test.describe('Sign-in redirect flow', () => {
     // The Docusaurus 404 must NOT be what we see.
     await expect(page.getByRole('heading', {name: /page not found/i})).toHaveCount(0);
     // The premium teaser (the real page) is present.
-    await expect(page.getByText(/live demo of premium gating/i)).toBeVisible();
+    await expect(page.getByText(/this is premium content/i)).toBeVisible();
   });
 });

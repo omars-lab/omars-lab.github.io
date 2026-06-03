@@ -105,7 +105,7 @@ export default function PremiumGate({
           <p className={styles.noticeBody}>
             {teaser
               ? teaser
-              : 'The rest of this page is premium — encrypted in the published bundle and unlocked for signed-in readers.'}
+              : 'The rest of this page is premium — sign in to read it.'}
           </p>
         </div>
       </aside>

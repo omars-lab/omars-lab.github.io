@@ -47,7 +47,7 @@ test.describe('Premium hard-gate (V3 + round-trip)', () => {
     expect(bodyText).not.toContain(SENTINEL);
     // Disclaimer-only info pane says ONLY that this is premium (the teaser text).
     await expect(page.getByText(/premium content/i).first()).toBeVisible();
-    await expect(page.getByText(/live demo of premium gating/i)).toBeVisible(); // teaser
+    await expect(page.getByText(/this is premium content/i)).toBeVisible(); // teaser
 
     // None of the loaded JS chunks may contain the gated sentinel.
     for (const u of jsUrls) {
