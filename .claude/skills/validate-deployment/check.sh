@@ -115,6 +115,46 @@ if [ -n "$EXPECT_SHA" ]; then
   fi
 fi
 
+# 6. Premium hard-gate is LIVE & safe ----------------------------------------
+# Only runs if a premium demo page exists. Asserts, on the LIVE site: (a) the
+# premium body ships as ciphertext (the build-time sentinel is ABSENT from the
+# page), (b) the decryption passphrase is NOT in the live JS bundle, and (c) the
+# Worker's /api/unlock-key is gated (302→Access / 401 for an anonymous request,
+# never a 200 that would vend the key to everyone).
+PREMIUM_URL="$URL/craft/premium-gating-demo"
+pstatus="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$PREMIUM_URL" 2>/dev/null)"
+if [ "$pstatus" = "200" ]; then
+  ptext="$(curl -sS --max-time 20 "$PREMIUM_URL" 2>/dev/null)"
+  pmain="$(printf '%s' "$ptext" | grep -oE '/assets/js/[a-z0-9._-]+\.js' | head -5)"
+  # (a) sentinel absent from the page HTML
+  if printf '%s' "$ptext" | grep -q 'PREMIUMSENTINELBODY'; then
+    echo "❌ Premium: cleartext sentinel PRESENT on the live page — body NOT encrypted!"
+    fail=1
+  else
+    echo "✅ Premium: body ciphertext (sentinel absent from live page)."
+  fi
+  # (b) passphrase absent from the live JS chunks (best-effort: scan the page's JS)
+  SP_LIVE="$(grep -E '^STATICRYPT_PASSPHRASE=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\''')"
+  if [ -n "$SP_LIVE" ]; then
+    leaked=0
+    for j in $pmain; do
+      if curl -sS --max-time 20 "$URL$j" 2>/dev/null | grep -qF "$SP_LIVE"; then leaked=1; break; fi
+    done
+    [ "$leaked" = 1 ] && { echo "❌ Premium: PASSPHRASE found in a live JS chunk!"; fail=1; } \
+                      || echo "✅ Premium: passphrase absent from live JS."
+  fi
+  # (c) /api/unlock-key is gated (NOT a public 200)
+  ukstatus="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "$URL/api/unlock-key" 2>/dev/null)"
+  if [ "$ukstatus" = "302" ] || [ "$ukstatus" = "401" ] || [ "$ukstatus" = "403" ]; then
+    echo "✅ Premium: /api/unlock-key gated (HTTP $ukstatus, no key to anonymous)."
+  else
+    echo "❌ Premium: /api/unlock-key returned HTTP $ukstatus — expected 302/401/403. The key may be PUBLIC!"
+    fail=1
+  fi
+else
+  echo "ℹ️  Premium: no live demo page at $PREMIUM_URL (HTTP $pstatus) — skipping premium checks."
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "✅ Deployment looks good."

@@ -11,11 +11,13 @@ Post-deploy smoke checks for `https://blog.bytesofpurpose.com`. Pairs with the
 ## Run
 
 ```bash
-bash .claude/skills/validate-deployment/check.sh
+make validate-deployment          # wraps check.sh against the live blog
+# or directly, with an optional URL + expected commit SHA:
+bash .claude/skills/validate-deployment/check.sh https://blog.bytesofpurpose.com <sha>
 ```
 
-Optionally pass a URL and the expected commit SHA:
-`bash check.sh https://blog.bytesofpurpose.com <sha>` (SHA defaults to local HEAD).
+The `make` target is the post-deploy step in the `deploy-site` flow (SHA defaults to
+local HEAD). Run it right after `make deploy`.
 
 ## ⚠️ Why validation must retry, and check build-specific markers
 
@@ -46,6 +48,13 @@ deploy is **expected**, not a failure.
    is answerable. (`yarn deploy` force-pushes gh-pages but does NOT update your local
    gh-pages ref — always read `origin/gh-pages`.)
 6. **Fresh-ish** — prints `last-modified` / CF cache age as a propagation sanity check.
+7. **Premium hard-gate live & safe** (only if a premium demo page exists) — on the LIVE
+   site: the premium body ships as **ciphertext** (build sentinel ABSENT from the page),
+   the **passphrase is absent** from the live JS chunks, and **`/api/unlock-key` is gated**
+   (302/401/403 to an anonymous request — never a public 200 that would vend the key to
+   everyone). This is the live counterpart to the build-time V5 gate
+   (`verify-premium-encrypted.js`): V5 proves the *build* is safe before shipping; this
+   proves the *deployed* site is. See `manage-infrastructure` for the Worker/key plumbing.
 
 ## Deeper verification
 
