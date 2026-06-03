@@ -16,16 +16,35 @@ Pairs with: `review-reader-experience` (the reader's-lens audit — labels/voice
 `validate-deployment` (post-deploy live checks). Apply any fixes through the owning
 surface's conventions; this skill only finds and prioritizes.
 
-## The one question (responsive ≠ mobile-good)
+## Audit from the MOBILE USER's perspective (not the device's)
 
-For every surface ask: **"Is this a layout built FOR a phone, or a desktop layout that
-happens to fit?"** A desktop-shrunk layout passes "it renders" and still fails the user:
-text too small to read without zoom, CTAs above the thumb's reach, a stray element pushing
-a horizontal scrollbar, a tap target the size of a desktop mouse hit-box. The two
-highest-signal tells — the things the eye glides past but a probe catches every time — are
-**horizontal overflow** and **sub-44px tap targets**. The sneakiest is the **parity trap**:
-content or affordances silently `display:none`'d on mobile, so the phone user gets a quietly
-worse product than the desktop user (hidden nav items get ~3× less interaction).
+Before any probe, picture the actual person and **reason from what they can DO**, because a
+phone is a *context*, not just a small screen. The mobile user is:
+
+- **On the go, interrupted, in short bursts** — checking one thing, skimming, maybe sharing
+  a link; rarely reading end-to-end. → The screen must **prioritize ruthlessly**: the one
+  thing they came for should be obvious and immediate, not buried below desktop chrome.
+- **One-handed, touch-only** — no hover, no precise click, no keyboard. They tap with a
+  thumb (44px), reach comfortably only in the **bottom ~⅔** of the screen, and swipe. →
+  Every action must be a real tap target in reach; **nothing important may rely on hover**.
+- **On a small screen, often poor network / bright sun** — sees little at once, scrolls a
+  lot, is easily overwhelmed. → Big readable text (≥16px), generous spacing, no horizontal
+  scroll surprise, no wall of text.
+
+So for every surface ask: **"What did this person come here to DO on a phone, and can they
+do it one-handed, in a glance, without zooming or hunting?"** — not merely "does it render?"
+A desktop-shrunk layout renders and still fails them: text too small to read without zoom,
+the action above the thumb's reach, a stray element pushing a horizontal scrollbar, a tap
+target the size of a desktop mouse hit-box, or the thing they wanted hidden behind desktop
+chrome. The two highest-signal tells a probe catches every time are **horizontal overflow**
+and **sub-44px tap targets**. The sneakiest is the **parity trap**: content or affordances
+silently `display:none`'d on mobile, so the phone user gets a quietly worse product than the
+desktop user (hidden nav items get ~3× less interaction).
+
+> The sibling skill **`audit-desktop-experience`** runs the same visual rubric from the
+> *desktop* user's perspective (seated, mouse+keyboard, wide screen, reading deeply) — a
+> **different audience** with different things they can do, so it's a separate skill, not a
+> wider viewport here.
 
 ## Audit vehicle — the PROD build on :4173, never dev
 
