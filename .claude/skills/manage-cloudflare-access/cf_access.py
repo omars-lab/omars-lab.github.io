@@ -291,6 +291,50 @@ def cmd_create_gated_app(token, domain, args):
     print("        `wrangler secret put PREMIUM_PASSPHRASE`, then `wrangler deploy`.")
 
 
+def cmd_add_destination(token, domain, args):
+    """Add a path-scoped destination to an EXISTING gated app (by id), keeping its
+    AUD, policies, and existing paths intact. Idempotent: a path already present is a
+    no-op. Use to extend the '/api/*' gate when a new Worker endpoint is added (e.g.
+    /api/redirect) — the AUD is unchanged, so the Worker's POLICY_AUD stays valid.
+
+    Why a PATCH (not delete+recreate): recreating would mint a NEW AUD and break the
+    Worker until wrangler.toml is updated + redeployed. Appending preserves the AUD.
+    """
+    app_id = args.target
+    new_path = args.path
+    if "/" not in new_path:
+        sys.exit(f"{new_path!r} is not a path-scoped match (need e.g. 'blog.{domain}/api/redirect').")
+
+    full = api(token, "GET", f"/accounts/{ACCOUNT_ID}/access/apps/{app_id}")
+    domains = list(full.get("self_hosted_domains") or [])
+    if new_path in domains:
+        print(f"{new_path!r} already gated by {full.get('name')!r} (id={app_id}). No change.")
+        print(f"  AUD = {full.get('aud')}")
+        return
+
+    domains.append(new_path)
+    # CF derives `destinations` from self_hosted_domains on write; send both to be safe,
+    # preserving the existing destinations + appending the new public URI.
+    dests = list(full.get("destinations") or [])
+    if not any(d.get("uri") == new_path for d in dests):
+        dests.append({"type": "public", "uri": new_path})
+
+    # The Access apps endpoint rejects PATCH under API-token auth (10405 "Method not
+    # allowed for this authentication scheme") — it requires a FULL-OBJECT PUT. So we
+    # echo the existing app config back, mutating only the two path fields. We strip
+    # server-managed/read-only keys CF won't accept on write (ids/timestamps/aud).
+    body = {k: v for k, v in full.items() if k not in (
+        "id", "uid", "aud", "created_at", "updated_at",
+        "destinations", "self_hosted_domains",
+    )}
+    body["self_hosted_domains"] = domains
+    body["destinations"] = dests
+    api(token, "PUT", f"/accounts/{ACCOUNT_ID}/access/apps/{app_id}", body)
+    print(f"Added {new_path!r} to {full.get('name')!r} (id={app_id}). ✓")
+    print(f"  self_hosted_domains now: {domains}")
+    print(f"  AUD (unchanged) = {full.get('aud')}")
+
+
 def cmd_delete_app_by_id(token, domain, args):
     """Delete an Access app by id (cleanup). Refuses the wildcard."""
     app = api(token, "GET", f"/accounts/{ACCOUNT_ID}/access/apps/{args.target}")
@@ -318,11 +362,16 @@ def main():
     s.add_argument("--policy", default="linkedin-any",
                    choices=["linkedin-any", "any-auth"])
     s = sub.add_parser("delete-app"); s.add_argument("target", help="Access app id")
+    s = sub.add_parser("add-destination",
+                       help="append a path-scoped destination to an existing gated app (keeps AUD)")
+    s.add_argument("target", help="Access app id")
+    s.add_argument("path", help="path-scoped match, e.g. blog.bytesofpurpose.com/api/redirect")
     args = p.parse_args()
     {"list": cmd_list, "show": cmd_show,
      "make-public": cmd_make_public, "make-private": cmd_make_private,
      "list-idps": cmd_list_idps, "show-idp": cmd_show_idp,
      "create-gated-app": cmd_create_gated_app,
+     "add-destination": cmd_add_destination,
      "delete-app": cmd_delete_app_by_id}[args.cmd](
         token, domain, args)
 

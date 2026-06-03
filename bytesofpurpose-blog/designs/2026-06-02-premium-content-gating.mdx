@@ -80,10 +80,11 @@ sequenceDiagram
 
     U->>App: open premium page
     App-->>U: sneak-peek + lock (body is ciphertext)
-    U->>Acc: click "Sign in with LinkedIn"
+    U->>Acc: click "Sign in" → nav to /api/redirect?redirect_url=…
     Acc->>LI: OIDC redirect
     LI-->>Acc: id_token (email, picture)
-    Acc-->>App: set CF_Authorization (Access JWT, httpOnly)
+    Acc-->>App: set CF_Authorization (httpOnly); Worker 303 → content page
+    Note over App: lands back on the page (NOT /api/me JSON)
     App->>W: GET /api/me (Cf-Access-Jwt-Assertion)
     W->>W: verify JWT vs team JWKS, check aud
     W-->>App: 200 {email, picture}
@@ -106,6 +107,85 @@ flowchart TD
     F --> G{200?}
     G -- yes --> H[Decrypt + render real body]
     G -- no --> C
+```
+
+## Workers & API endpoints
+
+There is exactly **one Worker** — `access-gate` (`workers/access-gate/`) — deployed on
+Cloudflare and mounted on the `/api/*` route, sitting **behind a single Cloudflare Access
+app** (LinkedIn OIDC, with a Service-Auth policy for dev). It exposes **three GET
+endpoints**. All three run *only* after Access admits the request (anonymous → 302 to
+LinkedIn before the Worker executes); the Worker re-verifies the Access JWT
+(signature + issuer + `aud` vs. the team JWKS) as belt-and-suspenders.
+
+| Endpoint | Role | Auth required | Response | Who calls it | When |
+|---|---|---|---|---|---|
+| **`GET /api/me`** | Identity readback (Access JWT → person) | Access JWT **with an email** (LinkedIn user; service tokens get 401 `no_email`) | `200 {email, name?, picture?, isInternal}` · `401` otherwise | `fetch()` from `AuthProvider` (`src/lib/auth.tsx`) + `posthog.js` | On every page load, to set navbar state + PostHog `identify`/`is_internal` |
+| **`GET /api/unlock-key`** | Vend the StatiCrypt passphrase (the hard-gate key) | Any valid Access JWT (LinkedIn user **or** dev service token — no email needed) | `200 {passphrase}` · `401` otherwise | `fetch()` from `fetchUnlockKey()`, used by `PremiumGate` | When a signed-in reader opens a `premium: true` page, to decrypt in-browser |
+| **`GET /api/redirect`** | Post-sign-in **bounce** back to content | Any valid Access JWT (only runs authenticated) | `303 Location: <same-origin path>` (sanitized; off-origin → `/`) | Top-level browser **navigation** from `signIn()` (`src/lib/auth.tsx`) | Immediately after LinkedIn auth, to land the reader on the page they came from |
+
+**Why three, and why `/api/redirect` is separate.** `/api/me` and `/api/unlock-key` are
+**data** endpoints — meant to be `fetch()`'d, returning JSON. Sign-in, by contrast, is a
+**top-level navigation**: the browser must visit a *protected* path so Access runs the
+LinkedIn round-trip, and Access returns the browser to **that same path**. If that path is
+a JSON endpoint, the reader lands on JSON (the SPA renders "Page Not Found"). So a dedicated
+`/api/redirect` is the one protected path whose job is to **303 the browser onward** to the
+real content page. It's a distinct *response type* (redirect, not JSON), so it's a distinct
+endpoint — not an overload of `/api/me` on a request header.
+
+> **Open-redirect guard.** `/api/redirect` emits a caller-supplied `redirect_url` as a
+> `Location` header to an authenticated user — a textbook open-redirect/header-injection
+> sink if unvalidated. `safeRedirectPath()` (Worker) coerces anything that could leave the
+> origin to `/`: rejects absolute URLs, any scheme (`https:`, `javascript:`), protocol-
+> relative `//evil.com`, backslash tricks, and control chars (CR/LF). `signIn()` mirrors the
+> same check client-side (defense in depth). Both are covered by unit tests
+> (`workers/access-gate/test`) + an e2e flow test (`test/e2e/signin-redirect.spec.ts`).
+
+### Who calls what
+
+```mermaid
+flowchart LR
+    subgraph Client["🌐 Browser (site bundle)"]
+        AP["AuthProvider<br/>(src/lib/auth.tsx)"]
+        PG["PremiumGate"]
+        PH["posthog.js"]
+        SI["signIn()"]
+    end
+    subgraph CF["☁️ Cloudflare Access app (/api/*)"]
+        ME["/api/me<br/>identity"]
+        UK["/api/unlock-key<br/>key-vend"]
+        RD["/api/redirect<br/>303 bounce"]
+    end
+    AP -->|"fetch (on load)"| ME
+    PH -->|"fetch (on load)"| ME
+    PG -->|"fetch (when signed in)"| UK
+    SI -->|"top-level navigation"| RD
+    RD -->|"303 → content page"| Client
+```
+
+### Sequence: the `/api/redirect` sign-in bounce
+
+```mermaid
+sequenceDiagram
+    participant U as Reader
+    participant App as Site (static SPA)
+    participant Acc as CF Access
+    participant LI as LinkedIn
+    participant W as Worker (/api/redirect)
+
+    U->>App: click "Sign in" on /craft/premium-gating-demo
+    Note over App: signIn() → window.location = <br/>/api/redirect?redirect_url=/craft/premium-gating-demo
+    App->>Acc: GET /api/redirect?redirect_url=…
+    alt no Access session yet
+        Acc->>LI: 302 OIDC redirect
+        LI-->>Acc: id_token (email)
+        Acc-->>Acc: set CF_Authorization, return to /api/redirect
+    end
+    Acc->>W: admitted request (valid JWT)
+    W->>W: safeRedirectPath(redirect_url) → same-origin path
+    W-->>App: 303 Location: /craft/premium-gating-demo
+    App->>App: SPA boots on the content page
+    App->>W: (now) GET /api/me + /api/unlock-key → gate unlocks
 ```
 
 ## Why StatiCrypt + Worker key-vend
