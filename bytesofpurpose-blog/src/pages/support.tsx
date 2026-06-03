@@ -10,7 +10,7 @@ import styles from './support.module.css';
 // channels filter below); a '#' placeholder would be omitted so we never ship a
 // CTA that opens a blank tab.
 // Typed as `string` (not the literal) so the `!== '#'` placeholder guard below
-// stays meaningful — if this is ever reset to '#', the card is omitted again.
+// stays meaningful: if this is ever reset to '#', the card is omitted again.
 const SHOPIFY_STORE_URL: string = 'https://bytesofpurpose.myshopify.com/';
 
 const GITHUB_URL = 'https://github.com/omars-lab';
@@ -41,7 +41,7 @@ export default function SupportPage(): React.JSX.Element {
     });
 
   const channels: Channel[] = [
-    // Shopify card is only shown once SHOPIFY_STORE_URL is a real link — a '#'
+    // Shopify card is only shown once SHOPIFY_STORE_URL is a real link (a '#'
     // placeholder would render a "Visit the store" CTA that opens a blank tab.
     ...(SHOPIFY_STORE_URL !== '#'
       ? [
@@ -50,7 +50,7 @@ export default function SupportPage(): React.JSX.Element {
             icon: '🛍️',
             title: 'Check out my Shopify store',
             blurb:
-              "I design and sell things I'd want to own myself — grabbing something is a real, tangible way to support the work here.",
+              "I design and sell things I'd want to own myself, and grabbing something is a real, tangible way to support the work here.",
             href: SHOPIFY_STORE_URL,
             cta: 'Visit the store',
             external: true,
@@ -72,7 +72,7 @@ export default function SupportPage(): React.JSX.Element {
       icon: '🤝',
       title: 'Connect on LinkedIn',
       blurb:
-        "Let's stay in touch — connect, share a post, or reach out about working together.",
+        "Let's stay in touch: connect, share a post, or reach out about working together.",
       href: LINKEDIN_URL,
       cta: 'Connect on LinkedIn',
       external: true,
@@ -82,7 +82,7 @@ export default function SupportPage(): React.JSX.Element {
   return (
     <Layout
       title="Support"
-      description="Ways to support my work — visit my Shopify store, follow on GitHub or LinkedIn, or buy me a coffee."
+      description="Ways to support my work: visit my Shopify store, follow on GitHub or LinkedIn, or buy me a coffee."
       noFooter={false}
     >
       <div className={`container margin-vert--lg ${styles.page}`}>
@@ -90,7 +90,7 @@ export default function SupportPage(): React.JSX.Element {
           <img
             className={styles.headshot}
             src={headshot}
-            alt="Omar Eid — headshot"
+            alt="Omar Eid headshot"
             width={160}
             height={160}
           />
@@ -98,7 +98,7 @@ export default function SupportPage(): React.JSX.Element {
             <h1>Support my work</h1>
             <p>
               Hi, I'm Omar. I write here about software, problem-solving, and
-              building things in the open — and I run almost entirely on coffee
+              building things in the open, and I run almost entirely on coffee
               ☕. If anything here helped you, here are a few ways to say thanks.
               No pressure, every one of them genuinely means a lot.
             </p>
@@ -124,7 +124,7 @@ export default function SupportPage(): React.JSX.Element {
             </a>
           ))}
 
-          {/* The coffee CTA is a card in the same grid as the channels — but a
+          {/* The coffee CTA is a card in the same grid as the channels, but a
               <div> (not an <a>), since its action is the CoffeeButton (wired to
               the support-button-copy A/B experiment), not a single link. */}
           <div className={styles.channelCard}>
@@ -133,7 +133,7 @@ export default function SupportPage(): React.JSX.Element {
             </span>
             <span className={styles.channelTitle}>…or buy me a coffee</span>
             <span className={styles.channelBlurb}>
-              I'm only half-joking about the coffee — it's the fuel behind every
+              I'm only half-joking about the coffee. It's the fuel behind every
               late-night post and side project. A small tip keeps the pot full
               and the writing coming.
             </span>

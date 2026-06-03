@@ -7,7 +7,7 @@ import AuthNavbarItem from '@site/src/components/AuthNavbarItem';
 // type:'html' string. Use it in docusaurus.config.js navbar items via:
 //   { type: 'custom-coffee', position: 'right' }
 //
-// NOTE: currently UNUSED — the support-button-copy experiment moved off the
+// NOTE: currently UNUSED; the support-button-copy experiment moved off the
 // navbar onto the dedicated /support page's CTA (src/components/Support/
 // CoffeeButton). This registration is kept (inert) so the navbar coffee button
 // can be re-enabled by re-adding the { type: 'custom-coffee' } navbar item.

@@ -5,7 +5,7 @@ import {useBlogPost} from '@docusaurus/plugin-content-blog/client';
 import ShareButton from '@site/src/components/ShareButton';
 import styles from './styles.module.css';
 
-// Swizzled @theme/BlogPostItem/Header/Title — re-implements the upstream Title
+// Swizzled @theme/BlogPostItem/Header/Title: re-implements the upstream Title
 // and mounts the inline <ShareButton> beside the H1, but ONLY on the blog post
 // page (not in the blog list, where the title renders as a linked <h2>).
 // Part of the ingress-attribution layer (see src/ingress-attribution-plan.md).

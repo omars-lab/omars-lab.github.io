@@ -13,7 +13,7 @@ import React from 'react';
 // React tree.
 //
 // Dev/prod parity: `make start` proxies localhost/api/* → the real prod Worker
-// (plugins/dev-api-proxy), so /api/* is reachable in dev too — no localhost
+// (plugins/dev-api-proxy), so /api/* is reachable in dev too, with no localhost
 // special-casing here. Sign in once on https://blog.bytesofpurpose.com so the
 // browser holds the CF_Authorization cookie; the proxy forwards it upstream.
 //
@@ -23,7 +23,7 @@ import React from 'react';
 
 // Sign-in navigates the top-level window to a PROTECTED /api/* path so Cloudflare
 // Access runs the LinkedIn round-trip. It must NOT be a data endpoint (/api/me,
-// /api/unlock-key return JSON — landing the browser there shows the SPA 404). The
+// /api/unlock-key return JSON, and landing the browser there shows the SPA 404). The
 // Worker's /api/redirect route is the one protected path that, once authenticated,
 // 303s the browser onward to the real content page. See the premium-content-gating
 // design ("Workers & API endpoints").
@@ -31,8 +31,8 @@ export const ACCESS_LOGIN_PATH = '/api/redirect';
 export const ACCESS_LOGOUT_PATH = '/cdn-cgi/access/logout';
 
 // Client-side mirror of the Worker's safeRedirectPath(): coerce `next` to a
-// same-origin path before putting it in the sign-in URL. Defense in depth — the
-// Worker re-validates authoritatively — and it avoids a pointless round-trip on an
+// same-origin path before putting it in the sign-in URL. Defense in depth: the
+// Worker re-validates authoritatively, and it avoids a pointless round-trip on an
 // obviously bad value. Keep in lockstep with workers/access-gate/src/index.ts.
 function sameOriginPath(next: string): string {
   if (!next || !next.startsWith('/')) return '/';
@@ -68,7 +68,7 @@ const AuthContext = React.createContext<AuthState>({
 /**
  * Begin the Cloudflare Access → LinkedIn sign-in flow. Navigating to the gated
  * `/api/redirect` path makes Access 302 to LinkedIn (if not already signed in);
- * once authenticated the Worker 303s the browser to `next` — the content page the
+ * once authenticated the Worker 303s the browser to `next`, the content page the
  * reader was on. `next` is sanitized to a same-origin path both here and in the
  * Worker (open-redirect defense in depth).
  */
@@ -92,7 +92,7 @@ export function signOut(): void {
 
 /**
  * Fetch /api/me ONCE. Resolves to a user (authenticated) or null (anonymous /
- * unreachable). Never rejects — every failure mode maps to null.
+ * unreachable). Never rejects; every failure mode maps to null.
  */
 async function fetchMe(): Promise<AuthUser | null> {
   try {
@@ -149,7 +149,7 @@ export function useAuth(): AuthState {
  *
  * The premium page gate + <Premium> blocks call this once they know the reader is
  * authenticated, then hand the passphrase to decryptPremium(). The passphrase is held
- * only in memory for the decrypt — never persisted.
+ * only in memory for the decrypt, never persisted.
  */
 export async function fetchUnlockKey(): Promise<string | null> {
   try {
@@ -157,7 +157,7 @@ export async function fetchUnlockKey(): Promise<string | null> {
     if (!r.ok) return null;
     const ct = r.headers.get('content-type') || '';
     // The Worker returns the passphrase as JSON {passphrase} (see
-    // workers/access-gate/src/index.ts) — guard so we never treat a non-JSON
+    // workers/access-gate/src/index.ts); guard so we never treat a non-JSON
     // body (an unexpected redirect/error page) as a key.
     if (!ct.includes('application/json')) return null;
     const data = (await r.json()) as {passphrase?: string} | null;

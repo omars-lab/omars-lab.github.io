@@ -45,7 +45,7 @@ export const Support = ({children}: SupportProps) => {
         {children || label}
       </button>
       {/* PayPal 1×1 tracking pixel. `border` is a deprecated HTML attr (not a
-          valid React img prop) — drop it; a 1×1 pixel has no visible border. */}
+          valid React img prop), so drop it; a 1×1 pixel has no visible border. */}
       <img alt="" style={{border: 0}} src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
     </form>
   );

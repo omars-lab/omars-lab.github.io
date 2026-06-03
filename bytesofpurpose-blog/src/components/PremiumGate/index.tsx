@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 // body with <PremiumGate payload="/premium/<id>.json" teaser="…" /> at compile time, so
 // the plaintext is in neither the HTML nor the JS bundle. This component:
 //
-//   - Anonymous: a gold "premium / locked" info pane (disclaimer ONLY — no CTA in it),
+//   - Anonymous: a gold "premium / locked" info pane (disclaimer ONLY, no CTA in it),
 //     then two CTA cards in the body: (1) sign in with LinkedIn to unlock, (2) ask for
 //     this to be made free. Both fire PostHog events.
 //   - Signed in: fetches the passphrase (/api/unlock-key) + the encrypted payload, decrypts
@@ -17,7 +17,7 @@ import styles from './styles.module.css';
 //
 // In DEV / unencrypted builds the plugin no-ops (no STATICRYPT_PASSPHRASE), so premium docs
 // render their real body normally and this component never appears. It only exists on pages
-// the build actually encrypted — so `payload` is always present here.
+// the build actually encrypted, so `payload` is always present here.
 
 type GateState =
   | {phase: 'idle'}
@@ -38,7 +38,7 @@ export default function PremiumGate({
 }): React.JSX.Element {
   const {status} = useAuth();
   const [state, setState] = React.useState<GateState>({phase: 'idle'});
-  // Whether the reader has already asked for this to be free this session — flips the
+  // Whether the reader has already asked for this to be free this session, which flips the
   // request card to a thank-you state so the demand event can't be spammed.
   const [requested, setRequested] = React.useState(false);
 

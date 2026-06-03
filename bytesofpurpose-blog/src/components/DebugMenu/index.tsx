@@ -6,7 +6,7 @@ import {linksSection} from './sections/LinksSection';
 import styles from './styles.module.css';
 
 // Floating, localhost-only DEBUG MENU. A general-purpose developer panel whose
-// content is a list of pluggable sections — it STARTS with Experiments, and new
+// content is a list of pluggable sections; it STARTS with Experiments, and new
 // debug sections drop into the `SECTIONS` array below without touching the
 // container. See ./types.ts (DebugSection) and ./sections/.
 //
@@ -14,7 +14,7 @@ import styles from './styles.module.css';
 // component (and its markup/strings) never reaches the deployed gh-pages bundle.
 // isLocalhost() is the same gate src/experiments.ts uses for the URL override.
 
-// Section registry — append here to add a debug section.
+// Section registry; append here to add a debug section.
 const SECTIONS: DebugSection[] = [experimentsSection, linksSection];
 
 function DebugMenuInner(): React.JSX.Element {

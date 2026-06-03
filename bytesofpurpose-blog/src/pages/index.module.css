@@ -49,24 +49,50 @@ html[data-theme='dark'] .heroBanner {
 }
 
 .chooserCard {
-  flex: 1 1 340px;
-  max-width: 400px;
-  text-align: left;
-  padding: 1.5rem 1.5rem 1.4rem;
-  border-radius: 14px;
+  flex: 1 1 320px;
+  max-width: 360px;
+  text-align: center;
+  padding: 1.5rem 1.5rem 1.6rem;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #fff;
   text-decoration: none;
-  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .chooserCard:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.55);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
   text-decoration: none;
   color: #fff;
+}
+
+/* Arched illustration sitting on top of each card. The source PNG already carries
+   the arch silhouette + outline, so we just size + center it and let the card hover
+   lift the whole tile. The arch top is reinforced with a border-radius mask for a
+   crisp cathedral-window feel even if the source bleeds. */
+.chooserCardImageWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.chooserCardImage {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  border-radius: 110px 110px 14px 14px;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.3));
+  transition: transform 0.2s ease;
+}
+
+.chooserCard:hover .chooserCardImage {
+  transform: scale(1.03);
 }
 
 .chooserCardTitle {

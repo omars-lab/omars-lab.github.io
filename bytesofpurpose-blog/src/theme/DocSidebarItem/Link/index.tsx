@@ -9,7 +9,7 @@ import {useIsDraft, DraftBadge} from '../draftBadge';
 import {useIsPremium, LockBadge} from '../lockBadge';
 import styles from './styles.module.css';
 
-// Swizzled (forked) DocSidebarItem/Link — identical to the upstream component
+// Swizzled (forked) DocSidebarItem/Link: identical to the upstream component
 // except it appends a dev/localhost-only "draft" badge for draft docs. See
 // ../draftBadge (gated to localhost + non-prod; no-op in production).
 function LinkLabel({label}: {label: string}) {

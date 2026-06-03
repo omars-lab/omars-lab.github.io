@@ -74,6 +74,11 @@ typecheck: ## Type-check the site with tsc (swizzled theme + components + pages)
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
 
+validate-em-dash: ## Scan ALL public-facing content (prose + components) for AI-voice em-dashes (—)
+	@# Repo-wide complement to the edit-only .claude/hooks/em-dash-voice-hook.sh, which never
+	@# sweeps the existing corpus. Exit 1 on any hit. Flags everything, code blocks included.
+	( cd ${SITEROOT} && node scripts/validate-em-dash.js )
+
 validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, categories, depth, naming)
 	@# exit 2 == ERROR-tier (fail the gate); exit 1 == warn-only (advisory, pass).
 	@( cd ${SITEROOT} && node scripts/validate-docs-structure.js ); rc=$$?; \

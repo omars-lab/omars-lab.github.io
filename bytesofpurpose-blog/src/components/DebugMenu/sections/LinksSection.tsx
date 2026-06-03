@@ -3,7 +3,7 @@ import type {DebugSection} from '../types';
 import styles from '../styles.module.css';
 
 // A quick debugging launchpad: external dashboards we hop to often while
-// developing/operating the site. Append to LINKS to add another — the body just
+// developing/operating the site. Append to LINKS to add another; the body just
 // maps each entry to an external anchor. Dev-only (the whole DebugMenu is
 // double-gated), so these admin URLs never reach the deployed bundle.
 

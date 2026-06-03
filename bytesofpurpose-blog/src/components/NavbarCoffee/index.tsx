@@ -5,7 +5,7 @@ import {EXPERIMENTS, resolveVariant} from '@site/src/experiments';
 // The navbar "Buy Me a Coffee?" link, wired into the SAME A/B experiment as the
 // docs-footer <Support/> button (flag: support-button-copy). Because the navbar
 // shows on every page, the experiment is now visible site-wide (incl. the
-// homepage) — and the localhost DebugMenu / ?ab-support-button-copy override
+// homepage), and the localhost DebugMenu / ?ab-support-button-copy override
 // flips it everywhere, not just on the one docs page that embeds <Support/>.
 //
 // Variant copy lives in src/experiments.ts:

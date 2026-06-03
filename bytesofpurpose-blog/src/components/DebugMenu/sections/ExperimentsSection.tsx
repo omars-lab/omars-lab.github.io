@@ -41,7 +41,7 @@ function forceVariant(exp: Experiment, variant: string): void {
   try {
     posthog?.featureFlags?.overrideFeatureFlags?.({flags: {[exp.key]: variant}});
   } catch {
-    /* SDK not ready — the URL param below still takes effect on reload. */
+    /* SDK not ready; the URL param below still takes effect on reload. */
   }
   // ...and persist via the URL param so a reload (and resolveVariant in every
   // consumer) keeps the forced variant. Reloading guarantees a uniform read.
@@ -73,8 +73,8 @@ function ExperimentsBody(): React.JSX.Element {
     <div>
       <p className={`${styles.status} ${phReady ? styles.statusOk : styles.statusWarn}`}>
         {phReady
-          ? `PostHog ready · distinct_id: ${distinctId ?? '—'}`
-          : 'PostHog NOT initialised — flags fall back to control (URL override still works).'}
+          ? `PostHog ready · distinct_id: ${distinctId ?? 'n/a'}`
+          : 'PostHog NOT initialised; flags fall back to control (URL override still works).'}
       </p>
 
       {entries.length === 0 && <p>No experiments registered.</p>}
