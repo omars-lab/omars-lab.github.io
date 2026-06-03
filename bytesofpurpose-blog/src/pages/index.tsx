@@ -16,9 +16,10 @@ function HomepageHeader() {
       <div className="container">
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        {/* Two-space chooser (folded in from the old /welcome page): Craft = what I
-            impact (the outward work, shared); Self = who I am (the inward journey).
-            Each card leads with an arched illustration, then title + body. */}
+        {/* Three-card chooser (folded in from the old /welcome page): Craft = what I
+            impact (the outward work, shared); Self = who I am (the inward journey);
+            Thoughts = what I'm thinking lately (the blog). Each card leads with an
+            arched illustration, then title + body. */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
             <div className={styles.chooserCardImageWrap}>
@@ -48,10 +49,21 @@ function HomepageHeader() {
             <div className={styles.chooserCardTitle}>🪞 Discover My Journey</div>
             <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
+          <Link className={styles.chooserCard} to="/blog">
+            <div className={styles.chooserCardImageWrap}>
+              <img
+                className={styles.chooserCardImage}
+                src={useBaseUrl('/img/cards/thinking.png')}
+                alt="Omar in thought, hand to his chin"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+            </div>
+            <div className={styles.chooserCardTitle}>💭 Browse My Thoughts</div>
+            <p className={styles.chooserCardBody}>What I'm thinking about lately.</p>
+          </Link>
         </div>
-        <p className={styles.secondaryLinks}>
-          Or skim the <Link to="/blog">latest blog posts</Link> for recent thinking.
-        </p>
       </div>
     </header>
   );
