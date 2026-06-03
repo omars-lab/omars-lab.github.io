@@ -5,7 +5,7 @@
  * unauthenticated request is 302'd to LinkedIn by Access before this code
  * even runs — so the JWT below is belt-and-suspenders, not the only gate):
  *
- *   GET /api/me          → { email, name?, picture? }   (identity for navbar + PostHog)
+ *   GET /api/me          → { email, name?, picture?, isInternal }  (identity + analytics flag)
  *   GET /api/unlock-key  → { passphrase }                (the StatiCrypt key-vend)
  *
  * The hard gate for premium content: /api/unlock-key returns the single
@@ -42,6 +42,19 @@ export interface Env {
 
 // The single origin allowed to call these endpoints with credentials.
 const ALLOWED_ORIGIN = 'https://blog.bytesofpurpose.com';
+
+// Internal-tester roster for analytics filtering. Lives HERE (server-side) — not
+// in the public site bundle — so author/tester emails never ship to readers and
+// the `isInternal` flag is server-authoritative (the client can't spoof it). This
+// replaces the old src/internal-testers.ts (which leaked these emails in main.*.js).
+// To make it fully out-of-source later, read env.INTERNAL_EMAILS (a comma list) and
+// merge — kept as a const for now so the roster is review-tracked in git.
+const INTERNAL_EMAILS: ReadonlyArray<string> = ['omar_eid21@yahoo.com'];
+
+function isInternalEmail(email: string): boolean {
+  const e = email.toLowerCase();
+  return INTERNAL_EMAILS.some((x) => x.toLowerCase() === e);
+}
 
 // Cache the JWKS keyset across requests in the same isolate (jose memoizes the
 // remote fetch + respects cache headers). Keyed by team domain.
@@ -153,6 +166,9 @@ export default {
           email,
           name: (payload.name as string | undefined) ?? undefined,
           picture: (payload.picture as string | undefined) ?? undefined,
+          // Server-authoritative analytics flag — the client registers is_internal
+          // from THIS, so the roster + emails stay off the public bundle.
+          isInternal: isInternalEmail(email),
         },
         200,
         req,
