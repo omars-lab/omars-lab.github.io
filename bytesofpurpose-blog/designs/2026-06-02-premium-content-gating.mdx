@@ -174,6 +174,49 @@ The site uses that email to swap the navbar to an avatar and to call PostHog's
   (non-zero exit) if a single premium doc leaked. It runs in `deploy-site` and as a
   pre-push hook, so unencrypted premium can never ship silently.
 
+## Verification & assurance (defense in depth)
+
+The architecture above makes the gate *possible*; this layer is what makes it *stay
+closed* across edits, refactors, and frontmatter typos. The encrypt step is fallible, so
+the design treats the **V5 verifier (`scripts/verify-premium-encrypted.js`) as the real
+guarantee** and the encrypt plugin as merely the thing that should make V5 pass. Four
+principles, hardened after an adversarial code review of the implementation:
+
+1. **Fail closed when safety is *unprovable*, not just when a leak is *seen*.** V5 proves
+   absence by grepping the whole build for distinctive tokens of each premium body. If a
+   premium doc yields **no** distinctive tokens, the verifier cannot prove the body is
+   absent — so it now **errors and aborts the deploy** rather than warning and passing.
+   "Can't prove safe" is treated as "unsafe." (The earlier version logged a warning and
+   continued, which is fail-*open* for exactly the docs hardest to fingerprint.)
+
+2. **Layered fingerprints so every body is checkable.** A body of only short, common words
+   produces no long single token. Rather than leave it un-fingerprinted, `bodyFingerprints()`
+   falls back from **long single tokens → 4-word phrases** (text runs survive HTML
+   serialization without entity-escaping, so they're still greppable). Only a genuinely
+   empty body reaches principle 1's hard error.
+
+3. **One source of truth for "what is premium."** The set of premium docs is computed in
+   exactly one place — `collectPremiumDocs()` (YAML-parsed `premium === true`) — and every
+   consumer (the encrypt plugin, the V5 verifier, **and** the deploy's fail-closed abort)
+   reads from it. Shell gates do **not** re-derive the set with a parallel `grep` that could
+   silently disagree (`premium:true` vs `premium: true`, quoted, etc.). A gate that
+   disagrees with the encryptor about which docs to encrypt is a leak waiting to happen.
+
+4. **The passphrase is itself contraband in the build.** V5 also asserts the
+   `STATICRYPT_PASSPHRASE` value appears **nowhere** in the built output — if the key ever
+   leaked into a bundle, every premium body would be offline-decryptable, so its absence is
+   gated with the same severity as the bodies.
+
+> **Known nuance (residual, by design): the post-deploy V5 in `make deploy` is
+> detection, not prevention.** `docusaurus deploy` rebuilds *and pushes* in one step, so
+> the V5 re-run there validates `build/` **after** the push — it would catch a regression
+> but only once it's already public. The genuinely *pre-publish* gate is `build-premium`
+> (V5 before any deploy) and the pre-push hook; the post-deploy run is a third,
+> belt-and-suspenders check. Because the deploy line exports `STATICRYPT_PASSPHRASE`, the
+> rebuild *does* encrypt — so this is defense-in-depth, not an open hole — but a future
+> change should make `deploy` build → verify → push so the strongest gate is also the
+> pre-publish one.
+
 ## Dev/prod parity (design decision)
 
 **Decision: local dev must behave identically to production — same encryption, same
@@ -294,6 +337,23 @@ Access JWT (verified against the team JWKS, with a matching `aud`). An anonymous
 request is 302'd to LinkedIn by Access *before the Worker even runs*; a forged or
 absent token yields 401. The passphrase is a Worker **secret**, never in the repo
 or the public bundle.
+
+### Threat model — what each attacker can and can't do
+
+The gate is deliberately scoped: it raises the bar on the **live site** and drives
+sign-ins; it is **not** a secret-keeping mechanism against someone who reads the public
+repo (see *Trade-offs*). Within that scope, this is the attack surface and what holds it.
+
+| Attacker capability | What stops them | Residual risk |
+|---|---|---|
+| **Anonymous reader, View-Source on a premium page** | Body ships as **ciphertext** (encrypted at MDX-compile, in neither HTML nor JS chunk); only a teaser is cleartext | None — the bytes are useless without the key |
+| **Calls `/api/unlock-key` directly without signing in** | CF Access 302s to LinkedIn *before the Worker runs*; absent/forged JWT → Worker returns **401** (verifies signature + issuer + `aud` against team JWKS) | None within scope; relies on CF Access + JWKS integrity |
+| **Forges an Access JWT / replays a stale one** | `jwtVerify` checks RS256 signature, issuer, audience, and expiry against the live team JWKS | Standard JWT/JWKS trust; key rotation handled by Cloudflare |
+| **Tampers with the encrypted sidecar payload** | `decryptPremium` **HMAC-verifies before decrypting** and returns null on mismatch — tampered ciphertext never renders | None — integrity is cryptographic |
+| **Author error: a premium doc ships in cleartext (typo, stale cache, missing passphrase)** | **V5 verifier** greps the whole build for each body's fingerprints and **aborts the deploy**; fails *closed* even when a body can't be fingerprinted (see *Verification & assurance*) | A regression in `make deploy`'s **post-push** V5 is detected after publish, not before — mitigated by the pre-push hook + `build-premium` running V5 *pre*-publish |
+| **The decryption key leaks into the bundle** | V5 asserts the `STATICRYPT_PASSPHRASE` value is **absent** from all built output; deploy aborts on any hit | None at build time; rotate via `make rotate-premium-secret` if ever exposed |
+| **Spoofs the `is_internal` analytics flag to hide traffic** | Flag is **server-authoritative** — the Worker derives it from a private roster and returns it; the roster + tester emails never ship to the client | Low — worst case is analytics noise, not content exposure |
+| **Reads the premium MDX from the public GitHub repo** | *Out of scope by design* — the repo is public; only the *deployed* site encrypts | **Accepted** — the gate is a nudge, not a vault (see the wink at the end) |
 
 ### Does this work on localhost?
 
