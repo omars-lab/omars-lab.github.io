@@ -237,8 +237,13 @@ install-hooks: ## Enable the local pre-commit secret-scan hook
 	git config core.hooksPath .githooks
 	@echo "✓ pre-commit secret scanning enabled (core.hooksPath=.githooks)"
 
-deploy: secret-scan ## Deploy the site to GitHub Pages (runs a secret scan first)
+deploy: secret-scan build-storybook ## Deploy the site to GitHub Pages (runs a secret scan first)
 	# Publishes the website to GitHub pages.
+	@# `static/storybook/` is a GENERATED artifact (gitignored, not tracked) that
+	@# Docusaurus copies verbatim from static/ — `yarn deploy` does NOT regenerate it.
+	@# So `build-storybook` is a prerequisite here: a fresh clone must regenerate the
+	@# /storybook/ assets (the footer links to /storybook/) before the deploy copies
+	@# static/, or the live page would ship with no bundles.
 	@# `docusaurus deploy` REBUILDS (it ignores a prebuilt build/ + SKIP_BUILD), so the
 	@# build-time env MUST be exported here or the rebuild ships premium in CLEAR (no
 	@# STATICRYPT_PASSPHRASE) and loses analytics (no POSTHOG_KEY). Per-var extraction
