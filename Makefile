@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret validate-dev-service-token validate-deployment
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -125,7 +125,22 @@ validate-dev-service-token: ## Verify the CF Access service token unlocks the Wo
 		exit 2; \
 	fi
 
-rotate-premium-secret: ## Rotate the premium passphrase in BOTH .env and the Worker (then re-encrypt+deploy)
+check-node-worker: ## Fail-closed: abort unless the running node satisfies workers/access-gate/.nvmrc
+	@# wrangler 4.94+ HARD-REFUSES to run on node < 22 (it exits before doing anything),
+	@# so any Worker deploy on the wrong node dies with a cryptic mid-command error. This
+	@# guard reads workers/access-gate/.nvmrc and aborts FIRST with a clear nvm hint, so
+	@# `rotate-premium-secret` can't half-rotate on an unsupported node. Prereq of the
+	@# Worker-deploy paths; run it standalone to check your shell before deploying.
+	@REQ=$$(tr -dc '0-9' < workers/access-gate/.nvmrc); \
+	CUR=$$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0); \
+	if [ "$$CUR" -lt "$$REQ" ]; then \
+		echo "🔴 ABORT: Worker tooling (wrangler) needs node >= $$REQ but this shell is on node $$CUR."; \
+		echo "   Fix: nvm install $$REQ && nvm use $$REQ   (or 'cd workers/access-gate && nvm use')"; \
+		exit 2; \
+	fi; \
+	echo "✅ node $$CUR satisfies the Worker's node >= $$REQ requirement."
+
+rotate-premium-secret: check-node-worker ## Rotate the premium passphrase in BOTH .env and the Worker (then re-encrypt+deploy)
 	@# Rotation MUST keep two copies equal: STATICRYPT_PASSPHRASE in .env (encrypts at
 	@# build time) and the access-gate Worker's PREMIUM_PASSPHRASE (vended to readers).
 	@# This target generates one new value, writes it to .env, pushes it to the Worker,
