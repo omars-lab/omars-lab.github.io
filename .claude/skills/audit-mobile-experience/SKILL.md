@@ -132,15 +132,96 @@ tell).
 }
 ```
 
-Beyond the probes, eyeball two things they can't catch: **thumb reach** (is the primary CTA
-in the bottom ~⅔ of the viewport, or buried top-corner?) and **reflow quality** (did
-multi-column content *stack*, or just *squish* — arched images squeezed, two cards crammed
-side-by-side at 360px?).
+**5. Mid-word-wrap probe** — a single word wider than its box wraps **mid-word** (e.g.
+`Entrepreneurship` → `Entrepreneursh` + `ip` in a narrow pager/card). Measures each
+element's longest word against its `clientWidth`. (Confirmed real catch:
+`pagination-nav__label`, word render-width 136px in a 124px box.)
+
+```js
+() => {
+  const measure = (txt, el) => {
+    const c = document.createElement('span'), s = getComputedStyle(el);
+    c.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font-size:${s.fontSize};font-weight:${s.fontWeight};font-family:${s.fontFamily};letter-spacing:${s.letterSpacing}`;
+    c.textContent = txt; document.body.appendChild(c);
+    const w = c.getBoundingClientRect().width; c.remove(); return w;
+  };
+  const hits = [];
+  for (const el of document.querySelectorAll('a,h1,h2,h3,div,span,p,b,strong,li,td')) {
+    const t = (el.innerText||'').trim();
+    if (!t || el.childElementCount > 0) continue;
+    const longest = t.split(/\s+/).sort((a,b)=>b.length-a.length)[0] || '';
+    if (longest.length < 10) continue;                  // only long words can break mid-token
+    const wordW = measure(longest, el), box = el.clientWidth;
+    if (box > 0 && wordW > box + 1) hits.push({ word: longest, wordW: Math.round(wordW), boxW: box, tag: el.tagName, cls: (el.className||'').toString().slice(0,30) });
+  }
+  const seen = new Set();
+  return { count: hits.length, samples: hits.filter(h => { const k=h.word+h.boxW; if(seen.has(k))return false; seen.add(k); return true; }).slice(0, 12) };
+}
+```
+
+## The visual-analysis pass (MANDATORY — the probes only see numbers)
+
+The four probes catch what has a number; they are **blind to aesthetics**. Spacing that
+feels cramped, a heading that wraps to a lonely orphan word, a CTA that breaks to two
+lines, content kissing the screen edge, lopsided cards, a wall of text with no breathing
+room — none of these trip a probe, yet they are exactly what makes a layout read as
+"shrunk desktop." **A run is NOT complete until this pass is done.** Numbers + a clean
+Lighthouse score with no visual review is a false pass.
+
+For **every surface, at minimum the 375px viewport** (and 360px where reflow is tight):
+
+1. **Capture a FULL-PAGE screenshot** — `mcp__chrome-devtools__take_screenshot` with
+   `fullPage: true`. The first viewport is not enough; spacing/rhythm problems hide below
+   the fold. (For very long pages, also grab the key sections individually.)
+2. **Actually look at the image** (Read it back) and score it against the rubric below.
+   Treat this like a designer reviewing a comp, not a checkbox.
+3. **Capture the desktop equivalent** for the same surface and compare — the question is
+   always *"is this designed for a phone, or just desktop squeezed into one?"*
+
+### Visual rubric — what to look for in the screenshot
+
+| Dimension | The tell (a finding) |
+|---|---|
+| **Edge spacing** | Text/images/cards touching or nearly touching the viewport edge; inconsistent left/right gutters; content wider "feeling" than its margin |
+| **Line breakage** | A heading or CTA wrapping to **2 lines**, or wrapping to leave an **orphan** (one lonely word on the last line); mid-word breaks; a label that *just barely* wraps |
+| **Vertical rhythm** | Uneven gaps between sections; two elements cramped together while others have huge gaps; no breathing room around headings |
+| **Density / walls** | A long unbroken block of text with no paragraph breaks, list, or image to rest the eye; a card stuffed with too much copy |
+| **Hierarchy** | Does the eye land on the right thing first? Is the primary CTA visually dominant, or lost among equal-weight elements? Heading/body size contrast too flat? |
+| **Balance** | Lopsided cards (one tall, one short); an image dwarfing its caption or vice-versa; an off-center element that should be centered |
+| **Alignment** | Things that should line up (card edges, icon+text baselines, list bullets) that don't |
+| **Thumb reach** | Primary CTA in the bottom ~⅔ (reachable one-handed), or stranded in a top corner? |
+| **Reflow quality** | Multi-column content *stacked* cleanly, or *squished* — arched images squeezed, two cards crammed side-by-side at 360px, a table compressed to unreadable? |
+
+### Worked examples (real catches — look for these specifically)
+
+These are confirmed real findings the numeric probes missed; check every run for them:
+
+- **Mid-word break in a pager / card title.** The doc "Previous / Next" pager cards and
+  any fixed-width card with a long single word will break **mid-word** at 375px — e.g.
+  `Entrepreneurship` rendering as `Entrepreneursh` + `ip` on the next line. Tell:
+  any word hyphen-less-wrapped across a line. Fix: `word-break: normal; overflow-wrap:
+  anywhere` won't help a single long word — instead widen the card, reduce the title
+  font-size at mobile width, or allow the card to grow. Inspect with a probe that flags
+  elements whose text node wraps mid-token, but the screenshot is the real catch.
+- **Share-button row crammed against the card's top edge.** The ShareButton/social row
+  (copy · email · LinkedIn · X) renders with **little or no gap above the card it sits
+  on** (e.g. directly on top of the "Premium content" card border), looking collided.
+  Tell: interactive chrome kissing a container edge with no breathing room. Fix: add
+  `margin-block`/`gap` above the share row at mobile width.
+
+Each visual finding goes into the same P0/P1/P2 report with the **screenshot as its
+evidence** (reference the capture + describe what's wrong) and a **concrete fix** (e.g.
+"card title wraps to 2 lines at 375px → shorten to ≤18 chars or reduce title font-size in
+`index.module.css`"; "feature blurb block has no vertical breathing room → add
+`margin-block` at the 966px breakpoint"). Aesthetic polish is usually **P2**, but a
+2-line primary CTA, content clipped at the edge, a mid-word-broken title, or a broken
+hierarchy that hides the main action is **P1**.
 
 ## Per-surface checklist (the four scopes)
 
-For each surface: load on :4173, run all four probes at the device matrix, screenshot
-desktop vs 375px, note thumb-reach + reflow.
+For each surface: load on :4173, run all four probes at the device matrix, **then run the
+mandatory visual-analysis pass above** (full-page screenshot → rubric → findings). Both
+the numbers AND the visual review are required before a surface is "done".
 
 - **Homepage / chooser** — `bytesofpurpose-blog/src/pages/index.tsx`,
   `src/pages/index.module.css`. The 3-card hero is the freshest risk: the chooser is

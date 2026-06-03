@@ -71,7 +71,36 @@ reachable, i.e. collapsed-not-hidden).
 Lighthouse mobile (homepage): a11y **100**, SEO **100**, best-practices **96** (one
 fail = `errors-in-console`, a console-error nit, out of mobile-layout scope).
 
+## Addendum (2026-06-03, later) — VISUAL-ANALYSIS pass
+
+The first pass was probe-numbers-led and under-weighted aesthetics. After the skill gained
+a **mandatory visual-analysis step** (full-page screenshot → rubric) and a **5th probe
+(mid-word-wrap)**, a re-run on the premium-demo page surfaced spacing/line-break issues the
+numeric probes are blind to. These are the "spacing, line breakage, etc." enhancements:
+
+8. **`Entrepreneurship` breaks mid-word in the Previous/Next pager** (`Entrepreneursh` +
+   `ip`). Surface: doc pager (`pagination-nav__label`) @ 375px. Evidence: mid-word-wrap
+   probe → word render-width **136px in a 124px box** + screenshot. **P1** (looks broken).
+   Fix: reduce `pagination-nav__label` font-size at mobile width, and/or let the label
+   wrap on word boundaries / the card grow. Affects every doc with a long-titled neighbor.
+9. **Share-button row (copy · email · LinkedIn · X) crammed against the premium card's
+   top edge.** Surface: `/craft/premium-gating-demo` @ 375px. Evidence: full-page
+   screenshot — the icon row sits with almost no gap above the yellow "Premium content"
+   card, looking collided. **P1** (reads as a layout bug). Fix: add `margin-block` / `gap`
+   below the ShareButton row (or above the premium callout) at mobile width.
+10. **"Previous" pager card floats lonely at ~55% width** with a large empty gap to its
+    right (no "Next" sibling on this page). Surface: doc pager @ 375px. Evidence:
+    screenshot. **P2** (awkward balance). Fix: full-width the single pager card on mobile,
+    or center it.
+
+**Method note (the lesson):** the original run *happened* to screenshot a couple of pages
+but treated images as optional confirmation, so findings #8–#10 were missed the first time.
+The skill now **requires** a per-surface full-page screenshot + rubric review; numbers
+alone are a false pass. The mid-word-wrap class is now also a programmatic probe so it no
+longer depends on the eye.
+
 ## Recommended fix order (if pursued)
-P1#1 (premium CTA height — conversion + quick) → P1#3 (changelog 10.4px text — readability)
-→ P1#2 (doc footer `.row` bleed — affects every doc) → P2#4 (global chrome min-height,
-clears most of the tap-target backlog at once).
+P1#1 (premium CTA height — conversion + quick) → **#9 (share-row spacing — visible bug on
+the premium page)** → **#8 (pager mid-word break — every doc)** → P1#3 (changelog 10.4px
+text) → P1#2 (doc footer `.row` bleed) → P2#4 (global chrome min-height, clears most of the
+tap-target backlog) → #10 (lonely pager card).
