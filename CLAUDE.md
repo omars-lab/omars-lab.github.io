@@ -12,6 +12,21 @@ Each skill is the single source of truth for its domain. If a fact spans areas, 
 it in the most specific skill and cross-link. Update the skill's Troubleshooting
 table when you hit and resolve a new failure mode.
 
+## ⚠️ Tenet: secure-by-default — fail closed, never ship secrets
+
+When a step can leak a secret or ship protected content unprotected, the **safe
+outcome must be the DEFAULT and the unsafe one must be impossible without explicit
+intent** — design it to **fail closed**, not to rely on remembering a flag. Concretely:
+a missing key ABORTS rather than silently ships cleartext; the standard target (e.g.
+`make deploy`) bakes in the protection (exports the encrypt passphrase, refuses to ship
+premium docs when `STATICRYPT_PASSPHRASE` is empty, re-runs the V5 leak gate after the
+deploy's rebuild) so an operator can't get the insecure path by omission. Secrets live
+ONLY in the gitignored `.env`; build/deploy outputs are scanned (gitleaks + V5 body/
+passphrase absence) and the scan BLOCKS on a hit. When you add a path that touches a
+secret or gated content, add the fail-closed guard in the SAME change and prove it bites
+(a planted-leak test that exits non-zero). Owning skills: `deploy-site`,
+`manage-infrastructure`, `validate-deployment`.
+
 ## ⚠️ Operating convention: track our work as tasks
 
 **Track non-trivial work as tasks** (TaskCreate/TaskUpdate). Any request that is more

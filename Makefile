@@ -224,7 +224,26 @@ install-hooks: ## Enable the local pre-commit secret-scan hook
 
 deploy: secret-scan ## Deploy the site to GitHub Pages (runs a secret scan first)
 	# Publishes the website to GitHub pages.
-	( cd ${SITEROOT} && USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy )
+	@# `docusaurus deploy` REBUILDS (it ignores a prebuilt build/ + SKIP_BUILD), so the
+	@# build-time env MUST be exported here or the rebuild ships premium in CLEAR (no
+	@# STATICRYPT_PASSPHRASE) and loses analytics (no POSTHOG_KEY). Per-var extraction
+	@# (NOT `source .env` — shell-special chars). Then re-run V5 on the deployed build/ as
+	@# a blocking safety net before the push is trusted. If a premium doc exists and the
+	@# passphrase is empty, ABORT — never ship cleartext premium.
+	@SP=$$(grep -E '^STATICRYPT_PASSPHRASE=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PK=$$(grep -E '^POSTHOG_KEY=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	PH=$$(grep -E '^POSTHOG_HOST=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
+	HAS_PREMIUM=$$(grep -rl '^premium: true' ${SITEROOT}/docs 2>/dev/null | head -1); \
+	if [ -n "$$HAS_PREMIUM" ] && [ -z "$$SP" ]; then \
+		echo "🔴 ABORT: premium docs exist but STATICRYPT_PASSPHRASE is empty — deploying would ship premium in CLEAR."; \
+		echo "   Set STATICRYPT_PASSPHRASE in .env (== the Worker's PREMIUM_PASSPHRASE) and retry. Fail-closed by default."; \
+		exit 1; \
+	fi; \
+	if [ -z "$$PK" ]; then echo "⚠️  POSTHOG_KEY empty — analytics will be missing in this deploy."; fi; \
+	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH \
+		USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy ) \
+	&& ( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP node scripts/verify-premium-encrypted.js ) \
+		|| { echo "🔴 post-deploy V5 found a premium leak in the shipped build — investigate immediately."; exit 2; }
 
 fix-frontmatter: ## Fix frontmatter issues using AI
 	gemini --approval-mode auto_edit --allowed-tools Edit,WriteFile -p "Follow the instructions in @./bytesofpurpose-blog/prompts/fix-frontmatter.md"
