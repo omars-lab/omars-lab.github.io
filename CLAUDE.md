@@ -38,6 +38,34 @@ tracking is what makes the archive step possible. Don't leave finished work untr
 or tasks stuck `in_progress` after they're done — the live list should always reflect
 reality. Trivial single-step asks don't need a task.
 
+## ⚠️ Operating convention: track DEFERRED findings as GitHub issues (deduped via ISSUES.md)
+
+Audit/review findings (mobile/desktop experience audits, reader-experience review, code
+review, etc.) that are **fixed in the same change need no issue** — close the loop in the
+PR. But a finding that is **deferred** (not fixed now) MUST be tracked as a **GitHub issue**
+so it isn't lost in a markdown report no one re-reads. Rules:
+
+1. **Dedup BEFORE filing.** The committed index **`ISSUES.md`** (repo root) maps a stable
+   finding-key → issue number. Check it first; also `gh issue list --search "<key terms>"`
+   as a backstop. If a matching open issue exists, **do not create a duplicate** — comment
+   on / update the existing one instead.
+2. **File with `gh issue create`** — title, body with the **probe-evidence** (numbers) and a
+   **concrete fix**, and an appropriate label (`bug`/`enhancement`). Reference the
+   originating skill + audit date.
+3. **Attach the screenshot.** `gh` can't upload images to issues (GitHub image upload is
+   web-only), so save the finding's screenshot to the **Dropbox audit dir**
+   (`~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/<YYYY-MM-DD>/`) and reference that
+   **path** in the issue body. (Visual findings without a screenshot path are incomplete.)
+4. **The index self-maintains via a hook.** The PostToolUse hook
+   `.claude/hooks/gh-issue-index-hook.sh` (matcher `Bash`) fires after a `gh issue create`,
+   parses the new issue URL/number from the tool output, and appends a row to `ISSUES.md` —
+   so the index can't drift from forgetfulness. If you ever close/dedup an issue manually,
+   update `ISSUES.md` in the same step. **GitHub remains the source of truth**; `ISSUES.md`
+   is the fast dedup index that the hook keeps honest.
+
+The owning audit skills (`audit-mobile-experience`, `audit-desktop-experience`,
+`review-reader-experience`) point to this convention in their output sections.
+
 ## ⚠️ Operating convention: commit → PR → ask to merge → squash on approval
 
 **Never commit to `master` directly.** The standing workflow for any non-trivial change is:
