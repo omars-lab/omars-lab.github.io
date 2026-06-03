@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "Cloudflare Worker: LinkedIn identity (/api/me) + StatiCrypt key-vend (/api/unlock-key), gated by Cloudflare Access.",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
@@ -16,6 +19,6 @@
     "@cloudflare/workers-types": "^4.20241106.0",
     "esbuild": "^0.28.0",
     "typescript": "^5.6.3",
-    "wrangler": "^3.84.0"
+    "wrangler": "^4.97.0"
   }
 }
