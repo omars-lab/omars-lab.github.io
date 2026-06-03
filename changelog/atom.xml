@@ -22,42 +22,52 @@
 <p>Defaults if meta omitted: type=chore, category=development, priority=medium,
 component=Claude. Date drives the card's execution/inception date.
 --&gt;</p>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02--premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag">2026-06-02 — Premium go-live: dev/prod parity, secure deploy, server-side internal flag<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02--premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag" class="hash-link" aria-label="Direct link to 2026-06-02 — Premium go-live: dev/prod parity, secure deploy, server-side internal flag" title="Direct link to 2026-06-02 — Premium go-live: dev/prod parity, secure deploy, server-side internal flag" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement">[2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement" class="hash-link" aria-label="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" title="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" translate="no">​</a></h2>
+<p>Formalized the unwritten "every sidebar section leads with an emoji" convention into a documented, enforced contract, and backfilled the ~18 category labels that had drifted. The validator now warns on emoji-less <code>_category_.json</code> labels (and rolls leaf-doc misses into one count), the docs-structure hook nudges on save, and <code>emojis.mdx</code> carries the topic→emoji map as the source of truth. Also trimmed two over-long page descriptions to the SEO/share window.</p>
+<ul>
+<li class="">Validator: emoji-prefix-category (per-finding) + emoji-prefix-doc (aggregate, --emoji expands) + sidebar-label-missing guard</li>
+<li class="">Hook: emoji advisory on a <em>category</em>.json / doc save without a leading emoji (warn-only)</li>
+<li class="">emojis.mdx: "Sidebar Topic Emojis" section + topic→emoji map (slug /definitions/emojis-for-activities)</li>
+<li class="">review-reader-experience SKILL: emoji consistency as a first-class audit item (map-driven suggestion)</li>
+<li class="">Backfilled leading emojis on ~18 drifted category labels (📈 Career Levels, 🛠️ Skills, 🤝 Cultural Values, 📖 Terminology, 💬 Prompts, …)</li>
+<li class="">Trimmed 2 over-160-char descriptions (my-problem-solving-approach, my-contributions) + resolved em-dash voice flags</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag">[2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag" class="hash-link" aria-label="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" title="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" translate="no">​</a></h2>
 <p>Took the premium hard-gate from code-complete to LIVE: provisioned the Cloudflare infra (token scopes, Worker deploy, passphrase), gave <code>yarn start</code> true dev/prod parity (dev encrypts + a service-token-authed <code>/api/*</code> proxy, after proving cookie-forwarding impossible), made <code>make deploy</code> fail-closed (aborts on missing passphrase, re-runs the V5 leak gate, which now also asserts the passphrase never ships), and moved the internal-tester roster server-side so author emails no longer leak in the public bundle. Added a <code>manage-infrastructure</code> skill, a secure-by-default tenet, and post-deploy live verification.</p>
 <ul>
-<li class="">#19/#20/#21 — Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker</li>
-<li class="">#25 — Dev encrypts premium (key from .env via <code>make start</code>)</li>
-<li class="">#26 — Dev <code>/api/*</code> proxy to the real Worker + revert the localhost toast</li>
-<li class="">#27 — Verify dev==prod parity (headless service-token unlock proven)</li>
-<li class="">#23 — Deploy premium live (encrypted build → gh-pages → validate), secure-by-default fail-closed deploy + V5 passphrase-absence gate</li>
-<li class="">#11 — Move the internal-tester allowlist into the Worker; <code>/api/me</code> vends <code>isInternal</code> (email no longer in the public bundle)</li>
+<li class="">#19/#20/#21: Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker</li>
+<li class="">#25: Dev encrypts premium (key from .env via <code>make start</code>)</li>
+<li class="">#26: Dev <code>/api/*</code> proxy to the real Worker + revert the localhost toast</li>
+<li class="">#27: Verify dev==prod parity (headless service-token unlock proven)</li>
+<li class="">#23: Deploy premium live (encrypted build → gh-pages → validate), secure-by-default fail-closed deploy + V5 passphrase-absence gate</li>
+<li class="">#11: Move the internal-tester allowlist into the Worker; <code>/api/me</code> vends <code>isInternal</code> (email no longer in the public bundle)</li>
 <li class="">Fix pre-existing premium-crypto.ts Uint8Array/ArrayBuffer typecheck errors</li>
 <li class="">New <code>manage-infrastructure</code> skill (Worker provisioning runbook + confirm-token-scopes.sh) + <code>make rotate-premium-secret</code> / <code>validate-dev-service-token</code> / <code>validate-deployment</code></li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02--linkedin-gated-premium-content--internal-analytics-filtering">2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02--linkedin-gated-premium-content--internal-analytics-filtering" class="hash-link" aria-label="Direct link to 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering" title="Direct link to 2026-06-02 — LinkedIn-gated premium content + internal-analytics filtering" translate="no">​</a></h2>
-<p>Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access — so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e. Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering">[2026-06-02] LinkedIn-gated premium content + internal-analytics filtering<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering" class="hash-link" aria-label="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" title="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" translate="no">​</a></h2>
+<p>Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access (so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e). Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).</p>
 <ul>
-<li class="">Phase A — DebugMenu Links section</li>
-<li class="">Phase B — Layered internal-analytics filtering (?internal=1 + tester list)</li>
-<li class="">Phase C — Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)</li>
+<li class="">Phase A: DebugMenu Links section</li>
+<li class="">Phase B: Layered internal-analytics filtering (?internal=1 + tester list)</li>
+<li class="">Phase C: Cloudflare Worker + Access auth infra (/api/me, /api/unlock-key)</li>
 <li class="">Decrypt-crux prototype (StatiCrypt codec, fixed passphrase, no prompt UI)</li>
-<li class="">Phase D — PostHog identify() + internal-email filter wired to auth</li>
-<li class="">Phase E — Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider</li>
-<li class="">Phase F core — encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)</li>
-<li class="">M1 — premium-gating-architecture memory</li>
-<li class="">S2 — PostHog internal-user filtering docs ($host + is_internal)</li>
+<li class="">Phase D: PostHog identify() + internal-email filter wired to auth</li>
+<li class="">Phase E: Navbar auth control (Sign in ⇆ avatar) + shared AuthProvider</li>
+<li class="">Phase F core: encrypted hard gate (rehype compile-time encrypt + V5 blocking gate)</li>
+<li class="">M1: premium-gating-architecture memory</li>
+<li class="">S2: PostHog internal-user filtering docs ($host + is_internal)</li>
 <li class="">SignInModal "track interest" button → premium_interest PostHog event</li>
 <li class="">Localhost sign-in graceful-degrade (toast instead of dead redirect)</li>
 <li class="">Cache-bust premium encryption in deploy (make build-premium + cache gotcha docs)</li>
 <li class="">Theme the premium gate + SignInModal to the blog brand</li>
 <li class="">Playwright-verify the themed premium surfaces render (brand styling assertions)</li>
-<li class="">S4 — author-blog-post: how to mark content premium (hard vs soft gate)</li>
-<li class="">S5 — new manage-premium-content skill (editorial policy)</li>
+<li class="">S4: author-blog-post: how to mark content premium (hard vs soft gate)</li>
+<li class="">S5: new manage-premium-content skill (editorial policy)</li>
 <li class="">Easter egg + honest caveat in the System Design (premium is free via public repo)</li>
-<li class="">Phase G — finalize + reconcile the premium-content-gating design doc</li>
+<li class="">Phase G: finalize + reconcile the premium-content-gating design doc</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-01--blog-modernization--regression--a11y--seo-harness">2026-06-01 — Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01--blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" title="Direct link to 2026-06-01 — Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
-<p>Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates) — then burned down the resulting test/a11y debt.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-01-blog-modernization--regression--a11y--seo-harness">[2026-06-01] Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01-blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" title="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
+<p>Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates), then burned down the resulting test/a11y debt.</p>
 <ul>
 <li class="">Fix the two Lighthouse a11y bugs (image-alt + heading-order)</li>
 <li class="">Add design-token layer + Inter font to custom.css</li>
@@ -72,7 +82,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Burn down baselined a11y debt (code-token contrast, task-list labels, prose link underlines)</li>
 <li class="">SEO enhancements: homepage WebSite/Organization JSON-LD + per-page validity test</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-05-31--ab-experiment-lifecycle--analytics-enablement">2026-05-31 — A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31--ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" title="Direct link to 2026-05-31 — A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-05-31-ab-experiment-lifecycle--analytics-enablement">[2026-05-31] A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31-ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" title="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
 <p>Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.</p>
 <ul>
 <li class="">A/B test: define support-button-copy experiment</li>
@@ -90,8 +100,8 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Create publish-site skill (draft-readiness triage + deploy)</li>
 <li class="">Rewrite git history to purge rotated credentials (filter-repo) + force-push</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02--two-tier-craftself-docs-ia">2026-06-02 — Two-tier Craft/Self docs IA<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02--two-tier-craftself-docs-ia" class="hash-link" aria-label="Direct link to 2026-06-02 — Two-tier Craft/Self docs IA" title="Direct link to 2026-06-02 — Two-tier Craft/Self docs IA" translate="no">​</a></h2>
-<p>Split the docs into two top-level halves — Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey) — each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-two-tier-craftself-docs-ia">[2026-06-02] Two-tier Craft/Self docs IA<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-two-tier-craftself-docs-ia" class="hash-link" aria-label="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" title="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" translate="no">​</a></h2>
+<p>Split the docs into two top-level halves: Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey), each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.</p>
 <ul>
 <li class="">Move 10 topic folders under docs/craft/ and docs/self/ (git mv)</li>
 <li class="">Rewrite 297 doc slugs to folder-path-mirrored + 232 cross-doc links</li>
@@ -136,13 +146,13 @@ component=Claude. Date drives the card's execution/inception date.
 <p><strong>Work Period:</strong> November 20, 2025</p>
 <p><strong>Files/Folders Impacted:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/content/2025-11-20-content-changelog-missing-features-analysis"><code>changelog/content/2025-11-20-content-changelog-missing-features-analysis.md</code></a> - This analysis entry</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-11-16-mechanic-establishment-storybook"><code>changelog/development/2025-11-16-mechanic-establishment-storybook.md</code></a> - Storybook entry verified</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis"><code>changelog/content/2025-11-20-content-changelog-missing-features-analysis.md</code></a> - This analysis entry</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/mechanic-establishment-storybook"><code>changelog/development/2025-11-16-mechanic-establishment-storybook.md</code></a> - Storybook entry verified</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo"><code>changelog/development/2025-XX-XX-mechanic-establishment-seo.md</code></a> - SEO entry verified</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-09-23-component-creation-card-timeline"><code>changelog/development/2025-09-23-component-creation-card-timeline.md</code></a> - Card/Timeline entry verified</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/09/23/development/component-creation-card-timeline"><code>changelog/development/2025-09-23-component-creation-card-timeline.md</code></a> - Card/Timeline entry verified</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap"><code>changelog/development/2025-XX-XX-structure-changelog-roadmap.md</code></a> - Changelog system entry verified</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-11-16-component-creation-changelog-component"><code>changelog/development/2025-11-16-component-creation-changelog-component.md</code></a> - Changelog component entry verified</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-09-10-mechanic-establishment-frontmatter-management"><code>changelog/development/2025-09-10-mechanic-establishment-frontmatter-management.md</code></a> - Frontmatter entry verified</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component"><code>changelog/development/2025-11-16-component-creation-changelog-component.md</code></a> - Changelog component entry verified</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/09/10/development/mechanic-establishment-frontmatter-management"><code>changelog/development/2025-09-10-mechanic-establishment-frontmatter-management.md</code></a> - Frontmatter entry verified</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration"><code>changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration.md</code></a> - CDK entry reviewed</li>
 </ul>
 <p><strong>Analysis Findings:</strong></p>
@@ -359,7 +369,7 @@ component=Claude. Date drives the card's execution/inception date.
 <p><strong>Files Enhanced:</strong></p>
 <ul>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging/adding-content/adding-blog-posts"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-blog-posts.mdx</code></a> - Expanded from basic guide to comprehensive resource</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added "Adding Content" section with links to all guides</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added "Adding Content" section with links to all guides</li>
 </ul>
 <p><strong>Folders Impacted:</strong></p>
 <ul>
@@ -474,7 +484,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Files Enhanced:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added link to changelog system documentation</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging"><code>docs/6-techniques/3-blogging-techniques/README.mdx</code></a> - Added link to changelog system documentation</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging/adding-content/adding-changelog-entries"><code>docs/6-techniques/3-blogging-techniques/5-adding-content/adding-changelog-entries.mdx</code></a> - Updated reference to new location</li>
 </ul>
 <p><strong>Files Deleted:</strong></p>
@@ -599,12 +609,12 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="">Use this to iterate on mermaid diagrams<!-- -->
 <ul>
-<li class=""><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener noreferrer" class="">GitHub — mermaid-js/mermaid-cli</a></li>
+<li class=""><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener noreferrer" class="">GitHub: mermaid-js/mermaid-cli</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Explore how to optimize the blog / use the latest features<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/blog/releases/3.6#mermaid" target="_blank" rel="noopener noreferrer" class="">Docusaurus — 3.6</a></li>
+<li class=""><a href="https://docusaurus.io/blog/releases/3.6#mermaid" target="_blank" rel="noopener noreferrer" class="">Docusaurus: 3.6</a></li>
 </ul>
 </li>
 </ul>
@@ -773,7 +783,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to deal with name conflicts in graph highlighting<!-- -->
 <ul class="contains-task-list containsTaskList_mC6p">
-<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Graph</a></li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Graph</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Mobile friendly graph<!-- -->
@@ -872,7 +882,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-in-progress">Status: In Progress<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#status-in-progress" class="hash-link" aria-label="Direct link to Status: In Progress" title="Direct link to Status: In Progress" translate="no">​</a></h3>
 <p><strong>Related Work:</strong></p>
 <ul>
-<li class="">See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/XX/XX/development/optimization-bundle-size-storybook">Bundle Size Optimization</a> for detailed work on Storybook bundle optimization</li>
+<li class="">See <a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook">Bundle Size Optimization</a> for detailed work on Storybook bundle optimization</li>
 <li class="">Initial webpack code splitting configuration completed (2025-01-20)</li>
 </ul>
 <p><strong>Remaining Work:</strong></p>
@@ -920,14 +930,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Leverage this for product analytics<!-- -->
 <ul class="contains-task-list containsTaskList_mC6p">
-<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://us.posthog.com/signup" target="_blank" rel="noopener noreferrer" class="">us.posthog.com — Signup</a>
+<li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://us.posthog.com/signup" target="_blank" rel="noopener noreferrer" class="">us.posthog.com: Signup</a>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Post hot cloud has a free offering ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Embedd it into blog ...</li>
 </ul>
 </li>
 <li class=""><a href="https://posthog.com/" target="_blank" rel="noopener noreferrer" class="">PostHog</a></li>
-<li class="">See docs on self hosting <a href="https://posthog.com/docs/self-host" target="_blank" rel="noopener noreferrer" class="">PostHog — Self Host</a></li>
+<li class="">See docs on self hosting <a href="https://posthog.com/docs/self-host" target="_blank" rel="noopener noreferrer" class="">PostHog: Self Host</a></li>
 </ul>
 </li>
 </ul>
@@ -937,10 +947,10 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Can I build a frontend app that has what I need / uses CloudKit with React native</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Tags zzz users that start here and end there ... what do they do ...<!-- -->
 <ul>
-<li class=""><a href="https://www.pendo.io/pendo-vs-fullstory/" target="_blank" rel="noopener noreferrer" class="">pendo.io — Pendo Vs Fullstory</a></li>
-<li class=""><a href="https://mixpanel.com/releases/startups" target="_blank" rel="noopener noreferrer" class="">mixpanel.com — Startups</a></li>
+<li class=""><a href="https://www.pendo.io/pendo-vs-fullstory/" target="_blank" rel="noopener noreferrer" class="">pendo.io: Pendo Vs Fullstory</a></li>
+<li class=""><a href="https://mixpanel.com/releases/startups" target="_blank" rel="noopener noreferrer" class="">mixpanel.com: Startups</a></li>
 <li class=""><a href="https://openpanel.dev/" target="_blank" rel="noopener noreferrer" class="">openpanel.dev</a></li>
-<li class="">Funnel analyais with oendo ... <a href="https://www.pendo.io/pendo-free/" target="_blank" rel="noopener noreferrer" class="">pendo.io — Pendo Free</a></li>
+<li class="">Funnel analyais with oendo ... <a href="https://www.pendo.io/pendo-free/" target="_blank" rel="noopener noreferrer" class="">pendo.io: Pendo Free</a></li>
 </ul>
 </li>
 </ul>
@@ -961,7 +971,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h1>Blogging Mechanism - Link Management</h1>
 <ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
-<p><input type="checkbox" disabled="" checked=""> <!-- -->This has broken links ... example ... <a href="https://blog.bytesofpurpose.com/docs/techniques/techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Techniques</a> links to <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com — Blogging Techniques</a> which shows page not found ... @done(2025-11-17 09:35 AM)</p>
+<p><input type="checkbox" disabled="" checked=""> <!-- -->This has broken links ... example ... <a href="https://blog.bytesofpurpose.com/docs/techniques/techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Techniques</a> links to <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Blogging Techniques</a> which shows page not found ... @done(2025-11-17 09:35 AM)</p>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->Add Link to card mechanism to blog</p>
@@ -984,7 +994,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
         <content type="html"><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Enable official docusaurus search?<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/docs/search" target="_blank" rel="noopener noreferrer" class="">Docusaurus — Search</a></li>
+<li class=""><a href="https://docusaurus.io/docs/search" target="_blank" rel="noopener noreferrer" class="">Docusaurus: Search</a></li>
 </ul>
 </li>
 </ul>
@@ -1002,7 +1012,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
         <content type="html"><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Link into docusaurus SEO<!-- -->
 <ul>
-<li class=""><a href="https://docusaurus.io/docs/seo" target="_blank" rel="noopener noreferrer" class="">Docusaurus — Seo</a></li>
+<li class=""><a href="https://docusaurus.io/docs/seo" target="_blank" rel="noopener noreferrer" class="">Docusaurus: Seo</a></li>
 </ul>
 </li>
 </ul>
@@ -1257,7 +1267,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 <p><strong>Components Created:</strong></p>
 <ul>
-<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
+<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
 <ul>
 <li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
 <li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
@@ -1295,7 +1305,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 <p><strong>Related Links:</strong></p>
 <ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/01/20/development/component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
+<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog">Changelog Page</a></li>
 <li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging/changelog-system">Changelog System Documentation</a></li>
