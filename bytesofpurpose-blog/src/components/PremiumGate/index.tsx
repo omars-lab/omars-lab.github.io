@@ -42,6 +42,13 @@ export default function PremiumGate({
   // request card to a thank-you state so the demand event can't be spammed.
   const [requested, setRequested] = React.useState(false);
 
+  // Reset the per-doc "make it free" request when navigating between premium docs:
+  // client-side nav reuses this component instance, so `requested` would otherwise
+  // carry over to a second premium doc. Keyed on `payload` (one per premium doc).
+  React.useEffect(() => {
+    setRequested(false);
+  }, [payload]);
+
   React.useEffect(() => {
     if (status !== 'authenticated') return undefined;
     let cancelled = false;
@@ -88,14 +95,14 @@ export default function PremiumGate({
     if (requested) return;
     posthog.capture('premium_interest', {path: currentPath(), source: 'gate_card'});
     setRequested(true);
-    showToast('Noted — thanks for the nudge!', {icon: '🙌'});
+    showToast('Noted. Thanks for the nudge!', {icon: '🙌'});
   };
 
   const failed = state.phase === 'error';
 
   return (
     <div className={styles.wrap}>
-      {/* Disclaimer-only info pane — gold, says ONLY that this is premium/locked. */}
+      {/* Disclaimer-only info pane (gold); says ONLY that this is premium/locked. */}
       <aside className={styles.notice} role="note">
         <span className={styles.noticeLock} aria-hidden="true">
           🔒
@@ -105,7 +112,7 @@ export default function PremiumGate({
           <p className={styles.noticeBody}>
             {teaser
               ? teaser
-              : 'The rest of this page is premium — sign in to read it.'}
+              : 'The rest of this page is premium. Sign in to read it.'}
           </p>
         </div>
       </aside>
@@ -118,7 +125,7 @@ export default function PremiumGate({
           </span>
           <h3 className={styles.cardTitle}>Unlock with LinkedIn</h3>
           <p className={styles.cardText}>
-            Sign in with LinkedIn to read the rest. It’s free — the gate is just a friendly
+            Sign in with LinkedIn to read the rest. It’s free. The gate is just a friendly
             way to say hi.
           </p>
           <button type="button" className={styles.cardCtaPrimary} onClick={onSignIn}>
@@ -129,7 +136,7 @@ export default function PremiumGate({
           </button>
           {failed ? (
             <p className={styles.cardHint}>
-              Couldn’t unlock just yet — signing in again should do it.
+              Couldn’t unlock just yet. Signing in again should do it.
             </p>
           ) : null}
         </div>
@@ -140,7 +147,7 @@ export default function PremiumGate({
           </span>
           <h3 className={styles.cardTitle}>Rather it were free?</h3>
           <p className={styles.cardText}>
-            Tell me you’d like this opened up — enough nudges and I’ll un-gate it. No sign-in
+            Tell me you’d like this opened up. Enough nudges and I’ll un-gate it. No sign-in
             needed.
           </p>
           <button
