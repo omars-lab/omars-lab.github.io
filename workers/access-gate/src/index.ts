@@ -71,12 +71,16 @@ function getJWKS(teamDomain: string) {
   return jwks;
 }
 
-function corsHeaders(req: Request): Record<string, string> {
-  // Echo the allowed origin only (credentials mode forbids "*").
-  const origin = req.headers.get('Origin');
-  const allow = origin === ALLOWED_ORIGIN ? ALLOWED_ORIGIN : ALLOWED_ORIGIN;
+function corsHeaders(_req: Request): Record<string, string> {
+  // The site is served from exactly one origin, so we always advertise that single
+  // origin (credentials mode forbids "*"). A browser request from any OTHER origin
+  // is rejected by the browser's own CORS check, since this value won't match its
+  // Origin; same-origin and non-browser callers (the dev service-token proxy) are
+  // unaffected. The real security boundary is the Access JWT below — CORS is not it.
+  // `Vary: Origin` is kept so caches don't reuse this across origins if that ever
+  // changes.
   return {
-    'Access-Control-Allow-Origin': allow,
+    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',

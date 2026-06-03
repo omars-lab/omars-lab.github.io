@@ -63,7 +63,14 @@ function htmlPathsFor(permalink, buildDir) {
 // Pick distinctive body tokens to assert ABSENCE of in the build. Strips MDX/markdown
 // punctuation, drops anything that appears in the teaser (the teaser ships in clear by
 // design), and returns the longest unique tokens (long tokens are unlikely to collide with
-// framework/boilerplate strings). Empty array → caller falls back to structural checks only.
+// framework/boilerplate strings).
+//
+// Fail-closed coverage: a body of only short/common words yields no ≥12-char single
+// token. Rather than leave such a doc un-fingerprinted (a leak blind spot — the gate
+// would have nothing to grep for), we FALL BACK to multi-word PHRASES from the body:
+// consecutive word runs joined by a single space, which are still distinctive enough to
+// prove absence and survive HTML serialization (text runs aren't entity-escaped). Only a
+// truly empty body (no words at all) returns [] — and the V5 gate treats THAT as an error.
 function bodyFingerprints(content, teaser) {
   const teaserTokens = new Set(
     String(teaser)
@@ -71,11 +78,30 @@ function bodyFingerprints(content, teaser) {
       .split(/[^a-z0-9]+/i)
       .filter(Boolean),
   );
-  const tokens = String(content)
+  const words = String(content)
     .split(/[^A-Za-z0-9]+/)
-    .filter((t) => t.length >= 12 && !teaserTokens.has(t.toLowerCase()));
+    .filter(Boolean);
+
+  // Primary: long single tokens (unlikely to collide with framework/boilerplate).
+  const longTokens = words.filter(
+    (t) => t.length >= 12 && !teaserTokens.has(t.toLowerCase()),
+  );
+  const primary = [...new Set(longTokens)]
+    .sort((a, b) => b.length - a.length)
+    .slice(0, 5);
+  if (primary.length > 0) return primary;
+
+  // Fallback: 4-word phrases over body words NOT entirely covered by the teaser. A
+  // phrase is distinctive even when every individual word is short/common, so a
+  // short-word-only premium body is still leak-checkable instead of silently skipped.
+  const phrases = [];
+  for (let i = 0; i + 4 <= words.length; i++) {
+    const run = words.slice(i, i + 4);
+    if (run.every((w) => teaserTokens.has(w.toLowerCase()))) continue;
+    phrases.push(run.join(' '));
+  }
   // Unique, longest-first, cap at 5.
-  return [...new Set(tokens)].sort((a, b) => b.length - a.length).slice(0, 5);
+  return [...new Set(phrases)].sort((a, b) => b.length - a.length).slice(0, 5);
 }
 
 /**
@@ -130,3 +156,18 @@ module.exports = {
   payloadIdFor,
   collectPremiumDocs,
 };
+
+// CLI: `node scripts/lib/premium-docs.js --count` prints how many `premium: true`
+// docs exist (YAML-parsed — the SAME source of truth the encrypt + verify gates
+// use), so shell callers (the Makefile deploy abort) can't diverge from the JS by
+// regex-matching frontmatter. `--list` prints one source path per line.
+if (require.main === module) {
+  const mode = process.argv[2];
+  const docs = collectPremiumDocs();
+  if (mode === '--list') {
+    for (const d of docs) console.log(d.source);
+  } else {
+    // default + --count
+    console.log(docs.length);
+  }
+}
