@@ -99,7 +99,7 @@ export default defineConfig({
       // The build MUST be produced with STATICRYPT_PASSPHRASE=e2e-premium-passphrase (the spec
       // stubs /api/unlock-key with that value). Run via `make test-premium-e2e`.
       name: 'premium',
-      testMatch: /premium-gating\.spec\.ts$/,
+      testMatch: /(premium-gating|signin-redirect)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
   ],

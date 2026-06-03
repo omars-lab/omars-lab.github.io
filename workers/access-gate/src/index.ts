@@ -1,17 +1,25 @@
 /**
  * access-gate — Cloudflare Worker behind a Cloudflare Access application.
  *
- * Two GET endpoints, both reachable only through the Access app (an
+ * Three GET endpoints, all reachable only through the Access app (an
  * unauthenticated request is 302'd to LinkedIn by Access before this code
  * even runs — so the JWT below is belt-and-suspenders, not the only gate):
  *
  *   GET /api/me          → { email, name?, picture?, isInternal }  (identity + analytics flag)
  *   GET /api/unlock-key  → { passphrase }                (the StatiCrypt key-vend)
+ *   GET /api/redirect    → 303 Location: <same-origin path>  (post-sign-in bounce)
  *
  * The hard gate for premium content: /api/unlock-key returns the single
  * PREMIUM_PASSPHRASE secret ONLY to a request carrying a valid Access JWT
  * (a signed-in LinkedIn user). The client uses it to decrypt the build-time
  * ciphertext in the page bundle. See the premium-content-gating system design.
+ *
+ * /api/redirect exists because /api/me and /api/unlock-key are DATA endpoints
+ * (JSON, meant to be fetch()'d). The sign-in flow navigates the top-level browser
+ * window to a protected /api/* path so Access runs the LinkedIn round-trip — but
+ * Access returns the browser to the SAME protected path it gated, and landing on a
+ * JSON endpoint renders the SPA's 404. /api/redirect is the one protected path that,
+ * for an authenticated navigation, 303s the browser onward to the real content page.
  *
  * JWT validation: every Access request carries `Cf-Access-Jwt-Assertion`. We
  * verify it against the team JWKS (https://<team>.cloudflareaccess.com/cdn-cgi/
@@ -54,6 +62,38 @@ const INTERNAL_EMAILS: ReadonlyArray<string> = ['omar_eid21@yahoo.com'];
 function isInternalEmail(email: string): boolean {
   const e = email.toLowerCase();
   return INTERNAL_EMAILS.some((x) => x.toLowerCase() === e);
+}
+
+/**
+ * Sanitize a caller-supplied `redirect_url` to a SAME-ORIGIN PATH ONLY. The
+ * /api/redirect route emits this as a `Location` header to an authenticated user,
+ * so an unvalidated value is a textbook open redirect (…?redirect_url=https://evil
+ * → a signed-in reader phished). Anything that could leave our origin — or inject a
+ * header — is coerced to '/'. Rejected: absolute URLs / any scheme (`https:`,
+ * `javascript:`, …), protocol-relative `//evil.com`, backslash tricks (`/\evil`),
+ * control chars (CR/LF header-splitting), and anything not starting with a single
+ * '/'. The result is always a local path we can safely resolve against ALLOWED_ORIGIN.
+ */
+function safeRedirectPath(raw: string | null): string {
+  if (!raw) return '/';
+  let v = raw;
+  // Access URL-encodes the nested redirect_url; decode once so we inspect the real
+  // value (a `%2F%2Fevil.com` would otherwise slip a `//` past the checks).
+  try {
+    v = decodeURIComponent(raw);
+  } catch {
+    /* malformed escape — fall back to the raw form, still checked below */
+  }
+  v = v.trim();
+  if (!v.startsWith('/')) return '/'; // must be a local absolute path
+  if (v.startsWith('//') || v.startsWith('/\\')) return '/'; // protocol-relative / backslash
+  // Reject any C0 control char or DEL — CR/LF would enable response-header splitting.
+  for (let i = 0; i < v.length; i++) {
+    const c = v.charCodeAt(i);
+    if (c < 0x20 || c === 0x7f) return '/';
+  }
+  if (/^\/+[a-z][a-z0-9+.-]*:/i.test(v)) return '/'; // a scheme after the slash(es)
+  return v;
 }
 
 // Cache the JWKS keyset across requests in the same isolate (jose memoizes the
@@ -155,6 +195,21 @@ export default {
       // No email required — the key isn't tied to a person. Any admitted caller
       // (LinkedIn user or the dev service token) may decrypt premium content.
       return json({passphrase: env.PREMIUM_PASSPHRASE}, 200, req);
+    }
+
+    if (url.pathname === '/api/redirect') {
+      // Post-sign-in bounce. The browser navigated here (Access already admitted the
+      // request — this code only runs authenticated), so 303 it onward to the
+      // same-origin content page it wanted. safeRedirectPath blocks open-redirect /
+      // header-injection: any off-origin or malformed value collapses to '/'.
+      const dest = safeRedirectPath(url.searchParams.get('redirect_url'));
+      return new Response(null, {
+        status: 303,
+        headers: {
+          Location: new URL(dest, ALLOWED_ORIGIN).toString(),
+          'Cache-Control': 'no-store',
+        },
+      });
     }
 
     if (url.pathname === '/api/me') {

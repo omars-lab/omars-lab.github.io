@@ -21,8 +21,29 @@ import React from 'react';
 //   sign in  → hitting any /api/* path triggers the Access → LinkedIn redirect.
 //   sign out → /cdn-cgi/access/logout clears the CF_Authorization cookie.
 
-export const ACCESS_LOGIN_PATH = '/api/me';
+// Sign-in navigates the top-level window to a PROTECTED /api/* path so Cloudflare
+// Access runs the LinkedIn round-trip. It must NOT be a data endpoint (/api/me,
+// /api/unlock-key return JSON — landing the browser there shows the SPA 404). The
+// Worker's /api/redirect route is the one protected path that, once authenticated,
+// 303s the browser onward to the real content page. See the premium-content-gating
+// design ("Workers & API endpoints").
+export const ACCESS_LOGIN_PATH = '/api/redirect';
 export const ACCESS_LOGOUT_PATH = '/cdn-cgi/access/logout';
+
+// Client-side mirror of the Worker's safeRedirectPath(): coerce `next` to a
+// same-origin path before putting it in the sign-in URL. Defense in depth — the
+// Worker re-validates authoritatively — and it avoids a pointless round-trip on an
+// obviously bad value. Keep in lockstep with workers/access-gate/src/index.ts.
+function sameOriginPath(next: string): string {
+  if (!next || !next.startsWith('/')) return '/';
+  if (next.startsWith('//') || next.startsWith('/\\')) return '/';
+  for (let i = 0; i < next.length; i++) {
+    const c = next.charCodeAt(i);
+    if (c < 0x20 || c === 0x7f) return '/'; // control chars
+  }
+  if (/^\/+[a-z][a-z0-9+.-]*:/i.test(next)) return '/';
+  return next;
+}
 
 export interface AuthUser {
   email: string;
@@ -45,18 +66,21 @@ const AuthContext = React.createContext<AuthState>({
 });
 
 /**
- * Begin the Cloudflare Access → LinkedIn sign-in flow. Navigating to a gated
- * /api/* path makes Access 302 to LinkedIn, then return the reader here with a
- * CF_Authorization cookie set. `next` is where to land after auth completes.
+ * Begin the Cloudflare Access → LinkedIn sign-in flow. Navigating to the gated
+ * `/api/redirect` path makes Access 302 to LinkedIn (if not already signed in);
+ * once authenticated the Worker 303s the browser to `next` — the content page the
+ * reader was on. `next` is sanitized to a same-origin path both here and in the
+ * Worker (open-redirect defense in depth).
  */
 export function signIn(next: string = typeof window !== 'undefined'
   ? window.location.pathname + window.location.search
   : '/'): void {
   if (typeof window === 'undefined') return;
-  // /api/* is reachable in both prod and dev (the dev server proxies it to the
-  // real Worker), so navigate unconditionally. redirect_url is honoured by
-  // Access on the way back from the IdP.
-  const url = `${ACCESS_LOGIN_PATH}?redirect_url=${encodeURIComponent(next)}`;
+  // /api/* is reachable in both prod and dev (the dev server proxies it to the real
+  // Worker), so navigate unconditionally. `next` rides as redirect_url; the Worker's
+  // /api/redirect 303s there after auth (NOT /api/me, which returns JSON → SPA 404).
+  const dest = sameOriginPath(next);
+  const url = `${ACCESS_LOGIN_PATH}?redirect_url=${encodeURIComponent(dest)}`;
   window.location.assign(url);
 }
 

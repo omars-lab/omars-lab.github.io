@@ -154,4 +154,71 @@ test('access-gate JWT gate', async (t) => {
     const body = await r.json();
     assert.equal(body.email, 'cookie@example.com');
   });
+
+  // ---- /api/redirect: the post-sign-in bounce (authenticated-only 303) ----------
+
+  // Helper: build /api/redirect?redirect_url=<raw> with a valid token, return Response.
+  const redirectCall = async (rawRedirect, headers) => {
+    const qs =
+      rawRedirect === undefined
+        ? ''
+        : `?redirect_url=${encodeURIComponent(rawRedirect)}`;
+    return call(`/api/redirect${qs}`, headers);
+  };
+
+  await t.test('/api/redirect 303s an authed nav to a safe same-origin path', async () => {
+    const jwt = await mint({email: 'reader@example.com'});
+    const r = await redirectCall('/craft/premium-gating-demo', {
+      'Cf-Access-Jwt-Assertion': jwt,
+    });
+    assert.equal(r.status, 303);
+    assert.equal(
+      r.headers.get('Location'),
+      'https://blog.bytesofpurpose.com/craft/premium-gating-demo',
+    );
+    // never cache an auth-dependent redirect
+    assert.equal(r.headers.get('Cache-Control'), 'no-store');
+  });
+
+  await t.test('/api/redirect requires auth — no token → 401, no Location', async () => {
+    const r = await redirectCall('/craft/premium-gating-demo');
+    assert.equal(r.status, 401);
+    assert.equal(r.headers.get('Location'), null);
+  });
+
+  // Open-redirect / header-injection attempts must all collapse to '/'.
+  const OPEN_REDIRECT_ATTEMPTS = [
+    ['absolute https URL', 'https://evil.com/phish'],
+    ['protocol-relative', '//evil.com'],
+    ['encoded protocol-relative', '%2F%2Fevil.com'],
+    ['backslash trick', '/\\evil.com'],
+    ['javascript scheme', '/javascript:alert(1)'],
+    ['no leading slash', 'evil.com'],
+    ['CRLF header split', '/ok%0d%0aSet-Cookie:+x=1'],
+    ['empty', ''],
+  ];
+  for (const [label, attempt] of OPEN_REDIRECT_ATTEMPTS) {
+    await t.test(`/api/redirect blocks open-redirect: ${label}`, async () => {
+      const jwt = await mint({email: 'reader@example.com'});
+      const r = await redirectCall(attempt, {'Cf-Access-Jwt-Assertion': jwt});
+      assert.equal(r.status, 303);
+      assert.equal(
+        r.headers.get('Location'),
+        'https://blog.bytesofpurpose.com/',
+        `"${attempt}" should have collapsed to the origin root`,
+      );
+    });
+  }
+
+  await t.test('/api/redirect preserves query + hash on a safe path', async () => {
+    const jwt = await mint({email: 'reader@example.com'});
+    const r = await redirectCall('/craft/x?a=1&b=2#frag', {
+      'Cf-Access-Jwt-Assertion': jwt,
+    });
+    assert.equal(r.status, 303);
+    assert.equal(
+      r.headers.get('Location'),
+      'https://blog.bytesofpurpose.com/craft/x?a=1&b=2#frag',
+    );
+  });
 });
