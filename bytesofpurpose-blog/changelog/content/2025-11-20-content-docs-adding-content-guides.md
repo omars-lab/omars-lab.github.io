@@ -63,7 +63,7 @@ Create comprehensive documentation guides for adding different types of content 
 
 **Files Enhanced:**
 - [`docs/6-techniques/3-blogging-techniques/5-adding-content/adding-blog-posts.mdx`](/craft/blogging/adding-content/adding-blog-posts) - Expanded from basic guide to comprehensive resource
-- [`docs/6-techniques/3-blogging-techniques/README.mdx`](/blogging) - Added "Adding Content" section with links to all guides
+- [`docs/6-techniques/3-blogging-techniques/README.mdx`](/craft/blogging) - Added "Adding Content" section with links to all guides
 
 **Folders Impacted:**
 - [`docs/6-techniques/3-blogging-techniques/5-adding-content/`](/craft/blogging/adding-content) - Restructured and enhanced with comprehensive guides

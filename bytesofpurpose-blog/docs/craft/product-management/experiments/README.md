@@ -73,13 +73,13 @@ Experiments are **structured, hypothesis-driven projects** that follow scientifi
 ## 📋 Experiment timeline
 
 Every experiment gets **one doc in this folder** that is both its **design** and its
-**living timeline** — hypothesis, why we placed it where we did, status, and outcome.
+**living timeline**: hypothesis, why we placed it where we did, status, and outcome.
 Each row below links to that doc. Lifecycle:
 `proposed → designed → draft → running → analyzing → concluded → rolled-out / abandoned`.
 
 | Experiment | Flag | Status | Started | Outcome |
 |---|---|---|---|---|
-| [Support CTA: link vs button](./2026-05-31-support-button-copy.md) | `support-button-copy` | 🟢 running | 2026-06-01 (re-scoped) | pending |
+| Support CTA: link vs button (draft) | `support-button-copy` | 🟢 running | 2026-06-01 (re-scoped) | pending |
 
 > Add a row when you start an experiment; update its status as it moves through the
 > lifecycle. New entry from `_TEMPLATE.md`. The five skills below each own a phase and
@@ -93,7 +93,7 @@ Each row below links to that doc. Lifecycle:
 | **Execute** | `run-ab-test` | Adds the code injection point, creates/validates/launches the PostHog experiment, Playwright-validates variants. |
 | **Analyze** | `analyze-experiment` | Pulls the exposure + conversion split, checks significance, writes the Outcome + a recommendation. |
 | **Decide** | `decide-experiment` | Applies decision gates (significance/MDE/guardrails) + judgment → a recorded decision readout. |
-| **Roll out** | `conclude-experiment` | Executes the decision — keep control & clean up, or ship treatment for good — and finalizes the doc. |
+| **Roll out** | `conclude-experiment` | Executes the decision (keep control & clean up, or ship treatment for good) and finalizes the doc. |
 
 ## What You'll Find Here
 
