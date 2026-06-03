@@ -94,10 +94,17 @@ function main() {
     const src = path.relative(SITE_ROOT, doc.source);
 
     // 1. Absence-grep: NONE of the body fingerprints may appear anywhere in build/.
+    //    Fail CLOSED if we have nothing to grep for: a premium doc with zero
+    //    fingerprints means we cannot PROVE its body is absent from the build, and
+    //    "can't prove safe" must abort rather than pass (the repo's fail-closed
+    //    tenet). bodyFingerprints() already falls back from long tokens to 4-word
+    //    phrases, so the only way to land here is a genuinely empty/whitespace body —
+    //    which has nothing to gate but also nothing to encrypt; flag it for the author.
     if (doc.fingerprints.length === 0) {
-      // No distinctive tokens (tiny/teaser-only body). Warn but rely on the structural checks.
-      console.warn(
-        `🔒 verify-premium: ${src} has no distinctive body tokens to fingerprint — relying on sidecar checks only.`,
+      failures.push(
+        `${src} (${doc.permalink}): premium doc has NO distinctive body content to fingerprint — ` +
+          `cannot prove the body is absent from build/. A premium doc must have a real body to ` +
+          `encrypt (or drop the \`premium: true\` flag if it's teaser-only).`,
       );
     }
     for (const fp of doc.fingerprints) {

@@ -233,8 +233,8 @@ deploy: secret-scan ## Deploy the site to GitHub Pages (runs a secret scan first
 	@SP=$$(grep -E '^STATICRYPT_PASSPHRASE=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
 	PK=$$(grep -E '^POSTHOG_KEY=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
 	PH=$$(grep -E '^POSTHOG_HOST=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
-	HAS_PREMIUM=$$(grep -rl '^premium: true' ${SITEROOT}/docs 2>/dev/null | head -1); \
-	if [ -n "$$HAS_PREMIUM" ] && [ -z "$$SP" ]; then \
+	PREMIUM_COUNT=$$(cd ${SITEROOT} && node scripts/lib/premium-docs.js --count 2>/dev/null || echo 0); \
+	if [ "$$PREMIUM_COUNT" != "0" ] && [ -z "$$SP" ]; then \
 		echo "🔴 ABORT: premium docs exist but STATICRYPT_PASSPHRASE is empty — deploying would ship premium in CLEAR."; \
 		echo "   Set STATICRYPT_PASSPHRASE in .env (== the Worker's PREMIUM_PASSPHRASE) and retry. Fail-closed by default."; \
 		exit 1; \
