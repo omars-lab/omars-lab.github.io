@@ -52,6 +52,35 @@ user** (AskUserQuestion) how to handle each occurrence — replace with a comma 
 split into two sentences · parentheses · keep as-is — then apply their choice. Don't
 auto-rewrite; the human decides whether each dash stays.
 
+> **Gotcha — the hook scans the WHOLE file, not just your diff.** Editing *any* line of a
+> file that already contains em-dashes (e.g. fixing a broken link, adding an MDX comment)
+> re-triggers the block on the pre-existing dashes. So a single unrelated edit can surface
+> several em-dashes you didn't write. That's expected: handle them via AskUserQuestion the
+> same way (note in your question that they're pre-existing), then re-apply your original
+> edit. **Plan ahead:** before editing an em-dash-heavy reader-facing file, expect to clear
+> its dashes in the same pass.
+
+> **Self-healing — record the user's choices here so we stop re-asking.** This skill is the
+> single source of truth for the em-dash rule, so when the user gives guidance on how to
+> rephrase (or any new rule about the hook), **write it into this section in the same change**
+> — both the *preference* and a short *example*. Over time this table should let us apply the
+> user's default rephrasing without a prompt for the common cases (still ask when genuinely
+> ambiguous). Append new rows as you learn them.
+
+**Worked examples (the user's observed rephrasing preferences):**
+
+| Original (em-dash) | Chosen fix | Pattern |
+|---|---|---|
+| `**living timeline** — hypothesis, why we placed it…` | colon: `**living timeline**: hypothesis…` | dash introducing a list/elaboration → **colon** |
+| `Executes the decision — keep control…, or ship… — and finalizes` | parens: `Executes the decision (keep control…, or ship…) and finalizes` | dash *pair* wrapping an aside → **parentheses** |
+| `A live demo of premium content — the rest unlocks when you sign in.` | period: `A live demo of premium content. The rest unlocks when you sign in.` | dash joining two independent clauses → **period (two sentences)** |
+| `This is premium content — sign in with LinkedIn to read the rest.` | period: `This is premium content. Sign in with LinkedIn to read the rest.` | (same — CTA teaser) |
+| `the gate is broken — this paragraph contains the sentinel…` | period: `the gate is broken. This paragraph contains the sentinel…` | (same — body prose) |
+
+Heuristic distilled from the above: a single dash before an *elaboration/list* → colon; a
+*pair* of dashes around an aside → parentheses; a dash joining two *complete* clauses →
+period (two sentences). When in doubt, still ask — but lead with the heuristic's choice.
+
 ## Five audits
 
 Run the audits relevant to the request. Default to all five for a broad "make it
