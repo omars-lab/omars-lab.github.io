@@ -78,9 +78,14 @@ two ways and add matching **internal-user filters** in the project so reports ex
    - the visitor opted in via **`?internal=1`** (a one-time per-browser marker:
      `posthog.js` reads it, persists `localStorage.bop_internal=1`, calls
      `ph.register({is_internal: true})`, then strips `internal` from the URL); or
-   - a signed-in reader's email is on the **internal-tester list**
-     (`src/internal-testers.ts`) — `/api/me` → `identify(email)` →
-     `if (isInternalTester(email)) ph.register({is_internal: true})`.
+   - a signed-in reader's email is on the **internal-tester roster**, which now
+     lives **server-side in the Worker** (`workers/access-gate/src/index.ts`, const
+     `INTERNAL_EMAILS`) — NOT in the public bundle. `/api/me` returns
+     `{email, isInternal}`; `posthog.js` does `identify(email)` then
+     `if (d.isInternal) ph.register({is_internal: true})`. (Moved out of the old
+     `src/internal-testers.ts`, which leaked the emails publicly; the flag is now
+     server-authoritative + unspoofable. Add a tester by editing the Worker const +
+     `wrangler deploy`.)
 2. **`$host`** — PostHog's built-in property; on local dev it's `localhost` / `127.0.0.1`.
 
 **Configure the filters (PostHog UI, project `448205`):**
