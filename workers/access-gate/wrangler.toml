@@ -17,10 +17,17 @@ account_id = "e22f4531704a3141ddb150ac47eabc87"
 # NOTE: routes are explicit per-path (no /api/* wildcard), so ANY new endpoint must
 # be added here AND gated by the Access app (cf_access.py) — otherwise it 404s at the
 # GitHub Pages origin (no Worker) or, if routed but not gated, skips the LinkedIn flow.
+#
+# ⚠️ The TRAILING `*` IS REQUIRED. A Cloudflare Worker route pattern matches the URL
+# including its query string, and `…/api/redirect` (no star) does NOT match
+# `…/api/redirect?redirect_url=…` — the request falls through to GitHub Pages (a 404
+# HTML page). /api/redirect is ALWAYS hit with a `?redirect_url=` query (it's the
+# sign-in bounce), so it MUST be `…/api/redirect*`. The other two get the star too for
+# the same reason (any caller that appends a query would otherwise miss the Worker).
 routes = [
-  { pattern = "blog.bytesofpurpose.com/api/me", zone_name = "bytesofpurpose.com" },
-  { pattern = "blog.bytesofpurpose.com/api/unlock-key", zone_name = "bytesofpurpose.com" },
-  { pattern = "blog.bytesofpurpose.com/api/redirect", zone_name = "bytesofpurpose.com" },
+  { pattern = "blog.bytesofpurpose.com/api/me*", zone_name = "bytesofpurpose.com" },
+  { pattern = "blog.bytesofpurpose.com/api/unlock-key*", zone_name = "bytesofpurpose.com" },
+  { pattern = "blog.bytesofpurpose.com/api/redirect*", zone_name = "bytesofpurpose.com" },
 ]
 
 # Public (non-secret) vars. TEAM_DOMAIN is the Zero Trust team domain (verified
