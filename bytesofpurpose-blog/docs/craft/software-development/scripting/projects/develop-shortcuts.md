@@ -19,15 +19,15 @@ draft: true
 		* [x] Use xcallback to append to noteplan! @done(2021-08-29 10:22 AM)
 		- noteplan://x-callback-url/addText?noteTitle=iPhone&openNote=no&text=*%20Hello%20World&mode=append
 	- [ ] There are iOS shortcuts ssh ... use it
-	- [x] Look into: [noteplan.co — X Callback Url%20Scheme](https://noteplan.co/faq/General/X-Callback-Url%20Scheme/) >2021-08-29 @done(2021-08-29 12:07 AM)
+	- [x] Look into: [noteplan.co: X Callback Url%20Scheme](https://noteplan.co/faq/General/X-Callback-Url%20Scheme/) >2021-08-29 @done(2021-08-29 12:07 AM)
 
 
 - [x] Setup shortcut on iphone to capture todos ... @done(2022-04-04T17:02:59-05:00)
 * [x] Look into: Get the shortcuts thing to work with get url ... >2022-01-30 @done(2022-01-31 12:57 AM)
-	* [x] Look into:  [reddit.com — Open Xcallback Url Doesnt End Why](https://www.reddit.com/r/shortcuts/comments/q6fcco/open_xcallback_url_doesnt_end_why/) >2022-01-30 @done(2022-01-31 12:57 AM)
+	* [x] Look into:  [reddit.com: Open Xcallback Url Doesnt End Why](https://www.reddit.com/r/shortcuts/comments/q6fcco/open_xcallback_url_doesnt_end_why/) >2022-01-30 @done(2022-01-31 12:57 AM)
 
 ## Automation 
-* [ ] [reddit.com — Append To Notes Error Error Error](https://www.reddit.com/r/shortcuts/comments/b7m6ti/append_to_notes_error_error_error/)
+* [ ] [reddit.com: Append To Notes Error Error Error](https://www.reddit.com/r/shortcuts/comments/b7m6ti/append_to_notes_error_error_error/)
 
 # ---------------------------
 
@@ -36,9 +36,9 @@ draft: true
 * [x] Create a macOS shortcut to open a note by clicking a url... @done(2022-01-15 10:26 PM)
 	* [ ] [shared apple note](shortcuts://x-callback-url/run-shortcut?name=Open%20Note&input=text&text=Furniture%20Options)
 	* [ ] [app-talk.com](https://app-talk.com/#notes)
-	* [ ] [hookproductivity.com — Using Hook With Apple Notes](https://hookproductivity.com/help/integration/using-hook-with-apple-notes/)
-	* [ ] [twitter.com — Artemchistyakov](https://twitter.com/artemchistyakov)
-	* [ ] [GitHub — temochka/Anykey](https://github.com/temochka/Anykey)
+	* [ ] [hookproductivity.com: Using Hook With Apple Notes](https://hookproductivity.com/help/integration/using-hook-with-apple-notes/)
+	* [ ] [twitter.com: Artemchistyakov](https://twitter.com/artemchistyakov)
+	* [ ] [GitHub: temochka/Anykey](https://github.com/temochka/Anykey)
 * [x] figure out automation to open notes groceries ... from noteplan @done(2022-07-23 11:20 AM)
 	* [open grocery list](shortcuts://x-callback-url/run-shortcut?name=Groceries)
 
@@ -50,15 +50,15 @@ draft: true
 category: shortcut
 content:
   md5: cc4d5b17aec276963ee0f0fac8df93ec
-glue: [glue — Blueprints](https://glue/blueprints/#id.shortcut.keyboard)
+glue: [glue: Blueprints](https://glue/blueprints/#id.shortcut.keyboard)
 jira:
-  task: [sacred-patterns.atlassian.net — THREAD 71](https://sacred-patterns.atlassian.net/browse/THREAD-71)
+  task: [sacred-patterns.atlassian.net: THREAD 71](https://sacred-patterns.atlassian.net/browse/THREAD-71)
 priorities:
   - I need to develop my Keyboard Shortcuts
 summary: Developing Keyboard Shortcuts
 tag: '#id.shortcut.keyboard'
 trello:
-  card: [trello.com — Z83py45n](https://trello.com/c/Z83py45n)
+  card: [trello.com: Z83py45n](https://trello.com/c/Z83py45n)
   done: false
   id: 63c8c8cca1dd6200b2539353
   list: 63c43d5498733701c29d3a12
@@ -66,7 +66,7 @@ trello:
 
 # Keyboard Shortcuts
 * [ ] Change the menu key ...
-	* [ ] [apple.stackexchange.com — Repurposing Menu Button On Windows Keyboards Used In Os X](https://apple.stackexchange.com/questions/173898/repurposing-menu-button-on-windows-keyboards-used-in-os-x)
+	* [ ] [apple.stackexchange.com: Repurposing Menu Button On Windows Keyboards Used In Os X](https://apple.stackexchange.com/questions/173898/repurposing-menu-button-on-windows-keyboards-used-in-os-x)
 
 
 

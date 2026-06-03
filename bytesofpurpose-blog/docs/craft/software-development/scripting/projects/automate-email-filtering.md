@@ -26,14 +26,14 @@ mail-app-component-container
 
 # Filtering Email
 
-* [ ] [mail.yahoo.com — Keyword=From%253AJockey%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253AJockey%2520in%253Ainbox)
-* [ ] [mail.yahoo.com — Keyword=From%253Afavordelivery%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253Afavordelivery%2520in%253Ainbox)
-* [ ] [mail.yahoo.com — Keyword=From%253Agap.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253Agap.com%2520in%253Ainbox)
+* [ ] [mail.yahoo.com: Keyword=From%253AJockey%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253AJockey%2520in%253Ainbox)
+* [ ] [mail.yahoo.com: Keyword=From%253Afavordelivery%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253Afavordelivery%2520in%253Ainbox)
+* [ ] [mail.yahoo.com: Keyword=From%253Agap.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253Agap.com%2520in%253Ainbox)
 
 * [ ] Make a tamper monkey script to inject buttons to delete filters / move them up / etc for yahoo filters ...
-	* [Stack Overflow — Press Delete Key Using Javascript](https://stackoverflow.com/questions/25440686/press-delete-key-using-javascript)
-	* [api.jquery.com — Attribute Equals Selector](https://api.jquery.com/attribute-equals-selector/)
-	* [codegrepper.com — Javascript+Sleep+In+Foreach+Loop](https://www.codegrepper.com/code-examples/javascript/javascript+sleep+in+foreach+loop)
+	* [Stack Overflow: Press Delete Key Using Javascript](https://stackoverflow.com/questions/25440686/press-delete-key-using-javascript)
+	* [api.jquery.com: Attribute Equals Selector](https://api.jquery.com/attribute-equals-selector/)
+	* [codegrepper.com: Javascript+Sleep+In+Foreach+Loop](https://www.codegrepper.com/code-examples/javascript/javascript+sleep+in+foreach+loop)
 	
 ```
 $( "button[data-test-id='delete-filter']" ).click();
@@ -57,38 +57,38 @@ const jquery = $; Array(500).fill().forEach( (e, i) => {
 [mail.yahoo.com](https://mail.yahoo.com/d/search/keyword=from%253A%2540email.theparkingspot.com%2520in%253Ainbox)
 
 * [ ] Unsubscribed: 
-	* [ ] [mail.yahoo.com — Keyword=From%253A%2540simplilearnmailer.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540simplilearnmailer.com%2520in%253Ainbox)
-	* [ ] [mail.yahoo.com — Keyword=From%253A%2540theshadestore.Com](https://mail.yahoo.com/d/search/keyword=from%253A%2540theshadestore.com)
-	* [ ] [mail.yahoo.com — Keyword=From%253A.Blinds.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.blinds.com%2520in%253Ainbox)
+	* [ ] [mail.yahoo.com: Keyword=From%253A%2540simplilearnmailer.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540simplilearnmailer.com%2520in%253Ainbox)
+	* [ ] [mail.yahoo.com: Keyword=From%253A%2540theshadestore.Com](https://mail.yahoo.com/d/search/keyword=from%253A%2540theshadestore.com)
+	* [ ] [mail.yahoo.com: Keyword=From%253A.Blinds.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.blinds.com%2520in%253Ainbox)
 * [ ] Manually Move Always
-* [mail.yahoo.com — Keyword=From%253Aemail.Informeddelivery.Usps.Com](https://mail.yahoo.com/d/search/keyword=from%253Aemail.informeddelivery.usps.com)
-* [mail.yahoo.com — Keyword=From%253A%2540ups.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540ups.com%2520in%253Ainbox)
-* [mail.yahoo.com — Keyword=From%253A%2540icbrushycreek.Org%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540icbrushycreek.org%2520in%253Ainbox)
-* [mail.yahoo.com — Keyword=From%253A%2540chase.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540chase.com%2520in%253Ainbox)
-* [mail.yahoo.com — Keyword=From%253A%2540smarthub.Coop%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540smarthub.coop%2520in%253Ainbox)
-* [mail.yahoo.com — Keyword=From%253A.Hilton.Com](https://mail.yahoo.com/d/search/keyword=from%253A.hilton.com)
+* [mail.yahoo.com: Keyword=From%253Aemail.Informeddelivery.Usps.Com](https://mail.yahoo.com/d/search/keyword=from%253Aemail.informeddelivery.usps.com)
+* [mail.yahoo.com: Keyword=From%253A%2540ups.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540ups.com%2520in%253Ainbox)
+* [mail.yahoo.com: Keyword=From%253A%2540icbrushycreek.Org%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540icbrushycreek.org%2520in%253Ainbox)
+* [mail.yahoo.com: Keyword=From%253A%2540chase.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540chase.com%2520in%253Ainbox)
+* [mail.yahoo.com: Keyword=From%253A%2540smarthub.Coop%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540smarthub.coop%2520in%253Ainbox)
+* [mail.yahoo.com: Keyword=From%253A.Hilton.Com](https://mail.yahoo.com/d/search/keyword=from%253A.hilton.com)
 * [mail.yahoo.com](https://mail.yahoo.com/d/search/keyword=from%253A%2540email.theparkingspot.com%2520in%253Ainbox)
-* Feedback: [mail.yahoo.com — Keyword=From%253A%2540gettattle.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540gettattle.com%2520in%253Ainbox)
-* Food Orders: [mail.yahoo.com — Keyword=From%253A%2540olo.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540olo.com%2520in%253Ainbox)
-* [mail.yahoo.com — Keyword=From%253A%2540toasttab.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540toasttab.com%2520in%253Ainbox)
+* Feedback: [mail.yahoo.com: Keyword=From%253A%2540gettattle.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540gettattle.com%2520in%253Ainbox)
+* Food Orders: [mail.yahoo.com: Keyword=From%253A%2540olo.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540olo.com%2520in%253Ainbox)
+* [mail.yahoo.com: Keyword=From%253A%2540toasttab.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540toasttab.com%2520in%253Ainbox)
 # Need Filters
-[mail.yahoo.com — Keyword=From%253A.Hilton.Com](https://mail.yahoo.com/d/search/keyword=from%253A.hilton.com)
-[mail.yahoo.com — Keyword=From%253A.Hiltongrandvacations.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.hiltongrandvacations.com%2520in%253Ainbox)
+[mail.yahoo.com: Keyword=From%253A.Hilton.Com](https://mail.yahoo.com/d/search/keyword=from%253A.hilton.com)
+[mail.yahoo.com: Keyword=From%253A.Hiltongrandvacations.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.hiltongrandvacations.com%2520in%253Ainbox)
 Spam 
 
-[mail.yahoo.com — Keyword=From%253A.Capitalone.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.capitalone.com%2520in%253Ainbox)
+[mail.yahoo.com: Keyword=From%253A.Capitalone.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A.capitalone.com%2520in%253Ainbox)
 globalpanmedia.com
 
 # Bills
-[mail.yahoo.com — Keyword=From%253A%2540invoicecloud.Net%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540invoicecloud.net%2520in%253Ainbox)
+[mail.yahoo.com: Keyword=From%253A%2540invoicecloud.Net%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540invoicecloud.net%2520in%253Ainbox)
 
 
 # Daycare 
-[mail.yahoo.com — Keyword=From%253A%2540tadpoles.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540tadpoles.com%2520in%253Ainbox)
+[mail.yahoo.com: Keyword=From%253A%2540tadpoles.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540tadpoles.com%2520in%253Ainbox)
 # Accounts 
-[mail.yahoo.com — Keyword=From%253Ajcpenney&Folders=1](https://mail.yahoo.com/d/search/keyword=from%253Ajcpenney&folders=1)
+[mail.yahoo.com: Keyword=From%253Ajcpenney&Folders=1](https://mail.yahoo.com/d/search/keyword=from%253Ajcpenney&folders=1)
 ## SPam 
-[mail.yahoo.com — Keyword=From%253A%2540thejokebox.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540thejokebox.com%2520in%253Ainbox)
+[mail.yahoo.com: Keyword=From%253A%2540thejokebox.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A%2540thejokebox.com%2520in%253Ainbox)
 
 
 
@@ -100,12 +100,12 @@ globalpanmedia.com
 
 # Cleaning Up Email 
 * Setup filters
-	* [mail.yahoo.com — Keyword=From%253A*Officedepot.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A*officedepot.com%2520in%253Ainbox)
+	* [mail.yahoo.com: Keyword=From%253A*Officedepot.Com%2520in%253Ainbox](https://mail.yahoo.com/d/search/keyword=from%253A*officedepot.com%2520in%253Ainbox)
 ```
     $$('#mail-app-component > div > section > div > article > div > div > div > div > ol > li > div > div > div > div > span').map(x => x.innerHTML.replace('From contains \"', '').replace('From ends with \"', '').replace('\"', '').replace(/[^@]*@/, '').replace(/^[.]/, '').replace(/^e?m?[.]/ ,'').replace(/^e?[-]?mail[0-9]?(er)?s?[.]/ ,'').replace(/^((sg)|(s)|(r)|(p)|(news)|(my)|(mg)|(mc)|(e2)|(e-offers)|(c)|(ce)|(e2))./, '').replace(/^info[0-9]?./, ''))
 ```
 	* `pbpaste | jq -r 'sort|.[]' | sort  | uniq -c | sort | wc -l`
-	- [Stack Overflow — Simple Jquery Selector Only Selects First Element In Chrome](https://stackoverflow.com/questions/14308588/simple-jquery-selector-only-selects-first-element-in-chrome)
+	- [Stack Overflow: Simple Jquery Selector Only Selects First Element In Chrome](https://stackoverflow.com/questions/14308588/simple-jquery-selector-only-selects-first-element-in-chrome)
 	- Filters to clean up 
 		-    2 apartmentlist.com
    2 arbucks.com

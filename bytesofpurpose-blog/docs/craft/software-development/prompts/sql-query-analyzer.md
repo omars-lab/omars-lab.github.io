@@ -352,7 +352,7 @@ ORDER BY field1;
 The SQL Query Analyzer represents a **mature, production-ready solution** for comprehensive database query analysis and documentation. By combining systematic analysis with self-healing visual generation and professional code cleaning, it transforms the complex process of understanding and maintaining SQL queries into a clear, documented, and maintainable workflow.
 
 ### 🎯 Why This System Works
-The system's strength lies in its **comprehensive approach**: it doesn't just analyze queries—it creates visual diagrams, generates documentation, cleans code, and continuously improves through self-healing capabilities.
+The system's strength lies in its **comprehensive approach**: it doesn't just analyze queries, it creates visual diagrams, generates documentation, cleans code, and continuously improves through self-healing capabilities.
 
 ### 🏆 Key Takeaways
 | Benefit | Impact | Value |

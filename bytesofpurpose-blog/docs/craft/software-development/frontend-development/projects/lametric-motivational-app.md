@@ -48,14 +48,14 @@ draft: true
 - [x] Tinker with Lametric polling ... @done(2021-11-03T00:35:49-05:00)
 
 - [x] Install AWS CLI @done(2021-11-03T00:45:52-05:00)
-	- [AWS — Cli](https://aws.amazon.com/cli/)
-	- [AWS — Super Charge Your Aws Command Line Experience With Aws Shell](https://aws.amazon.com/blogs/developer/super-charge-your-aws-command-line-experience-with-aws-shell/)
+	- [AWS: Cli](https://aws.amazon.com/cli/)
+	- [AWS: Super Charge Your Aws Command Line Experience With Aws Shell](https://aws.amazon.com/blogs/developer/super-charge-your-aws-command-line-experience-with-aws-shell/)
 
 # Publish App
 
 - [x] Make an la metric app @done(2021-11-03T00:46:29-05:00)
 - [x] Creating a Privacy Policy  @done(2021-11-03T00:41:34-05:00)
-	- [websitepolicies.com — Privacy Policy](https://www.websitepolicies.com/create/privacy-policy)
+	- [websitepolicies.com: Privacy Policy](https://www.websitepolicies.com/create/privacy-policy)
 
 # Stack v2 - Using Dropbox
 
@@ -81,29 +81,29 @@ draft: true
 
 - [ ] Giving LaMetric an auth url ...
 	- [ ] What's the domiain name of my endpoint
-		- [ ] [bytesofpurpose.auth.us-east-1.amazoncognito.com — Authorize](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/authorize)
+		- [ ] [bytesofpurpose.auth.us-east-1.amazoncognito.com: Authorize](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/authorize)
 	- [ ] Can I set domain name in cognate?
-		- [ ] [console.aws.amazon.com — Users](https://console.aws.amazon.com/cognito/users/?region=us-east-1#/pool/us-east-1_LPe9YcWFf/app-integration-domain?_k=pkzud7)
+		- [ ] [console.aws.amazon.com: Users](https://console.aws.amazon.com/cognito/users/?region=us-east-1#/pool/us-east-1_LPe9YcWFf/app-integration-domain?_k=pkzud7)
 	- [ ] Whats my refresh url?
-		- [ ] [bytesofpurpose.auth.us-east-1.amazoncognito.com — Token](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/token)
-	- [ ] Had to create a privacy policy - [websitepolicies.com — UkZU3V8d](https://www.websitepolicies.com/policies/view/ukZU3V8d)
+		- [ ] [bytesofpurpose.auth.us-east-1.amazoncognito.com: Token](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/token)
+	- [ ] Had to create a privacy policy - [websitepolicies.com: UkZU3V8d](https://www.websitepolicies.com/policies/view/ukZU3V8d)
 
 - [ ] Consolidate links needed by the oauth app ...
 	- [ ] Whats my cognito's authorize endpoint?
-		- [bytesofpurpose.auth.us-east-1.amazoncognito.com — Authorize](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/authorize)
-		- [bytesofpurpose.auth.us-east-1.amazoncognito.com — Token](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/token)
+		- [bytesofpurpose.auth.us-east-1.amazoncognito.com: Authorize](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/authorize)
+		- [bytesofpurpose.auth.us-east-1.amazoncognito.com: Token](https://bytesofpurpose.auth.us-east-1.amazoncognito.com/oauth2/token)
 
 - [ ] Ensure Cognito is setup via cdk
 	- [ ] Enable client secret ... for cognito ...
-	- [ ] [awslabs.github.io — Integrate Cognito Sso](https://awslabs.github.io/scale-out-computing-on-aws/security/integrate-cognito-sso/)
-	- [ ] [GitHub — aws-samples/aws-cdk-examples](https://github.com/aws-samples/aws-cdk-examples/tree/master/python)
-	- [ ] [alexanderzeitler.com — Create Aws Cognito Userpool With Oauth Flows Using Cdk](https://alexanderzeitler.com/articles/create-aws-cognito-userpool-with-oauth-flows-using-cdk/)
-	- [ ] [Stack Overflow — Aws Cdk Tie Cognito User Pool To Api Gateway](https://stackoverflow.com/questions/59489587/aws-cdk-tie-cognito-user-pool-to-api-gateway)
-	- [ ] [GitHub — aws/aws-cdk](https://github.com/aws/aws-cdk/issues/10676)
+	- [ ] [awslabs.github.io: Integrate Cognito Sso](https://awslabs.github.io/scale-out-computing-on-aws/security/integrate-cognito-sso/)
+	- [ ] [GitHub: aws-samples/aws-cdk-examples](https://github.com/aws-samples/aws-cdk-examples/tree/master/python)
+	- [ ] [alexanderzeitler.com: Create Aws Cognito Userpool With Oauth Flows Using Cdk](https://alexanderzeitler.com/articles/create-aws-cognito-userpool-with-oauth-flows-using-cdk/)
+	- [ ] [Stack Overflow: Aws Cdk Tie Cognito User Pool To Api Gateway](https://stackoverflow.com/questions/59489587/aws-cdk-tie-cognito-user-pool-to-api-gateway)
+	- [ ] [GitHub: aws/aws-cdk](https://github.com/aws/aws-cdk/issues/10676)
 
 - [ ] Dig through lametric's docs regarding Integrate with La Metric Authorization ... 
-	- [ ] [lametric-documentation.readthedocs.io — Cloud Authorization](https://lametric-documentation.readthedocs.io/en/latest/reference-docs/cloud-authorization.html)
-	- [ ] [lametric-documentation.readthedocs.io — Cloud Authorization](https://lametric-documentation.readthedocs.io/en/latest/reference-docs/cloud-authorization.html?highlight=client%20id#obtain-oauth-2-0-credentials-from-the-lametric-developer)
+	- [ ] [lametric-documentation.readthedocs.io: Cloud Authorization](https://lametric-documentation.readthedocs.io/en/latest/reference-docs/cloud-authorization.html)
+	- [ ] [lametric-documentation.readthedocs.io: Cloud Authorization](https://lametric-documentation.readthedocs.io/en/latest/reference-docs/cloud-authorization.html?highlight=client%20id#obtain-oauth-2-0-credentials-from-the-lametric-developer)
 
 - [ ] Debugging Cognito Issues ...
 	- [ ] Add more logs to the API Gateway
@@ -117,4 +117,4 @@ draft: true
 * [ ] Realized ... oauth is very much oriented to user logging in through apps ... backend (servic to service) flows not very friendly ... 
 	* [ ] To get a code we can refresh ... 
 	* [ ] We need to login through the browser ... and expose an API for dropbox to invoke ...
-	* [ ] [dropbox.com — Documentation](https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize)
+	* [ ] [dropbox.com: Documentation](https://www.dropbox.com/developers/documentation/http/documentation#oauth2-authorize)

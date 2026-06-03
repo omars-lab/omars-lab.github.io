@@ -19,7 +19,7 @@ What do I want to discover?
 - What have I learned as I have been working on this project?
 - What issues did I run into as I worked on this project?
 
-- [Stack Overflow — Trying To Install Bcrypt Into Node Project Node Set Up Issues](https://stackoverflow.com/questions/27665426/trying-to-install-bcrypt-into-node-project-node-set-up-issues)
+- [Stack Overflow: Trying To Install Bcrypt Into Node Project Node Set Up Issues](https://stackoverflow.com/questions/27665426/trying-to-install-bcrypt-into-node-project-node-set-up-issues)
 
 
 ## Documenting Pitfalls

@@ -15,7 +15,7 @@ The same instinct shapes this site: every sidebar section leads with an emoji so
 
 ## 🧭 Sidebar Topic Emojis
 
-**The rule:** every sidebar section — every `_category_.json` `label` — leads with **one emoji**, so a reader scanning the sidebar can find a topic by its shape before reading a word. Leaf docs may carry an emoji in their `title` too, but it's the section labels that matter most.
+**The rule:** every sidebar section, every `_category_.json` `label`, leads with **one emoji**, so a reader scanning the sidebar can find a topic by its shape before reading a word. Leaf docs may carry an emoji in their `title` too, but it's the section labels that matter most.
 
 This is enforced (warn-tier) by `scripts/validate-docs-structure.js` (`make validate-structure` → `emoji-prefix-category`) and surfaced as an advisory by the `Write|Edit` docs-structure hook the moment you save a `_category_.json` without a leading emoji. The `review-reader-experience` reader-experience audit also checks it and suggests an emoji from the map below.
 
@@ -53,7 +53,7 @@ When you add a section, reuse an emoji already used for the same **kind** of thi
 
 ### Sub-topics that previously had no emoji
 
-These were backfilled to satisfy the convention — listed so the choices are reusable for siblings:
+These were backfilled to satisfy the convention, listed so the choices are reusable for siblings:
 
 | Emoji | Sub-topic |
 |---|---|

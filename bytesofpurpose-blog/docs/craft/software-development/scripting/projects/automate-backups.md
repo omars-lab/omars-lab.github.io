@@ -21,5 +21,5 @@ draft: true
 * [ ] Start using rsync 
 	* [ ] How can I use rsync to replicate git like clone?
 		* [askubuntu.com](https://askubuntu.com/questions/476041/how-do-i-make-rsync-delete-files-that-have-been-deleted-from-the-source-folder)
-		* [linuxize.com — How To Exclude Files And Directories With Rsync](https://linuxize.com/post/how-to-exclude-files-and-directories-with-rsync/)
+		* [linuxize.com: How To Exclude Files And Directories With Rsync](https://linuxize.com/post/how-to-exclude-files-and-directories-with-rsync/)
 		* [unix.stackexchange.com](https://unix.stackexchange.com/questions/100660/how-to-use-rsync-to-backup-a-directory-without-git-subdirectory)

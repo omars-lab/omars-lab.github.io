@@ -71,7 +71,7 @@ Another input for jira-create: jira-create habit vs jira create task ... vs jira
     - [ ] Add xcallback urls so I can edit it locally by clicking a link in jira
     - [ ] Add disclaimer not to edit ...
 - [x] Map task state to emojis ... @done(2022-04-05T21:36:27-05:00)
-    - [jira.atlassian.com — WikiRendererHelpAction.Jspa](https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=miscellaneous&_ga=2.254738445.480292093.1649212489-754877465.1649212489)
+    - [jira.atlassian.com: WikiRendererHelpAction.Jspa](https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=miscellaneous&_ga=2.254738445.480292093.1649212489-754877465.1649212489)
 * [x] Checkin Jira scripts ... @done(2021-10-03 11:59 AM)
 
 ## Jira Info Panel
@@ -79,7 +79,7 @@ Another input for jira-create: jira-create habit vs jira create task ... vs jira
 - [x] Add panel back to jira tickets from frontmatter @done(2022-04-06T08:41:23-05:00)
     - [x] Turn links into jira links @done(2022-04-06T08:41:24-05:00)
         - [x] Do smart links for tasks and epics ...... @done(2022-04-06T08:41:19-05:00)
-            - [community.atlassian.com — 1655133](https://community.atlassian.com/t5/Jira-Software-questions/Create-smart-links-via-Jira-API/qaq-p/1655133) 
+            - [community.atlassian.com: 1655133](https://community.atlassian.com/t5/Jira-Software-questions/Create-smart-links-via-Jira-API/qaq-p/1655133) 
     - [x] Rewrite xcallback urls sh that they are redirected ... @done(2022-04-06T08:41:25-05:00)
 
 # Automate Pushing Ticket Content
@@ -91,8 +91,8 @@ Another input for jira-create: jira-create habit vs jira create task ... vs jira
     - [x] Sync state in jira back to laptop ... @done(2022-04-05T21:49:37-05:00)
 
 # Automate Backups
-- [ ] [developer.atlassian.com — Api Group Board](https://developer.atlassian.com/cloud/jira/software/rest/api-group-board/#api-agile-1-0-board-boardid-issue-get)
-- [ ] [community.atlassian.com — 1196475](https://community.atlassian.com/t5/Jira-Software-questions/Performing-a-data-only-backup-via-REST-API/qaq-p/1196475)
+- [ ] [developer.atlassian.com: Api Group Board](https://developer.atlassian.com/cloud/jira/software/rest/api-group-board/#api-agile-1-0-board-boardid-issue-get)
+- [ ] [community.atlassian.com: 1196475](https://community.atlassian.com/t5/Jira-Software-questions/Performing-a-data-only-backup-via-REST-API/qaq-p/1196475)
 
 # Other
 - [ ] Cache ... syncs ...? make a hash ... and don't push content ...
@@ -109,24 +109,24 @@ Another input for jira-create: jira-create habit vs jira create task ... vs jira
 - [ ] Add a front matter / initiative validator ...
 - [ ] Trello append link to frontmatter ...
 
-[trello.com — Search](https://trello.com/1/search?query=id.dashboard&partial=true&modelTypes=cards%2Cboards%2Cmembers%2Corganizations&card_fields=id%2CidBoard%2Cname%2Cclosed%2CdateLastActivity%2CshortLink%2Curl%2Cdesc&cards_limit=11&cards_page=0&card_board=true&board_fields=id%2Cname%2Cid%2CidOrganization%2CdateLastView%2CdateLastActivity%2Cname%2CshortLink%2Cclosed%2Cprefs&card_list=true&board_organization=true&board_organization_fields=displayName%2Cid&member_fields=id%2CfullName%2Cusername%2CavatarUrl%2CavatarSource%2Cinitials%2Cproducts%2CnonPublic&organization_fields=id%2CdisplayName%2Cname%2ClogoHash)
+[trello.com: Search](https://trello.com/1/search?query=id.dashboard&partial=true&modelTypes=cards%2Cboards%2Cmembers%2Corganizations&card_fields=id%2CidBoard%2Cname%2Cclosed%2CdateLastActivity%2CshortLink%2Curl%2Cdesc&cards_limit=11&cards_page=0&card_board=true&board_fields=id%2Cname%2Cid%2CidOrganization%2CdateLastView%2CdateLastActivity%2Cname%2CshortLink%2Cclosed%2Cprefs&card_list=true&board_organization=true&board_organization_fields=displayName%2Cid&member_fields=id%2CfullName%2Cusername%2CavatarUrl%2CavatarSource%2Cinitials%2Cproducts%2CnonPublic&organization_fields=id%2CdisplayName%2Cname%2ClogoHash)
 
 
 - [ ] Figure out how to do the jira thing with trello ...
 - [x] Does trello have an API? @done(2023-01-15 01:09 PM)
 - [x] Make a trello api token:  @done(2023-01-15 11:55 AM)
-	- [id.atlassian.com — Api Tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
+	- [id.atlassian.com: Api Tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
 - [x] Make a board @done(2023-01-15 11:59 AM)
-	- [trello.com — Kanban Board](https://trello.com/b/FD06G5em/kanban-board)
-	- [trello.com — 63c43d5498733701c29d3a0b](https://trello.com/1/boards/63c43d5498733701c29d3a0b)
+	- [trello.com: Kanban Board](https://trello.com/b/FD06G5em/kanban-board)
+	- [trello.com: 63c43d5498733701c29d3a0b](https://trello.com/1/boards/63c43d5498733701c29d3a0b)
 - [x] Using API token @done(2023-01-20 08:14 AM)
-	- [-] [support.atlassian.com — Manage Api Tokens For Your Atlassian Account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
-	- [trello.com — Admin](https://trello.com/power-ups/admin/)
+	- [-] [support.atlassian.com: Manage Api Tokens For Your Atlassian Account](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
+	- [trello.com: Admin](https://trello.com/power-ups/admin/)
 - [x] Figure out how to use api key with trello call @done(2023-01-15 07:53 PM)
 	- [-] curl -v [mysite.atlassian.net](https://mysite.atlassian.net) --user YOUR_EMAIL:YOUR_API_TOKEN \
 		- This method does not work with trello .. only Atlassian ...
 - [x] Get the board @done(2023-01-15 07:53 PM)
-	- [developer.atlassian.com — Api Group Boards](https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-get)
+	- [developer.atlassian.com: Api Group Boards](https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-get)
 	* curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b?key=YOUR_TRELLO_KEY&token=YOUR_TRELLO_TOKEN' --header 'Accept: application/json' | jq 
 - [x] Get lists of board ... @done(2023-01-20 08:15 AM)
 	- curl --request GET --url 'https://api.trello.com/1/boards/63c43d5498733701c29d3a0b/lists?key=YOUR_TRELLO_KEY&token=YOUR_TRELLO_TOKEN'  --header 'Accept: application/json' | jq 

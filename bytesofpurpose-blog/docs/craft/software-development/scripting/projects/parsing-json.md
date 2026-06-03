@@ -1,6 +1,6 @@
 ---
 title: 'JQ Mechanics'
-description: 'Powerful jq commands for parsing and transforming JSON — the mechanics I reach for most when processing data on the CLI.'
+description: 'Powerful jq commands for parsing and transforming JSON, the mechanics I reach for most when processing data on the CLI.'
 slug: /software-development/scripting/projects/parsing-json
 authors: [oeid]
 tags: []
