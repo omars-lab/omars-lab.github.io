@@ -95,7 +95,10 @@ the new rule — never let the docs and the checks drift. The contract is owned 
 enforced by `bytesofpurpose-blog/scripts/validate-docs-structure.js`
 (`make validate-structure`) + the warn-only PostToolUse `Write|Edit` hook
 `.claude/hooks/validate-docs-structure-hook.sh` (registered in `.claude/settings.json`
-alongside `validate-links-hook.sh` / `validate-draft-hook.sh`). Absolute-slug is the
+alongside `validate-links-hook.sh` / `validate-draft-hook.sh` / `em-dash-voice-hook.sh`).
+(The em-dash hook is the one BLOCKING content hook: a literal `—` in reader-facing content
+reads as AI voice, so it exits 2 and requires asking the user how to rephrase — see the
+`review-reader-experience` skill, "The em-dash tell".) Absolute-slug is the
 only ERROR tier; the rest are warn-tier advisories — including the `description-*` rules
 (missing / length ~50–160 / duplicate), which keep each page's `description:` frontmatter
 healthy because it feeds both `og:description` (SEO/social) and the ShareButton share
