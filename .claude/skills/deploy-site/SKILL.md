@@ -22,6 +22,14 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 2. **`POSTHOG_TEST_MODE` must NEVER be set for a production deploy.** It disables
    PostHog's bot filter (only for e2e). Explicitly `unset` it before building.
 3. **`make deploy` runs `make secret-scan` first** — a leaked secret aborts deploy.
+   It is also **fail-closed for premium** (secure-by-default tenet, see CLAUDE.md):
+   `docusaurus deploy` REBUILDS (it ignores a prebuilt `build/`), so `make deploy` now
+   exports `STATICRYPT_PASSPHRASE` + `POSTHOG_KEY`/`POSTHOG_HOST` from `.env` into that
+   rebuild automatically, **ABORTS** if any `premium: true` doc exists while the
+   passphrase is empty (never ships cleartext premium by omission), and **re-runs V5**
+   on the shipped build as a post-deploy gate. So a bare `make deploy` is safe — you no
+   longer hand-export the passphrase (the manual `export` below is legacy/explicit-build
+   only).
 3a. **Premium content needs `STATICRYPT_PASSPHRASE` at BUILD time, a CACHE-BUSTED build,
    and a BLOCKING verify gate before publish.** `premium: true` docs are encrypted at
    MDX-compile by `plugins/rehype-premium-encrypt.js`, which reads `STATICRYPT_PASSPHRASE`
