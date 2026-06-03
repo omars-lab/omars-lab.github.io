@@ -325,7 +325,7 @@ Uses 8 key dimensions for complete assessment:
 The Prompt Maturity Framework represents a **mature, production-ready solution** for comprehensive AI prompt quality assessment. By combining systematic evaluation with actionable recommendations and production readiness assessment, it transforms the complex process of prompt quality assurance into a clear, reliable, and scalable workflow.
 
 ### 🎯 Why This Framework Works
-The framework's strength lies in its **comprehensive approach**: it doesn't just evaluate prompts—it provides systematic assessment across multiple dimensions, identifies specific improvement opportunities, and ensures production-ready quality.
+The framework's strength lies in its **comprehensive approach**: it doesn't just evaluate prompts, it provides systematic assessment across multiple dimensions, identifies specific improvement opportunities, and ensures production-ready quality.
 
 ### 🏆 Key Takeaways
 | Benefit | Impact | Value |

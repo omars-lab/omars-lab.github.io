@@ -1,7 +1,7 @@
 ---
 slug: /blogging/blog-post-triggers
 title: '🔔 Blog Post Triggers'
-description: 'The events that should reliably spawn a blog post — and how to mark a doc as one that deserves a paired, summarizing post.'
+description: 'The events that should reliably spawn a blog post, and how to mark a doc as one that deserves a paired, summarizing post.'
 authors: [oeid]
 tags: [blogging, content-strategy, triggers, workflow, automation]
 date: 2026-06-02T10:00
@@ -14,9 +14,9 @@ draft: false
 should take. This page answers the question that comes **before** that: **when should a
 blog post exist at all?**
 
-A *trigger* is an event that reliably produces share-worthy narrative — a conference I
+A *trigger* is an event that reliably produces share-worthy narrative, a conference I
 attended, a book I finished, a thing I shipped. When a trigger fires, I expect a post
-along the lines of *"I attended X — here's what I learned,"* with the durable detail
+along the lines of *"I attended X, here's what I learned,"* with the durable detail
 living in a doc the post links to.
 
 ## The trigger taxonomy
@@ -28,11 +28,11 @@ when the event happens, a post is owed.
 | Trigger (`blog_trigger`) | What fires it | Example | Cadence |
 |---|---|---|---|
 | `conference` | I attend a conference / event | [AI Engineer World Fair 2025](/craft/generative-ai/mental-models/2025-06-15-ai-engineer-world-fair) | one post per event |
-| `book` | I finish a book worth a take | — | one post per book |
-| `solution` | I ship a real thing that solves a problem | — | one post per solution |
-| `poc` | I finish a proof-of-concept / tinkering session | — | one post per POC |
+| `book` | I finish a book worth a take | - | one post per book |
+| `solution` | I ship a real thing that solves a problem | - | one post per solution |
+| `poc` | I finish a proof-of-concept / tinkering session | - | one post per POC |
 | `milestone` | A repo or career milestone | [The Evolution of a Repository](/blog/evolution-of-a-repo) | per milestone |
-| `opinion` | A stance worth a timestamped take | — | as the take forms |
+| `opinion` | A stance worth a timestamped take | - | as the take forms |
 
 This formalizes the *"1 post per solution, 1 post per poc/tinkering"* note from
 **The Habit of Blogging**.
@@ -44,12 +44,12 @@ post is the point-in-time announcement that links back to it:
 
 ```mermaid
 flowchart LR
-    subgraph DOC["📄 docs/…/some-doc.md — durable reference"]
+    subgraph DOC["📄 docs/…/some-doc.md - durable reference"]
         D1["blog_trigger: conference"]
         D2["blog_post: &lt;slug&gt;"]
         D3["blog_status: published"]
     end
-    subgraph POST["📰 blog/YYYY-MM-DD-slug.md — announcement"]
+    subgraph POST["📰 blog/YYYY-MM-DD-slug.md - announcement"]
         P1["narrative ingress + &lt;!-- truncate --&gt;"]
         P2["summary / takeaways"]
         P3["Read the full notes → /docs/…"]
@@ -76,13 +76,13 @@ blog_post: ai-engineer-world-fair-2025    # slug of the paired /blog/ post (once
 blog_status: published                    # planned | drafted | published
 ```
 
-- **`blog_trigger`** — one of the controlled-vocabulary values in the table above. Its
+- **`blog_trigger`**: one of the controlled-vocabulary values in the table above. Its
   *presence* is what classifies the doc as post-worthy.
-- **`blog_post`** — the slug of the companion post. Leave it off until the post exists.
-- **`blog_status`** — lifecycle of the companion post: `planned` (owed, not written),
+- **`blog_post`**: the slug of the companion post. Leave it off until the post exists.
+- **`blog_status`**: lifecycle of the companion post: `planned` (owed, not written),
   `drafted` (stub exists), `published`.
 
-This is purely additive — it changes no existing frontmatter and never affects a URL.
+This is purely additive, it changes no existing frontmatter and never affects a URL.
 
 ## Scaffolding the post
 
@@ -106,6 +106,6 @@ make blog-pending
 
 ## See also
 
-- [Docs vs Blog Posts](/craft/blogging/docs-vs-blog-posts) — which *format* a piece of content takes.
-- [Adding Blog Posts](/craft/blogging/adding-content/adding-blog-posts) — the mechanics of authoring a post.
-- **The Habit of Blogging** — the broader content-planning habit (draft).
+- [Docs vs Blog Posts](/craft/blogging/docs-vs-blog-posts), which *format* a piece of content takes.
+- [Adding Blog Posts](/craft/blogging/adding-content/adding-blog-posts), the mechanics of authoring a post.
+- **The Habit of Blogging**: the broader content-planning habit (draft).

@@ -23,11 +23,11 @@ My MCP server provides a standardized interface between AI models and my develop
 
 
 # Personal MCPs
-* [claudelog.com — Claude Code Mcps](https://claudelog.com/claude-code-mcps/)
-* [claudelog.com — Configuration](https://claudelog.com/configuration/#mcp-configuration)
-* [GitHub — langgptai/awesome-claude-prompts.git](https://github.com/langgptai/awesome-claude-prompts.git)
-* [scottspence.com — Configuring Mcp Tools In Claude Code](https://scottspence.com/posts/configuring-mcp-tools-in-claude-code)
-* [cursor.com — Mcp](https://cursor.com/docs/context/mcp)
+* [claudelog.com: Claude Code Mcps](https://claudelog.com/claude-code-mcps/)
+* [claudelog.com: Configuration](https://claudelog.com/configuration/#mcp-configuration)
+* [GitHub: langgptai/awesome-claude-prompts.git](https://github.com/langgptai/awesome-claude-prompts.git)
+* [scottspence.com: Configuring Mcp Tools In Claude Code](https://scottspence.com/posts/configuring-mcp-tools-in-claude-code)
+* [cursor.com: Mcp](https://cursor.com/docs/context/mcp)
 
 ## Core Components
 

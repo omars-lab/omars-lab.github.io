@@ -202,11 +202,11 @@ I attended the AI Engineer World Fair in June 2025. Here are the key insights an
 - MCP servers for various applications
 
 ### Learning Resources
-- [modelcontextprotocol.io — Introduction](https://modelcontextprotocol.io/introduction)
-- [GitHub — aws/nova-act](https://github.com/aws/nova-act)
-- [strandsagents.com — Latest](https://strandsagents.com/latest/)
-- [GitHub — neo4j-product-examples/genai-workshop](https://github.com/neo4j-product-examples/genai-workshop)
-- [GitHub — aws-samples/sample-agents-with-nova-act-and-mcp](https://github.com/aws-samples/sample-agents-with-nova-act-and-mcp)
+- [modelcontextprotocol.io: Introduction](https://modelcontextprotocol.io/introduction)
+- [GitHub: aws/nova-act](https://github.com/aws/nova-act)
+- [strandsagents.com: Latest](https://strandsagents.com/latest/)
+- [GitHub: neo4j-product-examples/genai-workshop](https://github.com/neo4j-product-examples/genai-workshop)
+- [GitHub: aws-samples/sample-agents-with-nova-act-and-mcp](https://github.com/aws-samples/sample-agents-with-nova-act-and-mcp)
 
 ### Potential Projects
 - Building a personal MCP server

@@ -333,7 +333,7 @@ Using this maintenance system, we successfully:
 The Docusaurus Maintenance System represents a **mature, production-ready solution** for comprehensive documentation site maintenance. By combining systematic detection with intelligent categorization and proven fix patterns, it transforms the chaotic process of site maintenance into a reliable, scalable workflow.
 
 ### 🎯 Why This System Works
-The system's strength lies in its **comprehensive approach**: it doesn't just fix issues—it prevents them, categorizes them systematically, and provides proven patterns for resolution.
+The system's strength lies in its **comprehensive approach**: it doesn't just fix issues, it prevents them, categorizes them systematically, and provides proven patterns for resolution.
 
 ### 🏆 Key Takeaways
 | Benefit | Impact | Value |
