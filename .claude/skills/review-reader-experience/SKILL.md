@@ -32,6 +32,26 @@ Journey" — separating *what I impact* from *who I am*). When you trim, keep th
 distinct idea per element; don't merge two cards' meanings into vague mush. If a label
 or CTA spans more than a short line, that's a flag — propose the tighter version.
 
+### The em-dash tell (enforced by a hook)
+
+A literal **em-dash (`—`)** in reader-facing copy is a strong AI-voice signal — human
+blog writing rarely reaches for it. So on this site, an em-dash in **user-facing content**
+is treated as a flag to STOP and rephrase deliberately, never to ship silently. This is
+enforced, not just advised: the **`em-dash-voice-hook.sh`** PostToolUse `Write|Edit` hook
+(registered in `.claude/settings.json`) **blocks** (exit 2) when an em-dash appears in:
+
+- prose `*.md`/`*.mdx` under `bytesofpurpose-blog/{docs,blog,designs,changelog}/`,
+- any `*.html` (all user-facing),
+- user-facing **strings** in `bytesofpurpose-blog/src/**.{tsx,jsx}` (JSX text / quoted
+  literals — NOT `//` or `/* */` comments).
+
+Code, config, CSS, skills, plans, and `CLAUDE.md` are out of scope (em-dashes there aren't
+reader-facing — this skill file uses them freely). Only U+2014 `—` is flagged; the en-dash
+(`–`) and hyphen (`-`) are fine. When the hook fires, the required response is to **ask the
+user** (AskUserQuestion) how to handle each occurrence — replace with a comma · a colon ·
+split into two sentences · parentheses · keep as-is — then apply their choice. Don't
+auto-rewrite; the human decides whether each dash stays.
+
 ## Five audits
 
 Run the audits relevant to the request. Default to all five for a broad "make it
