@@ -8,7 +8,7 @@ date: 2025-09-01T10:00
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
 draft: true
 ---
-I wanted to see how far I could get running an LLM on my own hardware — no API keys, no
+I wanted to see how far I could get running an LLM on my own hardware: no API keys, no
 per-token bill, just my machine. Here's what I tried and what actually worked.
 
 <!-- truncate -->
@@ -17,5 +17,5 @@ per-token bill, just my machine. Here's what I tried and what actually worked.
 
 ## Takeaways
 
-- _Summarize the highlights here — the durable detail lives in the linked doc._
+- _Summarize the highlights here; the durable detail lives in the linked doc._
 

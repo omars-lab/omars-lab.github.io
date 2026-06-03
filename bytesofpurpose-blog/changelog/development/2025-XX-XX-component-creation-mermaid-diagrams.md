@@ -13,9 +13,9 @@ priority: 'medium'
 
 # Blob Changlog - Embedding Mermaid Diagrams
 * Use this to iterate on mermaid diagrams 
-	* [GitHub — mermaid-js/mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
+	* [GitHub: mermaid-js/mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
 * [ ] Explore how to optimize the blog / use the latest features 
-	* [Docusaurus — 3.6](https://docusaurus.io/blog/releases/3.6#mermaid)
+	* [Docusaurus: 3.6](https://docusaurus.io/blog/releases/3.6#mermaid)
 
 ## Execution Plan
 
