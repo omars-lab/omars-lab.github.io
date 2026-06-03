@@ -52,6 +52,15 @@ user** (AskUserQuestion) how to handle each occurrence — replace with a comma 
 split into two sentences · parentheses · keep as-is — then apply their choice. Don't
 auto-rewrite; the human decides whether each dash stays.
 
+**Repo-wide scanner (the standing gate the hook lacks).** The hook only fires on files
+Claude *edits* — it never sweeps the existing corpus, so em-dashes that predate the hook (or
+arrive via a human edit / bulk script / git) go uncaught. `make validate-em-dash`
+(`scripts/validate-em-dash.js`) scans **all** in-scope content (prose `*.md`/`*.mdx` under
+`{docs,blog,designs,changelog}/` + `src/**.{tsx,jsx}`) and exits 1 on any hit. Run it after
+any voice work and before a publish to prove the corpus is clean. It flags **everything**
+including em-dashes inside code blocks (a deliberate choice — keep the scan simple, let a
+human keep any genuinely-literal one).
+
 > **Gotcha — the hook scans the WHOLE file, not just your diff.** Editing *any* line of a
 > file that already contains em-dashes (e.g. fixing a broken link, adding an MDX comment)
 > re-triggers the block on the pre-existing dashes. So a single unrelated edit can surface
@@ -80,6 +89,31 @@ auto-rewrite; the human decides whether each dash stays.
 Heuristic distilled from the above: a single dash before an *elaboration/list* → colon; a
 *pair* of dashes around an aside → parentheses; a dash joining two *complete* clauses →
 period (two sentences). When in doubt, still ask — but lead with the heuristic's choice.
+
+**More patterns (from the 2026-06 corpus sweep — ~1100 em-dashes across 189 files):**
+
+| Original (em-dash) | Chosen fix | Pattern |
+|---|---|---|
+| `- **🕌 Faith** — the practices…` | colon: `- **🕌 Faith**: the practices…` | **bold/italic label** leading a list item → **colon** |
+| `[Docusaurus — Search](url)` | colon: `[Docusaurus: Search](url)` | **link label** `[Source — Page]` → **colon** (`Source: Page`) |
+| `\| … take \| — \| one post… \|` | hyphen: `\| … take \| - \| one post… \|` | **standalone `\| — \|` table cell** (means "n/a"/empty) → **`-`**, NOT a comma |
+| (em-dash inside a ``` fence / CLI sample) | hyphen: `-` | **code block / inline-code / mermaid label** → plain hyphen (a comma can break a command) |
+| `distinct_id: ${id ?? '—'}` | `'n/a'` | em-dash used as a **null/placeholder display value** → `n/a` |
+
+**Bulk-remediation mechanics (when clearing a large backlog, user-directed):**
+- The hook re-fires on **every** edit to a still-dirty file and echoes the *full* remaining
+  list each time — editing 50 dashes one at a time floods context 50×. Instead clear a whole
+  file in **one** operation (a single multi-edit batch, or a `perl`/`sed` pass) so the hook
+  evaluates once and the file lands at zero.
+- The Edit tool needs a prior **Read** of each file; a multi-file `sed`/`perl` pass avoids
+  that. A context-aware pass that's worked well: track ``` fences (hyphen inside code,
+  rephrase outside), colon after a `[link label]`/`**bold label**`, comma for mid-sentence
+  asides, then **review the diff** for spots a colon/period reads better and hand-fix.
+- **Always re-scan after a bulk pass**: `make validate-em-dash` for zero dashes, and
+  `grep -rn '|, |'` for the table-cell artifact above. Then `make build` (clean, cache
+  cleared) — rapid hot-reload of 100+ files can leave a STALE `.docusaurus` tags JSON that
+  shows a spurious `Cannot parse JSON … "tag"` dev error; a from-scratch build proves the
+  source is fine. `rm -rf .docusaurus node_modules/.cache` clears it.
 
 ## Five audits
 

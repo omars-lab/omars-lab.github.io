@@ -1,7 +1,7 @@
 ---
 slug: /generative-ai/mental-models/2025-11-10-ai-framework-landscape
 title: '🗺️ The AI Framework Landscape'
-description: 'An interactive tour of AI frameworks, tools, and platforms — comparing features and use cases to help you choose the right one.'
+description: 'An interactive tour of AI frameworks, tools, and platforms, comparing features and use cases to help you choose the right one.'
 authors: [oeid]
 tags: [ai-frameworks, genai, tools, comparison, langchain, llama-index, haystack, evaluation]
 date: '2025-11-10T10:00'

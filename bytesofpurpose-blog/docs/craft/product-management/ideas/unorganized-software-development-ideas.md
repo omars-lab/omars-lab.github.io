@@ -21,7 +21,7 @@ draft: true
 	- [ ] Need to fix broken links
 
 - [ ] Get the find mechanic to work ...
-	- [unix.stackexchange.com — Passing Multiple Directories To The Prune Option In Find](https://unix.stackexchange.com/questions/73938/passing-multiple-directories-to-the-prune-option-in-find)
+	- [unix.stackexchange.com: Passing Multiple Directories To The Prune Option In Find](https://unix.stackexchange.com/questions/73938/passing-multiple-directories-to-the-prune-option-in-find)
 
 # Script Usage Analytics
 - [ ] Track script usage ...
@@ -43,11 +43,11 @@ draft: true
 - [ ] Need a non recursive >today | #2022-07-08 ~05x~ >2023-07-29
 * [ ] Make a next weekend date tag!
 	* [ ] parse bash case statement ... and auto gen completion stuff 
-		- [web.archive.org — Sexy Lexing With Python](http://web.archive.org/web/20120525103427/http://www.evanfosmark.com/2009/02/sexy-lexing-with-python)
-		- [Medium — Lets Build A Linux Shell Part Iii A472c0102849](https://medium.com/swlh/lets-build-a-linux-shell-part-iii-a472c0102849)
-		- [GitHub — vorpaljs/bash-parser](https://github.com/vorpaljs/bash-parser/blob/master/documents/ast.md)
-		- [GitHub — mvdan/sh](https://github.com/mvdan/sh)
-		- [GitHub — idank/bashlex](https://github.com/idank/bashlex)
+		- [web.archive.org: Sexy Lexing With Python](http://web.archive.org/web/20120525103427/http://www.evanfosmark.com/2009/02/sexy-lexing-with-python)
+		- [Medium: Lets Build A Linux Shell Part Iii A472c0102849](https://medium.com/swlh/lets-build-a-linux-shell-part-iii-a472c0102849)
+		- [GitHub: vorpaljs/bash-parser](https://github.com/vorpaljs/bash-parser/blob/master/documents/ast.md)
+		- [GitHub: mvdan/sh](https://github.com/mvdan/sh)
+		- [GitHub: idank/bashlex](https://github.com/idank/bashlex)
 
 # Portfolio 
 - [ ] Continue porting portfolio to react ...

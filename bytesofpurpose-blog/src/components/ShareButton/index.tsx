@@ -63,7 +63,7 @@ function composeMessage(title: string, description: string, maxLen?: number): st
   return full;
 }
 
-// X/Twitter post text budget — below the 280 limit to leave room for the URL card.
+// X/Twitter post text budget, below the 280 limit to leave room for the URL card.
 const X_MAX_LEN = 200;
 
 function capture(channel: Channel, surface: string) {
@@ -135,7 +135,7 @@ export const ShareButton = ({
         capture('share_cp', surface);
         return;
       } catch {
-        // user dismissed the sheet, or share failed — fall through to copy.
+        // user dismissed the sheet, or share failed; fall through to copy.
       }
     }
     const ok = await copyToClipboard(url);
@@ -170,7 +170,7 @@ export const ShareButton = ({
   const onLinkedIn = () => {
     const url = shareUrl('share_li');
     // Use the documented shareArticle endpoint (mini=true). NB: LinkedIn no longer
-    // accepts text/summary prefill params and the composer opens blank — the rich
+    // accepts text/summary prefill params and the composer opens blank; the rich
     // preview is rendered from the target page's Open Graph tags (og:title/description/
     // image, which this site emits), attaching when the post is composed/submitted.
     openIntent(
@@ -183,7 +183,7 @@ export const ShareButton = ({
 
   const onX = () => {
     const url = shareUrl('share_x');
-    // X supports prefilled tweet text — use the friendly message (it auto-appends the
+    // X supports prefilled tweet text, so use the friendly message (it auto-appends the
     // URL card from &url=). Cap the text at X_MAX_LEN so a long description doesn't
     // blow past the tweet limit; the summary clause is trimmed, the title kept.
     openIntent(

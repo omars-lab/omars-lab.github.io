@@ -14,7 +14,7 @@ Tasbeeh Tracker ...
   - I need a smart clicker
 
 * [ ] Idea - for smart clicking - ml app that listens to when a pen is clicked - every day tools can become "smart"
-	* [ ] [towardsdatascience.com — Detecting Sounds With Deep Learning Ed9a41909da0](https://towardsdatascience.com/detecting-sounds-with-deep-learning-ed9a41909da0)
+	* [ ] [towardsdatascience.com: Detecting Sounds With Deep Learning Ed9a41909da0](https://towardsdatascience.com/detecting-sounds-with-deep-learning-ed9a41909da0)
 
 - [ ] Deciding on Smart Clicker to Track Tasbeeh >today
 	- [ ] Arduino IOT Cloud Kit 
@@ -22,8 +22,8 @@ Tasbeeh Tracker ...
 	- [ ] Presentation Clicker
 	- [ ] Apple Remote?
 		- Can I setup a custom app?
-		- [eternalstorms.at — Sirimote](https://eternalstorms.at/sirimote/)
-		- [GitHub — Eternalstorms](https://github.com/eternalstorms?tab=repositories)
+		- [eternalstorms.at: Sirimote](https://eternalstorms.at/sirimote/)
+		- [GitHub: Eternalstorms](https://github.com/eternalstorms?tab=repositories)
     - [ ] should i get the elago stream deck? need to tasbeeh more as i work ...
     - [ ] should i use this as an excuse to buy the lego automation stuff?
     - [ ] Should I get a raspberry pi ....
@@ -49,23 +49,23 @@ Tasbeeh Tracker ...
 
 # Setup Counter
 - [ ] Install custom components / integrations for home assistant ...
-    - [community.home-assistant.io — 134800](https://community.home-assistant.io/t/missing-integrations/134800)
+    - [community.home-assistant.io: 134800](https://community.home-assistant.io/t/missing-integrations/134800)
     * [ ] Install rest calls for home assistant 
     - [ ] Install shell integration 
-        - [home-assistant.io — Secure Shell Tunnel](https://www.home-assistant.io/blog/2017/11/02/secure-shell-tunnel/)
+        - [home-assistant.io: Secure Shell Tunnel](https://www.home-assistant.io/blog/2017/11/02/secure-shell-tunnel/)
 * [ ] Install custom components to run sh scripts / rest commands in home assistant …
 	* [ ] [codingcyclist.medium.com](https://codingcyclist.medium.com/how-to-install-any-custom-component-from-github-in-less-than-5-minutes-ad84e6dc56ff)
-	* [ ] [home-assistant.io — Shell Command](https://www.home-assistant.io/integrations/shell_command/)
+	* [ ] [home-assistant.io: Shell Command](https://www.home-assistant.io/integrations/shell_command/)
 
 - [ ] Figure out what I want homeassistant to do to keep track of counters/
     - Do I want data in home assistant? outside?
     - [ ] Edit the configuration accordingly ... with the shell commands needed to modify the counters ...
-        - [home-assistant.io — Examples](https://www.home-assistant.io/examples/#example-configurationyaml)
-        - [home-assistant.io — Configuration](https://www.home-assistant.io/docs/configuration/)
+        - [home-assistant.io: Examples](https://www.home-assistant.io/examples/#example-configurationyaml)
+        - [home-assistant.io: Configuration](https://www.home-assistant.io/docs/configuration/)
 
 # Keyfob Configuration
 - [x] Figure out how to configure the keyfob ...
-    * [manuals.fibaro.com — FGKF 601 EN T V1.1.Pdf](https://manuals.fibaro.com/content/manuals/en/FGKF-601/FGKF-601-EN-T-v1.1.pdf)
+    * [manuals.fibaro.com: FGKF 601 EN T V1.1.Pdf](https://manuals.fibaro.com/content/manuals/en/FGKF-601/FGKF-601-EN-T-v1.1.pdf)
 	* Keyfob can react to config value changes / sync on device …
 	* There are 12 main scenes that can be triggered … with different clicks - 6 single button clicks and 6 programmable sequences. ..
 

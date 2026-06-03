@@ -15,7 +15,7 @@ priority: 'medium'
 * [ ] I should have guidance on noteplan links / local vscode links / rewritting them ...
 
 # Blogging Mechanism - Link Management
-* [x] This has broken links ... example ... [blog.bytesofpurpose.com — Techniques](https://blog.bytesofpurpose.com/docs/techniques/techniques) links to [blog.bytesofpurpose.com — Blogging Techniques](https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques) which shows page not found ... @done(2025-11-17 09:35 AM)
+* [x] This has broken links ... example ... [blog.bytesofpurpose.com: Techniques](https://blog.bytesofpurpose.com/docs/techniques/techniques) links to [blog.bytesofpurpose.com: Blogging Techniques](https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques) which shows page not found ... @done(2025-11-17 09:35 AM)
 
 * [ ] Add Link to card mechanism to blog 
 	* [ogp.me](https://ogp.me/)

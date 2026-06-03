@@ -24,7 +24,7 @@ function normalize(href: string): string {
 /**
  * True when a LEAF doc link is a draft. Gated to localhost + dev build; no-ops in
  * production (plugin data is empty there and isLocalhost() is false). Only leaf
- * doc links are badged — see plugins/draft-docs for why categories aren't.
+ * doc links are badged; see plugins/draft-docs for why categories aren't.
  */
 export function useIsDraft(href?: string): boolean {
   const drafts = useDraftPermalinks();
@@ -39,7 +39,7 @@ export function DraftBadge(): React.JSX.Element {
   return (
     <span
       className={styles.draftBadge}
-      title="Draft — hidden in production"
+      title="Draft, hidden in production"
       aria-label="draft">
       D
     </span>

@@ -15,7 +15,7 @@ production.
 
 - Run A/B experiments (e.g. Support-button copy) with **PostHog** as the source of
   truth for assignment + results.
-- Make experiments **trivial to add** — declare one registry entry, read one helper.
+- Make experiments **trivial to add**: declare one registry entry, read one helper.
 - Be **deterministic to test & QA**: force any variant locally without touching
   PostHog, for Playwright and manual checks.
 - **Safe in production**: test overrides cannot be triggered by real visitors.
@@ -36,13 +36,13 @@ test/e2e/<x>-ab-test.spec.ts ← forces each variant via ?ab=, asserts copy+even
 
 ### Assignment & exposure
 
-PostHog hashes each user's `distinct_id` against the flag, so a user is **sticky** —
+PostHog hashes each user's `distinct_id` against the flag, so a user is **sticky**,
 always the same variant. Reading the variant with `getFeatureFlag(key)` records the
 `$feature_flag_called` **exposure** event. The conversion event is tagged with the
 variant (`variant` + `$feature/<key>`) so the split is queryable even without the
 experiment stats engine.
 
-## Forcing a variant — the three mechanisms
+## Forcing a variant: the three mechanisms
 
 | Need | Mechanism | Scope | Persistence |
 |---|---|---|---|
@@ -50,7 +50,7 @@ experiment stats engine.
 | **Preview yourself, anywhere** | devtools: `posthog.featureFlags.overrideFeatureFlags({flags:{'<key>':'test'}})` | your browser | localStorage |
 | **Force a specific customer** | PostHog UI → flag → Release conditions (match email / `distinct_id`) → 100% to a variant | that user/cohort | server-side |
 
-### URL-param override (localhost only) — supports a set of experiments
+### URL-param override (localhost only): supports a set of experiments
 
 ```
 ?ab-<flag-key>=<variant>                 force one experiment
@@ -59,7 +59,7 @@ experiment stats engine.
 ```
 
 Gated to `localhost`/`127.0.0.1` in `urlOverride()` so production visitors can't
-self-assign. This is what Playwright uses (deterministic, pre-hydration — no
+self-assign. This is what Playwright uses (deterministic, pre-hydration, with no
 dependence on PostHog override/localStorage timing, which proved flaky).
 
 ### Forcing a real customer (or cohort) into a variant
@@ -88,7 +88,7 @@ Full step-by-step + per-experiment task template: the **run-ab-test** skill.
 
 - **Browser→ingestion:** Playwright asserts POSTs to `us.i.posthog.com`
   (build with `POSTHOG_TEST_MODE=1`; PostHog drops bot UAs otherwise).
-- **Landed server-side:** `query-posthog` (official `@posthog/cli`) — exposure split
+- **Landed server-side:** `query-posthog` (official `@posthog/cli`) gives the exposure split
   by `$feature_flag_response`, conversion split by `variant`; exclude
   `$browser_type='bot'`.
 

@@ -17,6 +17,6 @@ draft: true
 
 # Appendix
 ## Inspiration
-* [codepen.io — XENWgq](https://codepen.io/celar/pen/XENWgq)
+* [codepen.io: XENWgq](https://codepen.io/celar/pen/XENWgq)
 * [patterninislamicart.com](https://patterninislamicart.com/)
-* [pinterest.com — Arabesque Pattern](https://www.pinterest.com/artoric/arabesque-pattern/)
+* [pinterest.com: Arabesque Pattern](https://www.pinterest.com/artoric/arabesque-pattern/)

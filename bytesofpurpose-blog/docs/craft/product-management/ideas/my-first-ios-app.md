@@ -14,17 +14,17 @@ draft: true
 
   
 - [ ] Build my first iPhone app ...
-    - [ ] [appcoda.com — Build Your First App](https://www.appcoda.com/learnswift/build-your-first-app.html)
+    - [ ] [appcoda.com: Build Your First App](https://www.appcoda.com/learnswift/build-your-first-app.html)
 * [ ] Basic IOS App
-    * [ ] [appcoda.com — Build Your First App](https://www.appcoda.com/learnswift/build-your-first-app.html)
+    * [ ] [appcoda.com: Build Your First App](https://www.appcoda.com/learnswift/build-your-first-app.html)
 
 
 Iphone Calendar Application 
 - [ ] Should I make my own iPhone calendar app / dashboard ...
 - [ ] Should I make a web app for this?
-	- [ ] [GitHub — patchthecode/JTAppleCalendar](https://github.com/patchthecode/JTAppleCalendar/wiki/Tutorials)
+	- [ ] [GitHub: patchthecode/JTAppleCalendar](https://github.com/patchthecode/JTAppleCalendar/wiki/Tutorials)
 - [ ] Can I make a simple iPhone app that reads files from dropbox …
 	- [ ] How do I build a reusable widget …
 - [ ] Tap into iCloud rest APIs and make a web app based calendar!
-	- [apple.stackexchange.com — Can I Access Icloud Drive Files From Non Apple Device](https://apple.stackexchange.com/questions/347891/can-i-access-icloud-drive-files-from-non-apple-device)
+	- [apple.stackexchange.com: Can I Access Icloud Drive Files From Non Apple Device](https://apple.stackexchange.com/questions/347891/can-i-access-icloud-drive-files-from-non-apple-device)
 	

@@ -12,7 +12,7 @@ sidebar_position: 1
 >
 > Lifecycle: `proposed` → `designed` → `draft` → **`running`** → `analyzing` → `concluded` → `rolled-out` / `abandoned`
 
-Does the **presentation** of the coffee CTA — a plain text link vs. a styled button —
+Does the **presentation** of the coffee CTA, a plain text link vs. a styled button,
 change how often readers click through to PayPal? Both arms show the **same** copy
 ("Buy me a $5 coffee ☕") on the **/support** page; the only thing that varies is whether
 that copy renders as an inline text link or a prominent button.
@@ -41,8 +41,8 @@ that copy renders as an inline text link or a prominent button.
 
 The coffee CTA is the blog's primary monetization/appreciation surface, now consolidated
 onto the dedicated **/support** page alongside the other channel CTAs (GitHub, LinkedIn,
-Shopify). Presentation is a cheap, single-dimension lever to test — no copy, flow, or
-destination change — so it isolates the effect of visual prominence. The result decides
+Shopify). Presentation is a cheap, single-dimension lever to test, no copy, flow, or
+destination change, so it isolates the effect of visual prominence. The result decides
 how the coffee CTA should render going forward; a null result is still useful (keep the
 quieter link style that visually matches the sibling channel CTAs).
 
@@ -60,7 +60,7 @@ destination (PayPal donate form, **$5**) is identical, so any difference is attr
 presentation alone.
 
 ### Metric
-- **Primary (conversion):** `support button clicked` — fired on the CoffeeButton's
+- **Primary (conversion):** `support button clicked`, fired on the CoffeeButton's
   `onClick`, tagged with `variant`, `surface: 'support-page'`, and
   `$feature/support-button-copy`. This is the action we care about (intent to donate), one
   step before leaving for PayPal.
@@ -68,7 +68,7 @@ presentation alone.
   `CoffeeButton` reads the flag via `resolveVariant` → `getFeatureFlag`.
 - **Guardrail:** none meaningful for a presentation swap.
 
-### Placement / injection point — and why here
+### Placement / injection point, and why here
 - **Component:** `src/components/Support/CoffeeButton` (`<CoffeeButton/>`). **Page:** the
   **/support** page (`src/pages/support.tsx`), rendered as the coffee channel's CTA.
 - **Why this placement:** the /support page is the single, intentional home for the coffee
@@ -89,11 +89,11 @@ presentation alone.
 
 ### Sample size & duration
 - Low-traffic blog, so expect this to need several weeks to reach significance. Don't
-  call it on a handful of clicks — defer to PostHog's experiment significance view. Note
+  call it on a handful of clicks, defer to PostHog's experiment significance view. Note
   the effective sample for the **presentation** test starts at 2026-06-01, not 2026-05-31.
 
 ## 4. Risks & decisions
-- **SSR shows control first paint** (flags resolve client-side). Accepted — the control is
+- **SSR shows control first paint** (flags resolve client-side). Accepted, the control is
   a link and the test is a button, so there is a possible presentation flash on bucket-in;
   acceptable for a low-traffic blog.
 - **Anonymous ids:** assignment is per-browser, not per-person. Fine for a blog.
@@ -112,15 +112,15 @@ presentation alone.
 | 2026-05-31 | designed | original **copy** hypothesis + design captured (footer `<Support/>`, "coffee" vs "support the dev") |
 | 2026-05-31 | injection point | `<Support/>` read `EXPERIMENTS['support-button-copy']` via `resolveVariant`; conversion tagged with variant |
 | 2026-05-31 | playwright validated | both variants rendered the right copy (`support-ab-test.spec.ts`); event ingestion proven separately |
-| 2026-05-31 | draft created | PostHog experiment **id 374363**, linked flag 696584, 50/50, goal `support button clicked` — via `create_experiment.py --create`, read-back validated |
-| 2026-05-31 | **running** | launched 19:16:55 UTC (`create_experiment.py --launch`) — bucketing real traffic 50/50 |
+| 2026-05-31 | draft created | PostHog experiment **id 374363**, linked flag 696584, 50/50, goal `support button clicked`, via `create_experiment.py --create`, read-back validated |
+| 2026-05-31 | **running** | launched 19:16:55 UTC (`create_experiment.py --launch`), bucketing real traffic 50/50 |
 | 2026-05-31 | live | site deployed to gh-pages (PostHog on, bot filter ON). Doc kept `draft:true` (hidden). |
 | 2026-05-31 | analyzing | first data read: 3/3 exposure split (clean), 0 conversions. Pipeline confirmed. |
-| 2026-06-01 | **re-scoped (copy → presentation)** | Experiment pivoted from a copy test to a **presentation** test: both arms now show identical copy ("Buy me a $5 coffee ☕"); `control` = plain text **link**, `test` = styled **button**. Moved to the **/support** page coffee CTA (`src/components/Support/CoffeeButton`); footer `<Support/>` + navbar `NavbarCoffee` surfaces retired from the flag. PayPal amount raised to **$5**. **Flag key + conversion event name unchanged** for funnel continuity — so pre-2026-06-01 data is OLD-copy-test data and excluded from the presentation analysis. |
+| 2026-06-01 | **re-scoped (copy → presentation)** | Experiment pivoted from a copy test to a **presentation** test: both arms now show identical copy ("Buy me a $5 coffee ☕"); `control` = plain text **link**, `test` = styled **button**. Moved to the **/support** page coffee CTA (`src/components/Support/CoffeeButton`); footer `<Support/>` + navbar `NavbarCoffee` surfaces retired from the flag. PayPal amount raised to **$5**. **Flag key + conversion event name unchanged** for funnel continuity, so pre-2026-06-01 data is OLD-copy-test data and excluded from the presentation analysis. |
 
 ## 6. Outcome
 
-*Pending — collecting presentation-test data since 2026-06-01.* Will record: exposure +
+*Pending, collecting presentation-test data since 2026-06-01.* Will record: exposure +
 conversion split by variant (filtered to ≥2026-06-01), conversion-rate lift, PostHog
 significance, the decision, and what was rolled out.
 

@@ -23,7 +23,7 @@ function normalize(href: string): string {
 }
 
 /** True when a leaf doc link is premium (gated). Works in production (the plugin data is
- *  populated there — premium docs ship encrypted). */
+ *  populated there, and premium docs ship encrypted). */
 export function useIsPremium(href?: string): boolean {
   const premium = usePremiumPermalinks();
   if (!href) return false;
@@ -34,7 +34,7 @@ export function LockBadge(): React.JSX.Element {
   return (
     <span
       className={styles.lockBadge}
-      title="Premium — sign in with LinkedIn to unlock"
+      title="Premium: sign in with LinkedIn to unlock"
       aria-label="premium">
       🔒
     </span>

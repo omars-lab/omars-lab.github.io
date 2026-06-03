@@ -51,7 +51,7 @@ While companies publish their "leadership principles" on websites and in job des
 
 ### Why Companies Care About Leadership Principles
 
-Leadership principles aren't just nice-to-have qualities—they're directly tied to business outcomes:
+Leadership principles aren't just nice-to-have qualities, they're directly tied to business outcomes:
 
 - **Risk Mitigation**: Leaders who demonstrate these principles are less likely to make costly mistakes
 - **Team Performance**: Strong leadership principles correlate with higher team productivity and retention
@@ -406,7 +406,7 @@ Leaders who prefer action over analysis, making decisions quickly and taking cal
 
 ## The Natural Friction Between Leadership Principles
 
-One of the most sophisticated aspects of leadership evaluation is understanding how these principles create natural tensions. Companies don't want leaders who blindly follow one principle at the expense of others—they want leaders who can navigate these tensions intelligently.
+One of the most sophisticated aspects of leadership evaluation is understanding how these principles create natural tensions. Companies don't want leaders who blindly follow one principle at the expense of others, they want leaders who can navigate these tensions intelligently.
 
 ### Key Friction Points
 
@@ -574,7 +574,7 @@ Be aware of these patterns that companies watch for:
 
 Understanding leadership principles goes far beyond memorizing company values. Companies are looking for evidence of these principles in action, demonstrated through specific behaviors, decisions, and outcomes. By preparing stories that authentically showcase these principles, you can demonstrate not just that you know what good leadership looks like, but that you've actually practiced it.
 
-The key is to be genuine—companies can detect when candidates are trying to fit their stories to what they think the interviewer wants to hear. Focus on real experiences where you demonstrated these principles, even if the outcomes weren't perfect. Companies value authenticity and learning from experience as much as they value success.
+The key is to be genuine, companies can detect when candidates are trying to fit their stories to what they think the interviewer wants to hear. Focus on real experiences where you demonstrated these principles, even if the outcomes weren't perfect. Companies value authenticity and learning from experience as much as they value success.
 
 <details>
 <summary>🤖 AI Metadata (Click to expand)</summary>

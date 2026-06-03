@@ -4,6 +4,7 @@ import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
@@ -16,13 +17,34 @@ function HomepageHeader() {
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         {/* Two-space chooser (folded in from the old /welcome page): Craft = what I
-            impact (the outward work, shared); Self = who I am (the inward journey). */}
+            impact (the outward work, shared); Self = who I am (the inward journey).
+            Each card leads with an arched illustration, then title + body. */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
+            <div className={styles.chooserCardImageWrap}>
+              <img
+                className={styles.chooserCardImage}
+                src={useBaseUrl('/img/cards/craft.png')}
+                alt="Omar at his desk, headphones on, writing code"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+            </div>
             <div className={styles.chooserCardTitle}>💻 Discover My Craft</div>
-            <p className={styles.chooserCardBody}>What I build — and share.</p>
+            <p className={styles.chooserCardBody}>What I build, and share.</p>
           </Link>
           <Link className={styles.chooserCard} to="/self">
+            <div className={styles.chooserCardImageWrap}>
+              <img
+                className={styles.chooserCardImage}
+                src={useBaseUrl('/img/cards/self.png')}
+                alt="Omar standing in prayer on a rug at home"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+            </div>
             <div className={styles.chooserCardTitle}>🪞 Discover My Journey</div>
             <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
@@ -70,7 +92,7 @@ export default function Home(): React.JSX.Element {
 
   return (
     <Layout
-      description="Software engineering docs, blog posts, and system designs by Omar Eid — purposeful code, one byte at a time.">
+      description="Software engineering docs, blog posts, and system designs by Omar Eid: purposeful code, one byte at a time.">
       {/* Raw <title> overrides Docusaurus' templated "<title> | <siteTitle>" so
           the homepage browser tab reads exactly "Omars Blog". */}
       <Head>

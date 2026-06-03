@@ -286,7 +286,7 @@ Calendar/
 The Daily Todo Carry Over prompt represents a **mature, production-ready solution** for automated task management. By combining sophisticated business logic with robust validation and error handling, it transforms the chaotic process of managing incomplete tasks into a streamlined, reliable workflow.
 
 ### 🎯 Why This Prompt Works
-The prompt's strength lies in its **comprehensive approach**: it doesn't just move tasks—it organizes content, extracts meeting notes, preserves context, and maintains data integrity throughout the process.
+The prompt's strength lies in its **comprehensive approach**: it doesn't just move tasks, it organizes content, extracts meeting notes, preserves context, and maintains data integrity throughout the process.
 
 ### 🏆 Key Takeaways
 | Benefit | Impact | Value |

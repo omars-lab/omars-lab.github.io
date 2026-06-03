@@ -29,7 +29,7 @@ export function openSignInModal(opts: SignInModalOptions = {}): void {
 function SignInModalImpl(): React.JSX.Element | null {
   const [open, setOpen] = React.useState(false);
   const [what, setWhat] = React.useState<string>('');
-  // Whether the reader has already pressed "make this public" this open — flips the
+  // Whether the reader has already pressed "make this public" this open, which flips the
   // button to a thank-you state so they can't fire the event repeatedly.
   const [interested, setInterested] = React.useState(false);
 
@@ -43,7 +43,7 @@ function SignInModalImpl(): React.JSX.Element | null {
       what: what || undefined,
     });
     setInterested(true);
-    showToast('Noted — thanks for the nudge!', {icon: '🙌'});
+    showToast('Noted, thanks for the nudge!', {icon: '🙌'});
   }, [what]);
 
   React.useEffect(() => {
@@ -90,7 +90,7 @@ function SignInModalImpl(): React.JSX.Element | null {
         <p className={styles.body}>
           {what ? `${what} is ` : 'This piece is '}
           one I put extra care into, so it’s reserved for signed-in readers. Sign in
-          with LinkedIn to unlock it — no password, and your email is only used to say
+          with LinkedIn to unlock it. No password, and your email is only used to say
           hello.
         </p>
         <button
@@ -108,7 +108,7 @@ function SignInModalImpl(): React.JSX.Element | null {
           onClick={registerInterest}
           disabled={interested}>
           {interested
-            ? '✓ Thanks — I’ll take the hint'
+            ? '✓ Thanks, I’ll take the hint'
             : 'Or: tell me you’d rather this were free'}
         </button>
         <button type="button" className={styles.dismiss} onClick={close}>

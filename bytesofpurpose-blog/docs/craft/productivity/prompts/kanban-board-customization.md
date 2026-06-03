@@ -303,7 +303,7 @@ Uses proper layering for optimal rendering:
 The Kanban Board Customization system represents a **mature, production-ready solution** for visual project management. By combining professional SVG generation with intelligent task card creation and flexible customization options, it transforms the complex process of creating visual project boards into a simple, reliable workflow.
 
 ### 🎯 Why This System Works
-The system's strength lies in its **comprehensive approach**: it doesn't just create SVGs—it generates professional-quality boards with proper layering, styling, and customization that are ready for immediate use.
+The system's strength lies in its **comprehensive approach**: it doesn't just create SVGs, it generates professional-quality boards with proper layering, styling, and customization that are ready for immediate use.
 
 ### 🏆 Key Takeaways
 | Benefit | Impact | Value |

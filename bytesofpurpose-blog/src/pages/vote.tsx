@@ -16,14 +16,14 @@ export default function VotePage() {
   }, []);
 
   // Ideas come from the generated data file (scripts/generate-ideas-data.js),
-  // which scans the `ideas/` folder at build time — the same pipeline as the
+  // which scans the `ideas/` folder at build time, the same pipeline as the
   // changelog page.
   const ideas = getAllIdeas();
 
   return (
     <Layout
       title="Vote on Post Ideas"
-      description="Tell me what to write next — vote on upcoming post ideas for the blog."
+      description="Tell me what to write next: vote on upcoming post ideas for the blog."
       noFooter={false}
     >
       <div className="container margin-vert--lg">
@@ -34,7 +34,7 @@ export default function VotePage() {
         </p>
         <p className={styles.signalNote}>
           <em>
-            Votes are signal-only for now — clicking 👍 records your interest
+            Votes are signal-only for now; clicking 👍 records your interest
             (no live tally is shown yet).
           </em>
         </p>

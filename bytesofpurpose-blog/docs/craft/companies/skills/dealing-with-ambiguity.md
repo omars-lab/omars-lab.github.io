@@ -19,7 +19,7 @@ Ambiguity usually comes from:
 - **Evolving customer needs** - Changing requirements and expectations
 - **Immature technology** - New technologies with uncertain capabilities
 
-The key is to **not freeze** in ambiguous situations—instead, clarify what is known and start from there.
+The key is to **not freeze** in ambiguous situations, instead, clarify what is known and start from there.
 
 ## Core Approach
 
@@ -72,7 +72,7 @@ Be explicit about lessons learned from pivots and changes.
 
 ### Search Customer Experience
 
-**Problem**: People were abandoning their search requests on amazon.com for fashion products. How to solve it was not clear—we didn't have clear goals.
+**Problem**: People were abandoning their search requests on amazon.com for fashion products. How to solve it was not clear, we didn't have clear goals.
 
 **Approach**: Ran multiple experiments that taught us:
 - How people perceive ads

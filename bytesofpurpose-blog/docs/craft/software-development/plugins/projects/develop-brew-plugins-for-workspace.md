@@ -52,5 +52,5 @@ draft: true
 	* [x] Start moving cron stuff for brew formula ... @done(2022-04-04 04:35 PM)
 	* [ ] Test it ...
 	* Limitation for cron running fever */#
-* [ ] [google.com — Search](https://www.google.com/search?q=com.apple.launchd.calendarinterval&pws=0)
+* [ ] [google.com: Search](https://www.google.com/search?q=com.apple.launchd.calendarinterval&pws=0)
 * [ ] Update cron to use brew ... / have brew install in cron ...

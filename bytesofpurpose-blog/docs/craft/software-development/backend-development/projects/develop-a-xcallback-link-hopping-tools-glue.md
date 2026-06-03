@@ -38,7 +38,7 @@ I need a tool to help me manage all my call backs / different urls across apps /
 - [x] Add python logging  @done(2023-01-09 09:09 AM)
 - [ ] Add log rotation?
 - [ ] Add glue debug window ...
-	- [ ] [Launch iTerm2 and Run Command — iTerm2 Python API 0.26 documentation](https://iterm2.com/python-api/examples/launch_and_run.html?highlight=run)
+	- [ ] [Launch iTerm2 and Run Command: iTerm2 Python API 0.26 documentation](https://iterm2.com/python-api/examples/launch_and_run.html?highlight=run)
 
 # Tags
 - [x] I should make special annotations I add to files ... to determine app to open with + file Id ... @done(2023-01-09T09:12:59-06:00)

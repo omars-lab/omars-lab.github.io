@@ -4,11 +4,11 @@ import {useAuth} from '@site/src/lib/auth';
 import {openSignInModal} from '@site/src/components/SignInModal';
 import styles from './styles.module.css';
 
-// <Premium> — author-facing INLINE premium wrapper for marking a block within an otherwise
+// <Premium>: author-facing INLINE premium wrapper for marking a block within an otherwise
 // free doc. Signed-in readers see the children; anonymous readers see a blurred sneak-peek
 // with a lock overlay, and clicking opens the sign-in modal.
 //
-// IMPORTANT — soft vs hard gate:
+// IMPORTANT, soft vs hard gate:
 //   • Whole-doc `premium: true` frontmatter is the HARD gate: the body is encrypted at
 //     compile time and never ships in clear (see PremiumGate + rehype-premium-encrypt).
 //   • This <Premium> inline wrapper is a SOFT gate: the children ARE in the bundle, just
@@ -34,7 +34,7 @@ function PremiumImpl({children}: {children: React.ReactNode}): React.JSX.Element
           openModal();
         }
       }}
-      aria-label="Premium section — sign in with LinkedIn to unlock">
+      aria-label="Premium section: sign in with LinkedIn to unlock">
       <span className={styles.blurred} aria-hidden="true">
         {children}
       </span>

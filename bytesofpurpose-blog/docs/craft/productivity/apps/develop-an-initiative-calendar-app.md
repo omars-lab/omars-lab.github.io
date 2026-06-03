@@ -16,8 +16,8 @@ draft: true
 # Calendar
 - [ ] Make calendar (web) app to organize my initiatives ... 
 	- [ ] NotePlan too limiting!
-- [ ] [GitHub — serhii-londar/open-source-mac-os-apps](https://github.com/serhii-londar/open-source-mac-os-apps)
-	- [ ] [GitHub — ekreutz/CornerCal](https://github.com/ekreutz/CornerCal)
+- [ ] [GitHub: serhii-londar/open-source-mac-os-apps](https://github.com/serhii-londar/open-source-mac-os-apps)
+	- [ ] [GitHub: ekreutz/CornerCal](https://github.com/ekreutz/CornerCal)
 
 
 # [#Developing] Calendar App
@@ -28,16 +28,16 @@ draft: true
 category: tool
 content:
   md5: 4667914e5f8e36ee5cbe0635c7ffef3d
-glue: [glue — Blueprints](https://glue/blueprints/#id.tool.terminal-cal)
+glue: [glue: Blueprints](https://glue/blueprints/#id.tool.terminal-cal)
 jira:
-  epic: [sacred-patterns.atlassian.net — THREAD 36](https://sacred-patterns.atlassian.net/browse/THREAD-36)
-  task: [sacred-patterns.atlassian.net — THREAD 54](https://sacred-patterns.atlassian.net/browse/THREAD-54)
+  epic: [sacred-patterns.atlassian.net: THREAD 36](https://sacred-patterns.atlassian.net/browse/THREAD-36)
+  task: [sacred-patterns.atlassian.net: THREAD 54](https://sacred-patterns.atlassian.net/browse/THREAD-54)
 priorities:
   - I need a smart calendar over terminal
 summary: Terminal Calendar
 tag: '#id.tool.terminal-cal'
 trello:
-  card: [trello.com — Hgu7he3t](https://trello.com/c/hgu7he3t)
+  card: [trello.com: Hgu7he3t](https://trello.com/c/hgu7he3t)
   done: false
   id: 63c8c880bddd340098cf2f6b
   list: 63c43d5498733701c29d3a12

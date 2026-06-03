@@ -14,7 +14,7 @@ draft: true
 * [x] iCloud text replacements are being updated … make sure only one laptop runs the shortcut updating stuff … for >2022-01-16 … @done(2022-04-02 11:16 PM)
 
 # Log Rotation
-* [ ] [richard-purves.com — Log Rotation Mac Admin Cheats Guide](https://richard-purves.com/2017/11/08/log-rotation-mac-admin-cheats-guide/)
+* [ ] [richard-purves.com: Log Rotation Mac Admin Cheats Guide](https://richard-purves.com/2017/11/08/log-rotation-mac-admin-cheats-guide/)
 
 * [ ] Change script so only 1 computer updates shortcuts >2022-01-16
 	* [ ] Should all clean them locally?

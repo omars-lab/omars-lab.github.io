@@ -7,7 +7,7 @@ import styles from './styles.module.css';
 // Draggable "Bookmark BytesOfPurpose" affordance.
 //
 // The link's href is a `javascript:` BOOKMARKLET. A page cannot auto-install a
-// bookmarklet (proven — see src/ingress-attribution-plan.md + test/e2e/bookmarklet-proof),
+// bookmarklet (proven; see src/ingress-attribution-plan.md + test/e2e/bookmarklet-proof),
 // so the user must DRAG this to their bookmarks bar. Clicking it would just run the JS
 // in-place (confusing), so we intercept the click and show a drag-instructions modal.
 //
@@ -16,7 +16,7 @@ import styles from './styles.module.css';
 
 // The bookmarklet body, minified into a single javascript: URL. When clicked from the
 // bookmarks bar it:
-//   1. sendBeacon()s a `bookmarklet_used` event STRAIGHT to PostHog ingestion — proven
+//   1. sendBeacon()s a `bookmarklet_used` event STRAIGHT to PostHog ingestion, proven
 //      to return {"status":"Ok"} (see test/e2e/bookmarklet-proof + the curl proof). This
 //      survives the imminent navigation and captures the click even if the user was on
 //      another origin where window.posthog doesn't exist.
@@ -46,7 +46,7 @@ function BookmarkletButtonImpl(): React.JSX.Element {
     posthogHost?: string;
   };
   // The bookmarklet should always return the user to the live site, even if they click
-  // it while on another origin — so target the production URL, not location.origin.
+  // it while on another origin, so target the production URL, not location.origin.
   const home = siteConfig.url + (siteConfig.baseUrl || '/').replace(/\/$/, '');
   const href = buildBookmarkletHref(
     posthogKey || '',
@@ -56,7 +56,7 @@ function BookmarkletButtonImpl(): React.JSX.Element {
 
   // React (18+) blocks `javascript:` URLs passed to href via JSX (replaces them with a
   // security-error string). Assign the bookmarklet href imperatively via refs after
-  // mount — setAttribute is not sanitized, and a real saved bookmarklet must be a
+  // mount: setAttribute is not sanitized, and a real saved bookmarklet must be a
   // javascript: URL. (Verified by test/e2e ingress-attribution bookmarklet tests.)
   const primaryRef = React.useRef<HTMLAnchorElement>(null);
   const targetRef = React.useRef<HTMLAnchorElement>(null);
@@ -66,7 +66,7 @@ function BookmarkletButtonImpl(): React.JSX.Element {
   }, [href, showHelp]);
 
   const onClick = (e: React.MouseEvent) => {
-    // Clicking runs the bookmarklet in-place (not useful) — intercept and teach the
+    // Clicking runs the bookmarklet in-place (not useful), so intercept and teach the
     // user to DRAG it instead.
     e.preventDefault();
     setShowHelp(true);
@@ -107,7 +107,7 @@ function BookmarkletButtonImpl(): React.JSX.Element {
             <p className={styles.body}>
               <strong>Drag</strong> the button below up to your{' '}
               <strong>bookmarks bar</strong> 👆 to save it. Clicking it there later brings
-              you back here — and helps us see that bookmarks bring readers back.
+              you back here, and it helps us see that bookmarks bring readers back.
             </p>
             <div className={styles.pointer} aria-hidden="true">⤴︎</div>
             <a

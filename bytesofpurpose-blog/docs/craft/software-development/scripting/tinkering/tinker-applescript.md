@@ -19,7 +19,7 @@ draft: true
 	- [x] Dig into paste 2 ( [pasteapp.me](https://pasteapp.me/) ) @done(2018-10-03 11:37 AM)
 		- It syncs to icloud ... so it probably cant be used across mac users on the same laptop with different icloud accounts ...
 			- [x] Actually tested with trial ... it doesnt ... @done(2018-10-03 11:37 AM)
-	- [x] Check this out ... some dude has a script to write to a specific file ... ( [mackungfu.org — Sharing The Clipboard Between Accounts](http://www.mackungfu.org/sharing-the-clipboard-between-accounts) ) @done(2018-10-04 03:37 PM)
+	- [x] Check this out ... some dude has a script to write to a specific file ... ( [mackungfu.org: Sharing The Clipboard Between Accounts](http://www.mackungfu.org/sharing-the-clipboard-between-accounts) ) @done(2018-10-04 03:37 PM)
 		- [-] Might have to write my own script and latch onto command c @done(2018-10-04 03:37 PM)
 	- [x] Have a load and unload script instead of reacting to logon and keep track of whats loaded @done(2018-10-04 02:32 PM)
 	- [x] Create shell scripts to manage files that need to be synced to clipboard accross two users @done(2018-10-04 03:38 PM)

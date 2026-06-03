@@ -5,7 +5,7 @@ authors: [oeid]
 tags: []
 draft: true
 date: 2022-05-30T10:00
-description: 'A development initiative for building Quip Live Apps — examples, the React/Quip model, and lessons from threading data through.'
+description: 'A development initiative for building Quip Live Apps, examples, the React/Quip model, and lessons from threading data through.'
 ---
 
 # Building Quip Live Apps

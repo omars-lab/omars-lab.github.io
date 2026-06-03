@@ -138,4 +138,4 @@ After completing research, you should have enough information to:
 
 ---
 
-**Remember**: Research is not about perfection—it's about gathering enough information to make an informed decision about whether and how to proceed with an idea.
+**Remember**: Research is not about perfection, it's about gathering enough information to make an informed decision about whether and how to proceed with an idea.

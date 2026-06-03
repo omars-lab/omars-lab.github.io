@@ -9,5 +9,5 @@ draft: true
 ---
 
 - [x] Tinker with Sed Branching ... @done(2022-04-05T21:54:23-05:00)
-	- [Stack Overflow — Explain This Sed Conditional Branching Behavior](https://stackoverflow.com/questions/46981555/explain-this-sed-conditional-branching-behavior)
-	- [gnu.org — Sed](https://www.gnu.org/software/sed/manual/sed.html#Branching-and-flow-control)
+	- [Stack Overflow: Explain This Sed Conditional Branching Behavior](https://stackoverflow.com/questions/46981555/explain-this-sed-conditional-branching-behavior)
+	- [gnu.org: Sed](https://www.gnu.org/software/sed/manual/sed.html#Branching-and-flow-control)

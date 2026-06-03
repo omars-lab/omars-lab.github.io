@@ -19,9 +19,9 @@ I need a portfolio website ... this document serves as my initial plan to put on
 ## Infrastructure & Deployment
 - [x] Routing apex to subdomain @done(2021-04-12 21:45 PM) #usedShortcut 
 - [x] Make XMLHttpRequest async @done(2021-04-12 21:45 PM) #usedShortcut 
-	- [thisinterestsme.com — Synchronous Xmlhttprequest](https://thisinterestsme.com/synchronous-xmlhttprequest/)
+	- [thisinterestsme.com: Synchronous Xmlhttprequest](https://thisinterestsme.com/synchronous-xmlhttprequest/)
 - [x] Make automate build for my portfolio using codedeploy @done(2021-04-12 21:58 PM) #usedShortcut 
-	- [codelocker.net — Aws Codebuild Buildspecyml To Push Files To S3](https://www.codelocker.net/p/1912/aws-codebuild-buildspecyml-to-push-files-to-s3/)
+	- [codelocker.net: Aws Codebuild Buildspecyml To Push Files To S3](https://www.codelocker.net/p/1912/aws-codebuild-buildspecyml-to-push-files-to-s3/)
 - [x] Setup a code pipeline... @done(2021-04-12 21:58 PM) #usedShortcut 
 	- A code build is just a build stage ...
 	- A pipeline ... is what triggers the build ...
@@ -38,6 +38,6 @@ I need a portfolio website ... this document serves as my initial plan to put on
 - A pipeline ... is what triggers the build ...
 
 ## Resources
-- [mui.com — Pricing](https://mui.com/pricing/)
-- [thisinterestsme.com — Synchronous Xmlhttprequest](https://thisinterestsme.com/synchronous-xmlhttprequest/)
-- [codelocker.net — Aws Codebuild Buildspecyml To Push Files To S3](https://www.codelocker.net/p/1912/aws-codebuild-buildspecyml-to-push-files-to-s3/)
+- [mui.com: Pricing](https://mui.com/pricing/)
+- [thisinterestsme.com: Synchronous Xmlhttprequest](https://thisinterestsme.com/synchronous-xmlhttprequest/)
+- [codelocker.net: Aws Codebuild Buildspecyml To Push Files To S3](https://www.codelocker.net/p/1912/aws-codebuild-buildspecyml-to-push-files-to-s3/)

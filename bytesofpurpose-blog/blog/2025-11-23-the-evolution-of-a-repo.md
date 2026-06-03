@@ -8,13 +8,13 @@ date: 2025-11-23T10:00
 draft: false
 ---
 
-Every codebase starts somewhere—often as a quick prototype or exploratory project. But as it grows, evolves, and accumulates contributors, it needs to mature. Understanding where your repository sits in its maturity lifecycle and knowing how to evolve it to the next phase is crucial for maintaining a healthy, productive codebase.
+Every codebase starts somewhere, often as a quick prototype or exploratory project. But as it grows, evolves, and accumulates contributors, it needs to mature. Understanding where your repository sits in its maturity lifecycle and knowing how to evolve it to the next phase is crucial for maintaining a healthy, productive codebase.
 
 <!-- truncate -->
 
 ## Why Repository Maturity Matters
 
-A mature repository isn't just about having tests or documentation—it's about creating an environment where developers can work efficiently, confidently, and sustainably. An immature codebase slows down development, increases bugs, and makes onboarding new contributors difficult. Conversely, a mature codebase enables faster iteration, reduces risk, and scales with your team.
+A mature repository isn't just about having tests or documentation. It's about creating an environment where developers can work efficiently, confidently, and sustainably. An immature codebase slows down development, increases bugs, and makes onboarding new contributors difficult. Conversely, a mature codebase enables faster iteration, reduces risk, and scales with your team.
 
 ## The Repository Maturity Model
 
@@ -352,7 +352,7 @@ You might be ready to evolve to the next phase if:
 
 ## Conclusion
 
-Repository evolution is an ongoing journey, not a destination. The goal isn't to reach Phase 5 immediately—it's to ensure your repository's maturity matches your team's needs and the project's requirements.
+Repository evolution is an ongoing journey, not a destination. The goal isn't to reach Phase 5 immediately. It's to ensure your repository's maturity matches your team's needs and the project's requirements.
 
 Start by honestly assessing where your repository currently sits, then pick one transition to focus on. Use the checklists and examples above as a guide, but adapt them to your specific context and constraints.
 

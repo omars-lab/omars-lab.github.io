@@ -3,7 +3,7 @@
 # This doc is BOTH the experiment's design and its living timeline.
 slug: /development/projects/experiments/experiment-<flag-key>
 title: '<Experiment title>'
-description: 'Template for an experiment doc that captures both the design and the living timeline — copy it per experiment and fill it in.'
+description: 'Template for an experiment doc that captures both the design and the living timeline, copy it per experiment and fill it in.'
 authors: [oeid]
 tags: [experiments, ab-testing]
 draft: true            # flip to false to publish on the blog
@@ -43,13 +43,13 @@ reconsider running it.
 Keep variants to a **single changed dimension** so the result is interpretable.
 
 ### Metric
-- **Primary (conversion):** `<event name>` — *why this is the right success signal.*
+- **Primary (conversion):** `<event name>`, *why this is the right success signal.*
 - **Guardrail(s):** `<metric(s) that must not regress>`.
 - **Exposure:** `$feature_flag_called` (recorded by `getFeatureFlag`).
 
-### Placement / injection point — *and why here*
+### Placement / injection point, *and why here*
 - **Component:** `src/components/<X>` · **Page(s):** `<path>`.
-- **Why this placement:** `<why this surface gives a clean, sufficient signal — traffic volume, proximity to the conversion, no confounding elements, etc.>`
+- **Why this placement:** `<why this surface gives a clean, sufficient signal, traffic volume, proximity to the conversion, no confounding elements, etc.>`
 - **Why NOT elsewhere:** `<surfaces we deliberately did not instrument, and why>`.
 
 ### Targeting & assignment
@@ -61,7 +61,7 @@ Keep variants to a **single changed dimension** so the result is interpretable.
   before calling significance. (Don't decide on a handful of events.)
 
 ## 4. Risks & decisions
-- SSR shows control first paint (flags resolve client-side) — acceptable?
+- SSR shows control first paint (flags resolve client-side), acceptable?
 - Anything that could confound the result, and how we mitigate it.
 - Rollback plan.
 
@@ -84,7 +84,7 @@ significance verdict, one-line read.
 
 ## 8. Decision
 
-*(decide-experiment fills this — the "how we made the call" record.)*
+*(decide-experiment fills this, the "how we made the call" record.)*
 **Decision:** … · **Date / by:** … · **Gates:** significance/sample/guardrails/SRM
 **Rationale:** `<why this option, incl. any override of the recommendation>`
 **Action → conclude-experiment:** `<flag→100% test | flag→100% control | none yet>` · **Revisit:** …

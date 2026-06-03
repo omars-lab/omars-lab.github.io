@@ -1,7 +1,7 @@
 ---
 slug: /companies/skills/dealing-with-challenges
 title: 'Dealing with Challenges'
-description: 'Frameworks for addressing and communicating about technical and professional challenges — useful for interviews and growth.'
+description: 'Frameworks for addressing and communicating about technical and professional challenges, useful for interviews and growth.'
 authors: [oeid]
 tags: [challenges, soft-skills, problem-solving, interviews, career, technical-challenges]
 date: '2025-10-02T00:00'
