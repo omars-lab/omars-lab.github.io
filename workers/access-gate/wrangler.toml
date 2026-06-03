@@ -12,11 +12,15 @@ main = "src/index.ts"
 compatibility_date = "2024-11-01"
 account_id = "e22f4531704a3141ddb150ac47eabc87"
 
-# Route the two API paths on the live blog host to this Worker. The same host is
-# fronted by GitHub Pages for everything else; only /api/* hits the Worker.
+# Route the API paths on the live blog host to this Worker. The same host is
+# fronted by GitHub Pages for everything else; only these paths hit the Worker.
+# NOTE: routes are explicit per-path (no /api/* wildcard), so ANY new endpoint must
+# be added here AND gated by the Access app (cf_access.py) — otherwise it 404s at the
+# GitHub Pages origin (no Worker) or, if routed but not gated, skips the LinkedIn flow.
 routes = [
   { pattern = "blog.bytesofpurpose.com/api/me", zone_name = "bytesofpurpose.com" },
   { pattern = "blog.bytesofpurpose.com/api/unlock-key", zone_name = "bytesofpurpose.com" },
+  { pattern = "blog.bytesofpurpose.com/api/redirect", zone_name = "bytesofpurpose.com" },
 ]
 
 # Public (non-secret) vars. TEAM_DOMAIN is the Zero Trust team domain (verified
