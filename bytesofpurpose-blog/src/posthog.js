@@ -10,7 +10,6 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import siteConfig from '@generated/docusaurus.config';
 import posthog from 'posthog-js';
-import {isInternalTester} from './internal-testers';
 
 if (ExecutionEnvironment.canUseDOM) {
   const {posthogKey, posthogHost, posthogTestMode} = siteConfig.customFields || {};
@@ -98,22 +97,24 @@ if (ExecutionEnvironment.canUseDOM) {
         // ---- Identity (Phase D): promote signed-in readers to real persons ----
         // The Cloudflare Worker behind Access vends the signed-in identity at
         // /api/me (validated against the team JWKS). With a valid Access JWT it
-        // returns {email}; we then identify() the visitor (person_profiles is
-        // 'identified_only', so this is what promotes an anonymous visitor to a
-        // real person) and, if that email is on the internal-tester roster,
-        // register is_internal so PostHog's internal-user filter hides our own
-        // traffic. Anonymous visitors get a 401 (Access redirects before the
-        // Worker runs) and no-op here. On localhost there is no Worker: the
-        // dev server answers /api/me with a 200 + the SPA fallback HTML, so
-        // r.json() throws a SyntaxError that the .catch swallows — the visitor
-        // stays anonymous either way. See src/internal-testers.ts + the
-        // premium-content-gating design.
+        // returns {email, isInternal}; we identify() the visitor (person_profiles
+        // is 'identified_only', so this promotes an anonymous visitor to a real
+        // person) and, when the Worker flags the email internal, register
+        // is_internal so PostHog's internal-user filter hides our own traffic. The
+        // roster lives in the Worker (workers/access-gate), NOT the public bundle.
+        // Anonymous visitors get a 401 (Access redirects before the Worker runs)
+        // and no-op here. In dev the /api/* proxy forwards to the real Worker via a
+        // service token, so this works on localhost too. See the
+        // premium-content-gating design + manage-infrastructure.
         fetch('/api/me', {credentials: 'include'})
           .then((r) => (r.ok ? r.json() : null))
           .then((d) => {
             if (!d?.email) return;
             ph.identify(d.email);
-            if (isInternalTester(d.email)) ph.register({is_internal: true});
+            // is_internal is now SERVER-authoritative: the Worker decides it from
+            // its private roster and returns {isInternal}. Keeps tester emails off
+            // the public bundle (was src/internal-testers.ts) and unspoofable.
+            if (d.isInternal) ph.register({is_internal: true});
           })
           .catch(() => {}); // localhost / anon / network: silently stay anonymous
       },

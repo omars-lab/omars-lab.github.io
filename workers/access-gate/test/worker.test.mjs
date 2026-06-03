@@ -96,13 +96,22 @@ test('access-gate JWT gate', async (t) => {
     assert.equal(r.status, 401);
   });
 
-  await t.test('valid token → /api/me returns email', async () => {
+  await t.test('valid token → /api/me returns email + isInternal=false for a reader', async () => {
     const jwt = await mint({email: 'reader@example.com', name: 'A Reader'});
     const r = await call('/api/me', {'Cf-Access-Jwt-Assertion': jwt});
     assert.equal(r.status, 200);
     const body = await r.json();
     assert.equal(body.email, 'reader@example.com');
     assert.equal(body.name, 'A Reader');
+    assert.equal(body.isInternal, false);
+  });
+
+  await t.test('/api/me flags a roster email as isInternal (case-insensitive)', async () => {
+    const jwt = await mint({email: 'Omar_Eid21@YAHOO.com'});
+    const r = await call('/api/me', {'Cf-Access-Jwt-Assertion': jwt});
+    assert.equal(r.status, 200);
+    const body = await r.json();
+    assert.equal(body.isInternal, true);
   });
 
   await t.test('valid token → /api/unlock-key vends the passphrase', async () => {
