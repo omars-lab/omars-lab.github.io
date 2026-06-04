@@ -316,8 +316,13 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     --ifm-col-width: 100%;
   }
 
-  /** In mobile view, turn off the side bar */
-  #__docusaurus > div.main-wrapper > div > div > div {
+  /** In mobile view, turn off the docs RIGHT sidebar (the table-of-contents).
+      Scoped to the docs TOC specifically — the previous broad selector
+      (`...> div > div > div`) also matched the content wrapper of STANDALONE
+      pages (/vote, /mindset, etc.), hiding their cards on mobile. */
+  .theme-doc-toc-mobile,
+  .col[class*='docItemCol'] ~ .col,
+  div[class*='tableOfContents'] {
     display: none;
   }
 }
