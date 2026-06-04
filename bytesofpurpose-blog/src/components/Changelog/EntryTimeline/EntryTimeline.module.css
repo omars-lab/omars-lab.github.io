@@ -147,20 +147,23 @@
     padding: 0.1rem 0.25rem;
   }
   
+  /* Readability floor on mobile: these timeline metadata labels were 9.6–10.4px
+     (0.6–0.65rem) — too small to read on a phone (audit-mobile #16, e.g. "500 days
+     thus far"). Bump to ~12.8px (0.8rem), the floor for secondary labels. */
   .durationLabel {
-    font-size: 0.65rem;
+    font-size: 0.8rem;
   }
-  
+
   .timelineDates {
     gap: 0.25rem;
   }
-  
+
   .timelineLabel {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
   }
-  
+
   .timelineDate {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
   
   .timelineDateItem {

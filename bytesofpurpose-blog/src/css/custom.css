@@ -393,3 +393,46 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     font-size: 0.95rem;        /* a touch smaller so common long titles fit one line */
   }
 }
+
+/* ==========================================================================
+   Doc-footer .row must not bleed past the article (audit-mobile #15). The doc
+   footer's tags + "Edit this page"/last-updated rows use Docusaurus' Bootstrap
+   `.row`, whose negative horizontal margin (the column gutter) isn't contained
+   on the narrow doc article — so the footer rendered ~16px wider than its
+   container at 375px (article scrollWidth 348 in clientWidth 332). Zero out the
+   gutter on the doc-footer rows so they stay inside the article box.
+   ========================================================================== */
+.theme-doc-footer .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ==========================================================================
+   Touch-target floor on mobile chrome (audit-mobile #17). The navbar toggle
+   (30x30), color-mode switch (32x32), LinkedIn auth pill (33x28) and footer
+   links (height 32) all rendered below the 44px WCAG-2.2 touch target on a
+   phone. Give the interactive chrome a >=44px effective target at mobile width
+   without changing the visual icon size (padding/min-size on the hit area).
+   Scoped to <=996px so desktop mouse density is untouched.
+   ========================================================================== */
+@media screen and (max-width: 996px) {
+  .navbar__toggle,
+  .navbar [class*='colorModeToggle'] button,
+  .navbar [class*='toggle'] button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  /* The custom auth control (sign-in pill / avatar) — give the tappable element room. */
+  .navbarAuthItem a,
+  .navbarAuthItem button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Footer links: 32px line-height boxes → pad to a 44px row so each is easily tapped. */
+  .footer__link-item {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
