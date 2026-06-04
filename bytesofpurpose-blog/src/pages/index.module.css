@@ -38,13 +38,16 @@ html[data-theme='dark'] .heroBanner {
   flex-wrap: wrap;
 }
 
-/* Three chooser cards in the hero (Craft / Journey / Thoughts). */
+/* Four chooser cards in the hero (Craft / Journey / Thoughts / Mindset), laid out
+   as a balanced 2×2 grid on desktop. The max-width holds exactly two cards
+   (2 × 340px + gap) per row so it never breaks to an unbalanced 3+1; the cards
+   stack to a single column on mobile (flex-wrap). */
 .chooser {
   display: flex;
   gap: 1.25rem;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 1040px;
+  max-width: 720px;
   margin: 0 auto;
 }
 

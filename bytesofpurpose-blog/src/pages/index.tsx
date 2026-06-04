@@ -16,10 +16,10 @@ function HomepageHeader() {
       <div className="container">
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        {/* Three-card chooser (folded in from the old /welcome page): Craft = what I
+        {/* Four-card chooser (folded in from the old /welcome page): Craft = what I
             impact (the outward work, shared); Self = who I am (the inward journey);
-            Thoughts = what I'm thinking lately (the blog). Each card leads with an
-            arched illustration, then title + body. */}
+            Thoughts = what I'm thinking lately (the blog); Mindset = the quotes that
+            move me. Each card leads with an arched illustration, then title + body. */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
             <div className={styles.chooserCardImageWrap}>
@@ -62,6 +62,20 @@ function HomepageHeader() {
             </div>
             <div className={styles.chooserCardTitle}>💭 Browse My Thoughts</div>
             <p className={styles.chooserCardBody}>What I'm thinking about lately.</p>
+          </Link>
+          <Link className={styles.chooserCard} to="/mindset">
+            <div className={styles.chooserCardImageWrap}>
+              <img
+                className={styles.chooserCardImage}
+                src={useBaseUrl('/img/cards/mindset.png')}
+                alt="Omar conducting an orchestra from the podium"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+            </div>
+            <div className={styles.chooserCardTitle}>🧠 Explore My Mindset</div>
+            <p className={styles.chooserCardBody}>The quotes that move me.</p>
           </Link>
         </div>
       </div>

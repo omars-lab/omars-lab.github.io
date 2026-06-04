@@ -1,0 +1,52 @@
+.intro {
+  max-width: 680px;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.placeholderNote {
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.quoteCard {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The quote itself — the visual anchor of the card. */
+.quote {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--ifm-heading-color);
+}
+
+.source {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* "Why it moved me" reflection. */
+.reflectionLabel {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.reflection {
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+  line-height: 1.6;
+}
