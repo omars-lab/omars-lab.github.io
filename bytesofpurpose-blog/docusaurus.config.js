@@ -105,6 +105,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // shows Self and vice-versa. The preset's default docs instance is disabled.
             docs: false,
             blog: {
+              // Served at /thoughts (matches the 'Thoughts' navbar item + the
+              // homepage "Browse My Thoughts" card). Old /blog/* URLs 301 → /thoughts/*
+              // via client-redirects below.
+              routeBasePath: 'thoughts',
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
               rehypePlugins: [rehypeTaskListLabels],
@@ -179,13 +183,17 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
       ],
-      // 🪞 Self — its OWN docs instance (introspective: faith + personal growth).
+      // 🪞 Journey — its OWN docs instance (introspective: faith + personal growth).
+      // Served at /journey (folder docs/journey). The plugin `id` stays 'self'
+      // internally so sidebarId/docsPluginId references don't churn; only the
+      // reader-facing path + route are 'journey'. Old /self/* URLs 301 → /journey/*
+      // via client-redirects below.
       [
         '@docusaurus/plugin-content-docs',
         {
           id: 'self',
-          path: 'docs/self',
-          routeBasePath: 'self',
+          path: 'docs/journey',
+          routeBasePath: 'journey',
           sidebarPath: require.resolve('./sidebars-self.js'),
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
@@ -463,7 +471,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/development/tinkering/tinkering", to: "/craft/product-management/tinkering"},
             {from: "/docs/entrepreneurship", to: "/craft/entrepreneurship"},
-            {from: "/docs/faith", to: "/self/faith"},
+            {from: "/docs/faith", to: "/journey/faith"},
             {from: "/docs/generative-ai", to: "/craft/generative-ai"},
             {from: "/docs/generative-ai/mental-models", to: "/craft/generative-ai/mental-models"},
             {from: "/docs/generative-ai/mental-models/ai-engineer-world-fair-2025", to: "/craft/generative-ai/mental-models/2025-06-15-ai-engineer-world-fair"},
@@ -471,7 +479,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/generative-ai/mental-models/learning-about-genai", to: "/craft/generative-ai/mental-models/2025-10-04-learning-about-genai"},
             {from: "/docs/generative-ai/mental-models/understanding-fundamentals-of-genai-systems", to: "/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai"},
             {from: "/docs/habits/habits-automating", to: "/craft/productivity/habits-automating"},
-            {from: "/docs/habits/habits-ideation", to: "/self/personal-growth/habits-ideation"},
+            {from: "/docs/habits/habits-ideation", to: "/journey/personal-growth/habits-ideation"},
             {from: "/docs/interview-prep", to: "/craft/interview-prep"},
             {from: "/docs/interview-prep/mental-models", to: "/craft/interview-prep/mental-models"},
             {from: "/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-dynamic-programming", to: "/craft/interview-prep/mental-models/data-structures-and-algorithms/understanding-dynamic-programming"},
@@ -498,8 +506,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape", to: "/craft/generative-ai/mental-models/2025-11-10-ai-framework-landscape"},
             {from: "/docs/mental-models/understanding-the-genai-domain/learning-about-genai", to: "/craft/generative-ai/mental-models/2025-10-04-learning-about-genai"},
             {from: "/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems", to: "/craft/generative-ai/mental-models/2025-07-30-understanding-the-fundamentals-of-genai"},
-            {from: "/docs/personal-growth", to: "/self/personal-growth"},
-            {from: "/docs/personal-growth/my-contributions", to: "/self/personal-growth/my-contributions"},
+            {from: "/docs/personal-growth", to: "/journey/personal-growth"},
+            {from: "/docs/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
             {from: "/docs/product-management", to: "/craft/product-management"},
             {from: "/docs/productivity", to: "/craft/productivity"},
             {from: "/docs/productivity/terminology", to: "/craft/productivity/terminology"},
@@ -518,16 +526,16 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/prompts/heal/docusaurus-maintenance-system", to: "/craft/blogging/prompts/docusaurus-maintenance-system"},
             {from: "/docs/prompts/meta/prompt-maturity-framework", to: "/craft/blogging/prompts/prompt-maturity-framework"},
             {from: "/docs/prompts/organize/daily-todo-carry-over", to: "/craft/productivity/prompts/daily-todo-carry-over"},
-            {from: "/docs/prompts/organize/personal-life-content-organizer", to: "/self/personal-growth/prompts/personal-life-content-organizer"},
+            {from: "/docs/prompts/organize/personal-life-content-organizer", to: "/journey/personal-growth/prompts/personal-life-content-organizer"},
             {from: "/docs/prompts/readme", to: "/craft/blogging/prompts"},
             {from: "/docs/prompts/refactor/role-refactoring-system", to: "/craft/blogging/prompts/role-refactoring-system"},
             {from: "/docs/scripting", to: "/craft/software-development/scripting"},
-            {from: "/docs/self", to: "/self"},
-            {from: "/docs/self/faith", to: "/self/faith"},
-            {from: "/docs/self/personal-growth", to: "/self/personal-growth"},
-            {from: "/docs/self/personal-growth/habits-ideation", to: "/self/personal-growth/habits-ideation"},
-            {from: "/docs/self/personal-growth/my-contributions", to: "/self/personal-growth/my-contributions"},
-            {from: "/docs/self/personal-growth/prompts/personal-life-content-organizer", to: "/self/personal-growth/prompts/personal-life-content-organizer"},
+            {from: "/docs/self", to: "/journey"},
+            {from: "/docs/self/faith", to: "/journey/faith"},
+            {from: "/docs/self/personal-growth", to: "/journey/personal-growth"},
+            {from: "/docs/self/personal-growth/habits-ideation", to: "/journey/personal-growth/habits-ideation"},
+            {from: "/docs/self/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
+            {from: "/docs/self/personal-growth/prompts/personal-life-content-organizer", to: "/journey/personal-growth/prompts/personal-life-content-organizer"},
             {from: "/docs/skills/preparing-for-interviews/interview-preparation-guide", to: "/craft/interview-prep/preparing"},
             {from: "/docs/skills/preparing-for-interviews/personal-story-bank", to: "/craft/interview-prep/preparing/personal-story-bank"},
             {from: "/docs/skills/preparing-for-interviews/pre-meditating-responses-for-leadership-questions", to: "/craft/interview-prep/preparing/pre-meditating-responses-for-leadership-questions"},
@@ -618,6 +626,20 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/techniques/tool-usage-techniques/establishing-tool-usage-patterns", to: "/craft/productivity/tool-usage/establishing-tool-usage-patterns"},
             {from: "/docs/techniques/tool-usage-techniques/tool-usage-techniques", to: "/craft/productivity/tool-usage"},
           ],
+          // Route renames (2026-06): the Self docs instance moved /self/* → /journey/*
+          // and the blog moved /blog/* → /thoughts/*. createRedirects runs for EVERY
+          // generated path, so every new /journey/* and /thoughts/* page gets a 301 from
+          // its old /self/* or /blog/* URL — old links and shares never break (CLAUDE.md
+          // tenet: a move is paired with a {from,to} redirect).
+          createRedirects(existingPath) {
+            if (existingPath.startsWith('/journey')) {
+              return [existingPath.replace(/^\/journey/, '/self')];
+            }
+            if (existingPath.startsWith('/thoughts')) {
+              return [existingPath.replace(/^\/thoughts/, '/blog')];
+            }
+            return undefined; // no redirect for other paths
+          },
         },
       ],
     ],
@@ -644,17 +666,28 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left',
             },
             {
-              label: 'Self',
+              // 'Journey' (the inward/personal docs instance, id 'self') — matches the
+              // homepage "Discover My Journey" card. Served at /journey (old /self/* 301s).
+              label: 'Journey',
               type: 'docSidebar', sidebarId: 'selfSidebar', docsPluginId: 'self',
               position: 'left',
             },
             {
-              label: 'Blog',
-              to: '/blog',
+              // 'Thoughts' (the blog, served at /thoughts) — matches the homepage
+              // "Browse My Thoughts" card.
+              label: 'Thoughts',
+              to: '/thoughts',
               position: 'left'
             },
             {
-              label: 'System Designs',
+              // 'Mindset' (the quotes-that-moved-me page) — matches the homepage
+              // "Explore My Mindset" card. Sits right after Thoughts.
+              label: 'Mindset',
+              to: '/mindset',
+              position: 'left'
+            },
+            {
+              label: 'Designs',
               to: '/designs',
               position: 'left'
             },

@@ -46,7 +46,7 @@ Follow this systematic approach to maximize your interview success:
 - [ ] **Review [Soft Skills Evaluation](/craft/companies/mental-models/skills/understanding-desireable-soft-skills)** - Learn the soft skills evaluation criteria
 
 ### Phase 2: Story Development
-- [ ] **Review your [🚀 My Contributions](/self/personal-growth/my-contributions)** - A portfolio of real impact to ground your interview stories
+- [ ] **Review your [🚀 My Contributions](/journey/personal-growth/my-contributions)** - A portfolio of real impact to ground your interview stories
 - [ ] **Build your [Personal Story Bank](/craft/interview-prep/preparing/personal-story-bank)** - Develop 2-3 STAR stories for each leadership principle
 - [ ] **Practice [Leadership Interview Prep](/craft/interview-prep/preparing/pre-meditating-responses-for-leadership-questions)** - Master the behavioral interview format
 - [ ] **Prepare [Interviewing the Interviewer](/craft/interview-prep/preparing/prepraring-questions-to-ask-interviewers)** - Develop thoughtful questions that demonstrate your interest

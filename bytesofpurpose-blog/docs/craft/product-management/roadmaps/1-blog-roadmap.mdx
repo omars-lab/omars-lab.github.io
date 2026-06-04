@@ -34,11 +34,33 @@ This document outlines the roadmap for developing and enhancing the blog platfor
     - [search.google.com: Search Analytics](https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Abytesofpurpose.com)
 - [ ] I need to figure out best terms to use in description for seo for each blog post ...
     - senior software engineer vs sde ...
-        [trends.google.as: Explore](https://trends.google.as/trends/explore?geo=US&q=senior%20sde,senior%20software%20engineer)
+        [Google Trends: senior sde vs senior software engineer](https://trends.google.as/trends/explore?geo=US&q=senior%20sde,senior%20software%20engineer)
     - principal software engineer vs sde ...
-        - [trends.google.as: Explore](https://trends.google.as/trends/explore?geo=US&q=Principal%20sde,Principal%20software%20engineer)
+        - [Google Trends: principal sde vs principal software engineer](https://trends.google.as/trends/explore?geo=US&q=Principal%20sde,Principal%20software%20engineer)
     - entry level
-        [trends.google.as: Explore](https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer,entry%20level%20software%20engineer)
+        [Google Trends: junior/entry-level software engineer terms](https://trends.google.as/trends/explore?geo=US&q=junior%20sde,junior%20software%20engineer)
+
+### SEO impact of URL renames (route changes are SEO-sensitive)
+
+> Renaming a URL is an SEO-sensitive change. When sections were renamed (Self to Journey,
+> Blog to Thoughts), the old paths (`/self/*`, `/blog/*`) were paired with 301 client
+> redirects so links, shares, and search rankings carry over. The open question: what is
+> the actual SEO cost of a rename, and how much of it the redirects recover.
+
+- [ ] **Discover the impact of renaming URLs WITHOUT redirects**: quantify what breaks if a
+  route is renamed and the old path is left to 404 (lost backlinks, lost ranking, lost
+  Search Console history, broken external/social shares). Establishes why the redirect
+  pairing is non-negotiable.
+- [ ] **Measure the impact of a rename WITH 301 redirects** (the path we took): does ranking
+  fully transfer, is there a temporary dip, how long until the new URL is the canonical one
+  in Google's index? Watch the `/self` to `/journey` and `/blog` to `/thoughts` renames in
+  Search Console as the live experiment.
+    - [search.google.com: Search Analytics](https://search.google.com/search-console/performance/search-analytics?resource_id=sc-domain%3Abytesofpurpose.com)
+- [ ] **Audit redirect coverage** after any rename: confirm every old permalink 301s to its
+  new home (the `createRedirects` in `docusaurus.config.js` handles wildcards; verify no
+  gaps), and submit the updated sitemap so the new URLs are recrawled.
+- [ ] **Write up the finding** as a decision note: a reusable rule for when a URL rename is
+  worth the SEO churn, and the redirect checklist to run every time.
 
 ### PostHog: person identification & profiles
 

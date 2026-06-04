@@ -86,18 +86,18 @@ function stripPrefix(seg) {
 
 function toPermalink(fullPath, docsDir, data) {
   // Docs are TWO separate instances: docs/craft/* serves under routeBasePath /craft,
-  // docs/self/* under /self (there is no /docs route). The first path segment under
+  // docs/journey/* under /journey (there is no /docs route). The first path segment under
   // docs/ IS the instance == its routeBasePath. A doc's permalink is
   //   /<instance> + <slug>           when slug is instance-relative (leading-slash), or
   //   /<instance>/<dir...>/<slug>    when slug renames just the last segment, or
   //   /<instance>/<dir...>           for an index file with no slug.
-  // e.g. docs/self/personal-growth/habits-reading.mdx (slug /personal-growth/habits-reading)
-  //        -> /self/personal-growth/habits-reading
+  // e.g. docs/journey/personal-growth/habits-reading.mdx (slug /personal-growth/habits-reading)
+  //        -> /journey/personal-growth/habits-reading
   //      docs/craft/README.mdx (slug /)  -> /craft
   const rel = path.relative(docsDir, fullPath).replace(/\.mdx?$/, '');
   const segs = rel.split(path.sep).map(stripPrefix);
 
-  const instance = segs[0]; // 'craft' | 'self' — the routeBasePath
+  const instance = segs[0]; // 'craft' | 'journey' — the routeBasePath
   const base = `/${instance}`;
   const bodySegs = segs.slice(1); // path within the instance
 

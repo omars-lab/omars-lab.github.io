@@ -103,13 +103,17 @@ The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working
 The docs are **two SEPARATE Docusaurus docs instances** (not one `/docs` instance):
 **`craft`** (how I see the world — the professional topics: generative-ai,
 software-development, product-management, productivity, blogging, interview-prep,
-companies, entrepreneurship) and **`self`** (how I see myself — faith, personal-growth).
+companies, entrepreneurship) and **`journey`** (how I see myself — faith, personal-growth;
+the plugin `id` is still `'self'` internally, but the folder/route are `journey`).
 Each is registered as its own `@docusaurus/plugin-content-docs` in `docusaurus.config.js`
 (`id: 'craft'` path `docs/craft` routeBasePath `/craft` sidebar `sidebars-craft.js`;
-`id: 'self'` path `docs/self` routeBasePath `/self` sidebar `sidebars-self.js`), and the
-preset's default docs is **disabled** (`docs: false`). Each navbar item is a `docSidebar`
-with its own `docsPluginId`, so **clicking Craft shows ONLY craft topics and Self ONLY
-self topics** — the two never mix. The **Welcome chooser is a standalone page**
+`id: 'self'` path `docs/journey` routeBasePath `/journey` sidebar `sidebars-self.js`), and the
+preset's default docs is **disabled** (`docs: false`). The navbar labels are **Craft** and
+**Journey** (the blog is **Thoughts** at `/thoughts`; the **Designs** blog at `/designs`).
+Each navbar item is a `docSidebar` with its own `docsPluginId`, so **clicking Craft shows
+ONLY craft topics and Journey ONLY journey topics** — the two never mix. (Old `/self/*` and
+`/blog/*` URLs 301 → `/journey/*` and `/thoughts/*` via the `createRedirects` in the
+client-redirects plugin.) The **Welcome chooser is a standalone page**
 (`src/pages/welcome.mdx`, served at `/welcome`, in NEITHER instance) with two CTAs
 ("discover my world" → `/craft`, "observe what I discovered about myself" → `/self`); it
 is the homepage CTA target. Below the instance level is the recurring per-topic folder

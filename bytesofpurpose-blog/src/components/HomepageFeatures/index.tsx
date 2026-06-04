@@ -42,7 +42,7 @@ const FeatureList: FeatureItem[] = [
         gain a few ideas, and provide feedback!
       </>
     ),
-    to: "/blog",
+    to: "/thoughts",
     buttonText: "Blog Posts"
   },
   {
