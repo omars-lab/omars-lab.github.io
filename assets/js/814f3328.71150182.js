@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkbytesofpurpose_blog=globalThis.webpackChunkbytesofpurpose_blog||[]).push([[67472],{55513:e=>{e.exports=JSON.parse('{"title":"Posts","items":[{"title":"\ud83c\udfd7\ufe0f The Evolution of a Repository: A Maturity Model","permalink":"/thoughts/evolution-of-a-repo","unlisted":false,"date":"2025-11-23T10:00:00.000Z"}]}')}}]);
