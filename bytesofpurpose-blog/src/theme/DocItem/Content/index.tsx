@@ -49,7 +49,10 @@ export default function DocItemContent({
         </header>
       ) : (
         // Content-supplied h1 lives inside MDXContent; render the control above it.
-        <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '-0.5rem'}}>
+        // A small positive gap (not the old -0.5rem pull-up) keeps the share row from
+        // cramming against content that opens with a card/callout, e.g. the premium gate
+        // (audit-mobile #20: share row collided with the "Premium content" card on mobile).
+        <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem'}}>
           <ShareButton surface="doc-title" title={shareTitle} description={shareDescription} />
         </div>
       )}

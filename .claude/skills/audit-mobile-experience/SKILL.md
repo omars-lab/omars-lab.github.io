@@ -277,6 +277,22 @@ If a surface is clean, say so **and paste the probe output** that proves it (a c
 without evidence violates the prove-don't-assert tenet). Fixes are a **separate, per-item
 approved follow-up** — this skill does not edit.
 
+### Track DEFERRED findings as GitHub issues (see the CLAUDE.md tenet)
+
+Findings **fixed in the same change** need no issue. For every finding that will **not** be
+fixed now:
+
+1. **Dedup first** — check the repo-root **`ISSUES.md`** index and
+   `gh issue list --search "<key terms>"`; if a matching open issue exists, comment on it,
+   don't duplicate.
+2. **Save the screenshot** to the Dropbox audit dir
+   `~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/<YYYY-MM-DD>/<finding-key>.png`
+   (a visual finding without a screenshot path is incomplete).
+3. **File** with `gh issue create` (label `bug`/`enhancement`, body = probe-evidence +
+   concrete fix + this skill's name/date + the Dropbox screenshot path). The PostToolUse
+   hook `gh-issue-index-hook.sh` auto-appends the new issue to `ISSUES.md`; fill in its
+   finding-key/title/source/screenshot columns.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |

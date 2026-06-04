@@ -349,3 +349,47 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .navbar__items--right [class*='navbarSearchContainer'] {
   order: 0;
 }
+
+/* ==========================================================================
+   Desktop reading measure (audit-desktop #21). The custom 3-column layout gives
+   the doc `main` ~60% of a 97.5% container, so on wide/ultrawide monitors body
+   text ran ~94 characters per line (over the ~80ch comfortable-reading ceiling)
+   and the reading column was stranded left in whitespace. Cap the prose measure
+   so lines wrap for readability; full-bleed elements (diagrams, the graph canvas,
+   tables, code) opt OUT so they still use the column width.
+   ========================================================================== */
+.theme-doc-markdown.markdown {
+  /* ~680px ≈ 70 characters of body text in this font — the readable measure. NB: the
+     `ch` unit overshoots here (this font's ch ≈ 10px, so 75ch computed to ~757px and
+     barely clamped the 749px column); a px measure is predictable. Verified: drops the
+     intro paragraph from ~94ch to ~70ch at 1440px (audit-desktop #21). */
+  max-width: 680px;
+}
+/* Let wide/visual content escape the prose cap and use the full column. */
+.theme-doc-markdown.markdown :is(pre, table, img, .container, figure, [class*='graph'], [class*='Graph'], [class*='excalidraw'], [class*='figma']) {
+  max-width: 100%;
+}
+/* Tablet/mobile: the column is already ~100% width and narrow, so the cap is a
+   no-op there — but keep it from ever exceeding the viewport. */
+@media screen and (max-width: 996px) {
+  .theme-doc-markdown.markdown {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Pager labels must not break mid-word (audit-mobile #19). The Docusaurus
+   Previous/Next pager renders the neighbor's title in a fixed-width card; a long
+   single word like "Entrepreneurship" was breaking to "Entrepreneursh"+"ip" at
+   375px. Wrap on word boundaries only, and ease the size on small screens.
+   ========================================================================== */
+.pagination-nav__label {
+  overflow-wrap: break-word;   /* break long words only as a last resort... */
+  word-break: normal;          /* ...never mid-token by default */
+  hyphens: auto;               /* if a word truly must break, hyphenate cleanly */
+}
+@media screen and (max-width: 480px) {
+  .pagination-nav__label {
+    font-size: 0.95rem;        /* a touch smaller so common long titles fit one line */
+  }
+}
