@@ -522,19 +522,19 @@ function checkTopicRoots() {
 }
 
 /**
- * Welcome drift: Craft and Self are two SEPARATE docs instances (routeBasePath /craft,
- * /self). The CHOOSER was folded into the homepage (`src/pages/index.tsx`) — its two CTA
- * cards must route readers into BOTH halves: the homepage must link to /craft AND /self.
+ * Welcome drift: Craft and Journey are two SEPARATE docs instances (routeBasePath /craft,
+ * /journey). The CHOOSER was folded into the homepage (`src/pages/index.tsx`) — its CTA
+ * cards must route readers into BOTH halves: the homepage must link to /craft AND /journey.
  * (A `to="/craft"` Link or an href both count.)
  */
 function checkWelcomeDrift() {
   const home = path.join(ROOT, 'src', 'pages', 'index.tsx');
   if (!fs.existsSync(home)) {
-    add('welcome-drift', 'src/pages/index.tsx', 'no homepage to check the Craft/Self chooser against');
+    add('welcome-drift', 'src/pages/index.tsx', 'no homepage to check the Craft/Journey chooser against');
     return;
   }
   const src = fs.readFileSync(home, 'utf8');
-  for (const half of ['/craft', '/self']) {
+  for (const half of ['/craft', '/journey']) {
     // a to="/craft", ](/craft), or href="/craft" all count as "leads into this half"
     const re = new RegExp(`(?:to=|\\]\\(|href=)["']${half}(?=[/"')\\s#?]|$)`);
     if (!re.test(src)) {

@@ -45,7 +45,7 @@ module.exports = function recentPostsPlugin(context, options) {
           title: String(data.title),
           description: data.description ? String(data.description) : '',
           date: new Date(data.date).toISOString(),
-          permalink: `/blog/${slug.replace(/^\//, '')}`,
+          permalink: `/thoughts/${slug.replace(/^\//, '')}`,
           tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         });
       }

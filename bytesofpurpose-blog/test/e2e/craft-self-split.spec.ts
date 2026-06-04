@@ -5,7 +5,7 @@ import { test, expect, Page } from '@playwright/test';
  *
  * The docs split into two halves, each its own navbar item + sidebar:
  *   - Craft (/craft) — outrospective: the professional topics.
- *   - Self  (/self)  — introspective: faith + personal growth.
+ *   - Self  (/journey)  — introspective: faith + personal growth.
  *
  * What this proves:
  *   1. The navbar has BOTH "Craft" and "Self" (and no legacy "Learn").
@@ -77,7 +77,7 @@ test.describe('Craft/Self — sidebar isolation', () => {
   test('Self sidebar shows ONLY self topics (no Craft bleed-through)', async ({
     page,
   }) => {
-    await page.goto('/self', { waitUntil: 'domcontentloaded' });
+    await page.goto('/journey', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
     const labels = await sidebarLabels(page);
     const joined = labels.join(' | ');
@@ -100,7 +100,7 @@ test.describe('Craft/Self — distinct section welcomes', () => {
     await expect(craftMain).toContainText(/mastery of my craft/i);
     await expect(craftMain).toContainText(/outward/i);
 
-    await page.goto('/self', { waitUntil: 'domcontentloaded' });
+    await page.goto('/journey', { waitUntil: 'domcontentloaded' });
     const selfMain = page.locator('main');
     await expect(selfMain).toContainText('introspective');
     await expect(selfMain).toContainText(/full potential|master(ing)? myself/i);
@@ -116,7 +116,7 @@ test.describe('Homepage chooser', () => {
     // The /welcome chooser was folded into the homepage hero; /welcome now → /.
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('a[href$="/craft"]').first()).toBeVisible();
-    await expect(page.locator('a[href$="/self"]').first()).toBeVisible();
+    await expect(page.locator('a[href$="/journey"]').first()).toBeVisible();
   });
 
   // NOTE: /welcome → / is a client redirect from @docusaurus/plugin-client-redirects,

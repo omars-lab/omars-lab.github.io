@@ -35,7 +35,7 @@ function HomepageHeader() {
             <div className={styles.chooserCardTitle}>💻 Discover My Craft</div>
             <p className={styles.chooserCardBody}>What I build, and share.</p>
           </Link>
-          <Link className={styles.chooserCard} to="/self">
+          <Link className={styles.chooserCard} to="/journey">
             <div className={styles.chooserCardImageWrap}>
               <img
                 className={styles.chooserCardImage}
@@ -46,10 +46,10 @@ function HomepageHeader() {
                 height={400}
               />
             </div>
-            <div className={styles.chooserCardTitle}>🪞 Discover My Journey</div>
+            <div className={styles.chooserCardTitle}>🛣️ Discover My Journey</div>
             <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
-          <Link className={styles.chooserCard} to="/blog">
+          <Link className={styles.chooserCard} to="/thoughts">
             <div className={styles.chooserCardImageWrap}>
               <img
                 className={styles.chooserCardImage}

@@ -26,7 +26,7 @@ const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 
 // Docs are served under the /docs route prefix (see the navbar "Learn" link).
 const DOC_URL = '/welcome';
-const BLOG_URL = '/blog/docs-vs-blog-posts';
+const BLOG_URL = '/thoughts/docs-vs-blog-posts';
 
 /**
  * Spy on posthog.capture in the page rather than sniffing the wire. PostHog batches
@@ -115,7 +115,7 @@ test.describe('Ingress attribution (production build)', () => {
     await expect(page.locator('[data-testid="share-control"]').first()).toBeVisible();
 
     // Blog list/index: title renders as a linked <h2>, share control omitted.
-    await page.goto('/blog', { waitUntil: 'domcontentloaded' });
+    await page.goto('/thoughts', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-testid="share-control"]')).toHaveCount(0);
   });
 

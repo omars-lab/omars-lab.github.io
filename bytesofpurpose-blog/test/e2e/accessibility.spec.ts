@@ -38,7 +38,7 @@ type PageSpec = {
 
 const PAGES: PageSpec[] = [
   { name: 'home', path: '/' },
-  { name: 'blog-index', path: '/blog' },
+  { name: 'blog-index', path: '/thoughts' },
   { name: 'docs-page', path: '/welcome' },
   {
     // Authored article — now strict ([] baseline). All Prism syntax-token
@@ -46,7 +46,7 @@ const PAGES: PageSpec[] = [
     // class-name/literal-property) was brought to AA in custom.css, in both
     // color modes. Fails on any NEW violation.
     name: 'blog-post',
-    path: '/blog/evolution-of-a-repo',
+    path: '/thoughts/evolution-of-a-repo',
   },
 ];
 
