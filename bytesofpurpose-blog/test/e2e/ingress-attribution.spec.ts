@@ -26,7 +26,10 @@ const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 
 // Docs are served under the /docs route prefix (see the navbar "Learn" link).
 const DOC_URL = '/welcome';
-const BLOG_URL = '/thoughts/docs-vs-blog-posts';
+// "Docs vs Blogs" is a CRAFT doc (its canonical home is /craft/blogging/...), NOT a
+// blog post — there is no /thoughts/docs-vs-blog-posts page. Point straight at the
+// canonical permalink so the share-control assertions exercise the real rendered page.
+const BLOG_URL = '/craft/blogging/docs-vs-blog-posts';
 
 /**
  * Spy on posthog.capture in the page rather than sniffing the wire. PostHog batches

@@ -667,7 +667,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             },
             {
               // 'Journey' (the inward/personal docs instance, id 'self') — matches the
-              // homepage "Discover My Journey" card. Route stays /self.
+              // homepage "Discover My Journey" card. Served at /journey (old /self/* 301s).
               label: 'Journey',
               type: 'docSidebar', sidebarId: 'selfSidebar', docsPluginId: 'self',
               position: 'left',
