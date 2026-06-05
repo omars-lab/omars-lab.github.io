@@ -11,17 +11,18 @@ import { test, expect, Page } from '@playwright/test';
  * What this proves:
  *   1. The menu appears on localhost and lists the registered experiment.
  *   2. Toggling a variant in the Experiments section ACTUALLY CHANGES the
- *      rendered UI — the <Support/> button copy flips control → test → back.
- *      This is the "switching does stuff" guarantee.
+ *      rendered UI — the /support coffee CTA flips its PRESENTATION
+ *      (link ↔ styled button) control → test → back. This is the
+ *      "switching does stuff" guarantee.
  *
- * Variant copy (flag: support-button-copy):
- *   control → "Buy me a coffee ☕"   test → "Support the dev 💜"
+ * Variant presentation (flag: support-button-copy, re-scoped 2026-06-01):
+ *   identical copy ("Buy me a $5 coffee ☕") in both arms; control renders a
+ *   plain text LINK, test renders a styled BUTTON (button--primary).
  */
 
-// A docs page that embeds <Support/> (same page support-ab-test.spec.ts uses).
-const PAGE_WITH_BUTTON =
-  process.env.AB_PAGE ||
-  '/craft/blogging/embed-structural-components/footer';
+// The /support page hosts the coffee CTA (CoffeeButton) wired to the experiment,
+// and the DebugMenu renders on every localhost page. Override with AB_PAGE.
+const PAGE_WITH_BUTTON = process.env.AB_PAGE || '/support';
 
 async function openMenu(page: Page) {
   const fab = page.getByRole('button', { name: 'Open debug menu' });
@@ -46,7 +47,7 @@ test.describe('DebugMenu — experiments switching', () => {
   test('toggling a variant writes the override and reloads', async ({ page }) => {
     await page.goto(PAGE_WITH_BUTTON, { waitUntil: 'domcontentloaded' });
 
-    const btn = page.getByTestId('support-button');
+    const btn = page.getByTestId('support-coffee-button');
     await expect(btn).toBeVisible();
 
     // Force "test" via the menu. The toggle writes ?ab-support-button-copy=test
@@ -61,7 +62,7 @@ test.describe('DebugMenu — experiments switching', () => {
       .click();
 
     await expect(page).toHaveURL(/ab-support-button-copy=test/);
-    await expect(page.getByTestId('support-button')).toBeVisible();
+    await expect(page.getByTestId('support-coffee-button')).toBeVisible();
   });
 
   test('support page coffee CTA reflects the variant (link vs button)', async ({ page }) => {
@@ -102,6 +103,6 @@ test.describe('DebugMenu — experiments switching', () => {
 
     // Clear strips the ab params and reloads → back to control (no override).
     await expect(page).not.toHaveURL(/ab-support-button-copy/);
-    await expect(page.getByTestId('support-button')).toBeVisible();
+    await expect(page.getByTestId('support-coffee-button')).toBeVisible();
   });
 });

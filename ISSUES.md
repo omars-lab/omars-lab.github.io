@@ -19,8 +19,8 @@ dedup an issue outside the normal flow, update its status here in the same step.
 | 19 | closed (#22) | mobile-pager-midword-break | [#19](https://github.com/omars-lab/omars-lab.github.io/issues/19) pager breaks "Entrepreneurship" mid-word | audit-mobile 2026-06-03 | mobile-premium-share-row-and-pager.png |
 | 20 | closed (#22) | mobile-share-row-crammed | [#20](https://github.com/omars-lab/omars-lab.github.io/issues/20) share row crammed on premium card | audit-mobile 2026-06-03 | mobile-premium-share-row-and-pager.png |
 | 21 | closed (#22) | desktop-doc-measure-and-whitespace | [#21](https://github.com/omars-lab/omars-lab.github.io/issues/21) doc line-length ~94ch + wide-screen whitespace | audit-desktop 2026-06-03 | desktop-docs-line-length-1440.png, desktop-docs-whitespace-2560.png |
-| 27 | open | stale-test-self-renamed-journey | [#27](https://github.com/omars-lab/omars-lab.github.io/issues/27) craft-self-split asserts navbar 'Self' (renamed to 'Journey') | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
-| 28 | open | stale-test-ingress-welcome-dead-route | [#28](https://github.com/omars-lab/omars-lab.github.io/issues/28) ingress DOC_URL='/welcome' is a dead route | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
-| 29 | open | flaky-test-ab-copy-drift | [#29](https://github.com/omars-lab/omars-lab.github.io/issues/29) support-ab-test copy drifts from live flag payload | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
+| 27 | closed (#30) | stale-test-self-renamed-journey | [#27](https://github.com/omars-lab/omars-lab.github.io/issues/27) craft-self-split asserts navbar 'Self' (renamed to 'Journey') | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
+| 28 | closed (#30) | stale-test-ingress-welcome-dead-route | [#28](https://github.com/omars-lab/omars-lab.github.io/issues/28) ingress DOC_URL='/welcome' is a dead route | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
+| 29 | closed (#30) | flaky-test-ab-copy-drift | [#29](https://github.com/omars-lab/omars-lab.github.io/issues/29) support-ab-test copy drifts from live flag payload | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
 
 All screenshots: `~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/2026-06-03/`
