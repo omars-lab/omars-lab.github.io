@@ -8,33 +8,52 @@
    Design tokens
    ========================================================================== */
 :root {
-  /* Brand palette */
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1554e0;
-  --ifm-color-primary-darker: #1350d4;
-  --ifm-color-primary-darkest: #1042ae;
-  --ifm-color-primary-light: #3e75ed;
-  --ifm-color-primary-lighter: #4a7eee;
-  --ifm-color-primary-lightest: #7098f2;
+  /* Brand palette — burnt terracotta, mirroring the portfolio accent (#E4572E).
+     Replaces the old generic blue. The base is deepened to #b33e1e so coral text
+     and the active nav link clear WCAG AA (4.71:1) on the cream paper — the brighter
+     #E4572E only reaches 3.6:1 there. Steps follow Infima's ±shade math. The brighter
+     portfolio coral is kept as --brand-coral for large/decorative accents (hero rule,
+     non-text fills) where AA-for-text doesn't apply. */
+  --ifm-color-primary: #b33e1e;
+  --ifm-color-primary-dark: #a1381b;
+  --ifm-color-primary-darker: #983519;
+  --ifm-color-primary-darkest: #7d2c15;
+  --ifm-color-primary-light: #c5462a;
+  --ifm-color-primary-lighter: #d34a22;
+  --ifm-color-primary-lightest: #e4673f;
+  --brand-coral: #e4572e;
 
   /* Tint used behind feature icons / soft surfaces */
-  --ifm-color-primary-contrast-background: rgba(37, 99, 235, 0.08);
+  --ifm-color-primary-contrast-background: rgba(179, 62, 30, 0.09);
 
-  /* Typography — Inter loaded via headTags in docusaurus.config.js */
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, 'Helvetica Neue',
+  /* Editorial surface — warm cream "paper" (light mode). Cards lift a touch
+     lighter than the page so they read as raised. Ink is a warm near-black with a
+     warm-gray secondary, matching the portfolio (#1A1A1A / #4A4742). */
+  --ifm-background-color: #ece7df;
+  --ifm-background-surface-color: #f4f0e8;
+  --ifm-font-color-base: #1a1a1a;
+  --ifm-heading-color: #1a1a1a;
+  --ifm-color-content-secondary: #4a4742;
+
+  /* Typography — Fraunces (headings) + Geist (body), loaded via headTags in
+     docusaurus.config.js. Fraunces is an old-style serif; it reads best around
+     600 weight and wants looser tracking than the old Inter setup. */
+  --ifm-font-family-base: 'Geist', system-ui, -apple-system, 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
-  --ifm-heading-font-weight: 700;
+  --ifm-heading-font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ifm-heading-font-weight: 600;
   --ifm-font-size-base: 16px;
   --ifm-line-height-base: 1.7;
   --ifm-code-font-size: 95%;
 
   /* Shape + elevation */
-  --ifm-global-radius: 0.6rem;
-  --ifm-button-border-radius: 0.5rem;
-  --ifm-card-background-color: #ffffff;
-  --ifm-navbar-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
-  --ifm-global-shadow-lw: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --ifm-global-radius: 0.5rem;
+  --ifm-button-border-radius: 0.4rem;
+  --ifm-card-background-color: #f4f0e8;
+  --ifm-navbar-background-color: #ece7df;
+  --ifm-navbar-shadow: 0 1px 0 rgba(26, 26, 26, 0.08);
+  --ifm-global-shadow-lw: 0 1px 3px rgba(26, 26, 26, 0.08);
+  --ifm-global-shadow-md: 0 6px 20px rgba(26, 26, 26, 0.1);
 
   /* Premium ("gold") palette — shared by the sidebar lock items, the locked
      info pane, and the CTA cards so every premium surface reads consistently.
@@ -56,17 +75,27 @@
 /* Dark mode: lift the primary so links/buttons keep AA contrast on dark
    surfaces, and define dark equivalents of the custom tokens above. */
 html[data-theme='dark'] {
-  --ifm-color-primary: #6d9bff;
-  --ifm-color-primary-dark: #4a82ff;
-  --ifm-color-primary-darker: #3877ff;
-  --ifm-color-primary-darkest: #155cff;
-  --ifm-color-primary-light: #90b4ff;
-  --ifm-color-primary-lighter: #a2c0ff;
-  --ifm-color-primary-lightest: #c9dbff;
+  /* Coral lifted toward salmon so links/buttons keep AA on the warm-ink surface. */
+  --ifm-color-primary: #f0805a;
+  --ifm-color-primary-dark: #ed6c41;
+  --ifm-color-primary-darker: #eb6234;
+  --ifm-color-primary-darkest: #d44a1d;
+  --ifm-color-primary-light: #f39473;
+  --ifm-color-primary-lighter: #f59e80;
+  --ifm-color-primary-lightest: #f9bca8;
 
-  --ifm-color-primary-contrast-background: rgba(109, 155, 255, 0.12);
-  --ifm-card-background-color: #1c1e21;
-  --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+  --ifm-color-primary-contrast-background: rgba(240, 128, 90, 0.14);
+
+  /* Warm-ink surfaces — the dark-mode sibling of the cream paper (warm, not cold
+     gray) so the two themes share one editorial temperature. */
+  --ifm-background-color: #1a1715;
+  --ifm-background-surface-color: #211d1a;
+  --ifm-font-color-base: #ece7df;
+  --ifm-heading-color: #f4f0e8;
+  --ifm-color-content-secondary: #b8b0a6;
+  --ifm-card-background-color: #211d1a;
+  --ifm-navbar-background-color: #1a1715;
+  --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
 
   /* Premium gold, lifted for contrast on dark surfaces. */
@@ -83,11 +112,19 @@ html[data-theme='dark'] {
   );
 }
 
-/* Tighten heading rhythm a touch for a more modern feel. */
+/* Headings use Fraunces (the editorial display serif). Apply it explicitly so it
+   wins regardless of Infima's --ifm-heading-font-family wiring. A serif wants only
+   the faintest negative tracking — the old −0.02em (tuned for Inter) over-tightens
+   Fraunces, so relax it. The optical-size axis lets large headings open up. */
 h1,
 h2,
-h3 {
-  letter-spacing: -0.02em;
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ifm-heading-font-family);
+  letter-spacing: -0.005em;
+  font-optical-sizing: auto;
 }
 
 /* ==========================================================================
@@ -115,10 +152,10 @@ h3 {
   transform: translateY(-1px);
 }
 
-/* In dark mode the primary is lightened (#6d9bff); white text on it fails AA
-   (2.7:1). Use dark text instead (6.2:1). Keep white on hover (primary-dark). */
+/* In dark mode the primary is a light salmon (#f0805a); white text on it fails AA.
+   Use dark ink instead. Keep white on hover (the darker primary-dark step). */
 html[data-theme='dark'] .navbar-coffee {
-  color: #1c1e21;
+  color: #1a1715;
 }
 html[data-theme='dark'] .navbar-coffee:hover {
   color: #fff;
@@ -440,4 +477,30 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     align-items: center;
     min-height: 44px;
   }
+}
+
+/* ==========================================================================
+   Footer — warm-ink, not cold slate. Docusaurus' `style: 'dark'` ships a cold
+   blue-gray (#303846) that reads as a foreign slab "cut off" from the warm cream
+   page. Re-point it at the warm-ink family used in dark mode so the footer is the
+   intentional dark anchor of the same editorial palette, and link hovers go coral.
+   A hairline top border ties it to the page instead of butting hard against it.
+   ========================================================================== */
+.footer--dark {
+  --ifm-footer-background-color: #1a1715;
+  --ifm-footer-color: #c9c2b8;
+  --ifm-footer-link-color: #c9c2b8;
+  --ifm-footer-title-color: #f4f0e8;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+.footer--dark .footer__link-item:hover {
+  /* primary-lightest clears AA (5.4:1) on the warm-ink footer; the darker steps
+     dip below 4.5:1 against it. */
+  color: var(--ifm-color-primary-lightest);
+  text-decoration: none;
+}
+/* Heading font: let the footer column titles pick up the editorial serif. */
+.footer__title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
 }

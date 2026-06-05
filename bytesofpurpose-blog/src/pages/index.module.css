@@ -1,33 +1,51 @@
 /**
  * CSS files with the .module.css suffix will be treated as CSS modules
  * and scoped locally.
+ *
+ * Editorial hero — the cream "paper" surface, Fraunces headline, coral eyebrow,
+ * framed by thin rules. Mirrors the portfolio (bytesofpurpose.com): no gradient,
+ * generous whitespace, ink-on-cream rather than white-on-color.
  */
 
 .heroBanner {
-  padding: 5rem 0 4.5rem;
+  padding: 5rem 0 4rem;
   text-align: center;
   position: relative;
   overflow: hidden;
-  color: #fff;
-  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+  /* Inherit the page's cream paper; a hairline rule top + bottom frames the band. */
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-html[data-theme='dark'] .heroBanner {
-  background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 55%, #5b21b6 100%);
+/* Coral eyebrow — uppercase Geist, tracked out, like the portfolio's section labels. */
+.heroEyebrow {
+  font-family: var(--ifm-font-family-base);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+  margin: 0 0 1rem;
 }
 
 .heroTitle {
-  font-size: 3.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-family: var(--ifm-heading-font-family);
+  font-size: 4rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: var(--ifm-heading-color);
   margin-bottom: 0.75rem;
 }
 
 .heroSubtitle {
-  font-size: 1.4rem;
+  font-family: var(--ifm-heading-font-family);
+  font-style: italic;
   font-weight: 400;
-  opacity: 0.92;
-  margin-bottom: 2.25rem;
+  font-size: 1.5rem;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 2.5rem;
 }
 
 .buttons {
@@ -44,34 +62,35 @@ html[data-theme='dark'] .heroBanner {
    stack to a single column on mobile (flex-wrap). */
 .chooser {
   display: flex;
-  gap: 1.25rem;
+  gap: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
+/* Cards sit on the cream paper now (not a translucent layer over a gradient), so
+   they read as raised tiles: surface bg, hairline border, coral accent on hover. */
 .chooserCard {
   flex: 1 1 300px;
-  max-width: 340px;
+  max-width: 350px;
   text-align: center;
   padding: 1.5rem 1.5rem 1.6rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #fff;
+  border-radius: 14px;
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
   text-decoration: none;
-  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: transform 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .chooserCard:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.55);
+  border-color: var(--ifm-color-primary);
   transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+  box-shadow: var(--ifm-global-shadow-md);
   text-decoration: none;
-  color: #fff;
+  color: var(--ifm-font-color-base);
 }
 
 /* Arched illustration sitting on top of each card. The source PNG already carries
@@ -90,7 +109,7 @@ html[data-theme='dark'] .heroBanner {
   max-width: 220px;
   height: auto;
   border-radius: 110px 110px 14px 14px;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 6px 16px rgba(26, 26, 26, 0.18));
   transition: transform 0.2s ease;
 }
 
@@ -99,28 +118,30 @@ html[data-theme='dark'] .heroBanner {
 }
 
 .chooserCardTitle {
+  font-family: var(--ifm-heading-font-family);
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0 0 0.4rem;
+  color: var(--ifm-heading-color);
 }
 
 .chooserCardBody {
   font-size: 0.98rem;
   line-height: 1.45;
-  opacity: 0.92;
+  color: var(--ifm-color-content-secondary);
   margin: 0;
 }
 
 @media screen and (max-width: 966px) {
   .heroBanner {
-    padding: 3rem 1.5rem;
+    padding: 3.5rem 1.5rem 3rem;
   }
 
   .heroTitle {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
   }
 
   .heroSubtitle {
-    font-size: 1.15rem;
+    font-size: 1.25rem;
   }
 }

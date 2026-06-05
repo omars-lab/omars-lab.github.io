@@ -64,8 +64,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
       require.resolve('./src/gtag-guard.js'),
       require.resolve('./src/posthog.js'),
     ],
-    // Load the Inter variable font for UI/body text (see --ifm-font-family-base in
-    // src/css/custom.css). Preconnect first so the stylesheet fetch is not blocked.
+    // Editorial type system, mirroring the portfolio (bytesofpurpose.com):
+    //   Fraunces — display serif for headings (optical-size axis + italic)
+    //   Geist    — sans for UI/body text
+    // See --ifm-heading-font-family / --ifm-font-family-base in src/css/custom.css.
+    // Preconnect first so the stylesheet fetch is not blocked.
     headTags: [
       {
         tagName: 'link',
@@ -83,7 +86,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
         tagName: 'link',
         attributes: {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+          href: 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Geist:wght@400;500;600;700&display=swap',
         },
       },
     ],

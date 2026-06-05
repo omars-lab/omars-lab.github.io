@@ -343,7 +343,7 @@
 }
 
 .panelLinkLight {
-  color: #2563eb;
+  color: var(--ifm-color-primary);
   border-bottom: 1px solid #eee;
 }
 
