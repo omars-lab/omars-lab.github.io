@@ -2,13 +2,13 @@ import React from 'react';
 import posthog from 'posthog-js';
 import { EXPERIMENTS, resolveVariant } from '@site/src/experiments';
 
-// The coffee CTA, wired into the support-button-copy A/B experiment. The variants
-// differ in BOTH copy AND presentation:
-//   control → "Donate $5 for ☕️ in Paypal →"  rendered as a plain text LINK
-//   test    → "Buy me a coffee ☕"             rendered as a styled BUTTON
-// (the same experiment that used to drive the standalone navbar button). Variant
-// copy lives in src/experiments.ts; the conversion event keeps the same
-// 'support button clicked' name so the historical funnel stays continuous.
+// The coffee CTA, wired into the support-button-copy A/B experiment. Post the
+// 2026-06-01 re-scope the variants differ ONLY in PRESENTATION (identical copy):
+//   control → "Buy me a $5 coffee ☕ →"  rendered as a plain text LINK
+//   test    → "Buy me a $5 coffee ☕"    rendered as a styled BUTTON
+// (the same experiment that used to drive the standalone navbar button). The copy
+// lives once in src/experiments.ts (same in both arms); the conversion event keeps
+// the same 'support button clicked' name so the historical funnel stays continuous.
 const EXP = EXPERIMENTS['support-button-copy'];
 
 const PAYPAL =

@@ -24,8 +24,12 @@ import { test, expect, Page } from '@playwright/test';
 
 const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 
-// Docs are served under the /docs route prefix (see the navbar "Learn" link).
-const DOC_URL = '/welcome';
+// The Craft section landing (/craft) is a published doc with a normal H1, so the
+// swizzled DocItem/Content injects the inline ShareButton, and its markdown renders
+// the <BookmarkletButton/> "come back any time" affordance (re-homed here after the
+// standalone /welcome page was folded into the homepage). It exercises BOTH the
+// share-control and the bookmarklet assertions below.
+const DOC_URL = '/craft';
 // "Docs vs Blogs" is a CRAFT doc (its canonical home is /craft/blogging/...), NOT a
 // blog post — there is no /thoughts/docs-vs-blog-posts page. Point straight at the
 // canonical permalink so the share-control assertions exercise the real rendered page.
@@ -292,7 +296,7 @@ test.describe('Ingress attribution (production build)', () => {
     expect(text).toContain('im=share_cp');
   });
 
-  // ---- Bookmarklet affordance (on the welcome doc) ------------------------
+  // ---- Bookmarklet affordance (on the Craft landing doc) ------------------
   test('bookmarklet button renders a javascript: bookmarklet href', async ({ page }) => {
     await page.goto(DOC_URL, { waitUntil: 'domcontentloaded' });
     test.skip(!(await posthogReady(page)), 'PostHog disabled (no key).');
@@ -316,6 +320,6 @@ test.describe('Ingress attribution (production build)', () => {
     await expect(page.locator('[data-testid="bookmarklet-modal"]')).toBeVisible();
     await expect(page.locator('[data-testid="bookmarklet-drag-target"]')).toBeVisible();
     // Still on the same page (no in-place bookmarklet execution / navigation).
-    expect(page.url()).toContain('/welcome');
+    expect(page.url()).toContain('/craft');
   });
 });

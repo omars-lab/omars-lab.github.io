@@ -4,13 +4,13 @@ import { test, expect, Page } from '@playwright/test';
  * Craft/Self two-tier IA (dev project, :3000).
  *
  * The docs split into two halves, each its own navbar item + sidebar:
- *   - Craft (/craft) — outrospective: the professional topics.
- *   - Self  (/journey)  — introspective: faith + personal growth.
+ *   - Craft   (/craft)   — outrospective: the professional topics.
+ *   - Journey (/journey) — introspective: faith + personal growth.
  *
  * What this proves:
- *   1. The navbar has BOTH "Craft" and "Self" (and no legacy "Learn").
- *   2. Landing in Craft shows ONLY craft topics in the sidebar (no Self topics),
- *      and landing in Self shows ONLY self topics (no Craft) — the halves don't
+ *   1. The navbar has BOTH "Craft" and "Journey" (and no legacy "Learn").
+ *   2. Landing in Craft shows ONLY craft topics in the sidebar (no Journey topics),
+ *      and landing in Journey shows ONLY journey topics (no Craft) — the halves don't
  *      bleed into each other.
  *   3. Each section landing renders its DISTINCT framing (outrospective vs
  *      introspective) — they are not the same page.
@@ -34,7 +34,7 @@ const CRAFT_TOPICS = [
 const SELF_TOPICS = ['Faith', 'Personal Growth'];
 
 // The sidebar nav (Docusaurus doc sidebar). Scope all sidebar queries to it so we
-// don't accidentally match the navbar's own "Craft"/"Self" items.
+// don't accidentally match the navbar's own "Craft"/"Journey" items.
 function sidebar(page: Page) {
   return page.locator('nav.menu, .theme-doc-sidebar-container').first();
 }
@@ -46,18 +46,18 @@ async function sidebarLabels(page: Page): Promise<string[]> {
   return (await links.allInnerTexts()).map((t) => t.trim()).filter(Boolean);
 }
 
-test.describe('Craft/Self — navbar', () => {
-  test('navbar shows Craft and Self (and not the old "Learn")', async ({ page }) => {
+test.describe('Craft/Journey — navbar', () => {
+  test('navbar shows Craft and Journey (and not the old "Learn")', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     const navbar = page.locator('.navbar');
     await expect(navbar.getByRole('link', { name: 'Craft', exact: true })).toBeVisible();
-    await expect(navbar.getByRole('link', { name: 'Self', exact: true })).toBeVisible();
+    await expect(navbar.getByRole('link', { name: 'Journey', exact: true })).toBeVisible();
     await expect(navbar.getByRole('link', { name: 'Learn', exact: true })).toHaveCount(0);
   });
 });
 
-test.describe('Craft/Self — sidebar isolation', () => {
-  test('Craft sidebar shows ONLY craft topics (no Self bleed-through)', async ({
+test.describe('Craft/Journey — sidebar isolation', () => {
+  test('Craft sidebar shows ONLY craft topics (no Journey bleed-through)', async ({
     page,
   }) => {
     await page.goto('/craft', { waitUntil: 'domcontentloaded' });
@@ -68,13 +68,13 @@ test.describe('Craft/Self — sidebar isolation', () => {
     for (const t of CRAFT_TOPICS) {
       expect(joined, `Craft sidebar should list "${t}"`).toContain(t);
     }
-    // ...and NO self topic leaks in.
+    // ...and NO journey topic leaks in.
     for (const t of SELF_TOPICS) {
-      expect(joined, `Craft sidebar must NOT list self topic "${t}"`).not.toContain(t);
+      expect(joined, `Craft sidebar must NOT list journey topic "${t}"`).not.toContain(t);
     }
   });
 
-  test('Self sidebar shows ONLY self topics (no Craft bleed-through)', async ({
+  test('Journey sidebar shows ONLY journey topics (no Craft bleed-through)', async ({
     page,
   }) => {
     await page.goto('/journey', { waitUntil: 'domcontentloaded' });
@@ -82,16 +82,16 @@ test.describe('Craft/Self — sidebar isolation', () => {
     const labels = await sidebarLabels(page);
     const joined = labels.join(' | ');
     for (const t of SELF_TOPICS) {
-      expect(joined, `Self sidebar should list "${t}"`).toContain(t);
+      expect(joined, `Journey sidebar should list "${t}"`).toContain(t);
     }
     for (const t of CRAFT_TOPICS) {
-      expect(joined, `Self sidebar must NOT list craft topic "${t}"`).not.toContain(t);
+      expect(joined, `Journey sidebar must NOT list craft topic "${t}"`).not.toContain(t);
     }
   });
 });
 
-test.describe('Craft/Self — distinct section welcomes', () => {
-  test('Craft landing is outrospective; Self landing is introspective', async ({
+test.describe('Craft/Journey — distinct section welcomes', () => {
+  test('Craft landing is outrospective; Journey landing is introspective', async ({
     page,
   }) => {
     await page.goto('/craft', { waitUntil: 'domcontentloaded' });
@@ -112,7 +112,7 @@ test.describe('Craft/Self — distinct section welcomes', () => {
 });
 
 test.describe('Homepage chooser', () => {
-  test('homepage links into BOTH halves (Craft + Self)', async ({ page }) => {
+  test('homepage links into BOTH halves (Craft + Journey)', async ({ page }) => {
     // The /welcome chooser was folded into the homepage hero; /welcome now → /.
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('a[href$="/craft"]').first()).toBeVisible();
