@@ -14,6 +14,7 @@ function HomepageHeader() {
   return (
     <header className={styles.heroBanner}>
       <div className="container">
+        <p className={styles.heroEyebrow}>Engineering · Faith · Craft</p>
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         {/* Four-card chooser (folded in from the old /welcome page): Craft = what I

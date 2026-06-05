@@ -54,7 +54,7 @@
   height: 120px;
   margin-bottom: 1.25rem;
   border-radius: 50%;
-  background: var(--ifm-color-primary-contrast-background, rgba(37, 99, 235, 0.08));
+  background: var(--ifm-color-primary-contrast-background, rgba(211, 74, 34, 0.08));
 }
 
 .featureSvg {

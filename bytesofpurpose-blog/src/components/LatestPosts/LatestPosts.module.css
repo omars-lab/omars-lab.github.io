@@ -85,6 +85,13 @@
   padding: 0.15rem 0.55rem;
   border-radius: 999px;
   background: var(--ifm-color-primary-contrast-background);
+  /* Darker coral so the small pill text clears WCAG AA (4.5:1) on the coral tint —
+     the base primary only reaches ~4.2:1 against the blended pill background. */
+  color: var(--ifm-color-primary-darker);
+}
+
+html[data-theme='dark'] .postTag {
+  /* On dark the tint is light-on-dark; the base salmon primary already clears AA. */
   color: var(--ifm-color-primary);
 }
 
