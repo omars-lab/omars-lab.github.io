@@ -478,3 +478,29 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
     min-height: 44px;
   }
 }
+
+/* ==========================================================================
+   Footer — warm-ink, not cold slate. Docusaurus' `style: 'dark'` ships a cold
+   blue-gray (#303846) that reads as a foreign slab "cut off" from the warm cream
+   page. Re-point it at the warm-ink family used in dark mode so the footer is the
+   intentional dark anchor of the same editorial palette, and link hovers go coral.
+   A hairline top border ties it to the page instead of butting hard against it.
+   ========================================================================== */
+.footer--dark {
+  --ifm-footer-background-color: #1a1715;
+  --ifm-footer-color: #c9c2b8;
+  --ifm-footer-link-color: #c9c2b8;
+  --ifm-footer-title-color: #f4f0e8;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+.footer--dark .footer__link-item:hover {
+  /* primary-lightest clears AA (5.4:1) on the warm-ink footer; the darker steps
+     dip below 4.5:1 against it. */
+  color: var(--ifm-color-primary-lightest);
+  text-decoration: none;
+}
+/* Heading font: let the footer column titles pick up the editorial serif. */
+.footer__title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+}
