@@ -458,6 +458,17 @@ without touching `title`). Everything that touches brand voice or taxonomy
 (navbar text, category names, intro rewrites, **and all file/folder re-org moves**)
 goes in **Proposed** for the user to approve.
 
+### Screenshots live in Dropbox, NOT the repo
+
+Visual-review / design-review screenshots (the exploratory shots you capture while reviewing
+layout, footer, home, etc.) go to
+`~/Library/CloudStorage/Dropbox/Data/bytesofpurpose-design-review/<YYYY-MM-DD>/` — **never**
+commit them to the repo. PNGs are large and never compress out of git history, so a clean
+working tree must not carry a `.claude/design-review/` (or similar) screenshot dir. (Screenshots
+that back a *filed GitHub issue* go to the separate audit dir
+`~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/<YYYY-MM-DD>/` — see the
+`audit-mobile-experience` / `audit-desktop-experience` skills.)
+
 ## After fixing
 
 - Rebuild to confirm nothing broke: `make dev` (sidebar/label changes are picked up
