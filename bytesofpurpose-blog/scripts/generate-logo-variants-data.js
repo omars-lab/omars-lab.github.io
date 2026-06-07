@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+// Generate the binary-pyramid logo variant data the design post imports.
+//
+// BUILD STEP (run by npm `prestart`/`prebuild`, mirroring generate-changelog-data.js).
+// Reads the geometry from scripts/lib/binary-pyramid-logo.js (the single source of
+// truth) and writes a gitignored data module the MDX post imports. The output is a
+// build artifact, NOT committed source — never hand-edit it; change the generator or
+// the VARIANTS list below and re-run.
+//
+//   output: designs/_binary-pyramid-variants.js   (gitignored)
+//   run:    node scripts/generate-logo-variants-data.js   (or `npm run generate-logo-variants`)
+
+const fs = require('fs');
+const path = require('path');
+
+const outputFile = path.join(__dirname, '..', 'designs', '_binary-pyramid-variants.js');
+
+// fillOverride bakes a literal color in (e.g. gold) instead of theme-aware currentColor.
+const GOLD = '#C9A227';
+// shared base for the interlaced-gold scene variants
+const SCENE = {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', flat:true, noZeros:true, shaftZeros:true, barColor:'#F4D03F', zeroColor:'#B8860B', goldFill:'#E8C46A', rings:4, centerCount:7, colGap:24};
+
+// group, id, label, config, [fillOverride]
+const ROWS = [
+  // The journey: early stacked-glyph attempts
+  ['journey','greek-glyph', 'Greek stacked-glyph (first attempt)',        {pillar:'greek', ring:'oval'}],
+  ['journey','ionic-stacked-glyph','Ionic stacked-glyph (totem problem)', {pillar:'ionic', ring:'oval'}],
+
+  // Architectural columns: elongated (one real column per 1)
+  ['elongated','el-spiral',  'Ionic elongated + spiral volute', {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral'}],
+  ['elongated','el-curl',    'Ionic elongated + curl volute',   {pillar:'ionic', ring:'oval', colMode:'arch', volute:'curl'}],
+  ['elongated','el-circle',  'Ionic elongated + circle rings',  {pillar:'ionic', ring:'circle', colMode:'arch', volute:'spiral'}],
+  ['elongated','da-elong',   'Doric elongated (no volutes)',    {pillar:'doric', ring:'oval', colMode:'arch'}],
+
+  // Stacked drums (multiple short columns per 1)
+  ['stacked','st-spiral',    'Ionic stacked + spiral',          {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', colStack:true}],
+  ['stacked','da-stack',     'Doric stacked (drums)',           {pillar:'doric', ring:'oval', colMode:'arch', colStack:true}],
+  ['stacked','da-stack-gap', 'Doric stacked + spacing',         {pillar:'doric', ring:'oval', colMode:'arch', colStack:true, stackGap:2.5}],
+
+  // Arrangement experiments
+  ['arrange','flat',         'All same height (colonnade)',     {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', flat:true}],
+  ['arrange','nozeros',      'No zeros (pure column pyramid)',  {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', noZeros:true}],
+  ['arrange','wedge',        'Wedge / diverging-V perspective', {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', noZeros:true, flat:true, arrange:'wedge', rings:5, centerCount:7, scaleStep:0.16, wedgeRise:7, colGap:12}],
+
+  // Perspective vantage points (the desert-wanderer views)
+  ['perspective','ground',   'Ground / sideways diverging-V',   {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', noZeros:true, arrange:'ground', rings:7, centerCount:7, colGap:12, horizon:72, recede:0.62}],
+  ['perspective','avenue',   'Avenue / straight-back aisle',    {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', arrange:'avenue', rings:5, centerCount:4, horizon:52, recede:0.6, colGap:12}],
+
+  // Gold: colonnade with INTERLACED solid bars + 0-chains, solid edges, two-tone gold
+  ['gold','gold-ionic',  'Gold Ionic (interlaced bars + 0s)',  {pillar:'ionic', ring:'oval', colMode:'arch', volute:'spiral', flat:true, noZeros:true, shaftZeros:true, barColor:'#F4D03F', zeroColor:'#B8860B', goldFill:'#E8C46A', rings:4, centerCount:7, colGap:24}, GOLD],
+  ['gold','gold-doric',  'Gold Doric (interlaced bars + 0s)',  {pillar:'doric', ring:'oval', colMode:'arch', flat:true, noZeros:true, shaftZeros:true, barColor:'#F4D03F', zeroColor:'#B8860B', goldFill:'#E8C46A', rings:4, centerCount:7, colGap:24}, GOLD],
+
+  // Interlaced gold columns on a sleek flat backdrop, three moods.
+  ['scene','scene-desert', 'Interlaced gold, desert', {...SCENE, scene:'desert'}, GOLD],
+  ['scene','scene-dusk',   'Interlaced gold, dusk',   {...SCENE, scene:'dusk'}, GOLD],
+  ['scene','scene-night',  'Interlaced gold, night',  {...SCENE, scene:'night'}, GOLD],
+];
+
+// The generator is an ESM module in src/; dynamic-import it from this CJS script.
+(async () => {
+  const { generateLogoSvg } = await import('../src/lib/binary-pyramid-logo.js');
+
+  const variants = ROWS.map(([group, id, label, cfg, fill]) => ({
+    group, id, label,
+    config: JSON.stringify(cfg),
+    svg: generateLogoSvg(cfg, fill || 'currentColor').replace(/\s*\n\s*/g, ' ').trim(),
+  }));
+
+  const out =
+`// AUTO-GENERATED by scripts/generate-logo-variants-data.js. DO NOT EDIT.
+// Build artifact (gitignored). Regenerate: node scripts/generate-logo-variants-data.js
+// Geometry source of truth: src/lib/binary-pyramid-logo.js
+/* eslint-disable */
+export const VARIANTS = ${JSON.stringify(variants, null, 2)};
+`;
+
+  fs.writeFileSync(outputFile, out, 'utf-8');
+  console.log(`[logo-variants] wrote ${variants.length} variants -> ${path.relative(process.cwd(), outputFile)}`);
+})();

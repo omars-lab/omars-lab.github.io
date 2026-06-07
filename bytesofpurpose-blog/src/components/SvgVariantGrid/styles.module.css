@@ -1,0 +1,125 @@
+.wrap {
+  --svg-fg: #676767;
+  --svg-bg: var(--ifm-background-surface-color);
+  --svg-line: var(--ifm-color-emphasis-200);
+  margin: 1.5rem 0;
+}
+.wrap.dark {
+  --svg-fg: #ffffff;
+  --svg-bg: #1b1b1d;
+  --svg-line: #3a3a3d;
+}
+
+/* ---- pillar-backdrop mode: cards as a horizontal band over a full-height colonnade ---- */
+.colonnade {
+  position: relative;
+  padding: 120px 14px;                /* tall: pillars run well above & below the cards */
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--ifm-color-primary) 8%, var(--svg-bg)),
+    var(--svg-bg));
+  isolation: isolate;
+}
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  color: var(--ifm-color-primary);   /* tint the colonnade with the brand accent */
+  opacity: 0.30;
+  pointer-events: none;
+}
+.backdrop :global(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* in colonnade mode the cards run sideways in a single non-wrapping row, centered */
+.colonnade .grid {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 14px;
+  overflow-x: auto;                   /* if 4 cards exceed width, scroll sideways */
+  padding-bottom: 6px;
+}
+.colonnade .card {
+  flex: 0 0 auto;
+  width: 240px;
+  backdrop-filter: blur(2px);
+  background: color-mix(in srgb, var(--svg-bg) 88%, transparent);
+}
+.colonnade .bar { position: relative; z-index: 1; }
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.toggle {
+  font: inherit;
+  padding: 6px 12px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+}
+.toggle:hover { border-color: var(--ifm-color-primary); }
+.hint { color: var(--ifm-color-emphasis-600); font-size: 0.85rem; }
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  margin: 0;
+  border: 1px solid var(--svg-line);
+  border-radius: 12px;
+  background: var(--svg-bg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Large preview — the SVG inherits color via currentColor. */
+.big {
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: var(--svg-fg);
+}
+.big :global(svg) { height: 100%; width: auto; }
+
+.cap { display: flex; flex-direction: column; gap: 4px; }
+.cap strong { color: var(--ifm-font-color-base); }
+.cfg {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.72rem;
+  word-break: break-all;
+  background: transparent;
+  padding: 0;
+}
+
+.previews {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px dashed var(--svg-line);
+  padding-top: 10px;
+  color: var(--svg-fg);
+}
+.preview { display: inline-flex; align-items: flex-end; }
+.preview :global(svg) { height: 100%; width: auto; }
+.previewTag {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.72rem;
+  margin-left: auto;
+}

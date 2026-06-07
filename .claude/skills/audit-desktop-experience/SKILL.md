@@ -232,6 +232,9 @@ fixed now:
    don't duplicate.
 2. **Save the screenshot** to the Dropbox audit dir
    `~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/<YYYY-MM-DD>/<finding-key>.png`.
+   (Exploratory **design-review** screenshots — visual/frontend-design review shots that are
+   NOT tied to a filed issue — go to `~/Library/CloudStorage/Dropbox/Data/bytesofpurpose-design-review/<YYYY-MM-DD>/`
+   instead; keep both out of the repo so git history stays lean — PNGs never compress out of history.)
 3. **File** with `gh issue create` (label `bug`/`enhancement`, body = probe-evidence +
    concrete fix + this skill's name/date + the Dropbox screenshot path). The PostToolUse
    hook `gh-issue-index-hook.sh` auto-appends the new issue to `ISSUES.md`; fill in its

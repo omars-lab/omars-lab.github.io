@@ -4,7 +4,7 @@ title: "Affirmations for the Inner Game"
 description: "A collection of faith-based and motivational affirmations I've returned to over the years, organized by theme: faith, strength, discipline, failure, focus, confidence, and living fully."
 authors: [oeid]
 tags: [mindset]
-date: 2026-06-06T10:00
+date: 2026-01-27
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
 draft: true
 ---

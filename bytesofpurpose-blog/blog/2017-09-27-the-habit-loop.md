@@ -1,0 +1,106 @@
+---
+slug: the-habit-loop
+title: "What The Power of Habit Taught Me About Changing Behavior"
+description: "Reflections on Charles Duhigg's The Power of Habit: the loop behind every habit, why willpower behaves like a muscle, and the one rule that actually changes behavior."
+authors: [oeid]
+tags: [mindset, productivity]
+date: 2017-09-27
+draft: true
+---
+
+A while back I read *The Power of Habit* by Charles Duhigg, and it changed how I
+think about why I do the things I do without deciding to. These are my reflections
+on the ideas that stuck, not a summary of the book. If they resonate, read the book
+itself: the case studies are worth it.
+
+<!-- truncate -->
+
+```mermaid
+flowchart LR
+    Cue["Cue<br/>(the trigger)"] --> Routine["Routine<br/>(the behavior)"]
+    Routine --> Reward["Reward<br/>(the payoff)"]
+    Reward -. "craving<br/>(anticipation)" .-> Cue
+```
+
+## The loop underneath everything
+
+The idea that reframed it all for me is that a habit isn't a single thing, it's a
+loop with three parts: a **cue** that triggers it, a **routine** you run, and a
+**reward** that makes it worth repeating. Once that loop is established, your brain
+stops actively participating. It runs the routine on autopilot so it can save effort
+for something else.
+
+That reframing matters because "I have a bad habit" stops being a character flaw and
+becomes a *mechanism*. And mechanisms can be taken apart. If I can name the cue and
+the reward around a routine I don't like, I'm no longer fighting a vague failing of
+willpower. I'm debugging a loop.
+
+## Craving is the engine
+
+What I'd missed before reading this is that a cue and a reward aren't enough on their
+own. The thing that actually powers the loop is the **craving** in between, the
+anticipation of the reward once the cue shows up. The habit gets strong when your
+brain starts *expecting* the reward the moment it sees the cue.
+
+That's a useful lever. To build a habit I want, I shouldn't just set up a reward, I
+should give the anticipation something to latch onto. And to break one I don't want,
+it helps to see that the pull I feel at the cue is the craving, not me.
+
+## The one rule that actually changes a habit
+
+The most practical idea in the book is also the simplest. You can't really erase an
+old habit. What works is to **keep the same cue and the same reward, and change only
+the routine in the middle.** The loop stays intact; you swap out the behavior it
+runs.
+
+This is why "just stop" almost never works and why substitution does. The cue is
+still going to fire and the craving is still going to demand its reward. The question
+isn't how to make those go away, it's what better routine you can route them into.
+
+## Willpower is a muscle, not a trait
+
+Two things about willpower reshaped how I plan my days. First, it behaves like a
+**muscle**: it's strengthenable with practice, but it also **fatigues**. Spend it
+all on self-control at work and there's little left for the evening. Second, of all
+the habits you could build, the research kept pointing at willpower itself as the
+single most important one for individual success, more predictive than raw talent.
+
+The practical move that follows is to make the important behaviors **automatic** so
+they don't draw down the willpower budget, and to decide *ahead of time* how you'll
+respond when a known hard moment arrives, rather than spending willpower improvising
+in the moment.
+
+## Keystone habits and small wins
+
+Not all habits are equal. Some are **keystone habits**: change one and it quietly
+dislodges and remakes a whole set of others. Exercise was the recurring example,
+something that has nothing directly to do with, say, eating better or working more
+focused, yet tends to drag those along with it.
+
+What makes keystone habits work is **small wins**. A small, early success is
+evidence that bigger change is possible, and that belief is what convinces you to
+keep going. So the strategy isn't to overhaul everything at once. It's to find the
+one habit whose change ripples outward, and to stack small wins until the belief
+takes hold.
+
+## Belief, and why it needs other people
+
+The part I underestimated is the social one. The book makes the case that for a
+changed habit to *stick* permanently, you have to believe change is possible, and
+that belief is far easier to hold inside a **community**, even one as small as two
+people. Habits change more durably when they're held up by other people who believe
+the same thing.
+
+That reframes a lot of behavior change as a social problem, not just a personal one.
+The group isn't a nice-to-have. It's often the thing that makes the new loop
+permanent instead of temporary.
+
+## What I took from it
+
+The throughline, for me: behavior I thought was just *who I am* is usually a loop I
+can examine. Find the cue and the reward, change only the routine, protect willpower
+by automating what matters, pick the keystone habit that pulls the rest along, and
+lean on a community to make the change believable. None of it is willpower-as-grit.
+It's understanding the machine and working with it.
+
+*Reflections on *The Power of Habit* by Charles Duhigg.*

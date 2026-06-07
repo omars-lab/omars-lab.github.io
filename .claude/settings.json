@@ -51,7 +51,12 @@
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true
+    "code-review@claude-plugins-official": true,
+    "document-co-author@oeid-claude-plugins": true,
+    "code-repository-manager@oeid-claude-plugins": true,
+    "architecture-manager@oeid-claude-plugins": true,
+    "code-quality-manager@oeid-claude-plugins": true,
+    "knowledge-manager@oeid-claude-plugins": true
   },
   "plansDirectory": ".claude/plans"
 }

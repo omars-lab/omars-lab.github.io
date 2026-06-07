@@ -39,6 +39,9 @@ storybook-static
 # Generated changelog data
 src/components/Changelog/changelog-data.json
 
+# Generated logo-variant SVG data (build artifact; source: src/lib/binary-pyramid-logo.js)
+designs/_binary-pyramid-variants.js
+
 # Generated changelog pages (copied from changelog/ directory)
 src/pages/changelog/
 

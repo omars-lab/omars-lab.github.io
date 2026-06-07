@@ -1,0 +1,135 @@
+{
+  "_provenance": {
+    "source": "roles-self-development/The Learner/knowledge/learning-resources.md",
+    "source_commit": "17a90f05f17f65bc81ef60c2f87be80da6c4ec91",
+    "note": "Public links abstracted from the source's resource catalog. Named mentors + personal tracking deliberately excluded. Refresh: append cards here when the source grows new public links; then re-stamp source_commit."
+  },
+  "books": [
+    {
+      "title": "The Best Textbooks on Every Subject",
+      "description": "A crowdsourced LessWrong thread of the single best textbook per subject.",
+      "meta": "lesswrong.com",
+      "href": "https://www.lesswrong.com/posts/xg3hXCYQPJkwHyik2/the-best-textbooks-on-every-subject"
+    },
+    {
+      "title": "Leanpub",
+      "description": "In-progress and indie technical books, often sold pay-what-you-want.",
+      "meta": "leanpub.com",
+      "href": "https://leanpub.com/"
+    },
+    {
+      "title": "OpenIntro: Operating Systems",
+      "description": "A free, open operating-systems textbook.",
+      "meta": "openintro.org",
+      "href": "https://www.openintro.org/book/os/"
+    }
+  ],
+  "courses": [
+    {
+      "title": "MIT xPRO: Data Science & Big Data Analytics",
+      "description": "A structured professional data-science program from MIT xPRO.",
+      "meta": "xpro.mit.edu",
+      "href": "https://xpro.mit.edu/courses/course-v1:xPRO+DSx/"
+    },
+    {
+      "title": "MIT OpenCourseWare: Curriculum Guide",
+      "description": "Free MIT course materials, organized by a guided curriculum.",
+      "meta": "ocw.mit.edu",
+      "href": "https://ocw.mit.edu/courses/mit-curriculum-guide/"
+    },
+    {
+      "title": "MasterClass: Bob Iger on Business Strategy",
+      "description": "Disney's former CEO on leadership and business strategy.",
+      "meta": "masterclass.com",
+      "href": "https://www.masterclass.com/classes/bob-iger-teaches-business-strategy-and-leadership"
+    },
+    {
+      "title": "spaCy Course",
+      "description": "A free, interactive course on industrial-strength NLP with spaCy.",
+      "meta": "course.spacy.io",
+      "href": "https://course.spacy.io/en/"
+    },
+    {
+      "title": "Certified Scrum Product Owner",
+      "description": "Scrum Alliance's product-owner certification track.",
+      "meta": "scrumalliance.org",
+      "href": "https://www.scrumalliance.org/get-certified/product-owner-track/certified-scrum-product-owner"
+    },
+    {
+      "title": "Art of Islamic Pattern: Online Classes",
+      "description": "Online classes on the geometry and craft of Islamic pattern.",
+      "meta": "artofislamicpattern.com",
+      "href": "https://artofislamicpattern.com/online-classes/the-facade-of-comares/#/5"
+    }
+  ],
+  "videos": [
+    {
+      "title": "Khan Academy: Information Theory",
+      "description": "A clear video walkthrough of the fundamentals of information theory.",
+      "meta": "khanacademy.org",
+      "href": "https://www.khanacademy.org/computing/computer-science/informationtheory"
+    }
+  ],
+  "blogs": [
+    {
+      "title": "Out of My Gord",
+      "description": "Personal thoughts in no particular order; a thinking-out-loud blog.",
+      "meta": "outofmygord.com",
+      "href": "https://outofmygord.com/"
+    },
+    {
+      "title": "Hacking, Distributed",
+      "description": "Deep posts on distributed systems and their failure modes.",
+      "meta": "hackingdistributed.com",
+      "href": "http://hackingdistributed.com/"
+    },
+    {
+      "title": "Kimball Techniques",
+      "description": "The Kimball Group's canonical data-warehouse and BI techniques.",
+      "meta": "kimballgroup.com",
+      "href": "https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/"
+    },
+    {
+      "title": "mattorb.com",
+      "description": "An engineering and product blog worth following.",
+      "meta": "mattorb.com",
+      "href": "https://mattorb.com/"
+    },
+    {
+      "title": "Spurious Correlations",
+      "description": "Tyler Vigen's reminder that correlation is not causation.",
+      "meta": "tylervigen.com",
+      "href": "https://www.tylervigen.com/spurious-correlations"
+    }
+  ],
+  "experts": [
+    {
+      "title": "Raymond Hettinger",
+      "description": "Python core developer; his talks on idiomatic Python are essential.",
+      "meta": "github.com/rhettinger",
+      "href": "https://github.com/rhettinger"
+    },
+    {
+      "title": "Stewart Smith",
+      "description": "Systems engineer; author of libeatmydata and other low-level tools.",
+      "meta": "github.com/stewartsmith",
+      "href": "https://github.com/stewartsmith"
+    }
+  ],
+  "mentors": [
+    {
+      "title": "CNCF Mentoring",
+      "description": "Cloud Native Computing Foundation's open mentoring programs.",
+      "meta": "github.com/cncf/mentoring",
+      "href": "https://github.com/cncf/mentoring"
+    }
+  ],
+  "forums": [
+    {
+      "title": "r/iOSProgramming",
+      "description": "A community for iOS development questions and discussion.",
+      "meta": "reddit.com",
+      "href": "https://www.reddit.com/r/iOSProgramming/"
+    }
+  ]
+}
