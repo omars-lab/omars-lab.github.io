@@ -14,6 +14,9 @@ cloudflared/*.json
 # Local Claude settings (machine-specific)
 .claude/settings.local.json
 
+# Git worktrees created under .claude (never commit a nested checkout)
+.claude/worktrees/
+
 # Python bytecode (skill helper scripts)
 __pycache__/
 *.pyc
