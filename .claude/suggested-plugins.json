@@ -1,0 +1,15 @@
+{
+  "$schema": "oeid-suggested-plugins/v1",
+  "plugins": [
+    { "plugin": "document-co-author@oeid-claude-plugins", "required": true,
+      "reason": "authoring blog posts + structured docs" },
+    { "plugin": "code-repository-manager@oeid-claude-plugins", "required": true,
+      "reason": "doc-link hygiene + publishing to wiki/Pages" },
+    { "plugin": "architecture-manager@oeid-claude-plugins", "required": true,
+      "reason": "architecture notes + changelog tooling for the blog" },
+    { "plugin": "code-quality-manager@oeid-claude-plugins", "required": true,
+      "reason": "docs quality + Makefile standards" },
+    { "plugin": "knowledge-manager@oeid-claude-plugins", "required": true,
+      "reason": "organizing the CS-notes / knowledge-base content" }
+  ]
+}
