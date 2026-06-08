@@ -3,7 +3,7 @@ slug: questions-for-knowing-who-you-are
 title: "Questions for Knowing Who You Are"
 description: "Why do others often know us better than we know ourselves? A taxonomy of prompts for examining your character, values, beliefs, and the forces that shape your identity."
 authors: [oeid]
-tags: [self-reflection, mindset]
+tags: [self-reflection, question-set]
 date: 2026-01-25
 draft: true
 ---

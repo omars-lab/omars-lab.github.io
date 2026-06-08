@@ -3,7 +3,7 @@ slug: questions-for-finding-your-purpose
 title: "Questions for Finding Your Purpose"
 description: "A taxonomy of the questions I return to when I want to reflect on why I exist, what gives life meaning, and how I want to be remembered."
 authors: [oeid]
-tags: [self-reflection, mindset]
+tags: [self-reflection, question-set]
 date: 2026-01-25
 draft: true
 ---
