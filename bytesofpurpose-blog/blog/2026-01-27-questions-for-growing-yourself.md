@@ -70,5 +70,3 @@ Growth is easy to assume and hard to verify. It's possible to stay busy for year
 - What are you focused on learning?
 - How do you use learning to improve yourself and your system?
 - Are you doing everything you can with what you have?
-</content>
-</invoke>

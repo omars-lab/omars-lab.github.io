@@ -107,7 +107,7 @@ export default function Home(): React.JSX.Element {
         '@id': `${url}/#organization`,
         name: title,
         url: `${url}/`,
-        logo: `${url}/img/logo.svg`,
+        logo: `${url}/img/logo-binary.svg`,
         founder: {'@type': 'Person', name: 'Omar Eid'},
         sameAs: [
           'https://github.com/omars-lab',

@@ -659,8 +659,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           logo: {
             alt: 'BytesOfPurpose Logo',
             // https://docusaurus.io/docs/api/themes/configuration
-            src: 'img/logo.svg',
-            srcDark: 'img/logo_dark.svg',
+            src: 'img/logo-binary.svg',
+            srcDark: 'img/logo-binary_dark.svg',
           },
           items: [
             {
