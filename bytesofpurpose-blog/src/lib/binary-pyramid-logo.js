@@ -45,6 +45,10 @@ const D = {
   recede: 0.34,                   // 0..1 how fast columns shrink/bunch with distance
   shaftZeros: false,              // arch shafts: draw each flute line as a vertical CHAIN of 0s
   goldFill: null,                 // if set (e.g. '#C9A227'), columns render in this gold
+  letters: null,                  // arrange:'inscribe' -> a word (e.g. 'PURPOSE') carved across N columns
+  letterScale: 1.0,               // size of the inscribed colonnade columns
+  colUnits: null,                 // inscribe: pillar height in cell-units (default centerCount=7); lower = shorter
+  shaftLanes: 3,                  // inscribe+shaftZeros: number of vertical 0-chain lanes per shaft
 };
 const C = Object.assign({}, D, cfg);
 
@@ -154,6 +158,84 @@ function rrect(cx, cy, rx, ry, rad){
          `V ${f(y1-r)} Q ${f(x1)} ${f(y1)} ${f(x1-r)} ${f(y1)} H ${f(x0+r)} `+
          `Q ${f(x0)} ${f(y1)} ${f(x0)} ${f(y1-r)} V ${f(y0+r)} Q ${f(x0)} ${f(y0)} ${f(x0+r)} ${f(y0)} Z`;
 }
+// ---------- inscribed letters (for the "PURPOSE" pillar-inscription mark) ----------
+// Each letter is returned as one or more CLOSED sub-paths sized to a box of width w,
+// cap-height h, centered at (cx,cy), with stroke weight t. Sub-paths are designed to
+// be mostly non-overlapping so they knock out cleanly under fill-rule="evenodd"
+// (overlapping same-winding regions would cancel). Round letters use ring cut-outs.
+function letterPath(ch, cx, cy, w, h, t){
+  const x0=cx-w/2, x1=cx+w/2, y0=cy-h/2, y1=cy+h/2, midY=cy;
+  // closed rectangle sub-path
+  const rect=(ax,ay,bx,by)=>`M ${f(ax)} ${f(ay)} H ${f(bx)} V ${f(by)} H ${f(ax)} Z`;
+  const vbar=(x)=>rect(x, y0, x+t, y1);          // full-height vertical bar
+  const hbar=(y)=>rect(x0, y, x1, y+t);          // full-width horizontal bar
+  // A "bowl": a closed C-shaped band (outer arc out, inner arc back) opening to the
+  // LEFT, spanning vertical extent [ty..by], bulging right to xr. Drawn as a single
+  // closed path so it knocks out cleanly (no inner-ellipse winding cancellation).
+  // Endpoints sit at x=xl (the stem), top & bottom.
+  const bowl=(xl,xr,ty,by)=>{
+    const ro=(by-ty)/2, cyb=(ty+by)/2, ri=Math.max(0.1,ro-t);
+    return `M ${f(xl)} ${f(ty)} `+
+           `A ${f(xr-xl)} ${f(ro)} 0 1 1 ${f(xl)} ${f(by)} `+   // outer arc, stem-top -> stem-bottom (right bulge)
+           `L ${f(xl)} ${f(by-t)} `+
+           `A ${f(xr-xl-t)} ${f(ri)} 0 1 0 ${f(xl)} ${f(ty+t)} Z`; // inner arc back
+  };
+  // diagonal closed quad (for R/K legs)
+  const leg=(ax,ay,bx,by)=>`M ${f(ax)} ${f(ay)} L ${f(ax+t)} ${f(ay)} L ${f(bx)} ${f(by)} L ${f(bx-t)} ${f(by)} Z`;
+  switch(ch){
+    case 'P':
+      return vbar(x0) + ` ${bowl(x0+t, x1, y0, midY+t*0.3)}`;
+    case 'R':
+      return vbar(x0) + ` ${bowl(x0+t, x1, y0, midY+t*0.3)}`
+        + ` ${leg(x0+t, midY-t*0.2, x1, y1)}`;
+    case 'B':
+      return vbar(x0) + ` ${bowl(x0+t, x1, y0, midY+t*0.5)}`
+        + ` ${bowl(x0+t, x1, midY-t*0.5, y1)}`;
+    case 'O': {
+      const rx=w/2, ry=h/2;
+      return `${ellipse(cx, cy, rx, ry)} ${ellipse(cx, cy, rx-t, ry-t)}`;
+    }
+    case 'U': {
+      // two stems + a bottom bowl opening UP (closed band along the bottom)
+      const r=Math.min(w/2, (y1-y0)*0.42);
+      const cyb=y1-r;
+      return rect(x0, y0, x0+t, cyb)
+        + ` ${rect(x1-t, y0, x1, cyb)}`
+        + ` M ${f(x0)} ${f(cyb)} A ${f(r)} ${f(r)} 0 0 0 ${f(x1)} ${f(cyb)} `
+        + `L ${f(x1-t)} ${f(cyb)} A ${f(r-t)} ${f(r-t)} 0 0 1 ${f(x0+t)} ${f(cyb)} Z`;
+    }
+    case 'S': {
+      // modern S as a smooth spine: an upper bowl opening LEFT (top) and a lower bowl
+      // opening RIGHT (bottom), drawn as one continuous stroked centerline offset to
+      // width t. Built from two C-bands that meet in the middle.
+      const r=Math.min(w/2, (h/2)*0.92), ri=Math.max(0.1,r-t);
+      const uy=y0+r, ly=y1-r;                        // centers of upper / lower curves
+      // upper arc: from right-top sweeping left-down to mid-left
+      const upper = `M ${f(x1)} ${f(uy-r*0.55)} `+
+        `A ${f(r)} ${f(r)} 0 1 0 ${f(x0)} ${f(midY)} `+      // outer
+        `L ${f(x0+t)} ${f(midY)} `+
+        `A ${f(ri)} ${f(ri)} 0 1 1 ${f(x1-t)} ${f(uy-r*0.55)} Z`;
+      // lower arc: from left-bottom sweeping right-up to mid-right
+      const lower = `M ${f(x0)} ${f(ly+r*0.55)} `+
+        `A ${f(r)} ${f(r)} 0 1 0 ${f(x1)} ${f(midY)} `+
+        `L ${f(x1-t)} ${f(midY)} `+
+        `A ${f(ri)} ${f(ri)} 0 1 1 ${f(x0+t)} ${f(ly+r*0.55)} Z`;
+      return upper + ' ' + lower;
+    }
+    case 'E':
+      // spine + three arms, arms start at x0+t so they don't overlap the spine
+      return vbar(x0)
+        + ` ${rect(x0+t, y0, x1, y0+t)}`             // top arm
+        + ` ${rect(x0+t, midY-t/2, x1-w*0.16, midY+t/2)}` // middle arm (shorter)
+        + ` ${rect(x0+t, y1-t, x1, y1)}`;            // bottom arm
+    case 'T':
+      return hbar(y0) + ` ${rect(cx-t/2, y0, cx+t/2, y1)}`;
+    case 'Y':
+      return `${leg(x0, y0, cx-t/2, midY)} ${leg(x1-t, y0, cx-t/2+t, midY)} ${rect(cx-t/2, midY-t*0.2, cx+t/2, y1)}`;
+    default: return '';
+  }
+}
+
 function glyph0(cx, cy, s){
   if (C.ring === 'circle'){
     const r=2.9*s, t=1.3*s;
@@ -240,11 +322,12 @@ function ionicCapital(x, capTop, s, vstyle, shaftHalfW){
   }
   return { svg:p, bottom:volY+R*0.5, halfW:eyeX+R };  // shaft start + capital half-width
 }
-function archColumn(x, colTop, colBot, s){
+function archColumn(x, colTop, colBot, s, letter){
   const style=C.pillar==='ionic'?'ionic':'doric';
   const vstyle=C.volute||'curl';
-  // wider shaft when interlacing bars+0s so the lanes are legible
-  const sw=(C.shaftZeros?4.4:3.0)*s;        // shaft half-width
+  // wider shaft when interlacing bars+0s (legible lanes) or inscribing a letter (room to carve).
+  // Widest when BOTH: a bold letter centered + 0-chains flanking it.
+  const sw=((letter&&C.shaftZeros)?7.0:(letter?5.4:(C.shaftZeros?4.4:3.0)))*s;   // shaft half-width
   let p='';
   let shaftTop, capHalfW=sw;
   if (style==='ionic'){
@@ -266,7 +349,45 @@ function archColumn(x, colTop, colBot, s){
   // edges) are ALWAYS solid bars; interior alternates solid / 0-chain.
   const flN = style==='ionic'?5:4;
   const gap=0.45*s, barW=(2*sw-(flN-1)*gap)/flN;
-  if (C.shaftZeros){
+  // letter geometry (shared by the inscribe modes below). In byte-chained mode the
+  // letter is the PRIMARY element (bigger + bolder), with 0s as surrounding texture.
+  const big = !!(letter && C.shaftZeros);
+  const lh = big ? Math.min((shaftBot-shaftTop)*0.82, 9.0*s) : Math.min((shaftBot-shaftTop)*0.62, 6.0*s);
+  const lw = big ? Math.min(2*sw*0.92, lh*0.84) : Math.min(2*sw*0.72, lh*0.82);
+  const lcy = (shaftTop+shaftBot)/2;                       // letter center on the shaft
+  const lstroke = big ? Math.max(1.2*s, lw*0.30) : Math.max(0.85*s, lw*0.24);  // bolder when chained
+  const shaftOuter = `M ${f(x-sw)} ${f(shaftTop)} H ${f(x+sw)} V ${f(shaftBot)} H ${f(x-sw)} Z`;
+  if (letter && C.shaftZeros){
+    // BYTE-CHAINED pillar: the shaft is woven from vertical CHAINS OF 0s (the byte-chain
+    // texture), and the PURPOSE letter sits ON TOP as solid raised relief. 0s whose
+    // center falls within the letter's clear-zone are skipped, so the letter reads as
+    // clean stone among the bytes. Letters spell the word; the 0s carry the "bytes" -
+    // the "Bytes of Purpose" unification.
+    const zeroColor = C.zeroColor || C.bitOffColor || FILL;
+    const nLanes = C.shaftLanes || 3;
+    const laneW = 2*sw / nLanes;
+    const zr = Math.min(laneW*0.42, 1.6*s);
+    const zt = zr*0.46;
+    const zStep = zr*2.3;
+    const nZ = Math.max(2, Math.floor((shaftBot-shaftTop - zr)/zStep));
+    // letter clear-zone (a little padding so 0s don't touch the strokes)
+    const clrX = lw/2 + zr*0.7, clrY = lh/2 + zr*0.5;
+    for (let l=0; l<nLanes; l++){
+      const zx = x - sw + laneW*(l+0.5);
+      for (let j=0;j<nZ;j++){
+        const cy = shaftTop + zr + j*((shaftBot-shaftTop-2*zr)/(nZ-1||1));
+        if (Math.abs(zx-x) < clrX && Math.abs(cy-lcy) < clrY) continue; // behind the letter
+        p+=`<path fill-rule="evenodd" d="${ellipse(zx,cy,zr,zr)} ${ellipse(zx,cy,zr-zt,zr-zt)}" fill="${zeroColor}"/>`;
+      }
+    }
+    const cut = letterPath(letter, x, lcy, lw, lh, lstroke);
+    if (cut) p+=`<path fill-rule="evenodd" d="${cut}" fill="${FILL}"/>`;   // solid letter on top
+  } else if (letter){
+    // INSCRIBED letter only (no byte-chain): solid shaft with the letter knocked out
+    // as engraved negative space, crisp + theme-aware at any size.
+    const cut = letterPath(letter, x, lcy, lw, lh, lstroke);
+    p+=`<path fill-rule="evenodd" d="${shaftOuter} ${cut}" fill="${FILL}"/>`;
+  } else if (C.shaftZeros){
     const barColor = C.barColor || C.bitOnColor || FILL;    // solid bars
     const zeroColor = C.zeroColor || C.bitOffColor || FILL;  // the 0s
     // lanes across the shaft: alternate bar / zero, with first & last = bar.
@@ -324,6 +445,27 @@ function countFor(d){ return C.flat ? countAt(0) : countAt(d); }
 
 const ground = C.arrange==='ground';
 const avenue = C.arrange==='avenue';
+const inscribe = C.arrange==='inscribe' || (C.letters && C.arrange!=='ground' && C.arrange!=='avenue' && C.arrange!=='wedge' && C.arrange!=='pyramid');
+
+if (inscribe){
+  // PURPOSE inscription: N equal-height columns left-to-right, each shaft inscribed
+  // with one letter of C.letters. A temple colonnade that spells a word.
+  const word = (C.letters||'PURPOSE').toUpperCase().split('');
+  const s = C.letterScale || 1.0;
+  // colUnits = pillar height in cell-units (default 7 = tall temple column). Lower it
+  // for stubbier, more squat pillars (the letter stays sized to the shaft).
+  const colUnits = C.colUnits || C.centerCount;
+  const colH = C.cellH * colUnits * s;
+  const step = (C.colGap*1.6 + 6*s);      // spacing between column centers
+  const n = word.length;
+  for (let i=0;i<n;i++){
+    const x = (i - (n-1)/2) * step;
+    const r = archColumn(x, -colH, 0, s, word[i]);
+    parts.push(r.svg);
+    maxAbsX = Math.max(maxAbsX, Math.abs(x)+r.halfW);
+  }
+  maxStackH = colH + 2;
+}
 
 if (avenue){
   // Single avenue receding straight back: rows of L/R column pairs marching away
@@ -355,7 +497,7 @@ if (avenue){
   parts.length=0; parts.push(...ordered);
 }
 
-for (let side=-sides; side<=sides && !avenue; side++){
+for (let side=-sides; side<=sides && !avenue && !inscribe; side++){
   const d=Math.abs(side), isCenter=d===0;
   const n=countFor(d), digit=digitFor(d);
   let s, x, baseY, colHmul=1;

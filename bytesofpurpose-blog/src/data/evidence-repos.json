@@ -1,0 +1,23 @@
+{
+  "_comment": "Visibility + owner manifest for the <Evidence> footnote component. The PROD bundle reads owner/name/public to decide, with NO network call, whether an evidence permalink may render as a clickable link (public repos) or must degrade to prose-only (private repos, to avoid a public 404 + path/SHA leak). In dev/localhost every link renders regardless of visibility (it's just the author, behind their own GitHub auth). Keep `public` honest: flipping a repo public on GitHub means setting it true here so its links go live in prod. `localPath` is used ONLY by scripts/validate-footnotes.js (relative to bytesofpurpose-blog/) to find the local clone for offline SHA/path/line verification; the component never reads it. Validated by scripts/validate-footnotes.js (every <Evidence repo=...> must appear here).",
+  "repos": {
+    "qiyas": {
+      "owner": "NaqshCoffee",
+      "name": "qiyas",
+      "public": false,
+      "localPath": "../../../qiyas"
+    },
+    "bikar": {
+      "owner": "NaqshCoffee",
+      "name": "bikar",
+      "public": false,
+      "localPath": "../../../bikar"
+    },
+    "sacred-patterns": {
+      "owner": "omars-lab",
+      "name": "sacred-patterns",
+      "public": true,
+      "localPath": "../../../sacred-patterns"
+    }
+  }
+}

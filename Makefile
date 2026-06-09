@@ -74,6 +74,9 @@ typecheck: ## Type-check the site with tsc (swizzled theme + components + pages)
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
 
+validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA + path + line range exist & are pushed)
+	( cd ${SITEROOT} && node scripts/validate-footnotes.js $(DIRS) )
+
 validate-em-dash: ## Scan ALL public-facing content (prose + components) for AI-voice em-dashes (—)
 	@# Repo-wide complement to the edit-only .claude/hooks/em-dash-voice-hook.sh, which never
 	@# sweeps the existing corpus. Exit 1 on any hit. Flags everything, code blocks included.
