@@ -1,0 +1,44 @@
+---
+slug: a-learning-plan-for-postgresql
+title: "A Learning Plan for PostgreSQL"
+description: "What to know to get good with PostgreSQL — practical query recipes, schema-design best practices, and tooling, with curated resources."
+authors: [oeid]
+tags: [data-engineering, databases, learning-plan]
+date: 2020-07-14
+draft: true
+---
+import CategoryCarousel from '@site/src/components/CategoryCarousel';
+
+When I sat down to actually get good with PostgreSQL, I realized the syntax was never the hard part. What mattered was building a toolbox of query recipes I could reach for without thinking, and developing schema-design habits that age well as a project grows. These are my running notes from that effort.
+
+I've organized them around two muscles: the everyday querying patterns I lean on constantly, and the design decisions that quietly determine whether a schema stays pleasant to work with or turns into a maintenance tax.
+
+<!-- truncate -->
+
+## How to approach it
+
+[Step 1] Build a recipe toolbox for everyday querying. Joins, aggregation, date handling, and null wrangling come up in nearly every query I write, so the goal is to make them reflexive rather than something you look up each time.
+
+[Step 2] Learn the schema-design best practices. A few habits pay for themselves repeatedly: every table should have a primary key, and you should make liberal use of views to hide table structure behind stable interfaces so you can refactor underneath them. Lean on constraints to let the database enforce invariants, and reach for partitioning when tables get large. One sharp edge worth remembering early: materialized views must be refreshed manually, so they're a caching tool, not a live one.
+
+[Step 3] Get comfortable with the tooling. Knowing your way around psql, a GUI like DBeaver, and a SQL linter removes friction so you can focus on the actual problem.
+
+## Querying recipes
+
+These are the patterns I reach for daily — joins, aggregation, date math, and handling nulls cleanly.
+
+<CategoryCarousel topic="learn-about-postgresql" category="Querying recipes" />
+
+## Schema design & best practices
+
+Design choices set the ceiling on how maintainable a database stays. These resources cover primary keys, constraints, views, materialized views, and partitioning.
+
+<CategoryCarousel topic="learn-about-postgresql" category="Schema design & best practices" />
+
+## Tooling
+
+A small set of tools handles most day-to-day work: psql for the terminal, DBeaver for browsing, and linting to keep SQL consistent.
+
+<CategoryCarousel topic="learn-about-postgresql" category="Tooling" />
+
+> This roadmap is curated from my own running notes on PostgreSQL. The resource lists are a living collection — they're maintained as data, so the list grows without the post changing. Dead links from the original notes have been pruned.

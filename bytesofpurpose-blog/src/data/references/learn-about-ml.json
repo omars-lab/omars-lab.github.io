@@ -1,0 +1,205 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The AI Engineer/Learning Topics/Machine Learning/Learn about ML.md",
+    "source_commit": "40186c4ab6c35ffd1dc537982237f6d4b4810091",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Concepts & fundamentals": [
+    {
+      "title": "Game of Zones Season 6 FULL Season Binge (Every Episode)",
+      "href": "https://www.youtube.com/watch?t=1235&v=N66uHLwbr8o&feature=youtu.be",
+      "description": "Watch all of Game of Zones season 6.X-Mas Day Special - The King's LAnding - 0:00EP 1 - The Dire Wolf - 4:53EP 2 - Journeymen - 8:15EP 3 - The North Remember...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "Machine Learning for Everyone | Vipul Patel | 32 comments",
+      "href": "https://www.linkedin.com/posts/vipulppatel_machine-learning-for-everyone-activity-6589526851092381697-v7QF",
+      "description": "Machine Learning for Everyone - Awesome Notes (35 Pages) - Vasily Zubarev Other Great Articles: (downloadable) 📌 A Non-Technical Introduction to LDA Topic Models https://lnkd.in/gTD_jrb 📌 Cheat Sheets for AI: Neural Networks, Machine Lea…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "Google Colab",
+      "href": "https://colab.research.google.com/drive/1SvVTDYD_QH_V67juSmWkNHa9N99oah-r",
+      "meta": "colab.research.google.com"
+    },
+    {
+      "title": "Gemini Enterprise Agent Platform | Google Cloud Documentation",
+      "href": "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
+      "description": "Build, scale, govern, and optimize autonomous agents with Gemini Enterprise Agent Platform.",
+      "meta": "docs.cloud.google.com"
+    },
+    {
+      "title": "Introducing Feast: an open source feature store for machine learning | Google Cloud Blog",
+      "href": "https://cloud.google.com/blog/products/ai-machine-learning/introducing-feast-an-open-source-feature-store-for-machine-learning",
+      "description": "Learn from GO-JEK and Google how Feast can help you store and keep tabs on various features relevant to your business, so that data scientists can collaborate to improve their models.",
+      "meta": "cloud.google.com"
+    },
+    {
+      "title": "OpenAI API, Community Examples | Notion",
+      "href": "https://brookechan.notion.site/OpenAI-API-Community-Examples-ce088785e541498698c1895798e67664",
+      "description": "Hosted by Notion Sites — The easiest way to get a website up and running.",
+      "meta": "brookechan.notion.site"
+    },
+    {
+      "title": "Cover Letter Generator | Notion",
+      "href": "https://brookechan.notion.site/Cover-Letter-Generator-8ac55d1145dc4243ae0dc97345e3661f",
+      "description": "Company: Spotify Job Description: We want someone to help build a new data pipeline for Spotify Unwrapped team using Apache Kafka and D3.js Resume: - Worked as a Developer Advocate at Algolia, writing blog posts and speaking on behalf of t…",
+      "meta": "brookechan.notion.site"
+    },
+    {
+      "title": "Metacademy: a package manager for knowledge – Machine Learning (Theory)",
+      "href": "https://hunch.net/?p=2714",
+      "description": "In recent years, there’s been an explosion of free educational resources that make high-level knowledge and skills accessible to an ever-wider group of people. In your own field, you probably have a good idea of where to look for the answe…",
+      "meta": "hunch.net"
+    },
+    {
+      "title": "2020 Machine Learning Roadmap (87% valid for 2024)",
+      "href": "https://www.youtube.com/watch?v=pHiMN_gy9mk",
+      "description": "Getting into machine learning is quite the adventure. And as any adventurer knows, sometimes it can be helpful to have a compass to figure out if you're head...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "Machine Learning for Designers",
+      "href": "https://www.oreilly.com/radar/machine-learning-for-designers/",
+      "description": "This report introduces contemporary machine learning systems, but also provides a conceptual framework to help you integrate machine-learning capabilities into your user-facing designs.",
+      "meta": "oreilly.com"
+    },
+    {
+      "title": "MIT 6.S191 (2020): Introduction to Deep Learning",
+      "href": "https://www.youtube.com/watch?v=njKP3FqW3Sk",
+      "description": "MIT Introduction to Deep Learning 6.S191: Lecture 1Foundations of Deep LearningLecturer: Alexander AminiJanuary 2020For all lectures, slides, and lab materia...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "Contextual Bandits — VowpalWabbit latest documentation",
+      "href": "https://vowpalwabbit.org/docs/vowpal_wabbit/python/latest/tutorials/python_Contextual_bandits_and_Vowpal_Wabbit.html",
+      "description": "This tutorial includes an overview of the contextual bandits approach to reinforcement learning and describes how to approach a contextual bandit problem using Vowpal Wabbit. You will learn how to use Vowpal Wabbit in a contextual bandit s…",
+      "meta": "vowpalwabbit.org"
+    }
+  ],
+  "Courses & comprehensive resources": [
+    {
+      "title": "Start Here with Machine Learning",
+      "href": "https://machinelearningmastery.com/start-here/#process",
+      "description": "Your guide to getting started and getting good at applied machine learning with Machine Learning Mastery.",
+      "meta": "machinelearningmastery.com"
+    },
+    {
+      "title": "Homepage",
+      "href": "https://end-to-end-machine-learning.teachable.com/",
+      "meta": "end-to-end-machine-learning.teachable.com"
+    },
+    {
+      "title": "Free resources to Supercharge your Data Science Career | Vipul Patel | 15 comments",
+      "href": "https://www.linkedin.com/posts/vipulppatel_free-resources-to-supercharge-your-data-science-activity-6591198674523566080-qi6I",
+      "description": "Free resources to Supercharge your Data Science Career - EliteDataScience Other Great Articles: (downloadable) 📌 Essential Notes - Coursera Deep Learning Course by Andrew Ng https://lnkd.in/dPizzVe 📌 Advantages Drawbacks Applications of…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "The Ultimate guide to AI, Data Science & Machine Learning, Articles, Cheatsheets and Tutorials ALL in one place",
+      "href": "https://www.linkedin.com/pulse/all-cheatsheets-one-place-vipul-patel/",
+      "description": "Last updated 10/29/21 This is a carefully curated compendium of articles & tutorials covering all things AI, Data Science & Machine Learning for the beginner to advanced practitioner. I will be periodically updating this document with popu…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "Learn Python, Data Viz, Pandas & More | Tutorials | Kaggle",
+      "href": "https://www.kaggle.com/learn",
+      "description": "Practical data skills you can apply immediately: that's what you'll learn in these no-cost courses. They're the fastest (and most fun) way to become a data scientist or improve your current skills.",
+      "meta": "kaggle.com"
+    },
+    {
+      "title": "Machine Learning Algorithms Cheatsheet [Python/R] | Kaggle",
+      "href": "https://www.kaggle.com/discussions/getting-started/156497",
+      "description": "Download - Machine Learning Algorithms Cheatsheet [Python/R]",
+      "meta": "kaggle.com"
+    },
+    {
+      "title": "numpy | Kaggle",
+      "href": "https://www.kaggle.com/discussions/getting-started/154965",
+      "description": "Discover what actually works in AI. Join millions of builders, researchers, and labs evaluating agents, models, and frontier technology through crowdsourced benchmarks, competitions, and hackathons.",
+      "meta": "kaggle.com"
+    },
+    {
+      "title": "huggingface.co",
+      "href": "https://huggingface.co/docs/transformers/summary",
+      "meta": "huggingface.co"
+    },
+    {
+      "title": "huggingface.co",
+      "href": "https://huggingface.co/docs/transformers/examples#the-big-table-of-tasks",
+      "meta": "huggingface.co"
+    },
+    {
+      "title": "Creating Neural Networks with Computational Graphs | Vipul Patel",
+      "href": "https://www.linkedin.com/feed/update/urn:li:activity:6551453166750187520",
+      "description": "Understanding & Creating Neural Networks with Computational Graphs from Scratch -Rafay Khan Other Great Articles: (downloadable) Google Data Engineering Cheatsheet (9 pages) https://lnkd.in/dbYMBGg Machine Learning Cheatsheets (16 Pages) h…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "#machinelearning #artificialintelligence #datascience #ml #ai #deeplearning #technology #python | Vipul Patel",
+      "href": "https://www.linkedin.com/feed/update/urn:li:activity:6551014767471927296",
+      "description": "Neural Networks & Deep Learning with Python ANN,CNN,RNN ✍ Visual Explanation of Deep Learning (21 pages) https://lnkd.in/eiiCB9w ✍ Walkthrough how to use Deep Learning to solve a problem with Python - (13 pages) https://lnkd.in/eBmbaJq ✍ A…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "Math of Deep Learning Neural Networks – Simplified | Vipul Patel",
+      "href": "https://www.linkedin.com/feed/update/urn:li:activity:6550852574898077696",
+      "description": "Math of Deep Learning Neural Networks Simplified (9 pages) - Roopam Upadhyay Other Great Articles: (downloadable) Detailed Guide to Build Better Predictive Models using Segmentation https://lnkd.in/dy9mFk5 20 Data Science Business Use Case…",
+      "meta": "linkedin.com"
+    },
+    {
+      "title": "Guide to Build Better Predictive Models using Segmentation | Vipul Patel",
+      "href": "https://www.linkedin.com/feed/update/urn:li:activity:6550576226271010816",
+      "description": "Detailed Guide to Build Better Predictive Models using Segmentation Other Great Articles: (downloadable) 20 Data Science Business Use Cases https://lnkd.in/duHBfRr Architecting a Machine Learning Pipeline https://lnkd.in/djmkDek Being a Da…",
+      "meta": "linkedin.com"
+    }
+  ],
+  "Specific techniques": [
+    {
+      "title": "tensorflow_constrained_optimization/README.md at master · google-research/tensorflow_constrained_optimization",
+      "href": "https://github.com/google-research/tensorflow_constrained_optimization/blob/master/README.md",
+      "description": "Contribute to google-research/tensorflow_constrained_optimization development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "What is Stratified Cross-Validation in Machine Learning? | Towards Data Science",
+      "href": "https://towardsdatascience.com/what-is-stratified-cross-validation-in-machine-learning-8844f3e7ae8e/",
+      "description": "This article explains stratified cross-validation and it's implementation in Python using Scikit-Learn. This article assumes the reader to...",
+      "meta": "towardsdatascience.com"
+    },
+    {
+      "title": "What is Hamming Distance?",
+      "href": "https://www.tutorialspoint.com/article/what-is-hamming-distance",
+      "description": "Hamming distance is a metric for comparing two binary data strings of equal length. It measures the number of bit positions in which the two bits are different, providing a quantitative way to assess how \"close\" or \"far apart\" two binary s…",
+      "meta": "tutorialspoint.com"
+    },
+    {
+      "title": "Euclidean distance - Wikipedia",
+      "href": "https://en.wikipedia.org/wiki/Euclidean_distance",
+      "description": "In mathematics, the Euclidean distance between two points in a Euclidean space is the length of the line segment between them. It can be calculated from the Cartesian coordinates of the points using the Pythagorean theorem, and therefore i…",
+      "meta": "en.wikipedia.org"
+    },
+    {
+      "title": "GitHub - microsoft/nni: An open source AutoML toolkit for automate machine learning lifecycle, including feature engine…",
+      "href": "https://github.com/microsoft/nni",
+      "description": "An open source AutoML toolkit for automate machine learning lifecycle, including feature engineering, neural architecture search, model compression and hyper-parameter tuning. - microsoft/nni",
+      "meta": "github.com"
+    }
+  ],
+  "_dead": [
+    {
+      "url": "https://www.reddit.com/r/learnmachinelearning/comments/fdwiex/gradient_descent_from_scratch_in_pure_python/?utm_source=share&utm_medium=ios_app&utm_name=iossmf",
+      "status": 200,
+      "error": "page.evaluate: Execution context was destroyed, most likely because of a navigation",
+      "section": "Gradient Descent",
+      "context": "* [ ] https://www.reddit.com/r/learnmachinelearning/comments/fdwiex/gradient_descent_from_scratch_in_pure_python/?utm_source=share&utm_medium=ios_app&utm_name=i"
+    },
+    {
+      "url": "https://towardsdatascience.com/image-clustering-using-transfer-learning-df5862779571",
+      "status": 404,
+      "error": null,
+      "section": "Backlog",
+      "context": "- https://towardsdatascience.com/image-clustering-using-transfer-learning-df5862779571"
+    }
+  ]
+}

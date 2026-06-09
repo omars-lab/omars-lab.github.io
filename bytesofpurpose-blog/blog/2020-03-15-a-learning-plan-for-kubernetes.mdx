@@ -1,0 +1,60 @@
+---
+slug: a-learning-plan-for-kubernetes
+title: "A Learning Plan for Kubernetes"
+description: "What to know when picking up Kubernetes — the core building blocks, then the patterns, scaling, and cloud specifics, with curated resources."
+authors: [oeid]
+tags: [backend, software-engineering, cloud, learning-plan]
+date: 2020-03-15
+draft: true
+---
+
+import CategoryCarousel from '@site/src/components/CategoryCarousel';
+
+When I picked up Kubernetes, the thing that kept me from drowning was treating it as
+two passes instead of one. The first pass is the core building blocks: the objects you
+declare, the `kubectl` muscle memory, `helm` for packaging, operators for the things
+that need a controller, and the surrounding ecosystem tooling. Get comfortable there
+and most of the cluster stops feeling like magic.
+
+The second pass is operational: how you scale workloads, how autoscaling actually
+behaves under load, and how a managed offering on a specific cloud changes the setup.
+This is the learning plan I kept as running notes — the resources worth starting from,
+grouped by which pass I used them in.
+
+<!-- truncate -->
+
+## How to approach it
+
+A good way in, in order:
+
+[Step 1] Learn the **core objects and tooling** first — declare pods, deployments, and
+services, get fluent with `kubectl`, package with `helm`, and understand when an
+operator is the right pattern.
+
+[Step 2] Study **real-world patterns and autoscaling** so you know how workloads behave
+under load and which patterns keep a cluster healthy as it grows.
+
+[Step 3] **Go deep on one cloud's managed offering** rather than staying generic. Pick a
+single managed Kubernetes service and learn its specifics end to end.
+
+The cards below are the specific resources I collected for each pass, and they grow over
+time.
+
+## Core Kubernetes
+
+Start here to build the foundation: the core objects you declare and the tooling you
+drive the cluster with day to day.
+
+<CategoryCarousel topic="learn-about-kubernetes" category="Core Kubernetes" />
+
+## Patterns, scaling & cloud
+
+Once the building blocks land, this is where the operational knowledge lives — the
+patterns that keep workloads healthy, how autoscaling behaves, and the cloud-specific
+managed setups.
+
+<CategoryCarousel topic="learn-about-kubernetes" category="Patterns, scaling & cloud" />
+
+---
+
+> This roadmap is curated from my own running notes on Kubernetes. The resource lists are a living collection — they're maintained as data, so the list grows without the post changing. Dead links from the original notes have been pruned.

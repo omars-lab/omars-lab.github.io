@@ -1,0 +1,69 @@
+---
+slug: a-learning-plan-for-java
+title: "A Learning Plan for Java"
+description: "What to know to be effective in Java beyond the language itself — the libraries, concurrency model, and Spring ecosystem worth learning, with curated resources."
+authors: [oeid]
+tags: [backend, software-engineering, java, learning-plan]
+date: 2021-10-04
+draft: true
+---
+
+import CategoryCarousel from '@site/src/components/CategoryCarousel';
+
+When I picked up Java seriously, the part that surprised me was how little the
+language itself mattered. The syntax, the type system, the object model: I had most
+of that down in a weekend. Being *effective* in Java turned out to be a different
+skill, and it lived almost entirely outside the language. It was knowing which
+everyday libraries to reach for, understanding how threads and the JVM actually
+behave under load, and learning Spring, since that's how the overwhelming majority of
+real Java applications are wired together.
+
+These are my running notes on that ecosystem: the things I keep coming back to,
+grouped by how I actually learned them. The cards under each section are the resources
+I collected, and they grow over time.
+
+<!-- truncate -->
+
+## How to approach it
+
+A good order to work through it:
+
+[Step 1] Get fluent with the **everyday libraries and tooling** first: the collections
+and utilities you'll use daily, plus the build and test tools (Maven or Gradle, JUnit)
+that every project assumes you already know.
+
+[Step 2] Build a real understanding of **concurrency and the JVM**: threads,
+executors, the memory model, garbage collection, and how to monitor and profile a
+running process. This is where Java rewards depth and where most production problems
+hide.
+
+[Step 3] Learn **Spring**, because it's the de facto way most Java services are built.
+Understanding dependency injection, Spring Boot, and the surrounding framework will do
+more for your day-to-day productivity than almost anything else.
+
+## Language, libraries & build tools
+
+Start here to get productive quickly: the standard-library pieces worth knowing well,
+plus the build and test tooling that every Java project takes for granted.
+
+<CategoryCarousel topic="learn-about-java" category="Language, libraries & build tools" />
+
+## Concurrency & the JVM
+
+This is the heart of being effective in Java. These cover threads and executors, the
+memory model, garbage collection, and the tools for monitoring and profiling what your
+process is actually doing at runtime.
+
+<CategoryCarousel topic="learn-about-java" category="Concurrency & the JVM" />
+
+## Spring & frameworks
+
+Most real Java apps run on Spring, so it's worth learning deliberately. These resources
+cover dependency injection, Spring Boot, and the wider framework ecosystem you'll meet
+on the job.
+
+<CategoryCarousel topic="learn-about-java" category="Spring & frameworks" />
+
+---
+
+> This roadmap is curated from my own running notes on Java. The resource lists are a living collection — they're maintained as data, so the list grows without the post changing. Dead links from the original notes have been pruned.

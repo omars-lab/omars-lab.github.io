@@ -1,0 +1,64 @@
+---
+slug: a-learning-plan-for-machine-learning
+title: "A Learning Plan for Machine Learning"
+description: "What to know when you're getting into machine learning — how to approach it, and a curated set of concepts, courses, and techniques to learn from."
+authors: [oeid]
+tags: [ai-engineering, llm, learning-plan]
+date: 2020-02-27
+draft: true
+---
+
+import CategoryCarousel from '@site/src/components/CategoryCarousel';
+
+When I started learning machine learning, the trap I kept falling into was reaching for
+a framework before I understood what the model was actually doing. The thing that
+finally made it click was treating ML as one idea: you have data, you want a function
+that maps inputs to outputs, and you let the data shape that function instead of writing
+the rules yourself. Once that framing landed, the rest stopped feeling like magic and
+started feeling like a toolbox.
+
+This is the learning plan I have kept and added to over the years. The resources are
+grouped by how I actually reached for them, and the lists keep growing.
+
+<!-- truncate -->
+
+## How to approach it
+
+A good way in, in order:
+
+[Step 1] Build the mental model first. Get clear on what ML is, the split between
+supervised and unsupervised learning, and the basics of regression and classification.
+The goal is to be able to look at a problem and name what kind of problem it is.
+
+[Step 2] Work through one comprehensive course end to end. Pick a single structured
+path rather than skimming a dozen, and follow it all the way so the concepts connect
+instead of staying as isolated facts.
+
+[Step 3] Learn specific techniques as you hit them. When a course or project surfaces
+something like gradient descent or how to split your data, go deep on that one piece in
+the moment. The technique sticks better when you have a problem that needs it.
+
+## Concepts & fundamentals
+
+Start here to build the model: what ML actually is, and the basics of supervised
+learning, regression, and classification that everything else builds on.
+
+<CategoryCarousel topic="learn-about-ml" category="Concepts & fundamentals" />
+
+## Courses & comprehensive resources
+
+When you are ready to go from scattered concepts to a real foundation, pick one of
+these structured courses or resource hubs and follow it through.
+
+<CategoryCarousel topic="learn-about-ml" category="Courses & comprehensive resources" />
+
+## Specific techniques
+
+Reach for these when a particular mechanism comes up and you want to understand it on
+its own: gradient descent, the train/test split, distance measures, and AutoML.
+
+<CategoryCarousel topic="learn-about-ml" category="Specific techniques" />
+
+---
+
+> This roadmap is curated from my own running notes on machine learning. The resource lists are a living collection — they're maintained as data, so the list grows without the post changing. Dead links from the original notes have been pruned.
