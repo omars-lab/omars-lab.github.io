@@ -1,0 +1,144 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The Software Backend Developer/Learning Topics/API Development/Learn about GraphQL.md",
+    "source_commit": "9011569b3bd01ce835e1134110fcb3c89eb6d9e7",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Learn about GraphQL": [
+    {
+      "title": "What is GraphQL and why it matters for headless CMS",
+      "href": "https://www.brightspot.com/cms-architecture/headless-cms/what-is-graphql-and-why-it-matters-for-headless-cms",
+      "description": "Discover why GraphQL is a game changer for API-based CMS and how it compares to REST.",
+      "meta": "brightspot.com"
+    },
+    {
+      "title": "GitHub - hasura/graphql-engine: Blazing fast, instant realtime GraphQL APIs on all your data with fine grained access c…",
+      "href": "https://github.com/hasura/graphql-engine",
+      "description": "Blazing fast, instant realtime GraphQL APIs on all your data with fine grained access control, also trigger webhooks on database events. - hasura/graphql-engine",
+      "meta": "github.com"
+    },
+    {
+      "title": "GraphQL Best Practices | GraphQL",
+      "href": "https://graphql.org/learn/best-practices/",
+      "description": "The GraphQL specification is intentionally silent on a handful of important issues facing APIs such as dealing with the network, authorization, and pagination. This doesn’t mean that there aren’t solutions for these issues when using Graph…",
+      "meta": "graphql.org"
+    },
+    {
+      "title": "Thinking in Graphs | GraphQL",
+      "href": "https://graphql.org/learn/thinking-in-graphs/",
+      "description": "Graphs are powerful tools for modeling many real-world phenomena because they resemble our natural mental models and verbal descriptions of the underlying process. With GraphQL, you model your business domain as a graph by defining a schem…",
+      "meta": "graphql.org"
+    },
+    {
+      "title": "Remote Joins: A GraphQL API to join a database & other data-sources",
+      "href": "https://hasura.io/blog/remote-joins-a-graphql-api-to-join-database-and-other-data-sources",
+      "description": "Remote Joins in Hasura extend the concept of joining data across tables, to being able to join data across tables and remote data sources.",
+      "meta": "hasura.io"
+    },
+    {
+      "title": "GraphQL Tutorials",
+      "href": "https://graphql.com/tutorials/",
+      "description": "Learn the fundamentals of schemas and queries, then implement some apps with hands-on step-by-step tutorials.",
+      "meta": "graphql.com"
+    },
+    {
+      "title": "Course Introduction | GraphQL ReasonML React Apollo Tutorial",
+      "href": "https://hasura.io/learn/graphql/reason-react-apollo/introduction/",
+      "description": "A powerful and concise tutorial that will introduce you to GraphQL and integrating GraphQL into your ReasonReact app with Apollo, in the shortest amount of time possible.",
+      "meta": "hasura.io"
+    },
+    {
+      "title": "Course Introduction | GraphQL React Apollo Typescript Tutorial",
+      "href": "https://hasura.io/learn/graphql/typescript-react-apollo/introduction/",
+      "description": "A powerful and concise tutorial that will introduce you to GraphQL and integrating GraphQL and Typescript into your React app with Apollo, in the shortest amount of time possible.",
+      "meta": "hasura.io"
+    }
+  ],
+  "Tinker with GraphQL and Postgres ...": [
+    {
+      "title": "hasura/graphql-engine - Docker Image",
+      "href": "https://hub.docker.com/r/hasura/graphql-engine",
+      "description": "Blazing fast, instant GraphQL APIs on Postgres with fine grained access control (https://hasura.io)",
+      "meta": "hub.docker.com"
+    },
+    {
+      "title": "GitHub - hasura/learn-graphql: Real world GraphQL tutorials for frontend developers with deadlines!",
+      "href": "https://github.com/hasura/learn-graphql",
+      "description": "Real world GraphQL tutorials for frontend developers with deadlines! - hasura/learn-graphql",
+      "meta": "github.com"
+    },
+    {
+      "title": "GitHub - walmartlabs/json-to-simple-graphql-schema: Transforms JSON input into a GraphQL schema",
+      "href": "https://github.com/walmartlabs/json-to-simple-graphql-schema",
+      "description": "Transforms JSON input into a GraphQL schema. Contribute to walmartlabs/json-to-simple-graphql-schema development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "GraphQL Core Concepts Tutorial",
+      "href": "https://www.howtographql.com/basics/2-core-concepts/",
+      "description": "GraphQL Core Concepts Tutorial",
+      "meta": "howtographql.com"
+    },
+    {
+      "title": "Understanding GraphQL (finally)",
+      "href": "https://medium.com/@erinfoox/understanding-graphql-finally-a75986d8df0a",
+      "description": "Understanding GraphQL (finally) 💡 I get it!I understand GraphQL and most of the magical powers it is capable of. It took a lot of research, tutorials, youtube videos and questions to wrap my head …",
+      "meta": "medium.com"
+    },
+    {
+      "title": "Documentation",
+      "href": "https://www.apollographql.com/docs/#new-to-apollo-or-graphql",
+      "description": "Develop anything.",
+      "meta": "apollographql.com"
+    },
+    {
+      "title": "Documentation",
+      "href": "https://www.apollographql.com/docs/",
+      "description": "Develop anything.",
+      "meta": "apollographql.com"
+    },
+    {
+      "title": "Schemas and Types | GraphQL",
+      "href": "https://graphql.org/learn/schema/",
+      "description": "Learn about the different elements of the GraphQL type system",
+      "meta": "graphql.org"
+    }
+  ],
+  "_dead": [
+    {
+      "url": "https://github.com/sassoftware/restaf-graphql-server",
+      "status": 404,
+      "error": null,
+      "section": "Learn about GraphQL",
+      "context": "- https://github.com/sassoftware/restaf-graphql-server"
+    },
+    {
+      "url": "https://hasura.io/docs/1.0/graphql/manual/getting-started/index.html#get-started-from-scratch",
+      "status": 404,
+      "error": null,
+      "section": "Tinker with GraphQL and Postgres ...",
+      "context": "- https://hasura.io/docs/1.0/graphql/manual/getting-started/index.html#get-started-from-scratch"
+    },
+    {
+      "url": "https://www.apollographql.com/blog/graphql-explained-5844742f195e/",
+      "status": 404,
+      "error": null,
+      "section": "Tinker with GraphQL and Postgres ...",
+      "context": "https://www.apollographql.com/blog/graphql-explained-5844742f195e/"
+    },
+    {
+      "url": "https://developer.github.com/v4/explorer/",
+      "status": 404,
+      "error": null,
+      "section": "Tinker with GraphQL and Postgres ...",
+      "context": "https://developer.github.com/v4/explorer/"
+    },
+    {
+      "url": "https://www.apollographql.com/blog/the-anatomy-of-a-graphql-query-6dffa9e9e747/",
+      "status": 404,
+      "error": null,
+      "section": "Tinker with GraphQL and Postgres ...",
+      "context": "https://www.apollographql.com/blog/the-anatomy-of-a-graphql-query-6dffa9e9e747/"
+    }
+  ]
+}

@@ -13,6 +13,7 @@
 import type { CarouselItem } from '@site/src/components/Carousel';
 
 import learningResources from './learning-resources.json';
+import learnAboutGraphql from './learn-about-graphql.json';
 
 export type ReferenceItem = CarouselItem;
 
@@ -34,6 +35,7 @@ export interface ReferenceTopic {
 // The registry: topic key -> its data. Add a line here when you add a topic.
 export const references: Record<string, ReferenceTopic> = {
   'learning-resources': learningResources as unknown as ReferenceTopic,
+  'learn-about-graphql': learnAboutGraphql as unknown as ReferenceTopic,
 };
 
 // Look up one category's items for a topic. Returns [] if absent so a post
