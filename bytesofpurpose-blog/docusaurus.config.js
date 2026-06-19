@@ -758,7 +758,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
                 },
                 {
                   label: 'Support',
-                  href: 'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD',
+                  href: 'https://buymeacoffee.com/omareid',
                   position: 'right',
                 },
               ]
