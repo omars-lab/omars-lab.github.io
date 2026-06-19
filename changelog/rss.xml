@@ -23,7 +23,7 @@
 <p>Defaults if meta omitted: type=chore, category=development, priority=medium,
 component=Claude. Date drives the card's execution/inception date.
 --&gt;</p>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement">[2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement" class="hash-link" aria-label="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" title="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement">[2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement" class="hash-link" aria-label="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" title="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" translate="no">​</a></h2>
 <p>Formalized the unwritten "every sidebar section leads with an emoji" convention into a documented, enforced contract, and backfilled the ~18 category labels that had drifted. The validator now warns on emoji-less <code>_category_.json</code> labels (and rolls leaf-doc misses into one count), the docs-structure hook nudges on save, and <code>emojis.mdx</code> carries the topic→emoji map as the source of truth. Also trimmed two over-long page descriptions to the SEO/share window.</p>
 <ul>
 <li class="">Validator: emoji-prefix-category (per-finding) + emoji-prefix-doc (aggregate, --emoji expands) + sidebar-label-missing guard</li>
@@ -33,7 +33,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Backfilled leading emojis on ~18 drifted category labels (📈 Career Levels, 🛠️ Skills, 🤝 Cultural Values, 📖 Terminology, 💬 Prompts, …)</li>
 <li class="">Trimmed 2 over-160-char descriptions (my-problem-solving-approach, my-contributions) + resolved em-dash voice flags</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag">[2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag" class="hash-link" aria-label="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" title="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag">[2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-premium-go-live-devprod-parity-secure-deploy-server-side-internal-flag" class="hash-link" aria-label="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" title="Direct link to [2026-06-02] Premium go-live: dev/prod parity, secure deploy, server-side internal flag" translate="no">​</a></h2>
 <p>Took the premium hard-gate from code-complete to LIVE: provisioned the Cloudflare infra (token scopes, Worker deploy, passphrase), gave <code>yarn start</code> true dev/prod parity (dev encrypts + a service-token-authed <code>/api/*</code> proxy, after proving cookie-forwarding impossible), made <code>make deploy</code> fail-closed (aborts on missing passphrase, re-runs the V5 leak gate, which now also asserts the passphrase never ships), and moved the internal-tester roster server-side so author emails no longer leak in the public bundle. Added a <code>manage-infrastructure</code> skill, a secure-by-default tenet, and post-deploy live verification.</p>
 <ul>
 <li class="">#19/#20/#21: Cloudflare infra: scope CF_API_TOKEN, set STATICRYPT_PASSPHRASE, deploy the access-gate Worker</li>
@@ -45,7 +45,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Fix pre-existing premium-crypto.ts Uint8Array/ArrayBuffer typecheck errors</li>
 <li class="">New <code>manage-infrastructure</code> skill (Worker provisioning runbook + confirm-token-scopes.sh) + <code>make rotate-premium-secret</code> / <code>validate-dev-service-token</code> / <code>validate-deployment</code></li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering">[2026-06-02] LinkedIn-gated premium content + internal-analytics filtering<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering" class="hash-link" aria-label="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" title="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering">[2026-06-02] LinkedIn-gated premium content + internal-analytics filtering<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-linkedin-gated-premium-content--internal-analytics-filtering" class="hash-link" aria-label="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" title="Direct link to [2026-06-02] LinkedIn-gated premium content + internal-analytics filtering" translate="no">​</a></h2>
 <p>Shipped an end-to-end premium-content hard gate for the static site: premium docs are encrypted at MDX-compile time and the decryption key is vended only to LinkedIn-signed-in readers by a Cloudflare Worker behind Access (so plaintext is in neither the HTML nor the JS bundle, proven by a blocking deploy gate and e2e). Also added layered internal-analytics filtering, a navbar auth control, themed reader-facing surfaces, four skill updates, and a published System Design (with an honest white-on-white wink that the source is public).</p>
 <ul>
 <li class="">Phase A: DebugMenu Links section</li>
@@ -67,7 +67,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Easter egg + honest caveat in the System Design (premium is free via public repo)</li>
 <li class="">Phase G: finalize + reconcile the premium-content-gating design doc</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-06-01-blog-modernization--regression--a11y--seo-harness">[2026-06-01] Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01-blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" title="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-01-blog-modernization--regression--a11y--seo-harness">[2026-06-01] Blog modernization + regression / a11y / SEO harness<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-01-blog-modernization--regression--a11y--seo-harness" class="hash-link" aria-label="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" title="Direct link to [2026-06-01] Blog modernization + regression / a11y / SEO harness" translate="no">​</a></h2>
 <p>Modernized the site's front door (tokens, fonts, hero, cards, latest-posts strip), fixed all Lighthouse a11y/SEO bugs to 100, and stood up an always-on regression harness (Playwright projects + axe a11y + SEO gates), then burned down the resulting test/a11y debt.</p>
 <ul>
 <li class="">Fix the two Lighthouse a11y bugs (image-alt + heading-order)</li>
@@ -83,7 +83,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Burn down baselined a11y debt (code-token contrast, task-list labels, prose link underlines)</li>
 <li class="">SEO enhancements: homepage WebSite/Organization JSON-LD + per-page validity test</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-05-31-ab-experiment-lifecycle--analytics-enablement">[2026-05-31] A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31-ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" title="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-05-31-ab-experiment-lifecycle--analytics-enablement">[2026-05-31] A/B experiment lifecycle + analytics enablement<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-05-31-ab-experiment-lifecycle--analytics-enablement" class="hash-link" aria-label="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" title="Direct link to [2026-05-31] A/B experiment lifecycle + analytics enablement" translate="no">​</a></h2>
 <p>Built the end-to-end A/B experimentation system (PostHog), launched the first experiment, purged rotated secrets from git history, and shipped the site.</p>
 <ul>
 <li class="">A/B test: define support-button-copy experiment</li>
@@ -101,7 +101,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Create publish-site skill (draft-readiness triage + deploy)</li>
 <li class="">Rewrite git history to purge rotated credentials (filter-repo) + force-push</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="2026-06-02-two-tier-craftself-docs-ia">[2026-06-02] Two-tier Craft/Self docs IA<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-two-tier-craftself-docs-ia" class="hash-link" aria-label="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" title="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-02-two-tier-craftself-docs-ia">[2026-06-02] Two-tier Craft/Self docs IA<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-02-two-tier-craftself-docs-ia" class="hash-link" aria-label="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" title="Direct link to [2026-06-02] Two-tier Craft/Self docs IA" translate="no">​</a></h2>
 <p>Split the docs into two top-level halves: Craft (outrospective: the professional topics, shared) and Self (introspective: the inward journey), each its own navbar item with an isolated sidebar, folder-path-mirrored slugs, preserved URLs via redirects, and distinct section welcomes; plus the migration engine, validators, e2e coverage, and a changelog-archive reminder hook.</p>
 <ul>
 <li class="">Move 10 topic folders under docs/craft/ and docs/self/ (git mv)</li>
@@ -125,7 +125,7 @@ component=Claude. Date drives the card's execution/inception date.
             <guid>https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis</guid>
             <pubDate>Thu, 20 Nov 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[Analysis of major features found in git history that were missing from changelog, with recommendations and completion status]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Analyze git commit history to identify major features and mechanics that should be tracked in the changelog but were missing, including:</p>
 <ol>
 <li class=""><strong>Storybook Integration</strong> - Identify if entry exists for Storybook component documentation tool</li>
@@ -142,8 +142,8 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Prioritize entries by importance</li>
 <li class="">Document analysis findings for future reference</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-analysis-completed-2025-11-20">✅ Analysis Completed (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#-analysis-completed-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Analysis Completed (2025-11-20)" title="Direct link to ✅ Analysis Completed (2025-11-20)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-analysis-completed-2025-11-20">✅ Analysis Completed (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#-analysis-completed-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Analysis Completed (2025-11-20)" title="Direct link to ✅ Analysis Completed (2025-11-20)" translate="no">​</a></h3>
 <p><strong>Work Period:</strong> November 20, 2025</p>
 <p><strong>Files/Folders Impacted:</strong></p>
 <ul>
@@ -157,7 +157,7 @@ component=Claude. Date drives the card's execution/inception date.
 <li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration"><code>changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration.md</code></a> - CDK entry reviewed</li>
 </ul>
 <p><strong>Analysis Findings:</strong></p>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="1-storybook-integration--high-priority">1. Storybook Integration ⭐ HIGH PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#1-storybook-integration--high-priority" class="hash-link" aria-label="Direct link to 1. Storybook Integration ⭐ HIGH PRIORITY" title="Direct link to 1. Storybook Integration ⭐ HIGH PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-storybook-integration--high-priority">1. Storybook Integration ⭐ HIGH PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#1-storybook-integration--high-priority" class="hash-link" aria-label="Direct link to 1. Storybook Integration ⭐ HIGH PRIORITY" title="Direct link to 1. Storybook Integration ⭐ HIGH PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ✅ <strong>COMPLETED</strong> - Entry exists and is complete</p>
 <p><strong>Entry Found:</strong></p>
 <ul>
@@ -173,7 +173,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Entry properly documents Storybook integration with all required details.</p>
 <hr>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="2-seo-improvements--high-priority">2. SEO Improvements ⭐ HIGH PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#2-seo-improvements--high-priority" class="hash-link" aria-label="Direct link to 2. SEO Improvements ⭐ HIGH PRIORITY" title="Direct link to 2. SEO Improvements ⭐ HIGH PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-seo-improvements--high-priority">2. SEO Improvements ⭐ HIGH PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#2-seo-improvements--high-priority" class="hash-link" aria-label="Direct link to 2. SEO Improvements ⭐ HIGH PRIORITY" title="Direct link to 2. SEO Improvements ⭐ HIGH PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ✅ <strong>COMPLETED</strong> - Entry exists and has been updated</p>
 <p><strong>Entry Found:</strong></p>
 <ul>
@@ -190,7 +190,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Entry has been updated with execution details and commit references.</p>
 <hr>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="3-card-and-timeline-components--medium-priority">3. Card and Timeline Components ⭐ MEDIUM PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#3-card-and-timeline-components--medium-priority" class="hash-link" aria-label="Direct link to 3. Card and Timeline Components ⭐ MEDIUM PRIORITY" title="Direct link to 3. Card and Timeline Components ⭐ MEDIUM PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-card-and-timeline-components--medium-priority">3. Card and Timeline Components ⭐ MEDIUM PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#3-card-and-timeline-components--medium-priority" class="hash-link" aria-label="Direct link to 3. Card and Timeline Components ⭐ MEDIUM PRIORITY" title="Direct link to 3. Card and Timeline Components ⭐ MEDIUM PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ✅ <strong>COMPLETED</strong> - Entry exists and is complete</p>
 <p><strong>Entry Found:</strong></p>
 <ul>
@@ -205,7 +205,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Entry properly documents component creation.</p>
 <hr>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="4-changelog-system--medium-priority">4. Changelog System ⭐ MEDIUM PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#4-changelog-system--medium-priority" class="hash-link" aria-label="Direct link to 4. Changelog System ⭐ MEDIUM PRIORITY" title="Direct link to 4. Changelog System ⭐ MEDIUM PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-changelog-system--medium-priority">4. Changelog System ⭐ MEDIUM PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#4-changelog-system--medium-priority" class="hash-link" aria-label="Direct link to 4. Changelog System ⭐ MEDIUM PRIORITY" title="Direct link to 4. Changelog System ⭐ MEDIUM PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ✅ <strong>COMPLETED</strong> - Entries exist and are complete</p>
 <p><strong>Entries Found:</strong></p>
 <ul>
@@ -217,7 +217,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Changelog system is properly documented with multiple entries covering different aspects.</p>
 <hr>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="5-frontmatter-management-mechanism--low-priority">5. Frontmatter Management Mechanism ⭐ LOW PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#5-frontmatter-management-mechanism--low-priority" class="hash-link" aria-label="Direct link to 5. Frontmatter Management Mechanism ⭐ LOW PRIORITY" title="Direct link to 5. Frontmatter Management Mechanism ⭐ LOW PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-frontmatter-management-mechanism--low-priority">5. Frontmatter Management Mechanism ⭐ LOW PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#5-frontmatter-management-mechanism--low-priority" class="hash-link" aria-label="Direct link to 5. Frontmatter Management Mechanism ⭐ LOW PRIORITY" title="Direct link to 5. Frontmatter Management Mechanism ⭐ LOW PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ✅ <strong>COMPLETED</strong> - Entry exists and is complete</p>
 <p><strong>Entry Found:</strong></p>
 <ul>
@@ -233,7 +233,7 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Entry properly documents frontmatter management mechanism and tools.</p>
 <hr>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="6-automated-deployment--low-priority">6. Automated Deployment ⭐ LOW PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#6-automated-deployment--low-priority" class="hash-link" aria-label="Direct link to 6. Automated Deployment ⭐ LOW PRIORITY" title="Direct link to 6. Automated Deployment ⭐ LOW PRIORITY" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="6-automated-deployment--low-priority">6. Automated Deployment ⭐ LOW PRIORITY<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#6-automated-deployment--low-priority" class="hash-link" aria-label="Direct link to 6. Automated Deployment ⭐ LOW PRIORITY" title="Direct link to 6. Automated Deployment ⭐ LOW PRIORITY" translate="no">​</a></h4>
 <p><strong>Status:</strong> ⚠️ <strong>PARTIALLY ADDRESSED</strong> - Entry exists but needs update</p>
 <p><strong>Entry Found:</strong></p>
 <ul>
@@ -254,13 +254,13 @@ component=Claude. Date drives the card's execution/inception date.
 </ul>
 <p><strong>Result:</strong> Entry exists but needs execution details if deployment automation is active.</p>
 <hr>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="summary">Summary<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#summary" class="hash-link" aria-label="Direct link to Summary" title="Direct link to Summary" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="completion-status">Completion Status<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#completion-status" class="hash-link" aria-label="Direct link to Completion Status" title="Direct link to Completion Status" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="summary">Summary<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#summary" class="hash-link" aria-label="Direct link to Summary" title="Direct link to Summary" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="completion-status">Completion Status<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#completion-status" class="hash-link" aria-label="Direct link to Completion Status" title="Direct link to Completion Status" translate="no">​</a></h3>
 <ul>
 <li class="">✅ <strong>Completed:</strong> 5/6 items (83%)</li>
 <li class="">⚠️ <strong>Partially Addressed:</strong> 1/6 items (17%)</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="priority-breakdown">Priority Breakdown<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#priority-breakdown" class="hash-link" aria-label="Direct link to Priority Breakdown" title="Direct link to Priority Breakdown" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="priority-breakdown">Priority Breakdown<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#priority-breakdown" class="hash-link" aria-label="Direct link to Priority Breakdown" title="Direct link to Priority Breakdown" translate="no">​</a></h3>
 <p><strong>High Priority Items:</strong></p>
 <ul>
 <li class="">✅ Storybook Integration - COMPLETED</li>
@@ -276,21 +276,21 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">✅ Frontmatter Management - COMPLETED</li>
 <li class="">⚠️ Automated Deployment - PARTIALLY ADDRESSED</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="key-findings">Key Findings<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#key-findings" class="hash-link" aria-label="Direct link to Key Findings" title="Direct link to Key Findings" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-findings">Key Findings<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#key-findings" class="hash-link" aria-label="Direct link to Key Findings" title="Direct link to Key Findings" translate="no">​</a></h3>
 <ol>
 <li class=""><strong>Most items have been addressed</strong> - All high and medium priority items are properly documented</li>
 <li class=""><strong>Entries are well-structured</strong> - All completed entries include execution details, commits, and proper formatting</li>
 <li class=""><strong>One item needs attention</strong> - Deployment automation entry exists but needs execution details if automation is active</li>
 <li class=""><strong>Analysis served its purpose</strong> - The analysis successfully identified gaps and those gaps have been filled</li>
 </ol>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="impact">Impact<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#impact" class="hash-link" aria-label="Direct link to Impact" title="Direct link to Impact" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="impact">Impact<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#impact" class="hash-link" aria-label="Direct link to Impact" title="Direct link to Impact" translate="no">​</a></h3>
 <ul>
 <li class=""><strong>Changelog coverage improved</strong> - Major features are now properly tracked</li>
 <li class=""><strong>Historical accuracy</strong> - Entries reflect actual implementation timeline</li>
 <li class=""><strong>Documentation quality</strong> - All entries include proper execution details and commit references</li>
 <li class=""><strong>Transparency</strong> - Blog evolution is now properly documented</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="next-steps">Next Steps<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-changelog-missing-features-analysis#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h3>
 <ol>
 <li class="">✅ <strong>Completed:</strong> All high and medium priority items documented</li>
 <li class="">⚠️ <strong>Optional:</strong> Update CDK entry with deployment automation details if deployment is automated</li>
@@ -304,7 +304,7 @@ component=Claude. Date drives the card's execution/inception date.
             <guid>https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides</guid>
             <pubDate>Thu, 20 Nov 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[Create comprehensive guides for adding different types of content including blog posts, changelog entries, documentation, and design posts]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Create comprehensive documentation guides for adding different types of content to the blog:</p>
 <ol>
 <li class="">
@@ -356,8 +356,8 @@ component=Claude. Date drives the card's execution/inception date.
 <p><strong>Update parent README</strong> - Update blogging techniques README to include new section</p>
 </li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-work-completed-2025-11-20">✅ Work Completed (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#-work-completed-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Work Completed (2025-11-20)" title="Direct link to ✅ Work Completed (2025-11-20)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-work-completed-2025-11-20">✅ Work Completed (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-adding-content-guides#-work-completed-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Work Completed (2025-11-20)" title="Direct link to ✅ Work Completed (2025-11-20)" translate="no">​</a></h3>
 <p><strong>Status:</strong> Completed</p>
 <p><strong>Files Created:</strong></p>
 <ul>
@@ -467,7 +467,7 @@ component=Claude. Date drives the card's execution/inception date.
             <guid>https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation</guid>
             <pubDate>Thu, 20 Nov 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[Move changelog system documentation from changelog directory to docs folder for better discoverability and organization]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Move changelog system documentation from the changelog directory to the docs folder to:</p>
 <ul>
 <li class="">Fix broken link in <code>changelog/README.md</code> that references <code>/docs/techniques/blogging-techniques/changelog-system</code></li>
@@ -476,8 +476,8 @@ component=Claude. Date drives the card's execution/inception date.
 <li class="">Convert to MDX format for consistency with other documentation files</li>
 <li class="">Update all references to point to the new location</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-documentation-moved-2025-11-20">✅ Documentation Moved (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#-documentation-moved-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Documentation Moved (2025-11-20)" title="Direct link to ✅ Documentation Moved (2025-11-20)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-documentation-moved-2025-11-20">✅ Documentation Moved (2025-11-20)<a href="https://blog.bytesofpurpose.com/changelog/2025/11/20/content/content-docs-changelog-system-documentation#-documentation-moved-2025-11-20" class="hash-link" aria-label="Direct link to ✅ Documentation Moved (2025-11-20)" title="Direct link to ✅ Documentation Moved (2025-11-20)" translate="no">​</a></h3>
 <p><strong>Status:</strong> Completed</p>
 <p><strong>Files Created:</strong></p>
 <ul>
@@ -552,15 +552,15 @@ Post on - how do I know what the most important things are in an ambiguous space
 Not necessarily this - but how do I push for the most important things - are we doing things that are not as important ...
 Why do I give off this impression?
 Should I merge this  /Users/omareid/workplace/git/blueprints</p>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to bring my roles to my blog</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to bring my process to my blog</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need a rag POc on my blog indesing my blog ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to bring my roadmaps to my blog ...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-future-content-ideas#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -570,20 +570,20 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Design and implement knowledge agents for blog content management and discovery]]></description>
             <content:encoded><![CDATA[<h1>Blog Content - Knowledge Agents Design</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Create a GIF?<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->How do I show the agents in action?</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->How can I showcase something im proud of for roles?</li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Blog post for knowledge agents ...<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I should capture the following ...<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- --># Product Vision</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- --># Tech Vision<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Am I at a point where I can / should switch to langchan</li>
 </ul>
 </li>
@@ -595,9 +595,9 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/content/2025-XX-XX-content-post-knowledge-agents-design#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -607,7 +607,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Create reusable React components that wrap Mermaid diagrams for easier embedding and consistent styling across blog posts and documentation]]></description>
             <content:encoded><![CDATA[<h1>Blob Changlog - Embedding Mermaid Diagrams</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="">Use this to iterate on mermaid diagrams<!-- -->
 <ul>
 <li class=""><a href="https://github.com/mermaid-js/mermaid-cli" target="_blank" rel="noopener noreferrer" class="">GitHub: mermaid-js/mermaid-cli</a></li>
@@ -619,8 +619,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="overview">Overview<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h3>
 <p>Currently, Mermaid diagrams are embedded directly in MDX files using code fences. While this works, creating reusable React components would provide:</p>
 <ul>
 <li class="">Consistent styling and theming</li>
@@ -629,8 +629,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Component-level documentation in Storybook</li>
 <li class="">Type safety and validation</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="planned-components">Planned Components<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#planned-components" class="hash-link" aria-label="Direct link to Planned Components" title="Direct link to Planned Components" translate="no">​</a></h3>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="1-mermaiddiagram-component">1. MermaidDiagram Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#1-mermaiddiagram-component" class="hash-link" aria-label="Direct link to 1. MermaidDiagram Component" title="Direct link to 1. MermaidDiagram Component" translate="no">​</a></h4>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="planned-components">Planned Components<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#planned-components" class="hash-link" aria-label="Direct link to Planned Components" title="Direct link to Planned Components" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-mermaiddiagram-component">1. MermaidDiagram Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#1-mermaiddiagram-component" class="hash-link" aria-label="Direct link to 1. MermaidDiagram Component" title="Direct link to 1. MermaidDiagram Component" translate="no">​</a></h4>
 <p><strong>Purpose</strong>: Base component for rendering Mermaid diagrams</p>
 <p><strong>Features</strong>:</p>
 <ul>
@@ -642,8 +642,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Configurable Mermaid options</li>
 </ul>
 <p><strong>Props</strong>:</p>
-<div class="language-typescript codeBlockContainer_ImEH theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_hOzM"><pre tabindex="0" class="prism-code language-typescript codeBlock_A1nP thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_rQ0W"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token keyword" style="color:hsl(301, 63%, 40%)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:hsl(35, 99%, 36%)">MermaidDiagramProps</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  code</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  title</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  config</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> MermaidConfig</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  height</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">number</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  theme</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'light'</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'dark'</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'auto'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  className</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br></span></code></pre></div></div>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="2-mermaidtimeline-component">2. MermaidTimeline Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#2-mermaidtimeline-component" class="hash-link" aria-label="Direct link to 2. MermaidTimeline Component" title="Direct link to 2. MermaidTimeline Component" translate="no">​</a></h4>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token keyword" style="color:hsl(301, 63%, 40%)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:hsl(35, 99%, 36%)">MermaidDiagramProps</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  code</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  title</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  config</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> MermaidConfig</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  height</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">number</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  theme</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'light'</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'dark'</span><span class="token plain"> </span><span class="token operator" style="color:hsl(221, 87%, 60%)">|</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'auto'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  className</span><span class="token operator" style="color:hsl(221, 87%, 60%)">?</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token builtin" style="color:hsl(119, 34%, 47%)">string</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br></span></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-mermaidtimeline-component">2. MermaidTimeline Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#2-mermaidtimeline-component" class="hash-link" aria-label="Direct link to 2. MermaidTimeline Component" title="Direct link to 2. MermaidTimeline Component" translate="no">​</a></h4>
 <p><strong>Purpose</strong>: Specialized component for timeline diagrams</p>
 <p><strong>Features</strong>:</p>
 <ul>
@@ -652,7 +652,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Date formatting helpers</li>
 <li class="">Color scheme integration</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="3-mermaidflowchart-component">3. MermaidFlowchart Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#3-mermaidflowchart-component" class="hash-link" aria-label="Direct link to 3. MermaidFlowchart Component" title="Direct link to 3. MermaidFlowchart Component" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-mermaidflowchart-component">3. MermaidFlowchart Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#3-mermaidflowchart-component" class="hash-link" aria-label="Direct link to 3. MermaidFlowchart Component" title="Direct link to 3. MermaidFlowchart Component" translate="no">​</a></h4>
 <p><strong>Purpose</strong>: Specialized component for flowcharts and process diagrams</p>
 <p><strong>Features</strong>:</p>
 <ul>
@@ -661,7 +661,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Node styling helpers</li>
 <li class="">Link styling customization</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="4-mermaidsequence-component">4. MermaidSequence Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#4-mermaidsequence-component" class="hash-link" aria-label="Direct link to 4. MermaidSequence Component" title="Direct link to 4. MermaidSequence Component" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-mermaidsequence-component">4. MermaidSequence Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#4-mermaidsequence-component" class="hash-link" aria-label="Direct link to 4. MermaidSequence Component" title="Direct link to 4. MermaidSequence Component" translate="no">​</a></h4>
 <p><strong>Purpose</strong>: Specialized component for sequence diagrams</p>
 <p><strong>Features</strong>:</p>
 <ul>
@@ -670,7 +670,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Message formatting</li>
 <li class="">Activation box styling</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="5-mermaidgantt-component">5. MermaidGantt Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#5-mermaidgantt-component" class="hash-link" aria-label="Direct link to 5. MermaidGantt Component" title="Direct link to 5. MermaidGantt Component" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-mermaidgantt-component">5. MermaidGantt Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#5-mermaidgantt-component" class="hash-link" aria-label="Direct link to 5. MermaidGantt Component" title="Direct link to 5. MermaidGantt Component" translate="no">​</a></h4>
 <p><strong>Purpose</strong>: Specialized component for Gantt charts</p>
 <p><strong>Features</strong>:</p>
 <ul>
@@ -679,8 +679,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Task grouping</li>
 <li class="">Milestone markers</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="implementation-strategy">Implementation Strategy<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#implementation-strategy" class="hash-link" aria-label="Direct link to Implementation Strategy" title="Direct link to Implementation Strategy" translate="no">​</a></h3>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="phase-1-base-component">Phase 1: Base Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-1-base-component" class="hash-link" aria-label="Direct link to Phase 1: Base Component" title="Direct link to Phase 1: Base Component" translate="no">​</a></h4>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="implementation-strategy">Implementation Strategy<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#implementation-strategy" class="hash-link" aria-label="Direct link to Implementation Strategy" title="Direct link to Implementation Strategy" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="phase-1-base-component">Phase 1: Base Component<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-1-base-component" class="hash-link" aria-label="Direct link to Phase 1: Base Component" title="Direct link to Phase 1: Base Component" translate="no">​</a></h4>
 <ol>
 <li class="">Create <code>src/components/Mermaid/MermaidDiagram.tsx</code></li>
 <li class="">Integrate with <code>@docusaurus/theme-mermaid</code></li>
@@ -689,48 +689,48 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Add loading states</li>
 <li class="">Create Storybook stories</li>
 </ol>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="phase-2-specialized-components">Phase 2: Specialized Components<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-2-specialized-components" class="hash-link" aria-label="Direct link to Phase 2: Specialized Components" title="Direct link to Phase 2: Specialized Components" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="phase-2-specialized-components">Phase 2: Specialized Components<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-2-specialized-components" class="hash-link" aria-label="Direct link to Phase 2: Specialized Components" title="Direct link to Phase 2: Specialized Components" translate="no">​</a></h4>
 <ol>
 <li class="">Create specialized components (Timeline, Flowchart, Sequence, Gantt)</li>
 <li class="">Add component-specific styling and helpers</li>
 <li class="">Create Storybook stories for each</li>
 <li class="">Document usage patterns</li>
 </ol>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="phase-3-integration">Phase 3: Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-3-integration" class="hash-link" aria-label="Direct link to Phase 3: Integration" title="Direct link to Phase 3: Integration" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="phase-3-integration">Phase 3: Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#phase-3-integration" class="hash-link" aria-label="Direct link to Phase 3: Integration" title="Direct link to Phase 3: Integration" translate="no">​</a></h4>
 <ol>
 <li class="">Update documentation in <code>docs/6-techniques/3-blogging-techniques/2-embed-diagrams/</code></li>
 <li class="">Create usage examples</li>
 <li class="">Migrate existing mermaid diagrams to use components (optional)</li>
 <li class="">Add component to MDXComponents for global availability</li>
 </ol>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="technical-considerations">Technical Considerations<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#technical-considerations" class="hash-link" aria-label="Direct link to Technical Considerations" title="Direct link to Technical Considerations" translate="no">​</a></h3>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="dependencies">Dependencies<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#dependencies" class="hash-link" aria-label="Direct link to Dependencies" title="Direct link to Dependencies" translate="no">​</a></h4>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="technical-considerations">Technical Considerations<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#technical-considerations" class="hash-link" aria-label="Direct link to Technical Considerations" title="Direct link to Technical Considerations" translate="no">​</a></h3>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="dependencies">Dependencies<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#dependencies" class="hash-link" aria-label="Direct link to Dependencies" title="Direct link to Dependencies" translate="no">​</a></h4>
 <ul>
 <li class=""><code>@docusaurus/theme-mermaid</code> - Already installed</li>
 <li class=""><code>mermaid</code> - Already installed</li>
 <li class=""><code>@docusaurus/theme-common</code> - For <code>useColorMode</code> hook</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="theme-integration">Theme Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#theme-integration" class="hash-link" aria-label="Direct link to Theme Integration" title="Direct link to Theme Integration" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="theme-integration">Theme Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#theme-integration" class="hash-link" aria-label="Direct link to Theme Integration" title="Direct link to Theme Integration" translate="no">​</a></h4>
 <ul>
 <li class="">Detect current theme using <code>useColorMode()</code> hook</li>
 <li class="">Pass theme to Mermaid config</li>
 <li class="">Support manual theme override</li>
 <li class="">Ensure proper contrast in both themes</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="performance">Performance<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#performance" class="hash-link" aria-label="Direct link to Performance" title="Direct link to Performance" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="performance">Performance<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#performance" class="hash-link" aria-label="Direct link to Performance" title="Direct link to Performance" translate="no">​</a></h4>
 <ul>
 <li class="">Lazy load Mermaid library if needed</li>
 <li class="">Memoize diagram rendering</li>
 <li class="">Optimize re-renders on theme changes</li>
 </ul>
-<h4 class="anchor anchorTargetStickyNavbar_TgDe" id="error-handling">Error Handling<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#error-handling" class="hash-link" aria-label="Direct link to Error Handling" title="Direct link to Error Handling" translate="no">​</a></h4>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="error-handling">Error Handling<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#error-handling" class="hash-link" aria-label="Direct link to Error Handling" title="Direct link to Error Handling" translate="no">​</a></h4>
 <ul>
 <li class="">Catch Mermaid parsing errors</li>
 <li class="">Display error message with original code</li>
 <li class="">Fallback to code block display</li>
 <li class="">Log errors for debugging</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="storybook-integration">Storybook Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#storybook-integration" class="hash-link" aria-label="Direct link to Storybook Integration" title="Direct link to Storybook Integration" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="storybook-integration">Storybook Integration<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#storybook-integration" class="hash-link" aria-label="Direct link to Storybook Integration" title="Direct link to Storybook Integration" translate="no">​</a></h3>
 <p>Create stories for:</p>
 <ul>
 <li class="">Base MermaidDiagram component</li>
@@ -740,7 +740,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Loading states</li>
 <li class="">Various diagram types</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="documentation">Documentation<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#documentation" class="hash-link" aria-label="Direct link to Documentation" title="Direct link to Documentation" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="documentation">Documentation<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#documentation" class="hash-link" aria-label="Direct link to Documentation" title="Direct link to Documentation" translate="no">​</a></h3>
 <p>Update:</p>
 <ul>
 <li class=""><code>docs/6-techniques/3-blogging-techniques/2-embed-diagrams/diagrams-mermaid.mdx</code></li>
@@ -748,7 +748,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Document props and configuration</li>
 <li class="">Add migration guide from code fences</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="benefits">Benefits<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#benefits" class="hash-link" aria-label="Direct link to Benefits" title="Direct link to Benefits" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="benefits">Benefits<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#benefits" class="hash-link" aria-label="Direct link to Benefits" title="Direct link to Benefits" translate="no">​</a></h3>
 <ol>
 <li class=""><strong>Consistency</strong>: All diagrams use same styling and theming</li>
 <li class=""><strong>Reusability</strong>: Easy to reuse diagrams across posts</li>
@@ -758,8 +758,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class=""><strong>Theme Support</strong>: Automatic light/dark mode support</li>
 <li class=""><strong>Error Handling</strong>: Better error messages and fallbacks</li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-initial-work-completed-2025-09-15-to-2025-09-29">✅ Initial Work Completed (2025-09-15 to 2025-09-29)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#-initial-work-completed-2025-09-15-to-2025-09-29" class="hash-link" aria-label="Direct link to ✅ Initial Work Completed (2025-09-15 to 2025-09-29)" title="Direct link to ✅ Initial Work Completed (2025-09-15 to 2025-09-29)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-initial-work-completed-2025-09-15-to-2025-09-29">✅ Initial Work Completed (2025-09-15 to 2025-09-29)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-creation-mermaid-diagrams#-initial-work-completed-2025-09-15-to-2025-09-29" class="hash-link" aria-label="Direct link to ✅ Initial Work Completed (2025-09-15 to 2025-09-29)" title="Direct link to ✅ Initial Work Completed (2025-09-15 to 2025-09-29)" translate="no">​</a></h3>
 <p><strong>Work Period:</strong> September 15, 2025 to September 29, 2025</p>
 <p><strong>Commits:</strong> 2 commits related to Mermaid diagrams</p>
 <p><strong>Key Accomplishments:</strong></p>
@@ -781,35 +781,35 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Establish a new graph component for blog content visualization and navigation]]></description>
             <content:encoded><![CDATA[<h1>Blogging Mechanisms - Graph Component</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need to deal with name conflicts in graph highlighting<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques/embed-structural-components/graph#graph-node-2" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Graph</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Mobile friendly graph<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I need a mobile version of the graph rebderer when the panel is simpler amd under the graph ...</li>
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="graph-renderer-">Graph Renderer ...<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#graph-renderer-" class="hash-link" aria-label="Direct link to Graph Renderer ..." title="Direct link to Graph Renderer ..." translate="no">​</a></h3>
-<ul class="contains-task-list containsTaskList_wQva">
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="graph-renderer-">Graph Renderer ...<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#graph-renderer-" class="hash-link" aria-label="Direct link to Graph Renderer ..." title="Direct link to Graph Renderer ..." translate="no">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Make a graph based blog post on the genai ecosystem ...<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Add links to nodes, fix titles, etc .</li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Move it to separate react component repo?</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Make the graph renderer actually pop you a section that takes you to the markdown ... and in inverse link that takes you back to the graph ...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="using-graph-renderer">Using Graph Renderer<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#using-graph-renderer" class="hash-link" aria-label="Direct link to Using Graph Renderer" title="Direct link to Using Graph Renderer" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_wQva">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="using-graph-renderer">Using Graph Renderer<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#using-graph-renderer" class="hash-link" aria-label="Direct link to Using Graph Renderer" title="Direct link to Using Graph Renderer" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Move all the research over to be an individual blog post about the Agentic AI Domain ...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-component-enhancement-graph-component#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -818,21 +818,21 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Complete Storybook stories for Graph components and enhance component documentation]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="storybook-stories">Storybook Stories<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#storybook-stories" class="hash-link" aria-label="Direct link to Storybook Stories" title="Direct link to Storybook Stories" translate="no">​</a></h3>
-<ul class="contains-task-list containsTaskList_wQva">
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="storybook-stories">Storybook Stories<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#storybook-stories" class="hash-link" aria-label="Direct link to Storybook Stories" title="Direct link to Storybook Stories" translate="no">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" checked=""> <!-- -->GraphCanvas stories (completed)</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider stories for GraphRenderer (if needed)</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Consider stories for AIFrameworkGraph (if needed)</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="component-documentation">Component Documentation<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#component-documentation" class="hash-link" aria-label="Direct link to Component Documentation" title="Direct link to Component Documentation" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="component-documentation">Component Documentation<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#component-documentation" class="hash-link" aria-label="Direct link to Component Documentation" title="Direct link to Component Documentation" translate="no">​</a></h3>
 <ul>
 <li class="">Improve component documentation</li>
 <li class="">Add more usage examples</li>
 <li class="">Create component API reference</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-documentation-component-development-roadmap#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -841,14 +841,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[CDK-based infrastructure improvements including GitHub CNAME entries, domain configuration, and Lambda updates]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <ul>
 <li class="">Make GitHub CNAME entries created via CDK</li>
 <li class="">Make domain config of user pool via CDK</li>
 <li class="">Update Lambda to return quotes</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-cdk-configuration#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -857,14 +857,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Add more Makefile commands, improve error messages, and enhance development documentation]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <ul>
 <li class="">Add more Makefile commands for common tasks</li>
 <li class="">Improve error messages and debugging tools</li>
 <li class="">Enhance development documentation</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-developer-experience#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -873,14 +873,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Optimize bundle sizes, improve page load times, and optimize Storybook build size]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <ul>
 <li class="">Optimize bundle sizes</li>
 <li class="">Improve page load times</li>
 <li class="">Optimize Storybook build size</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-in-progress">Status: In Progress<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#status-in-progress" class="hash-link" aria-label="Direct link to Status: In Progress" title="Direct link to Status: In Progress" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-in-progress">Status: In Progress<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-performance#status-in-progress" class="hash-link" aria-label="Direct link to Status: In Progress" title="Direct link to Status: In Progress" translate="no">​</a></h3>
 <p><strong>Related Work:</strong></p>
 <ul>
 <li class="">See <a class="" href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook">Bundle Size Optimization</a> for detailed work on Storybook bundle optimization</li>
@@ -900,15 +900,15 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Enhance testing infrastructure with Storybook integration, expanded E2E coverage, and visual regression testing]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="storybook-integration-with-playwright">Storybook Integration with Playwright<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#storybook-integration-with-playwright" class="hash-link" aria-label="Direct link to Storybook Integration with Playwright" title="Direct link to Storybook Integration with Playwright" translate="no">​</a></h3>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="storybook-integration-with-playwright">Storybook Integration with Playwright<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#storybook-integration-with-playwright" class="hash-link" aria-label="Direct link to Storybook Integration with Playwright" title="Direct link to Storybook Integration with Playwright" translate="no">​</a></h3>
 <ul>
 <li class="">Set up Playwright to test Storybook components</li>
 <li class="">Create visual regression tests for component stories</li>
 <li class="">Add interaction tests for Storybook components</li>
 <li class="">Configure Playwright to run against Storybook build</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="enhanced-playwright-tests">Enhanced Playwright Tests<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#enhanced-playwright-tests" class="hash-link" aria-label="Direct link to Enhanced Playwright Tests" title="Direct link to Enhanced Playwright Tests" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="enhanced-playwright-tests">Enhanced Playwright Tests<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#enhanced-playwright-tests" class="hash-link" aria-label="Direct link to Enhanced Playwright Tests" title="Direct link to Enhanced Playwright Tests" translate="no">​</a></h3>
 <ul>
 <li class="">Expand E2E test coverage for critical user flows</li>
 <li class="">Add tests for Graph component interactions</li>
@@ -916,8 +916,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Add visual regression testing for key pages</li>
 <li class="">Create test utilities for common interactions</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-infrastructure-improvement-testing-quality#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -926,13 +926,13 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Add journey analysis functionality to track and visualize user journeys through blog content]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <h1>Blog Mechanic - Journey Analysis</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Leverage this for product analytics<!-- -->
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <a href="https://us.posthog.com/signup" target="_blank" rel="noopener noreferrer" class="">us.posthog.com: Signup</a>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Post hot cloud has a free offering ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Embedd it into blog ...</li>
 </ul>
@@ -943,7 +943,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </li>
 </ul>
 <h1>Personal Funnel Analysis</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->How can I enable this on my blog?</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Can I build a frontend app that has what I need / uses CloudKit with React native</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Tags zzz users that start here and end there ... what do they do ...<!-- -->
@@ -955,8 +955,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-journey-analysis#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -966,11 +966,11 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Establish link management mechanisms for blog content organization and navigation]]></description>
             <content:encoded><![CDATA[<h1>Blog Technique - Link Manipulation</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->I should have guidance on noteplan links / local vscode links / rewritting them ...</li>
 </ul>
 <h1>Blogging Mechanism - Link Management</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" checked=""> <!-- -->This has broken links ... example ... <a href="https://blog.bytesofpurpose.com/docs/techniques/techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Techniques</a> links to <a href="https://blog.bytesofpurpose.com/docs/techniques/blogging-techniques" target="_blank" rel="noopener noreferrer" class="">blog.bytesofpurpose.com: Blogging Techniques</a> which shows page not found ... @done(2025-11-17 09:35 AM)</p>
 </li>
@@ -981,9 +981,9 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-link-management#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -992,16 +992,16 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Establish search functionality for blog content discovery and navigation]]></description>
-            <content:encoded><![CDATA[<ul class="contains-task-list containsTaskList_wQva">
+            <content:encoded><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Enable official docusaurus search?<!-- -->
 <ul>
 <li class=""><a href="https://docusaurus.io/docs/search" target="_blank" rel="noopener noreferrer" class="">Docusaurus: Search</a></li>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-search#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -1010,14 +1010,14 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Establish SEO mechanisms and optimizations for blog content visibility]]></description>
-            <content:encoded><![CDATA[<ul class="contains-task-list containsTaskList_wQva">
+            <content:encoded><![CDATA[<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Link into docusaurus SEO<!-- -->
 <ul>
 <li class=""><a href="https://docusaurus.io/docs/seo" target="_blank" rel="noopener noreferrer" class="">Docusaurus: Seo</a></li>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Establish SEO mechanisms and optimizations for blog content visibility, including:</p>
 <ul>
 <li class="">Frontmatter cleanup and standardization</li>
@@ -1025,8 +1025,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Integration with Docusaurus SEO features</li>
 <li class="">Proof of concept implementation</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-initial-seo-work-completed-2025-09-10">✅ Initial SEO Work Completed (2025-09-10)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#-initial-seo-work-completed-2025-09-10" class="hash-link" aria-label="Direct link to ✅ Initial SEO Work Completed (2025-09-10)" title="Direct link to ✅ Initial SEO Work Completed (2025-09-10)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-initial-seo-work-completed-2025-09-10">✅ Initial SEO Work Completed (2025-09-10)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-mechanic-establishment-seo#-initial-seo-work-completed-2025-09-10" class="hash-link" aria-label="Direct link to ✅ Initial SEO Work Completed (2025-09-10)" title="Direct link to ✅ Initial SEO Work Completed (2025-09-10)" translate="no">​</a></h3>
 <p><strong>Work Period:</strong> September 10, 2025</p>
 <p><strong>Commits:</strong> 3 commits related to SEO improvements</p>
 <p><strong>Key Accomplishments:</strong></p>
@@ -1051,16 +1051,16 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Optimize bundle sizes and load times for Storybook and the blog to improve web performance]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Optimize bundle sizes and load times for both Storybook and the main blog to improve web performance:</p>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="goals">Goals<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#goals" class="hash-link" aria-label="Direct link to Goals" title="Direct link to Goals" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="goals">Goals<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#goals" class="hash-link" aria-label="Direct link to Goals" title="Direct link to Goals" translate="no">​</a></h3>
 <ol>
 <li class=""><strong>Reduce Storybook bundle sizes</strong> - Currently seeing warnings for large bundles (1.41 MiB for force-graph libraries)</li>
 <li class=""><strong>Improve initial load time</strong> - Reduce time to first paint and interactive</li>
 <li class=""><strong>Better code splitting</strong> - Ensure heavy libraries load only when needed</li>
 <li class=""><strong>Optimize caching</strong> - Separate chunks for better browser caching</li>
 </ol>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="areas-to-optimize">Areas to Optimize<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#areas-to-optimize" class="hash-link" aria-label="Direct link to Areas to Optimize" title="Direct link to Areas to Optimize" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="areas-to-optimize">Areas to Optimize<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#areas-to-optimize" class="hash-link" aria-label="Direct link to Areas to Optimize" title="Direct link to Areas to Optimize" translate="no">​</a></h3>
 <ol>
 <li class="">
 <p><strong>Storybook Build</strong></p>
@@ -1087,8 +1087,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-initial-webpack-optimization-2025-01-20">✅ Initial Webpack Optimization (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#-initial-webpack-optimization-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Initial Webpack Optimization (2025-01-20)" title="Direct link to ✅ Initial Webpack Optimization (2025-01-20)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-initial-webpack-optimization-2025-01-20">✅ Initial Webpack Optimization (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#-initial-webpack-optimization-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Initial Webpack Optimization (2025-01-20)" title="Direct link to ✅ Initial Webpack Optimization (2025-01-20)" translate="no">​</a></h3>
 <p><strong>What We Tried:</strong></p>
 <ol>
 <li class="">
@@ -1102,7 +1102,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </li>
 <li class="">
 <p><strong>Chunk Separation Strategy:</strong></p>
-<div class="language-typescript codeBlockContainer_ImEH theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_hOzM"><pre tabindex="0" class="prism-code language-typescript codeBlock_A1nP thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_rQ0W"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">forceGraph</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  name</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'force-graph'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  test</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">node_modules</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-source language-regex group punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">react-force-graph</span><span class="token regex regex-source language-regex alternation keyword" style="color:hsl(301, 63%, 40%)">|</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">force-graph</span><span class="token regex regex-source language-regex alternation keyword" style="color:hsl(301, 63%, 40%)">|</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">d3-</span><span class="token regex regex-source language-regex group punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-delimiter" style="color:hsl(119, 34%, 47%)">/</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  chunks</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'all'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  priority</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">30</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  enforce</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token boolean" style="color:hsl(35, 99%, 36%)">true</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br></span></code></pre></div></div>
+<div class="language-typescript codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-typescript codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">forceGraph</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  name</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'force-graph'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  test</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token regex regex-delimiter" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">node_modules</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-source language-regex group punctuation" style="color:hsl(119, 34%, 47%)">(</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">react-force-graph</span><span class="token regex regex-source language-regex alternation keyword" style="color:hsl(301, 63%, 40%)">|</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">force-graph</span><span class="token regex regex-source language-regex alternation keyword" style="color:hsl(301, 63%, 40%)">|</span><span class="token regex regex-source language-regex" style="color:hsl(119, 34%, 47%)">d3-</span><span class="token regex regex-source language-regex group punctuation" style="color:hsl(119, 34%, 47%)">)</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">[</span><span class="token regex regex-source language-regex char-class special-escape escape" style="color:hsl(119, 34%, 47%)">\\</span><span class="token regex regex-source language-regex char-class" style="color:hsl(119, 34%, 47%)">/</span><span class="token regex regex-source language-regex char-class char-class-punctuation punctuation" style="color:hsl(119, 34%, 47%)">]</span><span class="token regex regex-delimiter" style="color:hsl(119, 34%, 47%)">/</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  chunks</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">'all'</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  priority</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token number" style="color:hsl(35, 99%, 36%)">30</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  enforce</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token boolean" style="color:hsl(35, 99%, 36%)">true</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">}</span><br></span></code></pre></div></div>
 </li>
 </ol>
 <p><strong>Results:</strong></p>
@@ -1142,7 +1142,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="next-steps">Next Steps<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="next-steps">Next Steps<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#next-steps" class="hash-link" aria-label="Direct link to Next Steps" title="Direct link to Next Steps" translate="no">​</a></h3>
 <ol>
 <li class="">
 <p><strong>Lazy Load Heavy Stories</strong></p>
@@ -1175,7 +1175,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ol>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="related-links">Related Links<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#related-links" class="hash-link" aria-label="Direct link to Related Links" title="Direct link to Related Links" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="related-links">Related Links<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-optimization-bundle-size-storybook#related-links" class="hash-link" aria-label="Direct link to Related Links" title="Direct link to Related Links" translate="no">​</a></h2>
 <ul>
 <li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/.storybook/main.ts" target="_blank" rel="noopener noreferrer" class="">Storybook Webpack Config</a></li>
 <li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Graph/GraphRenderer.tsx" target="_blank" rel="noopener noreferrer" class="">Graph Component</a></li>
@@ -1202,29 +1202,29 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </li>
 </ul>
 <h1>GenAI Assisted Blog Posts</h1>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->Turn a lot of the posts about topics generated/docuemnted by GenAI into a todo list to learn more about the topic ...</p>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Help me generate a plan ... to learn about XYZ ...</li>
 </ul>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->Make "Working Backwards Posts"</p>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Make a final blog post regarding what I learned ... what I did ... what the problem statement was ... etc ...</li>
 </ul>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->I should have a prompt that helps me generate these ...</p>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->help me put together a plan to tinker with ... xyzzy ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Learn my style from other posts ...</li>
 </ul>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled=""> <!-- -->Write a prompt to skim through recently edited / created blog files in git ... untracked, etc ... and initialize them ... go through them all first ...</p>
-<ul class="contains-task-list containsTaskList_wQva">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Don't add content ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Mark them as draft ...</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Add top 5 questions to answer them ...</li>
@@ -1232,9 +1232,9 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content:encoded>
         </item>
         <item>
@@ -1243,7 +1243,7 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
             <guid>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap</guid>
             <pubDate>Tue, 18 Nov 2025 15:48:34 GMT</pubDate>
             <description><![CDATA[Organize and structure the changelog and roadmap sections of the blog]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
+            <content:encoded><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
 <p>Organize and structure the changelog and roadmap sections of the blog, including:</p>
 <ul>
 <li class="">Changelog tab/page with GitHub-style heatmap visualization</li>
@@ -1251,8 +1251,8 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <li class="">Automated changelog data generation from markdown files</li>
 <li class="">Roadmap integration (migrated to changelog entries)</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_TgDe" id="-changelog-system-completed-2025-01-20">✅ Changelog System Completed (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#-changelog-system-completed-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Changelog System Completed (2025-01-20)" title="Direct link to ✅ Changelog System Completed (2025-01-20)" translate="no">​</a></h3>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-changelog-system-completed-2025-01-20">✅ Changelog System Completed (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#-changelog-system-completed-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Changelog System Completed (2025-01-20)" title="Direct link to ✅ Changelog System Completed (2025-01-20)" translate="no">​</a></h3>
 <p><strong>Work Period:</strong> January 20, 2025</p>
 <p><strong>Key Accomplishments:</strong></p>
 <ul>

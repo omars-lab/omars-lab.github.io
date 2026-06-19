@@ -15,12 +15,12 @@
             <pubDate>Thu, 06 Feb 2025 00:00:00 GMT</pubDate>
             <description><![CDATA[I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.]]></description>
             <content:encoded><![CDATA[<p>I wanted to conslidate the design of a GenAI agent I seek to build; thus I made this post.</p>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="prioritization--motivation">Prioritization / Motivation<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#prioritization--motivation" class="hash-link" aria-label="Direct link to Prioritization / Motivation" title="Direct link to Prioritization / Motivation" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="prioritization--motivation">Prioritization / Motivation<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#prioritization--motivation" class="hash-link" aria-label="Direct link to Prioritization / Motivation" title="Direct link to Prioritization / Motivation" translate="no">​</a></h2>
 <ul>
 <li class="">Most important thing is going to be genai in the future ..</li>
 <li class="">I want to build something mimmally myself ...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="requirements">Requirements<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="requirements">Requirements<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#requirements" class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" translate="no">​</a></h2>
 <ul>
 <li class="">As an engineer, I should demonstrate my ability to construct agentic applications with LLMs.</li>
 <li class="">As an engineer, I should demonstrate the ability to leverage vector dbs to power a RAG for an LLM.</li>
@@ -30,15 +30,15 @@
 <li class="">implement my own rag ...</li>
 <li class="">Design an LLM + RAG + Vector Db Applications</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="use-cases">Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#use-cases" class="hash-link" aria-label="Direct link to Use Cases" title="Direct link to Use Cases" translate="no">​</a></h2>
-<div class="theme-tabs-container tabs-container tabList_FEqp"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_Yend tabs__item--active">Note Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Blog Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Team Doc Companion</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_I12X"><ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="use-cases">Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#use-cases" class="hash-link" aria-label="Direct link to Use Cases" title="Direct link to Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Note Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Blog Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Team Doc Companion</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li class="">GenAI as a personal note taking companion ...</li>
 <li class="">GenAI agent focused on organizing notes ...</li>
 <li class="">Suggests commands to clean up notes ...</li>
 <li class="">Suggests moving ideas ...</li>
 <li class="">Discovers static ideas ...</li>
 <li class="">Groups hyperlinks ...</li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">Use Case: Blog Author<!-- -->
 <ul>
 <li class="">I should give chatgpt instructions to ignore slugs, etc</li>
@@ -61,7 +61,7 @@
 </li>
 <li class="">I shouldn't need to move my notes around and organize them ... GenAI should be able to do it for me ... or at least tag a note ...</li>
 <li class="">If it mis-tags it ... I should be able to explain why it tagged it wrong ...</li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">GenAI as a dev documentation companion ...</li>
 <li class="">"Having a note taker on the team"</li>
 <li class="">Team can collaboratively curate notes ... campanion organizes them, cleans them up, etc ...</li>
@@ -85,8 +85,8 @@
 </ul>
 </li>
 </ul></div></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="secondary-use-cases">Secondary Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#secondary-use-cases" class="hash-link" aria-label="Direct link to Secondary Use Cases" title="Direct link to Secondary Use Cases" translate="no">​</a></h2>
-<div class="theme-tabs-container tabs-container tabList_FEqp"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_Yend tabs__item--active">Interview Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Financial Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Rap Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Teaching Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Other</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_I12X"><ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="secondary-use-cases">Secondary Use Cases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#secondary-use-cases" class="hash-link" aria-label="Direct link to Secondary Use Cases" title="Direct link to Secondary Use Cases" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Interview Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Financial Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Rap Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Teaching Companion</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li class="">Companion to help you prepare for an interview ... or hold one ...</li>
 <li class="">What interview questions should I ask people?</li>
 <li class="">What make you special, how are you different than your peers</li>
@@ -98,10 +98,10 @@
 <li class="">What points would you make in it?</li>
 <li class="">Whats its outline?</li>
 <li class="">What questions would it answer?</li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">Another agent - analyze financial data / see how much I am spending in different categories ... for different occasions ... etc ...</li>
 <li class="">Use the LLM to help build an LLM based app ...</li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul class="contains-task-list containsTaskList_wQva">
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Genai music use voice of football players + deep introspective questions - as a song ....<!-- -->
 <ul>
 <li class="">Use voice of soccer players</li>
@@ -109,10 +109,10 @@
 </ul>
 </li>
 <li class=""><a href="https://www.vocalize.fm/signin" target="_blank" rel="noopener noreferrer" class="">https://www.vocalize.fm/signin</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><p>Gen AI to educate ... what are your gaps ... what content should you see ... what concepts must you learn</p><ul class="contains-task-list containsTaskList_wQva">
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><p>Gen AI to educate ... what are your gaps ... what content should you see ... what concepts must you learn</p><ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->What is your strategy of distributing info?</li>
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Instead of finding info ... how does info find you ...</li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">Are there any agentic use cases that come to mind?<!-- -->
 <ul>
 <li class="">Vetting a business?</li>
@@ -120,21 +120,21 @@
 </ul>
 </li>
 </ul></div></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="todos">Todos<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#todos" class="hash-link" aria-label="Direct link to Todos" title="Direct link to Todos" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_wQva">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="todos">Todos<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#todos" class="hash-link" aria-label="Direct link to Todos" title="Direct link to Todos" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Figure out proper use case for agent ...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="high-level-design">High Level Design<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#high-level-design" class="hash-link" aria-label="Direct link to High Level Design" title="Direct link to High Level Design" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="high-level-design">High Level Design<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#high-level-design" class="hash-link" aria-label="Direct link to High Level Design" title="Direct link to High Level Design" translate="no">​</a></h2>
 <iframe style="border:1px solid rgba(0, 0, 0, 0.1)" width="800" height="450" src="https://embed.figma.com/board/MpeIiTZuJGpsBNHltua5xN/Tech-Designs?node-id=0-1&amp;embed-host=share"></iframe>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="components">Components<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#components" class="hash-link" aria-label="Direct link to Components" title="Direct link to Components" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="components">Components<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#components" class="hash-link" aria-label="Direct link to Components" title="Direct link to Components" translate="no">​</a></h2>
 <ul>
 <li class="">Is there a sample chat interface I can build / tinker with?</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="essence">Essence<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#essence" class="hash-link" aria-label="Direct link to Essence" title="Direct link to Essence" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="essence">Essence<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#essence" class="hash-link" aria-label="Direct link to Essence" title="Direct link to Essence" translate="no">​</a></h2>
 <ul>
 <li class="">...</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="approach">Approach<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#approach" class="hash-link" aria-label="Direct link to Approach" title="Direct link to Approach" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="approach">Approach<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#approach" class="hash-link" aria-label="Direct link to Approach" title="Direct link to Approach" translate="no">​</a></h2>
 <ul>
 <li class="">iterative enhancements</li>
 <li class="">Can I run the genAI on my m1 Mac ....<!-- -->
@@ -154,8 +154,8 @@
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="resources">Resources<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#resources" class="hash-link" aria-label="Direct link to Resources" title="Direct link to Resources" translate="no">​</a></h2>
-<div class="theme-tabs-container tabs-container tabList_FEqp"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_Yend tabs__item--active">Vector DBs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">AWS Offerings</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Docker Compose</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_I12X"><ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="resources">Resources<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#resources" class="hash-link" aria-label="Direct link to Resources" title="Direct link to Resources" translate="no">​</a></h2>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Vector DBs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">AWS Offerings</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Docker Compose</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li class=""><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
 <li class=""><a href="https://aws.amazon.com/opensearch-service/serverless-vector-engine/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/opensearch-service/serverless-vector-engine/</a></li>
 <li class=""><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html" target="_blank" rel="noopener noreferrer" class="">https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html</a></li>
@@ -163,22 +163,22 @@
 <li class=""><a href="https://opensearch.org/docs/latest/search-plugins/vector-search/" target="_blank" rel="noopener noreferrer" class="">https://opensearch.org/docs/latest/search-plugins/vector-search/</a></li>
 <li class=""><a href="https://opensearch.org/docs/latest/getting-started/quickstart/" target="_blank" rel="noopener noreferrer" class="">https://opensearch.org/docs/latest/getting-started/quickstart/</a></li>
 <li class=""><a href="https://playground.opensearch.org/app/home#/" target="_blank" rel="noopener noreferrer" class="">https://playground.opensearch.org/app/home#/</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">What GenAI related services does AWS offer?</li>
 <li class=""><a href="https://aws.amazon.com/blogs/database/the-role-of-vector-datastores-in-generative-ai-applications/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/blogs/database/the-role-of-vector-datastores-in-generative-ai-applications/</a></li>
 <li class=""><a href="https://aws.amazon.com/opensearch-service/serverless-vector-engine/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/opensearch-service/serverless-vector-engine/</a></li>
 <li class=""><a href="https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html" target="_blank" rel="noopener noreferrer" class="">https://docs.aws.amazon.com/opensearch-service/latest/developerguide/serverless.html</a></li>
 <li class=""><a href="https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/blogs/machine-learning/from-rag-to-fabric-lessons-learned-from-building-real-world-rags-at-genaiic-part-1/</a></li>
 <li class=""><a href="https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/blogs/machine-learning/enhance-your-customers-omnichannel-experience-with-amazon-bedrock-and-amazon-lex/</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><div class="language-text codeBlockContainer_ImEH theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_hOzM"><pre tabindex="0" class="prism-code language-text codeBlock_A1nP thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_rQ0W"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">version: "3.8"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">services:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  qdrant:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    image: qdrant/qdrant:latest</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - "6333:6333"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  rag-app:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    build: .</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - "8000:8000"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    depends_on:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - qdrant</span><br></span></code></pre></div></div></div></div></div>
-<div class="theme-tabs-container tabs-container tabList_FEqp"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_Yend tabs__item--active">Amazon Q</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Running Locally</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">GenAI Agents</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">RAGs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Youtube Videos</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_Yend">Other GenAI Stuff</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_I12X"><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">version: "3.8"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">services:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  qdrant:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    image: qdrant/qdrant:latest</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - "6333:6333"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">  rag-app:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    build: .</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    ports:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - "8000:8000"</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">    depends_on:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">      - qdrant</span><br></span></code></pre></div></div></div></div></div>
+<div class="theme-tabs-container tabs-container tabList__CuJ"><ul role="tablist" aria-orientation="horizontal" class="tabs"><li role="tab" tabindex="0" aria-selected="true" class="tabs__item tabItem_LNqP tabs__item--active">Amazon Q</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Running Locally</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">GenAI Agents</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">RAGs</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Youtube Videos</li><li role="tab" tabindex="-1" aria-selected="false" class="tabs__item tabItem_LNqP">Other GenAI Stuff</li></ul><div class="margin-top--md"><div role="tabpanel" class="tabItem_Ymn6"><ul>
 <li class=""><a href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html" target="_blank" rel="noopener noreferrer" class="">https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html</a></li>
 <li class=""><a href="https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/" target="_blank" rel="noopener noreferrer" class="">https://aws.amazon.com/blogs/devops/effortlessly-execute-aws-cli-commands-using-natural-language-with-amazon-q-developer/</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class=""><a href="https://www.youtube.com/watch?v=IcBnE6J2gpk" target="_blank" rel="noopener noreferrer" class="">How to run LLM locally with ollama | Python example</a></li>
 <li class=""><a href="https://semaphoreci.com/blog/local-llm" target="_blank" rel="noopener noreferrer" class="">https://semaphoreci.com/blog/local-llm</a></li>
 <li class=""><a href="https://www.amazon.science/blog/lightweight-llm-for-converting-text-to-structured-data" target="_blank" rel="noopener noreferrer" class="">https://www.amazon.science/blog/lightweight-llm-for-converting-text-to-structured-data</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class=""><a href="https://huggingface.co/spaces" target="_blank" rel="noopener noreferrer" class="">https://huggingface.co/spaces</a></li>
 <li class=""><a href="https://huggingface.co/google-research-datasets" target="_blank" rel="noopener noreferrer" class="">https://huggingface.co/google-research-datasets</a></li>
 <li class=""><a href="https://huggingface.co/datasets/google-research-datasets/natural_questions/viewer/default/train?p=1" target="_blank" rel="noopener noreferrer" class="">https://huggingface.co/datasets/google-research-datasets/natural_questions/viewer/default/train?p=1</a></li>
@@ -187,7 +187,7 @@
 <li class=""><a href="https://huggingface.co/docs/transformers/en/llm_tutorial" target="_blank" rel="noopener noreferrer" class="">https://huggingface.co/docs/transformers/en/llm_tutorial</a></li>
 <li class=""><a href="https://www.aimon.ai/posts/deep-dive-into-agentic-llm-frameworks" target="_blank" rel="noopener noreferrer" class="">https://www.aimon.ai/posts/deep-dive-into-agentic-llm-frameworks</a></li>
 <li class=""><a href="https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-5-multi-agent-collaboration/" target="_blank" rel="noopener noreferrer" class="">https://www.deeplearning.ai/the-batch/agentic-design-patterns-part-5-multi-agent-collaboration/</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class=""><a href="https://www.google.com/search?q=course+build+rag+app+vector+db+docker-compose&amp;num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;sxsrf=AHTn8zphZFXvMrr3L9QmU3WwfWLSHHM9bw%3A1738897076103&amp;ei=tHalZ_OFBpO3wN4PlKCBoQE&amp;ved=0ahUKEwjzr5a0yLCLAxWTG9AFHRRQIBQQ4dUDCBI&amp;uact=5&amp;oq=course+build+rag+app+vector+db+docker-compose&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiLWNvdXJzZSBidWlsZCByYWcgYXBwIHZlY3RvciBkYiBkb2NrZXItY29tcG9zZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKABSJEPUPQBWLAOcAF4AZABAJgBzAGgAbwLqgEGMTMuMS4xuAEDyAEA-AEBmAIQoALgC8ICChAAGLADGNYEGEfCAgUQIRirApgDAIgGAZAGCJIHBjExLjQuMaAHtEA&amp;sclient=gws-wiz-serp" target="_blank" rel="noopener noreferrer" class="">https://www.google.com/search?q=course+build+rag+app+vector+db+docker-compose&amp;num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;sxsrf=AHTn8zphZFXvMrr3L9QmU3WwfWLSHHM9bw%3A1738897076103&amp;ei=tHalZ_OFBpO3wN4PlKCBoQE&amp;ved=0ahUKEwjzr5a0yLCLAxWTG9AFHRRQIBQQ4dUDCBI&amp;uact=5&amp;oq=course+build+rag+app+vector+db+docker-compose&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiLWNvdXJzZSBidWlsZCByYWcgYXBwIHZlY3RvciBkYiBkb2NrZXItY29tcG9zZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYoAEyBRAhGKABSJEPUPQBWLAOcAF4AZABAJgBzAGgAbwLqgEGMTMuMS4xuAEDyAEA-AEBmAIQoALgC8ICChAAGLADGNYEGEfCAgUQIRirApgDAIgGAZAGCJIHBjExLjQuMaAHtEA&amp;sclient=gws-wiz-serp</a></li>
 <li class=""><a href="https://www.google.com/search?num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;udm=7&amp;sxsrf=AHTn8zoSSP3fG8TYCVyu449HSsM51Ed54Q:1738897080539&amp;q=course+build+rag+app+vector+db+docker-compose&amp;sa=X&amp;ved=2ahUKEwjZjqW2yLCLAxWf8MkDHV1ZDZQQ8ccDegQIDxAH&amp;biw=1792&amp;bih=974&amp;dpr=2" target="_blank" rel="noopener noreferrer" class="">https://www.google.com/search?num=10&amp;sca_esv=a46735a6b9ec06aa&amp;pws=0&amp;udm=7&amp;sxsrf=AHTn8zoSSP3fG8TYCVyu449HSsM51Ed54Q:1738897080539&amp;q=course+build+rag+app+vector+db+docker-compose&amp;sa=X&amp;ved=2ahUKEwjZjqW2yLCLAxWf8MkDHV1ZDZQQ8ccDegQIDxAH&amp;biw=1792&amp;bih=974&amp;dpr=2</a></li>
 <li class=""><a href="https://community.openai.com/t/tutorial-a-step-by-step-guide-on-rag-using-surrealdb/701653" target="_blank" rel="noopener noreferrer" class="">https://community.openai.com/t/tutorial-a-step-by-step-guide-on-rag-using-surrealdb/701653</a></li>
@@ -195,10 +195,10 @@
 <li class=""><a href="https://qdrant.tech/documentation/quickstart/" target="_blank" rel="noopener noreferrer" class="">https://qdrant.tech/documentation/quickstart/</a></li>
 <li class=""><a href="https://python.langchain.com/docs/how_to/" target="_blank" rel="noopener noreferrer" class="">https://python.langchain.com/docs/how_to/</a></li>
 <li class=""><a href="https://arize.com/blog/understanding-agentic-rag/" target="_blank" rel="noopener noreferrer" class="">https://arize.com/blog/understanding-agentic-rag/</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class=""><a href="https://www.youtube.com/watch?v=8vkHLnhIFGA" target="_blank" rel="noopener noreferrer" class="">Build a Python Event-driven Serverless App with Amazon CodeWhisperer | Amazon Web Services</a></li>
 <li class=""><a href="https://www.youtube.com/watch?v=_1HbJeoij6g" target="_blank" rel="noopener noreferrer" class="">Amazon Q Developer - Your generative AI-powered assistant for work | Amazon Web Services</a></li>
-</ul></div><div role="tabpanel" class="tabItem_I12X" hidden=""><ul>
+</ul></div><div role="tabpanel" class="tabItem_Ymn6" hidden=""><ul>
 <li class="">Can I make a simple Mac app ... with apple intelligence ?<!-- -->
 <ul>
 <li class=""><a href="https://support.apple.com/guide/mac-help/use-chatgpt-with-apple-intelligence-mchlfc5cf131/15.0/mac/15.0" target="_blank" rel="noopener noreferrer" class="">https://support.apple.com/guide/mac-help/use-chatgpt-with-apple-intelligence-mchlfc5cf131/15.0/mac/15.0</a></li>
@@ -218,7 +218,7 @@
 </li>
 </ul>
 <h1>Options</h1>
-<h2 class="anchor anchorTargetStickyNavbar_TgDe" id="vector-databases">Vector Databases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="vector-databases">Vector Databases<a href="https://blog.bytesofpurpose.com/designs/design-genai-agent#vector-databases" class="hash-link" aria-label="Direct link to Vector Databases" title="Direct link to Vector Databases" translate="no">​</a></h2>
 <ul>
 <li class="">What are various vector database offerings?</li>
 </ul>
