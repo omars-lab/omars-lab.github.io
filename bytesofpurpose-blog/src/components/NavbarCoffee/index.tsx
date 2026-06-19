@@ -13,8 +13,7 @@ import {EXPERIMENTS, resolveVariant} from '@site/src/experiments';
 // We keep the existing .navbar-coffee styling + responsive icon/label split.
 const EXP = EXPERIMENTS['support-button-copy'];
 
-const PAYPAL =
-  'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=1&no_recurring=0&item_name=Support+a+Developer&currency_code=USD';
+const BUY_ME_A_COFFEE = 'https://buymeacoffee.com/omareid';
 
 // Split a variant copy like "Buy me a coffee ☕" into a trailing/leading emoji
 // (decorative icon) and the remaining words (the label). Falls back to a cup.
@@ -34,8 +33,8 @@ export default function NavbarCoffee(): React.JSX.Element {
   return (
     <a
       className="navbar-coffee"
-      href={PAYPAL}
-      aria-label={`${label} (support via PayPal)`}
+      href={BUY_ME_A_COFFEE}
+      aria-label={`${label} (support via Buy Me a Coffee)`}
       onClick={() =>
         posthog.capture('support button clicked', {
           page_path:

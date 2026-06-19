@@ -4,15 +4,14 @@ import { EXPERIMENTS, resolveVariant } from '@site/src/experiments';
 
 // The coffee CTA, wired into the support-button-copy A/B experiment. Post the
 // 2026-06-01 re-scope the variants differ ONLY in PRESENTATION (identical copy):
-//   control → "Buy me a $5 coffee ☕ →"  rendered as a plain text LINK
-//   test    → "Buy me a $5 coffee ☕"    rendered as a styled BUTTON
+//   control → "Buy me a coffee ☕ →"  rendered as a plain text LINK
+//   test    → "Buy me a coffee ☕"    rendered as a styled BUTTON
 // (the same experiment that used to drive the standalone navbar button). The copy
 // lives once in src/experiments.ts (same in both arms); the conversion event keeps
 // the same 'support button clicked' name so the historical funnel stays continuous.
 const EXP = EXPERIMENTS['support-button-copy'];
 
-const PAYPAL =
-  'https://www.paypal.com/donate?business=UQ2SHCNPFYBJY&amount=5&no_recurring=0&item_name=Support+a+Developer&currency_code=USD';
+const BUY_ME_A_COFFEE = 'https://buymeacoffee.com/omareid';
 
 interface CoffeeButtonProps {
   // Class applied to the LINK-style (control) variant so it matches the other
@@ -36,7 +35,7 @@ export default function CoffeeButton({ linkClassName }: CoffeeButtonProps): Reac
     <a
       className={isButton ? 'button button--primary button--lg' : linkClassName}
       data-testid="support-coffee-button"
-      href={PAYPAL}
+      href={BUY_ME_A_COFFEE}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() =>

@@ -16,7 +16,7 @@ import { test, expect, Page } from '@playwright/test';
  *      "switching does stuff" guarantee.
  *
  * Variant presentation (flag: support-button-copy, re-scoped 2026-06-01):
- *   identical copy ("Buy me a $5 coffee ☕") in both arms; control renders a
+ *   identical copy ("Buy me a coffee ☕") in both arms; control renders a
  *   plain text LINK, test renders a styled BUTTON (button--primary).
  */
 
@@ -76,7 +76,7 @@ test.describe('DebugMenu — experiments switching', () => {
     // Control default: a text link, NOT a button.
     await page.goto('/support', { waitUntil: 'domcontentloaded' });
     await expect(coffee).toBeVisible({ timeout: 15000 });
-    await expect(coffee).toContainText('Buy me a $5 coffee');
+    await expect(coffee).toContainText('Buy me a coffee');
     await expect(coffee).not.toHaveClass(/button--primary/);
 
     // Force "test" → the CTA becomes a styled button.
@@ -84,7 +84,7 @@ test.describe('DebugMenu — experiments switching', () => {
       waitUntil: 'domcontentloaded',
     });
     await expect(coffee).toBeVisible({ timeout: 15000 });
-    await expect(coffee).toContainText('Buy me a $5 coffee');
+    await expect(coffee).toContainText('Buy me a coffee');
     await expect(coffee).toHaveClass(/button--primary/);
   });
 
