@@ -28,8 +28,8 @@ export const EXPERIMENTS = {
   'support-button-copy': {
     key: 'support-button-copy',
     variants: {
-      control: 'Buy me a $5 coffee ☕',
-      test: 'Buy me a $5 coffee ☕',
+      control: 'Buy me a coffee ☕',
+      test: 'Buy me a coffee ☕',
     },
   },
 } satisfies Record<string, Experiment>;

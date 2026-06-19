@@ -5,7 +5,7 @@ import { EXPERIMENTS } from '../../src/experiments';
  * Validates the Support-CTA A/B experiment (flag: support-button-copy).
  *
  * RE-SCOPED 2026-06-01 (copy → presentation): both arms now render the SAME copy
- * ("Buy me a $5 coffee ☕", defined once in src/experiments.ts); the only thing that
+ * ("Buy me a coffee ☕", defined once in src/experiments.ts); the only thing that
  * varies is PRESENTATION on the /support page coffee CTA:
  *   control → plain text LINK   test → styled BUTTON (button--primary button--lg)
  * (see src/components/Support/CoffeeButton + the experiment doc
