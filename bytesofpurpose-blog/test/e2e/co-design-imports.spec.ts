@@ -185,6 +185,46 @@ test.describe('Imported co-design posts render in dev', () => {
     expect(kind, 'classifier recorded a decision (gate is live)').toBeTruthy();
   });
 
+  test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.siteScanner, { waitUntil: 'domcontentloaded' });
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      try {
+        localStorage.setItem('theme', 'dark');
+      } catch {}
+    });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page
+      .waitForSelector('.mermaid-animated svg .node', { timeout: 15000 })
+      .catch(() => {});
+    const check = await page.evaluate(() => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      // node shapes (rect/polygon/circle) must NOT keep a bright/near-white fill in dark
+      // mode (that's the symptom of an un-stripped hardcoded color). Parse luminance.
+      const shapes = Array.from(
+        document.querySelectorAll('.mermaid-animated svg .node rect, .mermaid-animated svg .node polygon, .mermaid-animated svg .node circle')
+      );
+      const lum = (rgb) => {
+        const m = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+        if (!m) return null;
+        return (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) / 255;
+      };
+      const brightFills = shapes
+        .map((s) => lum(getComputedStyle(s).fill))
+        .filter((l) => l != null && l > 0.8).length;
+      return { isDark, shapes: shapes.length, brightFills };
+    });
+    expect(check.isDark, 'page is in dark mode').toBe(true);
+    expect(check.shapes, 'mermaid nodes rendered').toBeGreaterThan(0);
+    expect(
+      check.brightFills,
+      'no node keeps a near-white fill in dark mode (colors were stripped + theme adapts)'
+    ).toBe(0);
+  });
+
   test('markdown-review hero: bidirectional arrow was split into two directed edges', async ({
     page,
   }) => {

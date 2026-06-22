@@ -154,13 +154,6 @@ flowchart TB
     IMPL -.->|"C: A2A dispatch"| MCP_CUST1
     IMPL -.->|"C: A2A dispatch"| MCP_CUST2
 
-    style IMPL fill:#e8f5e9,stroke:#388e3c
-    style CUSTOMERS fill:#e3f2fd,stroke:#1976d2
-    style BUILD fill:#f3e5f5,stroke:#7b1fa2
-    style MCP_BRIDGE fill:#fff3e0,stroke:#ff9800
-    style DECISION_ZONE fill:#fffde7,stroke:#f9a825,stroke-dasharray: 5 5
-    style REPO fill:#fff3e0,stroke:#ff9800
-    style A2A fill:#fce4ec,stroke:#c62828
 ```
 
 </div>
@@ -280,12 +273,6 @@ flowchart TB
     PARTNER -.->|"future persona"| TC
     SME -->|"feeds best practices"| DTT
 
-    style TC fill:#fff3e0,stroke:#ff9800
-    style DEV fill:#e8f5e9,stroke:#388e3c
-    style DTT fill:#f3e5f5,stroke:#7b1fa2
-    style CUST fill:#e3f2fd,stroke:#1976d2
-    style PARTNER fill:#fafafa,stroke:#bdbdbd
-    style SME fill:#fce4ec,stroke:#c62828
 ```
 
 :::note[Note]
@@ -403,10 +390,6 @@ flowchart LR
     BRIDGE -->|"reads/writes"| CUST_DEV
     CUST_DEV -.->|"future"| PROMOTE
 
-    style BOUNDARY_IN fill:#e8f5e9,stroke:#388e3c
-    style BOUNDARY_UPSTREAM fill:#f3e5f5,stroke:#7b1fa2
-    style BOUNDARY_TARGET fill:#e3f2fd,stroke:#1976d2
-    style BOUNDARY_DOWNSTREAM fill:#fafafa,stroke:#bdbdbd
 ```
 
 **Handoff point:** The work-item record: once sprint-ready (tech guidance populated, AC validated, work-item points estimated, test steps generated), the build pipeline takes over.
@@ -445,9 +428,6 @@ flowchart LR
     STORY -->|"developer picks up work item"| HANDOFF
     HANDOFF --> PHASE2
 
-    style PHASE1 fill:#e8f5e9,stroke:#388e3c
-    style HANDOFF fill:#fff3e0,stroke:#ff9800
-    style PHASE2 fill:#ffebee,stroke:#c62828
 ```
 
 ### What Developers Do Today
@@ -470,9 +450,6 @@ flowchart LR
 
     COMP -.->|"Phase 1/2"| P3["Documentation Agents<br/>• Knowledge Transfer Writer<br/>• Release Note Generator"]
 
-    style EST fill:#e8f5e9,stroke:#388e3c
-    style WIP fill:#fff3e0,stroke:#ff9800
-    style COMP fill:#e3f2fd,stroke:#1976d2
 ```
 
 ### Current Agent Architecture (Brief)
@@ -559,9 +536,6 @@ flowchart LR
     KTA["Knowledge Transfer<br/>Writer"]
     ATA -->|"logs what was done"| KTA
 
-    style BUILD fill:#f3e5f5,stroke:#7b1fa2
-    style CUSTOMER fill:#e3f2fd,stroke:#1976d2
-    style REPO fill:#fff3e0,stroke:#ff9800
 ```
 
 **How it works:** Work item triggers → Instance Readiness pre-flights via REST → Auto Developer generates config plan → generates an Instance Commit → pushes to shared repo → developer pulls/previews/applies on client tenant → Auto Tester validates → Knowledge Transfer Writer documents.
@@ -600,9 +574,6 @@ flowchart LR
     CONFIGS --> ATA
     ATA <-->|"reports results"| DEV
 
-    style BUILD fill:#f3e5f5,stroke:#7b1fa2
-    style CUSTOMER fill:#e3f2fd,stroke:#1976d2
-    style MCP fill:#fff3e0,stroke:#ff9800
 ```
 
 **How it works:** Developer opens the in-product assistant panel → pre-flight via MCP → agent proposes step-by-step plan → developer reviews/approves each action → agent executes via MCP → adapts mid-build by querying the client tenant → real-time validation.
@@ -647,9 +618,6 @@ flowchart TB
     REVIEWERS["Platform Expert Team<br/>(reviews & approves<br/>via portal)"]
     REVIEWERS <--> PORTAL
 
-    style BUILD fill:#f3e5f5,stroke:#7b1fa2
-    style EXTERNAL fill:#e8f5e9,stroke:#388e3c
-    style CUSTOMER fill:#e3f2fd,stroke:#1976d2
 ```
 
 **How it works:** Planning agent generates structured plan → external orchestrator decomposes into steps → review portal for team approval → A2A dispatch to native client-side agent → local execution with native tools → feedback loop to orchestrator.
@@ -1019,7 +987,6 @@ flowchart TB
     ATA --> ATA_TOOLS
     KTA --> KTA_TOOLS
 
-    style WF fill:#e8f5e9,stroke:#388e3c
 ```
 
 ### 7.2 Data Model (generalized, platform-neutral)
@@ -1235,10 +1202,6 @@ flowchart LR
     CUST --> UC4
     DTT --> UC7
 
-    style TC fill:#fff3e0,stroke:#ff9800
-    style DEV fill:#e8f5e9,stroke:#388e3c
-    style CUST fill:#e3f2fd,stroke:#1976d2
-    style DTT fill:#f3e5f5,stroke:#7b1fa2
 ```
 
 ### Use-Case List
@@ -1269,9 +1232,6 @@ graph LR
     G -->|"pass"| H["KT Writer logs<br/>implementation"]
     H --> I["Consultant moves work item<br/>to Complete"]
 
-    style A fill:#fff3e0,stroke:#ff9800
-    style E fill:#fff3e0,stroke:#ff9800
-    style I fill:#e3f2fd,stroke:#1976d2
 ```
 
 ## 8. Architecture Diagrams

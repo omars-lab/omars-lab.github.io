@@ -98,14 +98,6 @@ graph LR
     SRV -->|"invoke with open comments"| CC
     CC -->|"edits the doc"| FS
 
-    classDef ui fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef srv fill:#dcfce7,stroke:#22c55e,color:#14532d
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class UI ui
-    class SRV srv
-    class CC agent
-    class FS,GIT store
 ```
 
 </div>
@@ -130,12 +122,6 @@ graph LR
     GIT["🌿 Git<br/>wants: clean, attributable commits<br/>= durable iteration history"]
     TEAM["🧑‍🤝‍🧑 Teammate / Stakeholder<br/>wants: async review on any device,<br/>shared via the git host"]
 
-    classDef actor fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class REV,AUTH,TEAM actor
-    class CC agent
-    class GIT store
 ```
 
 **[Assumption: In the initial version, Reviewer and Author are the same person (Omar) on a single machine. Multi-user / concurrent review is a secondary, later concern: flagged as a key decision in §6.5.]**
@@ -295,12 +281,6 @@ graph LR
     E -->|"more feedback"| C
     E --> F["💾 Manual git commit"]
 
-    classDef author fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class A,B,C,E author
-    class D agent
-    class F store
 ```
 
 ### 4.2 Existing Tooling
@@ -402,14 +382,6 @@ graph LR
     WATCH --> FS
     WATCH -->|"reload event"| API
 
-    classDef ui fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef srv fill:#dcfce7,stroke:#22c55e,color:#14532d
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class V,CL,H ui
-    class API,ANCH,CS,GIT,ORCH,WATCH srv
-    class CC agent
-    class FS,REPO store
 ```
 
 **The core loop:** open doc → leave anchored comments → trigger Claude → server feeds open comments to Claude Code headless → Claude edits the file → server commits to git + re-anchors comments → UI live-reloads showing the new version, the diff, and updated threads.
@@ -431,12 +403,6 @@ graph LR
     S -->|"git commit"| G[("🌿 Git")]
     S -->|"re-anchor + live reload"| U
 
-    classDef u fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class U,S u
-    class CC agent
-    class FS,G store
 ```
 
 - **Strengths:** Reuses the Claude Code the author already runs (skills, CLAUDE.md, MCP, full tool loop). Minimal new code: the server orchestrates a subprocess. Claude can use the full repo context, not just the single file. Session resume (`--resume`) enables follow-up rounds.
@@ -455,12 +421,6 @@ graph LR
     S -->|"git commit"| G[("🌿 Git")]
     S -->|"re-anchor + live reload"| U
 
-    classDef u fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class U,S u
-    class API agent
-    class FS,G store
 ```
 
 - **Strengths:** Full programmatic control of the edit contract (precise structured output). No CLI dependency. Easier to stream token-level progress. The server, not Claude, controls exactly what gets written.
@@ -479,12 +439,6 @@ graph LR
     FS -->|"file watcher"| S
     S -->|"re-anchor + live reload"| U
 
-    classDef u fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class U,S u
-    class CC agent
-    class FS store
 ```
 
 - **Strengths:** Zero integration risk; works with any model/tool. Simplest possible v1. Human fully in the loop.
@@ -686,12 +640,6 @@ graph LR
     LR <-->|"push / pull"| HOST[("🌿 Managed git hosting<br/>GitHub / GitLab (D11)")]
     WR <-->|"clone / push"| HOST
 
-    classDef u fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef srv fill:#dcfce7,stroke:#22c55e,color:#14532d
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class DEV,M,D2 u
-    class LS,API2,WS srv
-    class LR,WR,HOST store
 ```
 
 - **Status:** **Decided: dual-mode (local agent + cloud), git-hosting as the shared substrate.** Cloud mode uses a **per-user isolated workspace** (container + Claude runtime per user/session).
@@ -903,10 +851,6 @@ graph LR
     C --> D["Comment Store writes thread +<br/>recovery selectors to sidecar"]
     D --> E["WS broadcast →<br/>marker appears in viewer"]
 
-    classDef ui fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef srv fill:#dcfce7,stroke:#22c55e,color:#14532d
-    class A,B ui
-    class C,D,E srv
 ```
 
 **Flow 2: Claude acts on open comments (the core loop)**
@@ -924,14 +868,6 @@ graph LR
     F --> G["Comment Store merges<br/>replies + statuses (§6.6)"]
     G --> H["WS broadcast →<br/>live reload + diff + threads"]
 
-    classDef ui fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef srv fill:#dcfce7,stroke:#22c55e,color:#14532d
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef block fill:#fee2e2,stroke:#ef4444,color:#7f1d1d
-    class A ui
-    class P,B,E,F,G,H,V srv
-    class C,D agent
-    class X block
 ```
 
 **Flow 3: Re-anchoring after any edit** (Claude's edit, or the user's own): the Anchoring Engine runs the ordered fallback (block → position → context-fuzzy → quote-fuzzy, per Appendix A); threads that fail all strategies are marked `orphaned` and surfaced to the reviewer to re-place.
@@ -959,12 +895,6 @@ graph LR
     G --> UC8
     UC7 -.->|triggers| UC9(("Re-anchor<br/>comments"))
 
-    classDef actor fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class R actor
-    class CC agent
-    class G store
 ```
 
 **Key use cases** (actor → goal → flow):
@@ -990,14 +920,6 @@ graph LR
     H -->|"more feedback"| C
     H --> I["🗂️ Browse iteration history<br/>(what changed & why)"]
 
-    classDef start fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    classDef gate fill:#dcfce7,stroke:#22c55e,color:#14532d
-    class A,B,C,D,H,I start
-    class E agent
-    class F gate
-    class G store
 ```
 
 ## 10. Architecture Diagrams
@@ -1029,12 +951,6 @@ graph LR
     G --> UC8
     UC7 -.->|triggers| UC9(("Re-anchor<br/>comments"))
 
-    classDef actor fill:#dbeafe,stroke:#3b82f6,color:#1e3a8a
-    classDef agent fill:#fef3c7,stroke:#f59e0b,color:#78350f
-    classDef store fill:#f3e8ff,stroke:#a855f7,color:#581c87
-    class R actor
-    class CC agent
-    class G store
 ```
 
 ### 10.3 Sequence Diagram: Full Review Round

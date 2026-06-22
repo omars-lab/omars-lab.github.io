@@ -108,10 +108,6 @@ graph LR
     PROSPECT -.->|future: becomes customer| HEAL((Self-Heal\nLoop))
     HEAL -.->|FUTURE / OUT OF SCOPE| engine
 
-    style engine fill:#e8f0fe,stroke:#1a73e8
-    style HEAL fill:#f5f5f5,stroke:#9e9e9e,stroke-dasharray: 5 5
-    style sources fill:#fef7e0,stroke:#f9ab00
-    style people fill:#e6f4ea,stroke:#34a853
 ```
 
 </div>
@@ -147,11 +143,6 @@ graph LR
     PV --- PVm["supply candidate sites,<br/>size signals, contacts &#8212;<br/>under licence/ToS terms"]:::note
     CRM --- CRMm["holds leads + outreach status<br/>as the system of record"]:::note
 
-    classDef people fill:#e6f4ea,stroke:#34a853
-    classDef engine fill:#e8f0fe,stroke:#1a73e8
-    classDef target fill:#fce8e6,stroke:#d93025
-    classDef ext fill:#fef7e0,stroke:#f9ab00
-    classDef note fill:#ffffff,stroke:#bdbdbd,color:#333
 ```
 
 :::info[Terminology]
@@ -322,8 +313,6 @@ graph LR
     CRM --> MAIL
     LLM <--> PIPE
 
-    style owned fill:#e8f0fe,stroke:#1a73e8
-    style assumed fill:#fef7e0,stroke:#f9ab00
 ```
 
 ## 4. Current State (As-Is)
@@ -341,9 +330,6 @@ graph LR
     WRITE -->|sends| SEND[Send outreach]
     SEND -.->|no structured record| OP
 
-    style OP fill:#e6f4ea,stroke:#34a853
-    style JUDGE fill:#fce8e6,stroke:#d93025
-    style CONTACT fill:#fce8e6,stroke:#d93025
 ```
 
 **[Assumption: the team currently prospects manually with light tooling (search, spreadsheets, maybe a trial of one enrichment tool) rather than a paid stack.]** Each step is human-driven, serial, and unrecorded:
@@ -440,8 +426,6 @@ graph LR
     OP -->|review / edit / approve| BD
     BD -.->|outcome feedback| QUEUE
 
-    style pipe fill:#e8f0fe,stroke:#1a73e8
-    style cfg fill:#fef7e0,stroke:#f9ab00
 ```
 
 **Design principles carried through every stage:**
@@ -466,8 +450,6 @@ graph LR
     CLAY --> PROV[150+ providers]
     OURS --> LLM[LLM: scan judgment + drafts]
     OURS --> STORE[(Lead store)]
-    style CLAY fill:#fef7e0,stroke:#f9ab00
-    style OURS fill:#e8f0fe,stroke:#1a73e8
 ```
 
 - **Strength:** fastest time-to-first-lead; least infrastructure; proven enrichment quality.
@@ -486,7 +468,6 @@ graph LR
     AGENT --> SCORE[Scoring + rationale]
     AGENT --> DRAFT[Outreach draft]
     DISC & SCAN & SIZE & CONTACT & SCORE & DRAFT --> STORE[(Lead + Signal Store)]
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
 ```
 
 - **Strength:** ecommerce-specialized; **owns the signal taxonomy** (seeds Phase 2); cost-controlled via cheap-first escalation; no single-vendor lock-in (any provider is swappable behind our interface).
@@ -503,8 +484,6 @@ graph LR
     AGENT --> DIY[DIY size: CrUX/Tranco/products.json]
     AGENT --> CONTACT[On-site scrape + minimal waterfall]
     CC & SCAN & DIY & CONTACT --> STORE[(Store)]
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
-    style CC fill:#e6f4ea,stroke:#34a853
 ```
 
 - **Strength:** lowest marginal data cost at scale; maximal control; no provider ToS exposure on discovery.
@@ -759,7 +738,6 @@ graph LR
     J --> L[Operator review]
     L -->|approve| M[Human sends] --> N((Outcome feedback))
     N -.-> A
-    style H fill:#fce8e6,stroke:#d93025
 ```
 
 **Cheap-first escalation (within a lead):** free signals (CrUX/Tranco presence, on-site scrape) run first; if the lead clears the ICP gate, paid calls (Store Leads tier, contact waterfall, verification) fire: so spend tracks lead quality, controlling cost-per-lead (B3). Every step appends an `AUDIT_EVENT`.
@@ -794,9 +772,6 @@ graph LR
     UC3 -.-> UC4
     UC5 -.->|feedback| UC10
 
-    style OP fill:#e6f4ea,stroke:#34a853
-    style BD fill:#e6f4ea,stroke:#34a853
-    style AG fill:#e8f0fe,stroke:#1a73e8
 ```
 
 **Key use cases (actor → goal → brief flow):**
@@ -831,10 +806,6 @@ graph LR
     J4 -->|no| JX
     J10 -.->|tunes scoring| J1
 
-    classDef engine fill:#e8f0fe,stroke:#1a73e8
-    classDef people fill:#e6f4ea,stroke:#34a853
-    classDef decision fill:#fce8e6,stroke:#d93025
-    classDef store fill:#fef7e0,stroke:#f9ab00
 ```
 
 *The fit gate (J4) is the cost-control lever: only candidates that pass size + ICP earn the paid contact/verification and scoring spend (B3). Low-fit candidates are archived, not discarded, and outcomes feed back to tune discovery and scoring.*

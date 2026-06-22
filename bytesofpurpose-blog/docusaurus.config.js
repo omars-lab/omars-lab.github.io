@@ -811,10 +811,28 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           {property: 'og:locale', content: 'en_US'},
         ],
         mermaid: {
+          // Per-color-mode theme: Docusaurus theme-mermaid swaps these on the site's
+          // light/dark toggle (this is the dark-mode adaptation — diagrams get a dark
+          // surface + light text/edges automatically in dark mode). 'base' is the
+          // themeable light theme we tune toward the brand below.
+          theme: {light: 'base', dark: 'dark'},
           options: {
-            theme: 'forest',
-            fontFamily: "Trebuchet MS, Verdana, Arial, Sans-Serif",
+            // Editorial sans, matching the site body font (Geist), instead of mermaid's
+            // default Trebuchet — so diagram text reads as part of the page.
+            fontFamily:
+              "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             htmlLabels: true,
+            // Nudge the LIGHT ('base') theme toward the terracotta/cream palette so a
+            // diagram with no per-node classDef still looks on-brand. Per-node classDef
+            // fills in the source diagrams still win where present.
+            themeVariables: {
+              primaryColor: '#f4f0e8', // node fill = warm paper surface
+              primaryBorderColor: '#b33e1e', // brand terracotta outline
+              primaryTextColor: '#2b2622', // warm ink
+              lineColor: '#9a8f80', // muted edge stroke (reads on cream)
+              tertiaryColor: '#ece7df', // subgraph background = page bg
+              fontSize: '15px',
+            },
           },
         },
         // Social/OG card — purpose-built 1200x630 landscape card (the standard

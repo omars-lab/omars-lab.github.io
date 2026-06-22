@@ -256,6 +256,44 @@ function rewriteLinks(body, idMap) {
 }
 
 // ---------------------------------------------------------------------------
+// strip hardcoded diagram colors (let the mermaid light/dark theme control them)
+// ---------------------------------------------------------------------------
+
+// The source HLDs hardcode per-node colors (`style X fill:#e8f0fe,stroke:#1a73e8`,
+// `classDef ui fill:#dbeafe…`, `class UI ui`). Those inline colors OVERRIDE mermaid's
+// theme, so they stay light in dark mode (unreadable). We strip the color directives
+// inside every ```mermaid block so the themeVariables (light) + 'dark' theme fully
+// control coloring in BOTH modes. Structural mermaid lines (nodes, edges, subgraphs)
+// are untouched; only color styling is removed. Returns {body, stripped}.
+function stripDiagramColors(body) {
+  const lines = body.split('\n');
+  let inMermaid = false;
+  let stripped = 0;
+  const out = [];
+  for (const line of lines) {
+    if (!inMermaid && /^\s*```mermaid\s*$/.test(line)) {
+      inMermaid = true;
+      out.push(line);
+      continue;
+    }
+    if (inMermaid && /^\s*```\s*$/.test(line)) {
+      inMermaid = false;
+      out.push(line);
+      continue;
+    }
+    if (inMermaid) {
+      // drop color-only directives: classDef, class assignment, inline style, linkStyle.
+      if (/^\s*(classDef\b|class\s+[\w,]+\s+\w|style\s+\w[\w-]*\s+(fill|stroke|color)|linkStyle\b)/.test(line)) {
+        stripped++;
+        continue;
+      }
+    }
+    out.push(line);
+  }
+  return {body: out.join('\n'), stripped};
+}
+
+// ---------------------------------------------------------------------------
 // animate the first ("hero") mermaid diagram
 // ---------------------------------------------------------------------------
 
@@ -517,8 +555,10 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
   const dd = deEmDashBody(adm.body);
   // 3) rewrite cross-doc links
   const lk = rewriteLinks(dd.body, idMap);
-  // 4) animate the first mermaid diagram (opt-in CSS wrapper)
-  const anim = animateFirstMermaid(lk.body);
+  // 4) strip hardcoded diagram colors (let the mermaid light/dark theme control them)
+  const sc = stripDiagramColors(lk.body);
+  // 5) animate the first mermaid diagram (opt-in CSS wrapper)
+  const anim = animateFirstMermaid(sc.body);
   let body = anim.body;
 
   // 3) description from exec summary (run through the prose de-em-dasher first)
@@ -721,6 +761,7 @@ module.exports = {
   rewriteLinks,
   convertFootnotes,
   convertAdmonitions,
+  stripDiagramColors,
   animateFirstMermaid,
   deriveTags,
   isoDate,

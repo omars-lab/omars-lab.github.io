@@ -116,9 +116,6 @@ graph LR
     OWNER -.->|approves gated tests| DECIDE
     OP -.->|supervises, tunes, intervenes| engine
 
-    style engine fill:#e8f0fe,stroke:#1a73e8
-    style signals fill:#fef7e0,stroke:#f9ab00
-    style people fill:#e6f4ea,stroke:#34a853
 ```
 
 </div>
@@ -152,12 +149,6 @@ graph LR
     OP --- OP_M(("Wants: supervise many stores<br/>safely + profitably;<br/>trust the autonomy"))
     SHOPPER --- SH_M(("Wants: a fast, clear,<br/>trustworthy buying<br/>experience"))
 
-    style OWNER fill:#e6f4ea,stroke:#34a853
-    style OP fill:#fef7e0,stroke:#f9ab00
-    style SHOPPER fill:#f5f5f5,stroke:#9e9e9e
-    style OWNER_M fill:#ffffff,stroke:#34a853
-    style OP_M fill:#ffffff,stroke:#f9ab00
-    style SH_M fill:#ffffff,stroke:#9e9e9e
 ```
 
 *Interests/motivations per persona; the agent must satisfy all three at once: lift the owner's revenue, stay supervisable by the operator, and never degrade the shopper's experience.*
@@ -320,8 +311,6 @@ graph LR
     UI --> GUARD
     UI --> STORE_DB
 
-    style owned fill:#e8f0fe,stroke:#1a73e8
-    style assumed fill:#f5f5f5,stroke:#9e9e9e
 ```
 
 ## 4. Current State (As-Is)
@@ -347,9 +336,6 @@ graph LR
     TOOL --> WALL[Manual hypotheses +\nmanual variants +\nanalyst dashboards +\nweeks of waiting]
     WALL -.->|most tests| ABANDON((Abandoned or\ndecided on noise))
 
-    style NOTHING fill:#f5f5f5,stroke:#9e9e9e
-    style GUESS fill:#fce8e6,stroke:#d93025
-    style ABANDON fill:#fce8e6,stroke:#d93025
 ```
 
 ### 4.2 The Tooling Landscape
@@ -457,9 +443,6 @@ graph LR
     AN --> LEDGER --> OWNER
     AN -.->|iterate| ID
 
-    style brain fill:#e8f0fe,stroke:#1a73e8
-    style control fill:#fef7e0,stroke:#f9ab00
-    style exec fill:#e6f4ea,stroke:#34a853
 ```
 
 The **execution layer (D1)** is deliberately drawn as a single abstracted box. The three architecture options below are three different ways to fill that box; the rest of the agent is unchanged across them.
@@ -480,7 +463,6 @@ graph LR
     PLAT -->|serves variant| VISITOR[Shopper]
     PLAT -->|raw metrics| AGENT
     AGENT -->|its own stats + decision| LEDGER[(Ledger)]
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
 ```
 
 - **Strengths:** Fastest to a working product: bucketing, anti-flicker, and serving are solved. Battle-tested delivery. Lowest engineering build.
@@ -499,8 +481,6 @@ graph LR
     EDGE -->|events| PIPE[(Our Event Pipeline)]
     PIPE --> AGENT
     AGENT --> LEDGER[(Ledger)]
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
-    style EDGE fill:#e6f4ea,stroke:#34a853
 ```
 
 - **Strengths:** Full control: our own bucketing, our own Bayesian/sequential stats end-to-end, no per-store platform fees, uniform integration across all stores. Best long-run margin and flexibility. Owns the data.
@@ -518,8 +498,6 @@ graph LR
     SHOPIFY -->|serves variant natively| VISITOR[Shopper]
     SHOPIFY -->|order/analytics events| AGENT
     AGENT --> LEDGER[(Ledger)]
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
-    style SHOPIFY fill:#fff0f0,stroke:#d93025
 ```
 
 - **Strengths:** Tightest integration with the dominant platform: native install/distribution (app store), direct access to catalog/orders/theme, less flicker risk than injected JS, trusted by merchants. Great onboarding.
@@ -671,9 +649,6 @@ graph LR
     C5 --> C8[C8 Surfaces]
     C6 --> C8
 
-    style brain fill:#e8f0fe,stroke:#1a73e8
-    style C6 fill:#fef7e0,stroke:#f9ab00
-    style C7 fill:#e6f4ea,stroke:#34a853
 ```
 
 ### 7.2 Data Model
@@ -782,9 +757,6 @@ graph LR
     L --> M[Owner sees win]
     G -.health breach.-> N((C6 auto-rollback))
 
-    style D fill:#fef7e0,stroke:#f9ab00
-    style J fill:#fef7e0,stroke:#f9ab00
-    style N fill:#fce8e6,stroke:#d93025
 ```
 
 **Two cross-cutting flows:**
@@ -815,9 +787,6 @@ graph LR
     UC9 -.-> UC2
     UC9 -.-> UC3
 
-    style OWNER fill:#e6f4ea,stroke:#34a853
-    style OP fill:#fef7e0,stroke:#f9ab00
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
 ```
 
 **Key use cases (actor → goal → flow):**
@@ -847,9 +816,6 @@ graph LR
     I --> J[Trust grows →<br/>owner widens autonomy]
     J --> C
 
-    style D fill:#fef7e0,stroke:#f9ab00
-    style H fill:#e6f4ea,stroke:#34a853
-    style I fill:#e6f4ea,stroke:#34a853
 ```
 
 *The journey is a loop, not a funnel: each shipped win compounds trust, which widens the autonomy the owner grants, which lets the agent do more; the flywheel behind the managed-service model.*
@@ -890,11 +856,6 @@ graph LR
     UC9 -.-> UC10
     UC9 -.-> UC2
 
-    style OWNER fill:#e6f4ea,stroke:#34a853
-    style OP fill:#fef7e0,stroke:#f9ab00
-    style AGENT fill:#e8f0fe,stroke:#1a73e8
-    style SCANNER fill:#f5f5f5,stroke:#9e9e9e
-    style SHOPPER fill:#f5f5f5,stroke:#9e9e9e
 ```
 
 *Squares = actors (color-coded by type: green = owner, amber = operator, blue = agent, grey = system/indirect); circles = use cases; dashed arrows = use case triggers another or feedback.*
