@@ -11,6 +11,7 @@ import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
+import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
 
 export default {
   // Reusing the default mapping
@@ -27,4 +28,7 @@ export default {
   // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
   PremiumGate,
   Premium,
+  // System-design posts: a diagram paired with a generated numbered legend (the badges
+  // ①②③ are authored into the mermaid labels; this renders the matching explanations).
+  DiagramWithFootnotes,
 };

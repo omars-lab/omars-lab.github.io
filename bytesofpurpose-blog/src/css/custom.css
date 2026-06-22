@@ -504,3 +504,39 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   font-family: var(--ifm-heading-font-family);
   font-weight: 600;
 }
+
+/* ==========================================================================
+   Animated mermaid edges (OPT-IN)
+   --------------------------------------------------------------------------
+   Mermaid (theme-mermaid) renders diagrams to inline SVG, so edges are
+   `<path class="flowchart-link">` elements that CSS can animate. This is a
+   "marching ants" flow animation: a dashed stroke that scrolls along each
+   edge, suggesting direction of flow. It is OPT-IN — only diagrams inside a
+   `.mermaid-animated` wrapper animate, so we never force motion on every
+   diagram site-wide. Wrap a diagram by putting it in a container with that
+   class (the DiagramWithFootnotes component accepts a className, or use a
+   plain <div className="mermaid-animated">…```mermaid```…</div>).
+
+   Respects prefers-reduced-motion: users who ask for less motion get a
+   static dashed edge, no animation.
+   ========================================================================== */
+@keyframes mermaidEdgeFlow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+.mermaid-animated .mermaid svg .flowchart-link,
+.mermaid-animated .mermaid svg .edgePath .path,
+.mermaid-animated .mermaid svg path.relation {
+  stroke-dasharray: 6 4;
+  animation: mermaidEdgeFlow 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mermaid-animated .mermaid svg .flowchart-link,
+  .mermaid-animated .mermaid svg .edgePath .path,
+  .mermaid-animated .mermaid svg path.relation {
+    animation: none;
+  }
+}

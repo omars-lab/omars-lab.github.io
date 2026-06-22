@@ -66,7 +66,7 @@ export default defineConfig({
       // graph-* specs + the DebugMenu spec. The DebugMenu renders ONLY on the
       // dev server (localhost + non-prod build) — it's stripped from prod — so it
       // must run here against :3000, not the build-backed projects.
-      testMatch: /(graph-.*|debug-menu|draft-sidebar|craft-self-split|navbar-auth|reconstruction-posts)\.spec\.ts$/,
+      testMatch: /(graph-.*|debug-menu|draft-sidebar|craft-self-split|navbar-auth|reconstruction-posts|co-design-imports)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {
@@ -75,7 +75,7 @@ export default defineConfig({
       // task-list aria-label rehype plugin) don't run in `yarn start`. Start the
       // build/serve first — `make test-a11y` / `make test-seo` handle that.
       name: 'prod',
-      testMatch: /(accessibility|seo|dev-only-surfaces|reconstruction-posts)\.spec\.ts$/,
+      testMatch: /(accessibility|seo|dev-only-surfaces|reconstruction-posts|co-design-imports)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
     {
