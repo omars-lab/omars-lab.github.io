@@ -94,15 +94,91 @@ test.describe('Imported co-design posts render in dev', () => {
       );
     });
 
-    test(`${name}: first diagram has the .mermaid-animated wrapper`, async ({ page }) => {
+    test(`${name}: first diagram is wrapped AND its edges actually animate`, async ({
+      page,
+    }) => {
       await page.goto(path, { waitUntil: 'domcontentloaded' });
       await page.waitForLoadState('networkidle').catch(() => {});
+
+      // the opt-in wrapper is present
       expect(
         await page.locator('article .mermaid-animated').count(),
         'opt-in animation wrapper present'
       ).toBeGreaterThan(0);
+
+      // and the CSS actually MATCHES the rendered mermaid edges (the wrapper alone is
+      // not proof — the selector must hit the real .docusaurus-mermaid-container DOM).
+      // Wait for an edge, then confirm the marching animation is applied + moving.
+      await page
+        .waitForSelector('.mermaid-animated svg path.flowchart-link', { timeout: 15000 })
+        .catch(() => {});
+      const result = await page.evaluate(async () => {
+        const edges = document.querySelectorAll(
+          '.mermaid-animated svg path.flowchart-link, .mermaid-animated svg path.relation'
+        );
+        if (!edges.length) return { edges: 0 };
+        const cs = getComputedStyle(edges[0] as Element);
+        const o1 = cs.strokeDashoffset;
+        await new Promise((r) => setTimeout(r, 250));
+        const o2 = getComputedStyle(edges[0] as Element).strokeDashoffset;
+        return {
+          edges: edges.length,
+          animationName: cs.animationName,
+          dashed: cs.strokeDasharray !== 'none' && cs.strokeDasharray !== '0px',
+          moving: o1 !== o2,
+        };
+      });
+      expect(result.edges, 'animated edges matched by the CSS').toBeGreaterThan(0);
+      expect(result.animationName, 'marching-ants keyframes applied').toBe(
+        'mermaidEdgeFlow'
+      );
+      expect(result.dashed, 'edge has a visible dash pattern').toBe(true);
+      expect(result.moving, 'stroke-dashoffset is animating (edges flow)').toBe(true);
+    });
+
+    test(`${name}: a flow-dot travels the edges (layered on the dashes)`, async ({
+      page,
+    }) => {
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle').catch(() => {});
+      // the client module appends a <circle class="mermaid-flow-dot"> once mermaid renders
+      await page
+        .waitForSelector('.mermaid-animated svg .mermaid-flow-dot', { timeout: 20000 })
+        .catch(() => {});
+      const dot = await page.evaluate(async () => {
+        const d = document.querySelector('.mermaid-animated svg .mermaid-flow-dot');
+        if (!d) return { present: false };
+        const pos = () => `${d.getAttribute('cx')},${d.getAttribute('cy')}`;
+        const a = pos();
+        await new Promise((r) => setTimeout(r, 300));
+        const b = pos();
+        await new Promise((r) => setTimeout(r, 300));
+        const c = pos();
+        return { present: true, moving: a !== b || b !== c };
+      });
+      expect(dot.present, 'traveling flow-dot present').toBe(true);
+      expect(dot.moving, 'flow-dot position changes over time').toBe(true);
     });
   }
+
+  test('markdown-review hero: bidirectional arrow was split into two directed edges', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.markdownReview, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page
+      .waitForSelector('.mermaid-animated svg path.flowchart-link', { timeout: 15000 })
+      .catch(() => {});
+    // The split replaced 5 edges (3 of them bidirectional) with directed ones. The hero
+    // now renders MORE than 5 flowchart edges, and the directional labels are present.
+    const edgeCount = await page
+      .locator('.mermaid-animated svg path.flowchart-link')
+      .count();
+    expect(edgeCount, 'split produced separate directed edges').toBeGreaterThanOrEqual(7);
+    const body = await page.locator('article .mermaid-animated').innerText();
+    expect(body, 'one-way HTTP label present').toContain('comments / actions');
+    expect(body, 'one-way WebSocket label present').toContain('live updates');
+  });
 
   test('storefront: scope-note + terminology render as admonitions', async ({ page }) => {
     await page.goto(POSTS.storefront, { waitUntil: 'domcontentloaded' });

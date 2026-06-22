@@ -526,17 +526,31 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   }
 }
 
-.mermaid-animated .mermaid svg .flowchart-link,
-.mermaid-animated .mermaid svg .edgePath .path,
+/* Docusaurus (theme-mermaid 11) renders the diagram into a
+   `.docusaurus-mermaid-container` and puts each edge on a `<path class="flowchart-link">`
+   (flowcharts) or `path.relation` (ER/class diagrams). Target those directly — NOT the
+   arrowheads (.arrowMarkerPath) or node outlines (.outer-path). The `.mermaid` fallback
+   covers any non-Docusaurus render path. */
+.mermaid-animated .docusaurus-mermaid-container svg path.flowchart-link,
+.mermaid-animated .docusaurus-mermaid-container svg path.relation,
+.mermaid-animated .mermaid svg path.flowchart-link,
 .mermaid-animated .mermaid svg path.relation {
-  stroke-dasharray: 6 4;
+  /* override mermaid's inline stroke-dasharray so the marching dashes are visible */
+  stroke-dasharray: 6 4 !important;
   animation: mermaidEdgeFlow 0.8s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mermaid-animated .mermaid svg .flowchart-link,
-  .mermaid-animated .mermaid svg .edgePath .path,
+  .mermaid-animated .docusaurus-mermaid-container svg path.flowchart-link,
+  .mermaid-animated .docusaurus-mermaid-container svg path.relation,
+  .mermaid-animated .mermaid svg path.flowchart-link,
   .mermaid-animated .mermaid svg path.relation {
     animation: none;
   }
+}
+
+/* The traveling flow-dot (appended by src/mermaid-flow-dot.js). A soft glow lifts it off
+   the edge stroke. The script honors prefers-reduced-motion (it never adds the dot then). */
+.mermaid-flow-dot {
+  filter: drop-shadow(0 0 3px var(--ifm-color-primary));
 }

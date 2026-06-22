@@ -63,6 +63,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     clientModules: [
       require.resolve('./src/gtag-guard.js'),
       require.resolve('./src/posthog.js'),
+      // Traveling flow-dot for opt-in `.mermaid-animated` diagrams (system-design posts).
+      require.resolve('./src/mermaid-flow-dot.js'),
     ],
     // Editorial type system, mirroring the portfolio (bytesofpurpose.com):
     //   Fraunces — display serif for headings (optical-size axis + italic)

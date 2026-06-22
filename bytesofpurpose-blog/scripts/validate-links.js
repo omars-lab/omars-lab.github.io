@@ -427,6 +427,13 @@ function scanFile(file, slugIndex) {
       }
     }
 
+    // A markdown REFERENCE-LINK DEFINITION (`[label]: https://… "optional title"`) is a
+    // legitimate way to carry a URL — it's not a bare inline URL. Skip the bare-url scan
+    // for such lines (the `[label][...]`/`[label]` use sites elsewhere render as links).
+    if (/^\s{0,3}\[[^\]]+\]:\s*<?https?:\/\/\S+>?(\s+("[^"]*"|'[^']*'|\([^)]*\)))?\s*$/.test(raw)) {
+      return;
+    }
+
     BARE_URL.lastIndex = 0;
     while ((m = BARE_URL.exec(line)) !== null) {
       const idx = m.index;

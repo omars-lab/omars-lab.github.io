@@ -88,9 +88,12 @@ graph LR
         CC["🤖 Claude Code CLI<br/>(headless)"]
     end
 
-    UI <-->|"HTTP / WebSocket"| SRV
-    SRV <-->|"read / write"| FS
-    SRV <-->|"commit / log / diff"| GIT
+    UI -->|"comments / actions (HTTP)"| SRV
+    SRV -->|"live updates (WebSocket)"| UI
+    SRV -->|"read"| FS
+    FS -->|"file contents"| SRV
+    SRV -->|"commit / log / diff"| GIT
+    GIT -->|"history"| SRV
     SRV -->|"invoke with open comments"| CC
     CC -->|"edits the doc"| FS
 
