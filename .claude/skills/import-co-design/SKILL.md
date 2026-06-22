@@ -57,9 +57,18 @@ Pasting an HLD in breaks for four reasons, all handled by the transformer:
    semicolon; heading/decision-label dash (`## X — Y`, `**D1 — …**`, `D3 — …`) → colon.
 5. **MDX-safety**: autolinks → markdown links (host/path as text); stray `<` → `&lt;`.
 6. **Cross-doc links** → `/designs/<mapped-slug>`; non-imported co-designs de-linked.
-7. **Animate** the FIRST mermaid block: wrap it in `<div className="mermaid-animated">` (the
-   opt-in marching-ants edge CSS in `src/css/custom.css`). Deterministic + idempotent.
-8. **Idempotent write**: if a Designs post already has a matching `source.id`, UPDATE that file
+7. **Strip diagram colors**: remove hardcoded `classDef`/`class`/`style fill:` directives
+   inside mermaid blocks so the site's mermaid theme (light `base` + `dark`) controls color
+   in BOTH modes (hardcoded fills override the theme and break dark mode).
+8. **Animate** the FIRST mermaid block: wrap it in `<div className="mermaid-animated …">`.
+   The marching-ants dashes (CSS) animate on every wrapped diagram; a **traveling flow-dot**
+   (the `src/mermaid-flow-dot.js` client module) is added only to FLOW diagrams. The source
+   declares flow-intent with a `%% animate: flow|none` directive in the mermaid block, which
+   the importer maps to `.flow-dot` / `.no-flow-dot` on the wrapper (else the client's
+   edge-label heuristic decides). Deterministic + idempotent. Full writeup:
+   `docs/craft/blogging/diagramming/animated-diagrams`; the component catalog is the
+   `upgrade-post` skill.
+9. **Idempotent write**: if a Designs post already has a matching `source.id`, UPDATE that file
    (keeping its slug + `sidebar_position`); else CREATE `YYYY-MM-DD-<kebab>.mdx`.
 
 Everything is `draft: true` on import. Publishing is a separate, deliberate step (`publish-site`).
@@ -114,19 +123,19 @@ plain post (NO `blog_trigger` — that convention is docs-only). De-em-dash it l
 
 ## Enrichments (when finalizing a post)
 
-- **Animated diagram** — automatic (first mermaid block), survives re-import. Nothing to do.
-- **`<DiagramWithFootnotes>`** (`src/components/DiagramWithFootnotes`, registered in
-  `src/theme/MDXComponents.tsx`) — numbered legend tied to ①②③ badges authored into the mermaid
-  labels. This is a MANUAL edit; a re-import would clobber it, so only add it to a FINALIZED post
-  you won't re-import. Usage:
-  ```mdx
-  <DiagramWithFootnotes notes={['Scanner finds CRO problems', 'Agent ideates + tests', 'Winners ship']}>
-  ```mermaid
-  graph LR
-    A["① Scan"] --> B["② Heal"] --> C["③ Report"]
-  ```
-  </DiagramWithFootnotes>
-  ```
+The full component catalog + when/how/gotchas lives in the **`upgrade-post`** skill. For
+co-design imports specifically:
+
+- **Animated diagram** — automatic + re-import-safe: the importer wraps the first mermaid
+  block in `.mermaid-animated` and stamps `.flow-dot`/`.no-flow-dot` from the source
+  `%% animate:` directive. Nothing to do post-import; to change the flow-intent, edit the
+  directive in the SOURCE HLD and re-import. (Marching dashes everywhere; traveling dot on
+  flow diagrams.)
+- **Mermaid colors** — automatic: hardcoded fills are stripped on import so the light/dark
+  theme controls color. Don't re-add `classDef`/`style fill:`.
+- **`<DiagramWithFootnotes>`** (numbered legend) — a MANUAL enrichment; a re-import would
+  clobber it, so only add it to a FINALIZED post you won't re-import. See `upgrade-post` for
+  the snippet.
 
 ## Publish
 
@@ -158,6 +167,16 @@ here.
 
 ## Learnings log (newest first)
 
+- 2026-06-22 — Animation + theming pass. Added a traveling flow-dot (sequential, graph-walk
+  ordered) layered on the marching dashes, gated to FLOW diagrams by CONTENT (a
+  `%% animate: flow|none` source directive, else an edge-label-verb heuristic) — NOT graph
+  shape; the heuristic misses flows whose verbs live in node names, so mark real flows
+  explicitly. Switched mermaid to a per-mode theme (light `base` tuned to brand + `dark`) and
+  the importer now STRIPS hardcoded `classDef`/`style fill:` (they overrode the theme and
+  broke dark mode). The original animation CSS never fired because the selector didn't match
+  Docusaurus's `.docusaurus-mermaid-container` + `path.flowchart-link` DOM — assert the
+  animation actually moves, not just that a wrapper class exists. Reference-style link
+  DEFINITIONS tripped validate-links as bare-url (fixed the validator).
 - 2026-06-22 — First build. The em-dash hook (no fence exemption) forces bulk de-em-dash +
   `&#8212;` for mermaid labels. MDX breaks on bare `<url>` autolinks and `< ` even though the
   grep-based hazard scan missed them — the BUILD is the real check. A failed MDX compile
