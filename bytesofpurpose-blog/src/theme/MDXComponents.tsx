@@ -12,6 +12,7 @@ import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
+import Mockup from '@site/src/components/Mockup';
 
 export default {
   // Reusing the default mapping
@@ -31,4 +32,7 @@ export default {
   // System-design posts: a diagram paired with a generated numbered legend (the badges
   // ①②③ are authored into the mermaid labels; this renders the matching explanations).
   DiagramWithFootnotes,
+  // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
+  // (browser/window/phone chrome) — shows what a design would LOOK like.
+  Mockup,
 };

@@ -589,10 +589,26 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
     },
   };
 
+  // PRESERVE a hand-linked UX-mockup sidecar across re-imports. The post declares it in
+  // frontmatter (`mockups: ./_mockups/<name>.mdx`); the sidecar is a hand-authored,
+  // importable React component of <Mockup> blocks that the importer NEVER regenerates.
+  // Keep the field, and inject the import + render after the truncate marker below.
+  const mockups = existingFile && existingFile.data.mockups;
+  if (mockups) fm.mockups = mockups;
+
   // ensure a truncate marker after the first paragraph if none present
   if (!/<!--\s*truncate\s*-->|\{\/\*\s*truncate\s*\*\/\}/.test(body)) {
     // insert after the first non-empty prose paragraph following the H1
     body = insertTruncate(body);
+  }
+
+  // inject the mockup sidecar import + render right after the truncate marker (so the
+  // "what it looks like" mock leads the body). Idempotent: skip if already present.
+  if (mockups && !/import\s+Mockups\s+from/.test(body)) {
+    body = body.replace(
+      /(<!--\s*truncate\s*-->|\{\/\*\s*truncate\s*\*\/\})/,
+      `$1\n\nimport Mockups from '${mockups}';\n\n<Mockups />`
+    );
   }
 
   const file = matter.stringify('\n' + body.replace(/^\n+/, ''), fm);

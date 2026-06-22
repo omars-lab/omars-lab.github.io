@@ -15,6 +15,26 @@ changes and it UPDATEs the matching post in place (never duplicates).
 The whole thing is one Node transformer + a Make target + proofs (unit + Playwright). The
 transformer is the source of truth for the mechanics; this file explains the why and the flow.
 
+## Philosophy: the co-design is the simple markdown; the blog design is the UPGRADE
+
+Importing is a **transformation, not a copy**. The source co-design is terse, internal
+markdown — written to think, for an audience that already has the context. The imported
+blog design is the **upgrade**: it should be **pretty, easy for a general reader to follow
+and understand, and paint the WHOLE picture** of the idea. Every mechanical step below
+serves that goal:
+
+- **Readable**: de-em-dashed, MDX-clean, with footnotes and admonitions that aid scanning.
+- **Visual**: the architecture/flow diagrams come alive (marching dashes + a traveling
+  flow-dot on flows), in on-brand colors that work light and dark.
+- **Concrete**: a co-design is conceptual; a reader cannot picture the product from prose.
+  So a design post should also show **what it would LOOK like** — UX **mockups** (the
+  `<Mockup>` component) that frame a live HTML impression of the screens. These are
+  hand-crafted (you cannot derive a UI from terse markdown) and live in a **sidecar** the
+  importer preserves (see the mockups step below).
+
+When deciding anything during an import, ask "does this make the design easier to follow and
+more vividly painted for a newcomer?" — not just "is it a faithful copy?"
+
 ## Why this is not a copy-paste
 
 The Designs blog is a Docusaurus `plugin-content-blog` instance (`designs/`, route `/designs`).
@@ -68,8 +88,12 @@ Pasting an HLD in breaks for four reasons, all handled by the transformer:
    edge-label heuristic decides). Deterministic + idempotent. Full writeup:
    `docs/craft/blogging/diagramming/animated-diagrams`; the component catalog is the
    `upgrade-post` skill.
-9. **Idempotent write**: if a Designs post already has a matching `source.id`, UPDATE that file
-   (keeping its slug + `sidebar_position`); else CREATE `YYYY-MM-DD-<kebab>.mdx`.
+9. **Preserve UX mockups**: if the post's frontmatter carries `mockups: ./_mockups/<name>.mdx`,
+   keep that field and inject `import Mockups … <Mockups />` after the truncate marker. The
+   sidecar is a hand-authored, importable React component of `<Mockup>` blocks; the importer
+   NEVER regenerates it, so the "what it looks like" mocks survive every re-import.
+10. **Idempotent write**: if a Designs post already has a matching `source.id`, UPDATE that file
+    (keeping its slug + `sidebar_position` + `mockups`); else CREATE `YYYY-MM-DD-<kebab>.mdx`.
 
 Everything is `draft: true` on import. Publishing is a separate, deliberate step (`publish-site`).
 
@@ -136,6 +160,12 @@ co-design imports specifically:
 - **`<DiagramWithFootnotes>`** (numbered legend) — a MANUAL enrichment; a re-import would
   clobber it, so only add it to a FINALIZED post you won't re-import. See `upgrade-post` for
   the snippet.
+- **UX mockups** (`<Mockup>`) — the "what it looks like" upgrade, and re-import-SAFE via the
+  sidecar pattern: create `designs/_mockups/<name>.mdx` (a default-exported component of
+  `<Mockup>` blocks), add `mockups: ./_mockups/<name>.mdx` to the post frontmatter, and the
+  importer injects + preserves the import/render and never regenerates the sidecar. This is
+  the recommended way to "paint the whole picture" of an imported design. Hand-craft one or
+  two mockups of the key screens; keep the inner HTML simple + theme-token-styled.
 
 ## Publish
 
@@ -167,6 +197,13 @@ here.
 
 ## Learnings log (newest first)
 
+- 2026-06-22 — Philosophy + mockups. Reframed the import as an UPGRADE (co-design = terse
+  internal MD; blog design = pretty, follow-able, whole-picture). Added UX mockups via a new
+  `<Mockup>` component (framed live HTML, theme-aware) and a re-import-safe SIDECAR pattern:
+  mockups live in `designs/_mockups/<name>.mdx` (a default-exported component), linked from
+  the post's `mockups:` frontmatter; the importer injects/preserves the import+render and
+  never regenerates the sidecar. (Mockups can't be derived from terse markdown, so they're
+  hand-crafted — the sidecar keeps them out of the regenerated body.)
 - 2026-06-22 — Animation + theming pass. Added a traveling flow-dot (sequential, graph-walk
   ordered) layered on the marching dashes, gated to FLOW diagrams by CONTENT (a
   `%% animate: flow|none` source directive, else an edge-label-verb heuristic) — NOT graph

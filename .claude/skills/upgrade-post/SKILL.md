@@ -85,6 +85,36 @@ graph LR
 Registered in `MDXComponents` (no import needed in docs, but importing is harmless). MANUAL
 opt-in — a re-import would clobber it, so only on finalized pages.
 
+### Mockup (UX mockups — show what it LOOKS like)
+
+WHAT: a framed, theme-aware wrapper (`browser` / `window` / `phone` / `none` chrome) that
+turns LIVE HTML/CSS into a UI mockup. WHEN: a design post needs to paint the picture — what
+a screen/layout would look like — not just how it works. The "screen" is real HTML so it
+adapts to light/dark, scales, and is version-controlled (no screenshots, no external embeds).
+HOW:
+
+```mdx
+import Mockup from '@site/src/components/Mockup';
+
+<Mockup chrome="browser" title="Review Studio" url="review.studio/doc/hld" caption="…">
+  <div style={{display:'flex'}}>
+    <nav>…sidebar…</nav>
+    <main>…document + comment pins…</main>
+    <aside>…comment thread + a CTA button…</aside>
+  </div>
+</Mockup>
+```
+
+- Keep the inner HTML simple + semantic (a few divs/buttons with light inline styles using
+  `var(--ifm-*)` tokens so it stays on-brand and theme-aware). It is an impression, not a
+  pixel-perfect build.
+- **On an imported co-design**, do NOT hand-add the mockup to the post body (a re-import
+  clobbers it). Put it in a **sidecar component** `designs/_mockups/<name>.mdx` (a default-
+  exported React component of `<Mockup>` blocks) and link it from the post's frontmatter
+  `mockups: ./_mockups/<name>.mdx`. The importer injects `import Mockups … <Mockups/>` after
+  the truncate marker and **preserves it across re-imports**, and never regenerates the
+  sidecar. See `import-co-design`.
+
 ### Admonitions (callouts)
 
 WHAT: `:::note / :::tip / :::info / :::warning / :::danger` styled boxes (enabled by default).

@@ -1,0 +1,106 @@
+/* Mockup — a framed UI mockup wrapper. Theme-aware via --ifm tokens. */
+
+.mockup {
+  margin: 1.75rem auto;
+  width: 100%;
+}
+
+.frame {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* --- chrome bars (browser address bar / window title bar) --- */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: color-mix(in srgb, var(--ifm-color-emphasis-200) 60%, var(--ifm-background-surface-color));
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ifm-color-emphasis-400);
+}
+/* macOS-ish traffic lights, in muted tones that read on both themes */
+.dots i:nth-child(1) { background: #e06c5e; }
+.dots i:nth-child(2) { background: #e6b04a; }
+.dots i:nth-child(3) { background: #79b46a; }
+
+.address {
+  flex: 1 1 auto;
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.winTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-800);
+}
+
+/* --- the live "screen" --- */
+.screen {
+  background: var(--ifm-background-color);
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--ifm-font-color-base);
+}
+
+.caption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
+
+/* --- phone shell --- */
+.chrome_phone {
+  max-width: 380px;
+}
+.chrome_phone .frame {
+  border-radius: 26px;
+  border-width: 8px;
+  border-color: var(--ifm-color-emphasis-800);
+  position: relative;
+}
+.chrome_phone .notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44%;
+  height: 18px;
+  background: var(--ifm-color-emphasis-800);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  z-index: 2;
+}
+.chrome_phone .screen {
+  min-height: 360px;
+}
+
+/* --- bare framed screen --- */
+.chrome_none .frame {
+  border-radius: 10px;
+}

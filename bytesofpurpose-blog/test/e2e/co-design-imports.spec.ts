@@ -185,6 +185,19 @@ test.describe('Imported co-design posts render in dev', () => {
     expect(kind, 'classifier recorded a decision (gate is live)').toBeTruthy();
   });
 
+  test('markdown-review: the UX mockup renders from its sidecar', async ({ page }) => {
+    await page.goto(POSTS.markdownReview, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    // the <Mockup> from designs/_mockups/markdown-review-studio.mdx, injected by the importer
+    const mock = page.locator('article figure[aria-label^="Mockup"]');
+    await expect(mock.first()).toBeVisible();
+    // it's a live HTML mock (has the framed screen + an interactive control), not an image
+    expect(
+      await mock.locator('button', { hasText: /Run Claude/ }).count(),
+      'live HTML mockup with a control'
+    ).toBeGreaterThan(0);
+  });
+
   test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
     page,
   }) => {
