@@ -74,9 +74,10 @@ In short: the scanner proved we can *find* what's wrong; this agent proves we ca
 
 The agent sits **on a customer's live storefront**. It consumes signals (the scanner's detected CRO problems, the store's own analytics, the product catalog), runs a continuous **experiment loop**, and produces shipped storefront changes plus a plain-language **wins ledger** the owner can read. The **DIY Store Owner** sets the rules and watches; the **Operator** supervises across many stores.
 
-<div className="mermaid-animated">
+<div className="mermaid-animated flow-dot">
 
 ```mermaid
+%% animate: flow
 graph LR
     subgraph signals["Inputs / Signals"]
         SCAN[Scanner Findings\nCO-DESIGN-0002]

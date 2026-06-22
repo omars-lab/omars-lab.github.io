@@ -259,14 +259,23 @@ function rewriteLinks(body, idMap) {
 // animate the first ("hero") mermaid diagram
 // ---------------------------------------------------------------------------
 
-// Wrap the FIRST ```mermaid block in <div class="mermaid-animated">…</div> so its edges
+// Wrap the FIRST ```mermaid block in <div class="mermaid-animated …">…</div> so its edges
 // get the marching-ants flow animation (the opt-in CSS in src/css/custom.css). Only the
 // first diagram, so the page has one animated hero flow without every diagram moving.
+//
+// The TRAVELING DOT (added by src/mermaid-flow-dot.js) is gated on whether the diagram is
+// a FLOW (a journey A->B->C) vs a CONTEXT/relationship diagram. That is a CONTENT decision,
+// so the AUTHOR declares it in the source mermaid block with a directive comment:
+//     %% animate: flow   -> force the traveling dot   (wrapper gets .flow-dot)
+//     %% animate: none   -> dashes only, no dot        (wrapper gets .no-flow-dot)
+//     (no directive)     -> the client module's edge-label heuristic decides
+// We read that directive here and stamp the matching class so intent wins over the guess.
+//
 // Deterministic + idempotent: re-running on already-wrapped output is a no-op because we
-// detect an existing wrapper. Returns {body, animated:boolean}.
+// detect an existing wrapper. Returns {body, animated:boolean, dotMode:'flow'|'none'|'auto'}.
 function animateFirstMermaid(body) {
-  if (/<div className="mermaid-animated">/.test(body)) {
-    return {body, animated: true}; // already wrapped (idempotent re-import)
+  if (/<div className="mermaid-animated/.test(body)) {
+    return {body, animated: true, dotMode: 'kept'}; // already wrapped (idempotent re-import)
   }
   const lines = body.split('\n');
   let start = -1;
@@ -281,11 +290,30 @@ function animateFirstMermaid(body) {
       break;
     }
   }
-  if (start === -1 || end === -1) return {body, animated: false};
+  if (start === -1 || end === -1) return {body, animated: false, dotMode: 'auto'};
+
+  // look for a `%% animate: flow|none|dot` directive inside the block
+  let dotMode = 'auto';
+  let cls = 'mermaid-animated';
+  for (let i = start + 1; i < end; i++) {
+    const m = lines[i].match(/^\s*%%\s*animate:\s*(flow|dot|none|context)\s*$/i);
+    if (m) {
+      const v = m[1].toLowerCase();
+      if (v === 'flow' || v === 'dot') {
+        dotMode = 'flow';
+        cls += ' flow-dot';
+      } else {
+        dotMode = 'none';
+        cls += ' no-flow-dot';
+      }
+      break;
+    }
+  }
+
   // MDX needs blank lines around a JSX block element.
   lines.splice(end + 1, 0, '', '</div>');
-  lines.splice(start, 0, '<div className="mermaid-animated">', '');
-  return {body: lines.join('\n'), animated: true};
+  lines.splice(start, 0, `<div className="${cls}">`, '');
+  return {body: lines.join('\n'), animated: true, dotMode};
 }
 
 // ---------------------------------------------------------------------------

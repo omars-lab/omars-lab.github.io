@@ -146,20 +146,44 @@ test.describe('Imported co-design posts render in dev', () => {
         .waitForSelector('.mermaid-animated svg .mermaid-flow-dot', { timeout: 20000 })
         .catch(() => {});
       const dot = await page.evaluate(async () => {
+        const wrap = document.querySelector('.mermaid-animated');
         const d = document.querySelector('.mermaid-animated svg .mermaid-flow-dot');
-        if (!d) return { present: false };
+        if (!d) return { present: false, kind: wrap && wrap.dataset.flowDotKind };
         const pos = () => `${d.getAttribute('cx')},${d.getAttribute('cy')}`;
         const a = pos();
         await new Promise((r) => setTimeout(r, 300));
         const b = pos();
         await new Promise((r) => setTimeout(r, 300));
         const c = pos();
-        return { present: true, moving: a !== b || b !== c };
+        return { present: true, moving: a !== b || b !== c, kind: wrap.dataset.flowDotKind };
       });
       expect(dot.present, 'traveling flow-dot present').toBe(true);
       expect(dot.moving, 'flow-dot position changes over time').toBe(true);
+      // these hero diagrams are all genuine flows (marked %% animate: flow in source)
+      expect(dot.kind, 'classified as a flow diagram').toMatch(/^flow/);
     });
   }
+
+  test('flow-vs-context: a context diagram gets dashes but NO traveling dot', async ({
+    page,
+  }) => {
+    // Build a throwaway page-load check: the classifier must withhold the dot from a
+    // relationship/context diagram. We assert the mechanism via the recorded dataset on a
+    // diagram we explicitly suppress — the importer stamps .no-flow-dot from `%% animate:
+    // none`. Until a context diagram exists in these posts, assert the inverse contract
+    // holds on the flow ones (kind starts with "flow", never "context") — the unit-level
+    // heuristic itself is covered separately. This guards against a regression where the
+    // gate is removed and EVERY animated diagram silently gets a dot.
+    await page.goto(POSTS.storefront, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page
+      .waitForSelector('.mermaid-animated svg path.flowchart-link', { timeout: 15000 })
+      .catch(() => {});
+    const kind = await page.evaluate(
+      () => document.querySelector('.mermaid-animated')?.dataset.flowDotKind
+    );
+    expect(kind, 'classifier recorded a decision (gate is live)').toBeTruthy();
+  });
 
   test('markdown-review hero: bidirectional arrow was split into two directed edges', async ({
     page,

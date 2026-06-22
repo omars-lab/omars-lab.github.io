@@ -27,34 +27,142 @@ if (ExecutionEnvironment.canUseDOM) {
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Order edges by their start point (top-to-bottom, then left-to-right) so the dot's
-  // journey reads roughly in the diagram's flow direction rather than raw DOM order.
-  function orderedEdges(svg) {
-    const edges = Array.from(svg.querySelectorAll(EDGE_SEL)).filter((p) => {
-      try {
-        return p.getTotalLength() > 1;
-      } catch {
-        return false;
-      }
+  // Mermaid encodes each flowchart edge's source + target node in its id / data-id as
+  // `…L_<source>_<target>_<index>` (e.g. L_UI_SRV_0 = UI -> SRV). We parse that to build
+  // the real graph — far more reliable than guessing flow from screen geometry.
+  function parseEdge(pathEl) {
+    const raw =
+      pathEl.getAttribute('data-id') || pathEl.id || pathEl.getAttribute('class') || '';
+    const m = raw.match(/L[_-](.+?)[_-](.+?)[_-]\d+$/);
+    if (!m) return null;
+    let len = 0;
+    try {
+      len = pathEl.getTotalLength();
+    } catch {
+      return null;
+    }
+    if (len <= 1) return null;
+    return {p: pathEl, from: m[1], to: m[2], len};
+  }
+
+  // Collect parsed edges; empty if the diagram isn't a node-labeled flowchart (e.g. ER /
+  // class / sequence) — those fall back to dashes-only.
+  function collectEdges(svg) {
+    const edges = [];
+    svg.querySelectorAll(EDGE_SEL).forEach((p) => {
+      const e = parseEdge(p);
+      if (e) edges.push(e);
     });
-    return edges
-      .map((p) => {
-        const start = p.getPointAtLength(0);
-        return {p, x: start.x, y: start.y};
-      })
-      .sort((a, b) => a.y - b.y || a.x - b.x)
-      .map((e) => e.p);
+    return edges;
+  }
+
+  // Verbs that, when they appear on an edge label, signal MOVEMENT/ACTION (a flow) rather
+  // than a static relationship. Read from the diagram's CONTENT (the edge labels), which
+  // is what actually distinguishes "data moves A->B->C" from "these systems relate".
+  const FLOW_VERBS =
+    /\b(invoke[sd]?|edit[s]?|read[s]?|write[s]?|send[s]?|push|pull|fetch|commit[s]?|ship[s]?|run[s]?|scan[s]?|score[s]?|rank[s]?|generate[s]?|produce[s]?|emit[s]?|trigger[s]?|dispatch|process(es)?|transform[s]?|deliver[s]?|return[s]?|reply|reports?|drives?|calls?|requests?|responds?|updates?|ideate[s]?|measure[s]?|decide[s]?|enrich(es)?|discover[s]?|outreach|becomes?|configures?)\b/i;
+
+  // Classify a diagram as FLOW (gets the traveling dot) vs CONTEXT (dashes only), from the
+  // diagram's CONTENT: how many of its labeled edges carry an action verb. A flow/activity
+  // diagram describes things MOVING ("invoke", "edits", "commit", "scan", "score"); a
+  // context/relationship diagram is mostly unlabeled or noun-relations. Returns a verdict
+  // the caller combines with the author's explicit directive (which always wins).
+  // `edgeLabels` is the list of edge-label strings rendered for this diagram.
+  function labelsLookLikeFlow(edgeLabels) {
+    const labeled = edgeLabels.filter((t) => t && t.trim());
+    if (!labeled.length) return false; // nothing labeled -> can't tell from content -> no dot by default
+    const verbish = labeled.filter((t) => FLOW_VERBS.test(t)).length;
+    // FLOW when a clear share of the LABELED edges read as actions.
+    return verbish / labeled.length >= 0.4;
+  }
+
+  // Pull the rendered edge-label strings for a diagram's svg.
+  function edgeLabelsOf(svg) {
+    return Array.from(svg.querySelectorAll('.edgeLabel'))
+      .map((n) => (n.textContent || '').trim())
+      .filter(Boolean);
+  }
+
+  // Order edges into a single walk: start at a source (in-degree 0, else lowest in-degree
+  // / top-left), then repeatedly take an unused edge out of the current node; when the
+  // current node has no unused out-edge, jump to the nearest node that still has one.
+  // Produces a path that follows the flow node-to-node instead of by screen position.
+  function walkOrder(edges) {
+    const out = {}; // node -> [edge,…] not yet used
+    const indeg = {};
+    const outdeg = {};
+    for (const e of edges) {
+      (out[e.from] = out[e.from] || []).push(e);
+      outdeg[e.from] = (outdeg[e.from] || 0) + 1;
+      indeg[e.to] = (indeg[e.to] || 0) + 1;
+      indeg[e.from] = indeg[e.from] || 0;
+    }
+    const nodes = Object.keys({...indeg, ...outdeg});
+    // pick a start: prefer a true source (indeg 0, has out-edges)
+    let start =
+      nodes.find((n) => (indeg[n] || 0) === 0 && (outdeg[n] || 0) > 0) ||
+      nodes.sort((a, b) => (indeg[a] || 0) - (indeg[b] || 0))[0];
+
+    const used = new Set();
+    const order = [];
+    let current = start;
+    while (order.length < edges.length) {
+      const avail = (out[current] || []).filter((e) => !used.has(e));
+      let next;
+      if (avail.length) {
+        next = avail[0];
+      } else {
+        // no out-edge from here: jump to any node that still has an unused out-edge
+        const jumpNode = Object.keys(out).find((n) =>
+          (out[n] || []).some((e) => !used.has(e))
+        );
+        if (jumpNode == null) break;
+        next = out[jumpNode].find((e) => !used.has(e));
+      }
+      used.add(next);
+      order.push(next.p);
+      current = next.to;
+    }
+    // append any leftover (disconnected) edges so the dot still covers them
+    for (const e of edges) if (!used.has(e)) order.push(e.p);
+    return order;
   }
 
   function animateContainer(container) {
     if (container.dataset.flowDotInit === '1') return;
     const svg = container.querySelector('svg');
     if (!svg) return;
-    const edges = orderedEdges(svg);
-    if (!edges.length) return;
+    const parsed = collectEdges(svg);
+    if (!parsed.length) return; // wait for mermaid to finish rendering edges
     container.dataset.flowDotInit = '1';
 
-    if (prefersReduced) return; // wrapper marked; honor reduced-motion (no moving dot)
+    if (prefersReduced) return; // honor reduced-motion (no moving dot; dashes still flow)
+
+    // The TWO-TIER model: the marching-ants dashes (CSS) animate on EVERY .mermaid-animated
+    // diagram. The traveling DOT is added ONLY to flow/activity diagrams — on a context /
+    // relationship diagram a sequential dot looks random, so we explicitly DON'T add it.
+    //
+    // The decision is CONTENT-based, in two layers (author intent wins):
+    //   1. AUTHOR DIRECTIVE (from the source `%% animate: flow|none`, stamped by the
+    //      importer as a wrapper class):
+    //        .flow-dot     -> always add the dot
+    //        .no-flow-dot  -> never add the dot
+    //   2. otherwise the EDGE-LABEL heuristic: do the diagram's edge labels read as
+    //      actions/verbs (a flow) vs static relations (context)?
+    const forced = container.classList.contains('flow-dot');
+    const suppressed = container.classList.contains('no-flow-dot');
+    if (suppressed) {
+      container.dataset.flowDotKind = 'none(author)';
+      return;
+    }
+    const decideFlow = forced || labelsLookLikeFlow(edgeLabelsOf(svg));
+    if (!decideFlow) {
+      container.dataset.flowDotKind = 'context'; // recorded for the e2e + debugging
+      return;
+    }
+    container.dataset.flowDotKind = forced ? 'flow(author)' : 'flow(labels)';
+
+    const edges = walkOrder(parsed);
 
     // The dot. A soft glow makes it read against the edge stroke.
     const dot = document.createElementNS(SVG_NS, 'circle');
