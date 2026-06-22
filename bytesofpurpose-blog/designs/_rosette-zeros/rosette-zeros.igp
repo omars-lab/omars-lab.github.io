@@ -1,0 +1,14 @@
+blueprint rz
+  circle C0 center(0,0) radius 100
+  divide C0 into 8
+  circle Z0 center(C0.cpt0) radius 40
+  circle Z1 center(C0.cpt1) radius 40
+  circle Z2 center(C0.cpt2) radius 40
+  circle Z3 center(C0.cpt3) radius 40
+  circle Z4 center(C0.cpt4) radius 40
+  circle Z5 center(C0.cpt5) radius 40
+  circle Z6 center(C0.cpt6) radius 40
+  circle Z7 center(C0.cpt7) radius 40
+
+pattern rz on rz
+  circles color #E8C46A width 7

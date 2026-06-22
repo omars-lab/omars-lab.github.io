@@ -1,0 +1,98 @@
+---
+slug: design-rosette-of-zeros
+sidebar_position: 8
+title: A Rosette of Zeros, Drawn by Two CLIs
+description: 'A design log: bending the binary-pyramid column of 0s into an 8-fold rosette using the bikar DSL, then asking qiyas what it saw.'
+authors: [oeid]
+tags: [design, logo, svg, geometry, cli, dsl]
+draft: true
+---
+
+import SvgVariantGrid from '@site/src/components/SvgVariantGrid';
+import {VARIANTS} from './_rosette-zeros-variants.js';
+
+I had a column of zeros and a question. The [Gold Ionic binary-pyramid logo](/designs/design-binary-pyramid-logo) draws each **0** as a little gold ring stacked up the shaft of a column. What if I took one of those columns of 0s and bent it into a circle, so the chain of zeros became a **rosette**? And what if, instead of hand-drawing it, I built it the way the rest of this project builds Islamic geometry: by writing a recipe in a tiny drawing language and letting a CLI render it, then handing the result to a second CLI to check?
+
+<SvgVariantGrid variants={VARIANTS} group="final" previewHeights={[40]} />
+
+{/* truncate */}
+
+## The constraint that shaped everything: no letters
+
+The first decision made itself. I wanted the zeros to be real geometry, not a typed character "0" in some font. That is also the only thing the tools can do: **bikar**, the renderer, has no text primitive at all. There is no way to stamp a glyph. A "0" has to be a *ring* drawn with a compass: a circle, or two circles, or an arc that closes on itself. So the rule "no letters in the SVG" is not a restriction I imposed on top of the tools. It is baked into them. Every zero you see below is a circle, and I checked the output to be sure: the final SVG contains zero `<text>` elements.
+
+## The two tools
+
+Two small command-line tools do all the work, and they pass the drawing between them:
+
+- **bikar** takes a recipe written in a small drawing language (a DSL, a domain-specific language) and renders it to SVG. It knows about circles, divisions of a circle, arcs, polygons, and rotational repetition.
+- **qiyas** (Arabic for "measurement") does the opposite. You hand it a drawing and it writes down what it sees: every shape, and the symmetry of the whole. It is the honesty check on whether the picture says what I meant it to say.
+
+The plan: write a bikar recipe for a ring of zeros, render it, then ask qiyas whether it reads as an 8-fold figure.
+
+## The recipe, and the iterations it took
+
+The idea is one move: take eight points evenly spaced around a circle, and put a small ring (a "0") at each one. In bikar's language, "eight evenly spaced points" is `divide C0 into 8`, and the natural way to repeat a shape around a center is the `rotate` block. So my first recipe put a circle inside a `rotate 8` block and expected eight of them.
+
+It rendered **two** circles, not eight.
+
+That was the first lesson, and a real one. bikar's `rotate` replicates *drawn edges*: line segments, arcs, and filled faces. It does **not** replicate a bare construction *circle*. A circle in bikar is scaffolding, the thing you hang points and arcs on, and scaffolding does not get copied by a rotation. So my eight-fold block produced the original circle plus one rotated nothing.
+
+My second and third attempts tried to fix that by drawing each zero as an **arc** instead, since arcs *do* get replicated. I tried a full-circle arc that started and ended at the same point. bikar drew nothing, because an arc from a point back to itself is ambiguous: there is no way to know which way around the circle it should sweep. I split it into two half-arcs, the way bikar's own rosette fixtures do. Still nothing visible, because a lone arc is not a closed face, and bikar only fills closed regions.
+
+At that point I stopped fighting the `rotate` block and used the thing bikar was quietly telling me to use the whole time: a circle, on its own, already renders as a ring outline. A circle *is* a zero. So the recipe became eight named circles, one at each division point, plus a line that colors them gold:
+
+```
+blueprint rz
+  circle C0 center(0,0) radius 100
+  divide C0 into 8
+  circle Z0 center(C0.cpt0) radius 40
+  circle Z1 center(C0.cpt1) radius 40
+  circle Z2 center(C0.cpt2) radius 40
+  circle Z3 center(C0.cpt3) radius 40
+  circle Z4 center(C0.cpt4) radius 40
+  circle Z5 center(C0.cpt5) radius 40
+  circle Z6 center(C0.cpt6) radius 40
+  circle Z7 center(C0.cpt7) radius 40
+
+pattern rz on rz
+  circles color #E8C46A width 7
+```
+
+`C0` is the big ring the zeros sit on. `divide C0 into 8` gives me eight seats named `C0.cpt0` through `C0.cpt7`. Each `Z` is a zero centered on a seat. That is the whole recipe, and it renders the first time.
+
+The only knob left was the radius of each zero, and it turned out to be the design decision. The honest log:
+
+| Try | What I changed | What happened |
+|-----|----------------|---------------|
+| 1 | `circle` inside `rotate 8` | 2 circles, not 8 (`rotate` does not copy circles) |
+| 2 | full-circle arc, rotated | nothing drawn (degenerate self-closing arc) |
+| 3 | two half-arcs, rotated | nothing drawn (an open arc is not a fillable face) |
+| 4 | 8 plain circles, radius 26 | works; zeros sit apart, beaded on the ring |
+| 5 | 8 plain circles, radius 40 | works; zeros **overlap into an interlaced chain** |
+
+Radius 26 reads as eight separate beads threaded on a necklace. Radius 40 lets the zeros overlap their neighbors, and the overlaps weave the eight rings into one continuous chain with a crisp 8-pointed star of empty space at the center. The second one is the rosette. Here are both, side by side:
+
+<SvgVariantGrid variants={VARIANTS} group="iters" previewHeights={[40]} />
+
+## What qiyas saw
+
+Then the honesty check. I handed the final SVG to qiyas and asked it to encode what it found. Its verdict, verbatim from the run: **9 shapes, dominant fold = 8, confidence 0.94.** It independently recovered the eight-fold rotational symmetry I had built, with no hint from me. The round trip closed: bikar drew an eight-fold thing, and qiyas, looking only at the picture, said "this is eight-fold."
+
+Two things it got *interestingly* wrong are worth more than the thing it got right.
+
+First, qiyas labeled all nine shapes as plain **circles**. It has a dedicated "rosette" detector, and it did **not** fire. That detector is trained to see a rosette as a ring of *petals*, polygon-ish or star-ish shapes, not a ring of circles. So qiyas sees "eight circles arranged with eight-fold symmetry" but does not promote the gestalt to "a rosette." The symmetry is recovered; the higher-order name is not. That gap is the kind of thing this whole project keeps running into: the machine can measure a property exactly and still not have a word for the shape.
+
+Second, and my favorite, I asked qiyas to compare the image **to itself** and score the match. A perfect copy should score a clean 1.0. It scored the symmetry a perfect 1.00 but the overall match only 0.73, and it reported a **45-degree rotation** between the image and its own twin. Forty-five degrees is exactly one eighth of a turn. Because the figure is eight-fold symmetric, it looks identical to a copy of itself rotated by one seat, so the matcher happily "aligned" the rosette to a rotated version of itself and then found that several rings no longer lined up. The very symmetry that makes the logo pleasing makes it ambiguous to a machine that is trying to pin down its orientation. A perfectly symmetric thing has no single "correct" rotation, and the tool's confusion is just that fact showing up as a number.
+
+Here is qiyas's own picture of what it carved the rosette into: a central zone (the eight-pointed star of empty space), the ring of eight zeros, and the surrounding field.
+
+![qiyas zone-audit of the rosette: a central star-shaped zone, the ring of eight circle-zeros, and the outer field](/img/rosette-zeros-qiyas-zones.png)
+
+## What the CLIs made easy, and what they made honest
+
+The easy part was the design space. Once I had the four-line recipe, exploring it was changing one number and re-rendering. No vector editor, no nudging anchor points. The radius sweep that found the interlaced look took seconds, and every result is reproducible from text.
+
+The honest part was everything bikar refused to do. It would not let me fake a zero with a glyph, because it has no glyphs. It would not let me rotate a circle into eight, because a circle is scaffolding. Each refusal pushed me toward the construction the geometry actually wanted: eight real circles on eight real division points of a ninth. And qiyas refused to flatter me. It confirmed the eight-fold symmetry, declined to call it a rosette, and surfaced the orientation ambiguity that perfect symmetry creates. None of that is failure. It is the tools telling me the truth about the thing I drew, which is the entire reason to draw it this way instead of by hand.
+
+A column of zeros became a ring of zeros, and two small programs argued me into the right one.

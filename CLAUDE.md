@@ -38,6 +38,18 @@ tracking is what makes the archive step possible. Don't leave finished work untr
 or tasks stuck `in_progress` after they're done — the live list should always reflect
 reality. Trivial single-step asks don't need a task.
 
+**Frame each task around the MAIN QUESTION it answers.** A task is not just an action; it
+is the central question being resolved, and its description leads with that question (e.g.
+"Should we make blog components for bikar?", "Where can the DSL be used live in a post?").
+**One task per investigation — always.** When the user raises several questions at once, or a
+request fans out into distinct things to figure out, create a SEPARATE task for each, before
+starting any of them. Never bundle multiple open questions into one task: each needs its own
+investigation, its own answer, and its own changelog line. The task list should read as the
+set of questions in flight, so anyone scanning it sees what we are trying to figure out, not
+just what we are typing. As each investigation resolves, record the answer in that task's
+description (lead with "ANSWERED:") before completing it — the completed task's answer is what
+flows into the changelog.
+
 ## ⚠️ Operating convention: track DEFERRED findings as GitHub issues (deduped via ISSUES.md)
 
 Audit/review findings (mobile/desktop experience audits, reader-experience review, code
