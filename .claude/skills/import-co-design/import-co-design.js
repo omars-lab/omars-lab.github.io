@@ -577,6 +577,9 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
     description,
     authors: ['oeid'],
     tags: deriveTags(id, lead),
+    // declares the post KIND so validate-post-outline.js applies the system-design
+    // required-elements rule (UX mockup + Decisions section + description).
+    kind: 'system-design',
     draft: true,
     source: {
       repo: 'work-git',

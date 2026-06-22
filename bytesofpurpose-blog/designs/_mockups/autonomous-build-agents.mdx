@@ -1,0 +1,48 @@
+---
+# Mockup sidecar for design-autonomous-build-agents.
+# Hand-authored UX mockups; linked from the post's `mockups:` frontmatter. The importer
+# injects + preserves the render and never regenerates this file.
+---
+
+import Mockup from '@site/src/components/Mockup';
+
+export default function Mockups() {
+  const card = (status, done, running) => ({
+    border: '1px solid ' + (running ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)'),
+    borderRadius: '8px', padding: '0.5rem 0.6rem', marginBottom: '0.4rem',
+    background: running ? 'var(--ifm-color-primary-contrast-background)' : 'var(--ifm-background-surface-color)',
+    opacity: done || running ? 1 : 0.6, fontSize: '0.76rem',
+  });
+  const badge = (txt, bg) => ({display: 'inline-block', float: 'right', padding: '0.05rem 0.4rem', borderRadius: '999px', background: bg, color: '#fff', fontWeight: 700, fontSize: '0.64rem'});
+  return (
+    <>
+      <h2>What it looks like</h2>
+
+      <Mockup chrome="window" title="Delivery Platform: Build Assistant" caption="The delivery consultant points the assistant at a work item; four agents carry it from pre-flight to documented, each reviewable before changes reach the client tenant.">
+        <div style={{display: 'flex', minHeight: '320px', fontFamily: 'var(--ifm-font-family-base)'}}>
+          <section style={{flex: '0 0 200px', borderRight: '1px solid var(--ifm-color-emphasis-200)', padding: '0.75rem', fontSize: '0.74rem'}}>
+            <div style={{fontWeight: 700, marginBottom: '0.4rem'}}>Work Item</div>
+            <div style={{fontWeight: 600, marginBottom: '0.3rem'}}>Add approval routing to expense form</div>
+            <div style={{color: 'var(--ifm-color-emphasis-700)', lineHeight: 1.5}}>
+              <div>config level: <strong>medium</strong></div>
+              <div>points: <strong>5</strong></div>
+              <div>target: <strong>acme-tenant</strong></div>
+              <div style={{marginTop: '0.4rem'}}>state: <span style={{color: 'var(--ifm-color-primary)', fontWeight: 700}}>Work In Progress</span></div>
+            </div>
+          </section>
+          <main style={{flex: '1 1 auto', padding: '0.75rem 0.9rem'}}>
+            <div style={{fontWeight: 700, fontSize: '0.82rem', marginBottom: '0.5rem'}}>Build workflow</div>
+            <div style={card(null, true, false)}><span style={badge('passed', '#79b46a')}>✓</span>① Instance Readiness <span style={{color: 'var(--ifm-color-emphasis-700)'}}>pre-flight passed</span></div>
+            <div style={card(null, false, true)}><span style={badge('generating', 'var(--ifm-color-primary)')}>…</span>② Auto Developer <span style={{color: 'var(--ifm-color-emphasis-700)'}}>generating Instance Commit</span></div>
+            <div style={card(null, false, false)}>③ Auto Tester <span style={{color: 'var(--ifm-color-emphasis-700)'}}>validates against acceptance criteria</span></div>
+            <div style={card(null, false, false)}>④ Knowledge Transfer Writer <span style={{color: 'var(--ifm-color-emphasis-700)'}}>documents the implementation</span></div>
+            <div style={{marginTop: '0.6rem', display: 'flex', gap: '0.4rem'}}>
+              <button style={{padding: '0.35rem 0.8rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 600, cursor: 'pointer'}}>Review &amp; approve</button>
+              <button style={{padding: '0.35rem 0.8rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px', background: 'transparent', color: 'var(--ifm-font-color-base)', cursor: 'pointer'}}>View Instance Commit</button>
+            </div>
+          </main>
+        </div>
+      </Mockup>
+    </>
+  );
+}

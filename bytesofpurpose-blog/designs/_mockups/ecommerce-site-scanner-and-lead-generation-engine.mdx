@@ -1,0 +1,69 @@
+---
+# Mockup sidecar for design-ecommerce-site-scanner-and-lead-generation-engine.
+# Hand-authored UX mockups; linked from the post's `mockups:` frontmatter. The importer
+# injects + preserves the render and never regenerates this file.
+---
+
+import Mockup from '@site/src/components/Mockup';
+
+export default function Mockups() {
+  const row = {borderBottom: '1px solid var(--ifm-color-emphasis-200)', fontSize: '0.74rem'};
+  const cell = {padding: '0.4rem 0.5rem', verticalAlign: 'top'};
+  const pill = (bg, fg) => ({display: 'inline-block', padding: '0.05rem 0.4rem', borderRadius: '999px', background: bg, color: fg, fontWeight: 700, fontSize: '0.68rem'});
+  return (
+    <>
+      <h2>What it looks like</h2>
+
+      <Mockup chrome="browser" title="Lead Engine" url="leadengine.app/queue" caption="The Growth Operator triages a ranked queue; each lead carries a score with explainable reasons, a verified contact, and a drafted message a human approves before sending.">
+        <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.55rem 0.7rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)', fontSize: '0.72rem'}}>
+            <strong>Ranked Leads</strong>
+            <span style={{color: 'var(--ifm-color-emphasis-700)'}}>ICP: Shopify · US · $500K–$5M</span>
+            <span style={{marginLeft: 'auto', color: 'var(--ifm-color-emphasis-700)'}}>cost/lead: $0.42</span>
+          </div>
+          <table style={{width: '100%', borderCollapse: 'collapse'}}>
+            <thead>
+              <tr style={{textAlign: 'left', color: 'var(--ifm-color-emphasis-700)', fontSize: '0.68rem'}}>
+                <th style={cell}>Site</th><th style={cell}>Score</th><th style={cell}>Why</th><th style={cell}>Size</th><th style={cell}>Contact</th><th style={cell}>Outreach</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{...row, background: 'var(--ifm-color-primary-contrast-background)'}}>
+                <td style={cell}><strong>peakgear.com</strong></td>
+                <td style={cell}><span style={pill('var(--ifm-color-primary)', '#fff')}>88 High</span></td>
+                <td style={cell}>fit 85% · reach 72% · fix 91% (weak CTA, slow checkout)</td>
+                <td style={cell}>Mid · 82%</td>
+                <td style={cell}>john@peakgear.com · 95%</td>
+                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>Ready</span></td>
+              </tr>
+              <tr style={row}>
+                <td style={cell}>trailrunsupply.com</td>
+                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>71 Med</span></td>
+                <td style={cell}>fit 70% · reach 64% · fix 80% (no trust signals)</td>
+                <td style={cell}>Small · 75%</td>
+                <td style={cell}>role: info@ · 60%</td>
+                <td style={cell}></td>
+              </tr>
+              <tr style={{fontSize: '0.74rem'}}>
+                <td style={cell}>urbanpaws.store</td>
+                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>54 Low</span></td>
+                <td style={cell}>fit 55% · reach 40% · fix 70%</td>
+                <td style={cell}>Small · 68%</td>
+                <td style={cell}>catch-all · 35%</td>
+                <td style={cell}></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style={{borderTop: '1px solid var(--ifm-color-emphasis-200)', padding: '0.7rem', background: 'var(--ifm-background-surface-color)'}}>
+            <div style={{fontWeight: 700, fontSize: '0.74rem', marginBottom: '0.3rem'}}>Drafted outreach · peakgear.com</div>
+            <p style={{margin: '0 0 0.5rem', fontSize: '0.76rem', color: 'var(--ifm-color-emphasis-800)'}}>Your checkout loads in 8.2s on mobile (vs ~2.1s typical). At a 2% conversion rate that is roughly $40K/year. Here is how to cut it in half.</p>
+            <div style={{display: 'flex', gap: '0.4rem'}}>
+              <button style={{padding: '0.35rem 0.8rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 600, cursor: 'pointer'}}>Approve &amp; send</button>
+              <button style={{padding: '0.35rem 0.8rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px', background: 'transparent', color: 'var(--ifm-font-color-base)', cursor: 'pointer'}}>Edit</button>
+            </div>
+          </div>
+        </div>
+      </Mockup>
+    </>
+  );
+}

@@ -1,0 +1,48 @@
+---
+# Mockup sidecar for design-self-healing-storefront.
+# Hand-authored UX mockups; linked from the post's `mockups:` frontmatter. The importer
+# injects + preserves the render and never regenerates this file.
+---
+
+import Mockup from '@site/src/components/Mockup';
+
+export default function Mockups() {
+  const ledgerRow = (name, summary, money, status, statusBg) => (
+    <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.6rem', padding: '0.55rem 0', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
+      <div style={{flex: '1 1 auto'}}>
+        <div style={{fontWeight: 600, fontSize: '0.78rem'}}>{name}</div>
+        <div style={{color: 'var(--ifm-color-emphasis-700)', fontSize: '0.74rem'}}>{summary}</div>
+      </div>
+      <div style={{flex: '0 0 auto', fontWeight: 700, color: 'var(--ifm-color-primary)', fontSize: '0.82rem'}}>{money}</div>
+      <span style={{flex: '0 0 auto', padding: '0.05rem 0.45rem', borderRadius: '999px', background: statusBg, color: '#fff', fontWeight: 700, fontSize: '0.64rem'}}>{status}</span>
+    </div>
+  );
+  return (
+    <>
+      <h2>What it looks like</h2>
+
+      <Mockup chrome="browser" title="Storefront Agent" url="storefront-agent.app/wins" caption="The store owner sees a plain-language wins ledger (dollars, not p-values), sets one autonomy dial, and keeps a pause button always in reach.">
+        <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.7rem 0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)'}}>
+            <div>
+              <div style={{fontSize: '0.7rem', color: 'var(--ifm-color-emphasis-700)'}}>Attributed lift (6 mo)</div>
+              <div style={{fontSize: '1.15rem', fontWeight: 800, color: 'var(--ifm-color-primary)'}}>+$18,450/mo</div>
+            </div>
+            <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem'}}>
+              <span style={{color: 'var(--ifm-color-emphasis-700)'}}>Autonomy</span>
+              <span style={{padding: '0.2rem 0.5rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px'}}>Auto-run · approve winners ▾</span>
+              <button style={{padding: '0.3rem 0.7rem', border: 'none', borderRadius: '7px', background: '#c0473a', color: '#fff', fontWeight: 700, cursor: 'pointer'}}>Pause all</button>
+            </div>
+          </div>
+          <div style={{padding: '0.5rem 0.85rem'}}>
+            <div style={{fontWeight: 700, fontSize: '0.76rem', margin: '0.2rem 0 0.3rem'}}>Wins ledger</div>
+            {ledgerRow('Product page: bolder value prop', 'Headline change lifted add-to-cart 6% (8.2% to 8.7%). 94% chance it beats control.', '+$1,200/mo', 'Shipped', '#79b46a')}
+            {ledgerRow('Free-shipping banner', 'Cart-to-checkout up 3%, holdback-measured.', '+$640/mo', 'Shipped', '#79b46a')}
+            {ledgerRow('Checkout: one-page layout', 'Pricing/checkout change. Needs your approval before it runs.', 'est +$2,100/mo', 'Needs you', '#e6b04a')}
+            {ledgerRow('PDP image carousel autoplay', 'No reliable lift detected. Stopped to protect the experience.', 'no change', 'Killed', 'var(--ifm-color-emphasis-500)')}
+          </div>
+        </div>
+      </Mockup>
+    </>
+  );
+}
