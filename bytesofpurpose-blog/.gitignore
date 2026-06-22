@@ -42,6 +42,13 @@ src/components/Changelog/changelog-data.json
 # Generated logo-variant SVG data (build artifact; source: src/lib/binary-pyramid-logo.js)
 designs/_binary-pyramid-variants.js
 
+# Rosette-of-zeros scratch working dir from the bikar/qiyas CLIs. We KEEP the final
+# recipe (rosette-zeros.igp) for reproducibility but ignore the scratch iterations and
+# raw renders. NB: unlike _binary-pyramid-variants.js above, _rosette-zeros-variants.js
+# is COMMITTED source (raw output of the private bikar CLI — not regenerable at build).
+designs/_rosette-zeros/*
+!designs/_rosette-zeros/rosette-zeros.igp
+
 # Generated changelog pages (copied from changelog/ directory)
 src/pages/changelog/
 
