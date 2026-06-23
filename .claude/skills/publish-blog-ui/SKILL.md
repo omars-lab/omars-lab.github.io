@@ -116,3 +116,12 @@ GitHub Packages requires auth even for read. In the consuming repo:
   rebuilding the package the blog DOESN'T pick up the new `dist` from a plain `yarn install`
   ("Already up-to-date") — force it with `rm -rf node_modules/{.yarn-integrity,@omars-lab} &&
   yarn install --check-files`. Verified the prod blog build is green against the cleaned package.
+- 2026-06-23 — **Second publish: `@omars-lab/blog-ui@0.2.0` is LIVE** (Walkthrough
+  `customScenes[]` + scene `index`, a backward-compatible minor). The merge-first flow worked
+  cleanly again: merge the version-bump PR to master → tag `blog-ui-v0.2.0` from master →
+  workflow green → the versions API shows 0.1.0 + 0.2.0. Consumer caret gotcha: `^0.1.0` does
+  NOT allow 0.2.0 (caret on a `0.x` version pins the MINOR: `>=0.1.0 <0.2.0`), so a consumer on
+  `^0.1.0` stays on 0.1.0 until you bump its range to `^0.2.0` and reinstall. The blog (consumes
+  via `file:`) is always on the working tree, so no bump; getting-started-with-claude-agents
+  stays on `^0.1.0` deliberately (it doesn't use `customScenes`, so 0.1.0 is fine — bump only
+  when it needs the new API).
