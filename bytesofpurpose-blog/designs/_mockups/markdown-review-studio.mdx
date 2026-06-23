@@ -1,0 +1,84 @@
+---
+# Mockup sidecar for design-markdown-review-studio.
+# Hand-authored UX mockups for the imported co-design. The post links this file via its
+# frontmatter `mockups:` field; the importer injects the import + render and NEVER
+# regenerates this file, so mockups survive re-import.
+---
+
+import {Mockup, Walkthrough} from '@omars-lab/blog-ui';
+import Mermaid from '@theme/Mermaid';
+
+export default function Mockups() {
+  const arch = `architecture-beta
+  group machine(logos:apple)[Local Machine]
+  service git(logos:git-icon)[Git Repo] in machine
+  service ui(logos:chrome)[Browser UI] in machine
+  service server(logos:nodejs-icon)[Review Server] in machine
+  service claude(logos:claude)[Claude Code CLI] in machine
+  service files(logos:markdown)[Markdown Files] in machine
+  ui:R --> L:server
+  server:T --> B:git
+  server:R --> L:claude
+  server:B --> T:files`;
+  return (
+    <>
+      <h2>What it looks like</h2>
+
+      <Walkthrough
+        steps={[
+          {type: 'scene', to: 'claude', say: 'Claude opens the studio for you to review the plan',
+            prompt: 'review the plan in markdown studio',
+            tools: [
+              {verb: 'Open', target: 'Markdown Studio', note: 'opening the doc for review'},
+              {verb: 'Read', target: 'markdown-review-hld.md'},
+            ]},
+          {type: 'scene', to: 'app', say: 'You review it in the browser', hold: 400},
+          {type: 'dragSelect', target: '#wt-sentence', say: 'select a phrase'},
+          {type: 'type', target: '#wt-commentbox', text: 'Anchor this to the exact range?', say: 'leave an anchored comment'},
+          {type: 'click', target: '#wt-fix', say: 'and hand it back to Claude'},
+          {type: 'scene', to: 'claude', say: 'Claude continues the session on your feedback',
+            prompt: 'continue',
+            intro: 'Feedback received. Applying your changes now...',
+            tools: [
+              {verb: 'Read', target: 'open comments', note: '1 anchored comment'},
+              {verb: 'Update', target: 'markdown-review-hld.md', note: 'rewriting the passage'},
+              {verb: 'Commit', target: 'git', note: 'durable iteration'},
+              {target: 'continued', done: true},
+            ]},
+        ]}
+      >
+        <Mockup chrome="browser" title="Review Studio" url="review.studio/doc/markdown-review-hld" caption="Select a phrase, leave an anchored comment, and Claude fixes the doc.">
+          <div style={{display:'flex', minHeight:'300px', fontFamily:'var(--ifm-font-family-base)'}}>
+            <nav style={{flex:'0 0 150px', borderRight:'1px solid var(--ifm-color-emphasis-200)', padding:'0.75rem', fontSize:'0.78rem'}}>
+              <div style={{fontWeight:700, marginBottom:'0.5rem'}}>Documents</div>
+              <div style={{padding:'0.3rem 0.4rem', borderRadius:'6px', background:'var(--ifm-color-primary-contrast-background)', color:'var(--ifm-color-primary)'}}>markdown-review-hld.md</div>
+              <div style={{padding:'0.3rem 0.4rem', color:'var(--ifm-color-emphasis-700)'}}>site-scanner-hld.md</div>
+              <div style={{padding:'0.3rem 0.4rem', color:'var(--ifm-color-emphasis-700)'}}>storefront-agent-hld.md</div>
+            </nav>
+            <main style={{flex:'1 1 auto', padding:'0.9rem 1.1rem'}}>
+              <div style={{fontWeight:700, fontSize:'1rem', marginBottom:'0.4rem'}}>Markdown Review Studio</div>
+              <p style={{margin:'0 0 0.5rem'}}>Reviewing long markdown documents with an AI assistant is slower and lossier than it should be: <span id="wt-sentence">feedback is unanchored prose</span> typed into a chat window.</p>
+              <p style={{margin:'0 0 0.5rem', color:'var(--ifm-color-emphasis-700)'}}>Every review round, the author has to re-describe where a comment applies and what should change.</p>
+            </main>
+            <aside style={{flex:'0 0 190px', borderLeft:'1px solid var(--ifm-color-emphasis-200)', padding:'0.75rem', fontSize:'0.76rem', background:'var(--ifm-background-surface-color)'}}>
+              <div style={{fontWeight:700, marginBottom:'0.5rem'}}>Comments</div>
+              <div style={{border:'1px solid var(--ifm-color-emphasis-200)', borderRadius:'8px', padding:'0.5rem', marginBottom:'0.5rem', minHeight:'2.2rem'}}>
+                <div style={{fontWeight:600, marginBottom:'0.2rem'}}>on "unanchored prose"</div>
+                <div id="wt-commentbox" style={{color:'var(--ifm-color-emphasis-800)', minHeight:'1rem'}}></div>
+              </div>
+              <button id="wt-fix" style={{width:'100%', padding:'0.45rem', border:'none', borderRadius:'8px', background:'var(--ifm-color-primary)', color:'#fff', fontWeight:600, cursor:'pointer'}}>Fix with Claude</button>
+            </aside>
+          </div>
+        </Mockup>
+      </Walkthrough>
+
+      <h2>How it's wired</h2>
+
+      <p>Everything runs on the reviewer's own machine: the browser talks to a local
+      Node server, which owns the markdown files and the git history and drives the
+      Claude Code CLI.</p>
+
+      <Mermaid value={arch} />
+    </>
+  );
+}

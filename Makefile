@@ -93,6 +93,23 @@ verify-premium: ## BLOCKING premium hard-gate check: no `premium:true` body clea
 	@# is missing. Also wired into deploy-site step 3b + the .githooks/pre-push hook.
 	( cd ${SITEROOT} && node scripts/verify-premium-encrypted.js )
 
+# Source dir of public co-design HLDs (override: make import-co-designs CODESIGN_SRC=…).
+CODESIGN_SRC ?= ${HOME}/Workspace/work-git/docs/architecture/co-designs/public
+import-co-designs: ## Import public co-design HLDs into the Designs blog + prove the transforms (see /import-co-design skill)
+	@# Repeatable, idempotent pipeline. Re-run any time a source HLD changes: it UPDATEs the
+	@# matching Designs post in place (matched by frontmatter source.id), never duplicates.
+	@# IMPORT_DATE stamps the provenance block; pass it so the run is deterministic.
+	IMPORT_DATE=$$(date +%Y-%m-%d) node .claude/skills/import-co-design/import-co-design.js --all "${CODESIGN_SRC}"
+	@# Prove the transforms (unit) — fast, no server needed.
+	( cd ${SITEROOT} && npx jest test/unit/import-co-design.test.ts )
+	@# Belt-and-suspenders: zero raw em-dashes shipped (the blocking hook scans source bytes).
+	@if grep -rl $$'\xe2\x80\x94' ${SITEROOT}/designs/*.mdx >/dev/null 2>&1; then \
+		echo "✗ em-dash leak in designs/*.mdx — see above"; \
+		grep -rln $$'\xe2\x80\x94' ${SITEROOT}/designs/*.mdx; exit 1; \
+	else echo "✓ no raw em-dash in imported designs posts"; fi
+	@echo "Imported. To verify rendering, undraft + clean-build + e2e:"
+	@echo "  (cd ${SITEROOT} && yarn docusaurus clear && yarn playwright test --project=dev co-design-imports)"
+
 build-premium: build-storybook ## Cache-busted ENCRYPTED production build (premium docs encrypted) + V5 gate
 	@# THE production build path when any doc is `premium: true`. Clears node_modules/.cache
 	@# + .docusaurus FIRST — webpack/Docusaurus can otherwise serve a premium doc's STALE

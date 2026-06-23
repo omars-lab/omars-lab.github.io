@@ -15,6 +15,26 @@ function useDraftPermalinks(): Set<string> {
   return React.useMemo(() => new Set(list.map(normalize)), [list]);
 }
 
+function useBlogDraftPermalinks(): Set<string> {
+  const data = useAllPluginInstancesData('draft-docs-plugin') as
+    | {default?: {blogDraftPermalinks?: string[]}}
+    | undefined;
+  const list = data?.default?.blogDraftPermalinks ?? [];
+  return React.useMemo(() => new Set(list.map(normalize)), [list]);
+}
+
+/**
+ * True when a BLOG sidebar item's permalink is a draft post. Used by the swizzled
+ * BlogSidebar (Thoughts/Designs), whose items carry only a permalink (no draft
+ * flag). Same localhost + non-prod gating as the docs draft badge.
+ */
+export function useIsBlogDraft(permalink?: string): boolean {
+  const drafts = useBlogDraftPermalinks();
+  if (process.env.NODE_ENV === 'production') return false;
+  if (!permalink || !isLocalhost()) return false;
+  return drafts.has(normalize(permalink));
+}
+
 function normalize(href: string): string {
   // Compare without trailing slash so '/foo' and '/foo/' match.
   if (!href) return href;

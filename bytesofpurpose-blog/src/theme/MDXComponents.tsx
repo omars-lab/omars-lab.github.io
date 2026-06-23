@@ -11,6 +11,15 @@ import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
+// Reusable design-post components now live in the published @omars-lab/blog-ui package
+// (single source of truth; the blog consumes it). The bundled styles are imported once.
+import {
+  DiagramWithFootnotes,
+  Mockup,
+  Walkthrough,
+  Assumption,
+} from '@omars-lab/blog-ui';
+import '@omars-lab/blog-ui/style.css';
 
 export default {
   // Reusing the default mapping
@@ -27,4 +36,15 @@ export default {
   // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
   PremiumGate,
   Premium,
+  // System-design posts: a diagram paired with a generated numbered legend (the badges
+  // ①②③ are authored into the mermaid labels; this renders the matching explanations).
+  DiagramWithFootnotes,
+  // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
+  // (browser/window/phone chrome) — shows what a design would LOOK like.
+  Mockup,
+  // Scripted animated UX demo over a mockup: cursor + highlight + comment + click +
+  // typed terminal, driven by a step array — shows the UX being USED.
+  Walkthrough,
+  // Yellow inline highlight for [Assumption: …] markers (unvalidated premises to review).
+  Assumption,
 };

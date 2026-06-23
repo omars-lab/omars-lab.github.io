@@ -1,0 +1,50 @@
+# Publish @omars-lab/blog-ui to GitHub Packages on a `blog-ui-v*` tag.
+#
+# Release flow:
+#   1. bump `version` in packages/blog-ui/package.json
+#   2. git tag blog-ui-v0.1.0 && git push origin blog-ui-v0.1.0
+#   3. this workflow builds the package and `npm publish`es it to GitHub Packages.
+#
+# Consumers install it with an .npmrc scoping @omars-lab to npm.pkg.github.com
+# (see packages/blog-ui/README or the import-co-design/upgrade-post skills).
+name: Publish blog-ui
+
+on:
+  push:
+    tags:
+      - 'blog-ui-v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # required to publish to GitHub Packages
+    defaults:
+      run:
+        working-directory: packages/blog-ui
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@omars-lab'
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Verify built artifacts exist
+        run: |
+          test -f dist/index.js || { echo "missing dist/index.js"; exit 1; }
+          test -f dist/index.css || { echo "missing dist/index.css"; exit 1; }
+          test -f dist/index.d.ts || { echo "missing dist/index.d.ts"; exit 1; }
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

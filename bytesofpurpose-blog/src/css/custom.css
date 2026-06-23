@@ -55,6 +55,13 @@
   --ifm-global-shadow-lw: 0 1px 3px rgba(26, 26, 26, 0.08);
   --ifm-global-shadow-md: 0 6px 20px rgba(26, 26, 26, 0.1);
 
+  /* Scrollbars — Infima defaults to a near-white track (#f1f1f1) that reads as a
+     bright strip against the warm cream paper. Match the track to the page and the
+     thumb to the warm-gray secondary ink so the scrollbar blends with the theme. */
+  --ifm-scrollbar-track-background-color: #ece7df;
+  --ifm-scrollbar-thumb-background-color: #c9c2b6;
+  --ifm-scrollbar-thumb-hover-background-color: #b3aa9b;
+
   /* Premium ("gold") palette — shared by the sidebar lock items, the locked
      info pane, and the CTA cards so every premium surface reads consistently.
      A metallic gold: a saturated base for text/icons, a gradient pair for the
@@ -97,6 +104,12 @@ html[data-theme='dark'] {
   --ifm-navbar-background-color: #1a1715;
   --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
+
+  /* Scrollbars — warm-ink equivalents of the light overrides (Infima's dark
+     defaults are a cold #444/#686868 that clash with the warm surface). */
+  --ifm-scrollbar-track-background-color: #1a1715;
+  --ifm-scrollbar-thumb-background-color: #3a342f;
+  --ifm-scrollbar-thumb-hover-background-color: #4a433c;
 
   /* Premium gold, lifted for contrast on dark surfaces. */
   --premium-gold: #e2c466; /* readable gold text on dark bg */
@@ -503,4 +516,184 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .footer__title {
   font-family: var(--ifm-heading-font-family);
   font-weight: 600;
+}
+
+/* ==========================================================================
+   Animated mermaid edges (OPT-IN)
+   --------------------------------------------------------------------------
+   Mermaid (theme-mermaid) renders diagrams to inline SVG, so edges are
+   `<path class="flowchart-link">` elements that CSS can animate. This is a
+   "marching ants" flow animation: a dashed stroke that scrolls along each
+   edge, suggesting direction of flow. It is OPT-IN — only diagrams inside a
+   `.mermaid-animated` wrapper animate, so we never force motion on every
+   diagram site-wide. Wrap a diagram by putting it in a container with that
+   class (the DiagramWithFootnotes component accepts a className, or use a
+   plain <div className="mermaid-animated">…```mermaid```…</div>).
+
+   Respects prefers-reduced-motion: users who ask for less motion get a
+   static dashed edge, no animation.
+   ========================================================================== */
+@keyframes mermaidEdgeFlow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+/* Docusaurus (theme-mermaid 11) renders the diagram into a
+   `.docusaurus-mermaid-container` and puts each edge on a `<path class="flowchart-link">`
+   (flowcharts) or `path.relation` (ER/class diagrams). Target those directly — NOT the
+   arrowheads (.arrowMarkerPath) or node outlines (.outer-path). The `.mermaid` fallback
+   covers any non-Docusaurus render path. */
+.mermaid-animated .docusaurus-mermaid-container svg path.flowchart-link,
+.mermaid-animated .docusaurus-mermaid-container svg path.relation,
+.mermaid-animated .mermaid svg path.flowchart-link,
+.mermaid-animated .mermaid svg path.relation {
+  /* override mermaid's inline stroke-dasharray so the marching dashes are visible */
+  stroke-dasharray: 6 4 !important;
+  animation: mermaidEdgeFlow 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mermaid-animated .docusaurus-mermaid-container svg path.flowchart-link,
+  .mermaid-animated .docusaurus-mermaid-container svg path.relation,
+  .mermaid-animated .mermaid svg path.flowchart-link,
+  .mermaid-animated .mermaid svg path.relation {
+    animation: none;
+  }
+}
+
+/* The traveling flow-dot (appended by src/mermaid-flow-dot.js). A soft glow lifts it off
+   the edge stroke. The script honors prefers-reduced-motion (it never adds the dot then). */
+.mermaid-flow-dot {
+  filter: drop-shadow(0 0 3px var(--ifm-color-primary));
+}
+
+/* ==========================================================================
+   Root document scrollbar. Infima only styles `.thin-scrollbar` elements (via the
+   --ifm-scrollbar-* vars set in :root above) — it leaves the MAIN page scrollbar at
+   the browser default, whose near-white track reads as a bright strip against the
+   warm cream paper. Color it to match the theme in both engines: `scrollbar-color`
+   (Firefox + Chromium) and the ::-webkit-scrollbar pseudo-elements (Safari/WebKit).
+   Reuses the same --ifm-scrollbar-* tokens so light/dark stay in lockstep.
+   ========================================================================== */
+html {
+  scrollbar-color: var(--ifm-scrollbar-thumb-background-color)
+    var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+html::-webkit-scrollbar-track {
+  background: var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar-thumb {
+  background: var(--ifm-scrollbar-thumb-background-color);
+  border-radius: 10px;
+  /* A track-colored border insets the thumb so it reads as a rounded pill, not a
+     full-width bar flush against the track. */
+  border: 3px solid var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-scrollbar-thumb-hover-background-color);
+}
+
+/* ==========================================================================
+   Markdown tables — editorial treatment, grounded in the brand (terracotta on
+   warm cream "paper"), NOT Infima's default boxed grid. The point of view:
+   minimal ink. The structure is carried by a single coral header rule, hairline
+   row dividers, and whitespace — with a hover highlight instead of zebra stripes
+   (striping is reserved for genuinely large tables; see below). Applies to every
+   `.markdown` surface: docs (craft/journey), Thoughts, and Designs.
+
+   References: minimal-border / whitespace-led tables (pencilandpaper.io,
+   uxmovement), left-text / right-number alignment, hover-over-stripe row
+   separation (alistapart), and accessible horizontal overflow on mobile
+   (adrianroselli, johnfraney): the table becomes its own scroll region.
+   ========================================================================== */
+.markdown table {
+  /* `display: block` turns the table into its own horizontal scroll container so
+     wide tables (the markdown-review-studio decisions table, etc.) scroll instead
+     of breaking the layout on narrow screens. `width: max-content` lets it size to
+     content up to the column, then overflow. Keyboard users can scroll it because
+     it's focusable (tabindex set on the element is not possible from CSS — the
+     scroll still works via wheel/trackpad/touch; a renderer-level wrapper would add
+     arrow-key support, deferred to keep this a pure-CSS change). */
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+  border-collapse: collapse;
+  border: 0; /* drop Infima's outer box; whitespace + the header rule define it */
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Header: the one bold accent. Warm cream tint + a 2px coral underline; the rest
+   of the table stays quiet. Left-aligned, slightly tighter tracking, Geist heavier. */
+.markdown table thead {
+  background: var(--ifm-color-primary-contrast-background);
+}
+.markdown table thead th {
+  font-weight: 650;
+  text-align: left;
+  letter-spacing: 0.01em;
+  color: var(--ifm-heading-color);
+  border: 0;
+  border-bottom: 2px solid var(--ifm-color-primary);
+  padding: 0.7rem 0.9rem;
+  white-space: nowrap; /* keep header labels on one line */
+}
+
+/* Body cells: generous padding, hairline horizontal dividers only, no vertical
+   gridlines. Top-align so multi-line cells read as rows, not blocks. */
+.markdown table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+}
+.markdown table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Row hover — the lightweight alternative to zebra striping. */
+.markdown table tbody tr {
+  transition: background-color 0.12s ease;
+}
+.markdown table tbody tr:hover {
+  background: rgba(179, 62, 30, 0.05);
+}
+
+/* Numeric columns line up for comparison: opt a cell in by wrapping its value in
+   an HTML right-aligned cell, or author the column with `:--:`/`--:` markdown
+   alignment, which Docusaurus emits as `style="text-align:right/center"`. Honor
+   those, and use tabular figures so digits sit in even columns. */
+.markdown table td[style*='right'],
+.markdown table th[style*='right'] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zebra striping ONLY for large tables: opt in by adding `large` to a wrapping
+   element or the table's own class via the `large-table` utility on its parent.
+   (Authors add it deliberately; small tables stay stripe-free per the research.) */
+.large-table .markdown table tbody tr:nth-child(even),
+.markdown table.large-table tbody tr:nth-child(even) {
+  background: rgba(26, 26, 26, 0.025);
+}
+
+/* Dark mode: mirror the tints onto the dark surface so dividers and the hover
+   read without glowing. The coral header rule carries over unchanged. */
+html[data-theme='dark'] .markdown table td {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+html[data-theme='dark'] .markdown table tbody tr:hover {
+  background: rgba(228, 87, 46, 0.1);
+}
+html[data-theme='dark'] .large-table .markdown table tbody tr:nth-child(even),
+html[data-theme='dark'] .markdown table.large-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.035);
 }

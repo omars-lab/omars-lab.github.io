@@ -63,6 +63,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     clientModules: [
       require.resolve('./src/gtag-guard.js'),
       require.resolve('./src/posthog.js'),
+      // Register iconify icon packs (logos: AWS/Azure/GCP/brand) for architecture-beta
+      // diagrams — runs before any diagram renders so the icons are available.
+      require.resolve('./src/mermaid-icons.js'),
+      // Traveling flow-dot for opt-in `.mermaid-animated` diagrams (system-design posts).
+      require.resolve('./src/mermaid-flow-dot.js'),
     ],
     // Editorial type system, mirroring the portfolio (bytesofpurpose.com):
     //   Fraunces — display serif for headings (optical-size axis + italic)
@@ -70,6 +75,35 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     // See --ifm-heading-font-family / --ifm-font-family-base in src/css/custom.css.
     // Preconnect first so the stylesheet fetch is not blocked.
     headTags: [
+      // Favicon variants (the BMC profile mark). `favicon:` above wires the .ico;
+      // these add the crisp PNG sizes + the iOS home-screen icon, which Docusaurus
+      // doesn't emit on its own.
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/img/favicon-32x32.png',
+        },
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '16x16',
+          href: '/img/favicon-16x16.png',
+        },
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: '/img/apple-touch-icon.png',
+        },
+      },
       {
         tagName: 'link',
         attributes: {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
@@ -809,10 +843,28 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           {property: 'og:locale', content: 'en_US'},
         ],
         mermaid: {
+          // Per-color-mode theme: Docusaurus theme-mermaid swaps these on the site's
+          // light/dark toggle (this is the dark-mode adaptation — diagrams get a dark
+          // surface + light text/edges automatically in dark mode). 'base' is the
+          // themeable light theme we tune toward the brand below.
+          theme: {light: 'base', dark: 'dark'},
           options: {
-            theme: 'forest',
-            fontFamily: "Trebuchet MS, Verdana, Arial, Sans-Serif",
+            // Editorial sans, matching the site body font (Geist), instead of mermaid's
+            // default Trebuchet — so diagram text reads as part of the page.
+            fontFamily:
+              "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             htmlLabels: true,
+            // Nudge the LIGHT ('base') theme toward the terracotta/cream palette so a
+            // diagram with no per-node classDef still looks on-brand. Per-node classDef
+            // fills in the source diagrams still win where present.
+            themeVariables: {
+              primaryColor: '#f4f0e8', // node fill = warm paper surface
+              primaryBorderColor: '#b33e1e', // brand terracotta outline
+              primaryTextColor: '#2b2622', // warm ink
+              lineColor: '#9a8f80', // muted edge stroke (reads on cream)
+              tertiaryColor: '#ece7df', // subgraph background = page bg
+              fontSize: '15px',
+            },
           },
         },
         // Social/OG card — purpose-built 1200x630 landscape card (the standard
