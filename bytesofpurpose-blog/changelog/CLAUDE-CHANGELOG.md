@@ -21,6 +21,22 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo
+<!-- meta: type=feature category=development priority=high component=Site -->
+Extracted the four reusable design-post components (Walkthrough, Mockup, DiagramWithFootnotes, Assumption) into a publishable `@omars-lab/blog-ui` ESM React package, built the release pipeline to GitHub Packages, and proved it consumable from another repo by converting getting-started-with-claude-agents into a Vite app that installs and renders it. Then exercised the pipeline a second time: extended the Walkthrough with multi-custom-scene support, used it so the self-healing-storefront design opens on a live store-scan with an issue warning, and shipped it as v0.2.0. Closed the loop on security by adding server-side gitleaks CI to both repos.
+
+- Publish reusable blog-UI components as a GitHub Packages artifact for cross-repo use (the package: tsup ESM + d.ts + bundled CSS, file: dep in the blog, publish-on-tag workflow)
+- Author a skill for releasing/publishing @omars-lab/blog-ui (publish-blog-ui: tag convention blog-ui-v*, semver, simulate-publish, consumer .npmrc setup, merge-first ordering)
+- Update skills + tests for the @omars-lab/blog-ui package migration (upgrade-post / author-walkthrough / import-co-design repointed to the package; e2e selectors verified)
+- Can a real Vite bundler resolve + bundle @omars-lab/blog-ui (ESM + its CSS) from GitHub Packages (yes: vite build clean, the package CSS-modules land in the bundle, rendered + screenshotted)
+- How should the Vite app render the blog-ui components as a meaningful demo (full guide port, with a stock-analyzer Walkthrough woven into the Getting-started section)
+- How does the Vite build deploy to gh-pages without breaking the existing guide deploy (base './', Makefile build copies Vite output to main/root where Pages serves; static-serve proven)
+- Prove the package: getting-started-with-claude-agents consumes @omars-lab/blog-ui + builds gh-pages with it (the cross-repo proof, end to end)
+- How should the Walkthrough component support multiple custom scenes (backward-compatible customScenes[] + scene index, single-customScene sidecars unaffected)
+- Storefront walkthrough: open on a store-scanning scene with a highlighted section + issue warning (acme-shop.com/checkout scan, dashboard, BI projection, proven via Playwright)
+- Release blog-ui v0.2.0 with multi-custom-scene support + propagate to consumers (tagged, published, verified live alongside 0.1.0; 0.x caret gotcha documented)
+- Add gitleaks server-side secret scan (CI) to both repos (fail-closed beyond the local pre-commit guard; full-history scans clean)
+
 ## [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)
 <!-- meta: type=feature category=development priority=medium component=Docs -->
 Formalized the unwritten "every sidebar section leads with an emoji" convention into a documented, enforced contract, and backfilled the ~18 category labels that had drifted. The validator now warns on emoji-less `_category_.json` labels (and rolls leaf-doc misses into one count), the docs-structure hook nudges on save, and `emojis.mdx` carries the topic→emoji map as the source of truth. Also trimmed two over-long page descriptions to the SEO/share window.
