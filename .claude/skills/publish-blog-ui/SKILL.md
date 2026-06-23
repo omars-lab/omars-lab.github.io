@@ -35,6 +35,8 @@ by the `.github/workflows/publish-blog-ui.yml` workflow on a version tag.
    `yarn build`, verifies `dist/` artifacts exist, then `npm publish`es to GitHub Packages using
    the repo's `GITHUB_TOKEN` (no manual creds). It runs from `packages/blog-ui`. (`npm publish`
    also runs `prepublishOnly` → `yarn build`, so the tarball can never ship a stale `dist`.)
+5. **Verify:** the repo's **Packages** tab (github.com/omars-lab/omars-lab.github.io → Packages)
+   shows the new version, or `npm view @omars-lab/blog-ui version --registry=https://npm.pkg.github.com`.
 
 ### Manual publish (if you can't / don't want to push a tag)
 
@@ -47,8 +49,6 @@ yarn simulate-publish   # dress-rehearse first
 npm publish             # prepublishOnly rebuilds; publishConfig points at GitHub Packages
 ```
 Same result as the tag-triggered workflow; the version still can't be republished once taken.
-5. **Verify:** the repo's **Packages** tab (github.com/omars-lab/omars-lab.github.io → Packages)
-   shows the new version, or `npm view @omars-lab/blog-ui version --registry=https://npm.pkg.github.com`.
 
 ## Semver
 
