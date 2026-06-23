@@ -7,7 +7,7 @@ export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm'],
   dts: true,
-  sourcemap: true,
+  sourcemap: false, // no .map files in the published tarball — consumers don't need them
   clean: true,
   external: ['react', 'react-dom'],
   injectStyle: false, // emit a separate dist/index.css instead of injecting at runtime

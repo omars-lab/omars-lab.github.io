@@ -46,9 +46,11 @@ See the component prop types (shipped `.d.ts`) for the full API. The blog's
 
 ```bash
 yarn install
-yarn build          # → dist/ (ESM + index.css + index.d.ts)
+yarn build              # → dist/ (ESM + index.css + index.d.ts; no sourcemaps)
+yarn simulate-publish   # dry-run: builds + shows the exact tarball, ships nothing
 ```
 
 Release: bump `version`, tag `blog-ui-v<version>`, push — the
-`.github/workflows/publish-blog-ui.yml` workflow publishes to GitHub Packages. See the
-`publish-blog-ui` skill for the full flow.
+`.github/workflows/publish-blog-ui.yml` workflow publishes to GitHub Packages. `npm publish`
+runs `prepublishOnly` (rebuild) so a stale `dist/` can't ship. See the `publish-blog-ui` skill
+for the full flow (and the manual-publish fallback).

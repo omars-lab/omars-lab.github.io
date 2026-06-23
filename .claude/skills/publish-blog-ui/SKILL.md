@@ -12,11 +12,17 @@ by the `.github/workflows/publish-blog-ui.yml` workflow on a version tag.
 
 ## Release flow (the happy path)
 
-1. **Build + sanity-check locally first:**
+1. **Simulate the publish locally first** — this is the dress rehearsal; it builds and shows
+   the EXACT tarball that would ship to GitHub Packages, but uploads nothing:
    ```bash
-   ( cd packages/blog-ui && yarn install && yarn build )
-   # expect dist/index.js + dist/index.css + dist/index.d.ts
+   ( cd packages/blog-ui && yarn simulate-publish )   # = yarn build && npm publish --dry-run
    ```
+   Read the `npm notice` block: confirm `dist/index.js` + `dist/index.css` + `dist/index.d.ts`
+   are present, the version is what you expect, and **no `.map` files** are in the tarball
+   (sourcemaps are off in `tsup.config.ts` — `sourcemap: false` — so consumers don't carry
+   dead weight; if you see `.map` files, the build config regressed). Expect ~5 files, ~10 kB.
+   A `repository.url was normalized` notice means `package.json` needs `git+https://…` (already
+   set); a `No license field` warning refers to the repo-ROOT package.json, not this one — ignore.
 2. **Bump the version** in `packages/blog-ui/package.json` (semver — see below). Commit it.
 3. **Tag with the EXACT pattern the workflow matches: `blog-ui-v<version>`** and push:
    ```bash
@@ -25,9 +31,22 @@ by the `.github/workflows/publish-blog-ui.yml` workflow on a version tag.
    ```
    The tag prefix MUST be `blog-ui-v` (the workflow's trigger is `tags: ['blog-ui-v*']`). A
    plain `v0.2.0` will NOT trigger it. The version in the tag should match `package.json`.
-4. **The workflow** (`publish-blog-ui.yml`) checks out, `yarn install`, `yarn build`, verifies
-   `dist/` artifacts exist, then `npm publish`es to GitHub Packages using the repo's
-   `GITHUB_TOKEN` (no manual creds). It runs from `packages/blog-ui`.
+4. **The workflow** (`publish-blog-ui.yml`) checks out, `yarn install --frozen-lockfile`,
+   `yarn build`, verifies `dist/` artifacts exist, then `npm publish`es to GitHub Packages using
+   the repo's `GITHUB_TOKEN` (no manual creds). It runs from `packages/blog-ui`. (`npm publish`
+   also runs `prepublishOnly` → `yarn build`, so the tarball can never ship a stale `dist`.)
+
+### Manual publish (if you can't / don't want to push a tag)
+
+The workflow is the normal path, but you can publish from your machine:
+```bash
+cd packages/blog-ui
+# auth: a PAT with write:packages, in ~/.npmrc or the env as NODE_AUTH_TOKEN
+echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc   # if not already
+yarn simulate-publish   # dress-rehearse first
+npm publish             # prepublishOnly rebuilds; publishConfig points at GitHub Packages
+```
+Same result as the tag-triggered workflow; the version still can't be republished once taken.
 5. **Verify:** the repo's **Packages** tab (github.com/omars-lab/omars-lab.github.io → Packages)
    shows the new version, or `npm view @omars-lab/blog-ui version --registry=https://npm.pkg.github.com`.
 
@@ -82,3 +101,10 @@ GitHub Packages requires auth even for read. In the consuming repo:
 - 2026-06-23 — Created with the package. Tag pattern is `blog-ui-v*` (not plain `v*`, since the
   monorepo may host other packages later). Blog consumes via `file:` so local changes are live;
   publishing is only for OTHER repos. GitHub Packages needs auth even to read.
+- 2026-06-23 — Added `yarn simulate-publish` (= build + `npm publish --dry-run`) as the
+  repeatable rehearsal target, and `prepublishOnly` (rebuild-before-publish guard). Turned
+  `sourcemap` OFF in tsup — the first dry-run tarball shipped 65 kB of `.map` files for no
+  consumer benefit; now ~10 kB / 5 files. The `file:` dep is cached by integrity hash, so after
+  rebuilding the package the blog DOESN'T pick up the new `dist` from a plain `yarn install`
+  ("Already up-to-date") — force it with `rm -rf node_modules/{.yarn-integrity,@omars-lab} &&
+  yarn install --check-files`. Verified the prod blog build is green against the cleaned package.
