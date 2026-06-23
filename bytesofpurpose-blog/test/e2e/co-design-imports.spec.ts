@@ -312,6 +312,41 @@ test.describe('Imported co-design posts render in dev', () => {
     expect(result.archPaths, 'service nodes + edges rendered').toBeGreaterThan(8);
   });
 
+  test('storefront: the auto-optimize walkthrough transitions app -> BI projection -> app', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.storefront, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const wt = page.locator('[class*="walkthrough"]').first();
+    await expect(wt).toBeVisible();
+    await wt.scrollIntoViewIfNeeded();
+    // the dashboard scene carries the auto-detected issue row; the custom scene is the BI
+    // projection chart. Sample which scene is shown across a loop and assert it visits BOTH.
+    const seen = await page.evaluate(async () => {
+      const scenes = Array.from(
+        document.querySelectorAll('[class*="walkthrough"] [class*="scene"]')
+      );
+      const visited = new Set<string>();
+      let sawIssue = false;
+      let sawProjection = false;
+      for (let i = 0; i < 22; i++) {
+        const vis = scenes.find((el) => parseFloat(getComputedStyle(el).opacity) > 0.6);
+        const t = (vis && vis.textContent) || '';
+        if (/Wins ledger|Attributed lift/.test(t)) visited.add('app');
+        if (/Projected conversion/.test(t)) visited.add('bi');
+        if (/Detected: slow mobile checkout/.test(t)) sawIssue = true;
+        if (/with agent/.test(t) && /do nothing/.test(t)) sawProjection = true;
+        await new Promise((r) => setTimeout(r, 700));
+      }
+      return {scenes: [...visited], sawIssue, sawProjection};
+    });
+    expect(seen.scenes, 'walkthrough visits both the app and BI scenes').toEqual(
+      expect.arrayContaining(['app', 'bi'])
+    );
+    expect(seen.sawIssue, 'the agent surfaces a new detected issue on the dashboard').toBe(true);
+    expect(seen.sawProjection, 'the BI scene shows with-agent vs do-nothing lines').toBe(true);
+  });
+
   test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
     page,
   }) => {

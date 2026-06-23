@@ -57,7 +57,7 @@ export type WalkStep =
   | {type: 'click'; target: string; say?: string; hold?: number}
   | {
       type: 'scene';
-      to: 'app' | 'claude';
+      to: 'app' | 'claude' | 'custom';
       prompt?: string; // claude beats: the typed prompt line
       intro?: string; // claude beats: a human assistant line shown BEFORE the tools
       tools?: ClaudeTool[]; // claude beats: the streamed tool-use lines
@@ -68,6 +68,8 @@ export type WalkStep =
 export interface WalkthroughProps {
   children: ReactNode; // the app scene (a <Mockup>)
   steps: WalkStep[];
+  /** an optional SECOND scene (e.g. a BI chart) crossfaded to via {type:'scene', to:'custom'} */
+  customScene?: ReactNode;
   stepHold?: number;
   autoPlay?: boolean;
   className?: string;
@@ -77,6 +79,7 @@ export interface WalkthroughProps {
 const Walkthrough: React.FC<WalkthroughProps> = ({
   children,
   steps,
+  customScene,
   stepHold = 1000,
   autoPlay = true,
   className,
@@ -87,7 +90,7 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
   const [cursor, setCursor] = useState({x: 24, y: 24, clicking: false});
   const [hl, setHl] = useState<{x: number; y: number; w: number; h: number} | null>(null);
   const [typed, setTyped] = useState<{sel: string; text: string} | null>(null);
-  const [scene, setScene] = useState<'app' | 'claude'>('app');
+  const [scene, setScene] = useState<'app' | 'claude' | 'custom'>('app');
   const [claudePrompt, setClaudePrompt] = useState('');
   const [claudeIntro, setClaudeIntro] = useState('');
   const [claudeTools, setClaudeTools] = useState<ClaudeTool[]>([]);
@@ -328,6 +331,18 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
             ))}
           </div>
         </div>
+
+        {/* CUSTOM scene (e.g. a BI projection chart), supplied by the author */}
+        {customScene && (
+          <div
+            className={clsx(
+              styles.scene,
+              scene === 'custom' ? styles.shown : styles.hidden
+            )}
+            aria-hidden={scene !== 'custom'}>
+            {customScene}
+          </div>
+        )}
       </div>
 
       {/* timeline: a continuous rail with one dot per step at an even position; a fill

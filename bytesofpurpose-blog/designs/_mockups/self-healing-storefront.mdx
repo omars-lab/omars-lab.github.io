@@ -5,10 +5,11 @@
 ---
 
 import Mockup from '@site/src/components/Mockup';
+import Walkthrough from '@site/src/components/Walkthrough';
 
 export default function Mockups() {
-  const ledgerRow = (name, summary, money, status, statusBg) => (
-    <div style={{display: 'flex', alignItems: 'flex-start', gap: '0.6rem', padding: '0.55rem 0', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
+  const ledgerRow = (name, summary, money, status, statusBg, id) => (
+    <div id={id} style={{display: 'flex', alignItems: 'flex-start', gap: '0.6rem', padding: '0.55rem 0', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
       <div style={{flex: '1 1 auto'}}>
         <div style={{fontWeight: 600, fontSize: '0.78rem'}}>{name}</div>
         <div style={{color: 'var(--ifm-color-emphasis-700)', fontSize: '0.74rem'}}>{summary}</div>
@@ -17,32 +18,85 @@ export default function Mockups() {
       <span style={{flex: '0 0 auto', padding: '0.05rem 0.45rem', borderRadius: '999px', background: statusBg, color: '#fff', fontWeight: 700, fontSize: '0.64rem'}}>{status}</span>
     </div>
   );
+
+  // The dashboard the agent runs on (app scene). It carries a "new critical issue" row the
+  // walkthrough points at, which then flips to Shipped.
+  const dashboard = (
+    <Mockup chrome="browser" title="Storefront Agent" url="storefront-agent.app/wins" caption="The agent watches the store, ships fixes within guardrails, and reports the dollar lift.">
+      <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.7rem 0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)'}}>
+          <div>
+            <div style={{fontSize: '0.7rem', color: 'var(--ifm-color-emphasis-700)'}}>Attributed lift (6 mo)</div>
+            <div style={{fontSize: '1.15rem', fontWeight: 800, color: 'var(--ifm-color-primary)'}}>+$18,450/mo</div>
+          </div>
+          <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem'}}>
+            <span style={{color: 'var(--ifm-color-emphasis-700)'}}>Autonomy</span>
+            <span style={{padding: '0.2rem 0.5rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px'}}>Auto-run · approve winners ▾</span>
+            <button style={{padding: '0.3rem 0.7rem', border: 'none', borderRadius: '7px', background: '#c0473a', color: '#fff', fontWeight: 700, cursor: 'pointer'}}>Pause all</button>
+          </div>
+        </div>
+        <div style={{padding: '0.5rem 0.85rem'}}>
+          <div style={{fontWeight: 700, fontSize: '0.76rem', margin: '0.2rem 0 0.3rem'}}>Wins ledger</div>
+          {ledgerRow('Detected: slow mobile checkout', 'Agent flagged checkout at 8.2s on mobile. Shipping a one-page variant to a 20% holdback.', 'testing', 'New issue', '#e0a000', 'sf-issue')}
+          {ledgerRow('Product page: bolder value prop', 'Headline change lifted add-to-cart 6% (8.2% to 8.7%). 94% chance it beats control.', '+$1,200/mo', 'Shipped', '#79b46a')}
+          {ledgerRow('Free-shipping banner', 'Cart-to-checkout up 3%, holdback-measured.', '+$640/mo', 'Shipped', '#79b46a')}
+          {ledgerRow('PDP image carousel autoplay', 'No reliable lift detected. Stopped to protect the experience.', 'no change', 'Killed', 'var(--ifm-color-emphasis-500)')}
+        </div>
+      </div>
+    </Mockup>
+  );
+
+  // BI projection scene: two diverging conversion lines over 6 months, the agent's
+  // cumulative changes vs the do-nothing baseline. A small theme-aware inline SVG.
+  const months = ['M1','M2','M3','M4','M5','M6'];
+  const withAgent = [2.0, 2.15, 2.35, 2.5, 2.7, 2.85];   // % conversion, compounding
+  const baseline  = [2.0, 2.0, 2.02, 2.0, 2.03, 2.0];     // flat do-nothing
+  const W = 560, H = 230, padL = 38, padB = 26, padT = 14, padR = 90;
+  const x = (i) => padL + (i/(months.length-1)) * (W-padL-padR);
+  const y = (v) => padT + (1 - (v-1.9)/(3.0-1.9)) * (H-padT-padB);
+  const path = (arr) => arr.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(' ');
+  const biScene = (
+    <Mockup chrome="window" title="Storefront Agent · Projections" caption="Month over month: conversion with the agent's cumulative changes vs doing nothing. The gap is the attributed lift.">
+      <div style={{padding: '0.8rem 1rem', fontFamily: 'var(--ifm-font-family-base)'}}>
+        <div style={{fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem'}}>Projected conversion rate</div>
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Conversion projection with vs without the agent">
+          {[2.0,2.4,2.8].map((v)=>(
+            <g key={v}>
+              <line x1={padL} y1={y(v)} x2={W-padR} y2={y(v)} stroke="var(--ifm-color-emphasis-200)" strokeWidth="1"/>
+              <text x={padL-6} y={y(v)+3} textAnchor="end" fontSize="10" fill="var(--ifm-color-emphasis-600)">{v.toFixed(1)}%</text>
+            </g>
+          ))}
+          {months.map((m,i)=>(<text key={m} x={x(i)} y={H-8} textAnchor="middle" fontSize="10" fill="var(--ifm-color-emphasis-600)">{m}</text>))}
+          {/* the gap = attributed lift */}
+          <path d={`${path(withAgent)} L${x(5).toFixed(1)} ${y(baseline[5]).toFixed(1)} ${[...baseline].reverse().map((v,k)=>`L${x(5-k).toFixed(1)} ${y(v).toFixed(1)}`).join(' ')} Z`} fill="var(--ifm-color-primary)" opacity="0.12"/>
+          <path d={path(baseline)} fill="none" stroke="var(--ifm-color-emphasis-500)" strokeWidth="2" strokeDasharray="5 4"/>
+          <path d={path(withAgent)} fill="none" stroke="var(--ifm-color-primary)" strokeWidth="2.5"/>
+          <text x={x(5)+6} y={y(withAgent[5])+3} fontSize="10.5" fontWeight="700" fill="var(--ifm-color-primary)">with agent</text>
+          <text x={x(5)+6} y={y(baseline[5])+3} fontSize="10.5" fill="var(--ifm-color-emphasis-600)">do nothing</text>
+        </svg>
+        <div style={{marginTop: '0.4rem', fontSize: '0.76rem', color: 'var(--ifm-color-emphasis-800)'}}>
+          Cumulative: <strong style={{color: 'var(--ifm-color-primary)'}}>+0.85pp conversion</strong> over 6 months, about <strong style={{color: 'var(--ifm-color-primary)'}}>+$18K/mo</strong> at this store's traffic.
+        </div>
+      </div>
+    </Mockup>
+  );
+
   return (
     <>
       <h2>What it looks like</h2>
 
-      <Mockup chrome="browser" title="Storefront Agent" url="storefront-agent.app/wins" caption="The store owner sees a plain-language wins ledger (dollars, not p-values), sets one autonomy dial, and keeps a pause button always in reach.">
-        <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.7rem 0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)'}}>
-            <div>
-              <div style={{fontSize: '0.7rem', color: 'var(--ifm-color-emphasis-700)'}}>Attributed lift (6 mo)</div>
-              <div style={{fontSize: '1.15rem', fontWeight: 800, color: 'var(--ifm-color-primary)'}}>+$18,450/mo</div>
-            </div>
-            <div style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem'}}>
-              <span style={{color: 'var(--ifm-color-emphasis-700)'}}>Autonomy</span>
-              <span style={{padding: '0.2rem 0.5rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px'}}>Auto-run · approve winners ▾</span>
-              <button style={{padding: '0.3rem 0.7rem', border: 'none', borderRadius: '7px', background: '#c0473a', color: '#fff', fontWeight: 700, cursor: 'pointer'}}>Pause all</button>
-            </div>
-          </div>
-          <div style={{padding: '0.5rem 0.85rem'}}>
-            <div style={{fontWeight: 700, fontSize: '0.76rem', margin: '0.2rem 0 0.3rem'}}>Wins ledger</div>
-            {ledgerRow('Product page: bolder value prop', 'Headline change lifted add-to-cart 6% (8.2% to 8.7%). 94% chance it beats control.', '+$1,200/mo', 'Shipped', '#79b46a')}
-            {ledgerRow('Free-shipping banner', 'Cart-to-checkout up 3%, holdback-measured.', '+$640/mo', 'Shipped', '#79b46a')}
-            {ledgerRow('Checkout: one-page layout', 'Pricing/checkout change. Needs your approval before it runs.', 'est +$2,100/mo', 'Needs you', '#e6b04a')}
-            {ledgerRow('PDP image carousel autoplay', 'No reliable lift detected. Stopped to protect the experience.', 'no change', 'Killed', 'var(--ifm-color-emphasis-500)')}
-          </div>
-        </div>
-      </Mockup>
+      <Walkthrough
+        customScene={biScene}
+        steps={[
+          {type: 'move', target: '#sf-issue', say: 'The agent watches the store and finds a new critical issue'},
+          {type: 'highlight', target: '#sf-issue', say: 'slow mobile checkout, hurting conversion'},
+          {type: 'highlight', target: '#sf-issue', say: 'within its guardrails, it ships a fix to a holdback', hold: 1400},
+          {type: 'scene', to: 'custom', say: 'Each shipped win compounds the conversion curve', hold: 2200},
+          {type: 'scene', to: 'app', say: 'and the dollar lift lands back on the dashboard', hold: 1200},
+        ]}
+      >
+        {dashboard}
+      </Walkthrough>
     </>
   );
 }
