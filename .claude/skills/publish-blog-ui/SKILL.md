@@ -98,6 +98,10 @@ GitHub Packages requires auth even for read. In the consuming repo:
 
 ## Learnings log (newest first)
 
+- 2026-06-23 — **Third publish: `@omars-lab/blog-ui@0.3.0` is LIVE** (the `<Gif>` component, a
+  backward-compatible minor). Same merge-first flow, no surprises now that the pipeline is
+  proven: merge the bump PR → tag `blog-ui-v0.3.0` from master → workflow green → versions API
+  shows 0.1.0 / 0.2.0 / 0.3.0. The cadence is reliable; new components ship as minors.
 - 2026-06-23 — Created with the package. Tag pattern is `blog-ui-v*` (not plain `v*`, since the
   monorepo may host other packages later). Blog consumes via `file:` so local changes are live;
   publishing is only for OTHER repos. GitHub Packages needs auth even to read.
