@@ -7,8 +7,20 @@
 
 import Mockup from '@site/src/components/Mockup';
 import Walkthrough from '@site/src/components/Walkthrough';
+import Mermaid from '@theme/Mermaid';
 
 export default function Mockups() {
+  const arch = `architecture-beta
+  group machine(logos:apple)[Local Machine]
+  service git(logos:git-icon)[Git Repo] in machine
+  service ui(logos:chrome)[Browser UI] in machine
+  service server(logos:nodejs-icon)[Review Server] in machine
+  service claude(logos:claude)[Claude Code CLI] in machine
+  service files(logos:markdown)[Markdown Files] in machine
+  ui:R --> L:server
+  server:T --> B:git
+  server:R --> L:claude
+  server:B --> T:files`;
   return (
     <>
       <h2>What it looks like</h2>
@@ -55,6 +67,14 @@ export default function Mockups() {
           </div>
         </Mockup>
       </Walkthrough>
+
+      <h2>How it's wired</h2>
+
+      <p>Everything runs on the reviewer's own machine: the browser talks to a local
+      Node server, which owns the markdown files and the git history and drives the
+      Claude Code CLI.</p>
+
+      <Mermaid value={arch} />
     </>
   );
 }

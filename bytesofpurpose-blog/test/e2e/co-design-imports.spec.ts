@@ -254,6 +254,50 @@ test.describe('Imported co-design posts render in dev', () => {
     expect(seen.claudeLines, 'Claude steps stream out').toBeGreaterThan(0);
   });
 
+  test('markdown-review: the architecture-beta diagram renders with iconify logos icons', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.markdownReview, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    // the "How it's wired" architecture-beta diagram (logos:apple/chrome/nodejs/git/...)
+    await page
+      .waitForSelector('article .docusaurus-mermaid-container svg', { timeout: 20000 })
+      .catch(() => {});
+    const result = await page.evaluate(async () => {
+      // wait a beat for the lazy-loaded icon pack + render
+      await new Promise((r) => setTimeout(r, 2500));
+      const wired = Array.from(document.querySelectorAll('h2')).some((h) =>
+        /How it's wired/.test(h.textContent || '')
+      );
+      const svgs = document.querySelectorAll(
+        'article .docusaurus-mermaid-container svg'
+      ).length;
+      const hasErr = /Syntax error|could not find icon|Parse error/i.test(
+        document.body.innerText
+      );
+      // iconify inlines each registered logos: icon as SVG <path> data (not <image>/<use>);
+      // a healthy architecture-beta render has many paths (the 5 service icons + edges).
+      // Find the container that holds the architecture diagram (mermaid tags it).
+      const archSvg = Array.from(
+        document.querySelectorAll('article .docusaurus-mermaid-container svg')
+      ).find((s) => /architecture/i.test(s.getAttribute('aria-roledescription') || ''));
+      const archPaths = archSvg ? archSvg.querySelectorAll('path').length : 0;
+      // iconify inlines each registered logos: icon as SVG markup; a rendered arch diagram
+      // with its 5 service icons has a substantial innerHTML. A diagram whose icons FAILED
+      // to resolve would be markedly smaller (just boxes + edges).
+      const archInner = archSvg ? archSvg.innerHTML.length : 0;
+      return {wired, svgs, hasErr, archPaths, archInner, foundArch: !!archSvg};
+    });
+    expect(result.wired, 'the "How it\'s wired" section is present').toBe(true);
+    expect(result.svgs, 'mermaid diagrams rendered').toBeGreaterThan(0);
+    expect(result.hasErr, 'no mermaid/icon error on the page').toBe(false);
+    expect(result.foundArch, 'the architecture-beta diagram rendered').toBe(true);
+    // icons resolved + drew: the architecture SVG has its service icons inlined (>5kb of
+    // markup; a no-icon fallback would be far smaller) and multiple service-node paths.
+    expect(result.archInner, 'iconify logos icons inlined into the diagram').toBeGreaterThan(5000);
+    expect(result.archPaths, 'service nodes + edges rendered').toBeGreaterThan(8);
+  });
+
   test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
     page,
   }) => {

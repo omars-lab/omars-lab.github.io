@@ -49,6 +49,42 @@ architecture-beta
   db:R --> L:server
 ```
 
+#### Real provider icons (AWS / Azure / GCP / brand logos) — VERIFIED in this repo
+The 5 built-ins are generic. For real icons, this repo registers the **iconify `logos`
+pack** (200k+ brand icons) on mermaid, so you can use `logos:<name>` directly:
+```
+architecture-beta
+  group cloud(logos:aws)[AWS]
+  service api(logos:aws-api-gateway)[API Gateway] in cloud
+  service fn(logos:aws-lambda)[Lambda] in cloud
+  service db(logos:aws-aurora)[Aurora] in cloud
+  api:R --> L:fn
+  fn:R --> L:db
+```
+- **AWS:** `logos:aws`, `logos:aws-lambda`, `logos:aws-api-gateway`, `logos:aws-aurora`,
+  `logos:aws-s3`, `logos:aws-dynamodb`, … (the `logos` set has the full `aws-*` catalog).
+- **Azure:** `logos:microsoft-azure`, `logos:azure-icon`, plus service marks where present.
+- **GCP:** `logos:google-cloud`, `logos:google-cloud-functions`, …
+- **Generic/local stacks:** `logos:nodejs-icon`, `logos:git-icon`, `logos:chrome`,
+  `logos:claude`, `logos:markdown`, `logos:docker-icon`, `logos:postgresql`, etc.
+- Browse names at icones.js.org (the **`logos`** collection). If an icon name is wrong it
+  silently shows nothing — verify in the browser.
+
+HOW it's wired (so a new repo can replicate): `src/mermaid-icons.js` (a clientModule
+registered in `docusaurus.config.js`) imports the `mermaid` singleton and calls
+`mermaid.registerIconPacks([{name:'logos', loader:()=>import('@iconify-json/logos').then(m=>m.icons)}])`
+before any diagram renders. The pack is a devDependency (`@iconify-json/logos`). To add
+another set (e.g. a dedicated AWS set), `yarn add -D @iconify-json/<set>` and add another
+entry to that array. This works WITH `@docusaurus/theme-mermaid` (which owns
+`mermaid.initialize`) because registerIconPacks mutates the same singleton.
+
+#### Worked example in the repo
+`designs/_mockups/markdown-review-studio.mdx` renders a local-machine topology with
+`logos:apple / chrome / nodejs-icon / git-icon / markdown / claude`. Note: inside a JSX
+component (a mockup sidecar) you can't use a ```` ```mermaid ```` fence — import
+`@theme/Mermaid` and render `<Mermaid value={theString} />` instead (define the string
+INSIDE the component, not at module top level, or MDX fails to compile).
+
 ### kanban (work board)
 `kanban`; a column is `columnId[Title]`; cards are INDENTED under it as `cardId[Text]`;
 optional metadata `@{ assigned: …, ticket: …, priority: Very High|High|Low|Very Low }`.
@@ -111,6 +147,37 @@ stateDiagram-v2
 (For `erDiagram`, `classDiagram`, `mindmap`, `timeline`, `C4Context` use the standard
 mermaid-11 syntax; if unsure, probe-verify per the workflow below before shipping.)
 
+## Arrow & layout hygiene (clean arrows are a CONTENT-quality bar, not automatic)
+
+Mermaid will happily render a valid-but-MESSY diagram — edges that cross through nodes,
+long detour edges, arrows overlapping labels. A diagram with crossing arrows reads as
+sloppy. Rules:
+
+**architecture-beta** (the layout is driven by service ORDER + the T/B/L/R ports you pick):
+- **Pick the port that FACES the target.** A hub with spokes: `server:T --> B:git` (git
+  above), `server:R --> L:claude` (claude right), `server:B --> T:files` (files below),
+  `ui:R --> L:server` (ui left). Each edge leaves the side the target sits on.
+- **Order services so connected ones are ADJACENT.** Declaration order places services; if
+  you connect two services that end up far apart, the edge takes a long ugly detour. Declare
+  a hub's neighbors around it (e.g. `git, ui, server, claude, files`).
+- **An edge that crosses through a node = a routing smell.** Reorder services or repick
+  ports until no edge passes over a node or another edge. (The markdown-review
+  `server→claude` edge originally cut diagonally across the Server node because claude was
+  declared in the wrong slot and used `R-->L` back over everything; reordering + facing
+  ports fixed it.)
+- **Drop edges that force a detour** if they don't carry essential meaning — fewer, clean
+  edges beat a complete-but-tangled graph.
+
+**flowchart**: keep ONE primary direction (`LR` or `TB`); group related nodes in
+`subgraph`s so edges stay local; keep edge labels short (long labels overlap the line);
+prefer a few clear edges over a hairball. If two edges must cross, that's fine — but an
+edge crossing a NODE is not.
+
+**The bar:** after rendering, the arrows should read at a glance — no line through a box, no
+label sitting on a line, no edge wandering across the whole diagram. If it doesn't, fix the
+ports/order; don't ship it. This is verified VISUALLY (see Verify below), not by "an SVG
+rendered."
+
 ## Site conventions (IMPORTANT — these differ from vanilla mermaid)
 
 1. **Do NOT hardcode colors.** No `classDef`/`style X fill:…,stroke:…` color directives.
@@ -141,7 +208,14 @@ especially the beta types. Prove it renders:
 2. `( cd bytesofpurpose-blog && yarn docusaurus clear && yarn start )` and open the page on
    `:3000`, OR run a quick Playwright check: the diagram's `.docusaurus-mermaid-container`
    must contain an `<svg>`, and there must be NO "Syntax error"/"Parse error" text and no
-   mermaid console error. (This is exactly how these skeletons were verified.)
+   mermaid console error.
+3. **VISUAL-VERIFY — mandatory, not optional.** "An SVG rendered" does NOT mean it looks
+   right. SCREENSHOT the diagram (target it by `aria-roledescription="architecture"` etc. —
+   a post can have many mermaid blocks, so don't grab `.last()`) and EYEBALL it for: arrows
+   crossing through nodes, edges overlapping labels, long detour edges, icons that didn't
+   resolve (blank where a `logos:` icon should be), and dark-mode legibility. If the arrows
+   aren't clean, fix the ports/order (see Arrow & layout hygiene) and re-shoot. Skipping
+   this is how a tangled diagram ships looking valid.
 
 ## Troubleshooting
 

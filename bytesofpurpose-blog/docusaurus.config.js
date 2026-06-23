@@ -63,6 +63,9 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     clientModules: [
       require.resolve('./src/gtag-guard.js'),
       require.resolve('./src/posthog.js'),
+      // Register iconify icon packs (logos: AWS/Azure/GCP/brand) for architecture-beta
+      // diagrams — runs before any diagram renders so the icons are available.
+      require.resolve('./src/mermaid-icons.js'),
       // Traveling flow-dot for opt-in `.mermaid-animated` diagrams (system-design posts).
       require.resolve('./src/mermaid-flow-dot.js'),
     ],
