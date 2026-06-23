@@ -21,7 +21,7 @@ source:
     docs/architecture/co-designs/public/CO-DESIGN-2026-06-22-self-healing-storefront-agent-hld.md
   id: CO-DESIGN-2026-06-22-self-healing-storefront-agent-hld
   status: In Review
-  imported: '2026-06-22'
+  imported: '2026-06-23'
 mockups: ./_mockups/self-healing-storefront.mdx
 ---
 
@@ -50,7 +50,7 @@ import Mockups from './_mockups/self-healing-storefront.mdx';
 - **D3: Autonomy (decided in principle):** **risk-gated autonomy tiers**: low-risk copy and layout changes ship automatically within guardrails; pricing and checkout changes are supported but always require human approval.
 - **D2: Measurement (leaning):** **Bayesian/sequential statistics** so even lower-traffic stores reach trustworthy decisions, never shipping a "win" the data doesn't support.
 
-**Expected value.** A mid-market store doing **$1M/year at a 2% conversion rate** that hits the target of **+10% cumulative conversion lift in 6 months** gains roughly **+$100K/year** in attributable revenue: for essentially no owner time and no expert on payroll. _(Illustrative [Assumption]; to be validated.)_
+**Expected value.** A mid-market store doing **$1M/year at a 2% conversion rate** that hits the target of **+10% cumulative conversion lift in 6 months** gains roughly **+$100K/year** in attributable revenue: for essentially no owner time and no expert on payroll. _(Illustrative <Assumption />; to be validated.)_
 
 **Status & what's open.** Status: **In Review.** The architecture, components, and guardrails are settled; the main open items are the scanner→agent interface (OQ2), the attribution-holdback model (OQ3), the "too small to test" traffic floor (OQ5), and validating the placeholder success metrics. Full detail follows; this summary is the front door.
 
@@ -232,14 +232,14 @@ Each objective notes the **key decisions** ([§6.5](#65-key-design-decisions)) t
 
 ### 2.3 Success Criteria
 
-_Targets below are **[Assumption]** placeholders: directionally right, numerically unvalidated. Tune once live data exists._
+_Targets below are <Assumption /> placeholders: directionally right, numerically unvalidated. Tune once live data exists._
 
-- **Time to first shipped win**: **[Assumption: ≤ 30 days]** from store onboarding to the first statistically-validated, shipped improvement.
-- **Decision yield**: **[Assumption: ≥ 70%]** of launched experiments reach a *valid* decision (ship or kill on defensible data) rather than timing out inconclusive.
-- **Net conversion lift per store**: **[Assumption: +10% cumulative conversion lift within 6 months]**, measured against a held-back baseline.
-- **False-win rate**: **[Assumption: ≤ 5%]** of shipped winners later shown (via holdback / re-test) to be neutral or negative.
-- **Operator leverage**: **[Assumption: 1 operator supervises ≥ 25 active stores]** at steady state, trending upward.
-- **Revenue-safety**: **[Assumption: zero unrecovered revenue-harm incidents]**; any experiment causing a material conversion/revenue drop is auto-rolled-back within a bounded window. _(This is a hard guardrail, not a soft target.)_
+- **Time to first shipped win**: <Assumption>≤ 30 days</Assumption> from store onboarding to the first statistically-validated, shipped improvement.
+- **Decision yield**: <Assumption>≥ 70%</Assumption> of launched experiments reach a *valid* decision (ship or kill on defensible data) rather than timing out inconclusive.
+- **Net conversion lift per store**: <Assumption>+10% cumulative conversion lift within 6 months</Assumption>, measured against a held-back baseline.
+- **False-win rate**: <Assumption>≤ 5%</Assumption> of shipped winners later shown (via holdback / re-test) to be neutral or negative.
+- **Operator leverage**: <Assumption>1 operator supervises ≥ 25 active stores</Assumption> at steady state, trending upward.
+- **Revenue-safety**: <Assumption>zero unrecovered revenue-harm incidents</Assumption>; any experiment causing a material conversion/revenue drop is auto-rolled-back within a bounded window. _(This is a hard guardrail, not a soft target.)_
 
 ### 2.4 Non-Goals
 
@@ -364,7 +364,7 @@ Because target stores span low- to mid-traffic, the **classic fixed-sample, freq
 - **Sequential** and **Bayesian** methods adapt during the test and can require **20 to 80% fewer users** than an equivalent fixed-sample test,[^a4] and they yield an intuitive output ("91% chance B beats A") instead of a p-value.[^a2]
 - CRO best practice for smaller stores is to test **bold, high-impact changes** (≥30% expected relative lift) rather than micro-tweaks like button color, because only large effects are detectable on thin traffic.[^a1]
 
-**[Assumption:** target stores are predominantly Shopify or Shopify-like; the design should not hard-assume Shopify but Shopify is the dominant case to optimize for.**]** This shapes the execution-model options in [§6](#6-proposed-design).
+<Assumption>** target stores are predominantly Shopify or Shopify-like; the design should not hard-assume Shopify but Shopify is the dominant case to optimize for.**</Assumption> This shapes the execution-model options in [§6](#6-proposed-design).
 
 ### 4.4 Where CO-DESIGN-0002 Leaves Off
 
@@ -401,7 +401,7 @@ Each gap below maps a **current-state limitation (§4)** to the **objective it b
 - **The DIY market stays unreachable.** Without an autonomous, safe, non-expert-friendly agent, this customer segment continues to do nothing (Section 4.1): there is no product they can actually use, so the largest part of the market is uncaptured.
 - **Any naïve automation actively destroys trust.** A version that ships changes on thin data (G2) or without rollback (G3) will eventually tank a customer's conversion: a single such incident in a managed service is reputationally fatal. The gaps are not just missing features; leaving G2/G3 unsolved makes the product *dangerous*.
 
-**Quantified illustration [Assumption]:** A mid-market store doing **$1M/year** at a **2% conversion rate** that achieves the §2.3 target of **+10% cumulative conversion lift over 6 months** sees roughly **+$100K/year** in attributable revenue: from changes that cost the owner essentially no time and put no expert on payroll. That attributable delta is both the customer's ROI and the justification for the subscription. _(Illustrative; depends on traffic, AOV, and realized lift; to be validated.)_
+**Quantified illustration <Assumption />:** A mid-market store doing **$1M/year** at a **2% conversion rate** that achieves the §2.3 target of **+10% cumulative conversion lift over 6 months** sees roughly **+$100K/year** in attributable revenue: from changes that cost the owner essentially no time and put no expert on payroll. That attributable delta is both the customer's ROI and the justification for the subscription. _(Illustrative; depends on traffic, AOV, and realized lift; to be validated.)_
 
 ## 6. Proposed Design
 
@@ -917,13 +917,13 @@ See [§7.1](#71-components) for the component diagram (C1 to C8: agent brain + g
 
 ## 11. Non-Functional Requirements & Constraints
 
-_Targets marked **[Assumption]** are directionally right but unvalidated: tune with real data._
+_Targets marked <Assumption /> are directionally right but unvalidated: tune with real data._
 
 ### 11.1 Performance
 
-- **No measurable storefront slowdown.** The variant-serving layer must add **[Assumption: &lt; 50ms]** to page load and **must not cause flicker (FOOC)**: the shopper never sees control flash before treatment. Native Shopify rendering (Phase A) and anti-flicker on the edge worker (Phase B) are the mechanisms.
-- **Real-time health monitoring latency.** Guardrail health checks (C6) evaluate store health on a **[Assumption: ≤ 1-minute]** cadence so harm is caught and rolled back fast.
-- **Decision freshness.** The measurement engine (C4) recomputes an experiment's decision at least **[Assumption: hourly]**, more often for high-traffic stores.
+- **No measurable storefront slowdown.** The variant-serving layer must add <Assumption>&lt; 50ms</Assumption> to page load and **must not cause flicker (FOOC)**: the shopper never sees control flash before treatment. Native Shopify rendering (Phase A) and anti-flicker on the edge worker (Phase B) are the mechanisms.
+- **Real-time health monitoring latency.** Guardrail health checks (C6) evaluate store health on a <Assumption>≤ 1-minute</Assumption> cadence so harm is caught and rolled back fast.
+- **Decision freshness.** The measurement engine (C4) recomputes an experiment's decision at least <Assumption>hourly</Assumption>, more often for high-traffic stores.
 - **Ideation throughput.** The agent maintains a non-empty hypothesis backlog per active store so there is always a next experiment ready when one concludes.
 
 ### 11.2 Security
@@ -935,7 +935,7 @@ _Targets marked **[Assumption]** are directionally right but unvalidated: tune w
 
 ### 11.3 Scalability
 
-- **Many stores per operator.** The system must support the §2.3 target of **[Assumption: ≥ 25 active stores per operator]**, scaling to hundreds of concurrent stores without linear operator growth: the managed-service margin thesis.
+- **Many stores per operator.** The system must support the §2.3 target of <Assumption>≥ 25 active stores per operator</Assumption>, scaling to hundreds of concurrent stores without linear operator growth: the managed-service margin thesis.
 - **Concurrent experiments per store.** Support multiple non-overlapping experiments per store with interaction-aware scheduling (avoid two experiments mutating the same page region simultaneously).
 - **Event volume.** The measurement pipeline ingests every shopper metric event across all stores; it must scale horizontally with traffic and degrade gracefully (sampling) rather than dropping decisions.
 
@@ -968,7 +968,7 @@ UX requirements per persona (from [§1.4](#14-system-users--personas)):
 | 7 | …exceed its **least-privilege scopes** (no PII, no payment data) | §9.2 access model |
 
 **Constraints imposed by the environment:**
-- **Platform limits (Phase A):** Shopify app review, theme/app API rate limits, and what the platform permits an app to mutate constrain the action space. **[Assumption:** Shopify's app + theme APIs permit the copy/layout mutations the autonomous tier needs.**]**
+- **Platform limits (Phase A):** Shopify app review, theme/app API rate limits, and what the platform permits an app to mutate constrain the action space. <Assumption>** Shopify's app + theme APIs permit the copy/layout mutations the autonomous tier needs.**</Assumption>
 - **Consent & privacy:** Visitor bucketing uses cookies/identifiers subject to consent and privacy law (GDPR/CCPA-class); experimentation must respect the store's existing consent mechanism. _(D8)_
 - **Statistical integrity:** Enforce minimum-runtime and pre-registered stop rules to prevent peeking/false-positive inflation; never declare a win the chosen method doesn't support. _(D2)_
 - **Accessibility:** Generated variants must meet accessibility standards (e.g., WCAG-class contrast, alt text, semantic structure): a brand-safety *and* legal requirement. _(D8)_

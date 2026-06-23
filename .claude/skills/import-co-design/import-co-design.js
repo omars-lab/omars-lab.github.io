@@ -256,6 +256,46 @@ function rewriteLinks(body, idMap) {
 }
 
 // ---------------------------------------------------------------------------
+// highlight [Assumption: …] markers (yellow, for review)
+// ---------------------------------------------------------------------------
+
+// Co-design HLDs flag unvalidated premises inline as `**[Assumption: …]**` (also
+// `*[Assumption]*` / bare `[Assumption: …]`). On the blog these should JUMP OUT for review,
+// not blend in as bold. Wrap them in <Assumption>…</Assumption> (the amber-highlight
+// component). Runs on PROSE only (skips code/mermaid fences). The inner text may contain
+// MDX-hazard chars; the later mdxSafeLine pass + the em-dash pass already clean prose, so
+// we keep the wrap simple here and let those run after.
+function highlightAssumptions(body) {
+  const lines = body.split('\n');
+  let inFence = false;
+  let fenceTick = '';
+  let wrapped = 0;
+  const re = /(?:\*\*|\*)?\[Assumption(:\s*[^\]]*)?\](?:\*\*|\*)?/g;
+  const out = lines.map((line) => {
+    const fm = line.match(/^(\s*)(`{3,}|~{3,})/);
+    if (fm) {
+      const tick = fm[2][0].repeat(3);
+      if (!inFence) {
+        inFence = true;
+        fenceTick = tick;
+      } else if (line.trim().startsWith(fenceTick)) {
+        inFence = false;
+      }
+      return line;
+    }
+    if (inFence || !/\[Assumption/.test(line)) return line;
+    return line.replace(re, (m, rest) => {
+      wrapped++;
+      // the component renders its own "Assumption" tag, so the body is just the premise
+      // text (everything after the colon). A bare [Assumption] => empty body (tag only).
+      const inner = rest ? rest.replace(/^:\s*/, '').trim() : '';
+      return inner ? `<Assumption>${inner}</Assumption>` : `<Assumption />`;
+    });
+  });
+  return {body: out.join('\n'), wrapped};
+}
+
+// ---------------------------------------------------------------------------
 // strip hardcoded diagram colors (let the mermaid light/dark theme control them)
 // ---------------------------------------------------------------------------
 
@@ -557,8 +597,10 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
   const lk = rewriteLinks(dd.body, idMap);
   // 4) strip hardcoded diagram colors (let the mermaid light/dark theme control them)
   const sc = stripDiagramColors(lk.body);
-  // 5) animate the first mermaid diagram (opt-in CSS wrapper)
-  const anim = animateFirstMermaid(sc.body);
+  // 5) highlight [Assumption: …] markers for review (amber <Assumption> wrap)
+  const asm = highlightAssumptions(sc.body);
+  // 6) animate the first mermaid diagram (opt-in CSS wrapper)
+  const anim = animateFirstMermaid(asm.body);
   let body = anim.body;
 
   // 3) description from exec summary (run through the prose de-em-dasher first)
@@ -623,6 +665,7 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
     footnotes: fn,
     admonitions: adm,
     animated: anim.animated,
+    assumptions: asm.wrapped,
   };
 }
 
@@ -722,7 +765,7 @@ function main() {
       (e) => e.data && e.data.source && e.data.source.id === plan.id
     );
     const sidebarPos = match ? match.data.sidebar_position : nextPos;
-    const { file, fm, stats, links, footnotes, admonitions, animated } =
+    const {file, fm, stats, links, footnotes, admonitions, animated, assumptions} =
       renderPost(plan, idMap, sidebarPos, match);
 
     const outName = match ? match.file : postFilename(plan);
@@ -734,7 +777,7 @@ function main() {
       `em-dash prose:${stats.prose} fenced:${stats.fenced}, ` +
       `links rewritten:${links.rewritten} delinked:${links.delinked}, ` +
       `footnotes:${footnotes.defs} admonitions:${admonitions.converted} ` +
-      `animated:${animated ? 'yes' : 'no'})`;
+      `animated:${animated ? 'yes' : 'no'} assumptions:${assumptions})`;
 
     if (DRY) {
       console.log('[dry-run] ' + summary);
@@ -781,6 +824,7 @@ module.exports = {
   convertFootnotes,
   convertAdmonitions,
   stripDiagramColors,
+  highlightAssumptions,
   animateFirstMermaid,
   deriveTags,
   isoDate,

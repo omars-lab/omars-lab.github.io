@@ -21,7 +21,7 @@ source:
     docs/architecture/co-designs/public/CO-DESIGN-2026-06-21-site-scanner-lead-engine-hld.md
   id: CO-DESIGN-2026-06-21-site-scanner-lead-engine-hld
   status: In Review
-  imported: '2026-06-22'
+  imported: '2026-06-23'
 mockups: ./_mockups/ecommerce-site-scanner-and-lead-generation-engine.mdx
 ---
 
@@ -47,7 +47,7 @@ The proposal is an autonomous **scanning and lead engine**: a Large-Language-Mod
 
 The most consequential choices are the "how do we get the data" decisions: site discovery (**D1**), size/traffic estimation (**D2**), and contact discovery (**D3**), all currently **leaning** toward layered, cheap-first pipelines; the build-vs-buy recommendation is a **purpose-built engine over best-of-breed APIs** ([§6.5 Key Design Decisions](#65-key-design-decisions)). Outreach stays **draft-only with a human on every send** (D6, decided).
 
-Expected value: **[Assumption: 50 to 100 qualified, contactable leads/week]** at a controlled cost per lead, plus a reusable signal taxonomy that de-risks Phase 2. Status is **In Review**. The biggest open questions are the exact ICP, the per-scan page budget, the cost-per-lead ceiling, and the EU-vs-US outreach posture ([§13.3 Open Questions](#133-open-questions)).
+Expected value: <Assumption>50 to 100 qualified, contactable leads/week</Assumption> at a controlled cost per lead, plus a reusable signal taxonomy that de-risks Phase 2. Status is **In Review**. The biggest open questions are the exact ICP, the per-scan page budget, the cost-per-lead ceiling, and the EU-vs-US outreach posture ([§13.3 Open Questions](#133-open-questions)).
 
 ---
 
@@ -229,7 +229,7 @@ Each objective notes the **key decisions** (D1 to D8, [Section 6.5](#65-key-desi
 
 ### 2.3 Success Criteria
 
-Phase 1 targets a **lean two-founder operation**. **[Assumption: all numeric targets below are starting hypotheses to validate with real runs, not committed SLAs.]**
+Phase 1 targets a **lean two-founder operation**. <Assumption>all numeric targets below are starting hypotheses to validate with real runs, not committed SLAs.</Assumption>
 
 | Metric | Target (Phase 1) | Type |
 |--------|------------------|------|
@@ -338,7 +338,7 @@ graph LR
 
 ```
 
-**[Assumption: the team currently prospects manually with light tooling (search, spreadsheets, maybe a trial of one enrichment tool) rather than a paid stack.]** Each step is human-driven, serial, and unrecorded:
+<Assumption>the team currently prospects manually with light tooling (search, spreadsheets, maybe a trial of one enrichment tool) rather than a paid stack.</Assumption> Each step is human-driven, serial, and unrecorded:
 
 | Step | How it's done today | Cost / limitation |
 |------|---------------------|-------------------|
@@ -357,7 +357,7 @@ The team is **not** inventing the category: mature point tools exist for each st
 - **Contact:** a [layered on-site → waterfall → verify pipeline][waterfall-lift] is the known-good pattern; no single provider suffices for small ecommerce.
 - **Orchestration:** [Clay.com][clay] already chains these generically.
 
-**[Assumption: the team is not currently paying for Clay or an equivalent orchestration stack: the agent is meant to be a purpose-built, ecommerce-specialized, cheaper-at-target-volume alternative, not a wrapper the team would otherwise rent.]**
+<Assumption>the team is not currently paying for Clay or an equivalent orchestration stack: the agent is meant to be a purpose-built, ecommerce-specialized, cheaper-at-target-volume alternative, not a wrapper the team would otherwise rent.</Assumption>
 
 ### 4.3 Why Not Just Use Clay / Existing Tools?
 
@@ -613,7 +613,7 @@ The three founding-team concerns are **D1 (discovery), D2 (traffic), D3 (contact
 
 | Area | Leaning | Note |
 |------|---------|------|
-| Agent/orchestration | LLM agent with tool-calling (cheap-first stage logic) | **[Assumption: built around Claude as the reasoning engine for scan judgment, scoring rationale, and drafting.]** |
+| Agent/orchestration | LLM agent with tool-calling (cheap-first stage logic) | <Assumption>built around Claude as the reasoning engine for scan judgment, scoring rationale, and drafting.</Assumption> |
 | Scan infra | Headless browser workers (bounded pages, rate-limited) | Honors D8 crawl guardrails |
 | Data store | Lead + signal store + audit log | Schema in Section 7.2 |
 | Providers | Best-of-breed per stage, behind our own interface | Swappable (Appendices A-C) |
@@ -887,7 +887,7 @@ sequenceDiagram
 
 ### 11.3 Scalability
 
-The Phase 1 target is **lean** (Section 2.3), so scalability is about *cost-linear growth*, not massive concurrency. Scaling dimensions: number of candidates scanned/week, provider call volume (cost-bound), and signal-store size. The Option 2 architecture scales by adding headless workers and raising provider tiers; **[Assumption: Phase 1 runs comfortably on a single modest worker pool: horizontal scale-out is a later concern.]** Deferring Option 3 (Common Crawl) means we accept provider costs now and revisit if volume economics demand in-house data.
+The Phase 1 target is **lean** (Section 2.3), so scalability is about *cost-linear growth*, not massive concurrency. Scaling dimensions: number of candidates scanned/week, provider call volume (cost-bound), and signal-store size. The Option 2 architecture scales by adding headless workers and raising provider tiers; <Assumption>Phase 1 runs comfortably on a single modest worker pool: horizontal scale-out is a later concern.</Assumption> Deferring Option 3 (Common Crawl) means we accept provider costs now and revisit if volume economics demand in-house data.
 
 ### 11.4 User Experience
 
@@ -973,7 +973,7 @@ Phase 1 is built by the **two-person founding team** ([Section 1.4](#14-system-u
 ### 13.2 Dependencies
 
 - **External providers** (swappable, but the pipeline depends on *some* provider per stage): discovery ([Store Leads][storeleads-api]/[BuiltWith][builtwith-lists]), size ([CrUX][crux]/[Tranco][tranco]/[Store Leads][storeleads-api]), contact ([Dropcontact][dropcontact]/[Prospeo][prospeo]/[Hunter][hunter] + [Bouncer][bouncer]).
-- **LLM provider** for scan judgment, scoring rationale, and drafting (D7: **[Assumption: Claude]**).
+- **LLM provider** for scan judgment, scoring rationale, and drafting (D7: <Assumption>Claude</Assumption>).
 - **A CRM / sequencing tool** as system of record and an **email sending channel** (Section 3.3).
 - **Headless browser infrastructure** for scanning (D4).
 - **Legal counsel** to validate the outreach posture before scaling (Section 11.5).

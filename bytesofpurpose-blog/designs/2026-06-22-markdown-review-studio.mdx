@@ -21,7 +21,7 @@ source:
     docs/architecture/co-designs/public/CO-DESIGN-2026-06-22-markdown-review-studio-hld.md
   id: CO-DESIGN-2026-06-22-markdown-review-studio-hld
   status: In Review
-  imported: '2026-06-22'
+  imported: '2026-06-23'
 mockups: ./_mockups/markdown-review-studio.mdx
 ---
 
@@ -45,7 +45,7 @@ Reviewing long markdown documents (such as architecture HLDs) with an AI assista
 
 The most consequential decisions, all **Decided**: comments are anchored by **inline HTML-comment markers written into the file**, with fuzzy matching as a recovery fallback (D1, the core technical bet); Claude is driven via the **Claude Code command-line interface (CLI) in headless mode** rather than the raw API, reusing the author's existing setup (D2); and edits **auto-apply and commit**, made safe by **validation hooks** that gate every commit (D5, D9). See the decisions summary in [§1.5 Key Decisions Summary](#15-key-decisions-summary).
 
-**Expected value:** a low-friction, repeatable review loop with durable, traceable, directly-actionable feedback: reusable across any markdown repository, not just this one (§1.7). Time savings are an *[Assumption]* pending dogfooding.
+**Expected value:** a low-friction, repeatable review loop with durable, traceable, directly-actionable feedback: reusable across any markdown repository, not just this one (§1.7). Time savings are an <Assumption /> pending dogfooding.
 
 **Current status: In Review.** The single-user local mode is Phase 1; a hosted multi-user cloud mode is Phase 3. The biggest open questions concern comment-commit strategy, non-git target folders, and cloud pricing/secrets infrastructure: see [§10.3 Open Questions](#103-open-questions).
 
@@ -130,7 +130,7 @@ graph LR
 
 ```
 
-**[Assumption: In the initial version, Reviewer and Author are the same person (Omar) on a single machine. Multi-user / concurrent review is a secondary, later concern: flagged as a key decision in §6.5.]**
+<Assumption>In the initial version, Reviewer and Author are the same person (Omar) on a single machine. Multi-user / concurrent review is a secondary, later concern: flagged as a key decision in §6.5.</Assumption>
 
 ### 1.5 Key Decisions Summary
 
@@ -265,7 +265,7 @@ What this design **touches** versus what it **assumes exists**:
 | Comment data | Creates & stores comment threads + anchors | A writable location alongside the docs (see D4) |
 | Browser | Serves the UI to a local browser | A modern desktop browser |
 
-**[Assumption: The target folder is already a git repository. If not, the tool offers to `git init` it on first run; flagged as an open question in §10.3.]**
+<Assumption>The target folder is already a git repository. If not, the tool offers to `git init` it on first run; flagged as an open question in §10.3.</Assumption>
 
 ## 4. Current State (As-Is)
 
@@ -307,7 +307,7 @@ The pain points are detailed in §1.6. In as-is terms:
 - Each review round **re-establishes context** for Claude.
 - The link between **"this comment"** and **"that edit/commit"** is implicit, not recorded.
 
-**[Assumption: The author currently does not use GitHub PR review for these co-design docs: review is local and conversational with Claude. If PR-based review is in active use, §6 should consider integrating with it rather than replacing it.]**
+<Assumption>The author currently does not use GitHub PR review for these co-design docs: review is local and conversational with Claude. If PR-based review is in active use, §6 should consider integrating with it rather than replacing it.</Assumption>
 
 ## 5. Problem Statement & Gaps
 
@@ -1008,7 +1008,7 @@ See **§6.1** for the layered component diagram (browser layer, studio server in
 | Live-reload latency after on-disk file change | &lt; 300 ms from file write to UI update |
 | Claude round | Bounded by Claude Code itself; UI shows progress (`stream-json`) and never blocks the rest of the app |
 
-**[Assumption: A single doc has at most a few hundred comments and is well under the 10MB headless stdin cap; docs are referenced by path to Claude, not piped, so size is not a constraint.]**
+<Assumption>A single doc has at most a few hundred comments and is well under the 10MB headless stdin cap; docs are referenced by path to Claude, not piped, so size is not a constraint.</Assumption>
 
 ### 11.2 Security
 

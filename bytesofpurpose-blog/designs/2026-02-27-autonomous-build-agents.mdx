@@ -20,7 +20,7 @@ source:
     docs/architecture/co-designs/public/CO-DESIGN-2026-02-27-autonomous-build-agents-hld.md
   id: CO-DESIGN-2026-02-27-autonomous-build-agents-hld
   status: In Review
-  imported: '2026-06-22'
+  imported: '2026-06-23'
 mockups: ./_mockups/autonomous-build-agents.mdx
 ---
 
@@ -44,7 +44,7 @@ The central challenge is cross-instance execution: the agents run on the deliver
 
 Key decisions and status: the recommendation is to **build Option A first** then evolve toward B (see [§6.4 Recommendation](#64-recommendation)); the primary interaction surface is leaning toward the in-product assistant panel (D13); and tenancy is leaning per-client (D16). Most of the 19 design decisions (D1 to D19) remain TBD pending delivery-consultant input.
 
-Expected value: one delivery consultant can guide many concurrent projects instead of one, with consistent, auditable, reversible builds. **[Assumption: Work In Progress through Ready for Testing is 60 to 70% of work-item cycle time.]** Status is **In Review**. The biggest open questions are the agent location (D1), delivery mechanism (D2), and the Instance Commit generation spike: the single hardest technical risk.
+Expected value: one delivery consultant can guide many concurrent projects instead of one, with consistent, auditable, reversible builds. <Assumption>Work In Progress through Ready for Testing is 60 to 70% of work-item cycle time.</Assumption> Status is **In Review**. The biggest open questions are the agent location (D1), delivery mechanism (D2), and the Instance Commit generation spike: the single hardest technical risk.
 
 ---
 
@@ -208,13 +208,13 @@ This design hinges on several interdependent architectural decisions. Each is ex
 
 4. **Manual translation of tech guidance**: Developers read natural-language guidance and manually determine which tables, fields, business rules, and client scripts to create. This translation is time-consuming and inconsistent.
 
-5. **No automated scaffolding**: Repeatable platform configuration patterns are rebuilt manually every time. **[Assumption: These repeatable patterns exist and are common enough to justify templating.]**
+5. **No automated scaffolding**: Repeatable platform configuration patterns are rebuilt manually every time. <Assumption>These repeatable patterns exist and are common enough to justify templating.</Assumption>
 
 6. **Validation gap**: No AI-assisted check that implementation matches acceptance criteria before human review.
 
-7. **Disconnected pipeline**: Planning agents produce structured output but there is no programmatic handoff to implementation. **[Assumption: A programmatic handoff is technically feasible despite the cross-instance boundary.]**
+7. **Disconnected pipeline**: Planning agents produce structured output but there is no programmatic handoff to implementation. <Assumption>A programmatic handoff is technically feasible despite the cross-instance boundary.</Assumption>
 
-8. **Knowledge silos**: Institutional knowledge about best practices and client-specific patterns lives in senior developers' heads. **[Assumption: This tribal knowledge problem is significant enough to address in this design.]**
+8. **Knowledge silos**: Institutional knowledge about best practices and client-specific patterns lives in senior developers' heads. <Assumption>This tribal knowledge problem is significant enough to address in this design.</Assumption>
 
 ### Pain Points Driving This Work
 
@@ -438,7 +438,7 @@ flowchart LR
 
 ### What Developers Do Today
 
-When a developer picks up a sprint-ready work item: read the work-item record on the internal build instance → mentally translate tech guidance into a configuration plan → log into the client dev tenant → build configurations by hand → self-test against AC → document (inconsistently) → mark complete. There is no structured handoff between planning output and implementation; the tech guidance is natural language, not a machine-readable spec. **[Assumption: Documentation of implementation details is inconsistent and often minimal.]**
+When a developer picks up a sprint-ready work item: read the work-item record on the internal build instance → mentally translate tech guidance into a configuration plan → log into the client dev tenant → build configurations by hand → self-test against AC → document (inconsistently) → mark complete. There is no structured handoff between planning output and implementation; the tech guidance is natural language, not a machine-readable spec. <Assumption>Documentation of implementation details is inconsistent and often minimal.</Assumption>
 
 ### How Cross-Instance Work Happens Today
 
@@ -495,7 +495,7 @@ The AI agent pipeline produces structured output; requirements, work items with 
 
 ### 5.3 Impact Assessment
 
-- **Time:** Implementation consumes the majority of sprint time. **[Assumption: Work In Progress → Ready for Testing is 60-70% of work-item cycle time.]** Even partial automation significantly reduces sprint velocity bottlenecks.
+- **Time:** Implementation consumes the majority of sprint time. <Assumption>Work In Progress → Ready for Testing is 60-70% of work-item cycle time.</Assumption> Even partial automation significantly reduces sprint velocity bottlenecks.
 - **Quality:** Configuration quality varies by experience. Encoding senior developer patterns into agent tools raises the quality floor.
 - **Knowledge retention:** When consultants leave, implementation knowledge is lost. The Knowledge Transfer Writer addresses this directly.
 - **Scale:** Team capacity is linearly tied to headcount. AI-assisted implementation breaks this for standard patterns.
@@ -1130,9 +1130,9 @@ The build agents extend the existing agent framework rather than introducing new
 
 The Instance Commit transport reuses the platform's native reviewable change bundle: the **Instance Commit** container, its individual **Commit Entries**, and the **Received Commit** previewed on the client tenant before it is applied.
 
-**[Assumption: The Auto Developer Agent generates Commit Entries programmatically. This requires understanding the payload format for each configuration type.]**
+<Assumption>The Auto Developer Agent generates Commit Entries programmatically. This requires understanding the payload format for each configuration type.</Assumption>
 
-The Work Item gains `implementation_status`, `implementation_log`, and a `target_system_ref`, and a new **Target System** registry holds each client tenant's endpoint, OAuth config, platform version, capability state, and last pre-flight result. **[Assumption: A new Target System registry is needed for the client-tenant inventory.]**
+The Work Item gains `implementation_status`, `implementation_log`, and a `target_system_ref`, and a new **Target System** registry holds each client tenant's endpoint, OAuth config, platform version, capability state, and last pre-flight result. <Assumption>A new Target System registry is needed for the client-tenant inventory.</Assumption>
 
 ### 7.3 Data Flows
 
@@ -1307,7 +1307,7 @@ stateDiagram-v2
 
 ### 9.1 Performance
 
-- **Instance Commit generation:** Target &lt; 5 minutes for a standard work item (up to ~20 config artifacts). **[Assumption: Most work items involve 5-15 artifacts.]**
+- **Instance Commit generation:** Target &lt; 5 minutes for a standard work item (up to ~20 config artifacts). <Assumption>Most work items involve 5-15 artifacts.</Assumption>
 - **Pre-flight checks:** &lt; 30 seconds (4-5 REST API calls)
 - **Post-install validation:** &lt; 2 minutes per work item
 - **Concurrency:** Support parallel generation for multiple work items
@@ -1334,7 +1334,7 @@ stateDiagram-v2
 
 ### 9.5 Compliance & Constraints
 
-- **Instance Commit payload complexity**: the Commit Entry format varies by configuration type. Each artifact type has its own payload structure. **[Assumption: This mapping is the single hardest technical challenge in the project.]**
+- **Instance Commit payload complexity**: the Commit Entry format varies by configuration type. Each artifact type has its own payload structure. <Assumption>This mapping is the single hardest technical challenge in the project.</Assumption>
 - **Platform version sensitivity**: Instance Commit compatibility depends on target instance version. Instance Readiness Agent must validate.
 - **Capability dependencies**: generated Instance Commits should declare platform-capability prerequisites.
 - **Instance Commit scope**: must target the correct application scope on the client tenant.
@@ -1424,7 +1424,7 @@ Delivery follows the recommendation in [§6.4](#64-recommendation) (build Option
 _This FAQ doubles as a **question-index** into the document: each answer links to the section that covers it in full._
 
 **Q1: What specific data does the Auto Developer Agent need from the work-item record?**
-At minimum: `technical_guidance`, `acceptance_criteria`, `configuration_level`, `work_item_points`, `test_steps`, and the `target_system` reference. **[Assumption: The tech guidance format is consistent enough to parse programmatically.]**
+At minimum: `technical_guidance`, `acceptance_criteria`, `configuration_level`, `work_item_points`, `test_steps`, and the `target_system` reference. <Assumption>The tech guidance format is consistent enough to parse programmatically.</Assumption>
 → [§7.2 Data Model](#72-data-model-generalized-platform-neutral) · [§7.1 Components](#71-components)
 
 **Q2: How do we link to multiple client tenants?**
@@ -1432,7 +1432,7 @@ Via the Target System registry (Section 7.2). Each instance has its own entry wi
 → [§7.2 Data Model](#72-data-model-generalized-platform-neutral)
 
 **Q3: Which MCP server would we use?**
-For Option A, MCP is not required for the core flow. REST API integration (Table API + Metadata API) may suffice for read-only pre-flight and validation. **[Assumption: Direct REST is simpler than full MCP for Option A.]**
+For Option A, MCP is not required for the core flow. REST API integration (Table API + Metadata API) may suffice for read-only pre-flight and validation. <Assumption>Direct REST is simpler than full MCP for Option A.</Assumption>
 → [§6.2 Architecture Options](#62-architecture-options) · [§B.2 MCP Support. Both Client AND Server](#b2-mcp-support--both-client-and-server)
 
 **Q4: What should be done on the client tenant vs on the internal build instance?**
@@ -1449,7 +1449,7 @@ Incremental rollout:
 | v3 | Catalog items, variables, record producers |
 | v4 | Workflows, workflow-builder flows |
 
-**[Assumption: This prioritization aligns with developer frequency.]**
+<Assumption>This prioritization aligns with developer frequency.</Assumption>
 → [§6.2 Architecture Options](#62-architecture-options) · [§A.4 Key Observations](#a4-key-observations)
 
 ## 11. Revision Log

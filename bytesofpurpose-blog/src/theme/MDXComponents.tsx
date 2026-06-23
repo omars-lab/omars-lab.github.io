@@ -14,6 +14,7 @@ import Premium from '@site/src/components/Premium';
 import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
 import Mockup from '@site/src/components/Mockup';
 import Walkthrough from '@site/src/components/Walkthrough';
+import Assumption from '@site/src/components/Assumption';
 
 export default {
   // Reusing the default mapping
@@ -39,4 +40,6 @@ export default {
   // Scripted animated UX demo over a mockup: cursor + highlight + comment + click +
   // typed terminal, driven by a step array — shows the UX being USED.
   Walkthrough,
+  // Yellow inline highlight for [Assumption: …] markers (unvalidated premises to review).
+  Assumption,
 };

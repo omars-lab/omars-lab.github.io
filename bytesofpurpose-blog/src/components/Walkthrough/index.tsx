@@ -330,22 +330,35 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
         </div>
       </div>
 
-      {/* timeline: one dot per step (completed / active / upcoming), with the step's
-          caption as its tooltip, so the viewer sees where they are in the sequence. */}
-      <ol className={styles.timeline} aria-label="Walkthrough progress">
-        {steps.map((s, i) => (
-          <li
-            key={i}
-            className={clsx(
-              styles.tlDot,
-              i < activeStep && styles.tlDone,
-              i === activeStep && styles.tlActive
-            )}
-            title={s.say || `Step ${i + 1}`}
-            aria-current={i === activeStep ? 'step' : undefined}
-          />
-        ))}
-      </ol>
+      {/* timeline: a continuous rail with one dot per step at an even position; a fill
+          bar + a single marker that SLIDES to the active step, so the viewer follows one
+          moving "you are here" along the sequence. Dots are inset from both ends so the
+          first/last are centered, not clipped. */}
+      {(() => {
+        const n = steps.length;
+        const pct = (i: number) => (n <= 1 ? 50 : (i / (n - 1)) * 100);
+        const activePct = activeStep < 0 ? 0 : pct(activeStep);
+        return (
+          <div className={styles.timeline} aria-label="Walkthrough progress">
+            <div className={styles.tlRail} />
+            <div className={styles.tlFill} style={{width: `${activePct}%`}} />
+            {steps.map((s, i) => (
+              <span
+                key={i}
+                className={clsx(
+                  styles.tlDot,
+                  i < activeStep && styles.tlDone,
+                  i === activeStep && styles.tlActive
+                )}
+                style={{left: `${pct(i)}%`}}
+                title={s.say || `Step ${i + 1}`}
+                aria-current={i === activeStep ? 'step' : undefined}
+              />
+            ))}
+            <span className={styles.tlMarker} style={{left: `${activePct}%`}} />
+          </div>
+        );
+      })()}
 
       <div className={styles.controls}>
         <button
@@ -353,15 +366,19 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
           className={styles.playBtn}
           onClick={() => {
             if (playing) {
+              // PAUSE: stop the animation in place.
               clearTimers();
               setPlaying(false);
               loopingRef.current = false;
             } else {
+              // RESTART: the player isn't resumable mid-step (the sequence is imperative),
+              // so this honestly restarts from the top — which loop()/play() already does.
+              loopingRef.current = false;
               loop();
             }
           }}
-          aria-label={playing ? 'Pause walkthrough' : 'Play walkthrough'}>
-          {playing ? '❚❚ Pause' : '▶ Play'}
+          aria-label={playing ? 'Pause walkthrough' : 'Restart walkthrough'}>
+          {playing ? '❚❚ Pause' : '↺ Restart'}
         </button>
         <span className={styles.caption}>{caption}</span>
       </div>

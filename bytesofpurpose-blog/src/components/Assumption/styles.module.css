@@ -1,0 +1,37 @@
+/* Assumption — amber inline highlight flagging an unvalidated premise for review. */
+
+.assumption {
+  background: color-mix(in srgb, #f6c343 38%, transparent);
+  border-bottom: 2px solid #e0a000;
+  border-radius: 3px;
+  padding: 0.05rem 0.3rem;
+  color: inherit; /* keep the page text color; the highlight carries the signal */
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  background: #e0a000;
+  color: #2b2200;
+  font-size: 0.7em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: baseline;
+}
+
+.body {
+  font-style: italic;
+}
+
+/* Dark mode: a deeper amber that still reads as "highlighted to review". */
+[data-theme='dark'] .assumption {
+  background: color-mix(in srgb, #f6c343 22%, transparent);
+  border-bottom-color: #f6c343;
+}
+[data-theme='dark'] .tag {
+  background: #f6c343;
+  color: #241c00;
+}

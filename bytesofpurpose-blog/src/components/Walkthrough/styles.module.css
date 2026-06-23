@@ -164,65 +164,67 @@
   color: #e6e6e6;
 }
 
-/* timeline progress dots — one per step, joined by a hairline */
+/* timeline — a continuous rail with evenly-placed step dots, a progress fill, and a single
+   marker that SLIDES (with a slight bounce) to the active step. The inner band is inset
+   from both ends (left/right margin = the dot radius) so the first/last dots are centered
+   on the rail, not clipped at the edge. Dots/fill/marker are positioned by `left: %`. */
 .timeline {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin: 0.7rem 0 0;
-  padding: 0;
-}
-.tlDot {
   position: relative;
-  flex: 1 1 auto;
-  height: 9px;
-  display: flex;
-  align-items: center;
+  height: 16px;
+  margin: 0.8rem 7px 0; /* 7px end-inset centers the first/last dot */
 }
-.tlDot::before {
-  /* the connecting line segment (left side of each dot) */
-  content: '';
+.tlRail {
   position: absolute;
+  top: 50%;
   left: 0;
-  right: 50%;
+  right: 0;
   height: 2px;
+  transform: translateY(-50%);
   background: var(--ifm-color-emphasis-300);
 }
-.tlDot:first-child::before {
-  display: none;
+.tlFill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--ifm-color-primary);
+  transition: width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1); /* slight overshoot = bounce */
 }
-.tlDot::after {
-  /* the dot itself */
-  content: '';
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
+.tlDot {
+  position: absolute;
+  top: 50%;
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--ifm-color-emphasis-300);
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
-.tlDone::before {
+.tlDone {
   background: var(--ifm-color-primary);
 }
-.tlDone::after {
+.tlActive {
   background: var(--ifm-color-primary);
 }
-.tlActive::before {
+/* the sliding "you are here" marker — travels between dot positions with a bounce */
+.tlMarker {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
   background: var(--ifm-color-primary);
-}
-.tlActive::after {
-  background: var(--ifm-color-primary);
-  width: 13px;
-  height: 13px;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ifm-color-primary) 24%, transparent);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  transition: left 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tlActive::after {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
+  .tlFill,
+  .tlMarker {
+    transition: none;
   }
 }
 
