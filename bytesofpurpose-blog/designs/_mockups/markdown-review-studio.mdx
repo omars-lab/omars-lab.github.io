@@ -26,21 +26,26 @@ export default function Mockups() {
       <h2>What it looks like</h2>
 
       <Walkthrough
-        claude={{
-          prompt: 'see the latest feedback on review.studio/doc/markdown-review-hld',
-          steps: [
-            '● reading the open comment',
-            '● locating "unanchored prose" in the doc',
-            '● rewriting the passage to name the anchor',
-            '✓ committed the edit to git',
-          ],
-        }}
         steps={[
-          {type: 'dragSelect', target: '#wt-sentence', say: 'The reviewer selects a phrase'},
-          {type: 'type', target: '#wt-commentbox', text: 'Anchor this to the exact range?', say: 'and types an anchored comment'},
-          {type: 'click', target: '#wt-fix', say: 'then asks Claude to fix it'},
-          {type: 'scene', to: 'claude', say: 'Claude reads the feedback and edits the doc'},
-          {type: 'scene', to: 'app', say: 'The edit lands back in the document', hold: 1400},
+          {type: 'scene', to: 'claude', say: 'Claude opens the studio for you to review the plan',
+            prompt: 'review the plan in markdown studio',
+            tools: [
+              {verb: 'Open', target: 'Markdown Studio', note: 'opening the doc for review'},
+              {verb: 'Read', target: 'markdown-review-hld.md'},
+            ]},
+          {type: 'scene', to: 'app', say: 'You review it in the browser', hold: 400},
+          {type: 'dragSelect', target: '#wt-sentence', say: 'select a phrase'},
+          {type: 'type', target: '#wt-commentbox', text: 'Anchor this to the exact range?', say: 'leave an anchored comment'},
+          {type: 'click', target: '#wt-fix', say: 'and hand it back to Claude'},
+          {type: 'scene', to: 'claude', say: 'Claude continues the session on your feedback',
+            prompt: 'continue',
+            intro: 'Feedback received. Applying your changes now...',
+            tools: [
+              {verb: 'Read', target: 'open comments', note: '1 anchored comment'},
+              {verb: 'Update', target: 'markdown-review-hld.md', note: 'rewriting the passage'},
+              {verb: 'Commit', target: 'git', note: 'durable iteration'},
+              {target: 'continued', done: true},
+            ]},
         ]}
       >
         <Mockup chrome="browser" title="Review Studio" url="review.studio/doc/markdown-review-hld" caption="Select a phrase, leave an anchored comment, and Claude fixes the doc.">

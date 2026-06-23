@@ -38,6 +38,16 @@ import styles from './styles.module.css';
  *   </Walkthrough>
  */
 
+// A Claude-Code tool-use line: `● Verb(target)  note` (the real-CLI look).
+export interface ClaudeTool {
+  verb: string; // e.g. 'Open', 'Read', 'Update'
+  target: string; // e.g. 'Markdown Studio', 'plan.md'
+  note?: string; // dim trailing note
+  done?: boolean; // render as a ✓ result line instead of a ● tool line
+}
+
+// A `scene` step toward 'claude' carries its OWN beat (prompt + tool-use lines), so a
+// walkthrough can have multiple distinct Claude beats (e.g. "open studio" then "continue").
 export type WalkStep =
   | {type: 'move'; target: string; say?: string; hold?: number}
   | {type: 'highlight'; target: string; say?: string; hold?: number}
@@ -45,17 +55,19 @@ export type WalkStep =
   | {type: 'type'; target: string; text: string; say?: string; hold?: number}
   | {type: 'comment'; target: string; text: string; say?: string; hold?: number}
   | {type: 'click'; target: string; say?: string; hold?: number}
-  | {type: 'scene'; to: 'app' | 'claude'; say?: string; hold?: number};
-
-export interface ClaudeScene {
-  prompt: string;
-  steps: string[];
-}
+  | {
+      type: 'scene';
+      to: 'app' | 'claude';
+      prompt?: string; // claude beats: the typed prompt line
+      intro?: string; // claude beats: a human assistant line shown BEFORE the tools
+      tools?: ClaudeTool[]; // claude beats: the streamed tool-use lines
+      say?: string;
+      hold?: number;
+    };
 
 export interface WalkthroughProps {
   children: ReactNode; // the app scene (a <Mockup>)
   steps: WalkStep[];
-  claude?: ClaudeScene; // the built-in Claude CLI scene
   stepHold?: number;
   autoPlay?: boolean;
   className?: string;
@@ -65,7 +77,6 @@ export interface WalkthroughProps {
 const Walkthrough: React.FC<WalkthroughProps> = ({
   children,
   steps,
-  claude,
   stepHold = 1000,
   autoPlay = true,
   className,
@@ -78,9 +89,15 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
   const [typed, setTyped] = useState<{sel: string; text: string} | null>(null);
   const [scene, setScene] = useState<'app' | 'claude'>('app');
   const [claudePrompt, setClaudePrompt] = useState('');
-  const [claudeLines, setClaudeLines] = useState<string[]>([]);
+  const [claudeIntro, setClaudeIntro] = useState('');
+  const [claudeTools, setClaudeTools] = useState<ClaudeTool[]>([]);
   const [caption, setCaption] = useState('');
   const [playing, setPlaying] = useState(false);
+  const [activeStep, setActiveStep] = useState(-1);
+
+  // does the walkthrough OPEN on a claude beat? (then the initial scene is claude)
+  const opensOnClaude =
+    steps[0]?.type === 'scene' && steps[0].to === 'claude';
 
   const reduced =
     typeof window !== 'undefined' &&
@@ -114,7 +131,8 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
     setHl(null);
     setTyped(null);
     setClaudePrompt('');
-    setClaudeLines([]);
+    setClaudeIntro('');
+    setClaudeTools([]);
   };
 
   const runStep = useCallback(
@@ -125,18 +143,25 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
         // crossfade scenes
         setScene(step.to);
         await wait(450);
-        if (step.to === 'claude' && claude) {
-          // type the prompt letter-by-letter, then stream the agent steps
+        if (step.to === 'claude') {
+          // each claude beat: type the prompt, then (optional) a human assistant line, then
+          // stream the tool-use lines — so it reads like a real session, not a tool dump.
           setClaudePrompt('');
-          for (let i = 1; i <= claude.prompt.length; i++) {
-            setClaudePrompt(claude.prompt.slice(0, i));
-            await wait(22);
+          setClaudeIntro('');
+          setClaudeTools([]);
+          const prompt = step.prompt || '';
+          for (let i = 1; i <= prompt.length; i++) {
+            setClaudePrompt(prompt.slice(0, i));
+            await wait(20);
           }
           await wait(300);
-          setClaudeLines([]);
-          for (const line of claude.steps) {
-            setClaudeLines((prev) => [...prev, line]);
-            await wait(480);
+          if (step.intro) {
+            setClaudeIntro(step.intro);
+            await wait(700);
+          }
+          for (const tool of step.tools || []) {
+            setClaudeTools((prev) => [...prev, tool]);
+            await wait(520);
           }
         }
         return;
@@ -184,21 +209,23 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
         return;
       }
     },
-    [rectOf, claude, reduced]
+    [rectOf, reduced]
   );
 
   const play = useCallback(async () => {
     if (!steps.length) return;
     setPlaying(true);
-    setScene('app');
+    // start on whichever scene the first step implies (claude if it opens on a claude beat)
+    setScene(opensOnClaude ? 'claude' : 'app');
     resetScene();
     await wait(300);
-    for (const step of steps) {
-      await runStep(step);
-      await wait(step.hold ?? stepHold);
+    for (let i = 0; i < steps.length; i++) {
+      setActiveStep(i);
+      await runStep(steps[i]);
+      await wait(steps[i].hold ?? stepHold);
     }
     setPlaying(false);
-  }, [steps, runStep, stepHold]);
+  }, [steps, runStep, stepHold, opensOnClaude]);
 
   const loopingRef = useRef(false);
   const inView = useRef(false);
@@ -277,18 +304,48 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
           <div className={styles.claudeBody}>
             <div className={styles.claudePrompt}>
               <span className={styles.caret}>›</span> {claudePrompt}
-              {scene === 'claude' && claudePrompt.length < (claude?.prompt.length ?? 0) && (
-                <span className={styles.blink}>▋</span>
-              )}
+              {scene === 'claude' &&
+                claudePrompt &&
+                !claudeIntro &&
+                claudeTools.length === 0 && <span className={styles.blink}>▋</span>}
             </div>
-            {claudeLines.map((l, i) => (
-              <div key={i} className={styles.claudeLine}>
-                {l}
+            {claudeIntro && <div className={styles.claudeIntro}>{claudeIntro}</div>}
+            {claudeTools.map((t, i) => (
+              <div
+                key={i}
+                className={t.done ? styles.claudeDone : styles.claudeTool}>
+                <span className={styles.toolGlyph}>{t.done ? '✓' : '●'}</span>{' '}
+                {t.done ? (
+                  <span>{t.target}</span>
+                ) : (
+                  <>
+                    <span className={styles.toolVerb}>{t.verb}</span>
+                    <span className={styles.toolTarget}>({t.target})</span>
+                    {t.note && <span className={styles.toolNote}> {t.note}</span>}
+                  </>
+                )}
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* timeline: one dot per step (completed / active / upcoming), with the step's
+          caption as its tooltip, so the viewer sees where they are in the sequence. */}
+      <ol className={styles.timeline} aria-label="Walkthrough progress">
+        {steps.map((s, i) => (
+          <li
+            key={i}
+            className={clsx(
+              styles.tlDot,
+              i < activeStep && styles.tlDone,
+              i === activeStep && styles.tlActive
+            )}
+            title={s.say || `Step ${i + 1}`}
+            aria-current={i === activeStep ? 'step' : undefined}
+          />
+        ))}
+      </ol>
 
       <div className={styles.controls}>
         <button

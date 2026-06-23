@@ -202,7 +202,7 @@ test.describe('Imported co-design posts render in dev', () => {
     });
   }
 
-  test('markdown-review: the Walkthrough plays the full fix-with-Claude flow', async ({
+  test('markdown-review: the Walkthrough plays the bracketed Claude-Code flow', async ({
     page,
   }) => {
     await page.goto(POSTS.markdownReview, { waitUntil: 'domcontentloaded' });
@@ -210,20 +210,23 @@ test.describe('Imported co-design posts render in dev', () => {
     const wt = page.locator('[class*="walkthrough"]').first();
     await expect(wt).toBeVisible();
     await wt.scrollIntoViewIfNeeded();
-    // "Fix with Claude" is the button label (v2).
+    // "Fix with Claude" is the button label.
     expect(await page.locator('button', { hasText: 'Fix with Claude' }).count()).toBe(1);
-    // sample across a full playback and assert each scripted step fires:
-    //  - cursor moves between steps
-    //  - drag-select grows a highlight (>1 distinct width)
-    //  - the comment is typed letter-by-letter (>1 distinct length in #wt-commentbox)
-    //  - the scene crossfades to the Claude CLI scene, whose steps stream out
+    // a horizontal timeline of step-dots is present.
+    expect(await wt.locator('[class*="tlDot"]').count()).toBeGreaterThan(1);
+    // sample across a full playback and assert each scripted beat fires:
+    //  - cursor moves; drag-select grows a highlight; the comment types letter-by-letter
+    //  - the Claude CLI scene appears with TOOL-USE lines (● Verb(target)) and a ✓ done
+    //  - the timeline's active dot advances through positions (the bracketed arc)
     const seen = await page.evaluate(async () => {
       const cursors = new Set<string>();
       const hlWidths = new Set<number>();
       const commentLens = new Set<number>();
+      const activeDots = new Set<number>();
       let claudeScene = false;
-      let claudeLines = 0;
-      for (let i = 0; i < 24; i++) {
+      let toolLines = 0;
+      let doneLines = 0;
+      for (let i = 0; i < 28; i++) {
         const cur = document.querySelector('[class*="cursor"]') as HTMLElement | null;
         if (cur) cursors.add(getComputedStyle(cur).transform);
         const hl = document.querySelector('[class*="highlight"]') as HTMLElement | null;
@@ -233,10 +236,17 @@ test.describe('Imported co-design posts render in dev', () => {
         const scenes = Array.from(document.querySelectorAll('[class*="scene"]'));
         const claude = scenes.find((el) => /claude/.test(el.className)) as HTMLElement | null;
         if (claude && parseFloat(getComputedStyle(claude).opacity) > 0.5) claudeScene = true;
-        claudeLines = Math.max(
-          claudeLines,
-          document.querySelectorAll('[class*="claudeLine"]').length
+        toolLines = Math.max(
+          toolLines,
+          document.querySelectorAll('[class*="claudeTool"]').length
         );
+        doneLines = Math.max(
+          doneLines,
+          document.querySelectorAll('[class*="claudeDone"]').length
+        );
+        const dots = Array.from(document.querySelectorAll('[class*="tlDot"]'));
+        const ai = dots.findIndex((d) => /tlActive/.test(d.className));
+        if (ai >= 0) activeDots.add(ai);
         await new Promise((r) => setTimeout(r, 800));
       }
       return {
@@ -244,14 +254,18 @@ test.describe('Imported co-design posts render in dev', () => {
         highlightWidths: hlWidths.size,
         commentLengths: commentLens.size,
         claudeScene,
-        claudeLines,
+        toolLines,
+        doneLines,
+        activeDotPositions: activeDots.size,
       };
     });
     expect(seen.cursorPositions, 'cursor moves between steps').toBeGreaterThan(1);
     expect(seen.highlightWidths, 'drag-select grows the highlight').toBeGreaterThan(1);
     expect(seen.commentLengths, 'comment is typed letter-by-letter').toBeGreaterThan(1);
-    expect(seen.claudeScene, 'crossfades to the Claude CLI scene').toBe(true);
-    expect(seen.claudeLines, 'Claude steps stream out').toBeGreaterThan(0);
+    expect(seen.claudeScene, 'shows the Claude CLI scene').toBe(true);
+    expect(seen.toolLines, 'Claude tool-use lines (● Verb(target)) stream out').toBeGreaterThan(0);
+    expect(seen.doneLines, 'the continue beat ends with a ✓ done line').toBeGreaterThan(0);
+    expect(seen.activeDotPositions, 'the timeline advances through steps').toBeGreaterThan(1);
   });
 
   test('markdown-review: the architecture-beta diagram renders with iconify logos icons', async ({

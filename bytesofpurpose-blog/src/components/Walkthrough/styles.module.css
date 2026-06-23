@@ -35,29 +35,44 @@
   z-index: 5;
 }
 
-/* animated pointer cursor */
+/* animated pointer cursor — a high-contrast TEAL pointer (distinct from the terracotta
+   brand UI so it never blends into a button) sitting inside a translucent halo so it reads
+   as a moving cursor over any background. --wt-cursor is the contrast hue. */
 .cursor {
+  --wt-cursor: #0e7490; /* teal — contrasts the terracotta/cream palette */
   position: absolute;
   top: 0;
   left: 0;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   margin: -2px 0 0 -2px;
   pointer-events: none;
   z-index: 9;
   transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
-  background: var(--ifm-color-primary);
+  background: var(--wt-cursor);
   clip-path: polygon(0 0, 0 75%, 28% 55%, 50% 100%, 64% 90%, 42% 48%, 75% 45%);
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+/* translucent halo circle behind the pointer — keeps it visible on busy/terracotta areas */
+.cursor::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: -5px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--wt-cursor) 22%, transparent);
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--wt-cursor) 45%, transparent);
 }
 .cursor.clicking::after {
   content: '';
   position: absolute;
-  left: -8px;
+  left: -10px;
   top: -8px;
-  width: 28px;
-  height: 28px;
-  border: 2px solid var(--ifm-color-primary);
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--wt-cursor);
   border-radius: 50%;
   animation: wtRipple 0.4s ease-out;
 }
@@ -111,14 +126,104 @@
   color: var(--ifm-color-primary-lightest, #e4673f);
   font-weight: 700;
 }
-.claudeLine {
-  color: #cde7cf;
+/* a human assistant line before the tool calls (makes it read like a real reply) */
+.claudeIntro {
+  color: #e6e6e6;
+  margin: 0.1rem 0 0.5rem;
+  animation: wtFadeIn 0.25s ease;
+}
+
+/* Claude-Code tool-use lines: ● Verb(target)  note  /  ✓ result */
+.claudeTool,
+.claudeDone {
   white-space: pre-wrap;
   animation: wtFadeIn 0.25s ease;
+  margin: 0.1rem 0;
+}
+.toolGlyph {
+  color: var(--ifm-color-primary-lightest, #e4673f);
+}
+.claudeDone .toolGlyph {
+  color: #79b46a;
+}
+.claudeDone {
+  color: #cde7cf;
+}
+.toolVerb {
+  color: #f4f0e8;
+  font-weight: 600;
+}
+.toolTarget {
+  color: #9ec5e6;
+}
+.toolNote {
+  color: #9a9a9a;
 }
 .blink {
   animation: wtBlink 1s steps(2, start) infinite;
   color: #e6e6e6;
+}
+
+/* timeline progress dots — one per step, joined by a hairline */
+.timeline {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0.7rem 0 0;
+  padding: 0;
+}
+.tlDot {
+  position: relative;
+  flex: 1 1 auto;
+  height: 9px;
+  display: flex;
+  align-items: center;
+}
+.tlDot::before {
+  /* the connecting line segment (left side of each dot) */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 50%;
+  height: 2px;
+  background: var(--ifm-color-emphasis-300);
+}
+.tlDot:first-child::before {
+  display: none;
+}
+.tlDot::after {
+  /* the dot itself */
+  content: '';
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ifm-color-emphasis-300);
+  z-index: 1;
+}
+.tlDone::before {
+  background: var(--ifm-color-primary);
+}
+.tlDone::after {
+  background: var(--ifm-color-primary);
+}
+.tlActive::before {
+  background: var(--ifm-color-primary);
+}
+.tlActive::after {
+  background: var(--ifm-color-primary);
+  width: 13px;
+  height: 13px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tlActive::after {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent);
+  }
 }
 
 /* ---- controls ---- */
@@ -165,7 +270,8 @@
   .cursor {
     transition: none;
   }
-  .claudeLine,
+  .claudeTool,
+  .claudeDone,
   .cursor.clicking::after,
   .blink {
     animation: none;

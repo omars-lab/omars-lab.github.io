@@ -19,16 +19,20 @@ components is the `upgrade-post` skill; this skill is the deep-dive on Walkthrou
 
 ```mdx
 <Walkthrough
-  claude={{
-    prompt: 'see the latest feedback on review.studio/doc/hld',
-    steps: ['reading the open comment', 'rewriting the passage', 'committed to git'],
-  }}
   steps={[
-    {type: 'dragSelect', target: '#sentence',  say: 'Select a phrase'},
-    {type: 'type',       target: '#commentbox', text: 'Anchor this to the exact range?', say: 'Type a comment'},
-    {type: 'click',      target: '#fix',        say: 'Fix with Claude'},
-    {type: 'scene',      to: 'claude',          say: 'Claude reads the feedback and edits'},
-    {type: 'scene',      to: 'app',             say: 'The edit lands back in the doc', hold: 1400},
+    {type: 'scene', to: 'claude', say: 'Claude opens the tool for review',
+      prompt: 'review the plan in markdown studio',
+      tools: [{verb: 'Open', target: 'Markdown Studio', note: 'for review'},
+              {verb: 'Read', target: 'doc.md'}]},
+    {type: 'scene',      to: 'app',             say: 'You review it in the browser'},
+    {type: 'dragSelect', target: '#sentence',  say: 'select a phrase'},
+    {type: 'type',       target: '#commentbox', text: 'Anchor this to the exact range?', say: 'leave a comment'},
+    {type: 'click',      target: '#fix',        say: 'hand it to Claude'},
+    {type: 'scene', to: 'claude', say: 'Claude continues on your feedback',
+      prompt: 'continue',
+      intro: 'Feedback received. Applying your changes now...',
+      tools: [{verb: 'Update', target: 'doc.md', note: 'rewriting'},
+              {target: 'continued', done: true}]},
   ]}
 >
   <Mockup chrome="browser" title="Review Studio" url="review.studio/doc/hld">
@@ -50,19 +54,37 @@ components is the `upgrade-post` skill; this skill is the deep-dive on Walkthrou
 | `type` | moves to the target, then types `text` letter-by-letter INTO it (mirrors into the element's textContent) | `target`, `text` |
 | `comment` | moves to the target's edge and drops `text` as the box content at once | `target`, `text` |
 | `click` | moves to the target's center and plays a click ripple | `target` |
-| `scene` | crossfades to `'app'` or `'claude'`; on `'claude'` it types the prompt + streams the steps | `to` |
+| `scene` | crossfades to `'app'` or `'claude'`; a `'claude'` step carries its OWN beat (`prompt`, optional `intro`, `tools`) | `to` |
 
 Every step takes an optional `say` (the caption shown under the player) and `hold` (ms to
 pause after the step; default ~1000).
 
-## The Claude scene
+## The Claude scene (tool-use beats — bracket the app flow)
 
-`claude={{prompt, steps}}` drives the built-in terminal scene (a dark "claude code" panel).
-On a `{type:'scene', to:'claude'}` step it types `prompt` in letter-by-letter (with a blinking
-caret) then streams each `steps` line. Lead the steps with `●` for tool/thinking lines and a
-final `✓` for the result, e.g. `['● reading the open comment', '✓ committed to git']`. The two
-scenes grid-stack in one viewport cell, so the Claude scene REPLACES the mock in place (it
-does not render stacked below it).
+A `{type:'scene', to:'claude', …}` step renders the built-in dark "claude code" terminal,
+and each such step is its OWN beat — so you can have MULTIPLE Claude beats (e.g. "open the
+studio" up front, then "continue" after the review). A beat carries:
+- `prompt` — typed in letter-by-letter with a blinking caret (e.g. `'continue'`).
+- `intro?` — an optional human assistant line shown BEFORE the tools, so it reads like a real
+  reply (e.g. `'Feedback received. Applying your changes now...'`).
+- `tools` — Claude-Code tool-use lines streamed one at a time, each
+  `{verb, target, note?, done?}`. A normal line renders `● Verb(target)  note`; a
+  `{target, done: true}` line renders `✓ target` (the green result). Example:
+  `[{verb:'Open', target:'Markdown Studio', note:'for review'}, {verb:'Update', target:'doc.md'}, {target:'continued', done:true}]`.
+
+**Bracket the story.** If the FIRST step is a `scene → claude`, the walkthrough OPENS on the
+Claude scene. The canonical arc is `claude(open) → app(review) → claude(continue) → loop` —
+Claude opens the tool, the human reviews in the browser, Claude continues on the feedback.
+The two scenes grid-stack in one viewport cell, so a Claude beat REPLACES the app in place
+(never stacked under it).
+
+## Cursor + timeline
+
+- The cursor is a **teal pointer in a translucent halo** (`--wt-cursor`), deliberately a
+  different hue from the terracotta brand UI so it never blends into a button.
+- A **timeline dot strip** under the viewport shows one dot per step (completed = filled,
+  active = enlarged + haloed, upcoming = dim); each dot's `title` is the step's `say`. It
+  advances as the walkthrough plays, so the viewer sees the sequence + where they are.
 
 ## Marking targets
 
