@@ -296,6 +296,148 @@ function highlightAssumptions(body) {
 }
 
 // ---------------------------------------------------------------------------
+// classify each mermaid block by semantic type (signal-priority, not structural)
+// ---------------------------------------------------------------------------
+
+// Heading-keyword -> type for plain graph/flowchart blocks. Order matters (first match).
+const HEADING_TYPE = [
+  [/use[-\s]?case|user[-\s]?profil|personas?|system users/i, 'usecase'],
+  [/context|system boundar|deployment topolog|how it'?s wired/i, 'context'],
+  [/option [a-c0-9]\b|components?|system\s*\/\s*component|architecture/i, 'arch'],
+  [/customer journey|data flow|pipeline|target state|works today|workflow|how .* optimiz/i, 'flow'],
+];
+
+// Classify ONE block given its declaration line + the nearest preceding heading text.
+// Returns {type, confidence}. Declaration wins (a typed diagram is unambiguous); else the
+// heading decides; else unknown (the skill will ask). Structural fingerprinting is
+// deliberately NOT used — the survey showed it misfires (ER=0 nodes, subgraphs, persona lists).
+function classifyDiagram(decl, heading) {
+  const d = decl.trim().toLowerCase();
+  if (d.startsWith('erdiagram')) return {type: 'er', confidence: 'high'};
+  if (d.startsWith('sequencediagram')) return {type: 'sequence', confidence: 'high'};
+  if (d.startsWith('statediagram')) return {type: 'state', confidence: 'high'};
+  if (d.startsWith('architecture-beta')) return {type: 'arch', confidence: 'high'};
+  if (d.startsWith('gantt')) return {type: 'gantt', confidence: 'high'};
+  if (d.startsWith('mindmap')) return {type: 'mindmap', confidence: 'high'};
+  if (d.startsWith('timeline')) return {type: 'timeline', confidence: 'high'};
+  if (d.startsWith('quadrantchart')) return {type: 'quadrant', confidence: 'high'};
+  if (d.startsWith('gitgraph')) return {type: 'gitgraph', confidence: 'high'};
+  // graph / flowchart: lean on the heading
+  if (/^(graph|flowchart)\b/.test(d)) {
+    for (const [re, type] of HEADING_TYPE) {
+      if (re.test(heading)) return {type, confidence: 'medium'};
+    }
+    return {type: 'flow', confidence: 'low'}; // default, but low -> the skill may ask
+  }
+  return {type: 'unknown', confidence: 'low'};
+}
+
+// Walk the body, classify every mermaid block, return [{index, type, confidence, heading}].
+// `overrides` (from the post's frontmatter manifest) pins a prior/answered decision by index.
+function classifyDiagrams(body, overrides = {}) {
+  const lines = body.split('\n');
+  const out = [];
+  let heading = '';
+  let i = 0;
+  let idx = 0;
+  while (i < lines.length) {
+    const h = lines[i].match(/^#{1,6}\s+(.*)$/) || lines[i].match(/^\*\*([^*]+)\*\*\s*[—:-]/);
+    if (h) heading = (h[1] || '').trim();
+    if (/^\s*```mermaid\s*$/.test(lines[i])) {
+      // the declaration is the first NON-comment line in the block (skip %% directives)
+      let dj = i + 1;
+      while (dj < lines.length && /^\s*%%/.test(lines[dj])) dj++;
+      const decl = (lines[dj] || '').trim();
+      const c = classifyDiagram(decl, heading);
+      const type = overrides[idx] || c.type;
+      out.push({index: idx, type, confidence: overrides[idx] ? 'pinned' : c.confidence, heading, declStart: i});
+      idx++;
+      // skip to end of fence
+      i += 1;
+      while (i < lines.length && !/^\s*```\s*$/.test(lines[i])) i++;
+    }
+    i++;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// restructure a use-case diagram to canonical form (actors + oval use cases)
+// ---------------------------------------------------------------------------
+
+// Persona-list blocks (each node = `ID["<emoji> Name<br/>wants: goal"]`, no edges) are
+// rendered as boxes but should be a USE-CASE diagram: a 👤 actor connected to a stadium-
+// oval use case (their goal), inside a system boundary. Rewrite the FIRST mermaid block
+// flagged `usecase` in `types`. Conservative: only transforms persona/"wants:" nodes; if
+// the block already has edges/ovals we leave its structure (just ensure actor emoji).
+function restructureUseCase(body, types) {
+  const target = types.find((t) => t.type === 'usecase');
+  if (!target) return {body, restructured: false};
+
+  const lines = body.split('\n');
+  // find the target block's fence range
+  let seen = -1;
+  let start = -1;
+  let end = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*```mermaid\s*$/.test(lines[i])) {
+      seen++;
+      if (seen === target.index) {
+        start = i;
+        for (let j = i + 1; j < lines.length; j++) {
+          if (/^\s*```\s*$/.test(lines[j])) {
+            end = j;
+            break;
+          }
+        }
+        break;
+      }
+    }
+  }
+  if (start === -1 || end === -1) return {body, restructured: false};
+
+  const inner = lines.slice(start + 1, end);
+  // parse persona nodes: ID["<label, may contain <br/> and 'wants:'>"]
+  const nodeRe = /^\s*([A-Za-z0-9_]+)\["([\s\S]*?)"\]\s*$/;
+  const personas = [];
+  let hadEdges = false;
+  for (const l of inner) {
+    if (/-->|---|-\.->|==>/.test(l)) hadEdges = true;
+    const m = l.match(nodeRe);
+    if (m) {
+      const id = m[1];
+      const raw = m[2];
+      // split "Name ... wants: goal" — the name is the first segment, goal after 'wants:'
+      const wantsSplit = raw.split(/<br\s*\/?>\s*wants:\s*/i);
+      const name = wantsSplit[0].replace(/<br\s*\/?>/gi, ' ').trim();
+      const goal = wantsSplit[1] ? wantsSplit[1].replace(/<br\s*\/?>/gi, ' ').trim() : '';
+      personas.push({id, name, goal});
+    }
+  }
+  // only restructure the persona-list shape (nodes with 'wants:' goals, no edges)
+  const withGoals = personas.filter((p) => p.goal);
+  if (hadEdges || withGoals.length < 2) return {body, restructured: false};
+
+  // build canonical use-case mermaid: actors --- (goal oval) inside a System subgraph
+  let dj = start + 1;
+  while (dj < end && /^\s*%%/.test(lines[dj])) dj++;
+  const decl = lines[dj].trim().startsWith('flowchart') ? 'flowchart LR' : 'graph LR';
+  const rebuilt = [decl, '  subgraph system[System]'];
+  for (const p of withGoals) {
+    // ensure the actor label leads with a person glyph (keep an existing emoji if present)
+    const hasEmoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(p.name);
+    const actorLabel = hasEmoji ? p.name : `👤 ${p.name}`;
+    rebuilt.push(`    ${p.id}["${actorLabel}"]`);
+    rebuilt.push(`    ${p.id}uc(["${p.goal}"])`);
+  }
+  rebuilt.push('  end');
+  for (const p of withGoals) rebuilt.push(`  ${p.id} --- ${p.id}uc`);
+
+  const next = [...lines.slice(0, start + 1), ...rebuilt, ...lines.slice(end)];
+  return {body: next.join('\n'), restructured: true, count: withGoals.length};
+}
+
+// ---------------------------------------------------------------------------
 // strip hardcoded diagram colors (let the mermaid light/dark theme control them)
 // ---------------------------------------------------------------------------
 
@@ -595,8 +737,20 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
   const dd = deEmDashBody(adm.body);
   // 3) rewrite cross-doc links
   const lk = rewriteLinks(dd.body, idMap);
+  // 3b) CLASSIFY every mermaid block (manifest), honoring any pinned types from the
+  //     existing post's frontmatter `diagrams` manifest (so answered decisions stick).
+  const pinned = {};
+  const prevManifest = existingFile && existingFile.data && existingFile.data.diagrams;
+  if (Array.isArray(prevManifest)) {
+    prevManifest.forEach((d, i) => {
+      if (d && d.type && d.pinned) pinned[i] = d.type;
+    });
+  }
+  const diagramTypes = classifyDiagrams(lk.body, pinned);
+  // 3c) RESTRUCTURE use-case persona-list diagrams to canonical actor+oval form
+  const uc = restructureUseCase(lk.body, diagramTypes);
   // 4) strip hardcoded diagram colors (let the mermaid light/dark theme control them)
-  const sc = stripDiagramColors(lk.body);
+  const sc = stripDiagramColors(uc.body);
   // 5) highlight [Assumption: …] markers for review (amber <Assumption> wrap)
   const asm = highlightAssumptions(sc.body);
   // 6) animate the first mermaid diagram (opt-in CSS wrapper)
@@ -641,6 +795,19 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
   const mockups = existingFile && existingFile.data.mockups;
   if (mockups) fm.mockups = mockups;
 
+  // DIAGRAM MANIFEST: record each mermaid block's inferred type + confidence so re-imports
+  // are deterministic and the skill knows which are AMBIGUOUS (low-confidence) to ask about.
+  // A `pinned: true` entry (set when the user answered a prompt) overrides inference forever.
+  fm.diagrams = diagramTypes.map((d) => {
+    const prev = Array.isArray(prevManifest) ? prevManifest[d.index] : null;
+    return {
+      type: d.type,
+      confidence: d.confidence,
+      heading: d.heading || '',
+      ...(prev && prev.pinned ? {pinned: true} : {}),
+    };
+  });
+
   // ensure a truncate marker after the first paragraph if none present
   if (!/<!--\s*truncate\s*-->|\{\/\*\s*truncate\s*\*\/\}/.test(body)) {
     // insert after the first non-empty prose paragraph following the H1
@@ -666,6 +833,9 @@ function renderPost(plan, idMap, sidebarPosition, existingFile) {
     admonitions: adm,
     animated: anim.animated,
     assumptions: asm.wrapped,
+    diagrams: diagramTypes,
+    ucRestructured: uc.restructured ? uc.count : 0,
+    ambiguous: diagramTypes.filter((d) => d.confidence === 'low').length,
   };
 }
 
@@ -765,8 +935,8 @@ function main() {
       (e) => e.data && e.data.source && e.data.source.id === plan.id
     );
     const sidebarPos = match ? match.data.sidebar_position : nextPos;
-    const {file, fm, stats, links, footnotes, admonitions, animated, assumptions} =
-      renderPost(plan, idMap, sidebarPos, match);
+    const r = renderPost(plan, idMap, sidebarPos, match);
+    const {file, fm, stats, links, footnotes, admonitions, animated, assumptions} = r;
 
     const outName = match ? match.file : postFilename(plan);
     const outPath = path.join(DESIGNS, outName);
@@ -777,7 +947,8 @@ function main() {
       `em-dash prose:${stats.prose} fenced:${stats.fenced}, ` +
       `links rewritten:${links.rewritten} delinked:${links.delinked}, ` +
       `footnotes:${footnotes.defs} admonitions:${admonitions.converted} ` +
-      `animated:${animated ? 'yes' : 'no'} assumptions:${assumptions})`;
+      `animated:${animated ? 'yes' : 'no'} assumptions:${assumptions} ` +
+      `diagrams:${r.diagrams.length} usecase-restructured:${r.ucRestructured} ambiguous:${r.ambiguous})`;
 
     if (DRY) {
       console.log('[dry-run] ' + summary);
@@ -825,6 +996,9 @@ module.exports = {
   convertAdmonitions,
   stripDiagramColors,
   highlightAssumptions,
+  classifyDiagram,
+  classifyDiagrams,
+  restructureUseCase,
   animateFirstMermaid,
   deriveTags,
   isoDate,

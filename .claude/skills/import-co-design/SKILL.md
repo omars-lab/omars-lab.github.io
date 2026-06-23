@@ -97,6 +97,34 @@ Pasting an HLD in breaks for four reasons, all handled by the transformer:
 
 Everything is `draft: true` on import. Publishing is a separate, deliberate step (`publish-site`).
 
+## Diagram classification + the ASK-ON-AMBIGUITY rule
+
+The importer CLASSIFIES every mermaid block by semantic type and records a per-post
+`diagrams:` **manifest** in frontmatter (`{type, confidence, heading, pinned?}` per block).
+Classification is **signal-priority, not structural** (structural fingerprinting misfires —
+ER parses as 0 nodes, subgraphs break counts, persona lists look like graphs):
+1. **declaration wins** — `erDiagram`→er, `sequenceDiagram`→sequence, `stateDiagram`→state,
+   `architecture-beta`→arch, etc. (high confidence). It skips leading `%% …` directive lines
+   to find the real declaration.
+2. **heading keywords** for `graph`/`flowchart` — Use Cases/User-Profiling/Personas→usecase;
+   Context/System Boundaries/Deployment topology→context; Option A/B/1/2/Components→arch;
+   Customer Journey/Data Flows/Pipeline/Target State/Works Today→flow (medium confidence).
+3. **no match** → `flow` at **low** confidence = AMBIGUOUS.
+
+**Only USE-CASE diagrams are restructured** (the rest are classified-and-kept; context/arch
+are already styled by the color-strip + arch-icon recipe). The use-case restructure turns an
+isolated persona list (`ID["👤 Name<br/>wants: goal"]`, no edges) into a canonical diagram:
+`👤 actor` --- `(["goal"])` oval inside a `subgraph System` boundary. It is conservative — it
+SKIPS any block that already has edges/ovals (those are left intact).
+
+**ASK on ambiguity (your job as the skill runner).** After an import, READ the manifest and
+the run summary's `ambiguous:N`. For each block with `confidence: low`, the diagram's true
+type is unclear — **use AskUserQuestion** to ask the user (offer usecase / context / arch /
+flow / sequence / leave-as-flow), then record the answer by setting `pinned: true` + the
+chosen `type` on that manifest entry and re-import. A `pinned` entry OVERRIDES inference
+forever, so a re-import never re-asks and stays deterministic. Do NOT silently guess on a
+low-confidence diagram.
+
 ## Run it (the repeatable pipeline)
 
 ```bash

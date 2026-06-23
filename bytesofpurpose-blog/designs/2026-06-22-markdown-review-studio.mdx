@@ -23,6 +23,52 @@ source:
   status: In Review
   imported: '2026-06-23'
 mockups: ./_mockups/markdown-review-studio.mdx
+diagrams:
+  - type: context
+    confidence: medium
+    heading: 1.3 Context
+  - type: usecase
+    confidence: medium
+    heading: User-profiling diagram
+  - type: flow
+    confidence: medium
+    heading: 4.1 How Document Review Works Today
+  - type: flow
+    confidence: medium
+    heading: 6.1 Target State Overview
+  - type: arch
+    confidence: medium
+    heading: 'Option 1: Claude Code CLI headless, auto-apply + commit _(recommended)_'
+  - type: arch
+    confidence: medium
+    heading: 'Option 2: Anthropic API direct, server applies edits'
+  - type: arch
+    confidence: medium
+    heading: 'Option 3: Export structured prompt for manual paste'
+  - type: context
+    confidence: medium
+    heading: 'D10: Deployment topology (dual-mode) ⭐'
+  - type: er
+    confidence: high
+    heading: 7.2 Data Model
+  - type: flow
+    confidence: medium
+    heading: 7.3 Data Flows
+  - type: flow
+    confidence: medium
+    heading: 7.3 Data Flows
+  - type: usecase
+    confidence: medium
+    heading: 8. Use Cases
+  - type: flow
+    confidence: medium
+    heading: 9. Customer Journey
+  - type: usecase
+    confidence: medium
+    heading: 10.2 Use Case Diagram
+  - type: sequence
+    confidence: high
+    heading: '10.3 Sequence Diagram: Full Review Round'
 ---
 
 # High-Level Design: Markdown Review Studio
@@ -122,12 +168,23 @@ graph LR
 
 ```mermaid
 graph LR
-    REV["👤 Reviewer (primary)<br/>wants: click the exact spot,<br/>comment in place, no re-describing"]
-    AUTH["✍️ Author<br/>wants: edit markdown directly,<br/>keep source canonical"]
-    CC["🤖 Claude Code<br/>wants: structured anchored comments<br/>to act on, preserve markers"]
-    GIT["🌿 Git<br/>wants: clean, attributable commits<br/>= durable iteration history"]
-    TEAM["🧑‍🤝‍🧑 Teammate / Stakeholder<br/>wants: async review on any device,<br/>shared via the git host"]
-
+  subgraph system[System]
+    REV["👤 Reviewer (primary)"]
+    REVuc(["click the exact spot, comment in place, no re-describing"])
+    AUTH["✍️ Author"]
+    AUTHuc(["edit markdown directly, keep source canonical"])
+    CC["🤖 Claude Code"]
+    CCuc(["structured anchored comments to act on, preserve markers"])
+    GIT["🌿 Git"]
+    GITuc(["clean, attributable commits = durable iteration history"])
+    TEAM["🧑‍🤝‍🧑 Teammate / Stakeholder"]
+    TEAMuc(["async review on any device, shared via the git host"])
+  end
+  REV --- REVuc
+  AUTH --- AUTHuc
+  CC --- CCuc
+  GIT --- GITuc
+  TEAM --- TEAMuc
 ```
 
 <Assumption>In the initial version, Reviewer and Author are the same person (Omar) on a single machine. Multi-user / concurrent review is a secondary, later concern: flagged as a key decision in §6.5.</Assumption>

@@ -285,3 +285,90 @@ describe('clampDescription', () => {
     expect(d).toBe('A short first sentence.');
   });
 });
+
+describe('classifyDiagram — signal-priority (declaration > heading)', () => {
+  it('declaration wins for typed diagrams', () => {
+    expect(T.classifyDiagram('erDiagram', '7.2 Data Model').type).toBe('er');
+    expect(T.classifyDiagram('sequenceDiagram', 'anything').type).toBe('sequence');
+    expect(T.classifyDiagram('stateDiagram-v2', 'x').type).toBe('state');
+    expect(T.classifyDiagram('architecture-beta', 'x').type).toBe('arch');
+  });
+  it('graph/flowchart leans on the heading', () => {
+    expect(T.classifyDiagram('graph LR', '1.3 Context').type).toBe('context');
+    expect(T.classifyDiagram('graph LR', 'User-profiling diagram').type).toBe('usecase');
+    expect(T.classifyDiagram('flowchart TB', '8. Use Cases').type).toBe('usecase');
+    expect(T.classifyDiagram('graph LR', '9. Customer Journey').type).toBe('flow');
+  });
+  it('Option N headings (digit, not just letter) classify as arch — regression', () => {
+    expect(T.classifyDiagram('graph LR', 'Option 1: Claude Code CLI').type).toBe('arch');
+    expect(T.classifyDiagram('graph LR', 'Option A: foo').type).toBe('arch');
+  });
+  it('an unmatched heading defaults to flow at LOW confidence (ask-worthy)', () => {
+    const c = T.classifyDiagram('graph LR', 'Some Random Heading');
+    expect(c.type).toBe('flow');
+    expect(c.confidence).toBe('low');
+  });
+});
+
+describe('classifyDiagrams — skips %% directive lines to find the declaration', () => {
+  it('reads the real declaration past a %% animate comment — regression', () => {
+    const body = [
+      '## 1.3 Context',
+      '```mermaid',
+      '%% animate: flow',
+      'graph LR',
+      '  A --> B',
+      '```',
+    ].join('\n');
+    const types = T.classifyDiagrams(body);
+    expect(types).toHaveLength(1);
+    expect(types[0].type).toBe('context'); // NOT 'unknown'
+  });
+  it('honors a pinned override by index', () => {
+    const body = '## X\n```mermaid\ngraph LR\n A-->B\n```';
+    const types = T.classifyDiagrams(body, {0: 'usecase'});
+    expect(types[0].type).toBe('usecase');
+    expect(types[0].confidence).toBe('pinned');
+  });
+});
+
+describe('restructureUseCase — persona list -> actors + oval use cases', () => {
+  const personaBlock = [
+    'intro',
+    '```mermaid',
+    'graph LR',
+    '    REV["👤 Reviewer<br/>wants: comment in place"]',
+    '    AUTH["✍️ Author<br/>wants: edit markdown directly"]',
+    '```',
+  ].join('\n');
+
+  it('wires isolated persona+wants nodes into actor --- (goal oval)', () => {
+    const types = [{index: 0, type: 'usecase', confidence: 'medium'}];
+    const r = T.restructureUseCase(personaBlock, types);
+    expect(r.restructured).toBe(true);
+    expect(r.count).toBe(2);
+    // actor keeps its name; goal becomes a stadium oval; an association edge is added
+    expect(r.body).toContain('REV["👤 Reviewer"]');
+    expect(r.body).toContain('REVuc(["comment in place"])');
+    expect(r.body).toContain('REV --- REVuc');
+    expect(r.body).toContain('subgraph system');
+    // a name without an emoji gets the 👤 glyph
+    expect(r.body).toContain('AUTH["✍️ Author"]'); // already had an emoji, kept
+  });
+
+  it('does NOT restructure a diagram that already has edges', () => {
+    const withEdges = [
+      '```mermaid',
+      'graph LR',
+      '  R["Reviewer"] --> UC(("do thing"))',
+      '```',
+    ].join('\n');
+    const r = T.restructureUseCase(withEdges, [{index: 0, type: 'usecase', confidence: 'high'}]);
+    expect(r.restructured).toBe(false);
+  });
+
+  it('no-op when there is no usecase diagram in the set', () => {
+    const r = T.restructureUseCase(personaBlock, [{index: 0, type: 'flow', confidence: 'high'}]);
+    expect(r.restructured).toBe(false);
+  });
+});
