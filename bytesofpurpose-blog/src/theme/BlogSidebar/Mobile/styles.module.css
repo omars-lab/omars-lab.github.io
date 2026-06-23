@@ -1,0 +1,7 @@
+/* Copied from @docusaurus/theme-classic BlogSidebar/Mobile so the swizzled Mobile
+   sidebar keeps identical styling; the only change is the dev-only draft badge in
+   index.tsx. */
+
+.yearGroupHeading {
+  margin: 1rem 0.75rem 0.5rem;
+}

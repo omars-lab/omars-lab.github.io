@@ -66,7 +66,7 @@ export default defineConfig({
       // graph-* specs + the DebugMenu spec. The DebugMenu renders ONLY on the
       // dev server (localhost + non-prod build) — it's stripped from prod — so it
       // must run here against :3000, not the build-backed projects.
-      testMatch: /(graph-.*|debug-menu|draft-sidebar|craft-self-split|navbar-auth|reconstruction-posts|co-design-imports)\.spec\.ts$/,
+      testMatch: /(graph-.*|debug-menu|draft-sidebar|blog-draft-badge|craft-self-split|navbar-auth|reconstruction-posts|co-design-imports)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {

@@ -32,14 +32,24 @@ const matter = require('gray-matter');
 module.exports = function draftDocsPlugin(context) {
   const docsDir = path.join(context.siteDir, 'docs');
 
+  // The two BLOG instances: Thoughts (source blog/, route /thoughts) and Designs
+  // (source designs/, route /designs). Their sidebar items carry only a permalink
+  // (no `draft` flag), so the swizzled BlogSidebar matches the permalink against
+  // the blogDraftPermalinks set published here — the same pattern the docs sidebar
+  // uses. (The blog POST header reads frontMatter.draft directly and needs none of
+  // this; this set exists for the sidebar list, where frontmatter isn't available.)
+  const blogInstances = [
+    {dir: path.join(context.siteDir, 'blog'), base: '/thoughts'},
+    {dir: path.join(context.siteDir, 'designs'), base: '/designs'},
+  ];
+
   return {
     name: 'draft-docs-plugin',
 
     async loadContent() {
-      if (!fs.existsSync(docsDir)) return {draftPermalinks: [], premiumPermalinks: []};
-
       const draftPermalinks = new Set();
       const premiumPermalinks = new Set();
+      const blogDraftPermalinks = new Set();
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -65,10 +75,33 @@ module.exports = function draftDocsPlugin(context) {
         }
       };
 
-      walk(docsDir);
+      if (fs.existsSync(docsDir)) walk(docsDir);
+
+      // Blog drafts: walk each blog instance for draft:true posts and derive the
+      // /<route>/<slug> permalink (slug frontmatter wins; else the date-stripped
+      // filename, mirroring Docusaurus' default blog slug derivation).
+      for (const {dir, base} of blogInstances) {
+        if (!fs.existsSync(dir)) continue;
+        for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
+          if (!entry.isFile() || !/\.mdx?$/.test(entry.name)) continue;
+          // Skip partials/drafts-of-includes (leading underscore = not a route).
+          if (entry.name.startsWith('_')) continue;
+          let data;
+          try {
+            ({data} = matter(fs.readFileSync(path.join(dir, entry.name), 'utf8')));
+          } catch {
+            continue;
+          }
+          if (data.draft === true) {
+            blogDraftPermalinks.add(toBlogPermalink(entry.name, data, base));
+          }
+        }
+      }
+
       return {
         draftPermalinks: [...draftPermalinks],
         premiumPermalinks: [...premiumPermalinks],
+        blogDraftPermalinks: [...blogDraftPermalinks],
       };
     },
 
@@ -77,6 +110,21 @@ module.exports = function draftDocsPlugin(context) {
     },
   };
 };
+
+// Blog permalink: /<base>/<slug>. An explicit `slug:` frontmatter wins (it may be
+// a bare slug or a leading-slash path); otherwise Docusaurus derives the slug from
+// the filename, dropping a leading `YYYY-MM-DD-` date prefix and the extension.
+function toBlogPermalink(filename, data, base) {
+  if (data.slug) {
+    const slug = String(data.slug);
+    if (slug.startsWith('/')) return slug === '/' ? base : `${base}${slug}`;
+    return `${base}/${slug}`;
+  }
+  const stem = filename
+    .replace(/\.mdx?$/, '')
+    .replace(/^\d{4}-\d{2}-\d{2}-/, '');
+  return `${base}/${stem}`;
+}
 
 // Strip a leading `NN-` (e.g. "4-development" -> "development") that Docusaurus
 // uses for ordering but drops from the URL.
