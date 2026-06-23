@@ -72,6 +72,35 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
     // See --ifm-heading-font-family / --ifm-font-family-base in src/css/custom.css.
     // Preconnect first so the stylesheet fetch is not blocked.
     headTags: [
+      // Favicon variants (the BMC profile mark). `favicon:` above wires the .ico;
+      // these add the crisp PNG sizes + the iOS home-screen icon, which Docusaurus
+      // doesn't emit on its own.
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/img/favicon-32x32.png',
+        },
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '16x16',
+          href: '/img/favicon-16x16.png',
+        },
+      },
+      {
+        tagName: 'link',
+        attributes: {
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: '/img/apple-touch-icon.png',
+        },
+      },
       {
         tagName: 'link',
         attributes: {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
