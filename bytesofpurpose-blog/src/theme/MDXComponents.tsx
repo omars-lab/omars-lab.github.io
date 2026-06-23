@@ -13,6 +13,7 @@ import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
 import Mockup from '@site/src/components/Mockup';
+import Walkthrough from '@site/src/components/Walkthrough';
 
 export default {
   // Reusing the default mapping
@@ -35,4 +36,7 @@ export default {
   // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
   // (browser/window/phone chrome) — shows what a design would LOOK like.
   Mockup,
+  // Scripted animated UX demo over a mockup: cursor + highlight + comment + click +
+  // typed terminal, driven by a step array — shows the UX being USED.
+  Walkthrough,
 };

@@ -1,0 +1,173 @@
+/* Walkthrough — scripted animated UX demo with crossfading scenes. Theme-aware. */
+
+.walkthrough {
+  margin: 1.75rem 0;
+}
+
+/* the viewport stacks both scenes in ONE grid cell so it sizes to the taller scene and
+   never collapses mid-crossfade. Both scenes occupy row1/col1; opacity does the swap. */
+.viewport {
+  display: grid;
+}
+.scene {
+  grid-area: 1 / 1;
+  position: relative; /* anchors the cursor + highlight overlays in the app scene */
+  transition: opacity 0.45s ease;
+  min-width: 0;
+}
+.scene.shown {
+  opacity: 1;
+  z-index: 1;
+}
+.scene.hidden {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* highlighted (selected) range */
+.highlight {
+  position: absolute;
+  background: color-mix(in srgb, var(--ifm-color-primary) 24%, transparent);
+  border-bottom: 2px solid var(--ifm-color-primary);
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* animated pointer cursor */
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin: -2px 0 0 -2px;
+  pointer-events: none;
+  z-index: 9;
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  background: var(--ifm-color-primary);
+  clip-path: polygon(0 0, 0 75%, 28% 55%, 50% 100%, 64% 90%, 42% 48%, 75% 45%);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+.cursor.clicking::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 50%;
+  animation: wtRipple 0.4s ease-out;
+}
+
+/* ---- Claude CLI scene ---- */
+.claude {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+  background: #1b1b1d;
+}
+.claudeBar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: #2a2a2d;
+  border-bottom: 1px solid #000;
+}
+.dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.dots i:nth-child(1) { background: #e06c5e; }
+.dots i:nth-child(2) { background: #e6b04a; }
+.dots i:nth-child(3) { background: #79b46a; }
+.claudeTitle {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.78rem;
+  color: #cfcfcf;
+}
+.claudeBody {
+  padding: 0.9rem 1rem;
+  min-height: 220px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #e6e6e6;
+}
+.claudePrompt {
+  color: #f4f0e8;
+  margin-bottom: 0.5rem;
+}
+.caret {
+  color: var(--ifm-color-primary-lightest, #e4673f);
+  font-weight: 700;
+}
+.claudeLine {
+  color: #cde7cf;
+  white-space: pre-wrap;
+  animation: wtFadeIn 0.25s ease;
+}
+.blink {
+  animation: wtBlink 1s steps(2, start) infinite;
+  color: #e6e6e6;
+}
+
+/* ---- controls ---- */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+.playBtn {
+  flex: 0 0 auto;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+}
+.playBtn:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+.caption {
+  font-size: 0.82rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@keyframes wtRipple {
+  from { opacity: 0.7; transform: scale(0.3); }
+  to { opacity: 0; transform: scale(1.2); }
+}
+@keyframes wtFadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; }
+}
+@keyframes wtBlink {
+  to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene,
+  .cursor {
+    transition: none;
+  }
+  .claudeLine,
+  .cursor.clicking::after,
+  .blink {
+    animation: none;
+  }
+}

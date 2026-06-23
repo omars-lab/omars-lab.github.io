@@ -202,6 +202,58 @@ test.describe('Imported co-design posts render in dev', () => {
     });
   }
 
+  test('markdown-review: the Walkthrough plays the full fix-with-Claude flow', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.markdownReview, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const wt = page.locator('[class*="walkthrough"]').first();
+    await expect(wt).toBeVisible();
+    await wt.scrollIntoViewIfNeeded();
+    // "Fix with Claude" is the button label (v2).
+    expect(await page.locator('button', { hasText: 'Fix with Claude' }).count()).toBe(1);
+    // sample across a full playback and assert each scripted step fires:
+    //  - cursor moves between steps
+    //  - drag-select grows a highlight (>1 distinct width)
+    //  - the comment is typed letter-by-letter (>1 distinct length in #wt-commentbox)
+    //  - the scene crossfades to the Claude CLI scene, whose steps stream out
+    const seen = await page.evaluate(async () => {
+      const cursors = new Set<string>();
+      const hlWidths = new Set<number>();
+      const commentLens = new Set<number>();
+      let claudeScene = false;
+      let claudeLines = 0;
+      for (let i = 0; i < 24; i++) {
+        const cur = document.querySelector('[class*="cursor"]') as HTMLElement | null;
+        if (cur) cursors.add(getComputedStyle(cur).transform);
+        const hl = document.querySelector('[class*="highlight"]') as HTMLElement | null;
+        if (hl) hlWidths.add(Math.round(hl.getBoundingClientRect().width));
+        const cb = document.querySelector('#wt-commentbox');
+        if (cb && cb.textContent) commentLens.add(cb.textContent.length);
+        const scenes = Array.from(document.querySelectorAll('[class*="scene"]'));
+        const claude = scenes.find((el) => /claude/.test(el.className)) as HTMLElement | null;
+        if (claude && parseFloat(getComputedStyle(claude).opacity) > 0.5) claudeScene = true;
+        claudeLines = Math.max(
+          claudeLines,
+          document.querySelectorAll('[class*="claudeLine"]').length
+        );
+        await new Promise((r) => setTimeout(r, 800));
+      }
+      return {
+        cursorPositions: cursors.size,
+        highlightWidths: hlWidths.size,
+        commentLengths: commentLens.size,
+        claudeScene,
+        claudeLines,
+      };
+    });
+    expect(seen.cursorPositions, 'cursor moves between steps').toBeGreaterThan(1);
+    expect(seen.highlightWidths, 'drag-select grows the highlight').toBeGreaterThan(1);
+    expect(seen.commentLengths, 'comment is typed letter-by-letter').toBeGreaterThan(1);
+    expect(seen.claudeScene, 'crossfades to the Claude CLI scene').toBe(true);
+    expect(seen.claudeLines, 'Claude steps stream out').toBeGreaterThan(0);
+  });
+
   test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
     page,
   }) => {
