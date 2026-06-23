@@ -1,0 +1,157 @@
+---
+slug: design-actions-pages-deploy
+sidebar_position: 14
+title: Building a Pages Deploy That Consumes a Private Package
+description: >-
+  How to deploy a Vite app to GitHub Pages from source in CI when it depends on
+  a package published to GitHub Packages, the same-owner auth trick, and the
+  two-job build/deploy pattern.
+authors:
+  - oeid
+tags:
+  - system-design
+  - ci-cd
+  - github-actions
+  - github-pages
+  - devops
+kind: system-design
+draft: true
+---
+
+When I extracted my blog's reusable React components into a published package
+(`@omars-lab/blog-ui` on GitHub Packages), I wanted a second repo to prove the package was
+truly consumable from the outside. So I rebuilt a separate project's site, the
+[getting-started-with-claude-agents](https://github.com/omars-lab/getting-started-with-claude-agents)
+guide, as a Vite app that installs that package and renders it. That worked. But it left a
+quieter problem: how does that site actually deploy, when its build now depends on a package
+that lives behind authentication?
+
+{/* truncate */}
+
+## The problem with the old deploy
+
+The guide had been a single self-contained `index.html`, served by GitHub Pages straight from
+the `main` branch (the "deploy from a branch" model). When I converted it to a Vite app, I kept
+that model: a `make build` step ran the build locally, copied the output to the repo root, and
+committed it. Pages served those committed files.
+
+That works, but it has a sharp edge: **the committed build output can silently drift from the
+source.** If someone edits `web/src/` and forgets to rebuild and commit, Pages keeps serving the
+stale bundle. The source and the live site disagree, and nothing tells you.
+
+The fix is to make CI the only thing that builds, so the published site is always a fresh build
+of the current source. That means moving from "deploy from a branch" to a custom GitHub Actions
+workflow, the model GitHub documents under
+[using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## The catch: the build needs a private dependency
+
+Here is what makes this more than a copy-paste workflow. The build runs `yarn install`, and one
+of those dependencies, `@omars-lab/blog-ui`, lives on **GitHub Packages**, which requires
+authentication to install. Even though the package is public, the npm registry on GitHub
+Packages does not allow anonymous installs. So the CI build needs a token with `read:packages`.
+
+The reflex is to mint a personal access token and store it as a repo secret. But that is not
+necessary here, and avoiding it is the cleaner design. The key facts:
+
+- The package is owned by the same account (`omars-lab`) that owns the deploying repo.
+- A repository's built-in Actions token (`GITHUB_TOKEN`) can read packages owned by that same
+  account, given the job declares `permissions: packages: read`.
+
+So the build authenticates with the **default Actions token**, no PAT, no stored secret. It is
+wired through `setup-node`, which writes an `.npmrc` pointing the `@omars-lab` scope at the
+GitHub Packages registry and uses the token for auth:
+
+```yaml
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+    registry-url: https://npm.pkg.github.com
+    scope: '@omars-lab'
+- run: yarn install --frozen-lockfile
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+## The shape: a build job and a deploy job
+
+The modern Pages deploy splits into two jobs. The build job produces the static site and
+uploads it as a Pages artifact; the deploy job publishes that artifact. GitHub's first-party
+actions, [`actions/upload-pages-artifact`](https://github.com/actions/upload-pages-artifact)
+and [`actions/deploy-pages`](https://github.com/actions/deploy-pages), handle the handoff.
+
+```yaml
+permissions:
+  contents: read
+  packages: read   # install @omars-lab/blog-ui
+  pages: write     # publish to Pages
+  id-token: write  # OIDC: prove the deploy came from this workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # ... setup-node + yarn install (above) ...
+      - run: yarn build              # Vite, into dist-site/
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist-site
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
+```
+
+Two details that are easy to get wrong: the deploy job needs both `pages: write` and
+`id-token: write` (the OIDC token is how GitHub verifies the deployment came from your
+workflow), and it must target the `github-pages` environment. GitHub's docs recommend pinning
+`deploy-pages@v4`.
+
+## Keeping a manual path
+
+CI on every push is the primary deploy, but I still wanted a one-command manual deploy. Since
+Pages now builds from the workflow (not a branch), "deploy by hand" cannot mean "commit and
+push the build". Instead, the manual path simply **triggers the same workflow**:
+
+```makefile
+deploy: validate-config
+	gh workflow run deploy-pages.yml --ref main
+```
+
+One pipeline, two ways to start it (a push, or `gh workflow run`), and no second code path that
+could behave differently from CI.
+
+## Validating the config before it runs
+
+A workflow that only fails when it runs in CI is a slow feedback loop. So the manual deploy
+validates the workflow first, using [actionlint](https://github.com/rhysd/actionlint), a static
+checker that understands the Actions schema deeply: it type-checks `${{ }}` expressions,
+verifies action inputs against each action's real input list, and flags security issues, well
+beyond a plain YAML parse.
+
+```makefile
+validate-config:
+	actionlint   # lints .github/workflows/ ; deploy depends on this (fail-closed)
+```
+
+It earns its place: pointed at a workflow with a misspelled `actions/checkout` input, it names
+the bad input and prints the full list of valid ones. The deploy target depends on it, so a
+broken config never makes it to a triggered run.
+
+## What this buys
+
+The source is the single source of truth. Every deploy is a fresh build of the current
+`web/src`, authenticated with a token that already exists, validated before it runs. There is no
+committed build output to drift, no secret to rotate, and no second deploy path to keep in sync.
+
+### Sources
+
+- [Using custom workflows with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
+- [actions/upload-pages-artifact](https://github.com/actions/upload-pages-artifact)
+- [actions/deploy-pages](https://github.com/actions/deploy-pages)
+- [actionlint](https://github.com/rhysd/actionlint)
