@@ -55,6 +55,13 @@
   --ifm-global-shadow-lw: 0 1px 3px rgba(26, 26, 26, 0.08);
   --ifm-global-shadow-md: 0 6px 20px rgba(26, 26, 26, 0.1);
 
+  /* Scrollbars — Infima defaults to a near-white track (#f1f1f1) that reads as a
+     bright strip against the warm cream paper. Match the track to the page and the
+     thumb to the warm-gray secondary ink so the scrollbar blends with the theme. */
+  --ifm-scrollbar-track-background-color: #ece7df;
+  --ifm-scrollbar-thumb-background-color: #c9c2b6;
+  --ifm-scrollbar-thumb-hover-background-color: #b3aa9b;
+
   /* Premium ("gold") palette — shared by the sidebar lock items, the locked
      info pane, and the CTA cards so every premium surface reads consistently.
      A metallic gold: a saturated base for text/icons, a gradient pair for the
@@ -97,6 +104,12 @@ html[data-theme='dark'] {
   --ifm-navbar-background-color: #1a1715;
   --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
+
+  /* Scrollbars — warm-ink equivalents of the light overrides (Infima's dark
+     defaults are a cold #444/#686868 that clash with the warm surface). */
+  --ifm-scrollbar-track-background-color: #1a1715;
+  --ifm-scrollbar-thumb-background-color: #3a342f;
+  --ifm-scrollbar-thumb-hover-background-color: #4a433c;
 
   /* Premium gold, lifted for contrast on dark surfaces. */
   --premium-gold: #e2c466; /* readable gold text on dark bg */
@@ -553,6 +566,36 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
    the edge stroke. The script honors prefers-reduced-motion (it never adds the dot then). */
 .mermaid-flow-dot {
   filter: drop-shadow(0 0 3px var(--ifm-color-primary));
+}
+
+/* ==========================================================================
+   Root document scrollbar. Infima only styles `.thin-scrollbar` elements (via the
+   --ifm-scrollbar-* vars set in :root above) — it leaves the MAIN page scrollbar at
+   the browser default, whose near-white track reads as a bright strip against the
+   warm cream paper. Color it to match the theme in both engines: `scrollbar-color`
+   (Firefox + Chromium) and the ::-webkit-scrollbar pseudo-elements (Safari/WebKit).
+   Reuses the same --ifm-scrollbar-* tokens so light/dark stay in lockstep.
+   ========================================================================== */
+html {
+  scrollbar-color: var(--ifm-scrollbar-thumb-background-color)
+    var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+html::-webkit-scrollbar-track {
+  background: var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar-thumb {
+  background: var(--ifm-scrollbar-thumb-background-color);
+  border-radius: 10px;
+  /* A track-colored border insets the thumb so it reads as a rounded pill, not a
+     full-width bar flush against the track. */
+  border: 3px solid var(--ifm-scrollbar-track-background-color);
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-scrollbar-thumb-hover-background-color);
 }
 
 /* ==========================================================================
