@@ -1,0 +1,25 @@
+# Server-side secret scan. The repo already has a LOCAL gitleaks guard (the .githooks/
+# pre-commit hook + `make secret-scan`), but that only protects committers who ran
+# `make install-hooks`. This workflow runs the SAME scan in CI on every push/PR so a secret
+# can't reach the public repo from an un-hooked clone — fail-closed, per the secure-by-default
+# tenet. It uses the committed .gitleaks.toml so CI and local stay in lockstep.
+name: gitleaks
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so gitleaks scans all commits, not just the tip
+
+      - name: gitleaks (full history + working tree)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_CONFIG: ${{ github.workspace }}/.gitleaks.toml
+          # GITLEAKS_LICENSE is only needed for org-account scanning; this is a user repo.
