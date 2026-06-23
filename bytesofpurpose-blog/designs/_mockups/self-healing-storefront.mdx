@@ -18,8 +18,44 @@ export default function Mockups() {
     </div>
   );
 
-  // The dashboard the agent runs on (app scene). It carries a "new critical issue" row the
-  // walkthrough points at, which then flips to Shipped.
+  // OPENING scene (app): the live storefront as the agent scans it. The mobile checkout
+  // section is flagged with an "issue identified" warning, the weak spot the agent finds
+  // first, before any dashboard or projection.
+  const storeScan = (
+    <Mockup chrome="browser" title="acme-shop.com" url="acme-shop.com/checkout" caption="The agent scans the live store and flags the weak spot: a slow mobile checkout.">
+      <div style={{fontFamily: 'var(--ifm-font-family-base)', position: 'relative'}}>
+        {/* faux storefront header */}
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
+          <div style={{fontWeight: 800, fontSize: '0.9rem'}}>ACME</div>
+          <div style={{marginLeft: 'auto', display: 'flex', gap: '0.8rem', fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-700)'}}>
+            <span>Shop</span><span>About</span><span>🛒 Cart (2)</span>
+          </div>
+        </div>
+        {/* scanning banner */}
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.4rem 0.85rem', fontSize: '0.7rem', color: 'var(--ifm-color-emphasis-700)', background: 'var(--ifm-color-emphasis-100)'}}>
+          <span style={{display: 'inline-block', width: '0.5rem', height: '0.5rem', borderRadius: '999px', background: '#4a9b8e'}} /> Agent scanning store · 12 pages crawled
+        </div>
+        {/* product strip (healthy) */}
+        <div style={{display: 'flex', gap: '0.5rem', padding: '0.7rem 0.85rem'}}>
+          {['Tee','Mug','Cap'].map((p) => (
+            <div key={p} style={{flex: 1, border: '1px solid var(--ifm-color-emphasis-200)', borderRadius: '8px', padding: '0.5rem', textAlign: 'center', fontSize: '0.7rem'}}>
+              <div style={{height: '34px', background: 'var(--ifm-color-emphasis-200)', borderRadius: '5px', marginBottom: '0.3rem'}} />
+              {p}
+            </div>
+          ))}
+        </div>
+        {/* the flagged checkout section */}
+        <div id="sf-scan-issue" style={{margin: '0.3rem 0.85rem 0.85rem', border: '2px solid #e0a000', borderRadius: '9px', padding: '0.6rem 0.7rem', background: 'rgba(224,160,0,0.06)', position: 'relative'}}>
+          <span style={{position: 'absolute', top: '-0.65rem', left: '0.6rem', background: '#e0a000', color: '#fff', fontWeight: 800, fontSize: '0.6rem', padding: '0.1rem 0.45rem', borderRadius: '999px'}}>⚠ Issue identified</span>
+          <div style={{fontWeight: 700, fontSize: '0.78rem', marginTop: '0.2rem'}}>Mobile checkout</div>
+          <div style={{fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-700)'}}>Loads in <strong style={{color: '#c0473a'}}>8.2s on mobile</strong> · 3-step form · cart abandonment 71%</div>
+        </div>
+      </div>
+    </Mockup>
+  );
+
+  // CUSTOM A: the dashboard the agent runs on. Carries a "new critical issue" row that flips
+  // to Shipped, the same checkout issue, now being addressed.
   const dashboard = (
     <Mockup chrome="browser" title="Storefront Agent" url="storefront-agent.app/wins" caption="The agent watches the store, ships fixes within guardrails, and reports the dollar lift.">
       <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
@@ -45,7 +81,7 @@ export default function Mockups() {
     </Mockup>
   );
 
-  // BI projection scene: two diverging conversion lines over 6 months, the agent's
+  // CUSTOM B: BI projection scene. Two diverging conversion lines over 6 months, the agent's
   // cumulative changes vs the do-nothing baseline. A small theme-aware inline SVG.
   const months = ['M1','M2','M3','M4','M5','M6'];
   const withAgent = [2.0, 2.15, 2.35, 2.5, 2.7, 2.85];   // % conversion, compounding
@@ -85,16 +121,16 @@ export default function Mockups() {
       <h2>What it looks like</h2>
 
       <Walkthrough
-        customScene={biScene}
+        customScenes={[dashboard, biScene]}
         steps={[
-          {type: 'move', target: '#sf-issue', say: 'The agent watches the store and finds a new critical issue'},
-          {type: 'highlight', target: '#sf-issue', say: 'slow mobile checkout, hurting conversion'},
-          {type: 'highlight', target: '#sf-issue', say: 'within its guardrails, it ships a fix to a holdback', hold: 1400},
-          {type: 'scene', to: 'custom', say: 'Each shipped win compounds the conversion curve', hold: 2200},
-          {type: 'scene', to: 'app', say: 'and the dollar lift lands back on the dashboard', hold: 1200},
+          {type: 'move', target: '#sf-scan-issue', say: 'The agent scans the live store'},
+          {type: 'highlight', target: '#sf-scan-issue', say: 'and identifies a weak spot: an 8.2s mobile checkout', hold: 1800},
+          {type: 'scene', to: 'custom', index: 0, say: 'it logs the issue on the dashboard and, within guardrails, ships a fix to a holdback', hold: 2200},
+          {type: 'scene', to: 'custom', index: 1, say: 'each shipped win compounds the conversion curve', hold: 2200},
+          {type: 'scene', to: 'app', say: 'and the agent keeps scanning for the next one', hold: 1400},
         ]}
       >
-        {dashboard}
+        {storeScan}
       </Walkthrough>
     </>
   );
