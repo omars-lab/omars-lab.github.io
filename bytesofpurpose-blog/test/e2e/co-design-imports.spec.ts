@@ -347,6 +347,43 @@ test.describe('Imported co-design posts render in dev', () => {
     expect(seen.sawProjection, 'the BI scene shows with-agent vs do-nothing lines').toBe(true);
   });
 
+  test('site-scanner: the lead-gen walkthrough goes scan -> detect/enrich -> outreach', async ({
+    page,
+  }) => {
+    await page.goto(POSTS.siteScanner, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    const wt = page.locator('[class*="walkthrough"]').first();
+    await expect(wt).toBeVisible();
+    await wt.scrollIntoViewIfNeeded();
+    // scan scene = the storefront + agent findings; custom scene = the lead engine + pitch.
+    const seen = await page.evaluate(async () => {
+      const scenes = Array.from(
+        document.querySelectorAll('[class*="walkthrough"] [class*="scene"]')
+      );
+      const visited = new Set<string>();
+      let sawFindings = false;
+      let sawOwner = false;
+      let sawPitch = false;
+      for (let i = 0; i < 24; i++) {
+        const vis = scenes.find((el) => parseFloat(getComputedStyle(el).opacity) > 0.6);
+        const t = (vis && vis.textContent) || '';
+        if (/Agent findings/.test(t)) visited.add('scan');
+        if (/Ranked Leads|Drafted outreach/.test(t)) visited.add('engine');
+        if (/Weak CTA|Slow checkout/.test(t)) sawFindings = true;
+        if (/john@peakgear\.com/.test(t) && /verified/i.test(t)) sawOwner = true;
+        if (/Drafted outreach/.test(t) && /\$40K\/year/.test(t)) sawPitch = true;
+        await new Promise((r) => setTimeout(r, 700));
+      }
+      return {scenes: [...visited], sawFindings, sawOwner, sawPitch};
+    });
+    expect(seen.scenes, 'visits both the scan and lead-engine scenes').toEqual(
+      expect.arrayContaining(['scan', 'engine'])
+    );
+    expect(seen.sawFindings, 'the scan detects growth-marketing issues').toBe(true);
+    expect(seen.sawOwner, 'the scan discovers a verified site owner').toBe(true);
+    expect(seen.sawPitch, 'the engine shows a drafted personalized pitch').toBe(true);
+  });
+
   test('mermaid colors adapt to dark mode (no hardcoded light fills survive)', async ({
     page,
   }) => {

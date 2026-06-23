@@ -5,65 +5,110 @@
 ---
 
 import Mockup from '@site/src/components/Mockup';
+import Walkthrough from '@site/src/components/Walkthrough';
 
 export default function Mockups() {
-  const row = {borderBottom: '1px solid var(--ifm-color-emphasis-200)', fontSize: '0.74rem'};
   const cell = {padding: '0.4rem 0.5rem', verticalAlign: 'top'};
   const pill = (bg, fg) => ({display: 'inline-block', padding: '0.05rem 0.4rem', borderRadius: '999px', background: bg, color: fg, fontWeight: 700, fontSize: '0.68rem'});
+  const finding = (id, text) => (
+    <div id={id} style={{display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.45rem', fontSize: '0.72rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)'}}>
+      <span style={{color: '#c0473a', fontWeight: 700}}>!</span><span>{text}</span>
+    </div>
+  );
+
+  // APP scene: the agent scanning a weak ecommerce storefront. A faux store on the left;
+  // the agent's findings panel on the right fills in as it scans. Targetable ids drive the
+  // walkthrough (detect issue -> discover size/owner).
+  const scan = (
+    <Mockup chrome="browser" title="Site Scanner" url="peakgear.com" caption="The agent scans a prospect's public pages, detects growth-marketing problems, sizes the store, and finds a verified contact.">
+      <div style={{display: 'flex', minHeight: '300px', fontFamily: 'var(--ifm-font-family-base)'}}>
+        <main style={{flex: '1 1 auto', padding: '0.8rem 1rem', borderRight: '1px solid var(--ifm-color-emphasis-200)'}}>
+          <div style={{fontWeight: 800, fontSize: '1.1rem'}}>PeakGear</div>
+          <div style={{color: 'var(--ifm-color-emphasis-600)', fontSize: '0.72rem', marginBottom: '0.6rem'}}>outdoor equipment · Shopify</div>
+          <div style={{height: '74px', background: 'var(--ifm-color-emphasis-200)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ifm-color-emphasis-600)', fontSize: '0.74rem'}}>hero product image</div>
+          <div id="sc-cta" style={{marginTop: '0.6rem', display: 'inline-block', padding: '0.3rem 0.7rem', border: '1px solid var(--ifm-color-emphasis-400)', borderRadius: '6px', color: 'var(--ifm-color-emphasis-700)', fontSize: '0.74rem'}}>shop</div>
+          <div id="sc-checkout" style={{marginTop: '0.6rem', fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-600)'}}>checkout · loads in 8.2s on mobile</div>
+        </main>
+        <aside style={{flex: '0 0 230px', padding: '0.7rem', background: 'var(--ifm-background-surface-color)'}}>
+          <div style={{fontWeight: 700, fontSize: '0.74rem', marginBottom: '0.4rem'}}>Agent findings</div>
+          <div id="sc-findings">
+            {finding('sc-f1', 'Weak CTA: "shop" (low intent)')}
+            {finding('sc-f2', 'Slow checkout: 8.2s on mobile')}
+            {finding('sc-f3', 'No trust signals near buy box')}
+          </div>
+          <div id="sc-enrich" style={{marginTop: '0.6rem', fontSize: '0.72rem', lineHeight: 1.6}}>
+            <div><span style={{color: 'var(--ifm-color-emphasis-600)'}}>Size:</span> <strong>Mid ($500K–$5M/yr)</strong> · 82%</div>
+            <div><span style={{color: 'var(--ifm-color-emphasis-600)'}}>Traffic:</span> ~48K visits/mo</div>
+            <div><span style={{color: 'var(--ifm-color-emphasis-600)'}}>Owner:</span> <strong>john@peakgear.com</strong> · verified 95%</div>
+          </div>
+        </aside>
+      </div>
+    </Mockup>
+  );
+
+  // CUSTOM scene: the lead engine, the scored lead + the composed outreach pitch.
+  const engine = (
+    <Mockup chrome="browser" title="Lead Engine" url="leadengine.app/queue" caption="The scan becomes a scored, contactable lead with a drafted pitch a human approves before sending.">
+      <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.55rem 0.7rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)', fontSize: '0.72rem'}}>
+          <strong>Ranked Leads</strong>
+          <span style={{color: 'var(--ifm-color-emphasis-700)'}}>ICP: Shopify · US · $500K–$5M</span>
+          <span style={{marginLeft: 'auto', color: 'var(--ifm-color-emphasis-700)'}}>cost/lead: $0.42</span>
+        </div>
+        <table style={{width: '100%', borderCollapse: 'collapse'}}>
+          <thead>
+            <tr style={{textAlign: 'left', color: 'var(--ifm-color-emphasis-700)', fontSize: '0.68rem'}}>
+              <th style={cell}>Site</th><th style={cell}>Score</th><th style={cell}>Why</th><th style={cell}>Size</th><th style={cell}>Contact</th><th style={cell}>Outreach</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{borderBottom: '1px solid var(--ifm-color-emphasis-200)', fontSize: '0.74rem', background: 'var(--ifm-color-primary-contrast-background)'}}>
+              <td style={cell}><strong>peakgear.com</strong></td>
+              <td style={cell}><span style={pill('var(--ifm-color-primary)', '#fff')}>88 High</span></td>
+              <td style={cell}>fit 85% · reach 72% · fix 91% (weak CTA, slow checkout)</td>
+              <td style={cell}>Mid · 82%</td>
+              <td style={cell}>john@peakgear.com · 95%</td>
+              <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>Ready</span></td>
+            </tr>
+            <tr style={{fontSize: '0.74rem'}}>
+              <td style={cell}>trailrunsupply.com</td>
+              <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>71 Med</span></td>
+              <td style={cell}>fit 70% · reach 64% · fix 80%</td>
+              <td style={cell}>Small · 75%</td>
+              <td style={cell}>role: info@ · 60%</td>
+              <td style={cell}></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style={{borderTop: '1px solid var(--ifm-color-emphasis-200)', padding: '0.7rem', background: 'var(--ifm-background-surface-color)'}}>
+          <div style={{fontWeight: 700, fontSize: '0.74rem', marginBottom: '0.3rem'}}>Drafted outreach · john@peakgear.com</div>
+          <p style={{margin: '0 0 0.5rem', fontSize: '0.76rem', color: 'var(--ifm-color-emphasis-800)'}}>Hi John, your checkout loads in 8.2s on mobile (vs ~2.1s typical). At a 2% conversion rate that is roughly $40K/year left on the table. Here is how to cut it in half.</p>
+          <div style={{display: 'flex', gap: '0.4rem'}}>
+            <button style={{padding: '0.35rem 0.8rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 600, cursor: 'pointer'}}>Approve &amp; send</button>
+            <button style={{padding: '0.35rem 0.8rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px', background: 'transparent', color: 'var(--ifm-font-color-base)', cursor: 'pointer'}}>Edit</button>
+          </div>
+        </div>
+      </div>
+    </Mockup>
+  );
+
   return (
     <>
       <h2>What it looks like</h2>
 
-      <Mockup chrome="browser" title="Lead Engine" url="leadengine.app/queue" caption="The Growth Operator triages a ranked queue; each lead carries a score with explainable reasons, a verified contact, and a drafted message a human approves before sending.">
-        <div style={{fontFamily: 'var(--ifm-font-family-base)'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.55rem 0.7rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)', background: 'var(--ifm-background-surface-color)', fontSize: '0.72rem'}}>
-            <strong>Ranked Leads</strong>
-            <span style={{color: 'var(--ifm-color-emphasis-700)'}}>ICP: Shopify · US · $500K–$5M</span>
-            <span style={{marginLeft: 'auto', color: 'var(--ifm-color-emphasis-700)'}}>cost/lead: $0.42</span>
-          </div>
-          <table style={{width: '100%', borderCollapse: 'collapse'}}>
-            <thead>
-              <tr style={{textAlign: 'left', color: 'var(--ifm-color-emphasis-700)', fontSize: '0.68rem'}}>
-                <th style={cell}>Site</th><th style={cell}>Score</th><th style={cell}>Why</th><th style={cell}>Size</th><th style={cell}>Contact</th><th style={cell}>Outreach</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{...row, background: 'var(--ifm-color-primary-contrast-background)'}}>
-                <td style={cell}><strong>peakgear.com</strong></td>
-                <td style={cell}><span style={pill('var(--ifm-color-primary)', '#fff')}>88 High</span></td>
-                <td style={cell}>fit 85% · reach 72% · fix 91% (weak CTA, slow checkout)</td>
-                <td style={cell}>Mid · 82%</td>
-                <td style={cell}>john@peakgear.com · 95%</td>
-                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>Ready</span></td>
-              </tr>
-              <tr style={row}>
-                <td style={cell}>trailrunsupply.com</td>
-                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>71 Med</span></td>
-                <td style={cell}>fit 70% · reach 64% · fix 80% (no trust signals)</td>
-                <td style={cell}>Small · 75%</td>
-                <td style={cell}>role: info@ · 60%</td>
-                <td style={cell}></td>
-              </tr>
-              <tr style={{fontSize: '0.74rem'}}>
-                <td style={cell}>urbanpaws.store</td>
-                <td style={cell}><span style={pill('var(--ifm-color-emphasis-300)', 'var(--ifm-color-emphasis-900)')}>54 Low</span></td>
-                <td style={cell}>fit 55% · reach 40% · fix 70%</td>
-                <td style={cell}>Small · 68%</td>
-                <td style={cell}>catch-all · 35%</td>
-                <td style={cell}></td>
-              </tr>
-            </tbody>
-          </table>
-          <div style={{borderTop: '1px solid var(--ifm-color-emphasis-200)', padding: '0.7rem', background: 'var(--ifm-background-surface-color)'}}>
-            <div style={{fontWeight: 700, fontSize: '0.74rem', marginBottom: '0.3rem'}}>Drafted outreach · peakgear.com</div>
-            <p style={{margin: '0 0 0.5rem', fontSize: '0.76rem', color: 'var(--ifm-color-emphasis-800)'}}>Your checkout loads in 8.2s on mobile (vs ~2.1s typical). At a 2% conversion rate that is roughly $40K/year. Here is how to cut it in half.</p>
-            <div style={{display: 'flex', gap: '0.4rem'}}>
-              <button style={{padding: '0.35rem 0.8rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 600, cursor: 'pointer'}}>Approve &amp; send</button>
-              <button style={{padding: '0.35rem 0.8rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '7px', background: 'transparent', color: 'var(--ifm-font-color-base)', cursor: 'pointer'}}>Edit</button>
-            </div>
-          </div>
-        </div>
-      </Mockup>
+      <Walkthrough
+        customScene={engine}
+        steps={[
+          {type: 'move', target: '#sc-cta', say: 'The agent scans a weak prospect store'},
+          {type: 'highlight', target: '#sc-cta', say: 'a low-intent CTA'},
+          {type: 'highlight', target: '#sc-checkout', say: 'and a slow mobile checkout'},
+          {type: 'highlight', target: '#sc-findings', say: 'it logs each detected issue'},
+          {type: 'highlight', target: '#sc-enrich', say: 'then sizes the store and finds a verified owner', hold: 1600},
+          {type: 'scene', to: 'custom', say: 'The scan becomes a scored lead with a drafted pitch', hold: 2400},
+        ]}
+      >
+        {scan}
+      </Walkthrough>
     </>
   );
 }
