@@ -554,3 +554,103 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .mermaid-flow-dot {
   filter: drop-shadow(0 0 3px var(--ifm-color-primary));
 }
+
+/* ==========================================================================
+   Markdown tables — editorial treatment, grounded in the brand (terracotta on
+   warm cream "paper"), NOT Infima's default boxed grid. The point of view:
+   minimal ink. The structure is carried by a single coral header rule, hairline
+   row dividers, and whitespace — with a hover highlight instead of zebra stripes
+   (striping is reserved for genuinely large tables; see below). Applies to every
+   `.markdown` surface: docs (craft/journey), Thoughts, and Designs.
+
+   References: minimal-border / whitespace-led tables (pencilandpaper.io,
+   uxmovement), left-text / right-number alignment, hover-over-stripe row
+   separation (alistapart), and accessible horizontal overflow on mobile
+   (adrianroselli, johnfraney): the table becomes its own scroll region.
+   ========================================================================== */
+.markdown table {
+  /* `display: block` turns the table into its own horizontal scroll container so
+     wide tables (the markdown-review-studio decisions table, etc.) scroll instead
+     of breaking the layout on narrow screens. `width: max-content` lets it size to
+     content up to the column, then overflow. Keyboard users can scroll it because
+     it's focusable (tabindex set on the element is not possible from CSS — the
+     scroll still works via wheel/trackpad/touch; a renderer-level wrapper would add
+     arrow-key support, deferred to keep this a pure-CSS change). */
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+  border-collapse: collapse;
+  border: 0; /* drop Infima's outer box; whitespace + the header rule define it */
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Header: the one bold accent. Warm cream tint + a 2px coral underline; the rest
+   of the table stays quiet. Left-aligned, slightly tighter tracking, Geist heavier. */
+.markdown table thead {
+  background: var(--ifm-color-primary-contrast-background);
+}
+.markdown table thead th {
+  font-weight: 650;
+  text-align: left;
+  letter-spacing: 0.01em;
+  color: var(--ifm-heading-color);
+  border: 0;
+  border-bottom: 2px solid var(--ifm-color-primary);
+  padding: 0.7rem 0.9rem;
+  white-space: nowrap; /* keep header labels on one line */
+}
+
+/* Body cells: generous padding, hairline horizontal dividers only, no vertical
+   gridlines. Top-align so multi-line cells read as rows, not blocks. */
+.markdown table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+}
+.markdown table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Row hover — the lightweight alternative to zebra striping. */
+.markdown table tbody tr {
+  transition: background-color 0.12s ease;
+}
+.markdown table tbody tr:hover {
+  background: rgba(179, 62, 30, 0.05);
+}
+
+/* Numeric columns line up for comparison: opt a cell in by wrapping its value in
+   an HTML right-aligned cell, or author the column with `:--:`/`--:` markdown
+   alignment, which Docusaurus emits as `style="text-align:right/center"`. Honor
+   those, and use tabular figures so digits sit in even columns. */
+.markdown table td[style*='right'],
+.markdown table th[style*='right'] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Zebra striping ONLY for large tables: opt in by adding `large` to a wrapping
+   element or the table's own class via the `large-table` utility on its parent.
+   (Authors add it deliberately; small tables stay stripe-free per the research.) */
+.large-table .markdown table tbody tr:nth-child(even),
+.markdown table.large-table tbody tr:nth-child(even) {
+  background: rgba(26, 26, 26, 0.025);
+}
+
+/* Dark mode: mirror the tints onto the dark surface so dividers and the hover
+   read without glowing. The coral header rule carries over unchanged. */
+html[data-theme='dark'] .markdown table td {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+html[data-theme='dark'] .markdown table tbody tr:hover {
+  background: rgba(228, 87, 46, 0.1);
+}
+html[data-theme='dark'] .large-table .markdown table tbody tr:nth-child(even),
+html[data-theme='dark'] .markdown table.large-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.035);
+}
