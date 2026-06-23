@@ -24,11 +24,15 @@ This repo runs **mermaid 11.15** — all types below are verified to render here
 | Git branching/merging story | `gitGraph` | commits, branches, merges |
 | Idea tree / brainstorm | `mindmap` | radial hierarchy |
 | Dated milestones | `timeline` | chronological events |
-| **Use-case diagram (UML)** | NOT native — see below | map to flowchart or C4 |
+| What a system TOUCHES at its boundary | `architecture-beta` (context) | hub-and-spoke; see Context diagram |
+| **Use-case diagram (UML)** | `flowchart` (no native type) | actors + oval use cases; see recipe |
 
-**"Use-case diagram" is not a native mermaid type.** Map it: for actors-and-use-cases, a
-`flowchart LR` with actor nodes on the left pointing at use-case nodes (or stadium shapes)
-reads as a use-case diagram; for system-context boundaries, use `C4Context`.
+**Three "boundary/relationship" diagrams that are easy to confuse — pick deliberately:**
+- **Flow** (`flowchart`/`graph`): something MOVES through steps (A→B→C). Activity/data flow.
+- **Context** (`architecture-beta`): what a system TOUCHES — its neighbors/stores/deps at the
+  boundary. Hub-and-spoke, NOT a sequence. (See "Context diagram" below.)
+- **Use-case** (`flowchart`, mapped): which ACTORS use which capabilities. Actors ↔ ovals.
+  (See "Use-case diagram" below.)
 
 ## Verified skeletons (mermaid 11)
 
@@ -144,8 +148,83 @@ stateDiagram-v2
   Shipped --> [*]
 ```
 
+### use-case diagram (VERIFIED recipe — no native type, built from a flowchart)
+Mermaid has no UML use-case type. The pattern that renders here: **actors as emoji nodes**
+(`👤` — note `fa:fa-user` does NOT render in this repo, the icon is dropped), **use cases as
+stadium/oval nodes `([...])`**, a **system-boundary `subgraph`**, plain `---` associations,
+and `-. include .->` / `-. extend .->` for the UML stereotypes. Verified-rendering skeleton:
+```
+flowchart LR
+  reviewer["👤 Reviewer"]
+  author["👤 Author"]
+  subgraph system[Review Studio]
+    uc1([View document])
+    uc2([Leave anchored comment])
+    uc3([Run Claude on comments])
+    uc4([Browse history])
+  end
+  reviewer --- uc1
+  reviewer --- uc2
+  reviewer --- uc3
+  author --- uc1
+  author --- uc4
+  uc3 -. include .-> uc2
+```
+Keep actors on one side (`flowchart LR` puts them left), the use cases inside the boundary,
+and few associations per actor so the lines stay clean (visual-verify).
+
+### context diagram (architecture-beta hub — what a system TOUCHES)
+Shows a system and the actors/stores/dependencies at its boundary — NOT internal flow. One
+`group` is the boundary; the core service is the hub; its neighbors sit around it with ports
+that FACE the hub (so no edge crosses a node). This is the markdown-review "How it's wired"
+diagram. Recipe:
+```
+architecture-beta
+  group machine(logos:apple)[Local Machine]
+  service git(logos:git-icon)[Git Repo] in machine
+  service ui(logos:chrome)[Browser UI] in machine
+  service server(logos:nodejs-icon)[Review Server] in machine
+  service claude(logos:claude)[Claude Code CLI] in machine
+  service files(logos:markdown)[Markdown Files] in machine
+  ui:R --> L:server
+  server:T --> B:git
+  server:R --> L:claude
+  server:B --> T:files
+```
+Declaration order places the hub's neighbors on its sides — declare them around the hub and
+each edge leaves the side its target sits on (see Arrow & layout hygiene).
+
 (For `erDiagram`, `classDiagram`, `mindmap`, `timeline`, `C4Context` use the standard
 mermaid-11 syntax; if unsure, probe-verify per the workflow below before shipping.)
+
+## Flowchart mechanisms (shapes / links / subgraphs / styling)
+
+The flowchart is the workhorse — know its parts:
+
+**Node shapes** (the bracket IS the shape): `A[rect]` · `A(rounded)` · `A([stadium/oval])` ·
+`A[[subroutine]]` · `A[(cylinder/db)]` · `A((circle))` · `A{rhombus/decision}` ·
+`A{{hexagon}}` · `A[/parallelogram/]` · `A>asymmetric]`. (Mermaid 11 also has the generic
+`A@{ shape: rounded }` form.) Pick shape by meaning: decision → rhombus, store → cylinder,
+use-case → stadium, process → rect.
+
+**Links:** `A-->B` (arrow) · `A---B` (line, no arrow — good for associations) · `A-.->B`
+(dotted) · `A==>B` (thick) · labels: `A-- text -->B` or `A-->|text|B` · chain: `A-->B-->C`.
+
+**Subgraphs (grouping + boundaries):**
+```
+flowchart LR
+  subgraph box[System Boundary]
+    direction TB
+    a --> b
+  end
+  user --> box
+```
+
+**Styling — AVAILABLE but COLOR-CONSTRAINED here.** `classDef name …`, `class A,B name`,
+the `A:::name` shorthand, `style A …`, and `linkStyle 0 …` all work. BUT do not set fill/
+stroke COLORS (the light/dark theme owns color — see Site conventions). Use these only for
+non-color structure if needed (e.g. `stroke-dasharray` to mark a provisional/future node).
+For everyday diagrams, set NO style at all and let the theme handle it.
 
 ## Arrow & layout hygiene (clean arrows are a CONTENT-quality bar, not automatic)
 
