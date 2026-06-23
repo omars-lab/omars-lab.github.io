@@ -1,0 +1,109 @@
+/* Gif — a framed, captioned animated-media figure. Theme-aware via --ifm tokens.
+   Matches <Mockup>'s frame language so gifs and mockups read as the same family. */
+
+.gif {
+  margin: 1.75rem auto;
+  width: 100%;
+}
+
+.frame {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* --- chrome bar (shared with Mockup's look) --- */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  background: color-mix(in srgb, var(--ifm-color-emphasis-200) 60%, var(--ifm-background-surface-color));
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+/* terminal frame: a dark bar so it reads as a CLI regardless of site theme */
+.barDark {
+  background: #2b2a28;
+  border-bottom-color: #11100f;
+}
+.barDark .barTitle { color: #c9c6bf; }
+
+.dots {
+  display: inline-flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ifm-color-emphasis-400);
+}
+.dots i:nth-child(1) { background: #e06c5e; }
+.dots i:nth-child(2) { background: #e6b04a; }
+.dots i:nth-child(3) { background: #79b46a; }
+
+.barTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-800);
+}
+
+/* --- the media + the play/pause affordance --- */
+.media {
+  position: relative;
+  line-height: 0; /* kill the inline-image gap */
+  background: var(--ifm-background-color);
+}
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.toggle {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20, 19, 18, 0.62);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.15s, transform 0.15s;
+  backdrop-filter: blur(2px);
+}
+.media:hover .toggle,
+.toggle:focus-visible {
+  opacity: 1;
+}
+.toggle:hover {
+  transform: scale(1.06);
+}
+
+.caption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+}
+
+/* bare frame: keep the rounded frame but no bar */
+.frame_none .frame {
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* the component already starts paused (poster) for these users; nothing animates here */
+  .toggle { transition: none; }
+}

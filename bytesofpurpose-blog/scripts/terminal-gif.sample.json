@@ -1,0 +1,25 @@
+{
+  "folder": "getting-started-with-claude-agents",
+  "model": "Opus 4.8",
+  "progress": "▓░░░░░░░ ~10%",
+  "transcript": [
+    {"kind": "promptbar", "text": "what stocks are worth considering today"},
+    {"kind": "gap"},
+    {"kind": "line", "segments": [{"t": "● ", "c": "ink"}, {"t": "I'll survey the market for stocks worth a closer look today. Let me", "c": "muted"}]},
+    {"kind": "line", "segments": [{"t": "  launch the ", "c": "muted"}, {"t": "stock-analyzer", "c": "muted", "b": true}, {"t": " agent to do this properly.", "c": "muted"}]},
+    {"kind": "gap"},
+    {"kind": "line", "segments": [{"t": "stock-analyzer", "c": "ink", "b": true}, {"t": "(Find stocks worth considering today)", "c": "muted"}]},
+    {"kind": "line", "indent": 2, "segments": [{"t": "└ ", "c": "muted"}, {"t": "Bash", "c": "ink", "b": true}, {"t": "(ls -la .claude/ && find .claude -name \"*.md\" …)", "c": "muted"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "Running…", "c": "muted"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "Read", "c": "ink", "b": true}, {"t": "(.claude/skills/ensure-deps/SKILL.md)", "c": "blue"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "… +1 tool use (ctrl+o to expand)", "c": "muted"}]},
+    {"kind": "gap"},
+    {"kind": "line", "segments": [{"t": "● ", "c": "ink"}, {"t": "Here's a shortlist worth a closer look today. Approve it before I", "c": "muted"}]},
+    {"kind": "line", "segments": [{"t": "  spend analysis time going deeper:", "c": "muted"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "NVDA", "c": "ink", "b": true}, {"t": "  data-center guidance raised after hours", "c": "muted"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "AVGO", "c": "ink", "b": true}, {"t": "  custom-silicon 8-K filed pre-market", "c": "muted"}]},
+    {"kind": "line", "indent": 4, "segments": [{"t": "LLY", "c": "ink", "b": true}, {"t": "   PDUFA decision due this week", "c": "muted"}]},
+    {"kind": "gap"},
+    {"kind": "spinner", "segments": [{"t": "Stewing… ", "c": "orange"}, {"t": "(28s · ↓ 636 tokens)", "c": "muted"}]}
+  ]
+}

@@ -12,6 +12,9 @@ export type {
 export {default as Mockup} from './components/Mockup';
 export type {MockupProps, MockupChrome} from './components/Mockup';
 
+export {default as Gif} from './components/Gif';
+export type {GifProps, GifFrame} from './components/Gif';
+
 export {default as DiagramWithFootnotes, circledNumber} from './components/DiagramWithFootnotes';
 export type {DiagramWithFootnotesProps} from './components/DiagramWithFootnotes';
 

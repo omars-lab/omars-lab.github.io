@@ -10,7 +10,7 @@ skill is the **catalog + decision guide**: what each component is, when it earns
 the MDX to drop in, and what bites. It is content-origin-agnostic — use it on any
 `blog/`, `designs/`, or `docs/` page.
 
-> **Where the components live:** Walkthrough, Mockup, DiagramWithFootnotes, and Assumption
+> **Where the components live:** Walkthrough, Mockup, Gif, DiagramWithFootnotes, and Assumption
 > now ship from the published **`@omars-lab/blog-ui`** package (source in `packages/blog-ui/`).
 > Import them as `import {Mockup, Walkthrough} from '@omars-lab/blog-ui'`. The blog registers
 > them + imports the bundled styles (`@omars-lab/blog-ui/style.css`) once in
@@ -122,6 +122,30 @@ import {Mockup} from '@omars-lab/blog-ui';
   `mockups: ./_mockups/<name>.mdx`. The importer injects `import Mockups … <Mockups/>` after
   the truncate marker and **preserves it across re-imports**, and never regenerates the
   sidecar. See `import-co-design`.
+
+### Gif (animated media — show it in MOTION)
+
+WHAT: a framed, captioned, accessible figure for an animated GIF (or short clip) — a recorded
+or synthesized terminal session, a screen capture. WHEN: you want to show real motion that a
+scripted `<Walkthrough>` can't (an actual CLI run, a screen recording). Unlike a bare
+`<img src="*.gif">`, it lazy-loads, frames the media to match `<Mockup>` (a `terminal` frame
+reads as a CLI on any theme), and is motion-accessible: it starts on a static `poster` for
+`prefers-reduced-motion` and gives everyone a play/pause toggle (a GIF can't pause natively, so
+it swaps to the poster). HOW:
+
+```mdx
+import {Gif} from '@omars-lab/blog-ui';
+
+<Gif src="/img/<post>/session.gif" poster="/img/<post>/session-poster.png"
+     alt="Claude Code running the stock-analyzer agent" frame="terminal" title="claude code"
+     caption={<><b>A real session.</b> The agent runs its skills, then pauses for approval.</>} />
+```
+
+- Put the `.gif` (and a `poster` first-frame `.png`, recommended) under `static/img/<post>/` and
+  reference by absolute path, or `import` it in a sidecar. `alt` is required; `poster` is what
+  reduced-motion users see.
+- To GENERATE a synthesized Claude-Code-session gif (no live recording), see the
+  `author-terminal-gif` skill — it feeds straight into this component.
 
 ### Admonitions (callouts)
 

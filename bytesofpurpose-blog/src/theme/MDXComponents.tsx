@@ -18,6 +18,7 @@ import {
   Mockup,
   Walkthrough,
   Assumption,
+  Gif,
 } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
 
@@ -47,4 +48,7 @@ export default {
   Walkthrough,
   // Yellow inline highlight for [Assumption: …] markers (unvalidated premises to review).
   Assumption,
+  // Animated-media figure: a framed, captioned, accessible <Gif> for a recorded/synthesized
+  // clip (terminal session, screen capture) — lazy, reduced-motion poster, play/pause toggle.
+  Gif,
 };
