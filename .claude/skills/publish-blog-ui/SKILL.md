@@ -101,6 +101,14 @@ GitHub Packages requires auth even for read. In the consuming repo:
 - 2026-06-23 — Created with the package. Tag pattern is `blog-ui-v*` (not plain `v*`, since the
   monorepo may host other packages later). Blog consumes via `file:` so local changes are live;
   publishing is only for OTHER repos. GitHub Packages needs auth even to read.
+- 2026-06-23 — **First publish: `@omars-lab/blog-ui@0.1.0` is LIVE** in GitHub Packages.
+  Lesson on ordering: a tag-triggered workflow only fires reliably when the workflow YAML is on
+  the **default branch** — so MERGE the PR that adds `publish-blog-ui.yml` to `master` FIRST,
+  then tag from master. (Tagging the feature branch may not trigger anything.) Sequence that
+  worked: squash-merge → `git checkout master && git pull --ff-only` → `git tag -a blog-ui-v0.1.0`
+  → `git push origin blog-ui-v0.1.0` → workflow ran all green → confirm with
+  `gh api /users/omars-lab/packages/npm/blog-ui/versions` (omars-lab is a USER, not an org, so
+  the `/users/…` endpoint, not `/orgs/…`). Runner annotated a harmless Node-20-deprecation notice.
 - 2026-06-23 — Added `yarn simulate-publish` (= build + `npm publish --dry-run`) as the
   repeatable rehearsal target, and `prepublishOnly` (rebuild-before-publish guard). Turned
   `sourcemap` OFF in tsup — the first dry-run tarball shipped 65 kB of `.map` files for no
