@@ -58,6 +58,8 @@ export type WalkStep =
   | {
       type: 'scene';
       to: 'app' | 'claude' | 'custom';
+      /** which custom scene to show when `to: 'custom'` (index into `customScenes`); default 0 */
+      index?: number;
       prompt?: string; // claude beats: the typed prompt line
       intro?: string; // claude beats: a human assistant line shown BEFORE the tools
       tools?: ClaudeTool[]; // claude beats: the streamed tool-use lines
@@ -68,8 +70,17 @@ export type WalkStep =
 export interface WalkthroughProps {
   children: ReactNode; // the app scene (a <Mockup>)
   steps: WalkStep[];
-  /** an optional SECOND scene (e.g. a BI chart) crossfaded to via {type:'scene', to:'custom'} */
+  /**
+   * A single extra scene (e.g. a BI chart), crossfaded to via {type:'scene', to:'custom'}.
+   * For more than one custom scene, use `customScenes` instead. (Kept for back-compat.)
+   */
   customScene?: ReactNode;
+  /**
+   * Multiple extra scenes, addressed by {type:'scene', to:'custom', index:N} (default 0).
+   * Takes precedence over `customScene` when provided. Lets a story crossfade across several
+   * author-supplied scenes, e.g. store-scan → dashboard → projection.
+   */
+  customScenes?: ReactNode[];
   stepHold?: number;
   autoPlay?: boolean;
   className?: string;
@@ -80,17 +91,28 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
   children,
   steps,
   customScene,
+  customScenes,
   stepHold = 1000,
   autoPlay = true,
   className,
   style,
 }) => {
+  // Normalize the custom scene(s) into one array: `customScenes` wins; else the single
+  // `customScene` becomes a 1-element array; else none. Existing single-scene sidecars keep
+  // working unchanged (they hit index 0).
+  const scenesList: ReactNode[] =
+    customScenes && customScenes.length
+      ? customScenes
+      : customScene
+        ? [customScene]
+        : [];
   const rootRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<HTMLDivElement>(null);
   const [cursor, setCursor] = useState({x: 24, y: 24, clicking: false});
   const [hl, setHl] = useState<{x: number; y: number; w: number; h: number} | null>(null);
   const [typed, setTyped] = useState<{sel: string; text: string} | null>(null);
   const [scene, setScene] = useState<'app' | 'claude' | 'custom'>('app');
+  const [customIndex, setCustomIndex] = useState(0);
   const [claudePrompt, setClaudePrompt] = useState('');
   const [claudeIntro, setClaudeIntro] = useState('');
   const [claudeTools, setClaudeTools] = useState<ClaudeTool[]>([]);
@@ -143,7 +165,8 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
       setCaption(step.say || '');
 
       if (step.type === 'scene') {
-        // crossfade scenes
+        // crossfade scenes; for a custom scene, select which one by index (default 0)
+        if (step.to === 'custom') setCustomIndex(step.index ?? 0);
         setScene(step.to);
         await wait(450);
         if (step.to === 'claude') {
@@ -332,17 +355,19 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
           </div>
         </div>
 
-        {/* CUSTOM scene (e.g. a BI projection chart), supplied by the author */}
-        {customScene && (
+        {/* CUSTOM scene(s) (e.g. a store-scan, a dashboard, a BI projection), supplied by the
+            author. All are grid-stacked in the same cell; only the active index is shown. */}
+        {scenesList.map((node, i) => (
           <div
+            key={i}
             className={clsx(
               styles.scene,
-              scene === 'custom' ? styles.shown : styles.hidden
+              scene === 'custom' && customIndex === i ? styles.shown : styles.hidden
             )}
-            aria-hidden={scene !== 'custom'}>
-            {customScene}
+            aria-hidden={!(scene === 'custom' && customIndex === i)}>
+            {node}
           </div>
-        )}
+        ))}
       </div>
 
       {/* timeline: a continuous rail with one dot per step at an even position; a fill

@@ -80,6 +80,20 @@ Claude opens the tool, the human reviews in the browser, Claude continues on the
 The two scenes grid-stack in one viewport cell, so a Claude beat REPLACES the app in place
 (never stacked under it).
 
+## Multiple custom scenes (app → A → B → …)
+
+Beyond the built-in `app` (children) and `claude` scenes, you can supply your OWN scenes and
+crossfade across several of them:
+- **One** extra scene: `customScene={<Mockup>…</Mockup>}`, reached by `{type:'scene', to:'custom'}`.
+- **Several**: `customScenes={[sceneA, sceneB]}`, each reached by `{type:'scene', to:'custom', index:N}`
+  (`index` defaults to 0). They grid-stack in the same cell; only the active index shows.
+
+This is how the storefront walkthrough opens on a live **store-scan** (the app scene, with the
+weak section flagged) then crossfades to the **dashboard** (`index:0`) and the **BI projection**
+(`index:1`). GOTCHA: `move`/`highlight`/`dragSelect`/`type` targets are resolved against the
+**app scene only** (the engine queries the children) — a custom scene can't be the target of a
+cursor step, so let its caption carry the beat, or put the interactive bits in the app scene.
+
 ## Cursor + timeline
 
 - The cursor is a **teal pointer in a translucent halo** (`--wt-cursor`), deliberately a
