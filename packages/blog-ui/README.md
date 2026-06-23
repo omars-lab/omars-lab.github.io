@@ -8,6 +8,8 @@ Reusable React components for design/blog posts, extracted from
   terminal scene (or any custom scene), with a step timeline. 
 - **`Mockup`** — a framed, theme-aware wrapper (browser / window / phone chrome) that turns
   live HTML into a UI mockup.
+- **`Gif`** — a framed, captioned, accessible animated-media figure for a GIF or clip (recorded
+  or synthesized terminal session, screen capture): lazy-load, reduced-motion poster, play/pause.
 - **`DiagramWithFootnotes`** — a diagram + a generated numbered legend (①②③) tied to notes.
 - **`Assumption`** — an amber inline highlight for "[Assumption: …]" markers to flag for review.
 
