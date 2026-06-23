@@ -407,7 +407,7 @@ const Walkthrough: React.FC<WalkthroughProps> = ({
 const CommentInjector: React.FC<{
   selector: string;
   text: string;
-  scope: React.RefObject<HTMLDivElement>;
+  scope: React.RefObject<HTMLDivElement | null>;
 }> = ({selector, text, scope}) => {
   useEffect(() => {
     const el = scope.current?.querySelector(selector) as HTMLElement | null;

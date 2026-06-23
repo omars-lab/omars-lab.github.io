@@ -11,10 +11,15 @@ import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
-import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
-import Mockup from '@site/src/components/Mockup';
-import Walkthrough from '@site/src/components/Walkthrough';
-import Assumption from '@site/src/components/Assumption';
+// Reusable design-post components now live in the published @omars-lab/blog-ui package
+// (single source of truth; the blog consumes it). The bundled styles are imported once.
+import {
+  DiagramWithFootnotes,
+  Mockup,
+  Walkthrough,
+  Assumption,
+} from '@omars-lab/blog-ui';
+import '@omars-lab/blog-ui/style.css';
 
 export default {
   // Reusing the default mapping

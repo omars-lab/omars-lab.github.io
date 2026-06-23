@@ -217,9 +217,9 @@ here.
 ## Files
 
 - `.claude/skills/import-co-design/import-co-design.js` — the transformer (exports pure functions for tests).
-- `bytesofpurpose-blog/test/unit/import-co-design.test.ts` — 37 unit proofs.
+- `bytesofpurpose-blog/test/unit/import-co-design.test.ts` — unit proofs (de-em-dash, links, footnotes, admonitions, diagram classifier + use-case restructure).
 - `bytesofpurpose-blog/test/e2e/co-design-imports.spec.ts` — rendered proofs (dev + prod projects).
-- `bytesofpurpose-blog/src/components/DiagramWithFootnotes/` — the numbered-legend component.
+- `packages/blog-ui/` — the published `@omars-lab/blog-ui` (Mockup, Walkthrough, DiagramWithFootnotes, Assumption); the blog consumes it.
 - `bytesofpurpose-blog/src/css/custom.css` — the opt-in `.mermaid-animated` edge animation.
 - `Makefile` → `import-co-designs` target.
 

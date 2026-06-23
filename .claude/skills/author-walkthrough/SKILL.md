@@ -10,10 +10,12 @@ for a Claude-driven tool, hands off to a Claude Code terminal that streams the f
 scripted, looping animation: cursor drags to select a phrase, a comment types in letter-by-
 letter, a button is clicked, the app scene crossfades to a Claude CLI scene, then fades back.
 
-The components live in `src/components/Walkthrough` and `src/components/Mockup` (both
-registered in `src/theme/MDXComponents.tsx`, so no import is needed in a `docs/` page; in a
-`designs/` sidecar you DO import them — see the sidecar pattern). The catalog of all post
-components is the `upgrade-post` skill; this skill is the deep-dive on Walkthrough.
+The `Walkthrough` and `Mockup` components ship from the published **`@omars-lab/blog-ui`**
+package (source in `packages/blog-ui/src/components/`). The blog registers them + imports the
+bundled styles in `src/theme/MDXComponents.tsx`, so no import is needed in a `docs/` page; in a
+`designs/` sidecar you DO import them: `import {Mockup, Walkthrough} from '@omars-lab/blog-ui'`
+(see the sidecar pattern). The catalog of all post components is the `upgrade-post` skill; this
+skill is the deep-dive on Walkthrough.
 
 ## The shape
 
@@ -135,8 +137,8 @@ The e2e spec `test/e2e/co-design-imports.spec.ts` has a worked assertion (the
 
 ## Files
 
-- `bytesofpurpose-blog/src/components/Walkthrough/` — the engine (index.tsx + styles).
-- `bytesofpurpose-blog/src/components/Mockup/` — the framed app scene.
+- `packages/blog-ui/src/components/Walkthrough/` — the engine (index.tsx + styles).
+- `packages/blog-ui/src/components/Mockup/` — the framed app scene.
 - `bytesofpurpose-blog/designs/_mockups/markdown-review-studio.mdx` — the worked example.
 - `bytesofpurpose-blog/test/e2e/co-design-imports.spec.ts` — the rendered-proof spec.
 

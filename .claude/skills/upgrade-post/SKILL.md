@@ -10,6 +10,14 @@ skill is the **catalog + decision guide**: what each component is, when it earns
 the MDX to drop in, and what bites. It is content-origin-agnostic — use it on any
 `blog/`, `designs/`, or `docs/` page.
 
+> **Where the components live:** Walkthrough, Mockup, DiagramWithFootnotes, and Assumption
+> now ship from the published **`@omars-lab/blog-ui`** package (source in `packages/blog-ui/`).
+> Import them as `import {Mockup, Walkthrough} from '@omars-lab/blog-ui'`. The blog registers
+> them + imports the bundled styles (`@omars-lab/blog-ui/style.css`) once in
+> `src/theme/MDXComponents.tsx`, so in a `docs/`/`blog/` page they're available with no import;
+> in a `designs/` mockup sidecar you DO import from the package. (Card/Carousel/Premium/etc.
+> remain in `bytesofpurpose-blog/src/components/`.)
+
 There are TWO doc surfaces this complements, don't duplicate them:
 - **Reader-facing** how-to lives in `docs/craft/blogging/` (`embed-code`, `embed-diagrams`,
   `embed-external-components`, `embed-structural-components`, `diagramming/`). Those teach a
@@ -72,7 +80,7 @@ WHAT: a diagram + a generated numbered legend (①②③) tying badges in the me
 explanations. WHEN: a diagram with steps that each need a sentence of context. HOW:
 
 ```mdx
-import DiagramWithFootnotes from '@site/src/components/DiagramWithFootnotes';
+import {DiagramWithFootnotes} from '@omars-lab/blog-ui';
 
 <DiagramWithFootnotes notes={['Scanner finds CRO problems', 'Agent ideates + tests', 'Winners ship']}>
 ```mermaid
@@ -94,7 +102,7 @@ adapts to light/dark, scales, and is version-controlled (no screenshots, no exte
 HOW:
 
 ```mdx
-import Mockup from '@site/src/components/Mockup';
+import {Mockup} from '@omars-lab/blog-ui';
 
 <Mockup chrome="browser" title="Review Studio" url="review.studio/doc/hld" caption="…">
   <div style={{display:'flex'}}>
