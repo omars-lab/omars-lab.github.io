@@ -191,6 +191,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Mobile-experience audit | `audit-mobile-experience` | confirm the site is a TRUE mobile experience from the MOBILE user's perspective (on-the-go, one-handed, touch): tap targets, thumb reach, content parity, no horizontal overflow, ≥16px text, working touch, mobile perf/a11y — not a shrunk desktop; chrome-devtools MCP on the prod build (:4173) + a MANDATORY visual-rubric screenshot pass → prioritized P0/P1/P2 report (report-only) |
 | Desktop-experience audit | `audit-desktop-experience` | sibling of the above from the DESKTOP user's perspective (seated, mouse+keyboard, wide screen, deep reading): readable line length (~≤80ch), content not lost in whitespace on wide/ultrawide, working hover/focus, good structure — the inverse failure modes (over-stretch / under-fill); same prod-build + visual-rubric method → prioritized report (report-only) |
 | Link hygiene | `validate-links` | lint source for bare/long/tracking/generic links (`make validate-links`) |
+| Serve locally | `serve-locally` | run the blog on your machine: `make start` (:3000, drafts visible) vs `make serve` (built site, no drafts); the stale-route-table 404 gotcha (restart fixes it) + curl-false-200 |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
 | Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |
