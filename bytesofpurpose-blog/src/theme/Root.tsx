@@ -3,6 +3,7 @@ import DebugMenu from '@site/src/components/DebugMenu';
 import ToastHost from '@site/src/components/Toast';
 import SignInModalHost from '@site/src/components/SignInModal';
 import {AuthProvider} from '@site/src/lib/auth';
+import {QuestionModalHost} from '@omars-lab/blog-ui';
 
 // Swizzled @theme/Root: wraps the entire app (above the router, persists across
 // navigation). The default Root just renders its children; we additionally:
@@ -19,6 +20,7 @@ export default function Root({children}: {children: React.ReactNode}): React.JSX
       <DebugMenu />
       <ToastHost />
       <SignInModalHost />
+      <QuestionModalHost />
     </AuthProvider>
   );
 }

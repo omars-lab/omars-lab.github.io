@@ -16,6 +16,12 @@ deploys cleanly. Pairs with `deploy-site` (ship) and `validate-deployment` (veri
 - `changelog/` — changelog entries (its own blog plugin instance).
 - `src/pages/` — standalone React pages (e.g. `changelog.tsx`).
 
+> **Question-set posts must be `.mdx`, not `.md`.** Any post tagged `question-set`
+> (the "What I Ask Myself: …" series) uses `<SectionBanner>` and `<Question>` JSX
+> components. Docusaurus only evaluates JSX in `.mdx` files — a `.md` file ignores
+> JSX silently or errors. Rename `YYYY-MM-DD-slug.md` → `YYYY-MM-DD-slug.mdx`
+> before adding these components.
+
 ## MDX pitfalls that FAIL the build (learned the hard way)
 
 Docusaurus 3 parses `.md`/`.mdx` as MDX. These break the build during static

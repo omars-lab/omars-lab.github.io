@@ -197,6 +197,106 @@ specific commit/line range in a sibling repo as proof. Validated by `validate-fo
 footnote without the Evidence component; `import-co-design` produces those. See an existing
 post that uses Evidence (e.g. the image-to-DSL Thoughts post) for the exact syntax.
 
+### SectionBanner (question-set section rationale)
+
+WHAT: a left-accent callout placed immediately under an H2 heading, explaining *why the
+questions in that section matter*. It renders as italic secondary-colored text with a
+3px primary-color left bar and a subtle surface background — quieter than an admonition,
+more like a narrator aside. WHEN: any post in the `question-set` tag class ("What I Ask
+Myself: …" series), or any post where H2 sections contain clustered questions that each
+need a one-sentence rationale. NOT for general docs or posts without clustered H2 sections.
+
+```mdx
+## Core purpose
+
+<SectionBanner why="These are the hardest questions to answer and the most important to keep asking. Most people live their whole lives without a clear answer -- and that gap shows up as restlessness, drift, and doing things for the wrong reasons." />
+
+<Question ...>…</Question>
+```
+
+- `why` is a 1-2 sentence rationale. No em-dashes (blocking hook). Write honestly, not generically.
+- Registered in `MDXComponents.tsx` — no import needed in `.mdx` blog posts.
+- The file must be `.mdx` (not `.md`) to use JSX components.
+
+### Question (introspective question card + detail modal + badges)
+
+WHAT: replaces a plain bullet-list question with a clickable card carrying glanceable
+**badges** (power icons + priority/frequency/depth pills). Clicking opens an app-wide
+modal showing the badges (labeled) plus per-question metadata: why it matters, how often
+to ask it, when to ask it, how often to record answers. Only rows/badges where the prop
+is set are rendered. WHEN: any `question-set` post where per-question metadata is
+available. NOT for questions in general docs — only introspective/journaling posts.
+
+```mdx
+<Question
+  power={['fire', 'anvil']}
+  priority="core"
+  frequency="Yearly"
+  depth="deep"
+  why="Without a clear answer, every decision defaults to what feels comfortable, not what's deepest."
+  howOften="Once per year, and any time you feel like you're going through the motions"
+  when="During quiet periods of reflection, journaling sessions, or spiritual retreats"
+  record="Write a paragraph-length answer; revisit it annually to see how your answer has shifted">
+  What is the purpose of your life?
+</Question>
+```
+
+- `children` = the question text (plain string in the card + modal heading).
+- **Badge props (all optional):**
+  - `power` — the "power of a question" charge(s). One value or an array. The taxonomy
+    (a forge metaphor, rendered with `react-icons/gi` SVG glyphs, theme-aware):
+    `'spark'` (GiLightningArc — a jolt that wakes you up),
+    `'fire'` (GiFlame — a burn that confronts you),
+    `'chisel'` (GiChisel — carves away what isn't you),
+    `'anvil'` (GiAnvil — reshapes who you become). Omit `power` for a calm/no-icon
+    question. A question may carry MULTIPLE (e.g. `power={['fire','anvil']}`).
+  - `priority` — `'core' | 'high' | 'medium' | 'low'` (colored pill; core/high stand out).
+  - `frequency` — short cadence label for the badge (e.g. `"Yearly"`, `"Monthly"`,
+    `"In hard stretches"`). The full sentence still goes in `howOften`.
+  - `depth` — `'quick' | 'moderate' | 'deep'` (how much reflection it demands).
+- All detail props (`why`, `howOften`, `when`, `record`) are optional; the modal renders
+  only the rows with values. A card opens the modal if it has ANY badge or detail.
+- Modal is pub/sub via `CustomEvent('bop:question-modal')`. The `QuestionModalHost` is
+  mounted once in `src/theme/Root.tsx` — already wired; don't add it again.
+- **MDX children extraction**: MDX wraps even plain-text children in React elements.
+  The component handles this with a `nodeToText()` helper — write the question as plain
+  text (no nested JSX) and it will extract cleanly.
+- Registered in `MDXComponents.tsx` — no import needed in `.mdx` blog posts.
+- The file must be `.mdx` (not `.md`).
+
+### PowerLegend (the canonical power-taxonomy legend)
+
+WHAT: renders the "power of a question" legend (spark/fire/chisel/anvil + calm) from the
+SAME `POWER_META` source the card badges use, so the reader-facing legend can never drift
+from the icons on the cards. WHEN: only in the **"What I Ask Myself" keystone post**
+(`blog/2026-01-24-what-i-ask-myself.mdx`) — that post is the single legend the whole
+series shares. Drop it in with no props:
+
+```mdx
+<PowerLegend />
+```
+
+- Do NOT hand-author the legend as a markdown table with approximate emoji — emoji render
+  per-OS and won't match the `react-icons` glyphs on the cards. Always use `<PowerLegend>`.
+- **LOCKSTEP RULE — taxonomy + legend post move together.** The `POWER_META` object in
+  `packages/blog-ui/src/components/Question/index.tsx` is the source of truth for the
+  power taxonomy. `<PowerLegend>` renders straight from it, so the *icons + glosses* stay
+  in sync automatically. BUT the keystone post also has **prose** describing the taxonomy
+  (the intro to the legend, the "a question can carry more than one" example). Whenever you
+  change the taxonomy (add/rename/recolor a power, change a gloss), update that post's prose
+  in the SAME change so the narrative doesn't drift from the icons. The component doc-comment
+  and this skill both point at that post as the canonical legend.
+
+### react-icons in blog-ui (bundling gotcha)
+
+The Question badges use `react-icons/gi`. `react-icons` is a **regular dependency** of
+`blog-ui` and tsup **bundles** it into `dist` (via `noExternal: ['react-icons']` in
+`tsup.config.ts`), tree-shaken to just the icons imported. This is REQUIRED: the blog
+consumes `blog-ui` via a `file:` ref and does NOT install react-icons, so if it were left
+external the runtime import resolves to nothing and Question crashes ("Element type is
+invalid"). If you add an icon from a new react-icons subpath, it's already covered by the
+`noExternal` glob — just rebuild + re-copy dist (see the build/copy workflow below).
+
 ### Timeline / Card / Tabs
 
 - `Timeline` + `TimelineItem` — sequenced events (retrospectives, phases).
@@ -238,6 +338,28 @@ post that uses Evidence (e.g. the image-to-DSL Thoughts post) for the exact synt
 
 ## Learnings log (newest first)
 
+- 2026-06-24 (later) — Added the **badge system** to `Question` (`power`/`priority`/
+  `frequency`/`depth`) + the `PowerLegend` component. The "power of a question" taxonomy is a
+  forge metaphor rendered with `react-icons/gi` SVG glyphs (spark=GiLightningArc,
+  fire=GiFlame, chisel=GiChisel, anvil=GiAnvil), `power` accepts a single value OR an array.
+  Two load-bearing gotchas: (1) `react-icons` must be BUNDLED into blog-ui's dist
+  (`noExternal: ['react-icons']` in tsup.config.ts) — the blog consumes via `file:` and
+  doesn't install it, so leaving it external crashes Question at runtime. Verify after build:
+  `grep -E 'from .react-icons' dist/index.js` should return NOTHING. (2) The reader-facing
+  legend is the `<PowerLegend>` component (renders from the same `POWER_META` source as the
+  cards) embedded in the "What I Ask Myself" keystone post — NEVER a hand-authored emoji table
+  (emoji render per-OS and won't match the SVG glyphs). Taxonomy changes + that post's prose
+  move in lockstep. Also created two companion posts: the keystone `what-i-ask-myself`
+  (carries the legend) and `how-i-ask-others-questions` (outward-facing prose).
+- 2026-06-24 — Added `SectionBanner` and `Question` catalog entries for the `question-set`
+  post class ("What I Ask Myself: …" series). Key gotcha: MDX wraps plain-text children in
+  React elements even for bare strings, so `typeof children === 'string'` is false; use the
+  `nodeToText()` recursive helper (already in `Question/index.tsx`) to extract the plain
+  question string for the modal. Yarn 1 `file:` protocol copies the package at install time
+  (not a symlink) -- after any `packages/blog-ui` rebuild, manually `cp -r packages/blog-ui/dist/
+  bytesofpurpose-blog/node_modules/@omars-lab/blog-ui/dist/` + clear webpack cache
+  (`rm -rf bytesofpurpose-blog/node_modules/.cache/webpack/`) + restart dev server from the
+  blog CWD.
 - 2026-06-22 — Created. Carved the component catalog out of import-co-design so enrichment is
   a reusable concern. Animated-diagram nuances (two-tier dashes+dot, `%% animate` directive,
   no hardcoded colors) are the most load-bearing entries; full reader writeup is the
