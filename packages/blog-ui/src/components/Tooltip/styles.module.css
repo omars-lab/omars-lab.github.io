@@ -1,0 +1,81 @@
+/* Tooltip — theme-aware hover/focus/tap popover. */
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+  cursor: help;
+  outline: none;
+}
+.wrap:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.bubble {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  z-index: 50;
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-900);
+  color: var(--ifm-color-emphasis-0, #fff);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.bubble b {
+  font-weight: 700;
+}
+
+/* placement */
+.top {
+  bottom: calc(100% + 8px);
+}
+.bottom {
+  top: calc(100% + 8px);
+}
+
+.open {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* little arrow */
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+}
+.top::after {
+  top: 100%;
+  border-top-color: var(--ifm-color-emphasis-900);
+}
+.bottom::after {
+  bottom: 100%;
+  border-bottom-color: var(--ifm-color-emphasis-900);
+}
+
+/* In light mode the emphasis-900 is near-black (good contrast). In dark mode it's near-white,
+   so flip the text color to keep the bubble readable. */
+[data-theme='dark'] .bubble {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-900);
+}
+[data-theme='dark'] .top::after {
+  border-top-color: var(--ifm-color-emphasis-200);
+}
+[data-theme='dark'] .bottom::after {
+  border-bottom-color: var(--ifm-color-emphasis-200);
+}

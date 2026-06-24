@@ -1,7 +1,8 @@
 import React, {CSSProperties, ReactNode, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {GiLightningArc, GiFlame, GiChisel, GiAnvil} from 'react-icons/gi';
+import {GiLightningArc, GiFlame, GiChisel, GiAnvil, GiCycle} from 'react-icons/gi';
 import type {IconType} from 'react-icons';
+import Tooltip from '../Tooltip';
 import styles from './styles.module.css';
 
 /**
@@ -39,6 +40,12 @@ import styles from './styles.module.css';
 export type QuestionPower = 'spark' | 'fire' | 'chisel' | 'anvil';
 export type QuestionPriority = 'core' | 'high' | 'medium' | 'low';
 export type QuestionDepth = 'quick' | 'moderate' | 'deep';
+/**
+ * Cron cadence — how often a RECURRING question comes around. Think of it as the question's
+ * schedule (a "cron job" for self-reflection). `adhoc` marks a question with no fixed cadence
+ * (ask it when its situation arises). Rendered as a pill with a recurring-cycle icon.
+ */
+export type QuestionCron = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'adhoc';
 
 /** A single power may be passed as a bare string; multiple as an array. */
 export type QuestionPowerProp = QuestionPower | QuestionPower[];
@@ -53,7 +60,13 @@ export interface QuestionProps {
   power?: QuestionPowerProp;
   /** Importance tier. Renders as a colored pill. */
   priority?: QuestionPriority;
-  /** Short cadence label for the badge (e.g. "Yearly", "Daily"). The full sentence goes in howOften. */
+  /** Recurring cadence (daily/weekly/monthly/quarterly/yearly/adhoc). Pill + cycle icon. */
+  cron?: QuestionCron;
+  /**
+   * @deprecated Use `cron` instead. Free-text cadence label kept for back-compat: if `cron`
+   * is unset and `frequency` is a recognized cadence word it maps to `cron`; otherwise it
+   * renders as a plain text pill (no icon).
+   */
   frequency?: string;
   /** How much reflection it demands. */
   depth?: QuestionDepth;
@@ -70,7 +83,9 @@ export interface QuestionDetail {
   /** Normalized to an array before dispatch so the modal renders consistently. */
   power?: QuestionPower[];
   priority?: QuestionPriority;
-  frequency?: string;
+  cron?: QuestionCron;
+  /** Free-text fallback when `frequency` wasn't a recognized cadence word (no icon). */
+  frequencyText?: string;
   depth?: QuestionDepth;
 }
 
@@ -91,24 +106,69 @@ const POWER_META: Record<QuestionPower, {Icon: IconType; name: string; label: st
 /** Stable render order regardless of the order props are passed in. */
 const POWER_ORDER: QuestionPower[] = ['spark', 'fire', 'chisel', 'anvil'];
 
-const PRIORITY_META: Record<QuestionPriority, string> = {
-  core: 'Core',
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
+const PRIORITY_META: Record<QuestionPriority, {label: string; gloss: string}> = {
+  core: {label: 'Core', gloss: 'A foundational question; everything else builds on it'},
+  high: {label: 'High', gloss: 'Important; worth returning to often'},
+  medium: {label: 'Medium', gloss: 'Useful, but not foundational'},
+  low: {label: 'Low', gloss: 'A lighter question; ask it when it fits'},
 };
 
-const DEPTH_META: Record<QuestionDepth, string> = {
-  quick: 'Quick',
-  moderate: 'Moderate',
-  deep: 'Deep',
+const DEPTH_META: Record<QuestionDepth, {label: string; gloss: string}> = {
+  quick: {label: 'Quick', gloss: 'A fast gut-check; answer in a moment'},
+  moderate: {label: 'Moderate', gloss: 'Some real reflection required'},
+  deep: {label: 'Deep', gloss: 'Sit with it; this one takes time'},
 };
+
+/** Cron cadence → {label, gloss}. The cycle icon (GiCycle) is shared across all cadences. */
+const CRON_META: Record<QuestionCron, {label: string; gloss: string}> = {
+  daily: {label: 'Daily', gloss: 'Ask every day'},
+  weekly: {label: 'Weekly', gloss: 'Ask every week'},
+  monthly: {label: 'Monthly', gloss: 'Ask every month'},
+  quarterly: {label: 'Quarterly', gloss: 'Ask every quarter'},
+  yearly: {label: 'Yearly', gloss: 'Ask every year'},
+  adhoc: {label: 'As needed', gloss: 'No fixed cadence; ask when it applies'},
+};
+
+const CRON_ORDER: QuestionCron[] = ['daily', 'weekly', 'monthly', 'quarterly', 'yearly', 'adhoc'];
+
+/** Map a free-text `frequency` value to a `cron` cadence when it's a recognized word. */
+function frequencyToCron(freq: string | undefined): QuestionCron | undefined {
+  if (!freq) return undefined;
+  const f = freq.trim().toLowerCase();
+  const direct = (CRON_ORDER as string[]).includes(f) ? (f as QuestionCron) : undefined;
+  if (direct) return direct;
+  const synonyms: Record<string, QuestionCron> = {
+    annually: 'yearly',
+    annual: 'yearly',
+    'every year': 'yearly',
+    'every day': 'daily',
+    'every week': 'weekly',
+    'every month': 'monthly',
+    'every quarter': 'quarterly',
+    'as needed': 'adhoc',
+    'ad hoc': 'adhoc',
+    'ad-hoc': 'adhoc',
+  };
+  return synonyms[f];
+}
 
 function normalizePower(power: QuestionPowerProp | undefined): QuestionPower[] {
   if (!power) return [];
   const arr = Array.isArray(power) ? power : [power];
   // de-dupe + apply a stable order so cards read consistently
   return POWER_ORDER.filter((p) => arr.includes(p));
+}
+
+/** Resolve the cron cadence + any leftover free-text frequency for rendering. */
+function resolveCadence(
+  cron: QuestionCron | undefined,
+  frequency: string | undefined,
+): {cron?: QuestionCron; frequencyText?: string} {
+  if (cron) return {cron};
+  const mapped = frequencyToCron(frequency);
+  if (mapped) return {cron: mapped};
+  if (frequency) return {frequencyText: frequency};
+  return {};
 }
 
 export const QUESTION_MODAL_EVENT = 'bop:question-modal';
@@ -134,47 +194,97 @@ function nodeToText(node: ReactNode): string {
 interface BadgesProps {
   power: QuestionPower[];
   priority?: QuestionPriority;
-  frequency?: string;
+  cron?: QuestionCron;
+  frequencyText?: string;
   depth?: QuestionDepth;
   /** 'card' is compact (icons only, terse pills); 'modal' shows labels. */
   variant: 'card' | 'modal';
 }
 
-function QuestionBadges({power, priority, frequency, depth, variant}: BadgesProps): React.JSX.Element | null {
-  const hasAny = power.length > 0 || priority || frequency || depth;
+function QuestionBadges({
+  power,
+  priority,
+  cron,
+  frequencyText,
+  depth,
+  variant,
+}: BadgesProps): React.JSX.Element | null {
+  const hasAny = power.length > 0 || priority || cron || frequencyText || depth;
   if (!hasAny) return null;
 
   return (
     <span className={clsx(styles.badges, variant === 'modal' && styles.badgesModal)}>
       {power.map((p) => {
-        const {Icon, label} = POWER_META[p];
+        const {Icon, name, label} = POWER_META[p];
         return (
-          <span
+          <Tooltip
             key={p}
-            className={clsx(styles.powerBadge, styles[`power_${p}`])}
-            title={label}
-            aria-label={label}>
-            <Icon className={styles.powerIcon} aria-hidden="true" />
-            {variant === 'modal' && <span className={styles.powerLabel}>{label}</span>}
-          </span>
+            content={
+              <>
+                <b>Power: {name}</b>
+                <br />
+                {label}
+              </>
+            }>
+            <span className={clsx(styles.powerBadge, styles[`power_${p}`])} aria-label={`Power: ${name}. ${label}`}>
+              <Icon className={styles.powerIcon} aria-hidden="true" />
+              {variant === 'modal' && <span className={styles.powerLabel}>{label}</span>}
+            </span>
+          </Tooltip>
         );
       })}
       {priority && (
-        <span
-          className={clsx(styles.pill, styles[`priority_${priority}`])}
-          title={`Priority: ${PRIORITY_META[priority]}`}>
-          {PRIORITY_META[priority]}
-        </span>
+        <Tooltip
+          content={
+            <>
+              <b>Priority: {PRIORITY_META[priority].label}</b>
+              <br />
+              {PRIORITY_META[priority].gloss}
+            </>
+          }>
+          <span className={clsx(styles.pill, styles[`priority_${priority}`])}>
+            {PRIORITY_META[priority].label}
+          </span>
+        </Tooltip>
       )}
-      {frequency && (
-        <span className={clsx(styles.pill, styles.pillFrequency)} title={`How often: ${frequency}`}>
-          {frequency}
-        </span>
+      {cron && (
+        <Tooltip
+          content={
+            <>
+              <b>Cadence: {CRON_META[cron].label}</b>
+              <br />
+              {CRON_META[cron].gloss}
+            </>
+          }>
+          <span className={clsx(styles.pill, styles.pillCron)}>
+            <GiCycle className={styles.cronIcon} aria-hidden="true" />
+            {CRON_META[cron].label}
+          </span>
+        </Tooltip>
+      )}
+      {!cron && frequencyText && (
+        <Tooltip
+          content={
+            <>
+              <b>How often</b>
+              <br />
+              {frequencyText}
+            </>
+          }>
+          <span className={clsx(styles.pill, styles.pillFrequency)}>{frequencyText}</span>
+        </Tooltip>
       )}
       {depth && (
-        <span className={clsx(styles.pill, styles.pillDepth)} title={`Depth: ${DEPTH_META[depth]}`}>
-          {DEPTH_META[depth]}
-        </span>
+        <Tooltip
+          content={
+            <>
+              <b>Depth: {DEPTH_META[depth].label}</b>
+              <br />
+              {DEPTH_META[depth].gloss}
+            </>
+          }>
+          <span className={clsx(styles.pill, styles.pillDepth)}>{DEPTH_META[depth].label}</span>
+        </Tooltip>
       )}
     </span>
   );
@@ -188,13 +298,16 @@ const Question: React.FC<QuestionProps> = ({
   record,
   power,
   priority,
+  cron,
   frequency,
   depth,
   className,
   style,
 }) => {
   const powers = normalizePower(power);
-  const hasBadges = powers.length > 0 || !!priority || !!frequency || !!depth;
+  const cadence = resolveCadence(cron, frequency);
+  const hasBadges =
+    powers.length > 0 || !!priority || !!cadence.cron || !!cadence.frequencyText || !!depth;
   const hasDetail = !!(why || howOften || when || record) || hasBadges;
 
   const handleClick = useCallback(() => {
@@ -207,10 +320,23 @@ const Question: React.FC<QuestionProps> = ({
       record,
       power: powers,
       priority,
-      frequency,
+      cron: cadence.cron,
+      frequencyText: cadence.frequencyText,
       depth,
     });
-  }, [children, why, howOften, when, record, priority, frequency, depth, powers, hasDetail]);
+  }, [
+    children,
+    why,
+    howOften,
+    when,
+    record,
+    priority,
+    cadence.cron,
+    cadence.frequencyText,
+    depth,
+    powers,
+    hasDetail,
+  ]);
 
   const handleKey = useCallback(
     (e: React.KeyboardEvent) => {
@@ -235,7 +361,8 @@ const Question: React.FC<QuestionProps> = ({
         <QuestionBadges
           power={powers}
           priority={priority}
-          frequency={frequency}
+          cron={cadence.cron}
+          frequencyText={cadence.frequencyText}
           depth={depth}
           variant="card"
         />
@@ -349,7 +476,8 @@ function QuestionModalImpl(): React.JSX.Element | null {
         <QuestionBadges
           power={detail.power ?? []}
           priority={detail.priority}
-          frequency={detail.frequency}
+          cron={detail.cron}
+          frequencyText={detail.frequencyText}
           depth={detail.depth}
           variant="modal"
         />
