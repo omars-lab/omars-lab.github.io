@@ -22,7 +22,7 @@ Start by naming what you're actually focused on right now, across each area you 
 about:
 
 - What questions are you focused on answering *now*?
-- What initiatives have you decided to work on *now* — for your career, your
+- What initiatives have you decided to work on *now*, for your career, your
   marketing, your projects, your learning, your growth?
 
 The point of listing focus by area is to notice where you've quietly let everything
@@ -48,8 +48,8 @@ You can't prioritize what you haven't gathered:
   tracker? Scattered across roles?
 - What initiatives are in the running?
 
-A recurring failure mode: getting repeatedly sucked into low-value polish — tuning a
-public profile, picking which work to showcase — when the higher priority is
+A recurring failure mode: getting repeatedly sucked into low-value polish (tuning a
+public profile, picking which work to showcase) when the higher priority is
 shipping the thing at all.
 
 ## Evaluating projects
@@ -89,4 +89,4 @@ Finally, treat prioritization as a skill you improve, not a chore you endure:
 - What can you do now versus what you'd need to learn to do something new?
 
 Prioritization isn't a list you sort once. It's a loop you run: focus, weigh,
-gather, evaluate, classify, prune, and reflect — then run it again.
+gather, evaluate, classify, prune, and reflect. Then run it again.
