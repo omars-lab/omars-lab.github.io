@@ -4,7 +4,7 @@ title: "Questions for Managing Your Emotions"
 description: "Introspective questions for regulating your emotional state — which feelings to fuel, which to overcome, and how to stay optimistic."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-27
+date: 2017-02-11
 draft: true
 ---
 

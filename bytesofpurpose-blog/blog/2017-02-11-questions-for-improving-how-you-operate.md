@@ -4,7 +4,7 @@ title: "Questions for Improving How You Operate"
 description: "A set of prompts for examining the how of your life: your processes, problem-solving techniques, and the systems you operate by."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

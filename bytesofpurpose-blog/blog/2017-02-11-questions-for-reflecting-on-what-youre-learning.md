@@ -4,7 +4,7 @@ title: "Questions for Reflecting on What You're Learning"
 description: "A set of prompts for checking whether you're learning the right things, whether it aligns with your purpose, and where you still need to grow."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

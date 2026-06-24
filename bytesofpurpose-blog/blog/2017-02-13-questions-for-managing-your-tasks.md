@@ -4,7 +4,7 @@ title: "Questions for Managing Your Tasks"
 description: "Introspective questions for capturing, tracking, and automating the tasks that make up your work — including dependencies, triggers, and recurring tasks."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-28
+date: 2017-02-13
 draft: true
 ---
 

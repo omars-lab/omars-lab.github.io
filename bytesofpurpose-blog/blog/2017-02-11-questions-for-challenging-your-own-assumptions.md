@@ -4,7 +4,7 @@ title: "Questions for Challenging Your Own Assumptions"
 description: "A set of prompts for interrogating your own thinking: surfacing assumptions, hunting for discomforting evidence, and steelmanning the other side."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

@@ -4,7 +4,7 @@ title: "Questions for Measuring Your Progress"
 description: "The questions I return to when I want to know whether I'm actually winning, reaching my potential, and closing the gap to my dreams."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

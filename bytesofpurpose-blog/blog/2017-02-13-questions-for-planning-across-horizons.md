@@ -4,7 +4,7 @@ title: "Questions for Planning Across Horizons"
 description: "Introspective questions for turning priorities into time-bound plans — from daily and weekly all the way out to a lifetime timeline."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-28
+date: 2017-02-13
 draft: true
 ---
 

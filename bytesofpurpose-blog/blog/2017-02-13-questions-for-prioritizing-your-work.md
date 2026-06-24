@@ -4,7 +4,7 @@ title: "Questions for Prioritizing Your Work"
 description: "A set of introspective questions for deciding what to work on now — prioritization factors, deprioritizing, and building a roadmap."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-28
+date: 2017-02-13
 draft: true
 ---
 

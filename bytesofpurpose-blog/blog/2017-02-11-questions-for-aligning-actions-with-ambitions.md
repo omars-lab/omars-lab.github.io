@@ -4,7 +4,7 @@ title: "Questions for Aligning Your Actions With Your Ambitions"
 description: "The questions I return to when I want to check whether my actions match my ambitions, and decide what to stop, start, or do more of."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

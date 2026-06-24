@@ -4,7 +4,7 @@ title: "Questions for How You Learn"
 description: "Introspective questions for understanding and refining your own learning process, style, and methods for seeking knowledge."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-27
+date: 2017-02-13
 draft: true
 ---
 

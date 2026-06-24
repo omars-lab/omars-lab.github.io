@@ -4,7 +4,7 @@ title: "Questions for Reflecting on Your Worth"
 description: "A taxonomy of the questions I return to when I want to take honest stock of my value, my skills, and the impact I have on the people around me."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

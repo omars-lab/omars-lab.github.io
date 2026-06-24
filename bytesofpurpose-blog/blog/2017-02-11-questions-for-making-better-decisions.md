@@ -4,7 +4,7 @@ title: "Questions for Making Better Decisions"
 description: "A taxonomy of the questions I use to look back on decisions, spot my patterns, learn from outcomes, and make peace with the ones I can't undo."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-28
+date: 2017-02-11
 draft: true
 ---
 
