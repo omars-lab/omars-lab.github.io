@@ -9,32 +9,21 @@
  * post complete. It encodes the editorial expectation that, e.g., a SYSTEM-DESIGN post is
  * the "polished upgrade" — it should paint the whole picture, not just dump prose.
  *
- * Current rules (warn-tier — advisory, never blocks):
- *   kind: system-design  must have →
- *     - a UX mockup           (<Mockup …> in the body OR a `mockups:` frontmatter link)
- *     - a Decisions section   (a heading matching Decisions / Key Decisions / Trade-offs / Trade offs)
- *     - a description         (non-empty `description:` frontmatter)
- *   kind: question-set   must have →
- *     - H2 sections           (themed clusters; the questions are grouped, not a flat list)
- *     - <Question> cards      (each question is a card, not a bare bullet)
- *     - a <SectionBanner>     (the per-section "why these matter" callout)
- *     - a description
- *   kind: framework      must have →
- *     - the framework laid out (numbered steps, an H2-per-stage, or a diagram/<DiagramWithFootnotes>)
- *     - a description
- *   kind: tutorial       must have →
- *     - steps or a runnable artifact (numbered steps, a code fence, a <Walkthrough>, or a <Gif>)
- *     - a description
- *   kind: reference / reflection / event-recap → a description (light contract; mostly prose)
- *   kind: legend         must have →
- *     - a legend/explainer of the conventions it indexes (a table, a <PowerLegend>, or links out)
- *     - a description
+ * SOURCE OF TRUTH: the kind taxonomy (emoji + description + the per-kind OUTLINE contract)
+ * lives in scripts/lib/blog-kinds.json. This file READS it: the emoji/description/contract
+ * TEXT come from the JSON; only the test LOGIC for each outline `id` lives here (in CHECKS).
+ * So to add/change a kind you edit blog-kinds.json (and add a CHECKS entry if it introduces
+ * a new outline id) — you do NOT hand-edit a rules list here.
  *
- * The `kind:` value must be one of the blog kinds in scripts/lib/blog-kind-emoji.json
- * (that file drives the sidebar emoji). An UNKNOWN kind is itself a finding here.
- * Posts with no `kind:` are skipped by THIS file's outline checks; the missing-kind
- * nudge is emitted by THIS file (the missing-kind finding). Add new kinds to OUTLINES below
- * AND to scripts/lib/blog-kind-emoji.json (the emoji map) in the same change.
+ * Findings (all warn-tier — advisory, never blocks):
+ *   - missing-kind        a blog post with no `kind:` (kind drives the sidebar emoji + contract)
+ *   - unknown-kind        a `kind:` not in blog-kinds.json
+ *   - long-sidebar-label  the sidebar entry (sidebar_label || title) is > ~3 content words
+ *   - outline-<id>        a post of a given kind is missing an element its contract requires
+ *   - legend-drift        the "Start Here" reader legend disagrees with blog-kinds.json
+ * The missing/unknown-kind findings print the FULL legend (emoji + description per kind)
+ * inline, and an outline finding prints the kind's whole contract, so the author can fix it
+ * (or realize the `kind:` is wrong) without leaving the terminal.
  *
  * Usage:
  *   node scripts/validate-post-outline.js [paths…]   # scan (default: blog + designs + docs)
@@ -51,15 +40,29 @@ const matter = require('gray-matter');
 const ROOT = path.join(__dirname, '..');
 const DEFAULT_DIRS = ['blog', 'designs', 'docs'];
 
-// The canonical blog kinds (drives the sidebar emoji). A `kind:` not in this set is
-// flagged as unknown by checkFile().
-let KNOWN_KINDS = [];
+// The canonical blog-kind taxonomy is the SINGLE SOURCE OF TRUTH in lib/blog-kinds.json:
+// each kind declares {emoji, description, outline:[{id,label}]}. We read it here so the
+// emoji, the human-readable contract, AND the known-kind set all come from one place. The
+// outline `id`s map to the test functions in CHECKS below (logic stays in code; the JSON
+// holds what each check REQUIRES, which is what authors + the hook + the skills read).
+let KINDS = {};
 try {
-  KNOWN_KINDS = Object.keys(
-    JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'blog-kind-emoji.json'), 'utf8')).kinds,
-  );
+  KINDS = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'blog-kinds.json'), 'utf8')).kinds || {};
 } catch {
-  KNOWN_KINDS = [];
+  KINDS = {};
+}
+const KNOWN_KINDS = Object.keys(KINDS);
+
+// One-line legend of every kind (emoji + name + description), shown inline when the hook
+// flags a missing/unknown kind so the author can pick the right one without leaving the
+// terminal.
+function kindLegend() {
+  return KNOWN_KINDS.map((k) => `    ${KINDS[k].emoji}  ${k} — ${KINDS[k].description}`).join('\n');
+}
+// The outline expectations for a given kind, as readable lines (from the JSON labels).
+function outlineExpectations(kind) {
+  const o = (KINDS[kind] && KINDS[kind].outline) || [];
+  return o.map((c) => `      - ${c.label}`).join('\n');
 }
 
 // Sidebar-label length budget. The kind emoji is added automatically, so these bound the
@@ -87,97 +90,61 @@ function contentWordCount(text) {
     .filter((w) => !PARTICLES.has(w.toLowerCase().replace(/[^a-z']/gi, ''))).length;
 }
 
-// Reusable checks.
-const hasDescription = {
-  id: 'description',
-  label: 'a non-empty `description:` frontmatter (powers the social card + share text)',
-  test: (fm) => typeof fm.description === 'string' && fm.description.trim().length > 0,
-};
 const hasH2 = (body) => /^##\s+\S/m.test(body);
 
-// Per-kind required elements. Each check: {id, label, test(fm, body) -> boolean present}.
-// Kinds must match scripts/lib/blog-kind-emoji.json (which drives the sidebar emoji).
-const OUTLINES = {
-  'system-design': [
-    {
-      id: 'mockup',
-      label: 'a UX mockup (a <Mockup> in the body, or a `mockups:` frontmatter sidecar link)',
-      test: (fm, body) => Boolean(fm.mockups) || /<Mockup[\s>]/.test(body),
-    },
-    {
-      id: 'decisions',
-      label: 'a Decisions section (a heading like "Key Decisions" / "Decisions" / "Trade-offs")',
-      test: (fm, body) =>
-        /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body),
-    },
-    hasDescription,
-  ],
-  'question-set': [
-    {
-      id: 'sections',
-      label: 'themed H2 sections (questions grouped by theme, not a flat list)',
-      test: (fm, body) => hasH2(body),
-    },
-    {
-      id: 'question-cards',
-      label: 'one or more <Question> cards (each question is a card, not a bare bullet)',
-      test: (fm, body) => /<Question[\s>]/.test(body),
-    },
-    {
-      id: 'section-banner',
-      label: 'a <SectionBanner> (the per-section "why these questions matter" callout)',
-      test: (fm, body) => /<SectionBanner[\s>]/.test(body),
-    },
-    hasDescription,
-  ],
-  framework: [
-    {
-      id: 'framework-laid-out',
-      label:
-        'the framework laid out (numbered steps, an H2-per-stage, or a <DiagramWithFootnotes>/mermaid)',
-      test: (fm, body) =>
-        /^\s*\d+\.\s+\S/m.test(body) ||
-        hasH2(body) ||
-        /<DiagramWithFootnotes[\s>]/.test(body) ||
-        /```mermaid/.test(body),
-    },
-    hasDescription,
-  ],
-  tutorial: [
-    {
-      id: 'steps-or-artifact',
-      label:
-        'steps or a runnable artifact (numbered steps, a code fence, a <Walkthrough>, or a <Gif>)',
-      test: (fm, body) =>
-        /^\s*\d+\.\s+\S/m.test(body) ||
-        /```/.test(body) ||
-        /<(Walkthrough|Gif)[\s>]/.test(body),
-    },
-    hasDescription,
-  ],
-  'design-story': [
-    {
-      id: 'links-to-design',
-      label:
-        'a link to the formal design doc in /designs (a design-story narrates the WHY and points to the HLD; the HLD itself lives in /designs)',
-      test: (fm, body) => /\]\(\/designs\/[^)\s]+\)/.test(body) || /\/designs\b/.test(body),
-    },
-    hasDescription,
-  ],
-  legend: [
-    {
-      id: 'legend-explainer',
-      label:
-        'an explainer of the conventions it indexes (a table, a <PowerLegend>, or a list of links out)',
-      test: (fm, body) =>
-        /<PowerLegend[\s/>]/.test(body) || /^\|.*\|/m.test(body) || /^\s*[-*]\s+\[/m.test(body),
-    },
-    hasDescription,
-  ],
-  reference: [hasDescription],
-  reflection: [hasDescription],
-  'event-recap': [hasDescription],
+// CHECKS: the TEST LOGIC for each outline element, keyed by the `id` declared in
+// blog-kinds.json. The JSON owns WHAT each kind requires (the legend authors + the hook
+// read); this registry owns HOW to detect it (functions can't live in JSON). When you add
+// an outline `id` to a kind in blog-kinds.json, add its matching test here.
+const CHECKS = {
+  description: (fm) => typeof fm.description === 'string' && fm.description.trim().length > 0,
+  // question-set
+  sections: (fm, body) => hasH2(body),
+  'question-cards': (fm, body) => /<Question[\s>]/.test(body),
+  'section-banner': (fm, body) => /<SectionBanner[\s>]/.test(body),
+  // framework
+  'framework-laid-out': (fm, body) =>
+    /^\s*\d+\.\s+\S/m.test(body) ||
+    hasH2(body) ||
+    /<DiagramWithFootnotes[\s>]/.test(body) ||
+    /```mermaid/.test(body),
+  // tutorial
+  'steps-or-artifact': (fm, body) =>
+    /^\s*\d+\.\s+\S/m.test(body) || /```/.test(body) || /<(Walkthrough|Gif)[\s>]/.test(body),
+  // system-design
+  mockup: (fm, body) => Boolean(fm.mockups) || /<Mockup[\s>]/.test(body),
+  decisions: (fm, body) =>
+    /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body),
+  // design-story
+  'links-to-design': (fm, body) =>
+    /\]\(\/designs\/[^)\s]+\)/.test(body) || /\/designs\b/.test(body),
+  // legend
+  'legend-explainer': (fm, body) =>
+    /<PowerLegend[\s/>]/.test(body) || /^\|.*\|/m.test(body) || /^\s*[-*]\s+\[/m.test(body),
 };
+
+// OUTLINES is built FROM the JSON: for each kind, its outline specs (id + label) paired
+// with the test from CHECKS. The contract text lives in blog-kinds.json (one source of
+// truth); only the test logic lives here.
+const OUTLINES = Object.fromEntries(
+  KNOWN_KINDS.map((kind) => [
+    kind,
+    (KINDS[kind].outline || [])
+      .filter((spec) => CHECKS[spec.id]) // skip specs with no matching test (warn below)
+      .map((spec) => ({id: spec.id, label: spec.label, test: CHECKS[spec.id]})),
+  ]),
+);
+
+// Surface any outline id declared in the JSON that has no test in CHECKS (a lockstep slip).
+for (const kind of KNOWN_KINDS) {
+  for (const spec of KINDS[kind].outline || []) {
+    if (!CHECKS[spec.id]) {
+      console.error(
+        `⚠️  blog-kinds.json: kind "${kind}" outline id "${spec.id}" has no test in validate-post-outline.js CHECKS (skipped).`,
+      );
+    }
+  }
+}
 
 const isContent = (n) => /\.mdx?$/.test(n) && !path.basename(n).startsWith('_');
 
@@ -205,26 +172,33 @@ function checkFile(file) {
   // Only enforce the kind vocabulary for BLOG posts (docs use their own kind words).
   const isBlogPost = /\/(blog|designs)\//.test(file);
 
-  // A blog post with NO `kind:` can't get a type-based sidebar emoji. Nudge to add one.
+  // A blog post with NO `kind:` can't get a type-based sidebar emoji. Show the full legend
+  // (emoji + description per kind) so the author can pick the right one inline.
   if (!kind) {
     if (isBlogPost && KNOWN_KINDS.length) {
       findings.push({
         file: path.relative(ROOT, file),
         kind: '(none)',
         id: 'missing-kind',
-        detail: `blog post has no \`kind:\`. Add one of: ${KNOWN_KINDS.join(', ')} (drives the sidebar emoji; see scripts/lib/blog-kind-emoji.json)`,
+        detail:
+          'blog post has no `kind:` (it drives the sidebar emoji + the outline contract). Pick one:\n' +
+          kindLegend() +
+          '\n  (source of truth: scripts/lib/blog-kinds.json)',
       });
     }
     return findings;
   }
 
-  // An unknown kind (not in the emoji map) can't get an emoji and has no outline contract.
+  // An unknown kind (not in the taxonomy) can't get an emoji and has no outline contract.
   if (isBlogPost && KNOWN_KINDS.length && !KNOWN_KINDS.includes(kind)) {
     findings.push({
       file: path.relative(ROOT, file),
       kind,
       id: 'unknown-kind',
-      detail: `kind: "${kind}" is not a known blog kind. Use one of: ${KNOWN_KINDS.join(', ')} (see scripts/lib/blog-kind-emoji.json)`,
+      detail:
+        `kind: "${kind}" is not a known blog kind. Pick one:\n` +
+        kindLegend() +
+        '\n  (source of truth: scripts/lib/blog-kinds.json)',
     });
   }
 
@@ -259,7 +233,60 @@ function checkFile(file) {
         file: path.relative(ROOT, file),
         kind,
         id: check.id,
-        detail: `kind: ${kind} post is missing ${check.label}`,
+        detail:
+          `kind: ${kind} post is missing ${check.label}\n` +
+          `       (a ${KINDS[kind].emoji} ${kind} post should have:\n${outlineExpectations(kind)}\n` +
+          `        ...or the kind may be wrong for this post. source: scripts/lib/blog-kinds.json)`,
+      });
+    }
+  }
+  return findings;
+}
+
+// Drift check: the READER legend (the "Start Here" post's kind->emoji table) must list the
+// same emoji as the MACHINE legend (blog-kinds.json). They drift when a kind is added to one
+// and not the other (e.g. design-story added to the JSON but not the post). We match on the
+// EMOJI column (stable; the post uses display names like "System design", not kebab keys).
+const LEGEND_POST = path.join(ROOT, 'blog', '2026-06-24-a-guide-to-these-posts.mdx');
+function checkLegendDrift() {
+  if (!fs.existsSync(LEGEND_POST)) return [];
+  let body;
+  try {
+    body = fs.readFileSync(LEGEND_POST, 'utf8');
+  } catch {
+    return [];
+  }
+  // Emoji present in the JSON taxonomy (skip the 'legend' row's own self-reference? no, the
+  // post documents every kind including legend).
+  const jsonEmoji = new Set(KNOWN_KINDS.map((k) => KINDS[k].emoji));
+  // Pull the first cell of every markdown table row that looks like an emoji.
+  const postEmoji = new Set();
+  for (const line of body.split('\n')) {
+    const m = line.match(/^\|\s*([^\s|][^|]*?)\s*\|/);
+    if (!m) continue;
+    const cell = m[1].trim();
+    if (/^(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})/u.test(cell)) postEmoji.add(cell);
+  }
+  if (!postEmoji.size) return []; // no recognizable legend table; don't false-alarm
+  const findings = [];
+  const rel = path.relative(ROOT, LEGEND_POST);
+  for (const k of KNOWN_KINDS) {
+    if (!postEmoji.has(KINDS[k].emoji)) {
+      findings.push({
+        file: rel,
+        kind: k,
+        id: 'legend-drift',
+        detail: `the "Start Here" legend table is missing kind "${k}" (${KINDS[k].emoji}). Add a row so the reader legend matches blog-kinds.json.`,
+      });
+    }
+  }
+  for (const e of postEmoji) {
+    if (!jsonEmoji.has(e)) {
+      findings.push({
+        file: rel,
+        kind: '(?)',
+        id: 'legend-drift',
+        detail: `the "Start Here" legend table has an emoji (${e}) that is not in blog-kinds.json. Remove the stale row or add the kind to blog-kinds.json.`,
       });
     }
   }
@@ -287,6 +314,14 @@ function main() {
 
   const findings = files.flatMap(checkFile);
 
+  // Legend drift is a one-shot, corpus-level check. Run it when we're scanning the blog
+  // broadly OR when the edited file IS the legend post (so editing either side nudges).
+  const touchesLegend =
+    !targets.length ||
+    files.some((f) => path.resolve(f) === LEGEND_POST) ||
+    files.some((f) => /[\\/]blog[\\/]/.test(f));
+  if (touchesLegend) findings.push(...checkLegendDrift());
+
   if (json) {
     console.log(JSON.stringify(findings, null, 2));
     process.exit(0);
@@ -311,7 +346,7 @@ function main() {
       '\nINVESTIGATE (is the POST missing structure, or is the `kind:` wrong for what it is?),' +
       '\nthen decide the IDEAL fix (enrich the post, OR reclassify the kind), then apply it.' +
       '\nA legend that is really an essay, or a system-design that is really a framework, is' +
-      '\nfixed by correcting `kind:` (see scripts/lib/blog-kind-emoji.json), not by forcing' +
+      '\nfixed by correcting `kind:` (see scripts/lib/blog-kinds.json), not by forcing' +
       '\nmissing elements onto it. See the author-blog-post + upgrade-post skills.'
   );
   process.exit(0); // warn-tier: never block

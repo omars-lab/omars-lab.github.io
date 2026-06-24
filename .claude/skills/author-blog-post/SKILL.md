@@ -26,9 +26,13 @@ deploys cleanly. Pairs with `deploy-site` (ship) and `validate-deployment` (veri
 
 Every blog post declares a **`kind:`** — what TYPE of document it is, not its topic. The
 kind drives two things: the **sidebar emoji** (auto-derived, never typed by hand) and the
-**outline contract** (what structural elements that kind of post should have). The kinds and
-their emoji are the single source of truth in
-**`bytesofpurpose-blog/scripts/lib/blog-kind-emoji.json`**:
+**outline contract** (what structural elements that kind of post should have).
+
+> **SOURCE OF TRUTH: `bytesofpurpose-blog/scripts/lib/blog-kinds.json`.** Each kind there
+> declares `{emoji, description, outline}`. The validator, the `draft-docs` plugin, the
+> hook, and the "Start Here" legend all derive from it — do NOT maintain a parallel copy.
+> `cat` that file (or read the inline legend the hook prints on a missing/unknown-kind
+> finding) for the authoritative, current list. The table below is a convenience snapshot:
 
 | `kind:` | emoji | what it is |
 |---|---|---|
@@ -61,15 +65,18 @@ sidebar_label: "What Is GTM?"  # SHORT (<= 3 CONTENT words) sidebar entry; NO em
   (e.g. `sidebar_label: "Finding Purpose"`). Required mechanism: the blog plugin does NOT
   read `sidebar_label` natively; our `draft-docs` plugin + `BlogSidebar` swizzle do.
 
-**Validation (warn-tier, via `validate-post-outline.js` + its `Write|Edit` hook):**
+**Validation (warn-tier, via `validate-post-outline.js` + its `Write|Edit` hook). All read
+their rules from `blog-kinds.json`, and the hook prints the FULL legend + the kind's contract
+inline so you can fix it (or realize the kind is wrong) without leaving the terminal:**
 - `missing-kind` — a blog post with no `kind:`.
-- `unknown-kind` — a `kind:` not in `blog-kind-emoji.json`.
-- `long-sidebar-label` — the sidebar entry exceeds ~3 content words / ~32 chars (add a short
-  `sidebar_label:`).
-- per-kind **outline**: e.g. `question-set` needs H2 + `<Question>` + `<SectionBanner>`;
-  `framework` needs the framework laid out; `tutorial` needs steps/an artifact;
-  `design-story` needs a link to `/designs`; `system-design` needs a `<Mockup>` + Decisions;
-  `legend` needs an explainer (a table / `<PowerLegend>` / links).
+- `unknown-kind` — a `kind:` not in `blog-kinds.json`.
+- `long-sidebar-label` — the sidebar entry exceeds ~3 content words / ~32 chars (particles
+  the/of/and/is don't count). Add a short `sidebar_label:`.
+- per-kind **outline** — the elements that kind's contract requires (e.g. `question-set`
+  needs H2 + `<Question>` + `<SectionBanner>`; `design-story` needs a link to `/designs`;
+  `system-design` needs a `<Mockup>` + Decisions). The exact list per kind is in the JSON's
+  `outline`.
+- `legend-drift` — the "Start Here" reader legend disagrees with `blog-kinds.json`.
 
 > **Investigate before you "fix" an outline advisory.** When the hook flags a missing
 > element, FIRST ask: is the POST missing structure, or is the `kind:` WRONG for what the
@@ -78,11 +85,13 @@ sidebar_label: "What Is GTM?"  # SHORT (<= 3 CONTENT words) sidebar entry; NO em
 > a Decisions heading onto it. Track each finding as a task (investigate → decide the ideal
 > fix → apply). Most of the initial backfill advisories were mis-classifications, not gaps.
 
-**Reader-facing legend.** The "🧭 Start Here" post (`blog/2026-06-24-a-guide-to-these-posts.mdx`,
-`/thoughts/a-guide-to-these-posts`) holds the kind→emoji legend table for readers. When you
-add or change a kind, update **all three in lockstep**: `blog-kind-emoji.json`, the validator's
-`OUTLINES`, and that legend post (plus this skill). Mirrors the docs emoji system
-(`scripts/lib/emoji-map.json` + `suggest-emoji`).
+**Adding / changing a kind (lockstep).** Edit **`blog-kinds.json`** (the source of truth:
+emoji + description + the `outline` contract). If the new kind introduces a new outline
+`id`, add its test to the `CHECKS` registry in `validate-post-outline.js`. Add a row to the
+**"🧭 Start Here"** reader legend (`blog/2026-06-24-a-guide-to-these-posts.mdx`) — the
+`legend-drift` check enforces this. The plugin + this skill's snapshot table read from the
+JSON automatically. Mirrors the docs emoji system (`scripts/lib/emoji-map.json` +
+`suggest-emoji`, which is **docs-only**; blog kinds are separate).
 
 ## MDX pitfalls that FAIL the build (learned the hard way)
 
