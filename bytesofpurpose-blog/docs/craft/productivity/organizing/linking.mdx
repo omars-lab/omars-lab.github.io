@@ -8,17 +8,73 @@ date: 2021-10-25T10:00
 draft: true
 ---
 
+The goal: make links between my notes, files, and tools work like first-class
+connections, so I can jump straight to the right file (or recurring question) and trust
+that the links don't rot. This page separates what such a system has to do (the
+**requirements**) from the concrete link formats that satisfy each one (the
+**examples**). The original brain-dump is preserved at the bottom under
+[Raw notes](#raw-notes).
+
+## Requirements
+
+What a custom-linking system for my notes must do:
+
+1. **Deep links into files**: a link should open a specific file at a specific line in my
+   editor, not just point at a web page.
+2. **Embed links to recurring questions**: questions I revisit across many notes should be
+   reachable by a stable link I can drop anywhere.
+3. **Generate links automatically**: a script should mint the editor deep-link for a file
+   rather than me hand-writing the URL each time.
+4. **Detect broken references**: a script should scan notes for links and flag any that no
+   longer resolve, so renames and moves don't silently break things.
+5. **Bridge external tools to local files**: a link clicked in a web tool (e.g. Jira)
+   should resolve to the matching local file, via URL rewriting rather than manual copying.
+
+## Link examples
+
+Concrete formats that satisfy the requirements above:
+
+| Link | Requirement | What it does |
+| --- | --- | --- |
+| `vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/tinker-react.md:1` | Deep links into files | Opens that file at line 1 in VS Code (the `:1` is the line number). |
+| A generated `vscode://file/...:<line>` URL | Generate links automatically | A script emits the deep-link so I don't hand-write the path each time. |
+| An `https://` Jira URL rewritten to an `x-callback` URL | Bridge external tools | Jira opens an `https` link that gets redirected to the local-file callback. |
+
+### Bridging Jira to local files
+
+Jira can only store `https` links, so the bridge is a redirect: the `https` URL opens, then
+a rewrite sends it to the `x-callback` (or `vscode://`) URL that opens the local file. Two
+ways to do the rewrite:
+
+- A Tampermonkey userscript that rewrites matching URLs on the page before I click.
+- A redirector extension page, e.g.
+  `chrome-extension://ocgpenflpmgnfapjedencafcfakcekcd/redirector.html`, where the
+  match/replace rules live.
+
+## Open questions
+
+- How will I embed links to recurring questions across my notes (what's the stable
+  anchor)?
+- Should the Jira-to-local rewrite happen automatically via a Tampermonkey plugin, or stay
+  a manual redirect rule?
+
+## Raw notes
+
+> Original brain-dump, kept verbatim for provenance.
+
 * [ ] How will I embed links to recurring questions across my notes?
 
 Links
 * [ ] Make a script to generate vscode xcallback ...
-* [ ] Script to detect links and notes and make sure no broken refs >2021-10-25 
+* [ ] Script to detect links and notes and make sure no broken refs `>2021-10-25`
 
-# Emedding XCallback URLs into Jira ...
+### Embedding XCallback URLs into Jira ...
+
 - [ ] Use URL re-writing ... jira opens an https url ... gets redirected to xcallback ...
 	- [ ] Should I automatically rewrite urls like this with a tampermonkey plugin?
 
-	- [ ] Edit redirects here ... chrome-extension://ocgpenflpmgnfapjedencafcfakcekcd/redirector.html
+	- [ ] Edit redirects here ... `chrome-extension://ocgpenflpmgnfapjedencafcfakcekcd/redirector.html`
 
-vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/tinker-react.md:1
+`vscode://file/Users/omareid/Workspace/git/blueprints/initiatives/tinker-react.md:1`
+
 [vscode: Tinker React.Md:1](https://vscode/file/Users/omareid/Workspace/git/blueprints/initiatives/tinker-react.md:1)

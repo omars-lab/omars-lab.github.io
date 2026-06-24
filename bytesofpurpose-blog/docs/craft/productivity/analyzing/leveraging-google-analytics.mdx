@@ -10,8 +10,49 @@ draft: false
 
 # Leveraging Google Analytics
 
-## Configuring Google Analytics
-- [ ] Setup Google Analytics on Blog >2022-04-19 
+How I set up Google Analytics on this blog, where the live dashboard is, and the tools I
+use to debug tracking. The reference links from my original setup notes are organized below
+by what they help you do; the raw checklist is preserved at the bottom under
+[Raw notes](#raw-notes).
+
+## Setting it up
+
+The path from "no analytics" to "tracked blog" has three layers, from most
+Docusaurus-specific to most general:
+
+1. **Wire it into Docusaurus.** The
+   [`@docusaurus/plugin-google-gtag`](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-google-gtag)
+   plugin is the supported way to add gtag.js to a Docusaurus site.
+2. **Add gtag.js to any site.** Google's own guides cover the general install and the
+   single-page-app case (relevant because Docusaurus is an SPA):
+   [gtag.js collection](https://developers.google.com/analytics/devguides/collection/gtagjs)
+   and
+   [single-page applications](https://developers.google.com/analytics/devguides/collection/gtagjs/single-page-applications).
+3. **Track custom events.** To go beyond pageviews and log button clicks, these show how to
+   run a globally-defined script inside a React component and fire events:
+   [react-component-depot example](https://github.com/codegeous/react-component-depot/blob/master/src/pages/_layouts/Home/index.js),
+   a [walkthrough video](https://www.youtube.com/watch?v=MEsm6SUED4I), and a
+   [Pluralsight guide](https://www.pluralsight.com/guides/how-to-use-a-globally-defined-script-inside-a-react-component).
+
+## Viewing the data
+
+- [Real-time overview dashboard](https://analytics.google.com/analytics/web/#/p286298793/realtime/overview?params=_u..nav%3Dmaui)
+  in Google Analytics.
+
+## Debugging tracking
+
+When events aren't showing up, verify the tags are firing before changing code:
+
+- [Tag Assistant Companion](https://chrome.google.com/webstore/detail/tag-assistant-companion/jmekfmbnaedfebfnmakmokmlfpblbfdm)
+  (Chrome extension)
+- [Tag Assistant](https://tagassistant.google.com/) (web)
+
+## Raw notes
+
+> Original brain-dump, kept verbatim for provenance.
+
+### Configuring Google Analytics
+- [ ] Setup Google Analytics on Blog `>2022-04-19`
     - [ ] Configuring the blog with google analytics
         - [ ] [Docusaurus: Plugin Google Gtag](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-google-gtag)
     - [ ] Try adding a button with a custom event ...
@@ -22,7 +63,7 @@ draft: false
         - [developers.google.com: Gtagjs](https://developers.google.com/analytics/devguides/collection/gtagjs)
         - [developers.google.com: Single Page Applications](https://developers.google.com/analytics/devguides/collection/gtagjs/single-page-applications)
 
-# Dashboard
+### Dashboard
 - [analytics.google.com: Web](https://analytics.google.com/analytics/web/#/p286298793/realtime/overview?params=_u..nav%3Dmaui)
 
 - [ ] Debugging Google Analytics
