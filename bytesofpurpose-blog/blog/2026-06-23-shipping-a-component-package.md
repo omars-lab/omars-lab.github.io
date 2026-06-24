@@ -1,6 +1,8 @@
 ---
 slug: shipping-a-component-package
 title: '📦 Shipping a Component Package, and Proving It Works'
+kind: system-design
+sidebar_label: "Shipping a Package"
 description: "How I extracted my blog's React components into a published package, proved it consumable from a second repo, and gave that repo a CI-built Pages deploy that installs it."
 authors: [oeid]
 tags: [system-design, devops, github-actions, generative-ai, claude]

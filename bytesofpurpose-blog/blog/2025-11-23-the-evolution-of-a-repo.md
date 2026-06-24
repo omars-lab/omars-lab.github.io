@@ -1,6 +1,8 @@
 ---
 slug: evolution-of-a-repo
 title: '🏗️ The Evolution of a Repository: A Maturity Model'
+kind: system-design
+sidebar_label: "Repo Evolution"
 description: 'Understand the different phases of repository maturity and learn practical steps to evolve your codebase from prototype to enterprise-grade.'
 authors: [oeid]
 tags: [software-engineering, codebase-management, technical-debt, architecture, best-practices]

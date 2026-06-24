@@ -1,6 +1,8 @@
 ---
 slug: a-framework-for-quantifying-yourself
 title: "A Framework for Quantifying Yourself"
+kind: framework
+sidebar_label: "Quantifying Yourself"
 description: "Treat your own life like a system worth measuring. A self-quantification framework built on one loop: measure, track, report, evaluate, with the planning questions that make each step actionable."
 authors: [oeid]
 tags: [productivity, self-quantification]

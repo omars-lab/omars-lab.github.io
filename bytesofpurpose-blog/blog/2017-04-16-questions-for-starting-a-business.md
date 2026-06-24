@@ -1,6 +1,8 @@
 ---
 slug: questions-for-starting-a-business
 title: "Questions for Starting a Business"
+kind: question-set
+sidebar_label: "Starting a Business"
 description: "The questions to work through when starting a business, from business model and audience to legal structure, plus the mindset to keep going."
 authors: [oeid]
 tags: [question-set, entrepreneurship]

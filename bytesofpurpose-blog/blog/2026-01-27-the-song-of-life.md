@@ -1,6 +1,8 @@
 ---
 slug: the-song-of-life
 title: "The Song of Life"
+kind: reflection
+sidebar_label: "Song of Life"
 description: "A set of philosophical reflections on life, death, purpose, words, and the strange symmetry between programs and existence."
 authors: [oeid]
 tags: [philosophy, mindset]

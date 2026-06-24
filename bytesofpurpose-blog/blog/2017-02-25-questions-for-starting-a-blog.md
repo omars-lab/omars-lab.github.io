@@ -1,6 +1,8 @@
 ---
 slug: questions-for-starting-a-blog
 title: "Questions for Starting a Blog"
+kind: question-set
+sidebar_label: "Starting a Blog"
 description: "Five steps of questions to work through before starting a blog: why, name, content, technology, and how you'll market it."
 authors: [oeid]
 tags: [question-set, writing]

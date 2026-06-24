@@ -1,6 +1,8 @@
 ---
 slug: the-habit-loop
 title: "What The Power of Habit Taught Me About Changing Behavior"
+kind: reflection
+sidebar_label: "The Habit Loop"
 description: "Reflections on Charles Duhigg's The Power of Habit: the loop behind every habit, why willpower behaves like a muscle, and the one rule that actually changes behavior."
 authors: [oeid]
 tags: [mindset, productivity]

@@ -1,6 +1,8 @@
 ---
 slug: the-anatomy-of-doing
 title: "The Anatomy of Doing: A Framework for Acting on What Matters"
+kind: framework
+sidebar_label: "Anatomy of Doing"
 description: "A personal operating system for execution: the handful of triggers that should pull you into action, and the loop that keeps the action honest."
 authors: [oeid]
 tags: [productivity]
