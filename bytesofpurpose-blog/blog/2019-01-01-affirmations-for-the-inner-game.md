@@ -6,7 +6,7 @@ sidebar_label: "Inner Game"
 description: "A collection of faith-based and motivational affirmations I've returned to over the years, organized by theme: faith, strength, discipline, failure, focus, confidence, and living fully."
 authors: [oeid]
 tags: [mindset]
-date: 2026-01-27
+date: 2019-01-01
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
 draft: true
 ---
