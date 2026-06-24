@@ -1,6 +1,6 @@
 ---
 slug: recreating-an-image-as-dsl
-title: '🧬 Teaching AI to Read a Pattern and Write Its Code'
+title: 'Teaching AI to Read a Pattern and Write Its Code'
 kind: tutorial
 sidebar_label: "Image to DSL"
 description: 'I spent weeks trying to get AI to look at an Islamic geometric pattern and hand me back the code that draws it. Here is the rabbit hole: what worked, what failed, and the mistakes I kept making.'

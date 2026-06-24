@@ -162,6 +162,15 @@ Flag and fix:
     ```bash
     perl -0pi -e "s/^(title:.*\n)/\$1sidebar_label: 'SHORT LABEL'\n/m" path/to/doc.mdx
     ```
+  - **Same rule applies to BLOG posts now.** The Posts sidebar (`/thoughts`) is no longer
+    docs-only: every blog post carries a `kind:` and a short `sidebar_label:` (≤ 3 content
+    words), and the kind-derived emoji is prepended automatically — see `author-blog-post`
+    ("Blog post `kind:` + the sidebar"). A long blog `title:` wraps/truncates in the Posts
+    sidebar exactly like a docs title, and the fix is identical: add a short `sidebar_label`,
+    keep the full `title` for the H1/SEO. (Mechanism differs: the blog plugin doesn't read
+    `sidebar_label` natively — the `draft-docs` plugin + `BlogSidebar` swizzle do, and the
+    warn-tier check is `validate-post-outline.js`'s `long-sidebar-label`, not the docs
+    structure validator.) So when auditing labels, sweep `blog/` too, not just `docs/`.
 - **Repetitive sibling labels.** Five entries all starting *"Understanding … "* read
   as noise — the shared prefix is already implied by the category. Strip the prefix
   in `sidebar_label` ("Dynamic Programming", "Graphs", "Heaps", …).

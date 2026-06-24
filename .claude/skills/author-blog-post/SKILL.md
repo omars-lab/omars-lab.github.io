@@ -22,6 +22,68 @@ deploys cleanly. Pairs with `deploy-site` (ship) and `validate-deployment` (veri
 > JSX silently or errors. Rename `YYYY-MM-DD-slug.md` → `YYYY-MM-DD-slug.mdx`
 > before adding these components.
 
+## Blog post `kind:` + the sidebar (emoji by TYPE, short labels)
+
+Every blog post declares a **`kind:`** — what TYPE of document it is, not its topic. The
+kind drives two things: the **sidebar emoji** (auto-derived, never typed by hand) and the
+**outline contract** (what structural elements that kind of post should have). The kinds and
+their emoji are the single source of truth in
+**`bytesofpurpose-blog/scripts/lib/blog-kind-emoji.json`**:
+
+| `kind:` | emoji | what it is |
+|---|---|---|
+| `question-set` | ❓ | a set of introspective questions ("What I Ask Myself" / "Questions for") |
+| `framework` | 🧩 | a reusable model ("A Framework for", "The Anatomy of", a maturity model) |
+| `reflection` | 💭 | a personal essay / takeaways ("Notes From", "What X Taught Me", affirmations) |
+| `system-design` | 🏗️ | a full build/architecture write-up that paints the whole picture (UX mockup + key decisions) |
+| `design-story` | 📐 | the STORY/motivation behind a design; a narrative front-door that **links to the formal HLD in `/designs`** (NOT the HLD itself) |
+| `tutorial` | 🧪 | a hands-on, learn-by-doing walkthrough (steps / code / `<Walkthrough>` / `<Gif>`) |
+| `reference` | 📖 | a concept explainer or taxonomy ("A Taxonomy of", "What Does X Mean") |
+| `event-recap` | 🎙️ | a conference / event recap |
+| `legend` | 🧭 | a series index / keystone that explains a set of posts + their conventions |
+
+**Frontmatter:**
+```yaml
+---
+title: "What Does GTM Mean? (And Is It the Same as an Experiment Dial-Up Plan?)"  # full title: H1 + SEO + tab
+kind: reference                # drives the sidebar emoji + outline checks
+sidebar_label: "What Is GTM?"  # SHORT (<= 3 CONTENT words) sidebar entry; NO emoji (kind adds it)
+---
+```
+
+- **The emoji is auto-derived from `kind:` — do NOT put an emoji in `title:` or
+  `sidebar_label:`.** The `draft-docs` plugin prepends the kind emoji to the rendered
+  sidebar label (`<emoji> + (sidebar_label || title)`); the swizzled `BlogSidebar`
+  (Desktop + Mobile) renders it, full title on hover.
+- **`sidebar_label:`** is a SHORT entry for the Posts sidebar (the full `title:` stays the
+  H1 / SEO title / browser tab). Aim for **≤ 3 content words** (particles like the/of/and/is
+  don't count). For the "What I Ask Myself" series, drop the repeated prefix
+  (e.g. `sidebar_label: "Finding Purpose"`). Required mechanism: the blog plugin does NOT
+  read `sidebar_label` natively; our `draft-docs` plugin + `BlogSidebar` swizzle do.
+
+**Validation (warn-tier, via `validate-post-outline.js` + its `Write|Edit` hook):**
+- `missing-kind` — a blog post with no `kind:`.
+- `unknown-kind` — a `kind:` not in `blog-kind-emoji.json`.
+- `long-sidebar-label` — the sidebar entry exceeds ~3 content words / ~32 chars (add a short
+  `sidebar_label:`).
+- per-kind **outline**: e.g. `question-set` needs H2 + `<Question>` + `<SectionBanner>`;
+  `framework` needs the framework laid out; `tutorial` needs steps/an artifact;
+  `design-story` needs a link to `/designs`; `system-design` needs a `<Mockup>` + Decisions;
+  `legend` needs an explainer (a table / `<PowerLegend>` / links).
+
+> **Investigate before you "fix" an outline advisory.** When the hook flags a missing
+> element, FIRST ask: is the POST missing structure, or is the `kind:` WRONG for what the
+> post actually is? A "legend" that is really an essay, or a "system-design" that is really
+> a narrative `design-story`, is fixed by **correcting `kind:`**, not by forcing a mockup or
+> a Decisions heading onto it. Track each finding as a task (investigate → decide the ideal
+> fix → apply). Most of the initial backfill advisories were mis-classifications, not gaps.
+
+**Reader-facing legend.** The "🧭 Start Here" post (`blog/2026-06-24-a-guide-to-these-posts.mdx`,
+`/thoughts/a-guide-to-these-posts`) holds the kind→emoji legend table for readers. When you
+add or change a kind, update **all three in lockstep**: `blog-kind-emoji.json`, the validator's
+`OUTLINES`, and that legend post (plus this skill). Mirrors the docs emoji system
+(`scripts/lib/emoji-map.json` + `suggest-emoji`).
+
 ## MDX pitfalls that FAIL the build (learned the hard way)
 
 Docusaurus 3 parses `.md`/`.mdx` as MDX. These break the build during static
