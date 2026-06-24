@@ -231,7 +231,7 @@ available. NOT for questions in general docs — only introspective/journaling p
 <Question
   power={['fire', 'anvil']}
   priority="core"
-  frequency="Yearly"
+  cron="yearly"
   depth="deep"
   why="Without a clear answer, every decision defaults to what feels comfortable, not what's deepest."
   howOften="Once per year, and any time you feel like you're going through the motions"
@@ -242,6 +242,10 @@ available. NOT for questions in general docs — only introspective/journaling p
 ```
 
 - `children` = the question text (plain string in the card + modal heading).
+- **Every badge dimension now has its own ICON** (so the card scans fast), and every badge
+  is wrapped in a `<Tooltip>` that explains it on hover/focus/tap (e.g. "Priority: Medium —
+  Useful, but not foundational"; "Depth: Deep — Sit with it; this one takes time"). The
+  glosses live in the `*_META` objects in `Question/index.tsx` (single source of truth).
 - **Badge props (all optional):**
   - `power` — the "power of a question" charge(s). One value or an array. The taxonomy
     (a forge metaphor, rendered with `react-icons/gi` SVG glyphs, theme-aware):
@@ -250,10 +254,16 @@ available. NOT for questions in general docs — only introspective/journaling p
     `'chisel'` (GiChisel — carves away what isn't you),
     `'anvil'` (GiAnvil — reshapes who you become). Omit `power` for a calm/no-icon
     question. A question may carry MULTIPLE (e.g. `power={['fire','anvil']}`).
-  - `priority` — `'core' | 'high' | 'medium' | 'low'` (colored pill; core/high stand out).
-  - `frequency` — short cadence label for the badge (e.g. `"Yearly"`, `"Monthly"`,
-    `"In hard stretches"`). The full sentence still goes in `howOften`.
-  - `depth` — `'quick' | 'moderate' | 'deep'` (how much reflection it demands).
+  - `priority` — `'core' | 'high' | 'medium' | 'low'`. Pill + a `LuFlag` (Lucide) flag
+    icon COLORED by tier (red core, orange high, amber medium, grey low).
+  - `cron` — RECURRING cadence: `'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' |
+    'adhoc'`. Pill + a `GiCycle` recurring icon. Think of it as the question's schedule (a
+    "cron job" for self-reflection); `adhoc` = ask when it applies. **`cron` replaces the
+    old free-text `frequency` prop** — `frequency` still works for back-compat (a recognized
+    cadence word maps to `cron`; anything else renders as a plain text pill), but new posts
+    should use `cron`.
+  - `depth` — `'quick' | 'moderate' | 'deep'`. Pill + a `LuBrain` (Lucide) brain icon whose
+    OPACITY scales with depth (faint quick → solid deep).
 - All detail props (`why`, `howOften`, `when`, `record`) are optional; the modal renders
   only the rows with values. A card opens the modal if it has ANY badge or detail.
 - Modal is pub/sub via `CustomEvent('bop:question-modal')`. The `QuestionModalHost` is
@@ -263,6 +273,34 @@ available. NOT for questions in general docs — only introspective/journaling p
   text (no nested JSX) and it will extract cleanly.
 - Registered in `MDXComponents.tsx` — no import needed in `.mdx` blog posts.
 - The file must be `.mdx` (not `.md`).
+
+### QuestionSection (sort a section's questions by priority)
+
+WHAT: a wrapper around the `<Question>` cards under one H2 that renders them sorted by
+`priority` (core > high > medium > low), preserving the authored order WITHIN each tier
+(stable sort). Questions with no `priority` sort last. WHEN: every section in a
+`question-set` post that has 2+ questions — so the reader meets the most-foundational
+questions first. HOW: wrap the section's questions (after the `<SectionBanner>`):
+
+```mdx
+## Core purpose
+
+<SectionBanner why="…" />
+
+<QuestionSection>
+
+<Question priority="high" …>…</Question>
+<Question priority="core" …>…</Question>   {/* renders FIRST despite being authored second */}
+
+</QuestionSection>
+```
+
+- One `<QuestionSection>` per H2 section; never nest, never wrap across an H2 boundary.
+- Put blank lines around the open/close tags so MDX parses the children as blocks.
+- Trailing prose AFTER the last question stays OUTSIDE the wrapper (close right after the
+  last `<Question>`). A pure-prose section (no questions) gets no wrapper.
+- Authors keep writing questions in any order; the component sorts at render time, so you
+  never hand-reorder cards. Registered in `MDXComponents.tsx`.
 
 ### PowerLegend (the canonical power-taxonomy legend)
 
@@ -338,6 +376,18 @@ invalid"). If you add an icon from a new react-icons subpath, it's already cover
 
 ## Learnings log (newest first)
 
+- 2026-06-24 (latest) — **Every badge dimension got an icon + a custom Tooltip, `cron`
+  replaced `frequency`, and `QuestionSection` sorts by priority.** Priority → a `LuFlag`
+  (Lucide) flag colored by tier (red/orange/amber/grey); depth → a `LuBrain` (Lucide) brain
+  whose opacity scales with depth; cron (new, replaces the free-text `frequency`) → a
+  `GiCycle` recurring icon with enum cadences (daily…yearly/adhoc). A reusable `<Tooltip>`
+  component wraps every badge so hovering an ambiguous label ("Medium"/"Moderate") explains
+  it. `<QuestionSection>` wraps a section's cards and stable-sorts them by priority at render
+  time (authors never hand-reorder). Lucide icons import from `react-icons/lu` and bundle the
+  same way as `gi` (the `noExternal` glob already covers all of react-icons). Applied across
+  all 23 question-set posts (badge icons are automatic; QuestionSection wrapping was a
+  per-section edit done by parallel agents). Gotcha: a `{/* JSX comment */}` inside a `/** */`
+  JSDoc block breaks the tsup build — keep example JSX comments out of doc-comments.
 - 2026-06-24 (later) — Added the **badge system** to `Question` (`power`/`priority`/
   `frequency`/`depth`) + the `PowerLegend` component. The "power of a question" taxonomy is a
   forge metaphor rendered with `react-icons/gi` SVG glyphs (spark=GiLightningArc,
