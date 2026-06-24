@@ -6,7 +6,7 @@ sidebar_label: "Prioritizing"
 description: "Prioritizing isn't a one-time ranking. It's a set of recurring questions: what factors matter, how to evaluate candidates, when to de-prioritize, and how to get better at it over time."
 authors: [oeid]
 tags: [productivity]
-date: 2026-01-28
+date: 2020-05-26
 draft: true
 ---
 

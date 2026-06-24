@@ -6,7 +6,7 @@ sidebar_label: "Song of Life"
 description: "A set of philosophical reflections on life, death, purpose, words, and the strange symmetry between programs and existence."
 authors: [oeid]
 tags: [philosophy, mindset]
-date: 2026-01-27
+date: 2020-03-23
 draft: true
 ---
 
