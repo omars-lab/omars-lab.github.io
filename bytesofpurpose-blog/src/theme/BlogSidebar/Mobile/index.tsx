@@ -4,21 +4,25 @@ import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client
 import {NavbarSecondaryMenuFiller} from '@docusaurus/theme-common';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
+import {useBlogSidebarLabel} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
 // Swizzled @theme/BlogSidebar/Mobile: mirrors upstream, adding the same dev-only
-// "D" draft badge as the Desktop sidebar (see ../Desktop). Gated to localhost +
-// non-prod; no-op in production.
+// "D" draft badge as the Desktop sidebar (see ../Desktop) and the same short
+// sidebar_label override. Draft badge is gated to localhost + non-prod; the short
+// label ships to prod too.
 
 function SidebarItemLink({item}: {item: {title: string; permalink: string}}) {
   const isDraft = useIsBlogDraft(item.permalink);
+  const label = useBlogSidebarLabel(item.permalink, item.title);
   return (
     <Link
       isNavLink
       to={item.permalink}
       className="menu__link"
-      activeClassName="menu__link--active">
-      {item.title}
+      activeClassName="menu__link--active"
+      title={item.title}>
+      {label}
       {isDraft && <DraftBadge />}
     </Link>
   );

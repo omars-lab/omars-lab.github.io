@@ -1,0 +1,23 @@
+{
+  "__doc__": "Single source of truth for the BLOG post-kind -> sidebar emoji convention. A blog post's emoji reflects its DOCUMENT KIND (what type of thing it is), NOT its topic, so the Posts sidebar is scannable by type. Set `kind:` in a post's frontmatter; the emoji is auto-derived from this map and prepended to the sidebar label by the draft-docs plugin (authors never type the emoji). Read by validate-blog-kind.js + the validate-blog-kind-hook.sh nudge + the draft-docs plugin. Mirrors the docs emoji system (scripts/lib/emoji-map.json). The reader-facing prose mirror is the blog-kinds terminology doc. Keep them in lockstep: when you add a kind, add it here, in the plugin is automatic (it reads this file), and note it in the terminology doc + the author-blog-post skill.",
+  "kinds": {
+    "question-set": "❓",
+    "framework": "🧩",
+    "reflection": "💭",
+    "system-design": "🏗️",
+    "tutorial": "🧪",
+    "reference": "📖",
+    "event-recap": "🎙️",
+    "legend": "🧭"
+  },
+  "descriptions": {
+    "question-set": "A set of introspective questions to ask yourself (the 'What I Ask Myself' / 'Questions for' series).",
+    "framework": "A reusable model or framework for thinking about something ('A Framework for', 'The Anatomy of').",
+    "reflection": "A personal essay or set of takeaways ('Notes From', 'What X Taught Me', affirmations).",
+    "system-design": "An architecture or build write-up (system designs, shipping a thing, repo evolution).",
+    "tutorial": "A hands-on, learn-by-doing walkthrough ('A Hands-On Way to', 'Teaching X', 'Running X Locally').",
+    "reference": "A concept explainer or taxonomy ('A Taxonomy of', 'What Does X Mean').",
+    "event-recap": "A recap of a conference or event.",
+    "legend": "A series index or keystone that explains a set of posts and the conventions they share."
+  }
+}
