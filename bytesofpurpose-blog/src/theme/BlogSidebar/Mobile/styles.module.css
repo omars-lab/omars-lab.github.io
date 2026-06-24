@@ -5,3 +5,9 @@
 .yearGroupHeading {
   margin: 1rem 0.75rem 0.5rem;
 }
+
+/* "Guides" / "Posts" section headings above the pinned + dated lists (mobile). */
+.mobileSectionTitle {
+  font-weight: var(--ifm-font-weight-bold);
+  cursor: default;
+}
