@@ -24,6 +24,9 @@ export type {AssumptionProps} from './components/Assumption';
 export {default as SectionBanner} from './components/SectionBanner';
 export type {SectionBannerProps} from './components/SectionBanner';
 
+export {default as Tooltip} from './components/Tooltip';
+export type {TooltipProps} from './components/Tooltip';
+
 export {
   default as Question,
   QuestionModalHost,
@@ -37,5 +40,6 @@ export type {
   QuestionPowerProp,
   QuestionPriority,
   QuestionDepth,
+  QuestionCron,
   PowerLegendProps,
 } from './components/Question';

@@ -158,6 +158,21 @@
   font-weight: 500;
 }
 
+/* Cron cadence pill — a recurring-cycle icon + the cadence label. */
+.pillCron {
+  gap: 0.3rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary-darker, var(--ifm-color-primary));
+  background: color-mix(in srgb, var(--ifm-color-primary) 10%, transparent);
+  border-color: color-mix(in srgb, var(--ifm-color-primary) 28%, transparent);
+}
+.cronIcon {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
 /* ── PowerLegend ─────────────────────────────────────────────────────── */
 
 .legend {
