@@ -2,11 +2,150 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://blog.bytesofpurpose.com/changelog</id>
     <title>Bytes of Purpose Blog</title>
-    <updated>2026-06-01T00:19:04.000Z</updated>
+    <updated>2026-06-23T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://blog.bytesofpurpose.com/changelog"/>
     <subtitle>Bytes of Purpose Blog</subtitle>
     <icon>https://blog.bytesofpurpose.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Analysis: Extracting Reusable Components into a Local Package]]></title>
+        <id>https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package</id>
+        <link href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package"/>
+        <updated>2026-06-23T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[What it would take to split reusable blog components into a built-before-the-site local package with tests, and how that fits gh-pages. Decision: stay co-located for now.]]></summary>
+        <content type="html"><![CDATA[<p><strong>Question:</strong> what would it take to split the reusable blog components (SvgVariantGrid,
+Evidence, BinaryPyramid, DiagramWithFootnotes, Vote, ShareButton, ...) into a separate
+local folder/package, with its own tests, that gets installed/built BEFORE the Docusaurus
+static site builds, and how would that fit GitHub Pages?</p>
+<p><strong>Decision (now): stay co-located.</strong> This memo records the analysis so the trigger to
+revisit is explicit, not forgotten.</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="where-we-are-today-the-baseline">Where we are today (the baseline)<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#where-we-are-today-the-baseline" class="hash-link" aria-label="Direct link to Where we are today (the baseline)" title="Direct link to Where we are today (the baseline)" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>33 components</strong> under <code>src/components/</code>, each a self-contained dir (<code>index.tsx</code> +
+<code>styles.module.css</code>), imported by full path <code>@site/src/components/X</code>. There is <strong>no
+barrel, no published package, no formal "UI lib"</strong>. The convention is "one folder per
+component, import by path." Shared <em>non-visual</em> logic lives in <code>src/lib/</code>
+(<code>binary-pyramid-logo.js</code>, <code>auth</code>, <code>premium-crypto</code>).</li>
+<li class=""><strong>Storybook already exists</strong> (<code>@storybook/react-webpack5</code> v8, ~9 <code>*.stories.tsx</code>). So
+components already have a partial isolation/preview story, but <strong>no unit tests</strong> on them
+(component tests today are end-to-end via Playwright in <code>test/e2e/</code>).</li>
+<li class=""><strong>There is already a "build a thing before the static build" precedent</strong>, twice over:<!-- -->
+<ol>
+<li class=""><code>prebuild</code>/<code>prestart</code> run <code>generate-changelog &amp;&amp; generate-ideas &amp;&amp; generate-logo-variants</code>, code generators that emit data modules the site imports.</li>
+<li class=""><code>make build</code> and <code>make deploy</code> both depend on <strong><code>build-storybook</code></strong>: a <em>separate
+build</em> (<code>storybook build --output-dir static/storybook</code>) whose output is a gitignored
+artifact that Docusaurus copies verbatim from <code>static/</code>. The deploy recipe documents
+that a fresh clone must regenerate <code>/storybook/</code> before the static copy, or the live
+footer link ships with no bundles.</li>
+</ol>
+</li>
+</ul>
+<p>The second precedent matters: <strong>the pipeline already knows how to build an upstream
+artifact before the Docusaurus build and ship it through gh-pages.</strong> A component package
+would slot into the same shape.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-extraction-would-actually-require">What extraction would actually require<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#what-extraction-would-actually-require" class="hash-link" aria-label="Direct link to What extraction would actually require" title="Direct link to What extraction would actually require" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-package-layout">1. Package layout<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#1-package-layout" class="hash-link" aria-label="Direct link to 1. Package layout" title="Direct link to 1. Package layout" translate="no">​</a></h3>
+<p>A local, <strong>unpublished</strong> workspace package, e.g. <code>packages/blog-ui/</code>:</p>
+<ul>
+<li class=""><code>package.json</code> with <code>name: "@bop/blog-ui"</code>, <code>main</code>/<code>module</code>/<code>types</code> → <code>dist/</code>.</li>
+<li class="">Build with <strong>tsup</strong> (or vite-lib): ESM + d.ts, externalizing <code>react</code>/<code>react-dom</code> and any
+Docusaurus <code>@theme</code>/<code>@docusaurus/*</code> imports (several components import these, and they must
+stay peer/externals, not be bundled).</li>
+<li class="">Consumed by the site via <strong>npm/yarn workspaces</strong> (turn the existing root <code>package.json</code>
+into a workspace root listing <code>bytesofpurpose-blog</code> + <code>packages/*</code>) or a <code>file:</code> dep.</li>
+<li class="">The site keeps importing via an alias so MDX/posts don't churn:
+<code>@site/src/components/X</code> → re-export from <code>@bop/blog-ui</code>, OR add a webpack alias
+<code>@blog-ui</code> and migrate imports gradually.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-tests-the-main-gain">2. Tests (the main <em>gain</em>)<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#2-tests-the-main-gain" class="hash-link" aria-label="Direct link to 2-tests-the-main-gain" title="Direct link to 2-tests-the-main-gain" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>vitest + @testing-library/react</strong> for unit/interaction tests, co-located in the package
+(<code>SvgVariantGrid.test.tsx</code>, <code>Evidence.test.tsx</code>, ...). This is what we <em>can't</em> easily do
+today: the only component coverage now is whole-page Playwright. Pure components
+(SvgVariantGrid renders raw SVG; Evidence's dev-vs-prod permalink branching) are ideal
+unit targets, e.g. assert Evidence renders a link in dev and prose-only for a private
+repo in prod, without standing up the whole site.</li>
+<li class=""><strong>a11y</strong> via <code>jest-axe</code>/<code>axe-core</code> at the component level.</li>
+<li class="">Migrate the existing Storybook stories into the package (they already document many
+components). Storybook can live in the package and serve as the visual test surface.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-build-ordering-prebuild-the-package-then-build-the-site">3. Build ordering (prebuild the package, then build the site)<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#3-build-ordering-prebuild-the-package-then-build-the-site" class="hash-link" aria-label="Direct link to 3. Build ordering (prebuild the package, then build the site)" title="Direct link to 3. Build ordering (prebuild the package, then build the site)" translate="no">​</a></h3>
+<p>Mirror the existing generator/storybook pattern:</p>
+<ul>
+<li class="">Root <code>prebuild</code>: <code>yarn workspace @bop/blog-ui build</code> <strong>before</strong> <code>docusaurus build</code>.</li>
+<li class="">Locally, workspaces symlink the package, so <code>dist/</code> must exist before <code>start</code>/<code>build</code>,
+add it to <code>prestart</code>/<code>prebuild</code> exactly like <code>generate-logo-variants</code>.</li>
+<li class=""><strong>Swizzle/alias caveat:</strong> components that import <code>@theme/*</code> or use Docusaurus context
+(e.g. <code>useColorMode</code>, <code>@docusaurus/Link</code>) only resolve inside the Docusaurus webpack
+context. Either keep those as externals (resolved by the host build) or leave the
+most-Docusaurus-coupled components in <code>src/components/</code> and extract only the
+<strong>presentation-pure</strong> ones first (SvgVariantGrid, Evidence, BinaryPyramid,
+DiagramWithFootnotes are good candidates; AuthNavbarItem, PremiumGate, DebugMenu are not).</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-gh-pages--ci-fit">4. gh-pages / CI fit<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#4-gh-pages--ci-fit" class="hash-link" aria-label="Direct link to 4. gh-pages / CI fit" title="Direct link to 4. gh-pages / CI fit" translate="no">​</a></h3>
+<ul>
+<li class="">The gh-pages deploy builds from source via the root <code>Makefile</code> (<code>make deploy</code> →
+<code>secret-scan build-storybook build</code>). Add the package build into that chain (a new
+<code>build-blog-ui</code> prerequisite, or fold it into <code>prebuild</code>) so the deploy pipeline builds
+<code>dist/</code> <strong>before</strong> the static build, the same as <code>build-storybook</code> does today.</li>
+<li class="">The package is <strong>LOCAL</strong> (not published to npm): no registry, no auth, no token. The only
+requirement is that the <strong>workspace resolves on a clean checkout</strong> (a <code>yarn install</code> at
+the root links it). CI already does <code>yarn install</code>; it just needs the build step ordered
+in.</li>
+<li class=""><strong>Secret scanning is unaffected</strong>: <code>make deploy</code> still runs <code>secret-scan</code> and the V5 leak
+gate on the <em>final</em> build output; an upstream package build doesn't change what gets
+scanned. (Keep the package's own deps out of any secret path; it's pure presentation.)</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="trade-offs">Trade-offs<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#trade-offs" class="hash-link" aria-label="Direct link to Trade-offs" title="Direct link to Trade-offs" translate="no">​</a></h2>
+<p><strong>Gains</strong></p>
+<ul>
+<li class="">Real <strong>component-level tests + a11y</strong> (today there are none; only e2e). This is the single
+biggest reason to do it.</li>
+<li class=""><strong>Reuse/versioning</strong>: the package could be consumed by a second site or Storybook deploy.</li>
+<li class="">Cleaner boundary between "the site" and "the design system."</li>
+</ul>
+<p><strong>Costs</strong></p>
+<ul>
+<li class=""><strong>Build complexity</strong>: one more build to order, cache, and debug; a <code>dist/</code> that can go
+stale locally if a watcher isn't wired.</li>
+<li class=""><strong>Swizzle/<code>@theme</code> friction</strong>: the Docusaurus-coupled components fight extraction; a
+partial extraction leaves components split across two homes (some <code>@bop/blog-ui</code>, some
+<code>src/components/</code>), which is its own confusion.</li>
+<li class=""><strong>Slower first build</strong> (package build + site build) and heavier <code>node_modules</code> linking.</li>
+<li class="">For a <strong>single-site, single-author</strong> project, the reuse/versioning gains are largely
+theoretical right now: the cost is paid today, the benefit is hypothetical.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="recommendation">Recommendation<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#recommendation" class="hash-link" aria-label="Direct link to Recommendation" title="Direct link to Recommendation" translate="no">​</a></h2>
+<p><strong>Stay co-located for now</strong> (the standing decision). The convention (one folder per
+component, <code>@site</code> import) is sufficient for a single site, and the highest-value piece,
+<strong>component-level tests</strong>, can be captured <em>without</em> extraction by adding <strong>vitest +
+@testing-library</strong> that import directly from <code>src/components/</code>. That delivers ~80% of the
+benefit (testability) for ~10% of the cost (no package, no build reorder, no swizzle fight).</p>
+<p><strong>Revisit the full extraction when any of these triggers fire:</strong></p>
+<ul>
+<li class="">a <strong>second consumer</strong> appears (a second site, or a standalone Storybook/design-system
+deploy that needs the components as a dependency);</li>
+<li class=""><code>src/components/</code> testing-via-vitest proves valuable enough that isolation/versioning is
+worth formalizing;</li>
+<li class="">the component count or churn makes the "design system vs site" boundary worth enforcing.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="ifwhen-we-pull-the-trigger-migration-sketch">If/when we pull the trigger: migration sketch<a href="https://blog.bytesofpurpose.com/changelog/2026/06/23/development/analysis-extract-components-to-local-package#ifwhen-we-pull-the-trigger-migration-sketch" class="hash-link" aria-label="Direct link to If/when we pull the trigger: migration sketch" title="Direct link to If/when we pull the trigger: migration sketch" translate="no">​</a></h3>
+<ol>
+<li class="">Add vitest + RTL to <code>bytesofpurpose-blog</code> first; test components in place. (Low-risk,
+high-value; do this regardless of extraction.)</li>
+<li class="">Make the root <code>package.json</code> a workspace root; scaffold <code>packages/blog-ui</code> (tsup, react
+as peer/external, <code>@docusaurus/*</code> + <code>@theme/*</code> external).</li>
+<li class="">Move <strong>presentation-pure</strong> components first (SvgVariantGrid, Evidence,
+DiagramWithFootnotes, BinaryPyramid). Re-export from <code>src/components/X</code> so posts/MDX
+imports don't change.</li>
+<li class="">Wire <code>prebuild</code>/<code>prestart</code> + the <code>make deploy</code> chain to build <code>@bop/blog-ui</code> before the
+site (mirroring <code>build-storybook</code>).</li>
+<li class="">Move the Storybook stories into the package; keep Playwright e2e as the integration net.</li>
+<li class="">Leave Docusaurus-coupled components (<code>@theme</code>/context users) in <code>src/components/</code> unless
+a clean externalization is proven.</li>
+</ol>]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[CLAUDE-CHANGELOG]]></title>
         <id>https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG</id>
@@ -22,6 +161,21 @@
 <p>Defaults if meta omitted: type=chore, category=development, priority=medium,
 component=Claude. Date drives the card's execution/inception date.
 --&gt;</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-23-omars-labblog-ui-a-publishable-component-package-proven-cross-repo">[2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-23-omars-labblog-ui-a-publishable-component-package-proven-cross-repo" class="hash-link" aria-label="Direct link to [2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo" title="Direct link to [2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo" translate="no">​</a></h2>
+<p>Extracted the four reusable design-post components (Walkthrough, Mockup, DiagramWithFootnotes, Assumption) into a publishable <code>@omars-lab/blog-ui</code> ESM React package, built the release pipeline to GitHub Packages, and proved it consumable from another repo by converting getting-started-with-claude-agents into a Vite app that installs and renders it. Then exercised the pipeline a second time: extended the Walkthrough with multi-custom-scene support, used it so the self-healing-storefront design opens on a live store-scan with an issue warning, and shipped it as v0.2.0. Closed the loop on security by adding server-side gitleaks CI to both repos.</p>
+<ul>
+<li class="">Publish reusable blog-UI components as a GitHub Packages artifact for cross-repo use (the package: tsup ESM + d.ts + bundled CSS, file: dep in the blog, publish-on-tag workflow)</li>
+<li class="">Author a skill for releasing/publishing @omars-lab/blog-ui (publish-blog-ui: tag convention blog-ui-v*, semver, simulate-publish, consumer .npmrc setup, merge-first ordering)</li>
+<li class="">Update skills + tests for the @omars-lab/blog-ui package migration (upgrade-post / author-walkthrough / import-co-design repointed to the package; e2e selectors verified)</li>
+<li class="">Can a real Vite bundler resolve + bundle @omars-lab/blog-ui (ESM + its CSS) from GitHub Packages (yes: vite build clean, the package CSS-modules land in the bundle, rendered + screenshotted)</li>
+<li class="">How should the Vite app render the blog-ui components as a meaningful demo (full guide port, with a stock-analyzer Walkthrough woven into the Getting-started section)</li>
+<li class="">How does the Vite build deploy to gh-pages without breaking the existing guide deploy (base './', Makefile build copies Vite output to main/root where Pages serves; static-serve proven)</li>
+<li class="">Prove the package: getting-started-with-claude-agents consumes @omars-lab/blog-ui + builds gh-pages with it (the cross-repo proof, end to end)</li>
+<li class="">How should the Walkthrough component support multiple custom scenes (backward-compatible customScenes[] + scene index, single-customScene sidecars unaffected)</li>
+<li class="">Storefront walkthrough: open on a store-scanning scene with a highlighted section + issue warning (acme-shop.com/checkout scan, dashboard, BI projection, proven via Playwright)</li>
+<li class="">Release blog-ui v0.2.0 with multi-custom-scene support + propagate to consumers (tagged, published, verified live alongside 0.1.0; 0.x caret gotcha documented)</li>
+<li class="">Add gitleaks server-side secret scan (CI) to both repos (fail-closed beyond the local pre-commit guard; full-history scans clean)</li>
+</ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement">[2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)<a href="https://blog.bytesofpurpose.com/changelog/CLAUDE-CHANGELOG#2026-06-03-emoji-prefixed-sidebar-section-labels-convention--enforcement" class="hash-link" aria-label="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" title="Direct link to [2026-06-03] Emoji-prefixed sidebar section labels (convention + enforcement)" translate="no">​</a></h2>
 <p>Formalized the unwritten "every sidebar section leads with an emoji" convention into a documented, enforced contract, and backfilled the ~18 category labels that had drifted. The validator now warns on emoji-less <code>_category_.json</code> labels (and rolls leaf-doc misses into one count), the docs-structure hook nudges on save, and <code>emojis.mdx</code> carries the topic→emoji map as the source of truth. Also trimmed two over-long page descriptions to the SEO/share window.</p>
 <ul>
@@ -1235,91 +1389,5 @@ Should I merge this  /Users/omareid/workplace/git/blueprints</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="status-not-started">Status: Not Started<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-plan-leveraging-genai-enhance-blog#status-not-started" class="hash-link" aria-label="Direct link to Status: Not Started" title="Direct link to Status: Not Started" translate="no">​</a></h3>
 <p>Execution has not yet begun. This section will be updated when work commences.</p>]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Blog Structure - Changelog & Roadmap]]></title>
-        <id>https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap</id>
-        <link href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap"/>
-        <updated>2025-11-18T15:48:34.000Z</updated>
-        <summary type="html"><![CDATA[Organize and structure the changelog and roadmap sections of the blog]]></summary>
-        <content type="html"><![CDATA[<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-plan">Execution Plan<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-plan" class="hash-link" aria-label="Direct link to Execution Plan" title="Direct link to Execution Plan" translate="no">​</a></h2>
-<p>Organize and structure the changelog and roadmap sections of the blog, including:</p>
-<ul>
-<li class="">Changelog tab/page with GitHub-style heatmap visualization</li>
-<li class="">Structure for changelog entries with frontmatter</li>
-<li class="">Automated changelog data generation from markdown files</li>
-<li class="">Roadmap integration (migrated to changelog entries)</li>
-</ul>
-<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="execution-results--attempts">Execution Results / Attempts<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#execution-results--attempts" class="hash-link" aria-label="Direct link to Execution Results / Attempts" title="Direct link to Execution Results / Attempts" translate="no">​</a></h2>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-changelog-system-completed-2025-01-20">✅ Changelog System Completed (2025-01-20)<a href="https://blog.bytesofpurpose.com/changelog/development/2025-XX-XX-structure-changelog-roadmap#-changelog-system-completed-2025-01-20" class="hash-link" aria-label="Direct link to ✅ Changelog System Completed (2025-01-20)" title="Direct link to ✅ Changelog System Completed (2025-01-20)" translate="no">​</a></h3>
-<p><strong>Work Period:</strong> January 20, 2025</p>
-<p><strong>Key Accomplishments:</strong></p>
-<ul>
-<li class="">Created changelog directory structure (<code>changelog/</code>)</li>
-<li class="">Implemented changelog entry format with frontmatter</li>
-<li class="">Built automated changelog data generation script (<code>scripts/generate-changelog-data.js</code>)</li>
-<li class="">Created Changelog React component with heatmap visualization</li>
-<li class="">Implemented GitHub-style month/quarter/year heatmap display</li>
-<li class="">Added changelog page route (<code>/changelog</code>)</li>
-<li class="">Migrated roadmap items to changelog entries</li>
-<li class="">Established naming conventions for changelog entries</li>
-<li class="">Integrated changelog generation into build process (npm lifecycle hooks)</li>
-</ul>
-<p><strong>Components Created:</strong></p>
-<ul>
-<li class=""><strong>Changelog Component System</strong> - See <a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component">Component Creation Entry</a> for detailed component architecture<!-- -->
-<ul>
-<li class="">Main Changelog component (<code>src/components/Changelog/Changelog.tsx</code>)</li>
-<li class="">Modular sub-components (DateOverlay, HeatmapRow, LegendSidebar, Legend, Filters, QuarterSection)</li>
-<li class="">Heatmap visualization with month/quarter/year grouping</li>
-<li class="">Separate rows for content vs development categories</li>
-<li class="">Quarter-based list view with horizontal scrolling</li>
-<li class="">Entry filtering and navigation</li>
-</ul>
-</li>
-<li class=""><strong>Changelog Utilities</strong> (<code>src/components/Changelog/changelogUtils.ts</code>)<!-- -->
-<ul>
-<li class="">Data loading and processing</li>
-</ul>
-</li>
-<li class=""><strong>Changelog Types</strong> (<code>src/components/Changelog/types.ts</code>)<!-- -->
-<ul>
-<li class="">TypeScript interfaces for changelog entries</li>
-</ul>
-</li>
-</ul>
-<p><strong>Scripts Created:</strong></p>
-<ul>
-<li class=""><strong><code>scripts/generate-changelog-data.js</code></strong>: Automatically scans <code>changelog/</code> directory, parses frontmatter, and generates JSON data file<!-- -->
-<ul>
-<li class="">Runs automatically via npm <code>prestart</code> and <code>prebuild</code> hooks</li>
-<li class="">Generates <code>src/components/Changelog/changelog-data.json</code></li>
-</ul>
-</li>
-</ul>
-<p><strong>Documentation Created:</strong></p>
-<ul>
-<li class=""><strong><code>NAMING_CONVENTIONS.md</code></strong>: Comprehensive naming conventions for changelog entries</li>
-<li class=""><strong><code>docs/6-techniques/3-blogging-techniques/changelog-system.md</code></strong>: Changelog entry format and guidelines</li>
-<li class=""><strong><code>prompts/heal/heal-blog-changelog.md</code></strong>: Reusable prompt for inferring and enriching changelog entries from git history</li>
-</ul>
-<p><strong>Related Links:</strong></p>
-<ul>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog/2025/11/16/development/component-creation-changelog-component">Changelog Component Creation</a> - Detailed component architecture and implementation</li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/changelog">Changelog Page</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/docs/NAMING_CONVENTIONS.md" target="_blank" rel="noopener noreferrer" class="">Naming Conventions</a></li>
-<li class=""><a class="" href="https://blog.bytesofpurpose.com/craft/blogging/changelog-system">Changelog System Documentation</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/heal/heal-blog-changelog.md" target="_blank" rel="noopener noreferrer" class="">Heal Changelog Prompt</a> - Reusable prompt for inferring and enriching changelog entries</li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/scripts/generate-changelog-data.js" target="_blank" rel="noopener noreferrer" class="">Changelog Generation Script</a></li>
-<li class=""><a href="https://github.com/omars-lab/omars-lab.github.io/blob/master/bytesofpurpose-blog/src/components/Changelog/Changelog.tsx" target="_blank" rel="noopener noreferrer" class="">Changelog Component</a></li>
-<li class=""><a href="https://posthog.com/changelog" target="_blank" rel="noopener noreferrer" class="">PostHog Changelog Inspiration</a></li>
-</ul>
-<p><strong>Roadmap Migration:</strong></p>
-<ul>
-<li class="">Migrated all roadmap items from <code>ROADMAP.md</code> files to changelog entries with <code>planned</code> status</li>
-<li class="">Removed deprecated <code>ROADMAP.md</code> files</li>
-<li class="">Roadmap items now tracked as changelog entries</li>
-</ul>
-<p><strong>Status:</strong> Changelog system has been successfully implemented. The blog now has a comprehensive changelog system with automated data generation, GitHub-style visualization, and structured entry format. Roadmap items have been migrated to changelog entries for unified tracking.</p>]]></content>
     </entry>
 </feed>

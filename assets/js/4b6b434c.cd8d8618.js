@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkbytesofpurpose_blog=globalThis.webpackChunkbytesofpurpose_blog||[]).push([[15621],{52874:e=>{e.exports=JSON.parse('{"authors":[{"name":"Omar Eid","title":"Principal AI Architect & Entrepreneur","url":"https://github.com/omars-lab","imageURL":"/img/headshot.png","key":"oeid","page":null,"count":5}]}')}}]);
