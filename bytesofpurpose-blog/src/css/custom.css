@@ -697,3 +697,57 @@ html[data-theme='dark'] .large-table .markdown table tbody tr:nth-child(even),
 html[data-theme='dark'] .markdown table.large-table tbody tr:nth-child(even) {
   background: rgba(255, 255, 255, 0.035);
 }
+
+/* ==========================================================================
+   In-content callout containers used across the interview/process/skills docs
+   (`<div class="tabs-container|process-step|insider-tip">`). These were authored
+   with a hardcoded inline <style> per page using cold Bootstrap grays/greens/
+   yellows (#f8f9fa / #e8f5e8 / #fff3cd) that clashed with the warm cream paper
+   and ignored dark mode. Centralized here on theme tokens so they match both
+   themes; the per-page <style> blocks were removed. Accent the process/tip rails
+   with the brand coral + the premium gold rather than stock green/amber.
+   ========================================================================== */
+.tabs-container {
+  background-color: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  padding: 16px;
+  margin: 16px 0;
+}
+.tabs-container .tabs,
+.tabs-container .tabItem {
+  background-color: transparent;
+}
+
+/* process-step + checklist share one treatment (both were the same green box). */
+.process-step,
+.checklist {
+  background-color: var(--ifm-color-primary-contrast-background);
+  border-left: 4px solid var(--ifm-color-primary);
+  border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
+  padding: 16px;
+  margin: 16px 0;
+}
+.process-step h4,
+.checklist h4 {
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+}
+.checklist ul {
+  margin-bottom: 0;
+}
+
+.insider-tip {
+  background-color: var(--premium-gold-wash, rgba(201, 162, 39, 0.1));
+  border-left: 4px solid var(--premium-gold-bright, #d4af37);
+  border-radius: 0 var(--ifm-global-radius) var(--ifm-global-radius) 0;
+  padding: 16px;
+  margin: 16px 0;
+}
+.insider-tip h4 {
+  color: var(--premium-gold-strong, #7a5f12);
+  margin-top: 0;
+}
+html[data-theme='dark'] .insider-tip h4 {
+  color: var(--premium-gold-bright, #d4af37);
+}

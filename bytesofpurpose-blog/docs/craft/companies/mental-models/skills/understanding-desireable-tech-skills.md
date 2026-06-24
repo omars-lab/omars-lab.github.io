@@ -12,24 +12,6 @@ draft: false
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<style>{`
-  .tabs-container {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 16px 0;
-    border: 1px solid #e9ecef;
-  }
-  
-  .tabs-container .tabs {
-    background-color: transparent;
-  }
-  
-  .tabs-container .tabItem {
-    background-color: transparent;
-  }
-`}</style>
-
 # Understanding Technical Skills: What Companies Actually Evaluate
 
 A comprehensive guide to the technical skills companies evaluate in interviews, including specific concerns, strengths, and progression expectations for different SDE levels.
