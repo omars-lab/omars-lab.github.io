@@ -14,6 +14,13 @@
   font-weight: var(--ifm-font-weight-bold);
 }
 
+/* The "Posts" heading when it follows the pinned "Guides" section: add space above so the
+   two sections read as distinct. */
+.sidebarSectionTitle {
+  margin-top: 1.8rem;
+  margin-bottom: var(--ifm-spacing-vertical, 1rem);
+}
+
 .sidebarItemList {
   font-size: 0.9rem;
 }

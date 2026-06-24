@@ -68,6 +68,9 @@ module.exports = function draftDocsPlugin(context) {
       // The blog sidebar item carries only {title, permalink}, so the swizzle looks
       // the label up here (same indirection the draft set uses).
       const blogSidebarLabels = {};
+      // Blog posts pinned ABOVE the year groups in the sidebar: `pinned: true`, or any
+      // `kind: legend` (an index/keystone belongs at the top, not buried by its date).
+      const blogPinnedPermalinks = new Set();
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -114,6 +117,11 @@ module.exports = function draftDocsPlugin(context) {
           if (data.draft === true) {
             blogDraftPermalinks.add(permalink);
           }
+          // Pin to the top of the sidebar: explicit `pinned: true`, or any legend (an
+          // index/keystone should sit above the year groups regardless of its date).
+          if (data.pinned === true || data.kind === 'legend') {
+            blogPinnedPermalinks.add(permalink);
+          }
           // Compute the rendered sidebar label = <kind emoji> + <short label or title>.
           //   - the short text is `sidebar_label:` if set (trimmed), else the full title;
           //   - the emoji is auto-derived from `kind:` (authors never type it). If the
@@ -141,6 +149,7 @@ module.exports = function draftDocsPlugin(context) {
         premiumPermalinks: [...premiumPermalinks],
         blogDraftPermalinks: [...blogDraftPermalinks],
         blogSidebarLabels,
+        blogPinnedPermalinks: [...blogPinnedPermalinks],
       };
     },
 

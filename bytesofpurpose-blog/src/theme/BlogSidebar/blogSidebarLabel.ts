@@ -38,3 +38,32 @@ export function useBlogSidebarLabel(permalink: string | undefined, title: string
   if (!permalink) return title;
   return labels[normalize(permalink)] ?? title;
 }
+
+// Posts pinned ABOVE the year groups (`pinned: true` or `kind: legend`). The plugin
+// publishes their permalinks; the swizzled BlogSidebar pulls these out of the year-grouped
+// list and renders them at the very top, so an index/keystone isn't buried by its date.
+function useBlogPinnedPermalinks(): Set<string> {
+  const data = useAllPluginInstancesData('draft-docs-plugin') as
+    | {default?: {blogPinnedPermalinks?: string[]}}
+    | undefined;
+  const list = data?.default?.blogPinnedPermalinks ?? [];
+  return React.useMemo(() => new Set(list.map(normalize)), [list]);
+}
+
+export type BlogSidebarItem = {title: string; permalink: string; [k: string]: unknown};
+
+/**
+ * Split sidebar items into [pinned, rest]. Pinned items keep their source order; rest is
+ * left untouched for the normal year grouping. Use in the BlogSidebar swizzle.
+ */
+export function usePartitionedBlogItems(items: BlogSidebarItem[]): [BlogSidebarItem[], BlogSidebarItem[]] {
+  const pinned = useBlogPinnedPermalinks();
+  return React.useMemo(() => {
+    const top: BlogSidebarItem[] = [];
+    const rest: BlogSidebarItem[] = [];
+    for (const item of items) {
+      (pinned.has(normalize(item.permalink)) ? top : rest).push(item);
+    }
+    return [top, rest];
+  }, [items, pinned]);
+}

@@ -1,10 +1,14 @@
 import React, {memo} from 'react';
+import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client';
 import {NavbarSecondaryMenuFiller} from '@docusaurus/theme-common';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
-import {useBlogSidebarLabel} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
+import {
+  useBlogSidebarLabel,
+  usePartitionedBlogItems,
+} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
 // Swizzled @theme/BlogSidebar/Mobile: mirrors upstream, adding the same dev-only
@@ -42,12 +46,24 @@ const ListComponent = ({items}: {items: Array<{title: string; permalink: string}
 
 function BlogSidebarMobileSecondaryMenu({sidebar}: any) {
   const items = useVisibleBlogSidebarItems(sidebar.items);
+  const [pinned, rest] = usePartitionedBlogItems(items);
   return (
-    <BlogSidebarContent
-      items={items}
-      ListComponent={ListComponent}
-      yearGroupHeadingClassName={styles.yearGroupHeading}
-    />
+    <>
+      {pinned.length > 0 && (
+        <>
+          <div className={clsx('menu__list-item-collapsible', styles.mobileSectionTitle)}>Guides</div>
+          <ListComponent items={pinned} />
+          <div className={clsx('menu__list-item-collapsible', styles.mobileSectionTitle)}>
+            {sidebar.title}
+          </div>
+        </>
+      )}
+      <BlogSidebarContent
+        items={rest}
+        ListComponent={ListComponent}
+        yearGroupHeadingClassName={styles.yearGroupHeading}
+      />
+    </>
   );
 }
 

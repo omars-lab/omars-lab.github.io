@@ -5,7 +5,10 @@ import {translate} from '@docusaurus/Translate';
 import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
-import {useBlogSidebarLabel} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
+import {
+  useBlogSidebarLabel,
+  usePartitionedBlogItems,
+} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
 // Swizzled @theme/BlogSidebar/Desktop: identical to upstream, except the post
@@ -57,6 +60,9 @@ const ListComponent = ({items}: {items: Array<{title: string; permalink: string}
 
 function BlogSidebarDesktop({sidebar}: any): React.JSX.Element {
   const items = useVisibleBlogSidebarItems(sidebar.items);
+  // Pinned posts (`pinned: true` / `kind: legend`) render ABOVE the year groups so an
+  // index/keystone isn't buried by its date; the rest year-group as normal.
+  const [pinned, rest] = usePartitionedBlogItems(items);
   return (
     <aside className="col col--3">
       <nav
@@ -66,11 +72,21 @@ function BlogSidebarDesktop({sidebar}: any): React.JSX.Element {
           message: 'Blog recent posts navigation',
           description: 'The ARIA label for recent posts in the blog sidebar',
         })}>
-        <div className={clsx(styles.sidebarItemTitle, 'margin-bottom--md')}>
-          {sidebar.title}
-        </div>
+        {pinned.length > 0 ? (
+          <>
+            {/* Pinned legends/keystones get their own "Guides" section at the very top; the
+                dated posts below keep the "Posts" heading (sidebar.title). */}
+            <div className={clsx(styles.sidebarItemTitle, 'margin-bottom--md')}>Guides</div>
+            <ListComponent items={pinned} />
+            <div className={clsx(styles.sidebarItemTitle, styles.sidebarSectionTitle)}>
+              {sidebar.title}
+            </div>
+          </>
+        ) : (
+          <div className={clsx(styles.sidebarItemTitle, 'margin-bottom--md')}>{sidebar.title}</div>
+        )}
         <BlogSidebarContent
-          items={items}
+          items={rest}
           ListComponent={ListComponent}
           yearGroupHeadingClassName={styles.yearGroupHeading}
         />
