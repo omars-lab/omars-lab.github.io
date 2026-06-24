@@ -367,7 +367,7 @@ graph LR
 
 ## 4. Current State (As-Is)
 
-This section describes how DIY ecommerce merchants approach conversion optimization and experimentation **today**, and the tooling landscape they would have to navigate. See [Appendix A](#appendix-a--cro-tooling--methods-research) for the sourced market and method research behind this section.
+This section describes how DIY ecommerce merchants approach conversion optimization and experimentation **today**, and the tooling landscape they would have to navigate. See [Appendix A](#appendix-a-cro-tooling--methods-research) for the sourced market and method research behind this section.
 
 ### 4.1 How a DIY Merchant Optimizes Conversion Today
 
@@ -377,7 +377,7 @@ For a typical solo/small ecommerce merchant, the current state is one of three m
 
 2. **Guess and ship (no testing).** The owner reads a blog post, changes the headline or button, and ships it to 100% of traffic: with no control group and no measurement. If sales dip, they may never connect it to the change. Improvements and regressions are equally invisible. This is *worse* than nothing when a confident change quietly suppresses conversion.
 
-3. **Adopt a testing tool (rare, and it usually fails).** A motivated owner installs an A/B testing app (Shopify-native like **Shoplift**/**Intelligems**, or a platform like **VWO**/**Optimizely**: see [Appendix A](#appendix-a--cro-tooling--methods-research)). They then face: manual hypothesis creation, manual variant building, statistical dashboards built for analysts, and the patience to wait weeks for significance. Most tests are abandoned, mis-configured, or "decided" on noise. The tool assumes an expert operator who isn't there.
+3. **Adopt a testing tool (rare, and it usually fails).** A motivated owner installs an A/B testing app (Shopify-native like **Shoplift**/**Intelligems**, or a platform like **VWO**/**Optimizely**: see [Appendix A](#appendix-a-cro-tooling--methods-research)). They then face: manual hypothesis creation, manual variant building, statistical dashboards built for analysts, and the patience to wait weeks for significance. Most tests are abandoned, mis-configured, or "decided" on noise. The tool assumes an expert operator who isn't there.
 
 ```mermaid
 graph LR
@@ -392,7 +392,7 @@ graph LR
 
 ### 4.2 The Tooling Landscape
 
-Today's experimentation tools cluster into three groups, all built for a **human expert operator**, not an autonomous agent or a non-expert owner _([Appendix A](#appendix-a--cro-tooling--methods-research))_:
+Today's experimentation tools cluster into three groups, all built for a **human expert operator**, not an autonomous agent or a non-expert owner _([Appendix A](#appendix-a-cro-tooling--methods-research))_:
 
 | Group | Examples | Built for | Gap for our user |
 |-------|----------|-----------|------------------|
@@ -404,7 +404,7 @@ Today's experimentation tools cluster into three groups, all built for a **human
 
 ### 4.3 The Statistical Reality for Mid-Market Stores
 
-Because target stores span low- to mid-traffic, the **classic fixed-sample, frequentist** approach most tools default to is often a poor fit _([Appendix A](#appendix-a--cro-tooling--methods-research))_:
+Because target stores span low- to mid-traffic, the **classic fixed-sample, frequentist** approach most tools default to is often a poor fit _([Appendix A](#appendix-a-cro-tooling--methods-research))_:
 
 - A store with ~500 weekly users at a 2% baseline conversion needs on the order of **16 weeks** to detect even a large (50%) relative improvement with fixed-sample frequentist methods.[^a3] Most owners won't wait, so tests die inconclusive.
 - **Sequential** and **Bayesian** methods adapt during the test and can require **20 to 80% fewer users** than an equivalent fixed-sample test,[^a4] and they yield an intuitive output ("91% chance B beats A") instead of a p-value.[^a2]
@@ -626,7 +626,7 @@ This phasing mirrors CO-DESIGN-0002's philosophy: **earn the right to build the 
 - **Question:** How do we produce trustworthy decisions across low- to mid-traffic stores?
 - **Options:** Fixed-sample frequentist · Bayesian · Sequential · Multi-armed bandit · Hybrid (method chosen per store by traffic).
 - **Status:** **Leaning: hybrid, Bayesian/sequential default.** Bandits for eligible high-traffic, always-on optimizations.
-- **Rationale:** Sequential/Bayesian need 20 to 80% fewer users and give intuitive probabilities ([Appendix A](#appendix-a--cro-tooling--methods-research)); fixed-sample only where traffic supports it. Enforce minimum-runtime and stop rules to prevent peeking errors.
+- **Rationale:** Sequential/Bayesian need 20 to 80% fewer users and give intuitive probabilities ([Appendix A](#appendix-a-cro-tooling--methods-research)); fixed-sample only where traffic supports it. Enforce minimum-runtime and stop rules to prevent peeking errors.
 
 #### D3: Autonomy & guardrails model
 
@@ -640,7 +640,7 @@ This phasing mirrors CO-DESIGN-0002's philosophy: **earn the right to build the 
 - **Question:** How are hypotheses generated and prioritized?
 - **Options:** Scanner-findings-seeded · analytics-anomaly-driven · LLM-reasoned from best practice · all three combined; prioritized by **expected lift × confidence × ease**.
 - **Status:** **Leaning: combined, scanner-seeded, with an explicit prioritization score.**
-- **Rationale:** Grounding in the scanner's real findings + the store's own analytics avoids generic suggestions (G1); the score keeps the backlog ranked and biases toward high-lift tests on low-traffic stores ([Appendix A](#a1)).
+- **Rationale:** Grounding in the scanner's real findings + the store's own analytics avoids generic suggestions (G1); the score keeps the backlog ranked and biases toward high-lift tests on low-traffic stores ([Appendix A](#a1-tooling-landscape-2026)).
 
 #### D5: Variant generation
 
