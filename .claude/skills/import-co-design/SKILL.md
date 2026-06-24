@@ -59,7 +59,9 @@ Pasting an HLD in breaks for four reasons, all handled by the transformer:
 
 1. **Frontmatter** → Designs shape: `slug: design-<kebab>`, `sidebar_position` (next free, or
    preserved on update), `title` (lead phrase, de-em-dashed), `description` (first exec-summary
-   sentence, ~≤158 chars), `authors: [oeid]`, subject-derived `tags`, `draft: true`, and a
+   sentence, ~≤158 chars), `authors: [oeid]`, subject-derived `tags`, `kind: system-design`
+   (an HLD paints the whole picture; drives the 🏗️ sidebar emoji + the `validate-post-outline.js`
+   system-design outline contract — see `author-blog-post`), `draft: true`, and a
    `source:` provenance block `{repo, path, id, status, imported}`. Filename
    `YYYY-MM-DD-<kebab>.mdx` from the source `date`.
 2. **Footnotes**: the source's `[[aN]](#aN)` references become GFM caret-style references, and

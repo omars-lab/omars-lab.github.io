@@ -1,7 +1,7 @@
 ---
 slug: getting-started-with-claude-agents
-title: '🤖 A Hands-On Way to Learn What a Claude Agent Actually Is'
-kind: tutorial
+title: 'A Hands-On Way to Learn What a Claude Agent Actually Is'
+kind: reflection
 sidebar_label: "Claude Agents"
 description: "I built a small, readable example you can open and poke at to answer one question: what is an agent, and what is a skill? It's a working stock-research agent that doubles as a teaching tool."
 authors: [oeid]

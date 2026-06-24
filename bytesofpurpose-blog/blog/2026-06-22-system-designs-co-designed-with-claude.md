@@ -1,7 +1,7 @@
 ---
 slug: system-designs-co-designed-with-claude
-title: '🧩 Four System Designs I Co-Designed with Claude'
-kind: system-design
+title: 'Four System Designs I Co-Designed with Claude'
+kind: design-story
 sidebar_label: "System Designs"
 description: "A look at four architecture HLDs I worked through with Claude: autonomous build agents, an ecommerce site scanner, a self-healing storefront, and a markdown review studio. Each is now a readable design doc you can open."
 authors: [oeid]

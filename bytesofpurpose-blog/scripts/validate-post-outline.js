@@ -33,7 +33,8 @@
  * The `kind:` value must be one of the blog kinds in scripts/lib/blog-kind-emoji.json
  * (that file drives the sidebar emoji). An UNKNOWN kind is itself a finding here.
  * Posts with no `kind:` are skipped by THIS file's outline checks; the missing-kind
- * nudge lives in validate-blog-kind.js. Add new kinds to OUTLINES below AND to the map.
+ * nudge is emitted by THIS file (the missing-kind finding). Add new kinds to OUTLINES below
+ * AND to scripts/lib/blog-kind-emoji.json (the emoji map) in the same change.
  *
  * Usage:
  *   node scripts/validate-post-outline.js [paths…]   # scan (default: blog + designs + docs)
@@ -70,6 +71,20 @@ const MAX_LABEL_CHARS = 32;
 // reads, not the auto-prepended kind glyph.
 function stripLeadingEmoji(s) {
   return s.replace(/^(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})[️‍]*\s*/u, '');
+}
+
+// Particles (articles, conjunctions, short prepositions, the copula) don't count toward the
+// sidebar-label word budget: "The Song of Life" reads as 2 words, not 4. We count the
+// CONTENT words only.
+const PARTICLES = new Set([
+  'a', 'an', 'the', 'and', 'or', 'nor', 'but', 'is', 'are', 'be', 'to', 'of', 'in', 'on',
+  'at', 'by', 'for', 'with', 'as', 'my', 'your', 'i', 'you',
+]);
+function contentWordCount(text) {
+  return text
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((w) => !PARTICLES.has(w.toLowerCase().replace(/[^a-z']/gi, ''))).length;
 }
 
 // Reusable checks.
@@ -137,6 +152,15 @@ const OUTLINES = {
         /^\s*\d+\.\s+\S/m.test(body) ||
         /```/.test(body) ||
         /<(Walkthrough|Gif)[\s>]/.test(body),
+    },
+    hasDescription,
+  ],
+  'design-story': [
+    {
+      id: 'links-to-design',
+      label:
+        'a link to the formal design doc in /designs (a design-story narrates the WHY and points to the HLD; the HLD itself lives in /designs)',
+      test: (fm, body) => /\]\(\/designs\/[^)\s]+\)/.test(body) || /\/designs\b/.test(body),
     },
     hasDescription,
   ],
@@ -215,15 +239,15 @@ function checkFile(file) {
     const labelText = stripLeadingEmoji(
       (usingLabel ? fm.sidebar_label : fm.title || '').toString().trim(),
     );
-    const words = labelText.split(/\s+/).filter(Boolean).length;
+    const words = contentWordCount(labelText); // particles (the/of/and/is…) don't count
     if (labelText && (words > MAX_LABEL_WORDS || labelText.length > MAX_LABEL_CHARS)) {
       findings.push({
         file: path.relative(ROOT, file),
         kind,
         id: 'long-sidebar-label',
         detail: usingLabel
-          ? `sidebar_label "${labelText}" is long (${words} words / ${labelText.length} chars). Aim for <= ${MAX_LABEL_WORDS} words.`
-          : `no \`sidebar_label:\` and the title is long (${words} words / ${labelText.length} chars) for the sidebar. Add a short \`sidebar_label:\` (<= ${MAX_LABEL_WORDS} words); the full title stays on the page.`,
+          ? `sidebar_label "${labelText}" is long (${words} content words / ${labelText.length} chars). Aim for <= ${MAX_LABEL_WORDS} content words.`
+          : `no \`sidebar_label:\` and the title is long (${words} content words / ${labelText.length} chars) for the sidebar. Add a short \`sidebar_label:\` (<= ${MAX_LABEL_WORDS} content words); the full title stays on the page.`,
       });
     }
   }
@@ -282,7 +306,14 @@ function main() {
     console.error(`\n  ${f.file}  [warn:outline-${f.id}]`);
     console.error(`      ↳ ${f.detail}`);
   }
-  console.error('\n(advice only — not blocking. See the upgrade-post + import-co-design skills.)');
+  console.error(
+    '\n(advice only, not blocking.) Each finding deserves a TASK, not a reflex fix: first' +
+      '\nINVESTIGATE (is the POST missing structure, or is the `kind:` wrong for what it is?),' +
+      '\nthen decide the IDEAL fix (enrich the post, OR reclassify the kind), then apply it.' +
+      '\nA legend that is really an essay, or a system-design that is really a framework, is' +
+      '\nfixed by correcting `kind:` (see scripts/lib/blog-kind-emoji.json), not by forcing' +
+      '\nmissing elements onto it. See the author-blog-post + upgrade-post skills.'
+  );
   process.exit(0); // warn-tier: never block
 }
 

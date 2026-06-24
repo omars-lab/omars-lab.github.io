@@ -1,6 +1,6 @@
 ---
 slug: ai-engineer-world-fair-2025
-title: "🌍 AI Engineer World Fair 2025"
+title: "AI Engineer World Fair 2025"
 kind: event-recap
 sidebar_label: "AI Engineer Fair"
 description: "My experience attending the AI Engineer World Fair in June 2025 - key insights, tools, and trends shaping the future of AI engineering."

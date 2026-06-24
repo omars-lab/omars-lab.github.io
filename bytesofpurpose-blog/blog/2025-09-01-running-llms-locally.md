@@ -1,7 +1,7 @@
 ---
 slug: running-llms-locally
 title: "Running LLMs Locally"
-kind: tutorial
+kind: reflection
 sidebar_label: "LLMs Locally"
 description: "The main platforms and steps for running large language models locally on your own machine, and the trade-offs of each."
 authors: [oeid]

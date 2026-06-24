@@ -120,6 +120,7 @@ title: <human title, no em-dash>
 description: 'A design log: <one sentence>.'   # feeds og:description + ShareButton
 authors: [oeid]
 tags: [design, geometry, cli, dsl, ...]
+kind: system-design   # a build/architecture write-up that paints the whole picture; drives the 🏗️ sidebar emoji + validate-post-outline checks (see author-blog-post). Without it, the post trips a `missing-kind` advisory.
 draft: true
 ---
 
