@@ -8,7 +8,7 @@ authors: [oeid]
 tags: [product-management, go-to-market, strategy, experimentation, launch]
 date: 2026-06-05T10:00
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
-draft: true
+draft: false
 ---
 "GTM" gets thrown around as if everyone agrees on what it covers. When someone says they "owned the GTM strategy," do they mean they planned how a product wins customers, or do they mean they ran the rollout? Those are different things, and conflating them quietly inflates one while underselling the other.
 

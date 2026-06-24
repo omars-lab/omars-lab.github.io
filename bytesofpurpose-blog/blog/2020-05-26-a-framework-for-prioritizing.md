@@ -7,7 +7,7 @@ description: "Prioritizing isn't a one-time ranking. It's a set of recurring que
 authors: [oeid]
 tags: [productivity]
 date: 2020-05-26
-draft: true
+draft: false
 ---
 
 Most advice on prioritization stops at "rank your list." But ranking is the easy

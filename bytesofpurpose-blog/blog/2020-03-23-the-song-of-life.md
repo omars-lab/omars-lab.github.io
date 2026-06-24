@@ -7,7 +7,7 @@ description: "A set of philosophical reflections on life, death, purpose, words,
 authors: [oeid]
 tags: [philosophy, mindset]
 date: 2020-03-23
-draft: true
+draft: false
 ---
 
 These are reflections I've collected over years of philosophical wandering: about

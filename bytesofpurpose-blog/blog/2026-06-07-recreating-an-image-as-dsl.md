@@ -7,7 +7,7 @@ description: 'I spent weeks trying to get AI to look at an Islamic geometric pat
 authors: [oeid]
 tags: [ai, generative-ai, geometry, dsl, computer-vision, islamic-geometric-patterns, agents]
 date: 2026-06-07T10:00
-draft: true
+draft: false
 ---
 
 import Evidence from '@site/src/components/Evidence';
