@@ -17,7 +17,7 @@ a folder and applies it. The deterministic half (file mutation) is
 > A docs sidebar emoji is chosen per FOLDER by content/kind and stamped onto the leaf docs
 > (this skill, `emoji-map.json`). A **blog** post's Posts-sidebar emoji is instead
 > auto-derived from its frontmatter **`kind:`** (question-set/framework/reflection/… → emoji),
-> mapped in `bytesofpurpose-blog/scripts/lib/blog-kind-emoji.json`, and prepended by the
+> mapped in `bytesofpurpose-blog/scripts/lib/blog-kinds.json`, and prepended by the
 > `draft-docs` plugin — authors never type it and this skill never touches `blog/`. To add or
 > change a blog emoji, set `kind:` (see `author-blog-post`, "Blog post `kind:` + the
 > sidebar"), not this script.

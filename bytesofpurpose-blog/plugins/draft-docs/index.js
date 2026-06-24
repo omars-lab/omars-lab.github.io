@@ -2,13 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 
-// Blog post-kind -> sidebar emoji (single source of truth). The sidebar label for a
-// blog post is prefixed with its kind's emoji so the Posts list is scannable BY TYPE.
+// Blog post-kind -> sidebar emoji, from the single source of truth (scripts/lib/blog-kinds.json,
+// where each kind is {emoji, description, outline}). The sidebar label for a blog post is
+// prefixed with its kind's emoji so the Posts list is scannable BY TYPE.
 let BLOG_KIND_EMOJI = {};
 try {
-  BLOG_KIND_EMOJI = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', '..', 'scripts', 'lib', 'blog-kind-emoji.json'), 'utf8'),
+  const kinds = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', '..', 'scripts', 'lib', 'blog-kinds.json'), 'utf8'),
   ).kinds || {};
+  for (const [k, v] of Object.entries(kinds)) BLOG_KIND_EMOJI[k] = v.emoji;
 } catch {
   BLOG_KIND_EMOJI = {};
 }

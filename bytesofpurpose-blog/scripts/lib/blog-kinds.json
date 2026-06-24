@@ -1,0 +1,77 @@
+{
+  "__doc__": "SINGLE SOURCE OF TRUTH for the blog post-kind taxonomy. Each kind declares its sidebar `emoji`, a one-line `description`, and an `outline` (the structural elements a post of that kind should contain). A post's emoji reflects its KIND (document type), not its topic, so the Posts sidebar is scannable by type. CONSUMERS: scripts/validate-post-outline.js reads emoji/description/outline from here (the outline `id`s map to test functions in that file's CHECKS registry); the draft-docs plugin reads `emoji` to prepend it to the sidebar label (authors never type the emoji); the validate-post-outline-hook surfaces these on a finding. The reader-facing mirror is the 'Start Here' post (blog/2026-06-24-a-guide-to-these-posts.mdx), whose kind->emoji table is drift-checked against this file. The author-blog-post skill POINTS here rather than re-listing. LOCKSTEP: to add/change a kind, edit (1) this file, (2) a matching CHECKS entry in validate-post-outline.js if it has a new outline id, (3) the Start Here legend table. Mirrors the docs emoji system (scripts/lib/emoji-map.json).",
+  "kinds": {
+    "question-set": {
+      "emoji": "❓",
+      "description": "A set of introspective questions to ask yourself (the 'What I Ask Myself' / 'Questions for' series).",
+      "outline": [
+        {"id": "sections", "label": "themed H2 sections (questions grouped by theme, not a flat list)"},
+        {"id": "question-cards", "label": "one or more <Question> cards (each question is a card, not a bare bullet)"},
+        {"id": "section-banner", "label": "a <SectionBanner> (the per-section \"why these questions matter\" callout)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "framework": {
+      "emoji": "🧩",
+      "description": "A reusable model or framework for thinking about something ('A Framework for', 'The Anatomy of', a maturity model).",
+      "outline": [
+        {"id": "framework-laid-out", "label": "the framework laid out (numbered steps, an H2-per-stage, or a <DiagramWithFootnotes>/mermaid)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "reflection": {
+      "emoji": "💭",
+      "description": "A personal essay or set of takeaways ('Notes From', 'What X Taught Me', affirmations).",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "system-design": {
+      "emoji": "🏗️",
+      "description": "A full build/architecture write-up that paints the whole picture (a UX mockup + the key decisions).",
+      "outline": [
+        {"id": "mockup", "label": "a UX mockup (a <Mockup> in the body, or a `mockups:` frontmatter sidecar link)"},
+        {"id": "decisions", "label": "a Decisions section (a heading like \"Key Decisions\" / \"Decisions\" / \"Trade-offs\")"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "design-story": {
+      "emoji": "📐",
+      "description": "The story/motivation BEHIND a design: a narrative front-door that links to the formal HLD in /designs (not the HLD itself, which lives in /designs).",
+      "outline": [
+        {"id": "links-to-design", "label": "a link to the formal design doc in /designs (a design-story narrates the WHY and points to the HLD; the HLD itself lives in /designs)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "tutorial": {
+      "emoji": "🧪",
+      "description": "A hands-on, learn-by-doing walkthrough ('A Hands-On Way to', 'Teaching X', 'Running X Locally').",
+      "outline": [
+        {"id": "steps-or-artifact", "label": "steps or a runnable artifact (numbered steps, a code fence, a <Walkthrough>, or a <Gif>)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "reference": {
+      "emoji": "📖",
+      "description": "A concept explainer or taxonomy ('A Taxonomy of', 'What Does X Mean').",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "event-recap": {
+      "emoji": "🎙️",
+      "description": "A recap of a conference or event.",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "legend": {
+      "emoji": "🧭",
+      "description": "A series index or keystone that explains a set of posts and the conventions they share.",
+      "outline": [
+        {"id": "legend-explainer", "label": "an explainer of the conventions it indexes (a table, a <PowerLegend>, or a list of links out)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    }
+  }
+}

@@ -3,7 +3,7 @@
 # Surfaces every advisory from scripts/validate-post-outline.js for the edited file:
 #
 #   - missing-kind        a BLOG post has no `kind:` (kind drives the sidebar emoji)
-#   - unknown-kind        `kind:` isn't one of the blog kinds in scripts/lib/blog-kind-emoji.json
+#   - unknown-kind        `kind:` isn't one of the blog kinds in scripts/lib/blog-kinds.json
 #   - long-sidebar-label  the sidebar entry (sidebar_label || title) is long; add a short
 #                         `sidebar_label:` (the full title stays on the page H1)
 #   - outline-<x>         a post of a given `kind:` is missing that kind's required elements
