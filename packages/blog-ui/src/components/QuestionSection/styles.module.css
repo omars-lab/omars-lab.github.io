@@ -1,0 +1,5 @@
+/* QuestionSection — a plain grouping wrapper. It exists to sort its <Question> children
+   by priority; visually it adds nothing beyond keeping the cards together. */
+.section {
+  display: block;
+}

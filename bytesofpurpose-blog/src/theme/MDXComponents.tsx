@@ -21,6 +21,7 @@ import {
   Gif,
   SectionBanner,
   Question,
+  QuestionSection,
   PowerLegend,
 } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
@@ -60,6 +61,9 @@ export default {
   // Question: a clickable card for an introspective question; click opens a modal with
   // metadata (why/howOften/when/record). QuestionModalHost must be mounted in Root.tsx.
   Question,
+  // QuestionSection: wraps a section's <Question> cards and renders them sorted by
+  // priority (core>high>medium>low), keeping authored order within each tier.
+  QuestionSection,
   // PowerLegend: the canonical "power of a question" legend (spark/fire/chisel/anvil),
   // rendered from the same source as the card badges so it can't drift. Used in the
   // "What I Ask Myself" keystone post.

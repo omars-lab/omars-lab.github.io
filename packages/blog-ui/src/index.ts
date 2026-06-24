@@ -43,3 +43,6 @@ export type {
   QuestionCron,
   PowerLegendProps,
 } from './components/Question';
+
+export {default as QuestionSection} from './components/QuestionSection';
+export type {QuestionSectionProps} from './components/QuestionSection';

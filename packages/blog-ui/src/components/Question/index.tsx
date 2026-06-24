@@ -1,6 +1,7 @@
 import React, {CSSProperties, ReactNode, useCallback, useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {GiLightningArc, GiFlame, GiChisel, GiAnvil, GiCycle} from 'react-icons/gi';
+import {LuFlag, LuBrain} from 'react-icons/lu';
 import type {IconType} from 'react-icons';
 import Tooltip from '../Tooltip';
 import styles from './styles.module.css';
@@ -243,6 +244,7 @@ function QuestionBadges({
             </>
           }>
           <span className={clsx(styles.pill, styles[`priority_${priority}`])}>
+            <LuFlag className={styles.priorityIcon} aria-hidden="true" />
             {PRIORITY_META[priority].label}
           </span>
         </Tooltip>
@@ -283,7 +285,10 @@ function QuestionBadges({
               {DEPTH_META[depth].gloss}
             </>
           }>
-          <span className={clsx(styles.pill, styles.pillDepth)}>{DEPTH_META[depth].label}</span>
+          <span className={clsx(styles.pill, styles.pillDepth, styles[`depth_${depth}`])}>
+            <LuBrain className={styles.depthIcon} aria-hidden="true" />
+            {DEPTH_META[depth].label}
+          </span>
         </Tooltip>
       )}
     </span>
