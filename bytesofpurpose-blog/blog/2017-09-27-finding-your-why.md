@@ -1,6 +1,8 @@
 ---
 slug: finding-your-why
 title: "Starting With Why: Notes From Trying to Find My Own"
+kind: reflection
+sidebar_label: "Finding Your Why"
 description: "Reflections sparked by Simon Sinek's Start With Why: why purpose comes before product, the pull of manipulation, and what it means to be a 'why' person."
 authors: [oeid]
 tags: [mindset, go-to-market]

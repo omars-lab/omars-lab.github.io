@@ -1,6 +1,8 @@
 ---
 slug: the-questions-i-want-to-answer
 title: "The Questions I Want to Answer"
+kind: question-set
+sidebar_label: "Questions to Answer"
 description: "A running catalog of the big questions I find worth answering, about value, opportunity, society, and the act of questioning itself."
 authors: [oeid]
 tags: [question-set, philosophy]

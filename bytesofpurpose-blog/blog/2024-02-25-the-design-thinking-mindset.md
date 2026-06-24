@@ -1,6 +1,8 @@
 ---
 slug: the-design-thinking-mindset
 title: "The Design Thinking Mindset: Notes on Human-Centered Design"
+kind: reflection
+sidebar_label: "Design Thinking"
 description: "Reflections on human-centered design: the inspiration-ideation-implementation loop, and the mindset shifts (empathy, ambiguity, iteration) that make it work."
 authors: [oeid]
 tags: [product-management, mindset]
