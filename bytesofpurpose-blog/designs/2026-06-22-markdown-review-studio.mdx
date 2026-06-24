@@ -93,7 +93,7 @@ The most consequential decisions, all **Decided**: comments are anchored by **in
 
 **Expected value:** a low-friction, repeatable review loop with durable, traceable, directly-actionable feedback: reusable across any markdown repository, not just this one (§1.7). Time savings are an <Assumption /> pending dogfooding.
 
-**Current status: In Review.** The single-user local mode is Phase 1; a hosted multi-user cloud mode is Phase 3. The biggest open questions concern comment-commit strategy, non-git target folders, and cloud pricing/secrets infrastructure: see [§10.3 Open Questions](#103-open-questions).
+**Current status: In Review.** The single-user local mode is Phase 1; a hosted multi-user cloud mode is Phase 3. The biggest open questions concern comment-commit strategy, non-git target folders, and cloud pricing/secrets infrastructure: see [§13.3 Open Questions](#133-open-questions).
 
 ---
 
@@ -1189,7 +1189,7 @@ A navigational index: if you're wondering about X, this is where the document de
 
 | Key question | Decision | Section |
 |--------------|----------|---------|
-| Where do comments physically live; in the `.md` or beside it? | D1 + D4 | [§6.5 D1](#d1--comment-anchoring-strategy--core-technical-bet), [§6.5 D4](#d4--comment-storage-hybrid-inline-anchors--sidecar-threads) |
+| Where do comments physically live; in the `.md` or beside it? | D1 + D4 | [§6.5 D1](#d1-comment-anchoring-strategy--core-technical-bet), [§6.5 D4](#d4-comment-storage-hybrid-inline-anchors--sidecar-threads) |
 | How do comments stay attached when the doc is edited? | D1 (inline markers + fuzzy fallback) | §6.5 D1, Appendix A |
 | What does a comment look like on disk? | Sidecar schema worked example | §6.5 D4 |
 | How are the four comment types (range/block/point/doc) anchored? | D1 "How it works" | §6.5 D1 |
@@ -1218,16 +1218,16 @@ A navigational index: if you're wondering about X, this is where the document de
 A: PR comments anchor to *diff lines*, not the *rendered* doc (Mermaid/tables/prose), require push+PR ceremony, and don't drive Claude. This tool comments on the rendered doc locally and closes the loop to Claude automatically. → [§4.2 Existing Tooling](#42-existing-tooling) · [§5.1 Problem Statement](#51-problem-statement)
 
 **Q: Why auto-apply instead of review-then-apply?**
-A: For a single-user local tool, git revert is a sufficient safety net and keeps the loop fast (§6.5 D5). A gated diff/accept mode is a Phase 3 option if needed. → [§6.5 D5: Edit apply model](#d5--edit-apply-model)
+A: For a single-user local tool, git revert is a sufficient safety net and keeps the loop fast (§6.5 D5). A gated diff/accept mode is a Phase 3 option if needed. → [§6.5 D5: Edit apply model](#d5-edit-apply-model)
 
 **Q: Why Claude Code CLI instead of the API?**
-A: It reuses the author's existing setup, skills, CLAUDE.md, co-design conventions, MCP, and repo-wide context, with minimal new code (§6.4). The orchestrator is behind an interface, so the API/Agent SDK can be swapped in later. → [§6.5 D2: Claude invocation mechanism](#d2--claude-invocation-mechanism) · [§6.4 Recommendation](#64-recommendation)
+A: It reuses the author's existing setup, skills, CLAUDE.md, co-design conventions, MCP, and repo-wide context, with minimal new code (§6.4). The orchestrator is behind an interface, so the API/Agent SDK can be swapped in later. → [§6.5 D2: Claude invocation mechanism](#d2-claude-invocation-mechanism) · [§6.4 Recommendation](#64-recommendation)
 
 **Q: What happens to a comment whose text Claude rewrote entirely?**
-A: The inline markers normally move with the text (D1). If Claude drops a marker, the `validateEdit` hook catches it (D9) and the server attempts fuzzy recovery (block → position → quote, Appendix A); if that fails the comment is marked `orphaned` and surfaced for re-placement; never silently dropped (§9.5 guardrail). → [§6.5 D1: Comment anchoring strategy](#d1--comment-anchoring-strategy--core-technical-bet) · [§6.5 D9: Edit-validation hooks](#d9--edit-validation-hooks) · [§9.5 Compliance & Constraints](#95-compliance--constraints)
+A: The inline markers normally move with the text (D1). If Claude drops a marker, the `validateEdit` hook catches it (D9) and the server attempts fuzzy recovery (block → position → quote, Appendix A); if that fails the comment is marked `orphaned` and surfaced for re-placement; never silently dropped (§11.5 guardrail). → [§6.5 D1: Comment anchoring strategy](#d1-comment-anchoring-strategy--core-technical-bet) · [§6.5 D9: Edit-validation hooks](#d9-edit-validation-hooks-) · [§11.5 Compliance & Constraints](#115-compliance--constraints)
 
 **Q: Won't the inline markers clutter my markdown?**
-A: They're terse HTML comments (`<!--rc:start id=ab12-->`); invisible in every renderer (GitHub, VS Code preview, the studio viewer). They appear only in the raw source and diffs; D4 allows committing marker/sidecar changes separately to keep `git log` clean. → [§6.5 D4: Comment storage](#d4--comment-storage-hybrid-inline-anchors--sidecar-threads)
+A: They're terse HTML comments (`<!--rc:start id=ab12-->`); invisible in every renderer (GitHub, VS Code preview, the studio viewer). They appear only in the raw source and diffs; D4 allows committing marker/sidecar changes separately to keep `git log` clean. → [§6.5 D4: Comment storage](#d4-comment-storage-hybrid-inline-anchors--sidecar-threads)
 
 ## Appendices
 
