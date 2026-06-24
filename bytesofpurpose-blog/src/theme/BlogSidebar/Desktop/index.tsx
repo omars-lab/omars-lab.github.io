@@ -5,6 +5,7 @@ import {translate} from '@docusaurus/Translate';
 import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
+import {useBlogSidebarLabel} from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
 // Swizzled @theme/BlogSidebar/Desktop: identical to upstream, except the post
@@ -24,13 +25,15 @@ function SidebarItemLink({
   linkActiveClassName?: string;
 }) {
   const isDraft = useIsBlogDraft(item.permalink);
+  const label = useBlogSidebarLabel(item.permalink, item.title);
   return (
     <Link
       isNavLink
       to={item.permalink}
       className={linkClassName}
-      activeClassName={linkActiveClassName}>
-      {item.title}
+      activeClassName={linkActiveClassName}
+      title={item.title}>
+      {label}
       {isDraft && <DraftBadge />}
     </Link>
   );

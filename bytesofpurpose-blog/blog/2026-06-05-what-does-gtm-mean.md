@@ -1,6 +1,8 @@
 ---
 slug: what-does-gtm-mean
 title: "What Does GTM Mean? (And Is It the Same as an Experiment Dial-Up Plan?)"
+kind: reference
+sidebar_label: "What Is GTM?"
 description: "GTM (go-to-market) strategy is the plan for how a product reaches and wins customers. Here's what it actually covers, and why a dial-up plan isn't the same thing."
 authors: [oeid]
 tags: [product-management, go-to-market, strategy, experimentation, launch]

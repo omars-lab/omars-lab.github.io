@@ -2,6 +2,17 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 
+// Blog post-kind -> sidebar emoji (single source of truth). The sidebar label for a
+// blog post is prefixed with its kind's emoji so the Posts list is scannable BY TYPE.
+let BLOG_KIND_EMOJI = {};
+try {
+  BLOG_KIND_EMOJI = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', '..', 'scripts', 'lib', 'blog-kind-emoji.json'), 'utf8'),
+  ).kinds || {};
+} catch {
+  BLOG_KIND_EMOJI = {};
+}
+
 /**
  * Local Docusaurus plugin: collects the permalink of every DRAFT doc
  * (`draft: true` frontmatter) and of every PREMIUM doc (`premium: true`), and
@@ -17,6 +28,7 @@ const matter = require('gray-matter');
  * Consumed via:
  *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks    // string[] — draft doc pages
  *   useGlobalData()['draft-docs-plugin'].default.premiumPermalinks  // string[] — premium doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.blogSidebarLabels  // {permalink: shortLabel} — blog posts with sidebar_label
  *
  * Only individual docs with `draft: true` are tracked — the swizzled sidebar
  * badges the LEAF link. (Category/folder badging was dropped: a fully-draft folder
@@ -50,6 +62,10 @@ module.exports = function draftDocsPlugin(context) {
       const draftPermalinks = new Set();
       const premiumPermalinks = new Set();
       const blogDraftPermalinks = new Set();
+      // permalink -> short sidebar label, for blog posts that set `sidebar_label:`.
+      // The blog sidebar item carries only {title, permalink}, so the swizzle looks
+      // the label up here (same indirection the draft set uses).
+      const blogSidebarLabels = {};
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -92,8 +108,28 @@ module.exports = function draftDocsPlugin(context) {
           } catch {
             continue;
           }
+          const permalink = toBlogPermalink(entry.name, data, base);
           if (data.draft === true) {
-            blogDraftPermalinks.add(toBlogPermalink(entry.name, data, base));
+            blogDraftPermalinks.add(permalink);
+          }
+          // Compute the rendered sidebar label = <kind emoji> + <short label or title>.
+          //   - the short text is `sidebar_label:` if set (trimmed), else the full title;
+          //   - the emoji is auto-derived from `kind:` (authors never type it). If the
+          //     short text already starts with the kind emoji (or any emoji), we don't
+          //     double-prefix.
+          // We only publish an override when it DIFFERS from the plain title (so posts
+          // with neither a sidebar_label nor a kind fall through to the default title).
+          const shortText =
+            typeof data.sidebar_label === 'string' && data.sidebar_label.trim()
+              ? data.sidebar_label.trim()
+              : typeof data.title === 'string'
+                ? data.title.trim()
+                : '';
+          const emoji = (data.kind && BLOG_KIND_EMOJI[data.kind]) || '';
+          const rendered =
+            emoji && !startsWithEmoji(shortText) ? `${emoji} ${shortText}` : shortText;
+          if (rendered && rendered !== (data.title || '').trim()) {
+            blogSidebarLabels[permalink] = rendered;
           }
         }
       }
@@ -102,6 +138,7 @@ module.exports = function draftDocsPlugin(context) {
         draftPermalinks: [...draftPermalinks],
         premiumPermalinks: [...premiumPermalinks],
         blogDraftPermalinks: [...blogDraftPermalinks],
+        blogSidebarLabels,
       };
     },
 
@@ -124,6 +161,14 @@ function toBlogPermalink(filename, data, base) {
     .replace(/\.mdx?$/, '')
     .replace(/^\d{4}-\d{2}-\d{2}-/, '');
   return `${base}/${stem}`;
+}
+
+// True when a string already begins with an emoji (so we don't double-prefix a label
+// that a human already emoji'd). Covers the common pictographic + symbol ranges and a
+// leading variation selector / ZWJ sequence.
+function startsWithEmoji(s) {
+  if (!s) return false;
+  return /^(\p{Extended_Pictographic}|\p{Emoji_Presentation})/u.test(s.trim());
 }
 
 // Strip a leading `NN-` (e.g. "4-development" -> "development") that Docusaurus
