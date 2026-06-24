@@ -52,6 +52,47 @@ function useBlogPinnedPermalinks(): Set<string> {
 
 export type BlogSidebarItem = {title: string; permalink: string; [k: string]: unknown};
 
+// permalink -> tag slugs, published by the plugin so the sidebar can scope to a tag page.
+function useBlogPostTags(): Record<string, string[]> {
+  const data = useAllPluginInstancesData('draft-docs-plugin') as
+    | {default?: {blogPostTags?: Record<string, string[]>}}
+    | undefined;
+  const raw = data?.default?.blogPostTags ?? {};
+  return React.useMemo(() => {
+    const out: Record<string, string[]> = {};
+    for (const [permalink, tags] of Object.entries(raw)) out[normalize(permalink)] = tags;
+    return out;
+  }, [raw]);
+}
+
+/**
+ * The tag slug the current page is filtered by, or null. Reads the URL: a blog tag page is
+ * `<route>/tags/<tagSlug>` (e.g. /thoughts/tags/technical-debt). Pass the current pathname.
+ */
+export function currentTagSlug(pathname: string): string | null {
+  const m = pathname.match(/\/tags\/([^/]+)\/?$/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+/**
+ * Scope sidebar items to the active tag when on a tag page; otherwise return them unchanged.
+ * So the left "Posts" list matches the tag-filtered main area instead of showing everything.
+ */
+export function useTagScopedItems(
+  items: BlogSidebarItem[],
+  pathname: string,
+): {items: BlogSidebarItem[]; tag: string | null} {
+  const tagMap = useBlogPostTags();
+  const tag = currentTagSlug(pathname);
+  const scoped = React.useMemo(() => {
+    if (!tag) return items;
+    const filtered = items.filter((it) => (tagMap[normalize(it.permalink)] ?? []).includes(tag));
+    // If we somehow matched nothing (tag map missing), don't hide the whole sidebar.
+    return filtered.length ? filtered : items;
+  }, [items, tagMap, tag]);
+  return {items: scoped, tag};
+}
+
 /**
  * Split sidebar items into [pinned, rest]. Pinned items keep their source order; rest is
  * left untouched for the normal year grouping. Use in the BlogSidebar swizzle.

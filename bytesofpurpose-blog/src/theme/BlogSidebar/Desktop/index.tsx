@@ -4,10 +4,12 @@ import Link from '@docusaurus/Link';
 import {translate} from '@docusaurus/Translate';
 import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
+import {useLocation} from '@docusaurus/router';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
 import {
   useBlogSidebarLabel,
   usePartitionedBlogItems,
+  useTagScopedItems,
 } from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
@@ -59,10 +61,17 @@ const ListComponent = ({items}: {items: Array<{title: string; permalink: string}
 };
 
 function BlogSidebarDesktop({sidebar}: any): React.JSX.Element {
-  const items = useVisibleBlogSidebarItems(sidebar.items);
+  const allItems = useVisibleBlogSidebarItems(sidebar.items);
+  const {pathname} = useLocation();
+  // On a /tags/<tag> page, scope the sidebar to that tag so it matches the filtered main
+  // area (otherwise the heading says "1 post" while the sidebar shows everything).
+  const {items, tag} = useTagScopedItems(allItems, pathname);
   // Pinned posts (`pinned: true` / `kind: legend`) render ABOVE the year groups so an
-  // index/keystone isn't buried by its date; the rest year-group as normal.
-  const [pinned, rest] = usePartitionedBlogItems(items);
+  // index/keystone isn't buried by its date; the rest year-group as normal. (Skip pinning
+  // when scoped to a tag — the list is already short and on-topic.)
+  const [pinnedRaw, restRaw] = usePartitionedBlogItems(items);
+  const pinned = tag ? [] : pinnedRaw;
+  const rest = tag ? items : restRaw;
   return (
     <aside className="col col--3">
       <nav
@@ -72,7 +81,22 @@ function BlogSidebarDesktop({sidebar}: any): React.JSX.Element {
           message: 'Blog recent posts navigation',
           description: 'The ARIA label for recent posts in the blog sidebar',
         })}>
-        {pinned.length > 0 ? (
+        {tag ? (
+          // Scoped to a tag: show the active tag as a cancelable facet. The × clears back
+          // to all posts (the blog root), matching the tag-filtered main area.
+          <div className={clsx(styles.sidebarItemTitle, 'margin-bottom--md')}>
+            <span className={styles.tagFacet}>
+              <span className={styles.tagFacetLabel}>{tag}</span>
+              <Link
+                to="/thoughts"
+                className={styles.tagFacetClear}
+                aria-label={`Clear the "${tag}" tag filter`}
+                title="Show all posts">
+                &times;
+              </Link>
+            </span>
+          </div>
+        ) : pinned.length > 0 ? (
           <>
             {/* Pinned legends/keystones get their own "Guides" section at the very top; the
                 dated posts below keep the "Posts" heading (sidebar.title). */}

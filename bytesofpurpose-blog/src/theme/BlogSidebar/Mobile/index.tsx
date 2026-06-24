@@ -4,10 +4,12 @@ import Link from '@docusaurus/Link';
 import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client';
 import {NavbarSecondaryMenuFiller} from '@docusaurus/theme-common';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
+import {useLocation} from '@docusaurus/router';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
 import {
   useBlogSidebarLabel,
   usePartitionedBlogItems,
+  useTagScopedItems,
 } from '@site/src/theme/BlogSidebar/blogSidebarLabel';
 import styles from './styles.module.css';
 
@@ -45,10 +47,22 @@ const ListComponent = ({items}: {items: Array<{title: string; permalink: string}
 };
 
 function BlogSidebarMobileSecondaryMenu({sidebar}: any) {
-  const items = useVisibleBlogSidebarItems(sidebar.items);
-  const [pinned, rest] = usePartitionedBlogItems(items);
+  const allItems = useVisibleBlogSidebarItems(sidebar.items);
+  const {pathname} = useLocation();
+  const {items, tag} = useTagScopedItems(allItems, pathname);
+  const [pinnedRaw, restRaw] = usePartitionedBlogItems(items);
+  const pinned = tag ? [] : pinnedRaw;
+  const rest = tag ? items : restRaw;
   return (
     <>
+      {tag && (
+        <div className={clsx('menu__list-item-collapsible', styles.mobileSectionTitle)}>
+          Tagged: {tag}{' '}
+          <Link to="/thoughts" aria-label={`Clear the "${tag}" tag filter`}>
+            &times;
+          </Link>
+        </div>
+      )}
       {pinned.length > 0 && (
         <>
           <div className={clsx('menu__list-item-collapsible', styles.mobileSectionTitle)}>Guides</div>

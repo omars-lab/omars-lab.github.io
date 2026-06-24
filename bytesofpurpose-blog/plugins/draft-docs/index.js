@@ -71,6 +71,9 @@ module.exports = function draftDocsPlugin(context) {
       // Blog posts pinned ABOVE the year groups in the sidebar: `pinned: true`, or any
       // `kind: legend` (an index/keystone belongs at the top, not buried by its date).
       const blogPinnedPermalinks = new Set();
+      // permalink -> normalized tag slugs, so the swizzled BlogSidebar can SCOPE itself to
+      // the current tag on a /<route>/tags/<tag> page (its items carry no tag info).
+      const blogPostTags = {};
 
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -122,6 +125,13 @@ module.exports = function draftDocsPlugin(context) {
           if (data.pinned === true || data.kind === 'legend') {
             blogPinnedPermalinks.add(permalink);
           }
+          // Record this post's tags (normalized to slugs) so the sidebar can scope to a tag.
+          if (Array.isArray(data.tags) && data.tags.length) {
+            blogPostTags[permalink] = data.tags
+              .map((t) => (typeof t === 'string' ? t : t && (t.label || t.slug)))
+              .filter(Boolean)
+              .map(tagSlug);
+          }
           // Compute the rendered sidebar label = <kind emoji> + <short label or title>.
           //   - the short text is `sidebar_label:` if set (trimmed), else the full title;
           //   - the emoji is auto-derived from `kind:` (authors never type it). If the
@@ -150,6 +160,7 @@ module.exports = function draftDocsPlugin(context) {
         blogDraftPermalinks: [...blogDraftPermalinks],
         blogSidebarLabels,
         blogPinnedPermalinks: [...blogPinnedPermalinks],
+        blogPostTags,
       };
     },
 
@@ -172,6 +183,16 @@ function toBlogPermalink(filename, data, base) {
     .replace(/\.mdx?$/, '')
     .replace(/^\d{4}-\d{2}-\d{2}-/, '');
   return `${base}/${stem}`;
+}
+
+// Normalize a tag to the slug Docusaurus uses in /tags/<slug> URLs (lowercase, spaces and
+// non-alphanumerics to hyphens). Good enough for this repo's simple string tags.
+function tagSlug(tag) {
+  return String(tag)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 // True when a string already begins with an emoji (so we don't double-prefix a label

@@ -52,3 +52,35 @@
   margin-top: 1.6rem;
   margin-bottom: 0.4rem;
 }
+
+/* Active-tag facet: a cancelable chip shown as the sidebar heading on a /tags/<tag> page. */
+.tagFacet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.4rem 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  background: color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ifm-color-primary) 35%, transparent);
+  color: var(--ifm-color-primary-darker, var(--ifm-color-primary));
+}
+.tagFacetLabel {
+  font-weight: 600;
+}
+.tagFacetClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: inherit;
+  text-decoration: none;
+}
+.tagFacetClear:hover {
+  background: color-mix(in srgb, var(--ifm-color-primary) 22%, transparent);
+  text-decoration: none;
+}
