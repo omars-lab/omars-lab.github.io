@@ -1,6 +1,8 @@
 ---
 slug: a-framework-for-prioritizing
 title: "A Framework for Prioritizing"
+kind: framework
+sidebar_label: "Prioritizing"
 description: "Prioritizing isn't a one-time ranking. It's a set of recurring questions: what factors matter, how to evaluate candidates, when to de-prioritize, and how to get better at it over time."
 authors: [oeid]
 tags: [productivity]

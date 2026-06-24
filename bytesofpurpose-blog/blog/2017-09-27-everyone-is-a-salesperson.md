@@ -1,6 +1,8 @@
 ---
 slug: everyone-is-a-salesperson
 title: "Everyone Is a Salesperson: What an Engineer Took From 'To Sell Is Human'"
+kind: reflection
+sidebar_label: "Everyone Sells"
 description: "Daniel Pink's 'To Sell Is Human' reframed selling as moving people, not closing deals. Here's what stuck with me, and how it changed the way I work as an engineer who used to think sales was someone else's job."
 authors: [oeid]
 tags: [product-management, software-engineering, mindset]
