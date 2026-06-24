@@ -1,0 +1,22 @@
+/* SectionBanner — a quiet narrator-aside under a section heading explaining why this
+   cluster of questions matters. Softer than an admonition; just a left-accent callout. */
+
+.banner {
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.65rem 1rem 0.65rem 1.1rem;
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: 0 4px 4px 0;
+  background: var(--ifm-background-surface-color);
+}
+
+.text {
+  margin: 0;
+  font-style: italic;
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+[data-theme='dark'] .banner {
+  background: color-mix(in srgb, var(--ifm-background-surface-color) 60%, transparent);
+}

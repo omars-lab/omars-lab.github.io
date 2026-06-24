@@ -20,3 +20,22 @@ export type {DiagramWithFootnotesProps} from './components/DiagramWithFootnotes'
 
 export {default as Assumption} from './components/Assumption';
 export type {AssumptionProps} from './components/Assumption';
+
+export {default as SectionBanner} from './components/SectionBanner';
+export type {SectionBannerProps} from './components/SectionBanner';
+
+export {
+  default as Question,
+  QuestionModalHost,
+  PowerLegend,
+  openQuestionModal,
+} from './components/Question';
+export type {
+  QuestionProps,
+  QuestionDetail,
+  QuestionPower,
+  QuestionPowerProp,
+  QuestionPriority,
+  QuestionDepth,
+  PowerLegendProps,
+} from './components/Question';

@@ -1,0 +1,325 @@
+/* Question card + modal for "What I Ask Myself" question-set posts. */
+
+/* ── Card (closed state) ─────────────────────────────────────────────── */
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.4rem 0;
+  padding: 0.65rem 0.85rem 0.65rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  background: var(--ifm-background-surface-color);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.card:hover {
+  border-color: var(--ifm-color-primary-light);
+  box-shadow: var(--ifm-global-shadow-lw);
+}
+.card:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.text {
+  flex: 1;
+  font-size: 0.97rem;
+  line-height: 1.5;
+  color: var(--ifm-font-color-base);
+  margin: 0;
+}
+
+.cardRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.expandIcon {
+  flex-shrink: 0;
+  color: var(--ifm-color-primary);
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+.card:hover .expandIcon {
+  opacity: 1;
+}
+
+/* ── Badges (card + modal) ───────────────────────────────────────────── */
+
+.badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+/* On the modal, badges sit on their own row under the question with breathing room. */
+.badgesModal {
+  margin: 0 0 1.1rem;
+  gap: 0.5rem;
+}
+
+/* Power icon badges — the GiLightningArc/GiFlame/GiChisel/GiAnvil glyphs. */
+.powerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  line-height: 1;
+}
+.powerIcon {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+/* Each power gets its own hue so the charge reads at a glance. */
+.power_spark .powerIcon {
+  color: #d9a300; /* amber-gold — electric jolt */
+}
+.power_fire .powerIcon {
+  color: #e2562a; /* ember orange — burn */
+}
+.power_chisel .powerIcon {
+  color: var(--ifm-color-emphasis-700); /* steel — carves away */
+}
+.power_anvil .powerIcon {
+  color: var(--ifm-color-primary); /* primary — forges who you become */
+}
+[data-theme='dark'] .power_spark .powerIcon {
+  color: #f3c34d;
+}
+[data-theme='dark'] .power_fire .powerIcon {
+  color: #ff7a4d;
+}
+
+/* On the modal, each power shows its label next to the icon. */
+.badgesModal .powerBadge {
+  padding: 0.2rem 0.55rem 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-100);
+  font-size: 0.8rem;
+}
+.powerLabel {
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-800));
+  white-space: nowrap;
+}
+
+/* Generic metadata pills (priority / frequency / depth). */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  background: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-emphasis-800);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+.badgesModal .pill {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+}
+
+/* Priority pill colors — core/high stand out, medium/low stay quiet. */
+.priority_core {
+  background: color-mix(in srgb, var(--ifm-color-primary) 16%, transparent);
+  border-color: color-mix(in srgb, var(--ifm-color-primary) 40%, transparent);
+  color: var(--ifm-color-primary-darker, var(--ifm-color-primary));
+}
+.priority_high {
+  background: color-mix(in srgb, #e2562a 14%, transparent);
+  border-color: color-mix(in srgb, #e2562a 38%, transparent);
+  color: #c2441e;
+}
+[data-theme='dark'] .priority_high {
+  color: #ff8a5f;
+}
+.priority_medium {
+  /* inherits the neutral .pill look */
+}
+.priority_low {
+  opacity: 0.75;
+}
+
+.pillFrequency {
+  font-weight: 500;
+}
+.pillDepth {
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* ── PowerLegend ─────────────────────────────────────────────────────── */
+
+.legend {
+  margin: 1.25rem 0;
+  padding: 0.5rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.legendRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0;
+}
+.legendIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
+  margin: 0;
+}
+.legendIcon .powerIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.legendNone {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.legendText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  margin: 0;
+}
+.legendName {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ifm-heading-color);
+}
+.legendGloss {
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-700));
+  line-height: 1.4;
+}
+
+/* ── Modal overlay ───────────────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
+  padding: 2rem 1.75rem 1.5rem;
+  border-radius: 0.9rem;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border-top: 4px solid var(--ifm-color-primary);
+  animation: popIn 0.18s ease;
+}
+@keyframes popIn {
+  from {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
+.closeBtn:hover {
+  color: var(--ifm-color-emphasis-900);
+}
+
+.question {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ifm-heading-color);
+}
+
+.metaList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.metaLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ifm-color-primary);
+}
+
+.metaValue {
+  font-size: 0.92rem;
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-700));
+  line-height: 1.5;
+}
+
+.dismissBtn {
+  display: block;
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: center;
+}
+.dismissBtn:hover {
+  color: var(--ifm-color-emphasis-900);
+  text-decoration: underline;
+}
