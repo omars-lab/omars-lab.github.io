@@ -7,7 +7,7 @@ description: "Reflections on human-centered design: the inspiration-ideation-imp
 authors: [oeid]
 tags: [product-management, mindset]
 date: 2024-02-25
-draft: true
+draft: false
 ---
 
 These are my reflections on human-centered design, drawn from time spent with the

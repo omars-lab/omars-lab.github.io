@@ -8,7 +8,7 @@ authors: [oeid]
 tags: [productivity, self-quantification]
 date: 2026-06-06T10:00
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
-draft: true
+draft: false
 ---
 What if you ran your own life the way a business runs itself, with metrics, dashboards, weekly reports, and a clear sense of what's trending up or down? That's the premise of what I call the **Analyzer**: a role I play that treats my own behavior, time, and growth as a system worth measuring.
 

@@ -7,7 +7,7 @@ description: "How I extracted my blog's React components into a published packag
 authors: [oeid]
 tags: [system-design, devops, github-actions, generative-ai, claude]
 date: 2026-06-23T10:00
-draft: true
+draft: false
 ---
 
 My blog had grown a small library of custom React components for design posts: an animated UX `Walkthrough`, a `Mockup` frame, a footnoted diagram, an assumption highlight. They were good enough that I wanted to use them in other projects too. The honest test of "reusable" is not whether the code looks clean. It is whether a *different* repo can actually install it and render it. So I set out to make that true, end to end.

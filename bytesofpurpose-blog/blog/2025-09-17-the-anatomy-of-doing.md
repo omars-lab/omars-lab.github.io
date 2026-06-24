@@ -7,7 +7,7 @@ description: "A personal operating system for execution: the handful of triggers
 authors: [oeid]
 tags: [productivity]
 date: 2025-09-17
-draft: true
+draft: false
 ---
 
 I spent a long time confusing *being busy* with *doing the right things*. The fix

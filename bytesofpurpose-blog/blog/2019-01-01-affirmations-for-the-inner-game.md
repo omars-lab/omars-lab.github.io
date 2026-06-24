@@ -8,7 +8,7 @@ authors: [oeid]
 tags: [mindset]
 date: 2019-01-01
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
-draft: true
+draft: false
 ---
 For years I've kept a running list of affirmations: faith-based reminders, lines from motivational talks, and one-liners that snapped me out of a rut. Some are scripture-adjacent, some are pure hype, some are questions I ask myself. They were scattered across notebooks and notes apps until I gathered and grouped them by theme.
 

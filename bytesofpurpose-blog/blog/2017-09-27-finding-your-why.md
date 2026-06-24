@@ -7,7 +7,7 @@ description: "Reflections sparked by Simon Sinek's Start With Why: why purpose c
 authors: [oeid]
 tags: [mindset, go-to-market]
 date: 2017-09-27
-draft: true
+draft: false
 ---
 
 I read Simon Sinek's *Start With Why* at a point when I was trying to figure out my

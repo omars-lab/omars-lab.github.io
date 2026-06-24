@@ -8,7 +8,7 @@ authors: [oeid]
 tags: [product-management, software-engineering, mindset]
 date: 2026-06-06T10:00
 # image: /img/REPLACE-ME.jpg  # add a social/card image before publishing
-draft: true
+draft: false
 ---
 I used to think of "sales" as a department down the hall. It was something other people did so that I could stay in my editor and write code. Then I read Daniel Pink's *To Sell Is Human: The Surprising Truth About Moving Others*, and the wall I'd put between "building" and "selling" stopped making sense.
 

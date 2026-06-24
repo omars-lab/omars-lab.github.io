@@ -7,7 +7,7 @@ description: "Reflections on Charles Duhigg's The Power of Habit: the loop behin
 authors: [oeid]
 tags: [mindset, productivity]
 date: 2017-09-27
-draft: true
+draft: false
 ---
 
 A while back I read *The Power of Habit* by Charles Duhigg, and it changed how I
