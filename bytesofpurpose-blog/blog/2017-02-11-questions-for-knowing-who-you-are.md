@@ -4,7 +4,7 @@ title: "Questions for Knowing Who You Are"
 description: "Why do others often know us better than we know ourselves? A taxonomy of prompts for examining your character, values, beliefs, and the forces that shape your identity."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

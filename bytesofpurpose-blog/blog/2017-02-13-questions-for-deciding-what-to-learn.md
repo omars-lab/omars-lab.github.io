@@ -4,7 +4,7 @@ title: "Questions for Deciding What to Learn"
 description: "Introspective questions for choosing what to learn next, building a curriculum, and managing your learning commitments."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-27
+date: 2017-02-13
 draft: true
 ---
 

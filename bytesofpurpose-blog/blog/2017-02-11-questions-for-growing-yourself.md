@@ -4,7 +4,7 @@ title: "Questions for Growing Yourself"
 description: "A taxonomy of the questions I return to when I want to check whether I'm actually growing, investing in myself, and reaching my potential."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-27
+date: 2017-02-11
 draft: true
 ---
 

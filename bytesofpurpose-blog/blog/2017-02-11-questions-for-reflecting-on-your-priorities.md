@@ -4,7 +4,7 @@ title: "Questions for Reflecting on Your Priorities"
 description: "The questions I sit with to check whether my time and energy are actually going to what matters most right now."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-26
+date: 2017-02-11
 draft: true
 ---
 

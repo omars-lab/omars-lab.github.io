@@ -4,7 +4,7 @@ title: "Questions for Finding Where to Improve"
 description: "Introspective questions for spotting your gaps and weaknesses, finding growth opportunities, and deciding what to work on next."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-27
+date: 2017-02-13
 draft: true
 ---
 

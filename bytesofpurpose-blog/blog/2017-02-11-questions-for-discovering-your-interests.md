@@ -4,7 +4,7 @@ title: "Questions for Discovering Your Interests"
 description: "You can't list your interests on command. But you can infer them from what you do. A taxonomy of prompts for reverse-engineering what actually intrigues you."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-26
+date: 2017-02-11
 draft: true
 ---
 

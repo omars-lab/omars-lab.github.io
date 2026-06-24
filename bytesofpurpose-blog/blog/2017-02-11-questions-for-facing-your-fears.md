@@ -4,7 +4,7 @@ title: "Questions for Facing Your Fears"
 description: "A curated set of questions for naming what you're afraid of, examining what threatens you, and building the courage to act anyway."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-26
+date: 2017-02-11
 draft: true
 ---
 

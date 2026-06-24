@@ -4,7 +4,7 @@ title: "Questions for Understanding Your Inaction"
 description: "The questions I sit with when I want to understand why I haven't started something, what's holding me back, and how to break the loop."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 

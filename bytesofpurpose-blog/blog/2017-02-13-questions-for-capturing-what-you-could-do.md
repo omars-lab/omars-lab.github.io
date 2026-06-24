@@ -4,7 +4,7 @@ title: "Questions for Capturing What You Could Do"
 description: "Introspective questions for brainstorming and organizing everything you could do — goals, commitments, challenges, and the things you want to create."
 authors: [oeid]
 tags: [productivity, question-set]
-date: 2026-01-28
+date: 2017-02-13
 draft: true
 ---
 

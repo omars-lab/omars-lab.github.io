@@ -4,7 +4,7 @@ title: "Questions for Knowing What You Want"
 description: "A curated set of questions for getting honest about what you want, what you're chasing, and what you'd regret not pursuing."
 authors: [oeid]
 tags: [self-reflection, question-set]
-date: 2026-01-25
+date: 2017-02-11
 draft: true
 ---
 
