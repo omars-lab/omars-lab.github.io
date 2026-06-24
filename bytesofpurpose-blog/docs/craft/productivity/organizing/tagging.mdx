@@ -8,35 +8,100 @@ date: 2022-04-05T10:00
 draft: true
 ---
 
-* [ ] I have abstract roles that span other roles / other roles inherit from ... I need special hashtags to these roles to link the too ... things like skill building - #skill++ #24/7
+The goal: a small set of **custom tags** I can drop into my notes that scripts then act on
+automatically. This page separates what such a system has to do (the **requirements**)
+from the concrete tags that satisfy each one (the **examples**). The original
+brain-dump is preserved at the bottom under [Raw notes](#raw-notes).
+
+## Requirements
+
+What a custom-tag system for my notes must do:
+
+1. **Auto-expanding date tags**: a tag written once should expand into a concrete date,
+   and date-bearing tasks should surface on the right day instead of being pre-created.
+2. **Recurring tasks**: a tag should make a task repeat (daily, weekly) until an optional
+   end date, created on demand rather than pre-populated.
+3. **A task mover**: pull dated/`today` tasks into the daily file, preserving the
+   task/subtask hierarchy and tallying older dates so the backlog stays legible.
+4. **Freshening**: bump stale dates on un-done tasks forward so old work doesn't rot.
+5. **Archiving**: move larger notes into daily files, surviving note renames.
+6. **Abstract / inheritable role tags**: tags that stand for a category of work and that
+   other roles can inherit from, so one tag links many related notes.
+7. **Auto-tagging**: categories of work get tagged automatically rather than by hand.
+8. **Run-on-use, not on a schedule**: expansion/mover scripts should run when I actually
+   open my notes (via an x-callback trigger), not blindly every day on cron.
+
+## Tag examples
+
+Concrete syntax that satisfies the requirements above:
+
+| Tag | Requirement | What it does |
+| --- | --- | --- |
+| `>2022-01-12` | Auto-expanding date | Expands to that date; in calendar files it moves to `today`. |
+| `>this-week` | Auto-expanding date | Expands once a week (the weekly analogue of `expand-today`). |
+| `>today` | Task mover | Marks a task to be pulled into the current daily file. |
+| `#repeat(until=date)` | Recurring tasks | Repeats a task daily until the given date. |
+| `#skill++` | Abstract / inheritable role | An abstract role other roles inherit from (skill-building). |
+| `#24/7` | Abstract / inheritable role | An always-on role tag, paired with `#skill++`. |
+| `@done(2022-04-05 10:21 PM)` | Task mover / freshening | Completion stamp; the mover ignores done tasks. |
+
+### Mover detail
+
+The today-mover should **tally older dates and aggregate by 5**, keeping the oldest dates
+so a long tail of overdue work collapses instead of flooding the daily file. For example,
+it collapses `>today >2022-04-04 >2022-03-31 >2022-03-12 >2022-03-11` rather than listing
+each one.
+
+### Trigger detail
+
+Rather than a daily cron, bind expansion to opening NotePlan: an x-callback (wired through
+Shortcuts) that **runs the expand/move script first, then opens the app**. The `sed`
+in-place pass skips lines that already carry `today` and rewrites the rest.
+
+## Open questions
+
+- For abstract roles that span other roles, what's the cleanest inheritance syntax
+  (`#skill++`, `#24/7`)?
+- For auto-tagging categories of work, can it be fully automatic, or is a manual nudge
+  unavoidable?
+- Backlog file vs. in-place dating: do I keep a single backlog note, or keep dating tasks
+  in the file where I naturally write them?
+- Should I go back to driving NotePlan edits through shell commands?
+
+## Raw notes
+
+> Original brain-dump, kept verbatim for provenance.
+
+* [ ] I have abstract roles that span other roles / other roles inherit from ... I need special hashtags to these roles to link the too ... things like skill building - `#skill++` `#24/7`
 
 
-# Autoexpanding Special Tags
+### Autoexpanding Special Tags
 
 - [ ] When it comes to tagging categories of work, how will I do these?
 	- [ ] Can I auto tag stuff?
 
-# Task Management
-* [ ] Similar to `expand-today`, I should have a >this-week tag and expand it once a week ...
-* [x] Make script to move things to today ... @done(2022-04-05 10:21 PM)
+### Task Management
+
+* [ ] Similar to `expand-today`, I should have a `>this-week` tag and expand it once a week ...
+* [x] Make script to move things to today ... `@done(2022-04-05 10:21 PM)`
 * [ ] To do the sed task today moving thingy ... I almost need to transform all subtasks ... into one line with the main task ...
 	* [ ] But this way ... I wouldn't be handling subtasks appropriately ...
-	* [ ] today needs to be at the top level ... 
-* [ ] I need to write a script to keep on repeating this ... until ...#repeat(until=date)
+	* [ ] today needs to be at the top level ...
+* [ ] I need to write a script to keep on repeating this ... until ... `#repeat(until=date)`
 	* [ ] Don't pre-create ... create every day based on when I login in / cron runs!
 	* [ ] Can use the sed in place ... ignore lines that already have today ... and replace those with a repeat less than ..
-* [ ] Script to freshen any old tasks! Sed >date with fresher date! >2021-10-26 
-* [ ] I should make a script to auto expand >2022-01-12 with the date ... in note files ...
+* [ ] Script to freshen any old tasks! Sed `>date` with fresher date! `>2021-10-26`
+* [ ] I should make a script to auto expand `>2022-01-12` with the date ... in note files ...
 	* [ ] if its in calendar files ... it should expand and move to today ...
-	* [ ] Or should I have a "backlog" file ... with all the things to do .... 
+	* [ ] Or should I have a "backlog" file ... with all the things to do ....
 		* [ ] But I naturally mark put stuff I need to do today in the today file ...
 		* [ ] Can I auto tag the date ... based on file ..?
 * [ ] Should I go back to a shell command to track todos / edit Noteplan through shell commands ...?
-* [ ] I need repeat/ constant functionality ... to repeat daily tasks 
+* [ ] I need repeat/ constant functionality ... to repeat daily tasks
 - [ ] I need archive functionality ... that knows how to move bigger notes into the daily files ... but if I change name ... daily file name changes too!
 * [ ] for today mover, I should tally older dates and agg by 5 ... and keep oldest dates
 * [ ] I don't want the expand-today script to run every day ...
 	* [ ] I only want it to run when I use note plan ...
 	* [ ] Should make an Xxcallback to w/ shortcuts to open note plan .... But before doing so ... it should run the script!
 
-* [ ] Figure out how to tally older days when moving things over to today ... >today >2022-04-04 >2022-03-31 >2022-03-12 >2022-03-11
+* [ ] Figure out how to tally older days when moving things over to today ... `>today >2022-04-04 >2022-03-31 >2022-03-12 >2022-03-11`
