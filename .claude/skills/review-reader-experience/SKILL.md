@@ -52,6 +52,18 @@ user** (AskUserQuestion) how to handle each occurrence — replace with a comma 
 split into two sentences · parentheses · keep as-is — then apply their choice. Don't
 auto-rewrite; the human decides whether each dash stays.
 
+**The `--` bypass is the SAME anti-pattern (also blocked).** Swapping a forbidden `—` for
+`--` (double hyphen) does not fix the AI-voice tell — it dodges the hook while still reading
+as the same em-dash cadence (and now as a typo). So the hook **also blocks `--` used as a
+sentence/clause dash** in the same scoped files, with the same AskUserQuestion flow. The
+matcher is deliberately narrow to avoid false positives: it flags `--` only when it reads as
+prose punctuation (` -- ` spaced, or `word-- ` attached-before), and it **skips** legitimate
+`--`: CLI flags (`--port`), markdown/YAML `---` rules and frontmatter delimiters, HTML
+`<!-- -->` comments, and anything inside a fenced ```` ``` ```` code block. If you genuinely
+need a literal `--` in prose (e.g. showing `git checkout -- file`), wrap it in inline code
+(backticks) or a code fence and the hook leaves it alone. **Never "fix" an em-dash by typing
+`--`** — that just trades one flagged form for another; pick real punctuation instead.
+
 **Repo-wide scanner (the standing gate the hook lacks).** The hook only fires on files
 Claude *edits* — it never sweeps the existing corpus, so em-dashes that predate the hook (or
 arrive via a human edit / bulk script / git) go uncaught. `make validate-em-dash`

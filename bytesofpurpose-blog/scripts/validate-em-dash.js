@@ -14,10 +14,14 @@
  *   - prose:      bytesofpurpose-blog/{docs,blog,designs,changelog}/**.{md,mdx}
  *   - components: bytesofpurpose-blog/src/**.{tsx,jsx}
  *
- * POLICY: flag EVERYTHING — every em-dash in scope, including those inside fenced
- * code blocks / inline-code spans (a deliberate decision: keep the scan dead-simple
- * and let a human keep any genuinely-literal one rather than silently exempt code).
- * Only U+2014 ("—") is flagged; en-dash (–) and hyphen (-) are fine.
+ * POLICY: flag the em-dash EVERYWHERE in scope (including inside code) — keep that scan
+ * dead-simple. ALSO flag the "--" double-hyphen BYPASS (typing "--" to dodge the em-dash
+ * rule is the same AI-voice anti-pattern wearing a disguise). The "--" matcher mirrors the
+ * hook: it flags "--" only when it reads as a prose dash (" -- " spaced, or "word-- "
+ * attached-before) and SKIPS legitimate "--": CLI flags (--port), "---" rules / frontmatter
+ * delimiters, "<!-- -->" comments, and fenced ``` code blocks. (The em-dash check stays
+ * code-inclusive; the "--" check is code-aware because "--" is common+legitimate in code.)
+ * Only U+2014 ("—") and the "--" bypass are flagged; en-dash (–) and a lone hyphen (-) are fine.
  *
  * Usage:
  *   node scripts/validate-em-dash.js                 # scan (default scope) — file:line:snippet
@@ -74,6 +78,21 @@ const files = [];
 for (const r of roots) walk(path.resolve(r), files);
 files.sort();
 
+// "--" bypass: does this (code-sanitized, non-rule) line use "--" as a prose dash?
+// Mirrors em-dash-voice-hook.sh.
+function hasDashBypass(line) {
+  let s = line;
+  s = s.replace(/`[^`]*`/g, ''); // drop inline code spans
+  s = s.replace(/<!--/g, '').replace(/-->/g, ''); // drop html comment markers
+  const collapsed = s.replace(/\s/g, '');
+  if (/^-+$/.test(collapsed)) return false; // a pure "---" rule / frontmatter delimiter
+  // spaced sentence dash " -- " (both sides space, not "---"); never a CLI flag
+  if (/[^-] -- [^-]/.test(s) || /^-- [^-]/.test(s) || /[^-] --$/.test(s)) return true;
+  // attached-before "word-- " (CLI flags have a space BEFORE "--", so this excludes them)
+  if (/[\w,.;:!?'")]-- +\w/.test(s)) return true;
+  return false;
+}
+
 const findings = [];
 for (const file of files) {
   let text;
@@ -82,17 +101,27 @@ for (const file of files) {
   } catch {
     continue;
   }
-  if (!text.includes(EM_DASH)) continue;
   const lines = text.split('\n');
+  let inFence = false;
   lines.forEach((line, i) => {
-    if (!line.includes(EM_DASH)) return;
-    const count = line.split(EM_DASH).length - 1;
+    // track fenced code blocks (for the "--" check only; em-dash stays code-inclusive)
+    const trimmed = line.trimStart();
+    const isFenceToggle = /^(```|~~~)/.test(trimmed);
+
+    const emCount = line.includes(EM_DASH) ? line.split(EM_DASH).length - 1 : 0;
+    const dashBypass = !inFence && !isFenceToggle && hasDashBypass(line);
+
+    if (isFenceToggle) inFence = !inFence;
+
+    if (emCount === 0 && !dashBypass) return;
     let snip = line.trim();
     if (snip.length > 120) snip = snip.slice(0, 117) + '...';
+    const kind = emCount > 0 && dashBypass ? 'em-dash + "--"' : emCount > 0 ? 'em-dash' : '"--" bypass';
     findings.push({
       file: path.relative(SITE_ROOT, file),
       line: i + 1,
-      count,
+      count: emCount + (dashBypass ? 1 : 0),
+      kind,
       snippet: snip,
     });
   });
@@ -105,13 +134,13 @@ if (asJson) {
   console.log(JSON.stringify({ total, files: fileCount, findings }, null, 2));
 } else {
   for (const f of findings) {
-    console.log(`${f.file}:${f.line}: ${f.snippet}`);
+    console.log(`${f.file}:${f.line} [${f.kind}]: ${f.snippet}`);
   }
   if (total === 0) {
-    console.log('✓ em-dash: no em-dashes (—) in public-facing content.');
+    console.log('✓ em-dash: no em-dashes (—) or "--" bypasses in public-facing content.');
   } else {
     console.error(`\n✗ em-dash: ${total} occurrence(s) across ${fileCount} file(s).`);
-    console.error('An em-dash (—) in reader-facing copy reads as AI voice. Rephrase: comma · colon · period-split · parentheses.');
+    console.error('An em-dash (—) or "--" bypass reads as AI voice. Rephrase: comma · colon · period-split · parentheses.');
   }
 }
 
