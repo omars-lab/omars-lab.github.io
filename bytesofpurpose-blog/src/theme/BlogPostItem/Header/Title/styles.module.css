@@ -18,3 +18,14 @@
   gap: 0.75rem;
   flex-wrap: wrap;
 }
+
+/* Dev-only "open in VS Code" wrapper around the draft "D" badge. Keep it inline so
+   the pill stays beside the title; the badge carries its own styling. */
+.draftEditLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+.draftEditLink:hover {
+  text-decoration: none;
+  filter: brightness(0.95);
+}

@@ -2,10 +2,26 @@ import React from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import {useBlogPost} from '@docusaurus/plugin-content-blog/client';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import ShareButton from '@site/src/components/ShareButton';
 import {isLocalhost} from '@site/src/experiments';
 import {DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
 import styles from './styles.module.css';
+
+// Build a vscode://file/<abs-path> URI from the post's aliased source path
+// (e.g. "@site/designs/2026-06-22-foo.mdx") + the dev-only absolute site dir.
+// Returns null unless both are present (so prod, where siteDirDev is empty,
+// yields no link). The path is URL-encoded per segment so spaces etc. survive.
+function vscodeUriForSource(
+  source: string | undefined,
+  siteDir: string | undefined,
+): string | null {
+  if (!source || !siteDir) return null;
+  const rel = source.replace(/^@site\//, '');
+  const abs = `${siteDir.replace(/\/$/, '')}/${rel}`;
+  const encoded = abs.split('/').map(encodeURIComponent).join('/');
+  return `vscode://file/${encoded}`;
+}
 
 // Swizzled @theme/BlogPostItem/Header/Title: re-implements the upstream Title
 // and mounts the inline <ShareButton> beside the H1, but ONLY on the blog post
@@ -30,16 +46,42 @@ export default function BlogPostItemHeaderTitle({
   className?: string;
 }): React.JSX.Element {
   const {metadata, frontMatter, isBlogPostPage} = useBlogPost();
+  const {siteConfig} = useDocusaurusContext();
   const {permalink, title} = metadata;
   const shareDescription =
     (frontMatter?.description as string | undefined) || metadata.description;
   const isDraft = useIsDraftPost(frontMatter);
   const TitleHeading = isBlogPostPage ? 'h1' : 'h2';
 
+  // Dev-only: when a post is a draft, make its "D" badge a link that opens the
+  // source file in VS Code (vscode://file/<abs-path>). Only renders when a draft
+  // (so already localhost + non-prod) AND siteDirDev is set (empty in prod).
+  const vscodeUri = isDraft
+    ? vscodeUriForSource(
+        (metadata as {source?: string}).source,
+        siteConfig.customFields?.siteDirDev as string | undefined,
+      )
+    : null;
+
+  const badge = isDraft ? (
+    vscodeUri ? (
+      <a
+        href={vscodeUri}
+        className={styles.draftEditLink}
+        title="Open this draft's source in VS Code"
+        aria-label="Open draft source in VS Code"
+        onClick={(e) => e.stopPropagation()}>
+        <DraftBadge />
+      </a>
+    ) : (
+      <DraftBadge />
+    )
+  ) : null;
+
   const heading = (
     <TitleHeading className={clsx(styles.title, className)}>
       {isBlogPostPage ? title : <Link to={permalink}>{title}</Link>}
-      {isDraft && <DraftBadge />}
+      {badge}
     </TitleHeading>
   );
 

@@ -55,6 +55,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
       // Test-only: opt out of PostHog's bot/UA filter so e2e (Playwright) events
       // reach ingestion. Never set in production builds.
       posthogTestMode: process.env.POSTHOG_TEST_MODE === '1',
+      // Absolute site dir, ONLY in dev — used by the dev-only "open in VS Code"
+      // link on the draft badge to build a vscode://file/<abs-path> URI. Empty in
+      // production builds so the local filesystem path never ships to the public
+      // bundle (the link is also gated to localhost + non-prod client-side).
+      siteDirDev:
+        process.env.NODE_ENV !== 'production' ? __dirname : '',
     },
     // gtag-guard MUST come before posthog (and before the gtag plugin's own
     // client module): it stubs window.gtag so the plugin's unguarded route-change
