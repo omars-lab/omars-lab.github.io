@@ -80,6 +80,10 @@ validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA +
 validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
+validate-redirects: ## Check the client-redirects array for invalid/draft/colliding/duplicate targets (catches build-breakers early)
+	@# exit 2 == ERROR-tier (a redirect target that's missing or draft would fail the prod build).
+	( cd ${SITEROOT} && node scripts/validate-redirects.js )
+
 validate-em-dash: ## Scan ALL public-facing content (prose + components) for AI-voice em-dashes (—)
 	@# Repo-wide complement to the edit-only .claude/hooks/em-dash-voice-hook.sh, which never
 	@# sweeps the existing corpus. Exit 1 on any hit. Flags everything, code blocks included.
