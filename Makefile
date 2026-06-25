@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-assets generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -215,7 +215,8 @@ PORT ?= 3000
 start: build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	# Builds Storybook first so it's available at /storybook/
-	# Changelog data is auto-generated via npm 'prestart' hook before starting
+	# Dynamic data assets are auto-generated via the npm 'prestart' hook
+	# (npm run generate-assets) before starting — see `make generate-assets`.
 	@# Dev/prod parity for premium: export STATICRYPT_PASSPHRASE from the gitignored .env so
 	@# the rehype-premium-encrypt plugin ENCRYPTS premium bodies in dev too — the gate looks
 	@# identical to prod locally. NOT hardcoded; per-var extraction (NOT `source .env` —
@@ -241,9 +242,18 @@ clear: ## Clear Docusaurus cache
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	( cd ${SITEROOT} && yarn clear )
 
+generate-assets: ## Regenerate ALL dynamic data assets from frontmatter (changelog/ideas/logo/kanban)
+	# Single source of truth for build-time generation. Writes the gitignored
+	# generated-from-frontmatter assets (src/components/*/{changelog,ideas,kanban}-data.json,
+	# designs/_binary-pyramid-variants.js). Runs automatically via the npm prestart/prebuild
+	# hooks before `yarn start`/`yarn build`; this target is for regenerating on demand.
+	# NEVER hand-edit the outputs — edit the generator or the frontmatter source.
+	( cd ${SITEROOT} && yarn generate-assets )
+
 build: build-storybook ## Build the site for production
 	# Bundles your website into static files for production.
-	# Changelog data is auto-generated via npm 'prebuild' hook before building
+	# Dynamic data assets are auto-generated via the npm 'prebuild' hook
+	# (npm run generate-assets) before building — see `make generate-assets`.
 	( cd ${SITEROOT} && yarn build )
 
 serve: build ## Serve the built site locally
