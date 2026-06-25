@@ -148,10 +148,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // shows Self and vice-versa. The preset's default docs instance is disabled.
             docs: false,
             blog: {
-              // Served at /thoughts (matches the 'Thoughts' navbar item + the
-              // homepage "Browse My Thoughts" card). Old /blog/* URLs 301 → /thoughts/*
-              // via client-redirects below.
-              routeBasePath: 'thoughts',
+              // Served at /initiatives — the TEMPORAL half of the site (dated
+              // initiatives, experiments, project logs), sibling to the durable
+              // /craft docs. Matches the 'Initiatives' navbar item + the homepage
+              // card. Old /thoughts/* AND /blog/* URLs 301 → /initiatives/* via
+              // client-redirects below (two-hop legacy: /blog → /thoughts → /initiatives).
+              routeBasePath: 'initiatives',
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
               rehypePlugins: [rehypeTaskListLabels],
@@ -435,6 +437,19 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/interview-prep/understanding-what-companies-expect", to: "/craft/interview-prep/understanding-what-companies-expect"},
             {from: "/docs/craft/product-management", to: "/craft/product-management"},
             {from: "/docs/craft/product-management/experiments", to: "/craft/product-management/experiments"},
+            // Durable/temporal reframe (C3): the dated experiment INSTANCE moved out of
+            // /craft (durable) into /initiatives (temporal) as an experiment-plan post. The
+            // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
+            // is automatic via createRedirects.
+            {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
+            // C5: the "Start Here" guide became the Legend hub (slug a-guide-to-these-posts → legend).
+            {from: "/initiatives/a-guide-to-these-posts", to: "/initiatives/legend"},
+            // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
+            // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
+            // legacy /thoughts,/blog hops — list all three old roots explicitly.
+            {from: "/initiatives/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
+            {from: "/thoughts/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
+            {from: "/blog/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
             {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
@@ -669,17 +684,22 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/techniques/tool-usage-techniques/establishing-tool-usage-patterns", to: "/craft/productivity/tool-usage/establishing-tool-usage-patterns"},
             {from: "/docs/techniques/tool-usage-techniques/tool-usage-techniques", to: "/craft/productivity/tool-usage"},
           ],
-          // Route renames (2026-06): the Self docs instance moved /self/* → /journey/*
-          // and the blog moved /blog/* → /thoughts/*. createRedirects runs for EVERY
-          // generated path, so every new /journey/* and /thoughts/* page gets a 301 from
-          // its old /self/* or /blog/* URL — old links and shares never break (CLAUDE.md
-          // tenet: a move is paired with a {from,to} redirect).
+          // Route renames: the Self docs instance moved /self/* → /journey/* (2026-06),
+          // and the blog moved through TWO renames — /blog/* → /thoughts/* (2026-06) →
+          // /initiatives/* (2026-06, durable/temporal reframe). createRedirects runs for
+          // EVERY generated path, so every new /journey/* and /initiatives/* page emits a
+          // 301 from its old URL(s) — old links and shares never break (CLAUDE.md tenet: a
+          // move is paired with a {from,to} redirect). The blog emits BOTH legacy roots so
+          // a /blog/* OR a /thoughts/* link still lands on the final /initiatives/* page.
           createRedirects(existingPath) {
             if (existingPath.startsWith('/journey')) {
               return [existingPath.replace(/^\/journey/, '/self')];
             }
-            if (existingPath.startsWith('/thoughts')) {
-              return [existingPath.replace(/^\/thoughts/, '/blog')];
+            if (existingPath.startsWith('/initiatives')) {
+              return [
+                existingPath.replace(/^\/initiatives/, '/thoughts'),
+                existingPath.replace(/^\/initiatives/, '/blog'),
+              ];
             }
             return undefined; // no redirect for other paths
           },
@@ -716,17 +736,25 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left',
             },
             {
-              // 'Thoughts' (the blog, served at /thoughts) — matches the homepage
-              // "Browse My Thoughts" card.
-              label: 'Thoughts',
-              to: '/thoughts',
+              // 'Initiatives' (the blog, served at /initiatives) — the TEMPORAL half:
+              // dated initiatives, experiments, project logs. Matches the homepage card.
+              label: 'Initiatives',
+              to: '/initiatives',
               position: 'left'
             },
             {
               // 'Mindset' (the quotes-that-moved-me page) — matches the homepage
-              // "Explore My Mindset" card. Sits right after Thoughts.
+              // "Explore My Mindset" card. Sits right after Initiatives.
               label: 'Mindset',
               to: '/mindset',
+              position: 'left'
+            },
+            {
+              // 'Legend' — the site's map/front-door (durable vs temporal, the post-kind
+              // emoji, where the glossaries live). It's the `kind: legend` guide post,
+              // served at /initiatives/legend (a guide TO the posts, so it lives with them).
+              label: 'Legend',
+              to: '/initiatives/legend',
               position: 'left'
             },
             {
@@ -806,6 +834,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {
               title: 'Other Works',
               items: [
+                {
+                  // The single Glossary home — every term of art, with an A-to-Z
+                  // index linking each to its definition. A reference resource.
+                  label: 'Glossary',
+                  to: '/glossary',
+                  position: 'right',
+                },
                 {
                   // "What's New" (changelog) — moved here from the navbar; a
                   // secondary destination rather than primary reader nav.

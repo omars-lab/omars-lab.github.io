@@ -73,7 +73,8 @@ Append a **## 8. Decision** block to the timeline doc — the durable "how we ma
 ```
 
 Update the status line (`analyzing` → `concluded`, or stay `running` if "keep running")
-and the README timeline table. For decisions that warrant a fuller write-up, the
+and the post's `stage` frontmatter so the card moves on the Experimentation board. For
+decisions that warrant a fuller write-up, the
 `documenting-tech-designs` / `preparing-decision-docs` skills can structure a standalone
 decision doc — but the timeline block is the minimum durable record.
 

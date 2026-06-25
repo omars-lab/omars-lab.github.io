@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Draft markers on the BLOG instances — Thoughts (/thoughts) and Designs
+ * Draft markers on the BLOG instances — Initiatives (/initiatives) and Designs
  * (/designs) — (dev project, :3000).
  *
  * Sibling of draft-sidebar.spec.ts (which covers the docs sidebar). The blogs have
@@ -18,7 +18,7 @@ import { test, expect } from '@playwright/test';
  * Must run against the DEV server (drafts don't exist in a prod build).
  */
 
-for (const route of ['/thoughts', '/designs']) {
+for (const route of ['/initiatives', '/designs']) {
   test.describe(`Blog draft markers (dev only) — ${route}`, () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(route, { waitUntil: 'domcontentloaded' });

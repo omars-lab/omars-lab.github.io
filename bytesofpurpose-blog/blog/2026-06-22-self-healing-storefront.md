@@ -18,7 +18,7 @@ One of four designs I co-designed with Claude (I drove the structure and decisio
 
 ## The problem
 
-The [Ecommerce Site Scanner](/thoughts/ecommerce-site-scanner) *finds* what is wrong with a store. This is the *fix* half: once you know the conversion problems, who actually runs the experiments to fix them, safely, on live traffic?
+The [Ecommerce Site Scanner](/initiatives/ecommerce-site-scanner) *finds* what is wrong with a store. This is the *fix* half: once you know the conversion problems, who actually runs the experiments to fix them, safely, on live traffic?
 
 ## The design
 

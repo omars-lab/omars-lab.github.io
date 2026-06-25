@@ -61,7 +61,10 @@ In `…/experiments/<date>-<flag-key>.md`:
   `running` if you chose to keep running.
 - Make sure **## 6. Outcome** states the winner, the numbers, the decision, and what was
   shipped/cleaned up.
-- Append the final **timeline log** row and update the **README timeline table**.
+- Append the final **timeline log** row; set `stage: concluded` and flip
+  `kind: experiment-plan` → `experiment-result` 📊 so the card lands in the board's terminal
+  column. **Distill the durable learning UP into `/craft`** (the PM experiment framework) and
+  link the post to it — the lasting lesson must not live only in the dated post.
 - Close the experiment's tasks.
 
 ## Cross-links

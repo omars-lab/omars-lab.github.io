@@ -21,6 +21,24 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-06-25] Durable vs temporal reframe: Initiatives, boards, kinds, Legend, glossary
+<!-- meta: type=feature category=development priority=high component=Site -->
+Reorganized the whole site around one idea: durable knowledge (`/craft` + `/journey`) vs temporal initiatives (`/initiatives`, renamed from `/thoughts`). Renamed the blog with two-hop legacy redirects; added experiment post-kinds and moved the experiment to `/initiatives` as a board card; built an interactive KanbanBoard (generated from frontmatter) with an Experimentation board; stood up a Legend hub explaining the model, a single Glossary home, and a Craft Leadership + Journey Self-Reflection topic; made the skills board-aware; and built a semantic glossary-linking system. Along the way, hardened the build into a fail-closed generated-asset pipeline and audited the new components on mobile.
+
+- Rename the blog `/thoughts` → `/initiatives` (config, plugins, components, content, e2e; two-hop `/blog`+`/thoughts` legacy redirects)
+- Fail-closed generated-asset pipeline: gitignore generated data + one `generate-assets` target + a PreToolUse edit-guard hook + CLAUDE.md convention
+- Add blog post-kinds learning-plan 📚 / experiment-plan 📝 / experiment-result 📊 (JSON + outline validator + legend table, in lockstep)
+- Move the experiment out of `/craft` into `/initiatives` as an `experiment-plan` post (kinds applied, old URL 301s)
+- Build the interactive KanbanBoard component + generator + the Experimentation board post (board-parameterized, card→modal→post, e2e green)
+- Visual + mobile audit of the KanbanBoard: found + fixed an off-screen-column bug on phones (auto-scroll to the first populated column) + a standing visual/mobile convention
+- A `/designs` post showcasing the blog build system (folders, generate-assets, frontmatter→data→component, the fail-closed hygiene)
+- Legend hub at `/initiatives/legend`: the durable-vs-temporal explainer + the post-kind emoji table + where the glossaries live
+- Single Glossary home at `/glossary` with an A-to-Z term index (index-hub; topic glossaries stay near their topics)
+- New Craft Leadership topic + move how-i-ask-others-questions into it (durable people skill)
+- Journey: rename Personal Growth → Personal Habits (label-only) + new Self Reflection topic + the `ask-myself` tag across 27 question-set posts
+- Board-aware groom-initiatives skill + rework the 5 experiment-lifecycle skills onto the post+board model
+- Semantic glossary-linking: a regex hook triages candidate files, a `link-glossary-terms` skill makes the term-of-art-vs-casual call and links only genuine first uses
+
 ## [2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo
 <!-- meta: type=feature category=development priority=high component=Site -->
 Extracted the four reusable design-post components (Walkthrough, Mockup, DiagramWithFootnotes, Assumption) into a publishable `@omars-lab/blog-ui` ESM React package, built the release pipeline to GitHub Packages, and proved it consumable from another repo by converting getting-started-with-claude-agents into a Vite app that installs and renders it. Then exercised the pipeline a second time: extended the Walkthrough with multi-custom-scene support, used it so the self-healing-storefront design opens on a live store-scan with an issue warning, and shipped it as v0.2.0. Closed the loop on security by adding server-side gitleaks CI to both repos.

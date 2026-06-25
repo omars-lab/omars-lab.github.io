@@ -68,7 +68,7 @@ before deploy.
 > sitemap (verified — a draft doc 404s live). So un-drafting is what makes a page public.
 
 > **⚠️ Publish the whole link CLUSTER, not one post in isolation.** If a post you publish
-> links to ANOTHER draft (e.g. a `/thoughts` design-story post links its `/designs` HLD, or
+> links to ANOTHER draft (e.g. a `/initiatives` design-story post links its `/designs` HLD, or
 > any post links a sibling that's still `draft: true`), the link 404s in production because
 > the target is excluded from the prod build. The **prod build is what catches this**: a
 > bare `yarn build` (or `make build-premium`) prints `Broken link on source page path = …

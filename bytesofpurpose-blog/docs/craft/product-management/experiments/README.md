@@ -70,20 +70,19 @@ Experiments are **structured, hypothesis-driven projects** that follow scientifi
 
 *Note: Tinkering has been moved to its own section at `/docs/developing/tinkering`*
 
-## 📋 Experiment timeline
+## 📋 Where the experiments live
 
-Every experiment gets **one doc in this folder** that is both its **design** and its
-**living timeline**: hypothesis, why we placed it where we did, status, and outcome.
-Each row below links to that doc. Lifecycle:
-`proposed → designed → draft → running → analyzing → concluded → rolled-out / abandoned`.
+This page is the **durable** framework: how I think about experiments. The **individual,
+dated experiments themselves** are temporal, so they live as posts on the **Initiatives**
+blog, each with a kind that flips from **experiment plan** 📝 to **experiment result** 📊 as
+the outcome lands:
 
-| Experiment | Flag | Status | Started | Outcome |
-|---|---|---|---|---|
-| Support CTA: link vs button (draft) | `support-button-copy` | 🟢 running | 2026-06-01 (re-scoped) | pending |
+- **[Support CTA: link vs button](/initiatives/support-button-copy)** (running): does a
+  styled button draw more donate clicks than a plain text link?
 
-> Add a row when you start an experiment; update its status as it moves through the
-> lifecycle. New entry from `_TEMPLATE.md`. The five skills below each own a phase and
-> keep the doc + this table current.
+> An interactive **Experimentation board** indexes these posts by stage (plan → running →
+> result). The board replaces the old timeline table that used to sit here. Lifecycle:
+> `proposed → designed → draft → running → analyzing → concluded → rolled-out / abandoned`.
 
 ### The experiment lifecycle (skills)
 

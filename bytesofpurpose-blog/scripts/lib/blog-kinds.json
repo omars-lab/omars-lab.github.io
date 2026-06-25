@@ -72,6 +72,35 @@
         {"id": "legend-explainer", "label": "an explainer of the conventions it indexes (a table, a <PowerLegend>, or a list of links out)"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
+    },
+    "learning-plan": {
+      "emoji": "📚",
+      "description": "A sequenced plan for learning a topic: the goal, what you need first, an ordered curriculum/milestones, resources, and how you know you're done.",
+      "outline": [
+        {"id": "goal-outcome", "label": "a goal/outcome up front (an H2 like \"Goal\", \"Outcome\", \"What you'll learn\", or \"Why\")"},
+        {"id": "curriculum", "label": "a sequenced curriculum or milestones (numbered steps, an H2-per-stage/module, or a checklist)"},
+        {"id": "resources", "label": "a resources section (a \"Resources\"/\"Reading\"/\"References\" heading or a list of links)"},
+        {"id": "checkpoint", "label": "a checkpoint / done-criteria (a \"Checkpoint\", \"You're done when\", \"Assessment\", or \"Prerequisites\" section that bounds the plan)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "experiment-plan": {
+      "emoji": "📝",
+      "description": "The PLAN half of an experiment (an /initiatives experiment post): the hypothesis and the design, before the result is in. Flips to experiment-result 📊 once the Outcome lands.",
+      "outline": [
+        {"id": "hypothesis", "label": "a hypothesis (an H2 like \"Hypothesis\" / \"We believe\" / \"Prediction\", or a bold **Hypothesis:** line)"},
+        {"id": "experiment-design", "label": "a design section (an H2 like \"Design\", \"Setup\", \"Method\", \"How we'll run it\", or \"Variants\")"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "experiment-result": {
+      "emoji": "📊",
+      "description": "The RESULT half of an experiment (an /initiatives experiment post after the data is in): the outcome and the decision. The same post, with its kind flipped from experiment-plan 📝.",
+      "outline": [
+        {"id": "outcome", "label": "an outcome/results section (an H2 like \"Outcome\", \"Result\", \"Results\", \"Findings\", or \"What happened\")"},
+        {"id": "decisions", "label": "a Decision section (a heading like \"Decision\", \"Recommendation\", or \"Trade-offs\" — what we'll do given the result)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
     }
   }
 }

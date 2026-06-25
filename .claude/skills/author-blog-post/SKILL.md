@@ -77,8 +77,8 @@ sidebar_label: "What Is GTM?"  # SHORT (<= 3 CONTENT words) sidebar entry; NO em
 >   badge), and `blogPostTags` (permalink → tag slugs).
 > - **`src/theme/BlogSidebar/{Desktop,Mobile}/index.tsx`** (+ the `blogSidebarLabel.ts`
 >   helpers) consume those: render the short label, the Guides/Posts split, and — on a
->   `/thoughts/tags/<tag>` page — **scope the sidebar to that tag** and show a **cancelable
->   facet chip** (`<tag> ✕`, the × clears back to `/thoughts`). So the sidebar matches the
+>   `/initiatives/tags/<tag>` page — **scope the sidebar to that tag** and show a **cancelable
+>   facet chip** (`<tag> ✕`, the × clears back to `/initiatives`). So the sidebar matches the
 >   tag-filtered main area instead of listing every post.
 > Add a new per-post sidebar behavior by publishing a map in the plugin and reading it in
 > the swizzle (mirror how `pinned`/tags work). The `kind → emoji` itself comes from

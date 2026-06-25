@@ -18,8 +18,8 @@ import { test, expect, Page } from '@playwright/test';
 
 const PAGES = [
   { name: 'home', path: '/' },
-  { name: 'blog-index', path: '/thoughts' },
-  { name: 'blog-post', path: '/thoughts/evolution-of-a-repo' },
+  { name: 'blog-index', path: '/initiatives' },
+  { name: 'blog-post', path: '/initiatives/evolution-of-a-repo' },
   { name: 'docs-page', path: '/welcome' },
 ];
 

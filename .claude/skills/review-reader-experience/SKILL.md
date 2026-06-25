@@ -162,7 +162,7 @@ Flag and fix:
     ```bash
     perl -0pi -e "s/^(title:.*\n)/\$1sidebar_label: 'SHORT LABEL'\n/m" path/to/doc.mdx
     ```
-  - **Same rule applies to BLOG posts now.** The Posts sidebar (`/thoughts`) is no longer
+  - **Same rule applies to BLOG posts now.** The Posts sidebar (`/initiatives`) is no longer
     docs-only: every blog post carries a `kind:` and a short `sidebar_label:` (≤ 3 content
     words), and the kind-derived emoji is prepended automatically — see `author-blog-post`
     ("Blog post `kind:` + the sidebar"). A long blog `title:` wraps/truncates in the Posts

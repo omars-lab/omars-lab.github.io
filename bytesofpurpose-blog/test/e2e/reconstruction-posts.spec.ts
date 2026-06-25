@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
  * Two posts tell the "recreate a pattern with the bikar/qiyas CLIs" story:
  *   - DESIGNS: /designs/design-rosette-of-zeros  (SvgVariantGrid of bikar-rendered
  *     ring-of-zeros SVGs + a qiyas zone-audit image + the .igp recipe)
- *   - THOUGHTS: /thoughts/recreating-an-image-as-dsl  (the image->DSL journey, with
+ *   - INITIATIVES: /initiatives/recreating-an-image-as-dsl  (the image->DSL journey, with
  *     <Evidence> footnotes that permalink into the sibling source repos)
  *
  * BOTH are currently `draft: true`, so they exist ONLY in the dev build (:3000) and
@@ -33,7 +33,7 @@ import { test, expect } from '@playwright/test';
  */
 
 const ROSETTE = '/designs/design-rosette-of-zeros';
-const IMAGE_TO_DSL = '/thoughts/recreating-an-image-as-dsl';
+const IMAGE_TO_DSL = '/initiatives/recreating-an-image-as-dsl';
 
 // Private permalinks that must never ship in a prod bundle (private sibling repos).
 const PRIVATE_PERMALINK = /github\.com\/NaqshCoffee\/[^"']*\/blob\//;

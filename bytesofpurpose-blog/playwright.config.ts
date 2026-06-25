@@ -75,7 +75,7 @@ export default defineConfig({
       // task-list aria-label rehype plugin) don't run in `yarn start`. Start the
       // build/serve first — `make test-a11y` / `make test-seo` handle that.
       name: 'prod',
-      testMatch: /(accessibility|seo|dev-only-surfaces|reconstruction-posts|co-design-imports)\.spec\.ts$/,
+      testMatch: /(accessibility|seo|dev-only-surfaces|reconstruction-posts|co-design-imports|kanban-board)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'], baseURL: PROD_BASE },
     },
     {
