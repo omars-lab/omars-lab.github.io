@@ -4,6 +4,25 @@
 
 .board {
   margin: 1.5rem 0;
+  /* Right-edge fade cue: signals the column track scrolls horizontally (the populated
+     column may be off-screen on a phone). The track auto-scrolls to the first populated
+     column on mount, and this fade tells the user there is more to swipe to. */
+  position: relative;
+}
+
+.board::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0.5rem;
+  width: 2rem;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--ifm-background-color)
+  );
 }
 
 /* Columns: a horizontal track. On mobile it scrolls (snap per column); on wide screens
@@ -118,7 +137,7 @@
 }
 
 .cardSummary {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--ifm-color-emphasis-700);
   line-height: 1.4;
   /* clamp to a few lines so cards stay scannable */
@@ -137,7 +156,7 @@
 }
 
 .cardDate {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--ifm-color-emphasis-600);
 }
 

@@ -51,6 +51,24 @@ When you add a new generator, add its output to `generate-assets`, gitignore the
 and add the path to the hook + this list in the SAME change. The build system is showcased
 in a `/designs` post; owning skills: `deploy-site`, `serve-locally`.
 
+## ⚠️ Operating convention: every new interactive component gets a visual + mobile pass
+
+A component that **renders content or takes input** (a board, a modal, a card, a chart, a
+filter) is not "done" when it compiles and an e2e asserts it exists — it's done when it's
+been **looked at on a phone**. Before its commit lands, run a visual + mobile pass on the
+NEW/changed component (not the whole site): a Storybook story or the live surface at a
+**375px mobile viewport** AND a desktop width, checking the `audit-mobile-experience` rubric
+on just that component — tap targets ≥44px, no horizontal page overflow, body text ≥16px,
+columns/cards reflow (stack/scroll, not squish), a modal usable one-handed (fits viewport,
+Escape/scrim/touch close), and **the content the user came for is visible without hunting**
+(a real catch: the KanbanBoard's only populated column was off-screen on mobile until it was
+made to auto-scroll to the first populated column). Fix cheap findings in the same change;
+**defer**red ones become GitHub issues (ISSUES.md dedup) with a screenshot in the Dropbox
+audit dir. The two audit skills (`audit-mobile-experience`, `audit-desktop-experience`) own
+the rubric + the chrome-devtools method; this convention just makes the pass non-optional for
+new components. (No mobile-viewport Playwright project exists yet — all projects are Desktop
+Firefox; adding one is a separate, deliberate infra decision, not required per-component.)
+
 ## ⚠️ Operating convention: track our work as tasks
 
 **Track non-trivial work as tasks** (TaskCreate/TaskUpdate). Any request that is more

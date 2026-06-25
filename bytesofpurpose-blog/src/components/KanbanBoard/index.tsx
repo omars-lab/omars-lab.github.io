@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import kanbanData from './kanban-data.json';
@@ -161,13 +161,35 @@ export default function KanbanBoard({board, title}: KanbanBoardProps): React.JSX
 
   const total = cards.length;
 
+  // The columns scroll horizontally on narrow screens. On a phone the leading columns are
+  // often empty (Proposed/Designed) while the action is mid-board (Running), so a mobile
+  // user would land on an empty column and think the board is empty. On mount, scroll the
+  // track so the FIRST POPULATED column is in view — without scrolling the page itself.
+  const trackRef = useRef<HTMLDivElement>(null);
+  const firstPopulatedRef = useRef<HTMLDivElement>(null);
+  const firstPopulatedColId = config.columns.find((c) => (byColumn[c.id] || []).length > 0)?.id;
+  useEffect(() => {
+    const track = trackRef.current;
+    const target = firstPopulatedRef.current;
+    if (!track || !target) return;
+    // Only act when the track actually overflows (mobile/narrow) and the target is off-screen.
+    if (track.scrollWidth <= track.clientWidth) return;
+    const left = target.offsetLeft - track.offsetLeft;
+    track.scrollTo({left, behavior: 'auto'});
+  }, [firstPopulatedColId]);
+
   return (
     <section className={styles.board} aria-label={title || config.title}>
-      <div className={styles.columns} role="list">
+      <div className={styles.columns} role="list" ref={trackRef}>
         {config.columns.map((col) => {
           const colCards = byColumn[col.id] || [];
+          const isFirstPopulated = col.id === firstPopulatedColId;
           return (
-            <div key={col.id} className={styles.column} role="listitem">
+            <div
+              key={col.id}
+              className={styles.column}
+              role="listitem"
+              ref={isFirstPopulated ? firstPopulatedRef : undefined}>
               <div className={styles.columnHeader}>
                 <span className={styles.columnLabel}>
                   {col.emoji && <span aria-hidden="true">{col.emoji} </span>}
