@@ -252,6 +252,23 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
       ],
+      // 🧭 Legend — its OWN docs instance: the map for the whole site. Served at /legend
+      // (folder docs/legend) with its own sidebar (like Craft/Journey), holding the
+      // durable/temporal explainer + the post-kind emoji + all the terminology + the glossary.
+      // Replaced the old standalone /legend page so the section is navigable in a sidebar.
+      [
+        '@docusaurus/plugin-content-docs',
+        {
+          id: 'legend',
+          path: 'docs/legend',
+          routeBasePath: 'legend',
+          sidebarPath: require.resolve('./sidebars-legend.js'),
+          remarkPlugins: [remarkTaskList],
+          rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
+          editUrl:
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
+        },
+      ],
       // https://docusaurus.io/docs/blog#multiple-blogs
       [
         '@docusaurus/plugin-content-blog',
@@ -329,7 +346,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/companies/mental-models/skills/leadership-principles-companies-look-for", to: "/craft/companies/mental-models/skills/understanding-desireable-leadership-skills"},
             {from: "/docs/companies/mental-models/skills/soft-skills-interview-evaluation", to: "/craft/companies/mental-models/skills/understanding-desireable-soft-skills"},
             {from: "/docs/companies/mental-models/skills/technical-skills-interview-evaluation", to: "/craft/companies/mental-models/skills/understanding-desireable-tech-skills"},
-            {from: "/docs/companies/terminology", to: "/craft/companies/terminology"},
+            {from: "/docs/companies/terminology", to: "/legend/terminology/companies"},
             {from: "/docs/craft", to: "/craft"},
             {from: "/docs/craft/blogging", to: "/craft/blogging"},
             {from: "/docs/craft/blogging/adding-content", to: "/craft/blogging/adding-content"},
@@ -402,7 +419,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/companies/skills/dealing-with-challenges", to: "/craft/companies/skills/dealing-with-challenges"},
             {from: "/docs/craft/companies/skills/managing-complexity", to: "/craft/companies/skills/managing-complexity"},
             {from: "/docs/craft/companies/skills/my-problem-solving-approach", to: "/craft/companies/skills/my-problem-solving-approach"},
-            {from: "/docs/craft/companies/terminology", to: "/craft/companies/terminology"},
+            {from: "/docs/craft/companies/terminology", to: "/legend/terminology/companies"},
             {from: "/docs/craft/entrepreneurship", to: "/craft/entrepreneurship"},
             {from: "/docs/craft/generative-ai", to: "/craft/generative-ai"},
             {from: "/docs/craft/generative-ai/building-systems/approach-in-building-systems", to: "/craft/generative-ai/building-systems/approach-in-building-systems"},
@@ -449,10 +466,21 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
             // is automatic via createRedirects.
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
-            // The "Start Here" guide → Legend hub → standalone /legend page (its own CX, no
-            // Initiatives sidebar). Both old /initiatives URLs 301 to the standalone page.
+            // The "Start Here" guide → Legend hub → standalone /legend page → the Legend docs
+            // INSTANCE (own sidebar). /legend is still the README, so these still land right.
             {from: "/initiatives/a-guide-to-these-posts", to: "/legend"},
             {from: "/initiatives/legend", to: "/legend"},
+            // Legend-as-instance: the glossary + all terminology moved OUT of /craft into the
+            // Legend instance (/legend/...). Old URLs 301 to their new homes.
+            {from: "/glossary", to: "/legend/glossary"},
+            {from: "/craft/software-development/terminology", to: "/legend/terminology/software-development"},
+            {from: "/craft/software-development/terminology/terminology-portfolio", to: "/legend/terminology/software-development/terminology-portfolio"},
+            {from: "/craft/productivity/terminology", to: "/legend/terminology/productivity"},
+            {from: "/craft/productivity/terminology/terminology-development", to: "/legend/terminology/productivity/terminology-development"},
+            {from: "/craft/productivity/terminology/terminology-cli", to: "/legend/terminology/productivity/terminology-cli"},
+            {from: "/craft/productivity/terminology/terminology-project-management", to: "/legend/terminology/productivity/terminology-project-management"},
+            {from: "/craft/productivity/terminology/emojis", to: "/legend/terminology/productivity/emojis"},
+            {from: "/craft/companies/terminology", to: "/legend/terminology/companies"},
             // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
             // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
             // legacy /thoughts,/blog hops — list all three old roots explicitly.
@@ -480,11 +508,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/productivity/processes/process-interview", to: "/craft/productivity/processes/process-interview"},
             {from: "/docs/craft/productivity/prompts/daily-todo-carry-over", to: "/craft/productivity/prompts/daily-todo-carry-over"},
             {from: "/docs/craft/productivity/prompts/kanban-board-customization", to: "/craft/productivity/prompts/kanban-board-customization"},
-            {from: "/docs/craft/productivity/terminology", to: "/craft/productivity/terminology"},
-            {from: "/docs/craft/productivity/terminology/emojis", to: "/craft/productivity/terminology/emojis"},
-            {from: "/docs/craft/productivity/terminology/terminology-cli", to: "/craft/productivity/terminology/terminology-cli"},
-            {from: "/docs/craft/productivity/terminology/terminology-development", to: "/craft/productivity/terminology/terminology-development"},
-            {from: "/docs/craft/productivity/terminology/terminology-project-management", to: "/craft/productivity/terminology/terminology-project-management"},
+            {from: "/docs/craft/productivity/terminology", to: "/legend/terminology/productivity"},
+            {from: "/docs/craft/productivity/terminology/emojis", to: "/legend/terminology/productivity/emojis"},
+            {from: "/docs/craft/productivity/terminology/terminology-cli", to: "/legend/terminology/productivity/terminology-cli"},
+            {from: "/docs/craft/productivity/terminology/terminology-development", to: "/legend/terminology/productivity/terminology-development"},
+            {from: "/docs/craft/productivity/terminology/terminology-project-management", to: "/legend/terminology/productivity/terminology-project-management"},
             {from: "/docs/craft/productivity/tool-usage", to: "/craft/productivity/tool-usage"},
             {from: "/docs/craft/productivity/tool-usage/establishing-tool-usage-patterns", to: "/craft/productivity/tool-usage/establishing-tool-usage-patterns"},
             {from: "/docs/craft/software-development", to: "/craft/software-development"},
@@ -505,8 +533,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/software-development/scripting/projects/parsing-json", to: "/craft/software-development/scripting/projects/parsing-json"},
             {from: "/docs/craft/software-development/scripting/projects/terminal-calendar", to: "/craft/software-development/scripting/projects/terminal-calendar"},
             {from: "/docs/craft/software-development/scripting/projects/terminal-links", to: "/craft/software-development/scripting/projects/terminal-links"},
-            {from: "/docs/craft/software-development/terminology", to: "/craft/software-development/terminology"},
-            {from: "/docs/craft/software-development/terminology/terminology-portfolio", to: "/craft/software-development/terminology/terminology-portfolio"},
+            {from: "/docs/craft/software-development/terminology", to: "/legend/terminology/software-development"},
+            {from: "/docs/craft/software-development/terminology/terminology-portfolio", to: "/legend/terminology/software-development/terminology-portfolio"},
             {from: "/docs/craft/software-development/workspace/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks/setup-machine"},
             {from: "/docs/craft/software-development/workspace/setup/running-ha-on-mac-mini", to: "/craft/software-development/workspace/setup/running-ha-on-mac-mini"},
             {from: "/docs/craft/software-development/workspace/tips", to: "/craft/software-development/workspace/tips"},
@@ -518,11 +546,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craftsmanship/tools/tools", to: "/craft/software-development/workspace/tools"},
             {from: "/docs/craftsmanship/workspace/autom8-ha-on-mac-mini", to: "/craft/software-development/workspace/setup/running-ha-on-mac-mini"},
             {from: "/docs/craftsmanship/workspace/running-llms-locally", to: "/craft/generative-ai/my-genai-workflow/running-llms-locally"},
-            {from: "/docs/definitions/development-terminology", to: "/craft/productivity/terminology/terminology-development"},
-            {from: "/docs/definitions/emojis-for-activities", to: "/craft/productivity/terminology/emojis"},
-            {from: "/docs/definitions/terminology-cli", to: "/craft/productivity/terminology/terminology-cli"},
-            {from: "/docs/definitions/terminology-portfolio", to: "/craft/software-development/terminology/terminology-portfolio"},
-            {from: "/docs/definitions/terminology-project-management", to: "/craft/productivity/terminology/terminology-project-management"},
+            {from: "/docs/definitions/development-terminology", to: "/legend/terminology/productivity/terminology-development"},
+            {from: "/docs/definitions/emojis-for-activities", to: "/legend/terminology/productivity/emojis"},
+            {from: "/docs/definitions/terminology-cli", to: "/legend/terminology/productivity/terminology-cli"},
+            {from: "/docs/definitions/terminology-portfolio", to: "/legend/terminology/software-development/terminology-portfolio"},
+            {from: "/docs/definitions/terminology-project-management", to: "/legend/terminology/productivity/terminology-project-management"},
             {from: "/docs/development", to: "/craft/software-development"},
             {from: "/docs/development/initiatives/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/development/pocs/enhancing-the-google-search-experience", to: "/craft/product-management/pocs/enhancing-the-google-search-experience"},
@@ -534,7 +562,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/development/research/research", to: "/craft/product-management/research"},
             {from: "/docs/development/roadmaps/blog-roadmap", to: "/craft/product-management/roadmaps/1-blog-roadmap"},
             {from: "/docs/development/roadmaps/portfolio-roadmap", to: "/craft/product-management/roadmaps/2-portfolio-roadmap"},
-            {from: "/docs/development/terminology", to: "/craft/software-development/terminology"},
+            {from: "/docs/development/terminology", to: "/legend/terminology/software-development"},
             {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/development/tinkering/tinkering", to: "/craft/product-management/tinkering"},
             {from: "/docs/entrepreneurship", to: "/craft/entrepreneurship"},
@@ -577,7 +605,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
             {from: "/docs/product-management", to: "/craft/product-management"},
             {from: "/docs/productivity", to: "/craft/productivity"},
-            {from: "/docs/productivity/terminology", to: "/craft/productivity/terminology"},
+            {from: "/docs/productivity/terminology", to: "/legend/terminology/productivity"},
             {from: "/docs/prompts/analyze/sql-query-analyzer", to: "/craft/software-development/prompts/sql-query-analyzer"},
             {from: "/docs/prompts/author/blog-post-author", to: "/craft/blogging/prompts/blog-post-author"},
             {from: "/docs/prompts/draw/kanban-board-customization", to: "/craft/productivity/prompts/kanban-board-customization"},
@@ -759,11 +787,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left'
             },
             {
-              // 'Legend' — the site's map/front-door (durable vs temporal, the post-kind
-              // emoji, where the glossaries live). A STANDALONE page at /legend (its own
-              // clean CX, no Initiatives/Posts sidebar), like /welcome, /mindset, /glossary.
+              // 'Legend' — its OWN docs instance (id 'legend', route /legend) with its own
+              // sidebar (like Craft/Journey): the durable/temporal explainer + post-kind emoji,
+              // the glossary, and all the terminology. A docSidebar so clicking it shows ONLY
+              // the Legend sidebar.
               label: 'Legend',
-              to: '/legend',
+              type: 'docSidebar', sidebarId: 'legendSidebar', docsPluginId: 'legend',
               position: 'left'
             },
             {
@@ -852,9 +881,9 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               items: [
                 {
                   // The single Glossary home — every term of art, with an A-to-Z
-                  // index linking each to its definition. A reference resource.
+                  // index linking each to its definition. Lives in the Legend instance.
                   label: 'Glossary',
-                  to: '/glossary',
+                  to: '/legend/glossary',
                   position: 'right',
                 },
                 {

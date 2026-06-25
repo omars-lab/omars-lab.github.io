@@ -1,5 +1,5 @@
 {
-  "__doc__": "Single source of truth for the sidebar-emoji convention. Read by validate-docs-structure.js, the validate-docs-structure-hook.sh nudge, and the /suggest-emoji skill. The prose mirror lives at docs/craft/productivity/terminology/emojis.mdx (slug /definitions/emojis-for-activities) and the design doc designs/2026-06-03-sidebar-emoji-system.mdx. Keep all three in lockstep. When you teach the system a new folder emoji, add it to `folders` (or `kinds` if it is a recurring kind). Folder keys are paths relative to docs/ (the instance is included, e.g. craft/blogging/embed-diagrams).",
+  "__doc__": "Single source of truth for the sidebar-emoji convention. Read by validate-docs-structure.js, the validate-docs-structure-hook.sh nudge, and the /suggest-emoji skill. The prose mirror lives at docs/legend/terminology/productivity/emojis.mdx (slug /legend/terminology/productivity/emojis) and the design doc designs/2026-06-03-sidebar-emoji-system.mdx. Keep all three in lockstep. When you teach the system a new folder emoji, add it to `folders` (or `kinds` if it is a recurring kind). Folder keys are paths relative to docs/ (the instance is included, e.g. craft/blogging/embed-diagrams).",
   "kinds": {
     "research": "🔬",
     "projects": "🔨",
