@@ -27,6 +27,19 @@ secret or gated content, add the fail-closed guard in the SAME change and prove 
 (a planted-leak test that exits non-zero). Owning skills: `deploy-site`,
 `manage-infrastructure`, `validate-deployment`.
 
+## ⚠️ Operating convention: move/split content, don't delete it — removing a file is a smell
+
+When reorganizing, **relocate and reshape; do not destroy.** `git mv` to move a file, fold one
+doc into another by **moving its content across** (not dropping it), and **split** a big file into
+several when that organizes better — all fine, all preserve the work. **Deleting a file is a
+SMELL**: a warning sign to stop and justify, not a casual default. Delete only when the content is
+genuinely redundant (a true duplicate, or a stub whose every line was just moved elsewhere) AND
+you can name where it went; if you are unsure, MOVE/redirect instead of removing, or ask. The same
+rule the `mature-content` skill applies to tasks ("reorganize, don't discard") applies to files and
+content generally: the before/after should never silently LOSE anything. Pair every move/rename
+with a `{from,to}` client-redirect (the `validate-redirects` gate guards the targets), and prefer
+a redirect-to-new-home over a deletion every time.
+
 ## ⚠️ Operating convention: never hand-edit generated assets — edit the source, regenerate
 
 Several files are **generated from frontmatter / built by the toolchain** and are
