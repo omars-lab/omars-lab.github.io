@@ -7,6 +7,10 @@ const darkTheme = themes.oneDark;
 // A11y: label GFM task-list checkboxes (else axe/WCAG "label" rule fails).
 const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
 
+// Lift a markdown task list inside <TaskList> into the component's `items` prop (so the
+// special capture tags render as styled chips). MDAST stage, before the JSX → React step.
+const remarkTaskList = require('./plugins/remark-task-list');
+
 // Premium hard-gate: encrypt `premium: true` doc bodies at MDX-compile time (rehype stage)
 // so plaintext is in NEITHER the built HTML NOR the JS bundle. No-ops without
 // STATICRYPT_PASSPHRASE (dev/authoring). See the premium-content-gating design.
@@ -156,6 +160,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               routeBasePath: 'initiatives',
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
+              remarkPlugins: [remarkTaskList],
               rehypePlugins: [rehypeTaskListLabels],
               // SEO: give the blog index a real title + meta description (the
               // default description was just "Blog" — ~4 chars, fails SEO checks).
@@ -223,6 +228,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           path: 'docs/craft',
           routeBasePath: 'craft',
           sidebarPath: require.resolve('./sidebars-craft.js'),
+          remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
@@ -240,6 +246,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           path: 'docs/journey',
           routeBasePath: 'journey',
           sidebarPath: require.resolve('./sidebars-self.js'),
+          remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
