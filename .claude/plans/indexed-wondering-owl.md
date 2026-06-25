@@ -48,6 +48,31 @@ redirects and all structure/outline/link checks green.
    glossary home (built in C5). This is its OWN skill + a validator + a warn-tier hook, then
    applied across existing posts.
 
+**Build-system hardening (raised mid-C1, FOLDED into this branch)** — three "CB" commits:
+9. **CB1 — generated-asset pipeline (DONE).** Generated-from-frontmatter assets were a
+   footgun (`ideas-data.json` regenerated every build yet committed). Now fail-closed:
+   untracked + gitignored generated data; a single `generate-assets` npm/Make target
+   (wired into prestart/prebuild) regenerates ALL dynamic assets; a PreToolUse Write|Edit
+   hook (`.claude/hooks/block-generated-edits.sh`) BLOCKS edits to generated outputs +
+   build-derived dirs (exempts secrets + the committed `_rosette-zeros-variants.js` source);
+   CLAUDE.md convention added. **C4's kanban generator MUST be born inside `generate-assets`
+   with its output gitignored + added to the hook** (the hook + gitignore already name
+   `kanban-data.json`).
+10. **CB2 — build-system `/designs` post** (user: write it now): showcase the build pipeline
+    — folders, the `generate-assets` target, each generator's frontmatter→asset→consumer
+    mapping, the fail-closed hygiene + the committed-source exception. Depends on CB1 (ideally
+    after C4 so kanban is real; can ship pre-C4 and mention kanban as upcoming).
+11. **CB3 — visual + mobile validation for OUR components** (user request): prove the
+    KanbanBoard, its card modal, and the question-set cards render correctly and are genuinely
+    mobile-friendly (not desktop-shrunk). Reuse `audit-mobile-experience` (chrome-devtools MCP
+    on :4173 + visual-rubric screenshot) + Storybook stories at a mobile viewport. (1) BAKE a
+    visual+mobile pass into C4's verify gate (tap targets ≥44px, no horizontal overflow,
+    ≥16px text, columns reflow, modal usable one-handed, touch close works); (2) add a STANDING
+    convention that every new interactive component gets a visual+mobile pass before its commit
+    is done; (3) OPTIONAL mobile-viewport Playwright project (decide at execution — today all
+    projects are Desktop Firefox; no mobile/visual spec exists). Defer findings → GitHub issues
+    (ISSUES.md dedup). Depends on C4.
+
 **This plan file is the durable record of record.** The session may be cleared; the task list
 lives in the transcript but THIS FILE survives. The embedded "Task list (loop-ready)" section
 below mirrors the tracked tasks 1:1 (IDs, dependencies, verify gates) so work can resume from
@@ -159,7 +184,10 @@ Broadest-surface change; doing it first means every later commit targets final r
   `packages/blog-ui/src/components/Question/index.tsx`.
 - New: `scripts/generate-kanban-data.js` — scans posts of a given kind, reads frontmatter
   (`stage`/column, `priority`, `title`, `summary`, permalink) → `kanban-data.json` (mirror
-  `generate-ideas-data.js`). Wire into the `prestart`/prebuild data-gen step.
+  `generate-ideas-data.js`). **Per CB1: add it to the `generate-assets` npm target (NOT a new
+  inline prestart/prebuild entry — `generate-assets` is the single source of truth); the
+  output `src/components/KanbanBoard/kanban-data.json` is ALREADY gitignored + ALREADY named in
+  the block-generated-edits hook — confirm both, don't re-add.**
 - Component is **board-parameterized** (a `board`/`kind` prop selects the data slice +
   columns), so the same component renders the **Experimentation** board (cards = experiment
   posts; columns Plan 📝 | Running | Result 📊) and the **Ideas/Initiatives** board.
@@ -169,8 +197,15 @@ Broadest-surface change; doing it first means every later commit targets final r
 - New post: `blog/<date>-experimentation.md` (`kind: legend` or a board kind) embedding the
   Experimentation `<KanbanBoard board="experiments"/>` — this is the board/index that replaces
   the README timeline.
+- **Per CB3 — visual + mobile validation (part of this commit's gate, not optional):** after the
+  board renders, run a visual+mobile pass on the component — Storybook story at a MOBILE viewport
+  (tap targets ≥44px, no horizontal overflow, ≥16px text, columns reflow/scroll, modal usable
+  one-handed, Escape/scrim/touch close works) AND the `audit-mobile-experience` rubric on the
+  board POST page at :4173 with a screenshot to the Dropbox audit dir. Defer findings → GitHub
+  issues (ISSUES.md dedup); fix cheap ones in-PR.
 - Verify: Storybook builds; `make start` renders the board; click a card → modal → link to the
-  experiment post; e2e green.
+  experiment post; e2e green; **board + modal pass the mobile rubric (no P0); `generate-assets`
+  emits `kanban-data.json` and it is untracked.**
 
 ### Commit 5 — PM topic cleanup + Ideas board + Legend hub + simplify guide
 (Tasks #11-cleanup, #10, #1/#2/#3.) Depends on Commit 4 (board component).
@@ -266,9 +301,10 @@ anchor link to that term's specific definition in the single glossary home (buil
   `node bytesofpurpose-blog/scripts/generate-changelog-data.js`, then delete the completed
   tasks.
 - **PR (not a commit)**: push `feat/durable-temporal-reframe`; `gh pr create` with a body
-  summarizing C1–C9 + verification evidence + any out-of-repo experiment/author skill
-  follow-ups (from C8). **DO NOT MERGE** — ask the user to merge (CLAUDE.md: never self-merge).
-- Depends on: all of C1–C9.
+  summarizing C1–C9 + the CB1–CB3 build-system hardening + verification evidence + any
+  out-of-repo experiment/author skill follow-ups (from C8). **DO NOT MERGE** — ask the user to
+  merge (CLAUDE.md: never self-merge).
+- Depends on: all of C1–C9 **and CB1–CB3**.
 
 ---
 
@@ -283,6 +319,16 @@ C1 rename ─► C2 kinds ─► C3 move experiments ─► C4 KanbanBoard+ExpBo
 C6 and C7 only need C1 (authorable anytime after the rename). C8 needs C3 (experiment posts) +
 C4 (boards). C9 needs C5 (glossary home). C10 needs ALL of C1–C9, then opens the PR (no merge).
 
+**Build-system hardening (folded in, raised mid-C1):**
+```
+CB1 generated-asset pipeline (DONE) ─► CB2 build-system /designs post ◄── (ideally) C4
+                                   └─► (C4's kanban generator must join generate-assets)
+C4 KanbanBoard ─► CB3 visual+mobile validation of our components
+C10 (last) now also depends on CB1, CB2, CB3.
+```
+CB1 is DONE. CB2 depends on CB1 (best after C4). CB3 depends on C4. C4 additionally depends on
+CB1 (kanban generator born inside `generate-assets`, output gitignored + in the guard hook).
+
 ## Task list (loop-ready) — mirrors the tracked tasks 1:1 (durable copy in case the list is cleared)
 | Task ID | Commit | Subject | Blocked by (task IDs) | Verify gate |
 |---|---|---|---|---|
@@ -295,12 +341,21 @@ C4 (boards). C9 needs C5 (glossary home). C10 needs ALL of C1–C9, then opens t
 | 21 | C7 | Journey: Personal Habits (label-only) + Self Reflection topic + move what-i-ask-myself + ask-myself tag | 15 | validate-structure + validate-links + build; `/initiatives/tags/ask-myself` renders |
 | 22 | C8 | Board-aware idea-grooming skill + rework experiment-lifecycle skills | 17, 18 | new SKILL.md present + registered in CLAUDE.md skills map |
 | 23 | C9 | Glossary-linking skill + validator + warn-tier hook + apply | 19 | validator exits 0; hook surfaces planted missing-link; sample post linked; build |
-| 24 | C10 | CLAUDE.md conventions + archive tasks to changelog + open PR (no merge) | 15,16,17,18,19,20,21,22,23 | both new skills in CLAUDE.md map; changelog renders; full suite green; PR opened |
+| 24 | C10 | CLAUDE.md conventions + archive tasks to changelog + open PR (no merge) | ALL of C1–C9 + CB1–CB3 | both new skills in CLAUDE.md map; changelog renders; full suite green; PR opened |
+| CB1 | CB1 | Gitignore generated assets + `generate-assets` target + edit-guard hook + guidance **(DONE)** | — | hook exits 2 on generated paths / 0 on source+exception+secrets; `generate-assets` recreates all 3; fresh-checkout build clean; none tracked |
+| CB2 | CB2 | Build-system `/designs` post (folders, generators, frontmatter→asset→consumer, fail-closed hygiene) | CB1 (best after C4) | build clean; em-dash clean; outline ok; renders at `/designs/<slug>` |
+| CB3 | CB3 | Visual + mobile validation of our components (KanbanBoard, modal, cards) | C4 | board+modal pass mobile rubric (no P0); screenshot in Dropbox audit dir; convention documented; mobile spec (if added) green |
 
-To resume after a clear: if the task list is empty, re-create tasks 15–24 from this table
-(subjects + blocked-by + the per-commit detail in the "Commit N" sections above), then drive
-the loop. The full per-commit instructions, file paths, and locked decisions are in the
-sections above — this table is the index, not a replacement for them.
+> **ID note (post-clear resume):** the original session used task IDs 15–24. After a clear
+> mid-effort, tasks were re-created with fresh IDs — C1–C10 → IDs **1–10**, and the three
+> build-system commits as **CB1=#11, CB2=#12, CB3=#13**. The Commit/CB labels (not the numeric
+> IDs) are the stable handle; map by label, not number, on resume.
+
+To resume after a clear: if the task list is empty, re-create the tasks from this table
+(subjects + blocked-by + the per-commit detail in the "Commit N" / "CB" sections above), then
+drive the loop. **CB1 is already DONE** (committed `16bb4b95`). The full per-commit instructions,
+file paths, and locked decisions are in the sections above — this table is the index, not a
+replacement for them.
 
 ---
 
