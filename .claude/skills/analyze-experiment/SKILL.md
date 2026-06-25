@@ -64,7 +64,9 @@ Open `…/experiments/<date>-<flag-key>.md` and:
 - Fill the **## 6. Outcome** section: per-variant exposures/conversions/rate, lift,
   significance verdict, and a one-line read.
 - Append a **timeline log** row (date, state `analyzing` or `concluded`, note).
-- Update the status line + the **README timeline table** row.
+- Bump the post's `stage` frontmatter (`running` → `analyzing`) so its card moves on the
+  Experimentation board; once the Outcome is final, flip `kind: experiment-plan` →
+  `experiment-result` (the card lands in the terminal `concluded` column).
 
 ## Step 5 — Emit a recommendation (feeds the decision)
 

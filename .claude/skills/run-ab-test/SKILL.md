@@ -12,10 +12,10 @@ experiment lifecycle:
 **`design-experiment`** (design doc) → **run-ab-test** (build + create/validate/launch) →
 **`analyze-experiment`** (results) → **`conclude-experiment`** (roll out the winner).
 
-Each experiment has **one timeline doc** at
-`bytesofpurpose-blog/docs/4-development/6-projects/experiments/<date>-<flag-key>.md`
-(design + living status + outcome). Keep that doc's status + the folder `README.md`
-timeline table current as the experiment moves through this skill (injection point →
+Each experiment is **one `/initiatives` blog post** at
+`bytesofpurpose-blog/blog/<date>-<flag-key>.md` (`kind: experiment-plan`→`experiment-result`,
+design + living status + outcome) — a card on the Experimentation board. Keep its `stage`
+frontmatter current as the experiment moves through this skill (injection point →
 draft → validated → running). Pairs with `setup-posthog` (keys), `query-posthog`
 (readback), `author-blog-post` (component edits).
 

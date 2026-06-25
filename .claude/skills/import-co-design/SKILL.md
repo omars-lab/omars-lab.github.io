@@ -1,6 +1,6 @@
 ---
 name: import-co-design
-description: Import a public co-design HLD (architecture/co-designs/public/CO-DESIGN-*-hld.md from the work repo) into the Bytes of Purpose Designs blog (/designs) as a build-clean .mdx post, and produce the /thoughts showcase post that summarizes the collection. Runs a deterministic, idempotent transformer that maps frontmatter, de-em-dashes the body (the em-dash voice hook BLOCKS — in designs/*.mdx), fixes MDX build-breakers, rewrites cross-doc links to /designs slugs, converts <a id> footnotes to GFM + labeled scope-notes to admonitions, and wraps the first mermaid diagram for the opt-in flow animation. Use when the user wants to publish a co-design as a design doc, refresh an imported one after the source changed, or stand up the showcase post. Pairs with author-blog-post (MDX pitfalls), publish-site (un-draft + deploy), manage-frontmatter-descriptions (the description field).
+description: Import a public co-design HLD (architecture/co-designs/public/CO-DESIGN-*-hld.md from the work repo) into the Bytes of Purpose Designs blog (/designs) as a build-clean .mdx post, and produce the /initiatives showcase post that summarizes the collection. Runs a deterministic, idempotent transformer that maps frontmatter, de-em-dashes the body (the em-dash voice hook BLOCKS — in designs/*.mdx), fixes MDX build-breakers, rewrites cross-doc links to /designs slugs, converts <a id> footnotes to GFM + labeled scope-notes to admonitions, and wraps the first mermaid diagram for the opt-in flow animation. Use when the user wants to publish a co-design as a design doc, refresh an imported one after the source changed, or stand up the showcase post. Pairs with author-blog-post (MDX pitfalls), publish-site (un-draft + deploy), manage-frontmatter-descriptions (the description field).
 ---
 
 # Import a co-design HLD into the Designs blog
@@ -8,7 +8,7 @@ description: Import a public co-design HLD (architecture/co-designs/public/CO-DE
 You author architecture HLDs ("co-designs") with Claude in a separate work repo
 (`~/Workspace/work-git/docs/architecture/co-designs/public/CO-DESIGN-*-hld.md`). This skill
 turns one (or all) of them into a **Designs-blog post** (`/designs/design-<name>`), and the
-collection into a single **`/thoughts` showcase post** that says "here's what I co-designed,
+collection into a single **`/initiatives` showcase post** that says "here's what I co-designed,
 check it out." It is a **repeatable, idempotent pipeline**: re-run it whenever a source HLD
 changes and it UPDATEs the matching post in place (never duplicates).
 
@@ -166,7 +166,7 @@ em-dash in rendered prose, the `.mermaid-animated` wrapper is present, admonitio
 footnotes render, and the storefront→site-scanner cross-link resolves. In `prod` it asserts the
 drafts 404 (they're not published yet).
 
-## The showcase /thoughts post
+## The showcase /initiatives post
 
 After importing, write/refresh one post at
 `bytesofpurpose-blog/blog/YYYY-MM-DD-system-designs-co-designed-with-claude.md`

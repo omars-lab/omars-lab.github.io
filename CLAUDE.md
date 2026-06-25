@@ -220,13 +220,14 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Premium infra setup | `manage-infrastructure` | provision the premium Worker: scope CF_API_TOKEN (confirm-token-scopes.sh), set STATICRYPT_PASSPHRASE in .env, wrangler deploy + verify; `make rotate-premium-secret` |
 | Analytics setup | `setup-posthog` | obtain/place the 4 PostHog keys; CLI install; key gotchas |
 | Analytics queries | `query-posthog` | official @posthog/cli readback, HogQL, confirmations |
-| Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) → timeline entry |
+| Groom initiatives | `groom-initiatives` | the board-aware contract for temporal work: a new idea/experiment is an `/initiatives` POST whose `kind`/`stage`/`priority` frontmatter make it a kanban card; advancing = a `stage` edit; concluding = distill the durable learning UP into `/craft`. Knows the Experimentation + Ideas boards, their columns, the kind→board map |
+| Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) as an `/initiatives` experiment POST (`kind: experiment-plan` 📝, `stage`) → a card on the Experimentation board (no more `/craft` doc + README timeline) |
 | A/B testing (execute) | `run-ab-test` | flag injection point, create/validate/launch (REST API), Playwright |
 | Experiment analysis | `analyze-experiment` | pull exposure+conversion split, significance, write Outcome + a recommendation |
 | Experiment decision | `decide-experiment` | apply decision gates (significance/MDE/guardrails) + judgment → recorded decision readout |
 | Experiment rollout | `conclude-experiment` | execute the decision: roll flag to 100% / keep control, clean up, finalize doc |
 | Content authoring | `author-blog-post` | frontmatter + MDX pitfalls (`<br/>`, `{braces}`); the blog `kind:` + short `sidebar_label` system (kind drives the auto-derived sidebar emoji via `blog-kind-emoji.json`; per-kind outline checks via `validate-post-outline.js`) |
-| Import a co-design HLD | `import-co-design` | transform a `CO-DESIGN-*-hld.md` from the work repo into a build-clean `/designs` post + the `/thoughts` showcase post; deterministic, idempotent Node transformer (de-em-dash, MDX fixes, link rewrite, mermaid flow-anim) |
+| Import a co-design HLD | `import-co-design` | transform a `CO-DESIGN-*-hld.md` from the work repo into a build-clean `/designs` post + the `/initiatives` showcase post; deterministic, idempotent Node transformer (de-em-dash, MDX fixes, link rewrite, mermaid flow-anim) |
 | Import a reconstruction | `import-reconstruction` | turn a bikar/qiyas CLI pattern reconstruction into a draft `/designs` design log: the two-CLI loop, the no-letters-by-construction constraint, committing rendered SVG variants as SOURCE (NOT gitignored — bikar is private/absent at build), qiyas-honest-findings narrative, Evidence privacy rule, rerunnable Playwright proof |
 | Enrich a post | `upgrade-post` | weave reusable MDX components into any post/doc (animated mermaid, DiagramWithFootnotes, admonitions, carousels, SvgVariantGrid, Evidence, Timeline; the question-set kit: `<Question>` cards with power/priority/cron/depth badges + Tooltip, QuestionSection, SectionBanner, PowerLegend) — the what/when/snippet/gotcha catalog |
 | Reader-experience audit | `review-reader-experience` | audit the site through the reader's eyes: long/jargony sidebar+navbar labels, confusing layout / ignored buttons, writer-focused voice, file/folder IA (nesting, orphan categories, mis-homed docs, re-org — URL-safe only because every slug is **absolute**; a relative slug bakes the path into the URL, and editing a slug VALUE 404s silently) → prioritized report |
@@ -259,10 +260,15 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 - `bytesofpurpose-blog/src/posthog-integration-plan.md` — what events/why + verify.
 - `bytesofpurpose-blog/src/posthog-issues.md` — debugging log / resolved issues.
 
-## Experiment timeline (lab notebook)
+## Experiment lab notebook (board-driven)
 
-- `bytesofpurpose-blog/docs/4-development/6-projects/experiments/` — **one published doc
-  per experiment** (design + living status + outcome) + `README.md` timeline table +
-  `_TEMPLATE.md`. Lifecycle: `design-experiment` → `run-ab-test` → `analyze-experiment`
-  → `decide-experiment` → `conclude-experiment`. Keep each doc's status + the README
-  table current as an experiment moves through the phases.
+- An experiment is **one `/initiatives` blog post** (`bytesofpurpose-blog/blog/<date>-<flag>.md`)
+  with `kind: experiment-plan` 📝 → `experiment-result` 📊 (the kind flips when the Outcome
+  lands) and a `stage` that places it as a card on the **Experimentation board**
+  (`/initiatives/experimentation`, `<KanbanBoard board="experiments"/>`). The board (generated
+  from frontmatter) **replaced** the old `/craft` experiments doc + README timeline table + the
+  `_TEMPLATE.md`; the durable PM experiment FRAMEWORK stays at `/craft/product-management/experiments`.
+  Lifecycle: `design-experiment` → `run-ab-test` → `analyze-experiment` → `decide-experiment`
+  → `conclude-experiment`, all board-aware (see `groom-initiatives` for the board contract).
+  Advance a card by editing the post's `stage`; on conclusion, distill the durable learning
+  up into `/craft`.
