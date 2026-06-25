@@ -1,0 +1,108 @@
+---
+slug: design-build-system
+sidebar_position: 15
+title: The Build System Behind This Blog
+sidebar_label: Build System
+kind: reference
+description: >-
+  How this Docusaurus site builds itself from content: the folder layout, the
+  one generate-assets step that turns frontmatter into data, what each generator
+  produces and who consumes it, and the fail-closed rule that you never hand-edit
+  generated output.
+authors:
+  - oeid
+tags:
+  - system-design
+  - build
+  - docusaurus
+draft: false
+---
+
+This site looks like a pile of markdown, but a fair amount of it is generated. Boards,
+the changelog, the vote list, a logo's variants: none of those are hand-authored data
+files. They are built from the frontmatter of the content itself, on every build, by one
+step. This is how that works, and why it is set up to make the wrong move impossible
+rather than merely discouraged.
+
+<!-- truncate -->
+
+## The folder layout
+
+The content lives in a few top-level trees, split by the site's organizing idea
+([durable vs temporal](/initiatives/legend)):
+
+| Folder | What it holds |
+|---|---|
+| `docs/craft/`, `docs/journey/` | the two DURABLE docs instances (Craft, Journey): distilled learnings, frameworks, terminology |
+| `blog/` | the TEMPORAL Initiatives blog: dated posts, experiments, project logs |
+| `designs/` | the Designs blog: full design write-ups like this one |
+| `src/components/`, `packages/blog-ui/` | the React components (site-specific and the shared UI package) |
+| `plugins/` | Docusaurus plugins (draft awareness, recent posts) |
+| `scripts/` | the generators and validators |
+
+## The pipeline: one step turns frontmatter into data
+
+Everything that is generated from content is produced by a single npm target,
+`generate-assets`, wired into both `prestart` and `prebuild`:
+
+```json
+"generate-assets": "npm run generate-changelog && npm run generate-ideas
+                  && npm run generate-logo-variants && npm run generate-kanban",
+"prestart": "npm run generate-assets",
+"prebuild": "npm run generate-assets"
+```
+
+So `yarn start` and `yarn build` (and the `make` targets that wrap them) always regenerate
+first. A fresh clone needs nothing special: the data is rebuilt before the site is. There is
+also `make generate-assets` to regenerate on demand without a full build.
+
+## What each generator reads, and who consumes it
+
+Every generator reads the frontmatter of some content and writes a data file that a
+component renders. The arrow is always the same shape: content frontmatter, to a data
+file, to a component.
+
+| Generator | Reads | Writes | Consumed by |
+|---|---|---|---|
+| `generate-changelog-data.js` | the changelog entries | `src/components/Changelog/changelog-data.json` | the Changelog timeline |
+| `generate-ideas-data.js` | the `ideas/` posts | `src/components/Vote/ideas-data.json` | the Vote page |
+| `generate-kanban-data.js` | blog posts' `kind`/`stage`/`priority` | `src/components/KanbanBoard/kanban-data.json` | the KanbanBoard (Experimentation + Ideas boards) |
+| `generate-logo-variants-data.js` | the binary-pyramid logo source | `designs/_binary-pyramid-variants.js` | the logo preview |
+
+The kanban one is the clearest example of the pattern. A card on the
+[Experimentation board](/initiatives/experimentation) is not authored anywhere; it is one
+experiment post, slotted into a column by its `stage` frontmatter. To move a card across the
+board, I change one line of frontmatter on the post and rebuild. The board can never drift
+from the posts it indexes, because it is derived from them.
+
+## The fail-closed rule: never hand-edit generated output
+
+Here is the part that matters more than the mechanism. Every one of those output files is
+**gitignored and overwritten on the next build**. If you opened one and edited it by hand,
+your change would vanish the next time anyone ran the build, silently. So the rule is: edit
+the generator or the frontmatter source, never the generated file.
+
+That rule is not left to memory. A `PreToolUse` hook
+(`.claude/hooks/block-generated-edits.sh`) refuses any edit to a generated output or a
+build-derived directory (`build/`, `.docusaurus/`, `static/storybook/`, and the data files
+above), and tells you which source to edit instead. The safe path is the only path; the
+unsafe one is blocked, not just frowned upon.
+
+There is one deliberate exception the hook respects. `designs/_rosette-zeros-variants.js`
+looks generated (it has the same shape as the gitignored logo-variants file) but it is
+committed SOURCE: it is the raw output of a private CLI that is not present at build time, so
+it cannot be regenerated here. The hook exempts it by name. Secrets like `.env` are out of
+scope too: they are gitignored for a different reason and editing them locally is legitimate.
+
+## Why build it this way
+
+The alternative, committing the generated data and trusting everyone to regenerate it, fails
+quietly. A stale `kanban-data.json` in git looks authoritative and is wrong. By generating on
+every build, gitignoring the output, and blocking hand-edits, the data is always a pure
+function of the content, and there is no way to end up with a committed file that disagrees
+with the posts it was built from. The board, the changelog, and the vote list are guaranteed
+to match reality, because reality (the frontmatter) is the only place they come from.
+
+When I add a new generator, the checklist is small and enforced: add it to `generate-assets`,
+gitignore its output, and add the path to the block-generated-edits hook. Same change, every
+time.
