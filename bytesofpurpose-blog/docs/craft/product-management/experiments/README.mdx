@@ -11,6 +11,29 @@ draft: false
 
 Structured experiments using scientific methods to test hypotheses, validate assumptions, and make data-driven decisions. Experiments are a type of project focused on validation and learning.
 
+## The experimentation board
+
+The board below is the live index of my experiments. Each card is one experiment post (on the
+[Initiatives](/initiatives) blog), and it moves across the board as the work moves: from a
+**plan** (the hypothesis and design), through **running** (collecting data), to a **result** (the
+outcome and the decision). A card's position is its `stage`, read straight from the post's
+frontmatter, so the board can never drift from the posts it indexes. Click a card to open it.
+
+<KanbanBoard board="experiments" />
+
+| Column | What it means |
+|---|---|
+| Proposed | An experiment I want to run, not yet designed. |
+| Designed | Hypothesis and design are written, not yet live. |
+| Running | Live and collecting data. |
+| Analyzing | Data is in; I am working out what it says. |
+| Concluded | Decision made and recorded; a result post. |
+
+The board is generated, not hand-maintained. Every experiment is a post on the Initiatives blog
+with a `kind` that flips from **experiment plan** 📝 to **experiment result** 📊 once the outcome
+lands. To move a card, I change one line of frontmatter on the post; the board re-derives on the
+next build. The rest of this page is the durable framework behind those experiments.
+
 ## What Are Experiments?
 
 Experiments are **structured, hypothesis-driven projects** that follow scientific methodology:
@@ -70,19 +93,13 @@ Experiments are **structured, hypothesis-driven projects** that follow scientifi
 
 *Note: Tinkering has been moved to its own section at `/docs/developing/tinkering`*
 
-## 📋 Where the experiments live
+## Where the experiments live
 
-This page is the **durable** framework: how I think about experiments. The **individual,
-dated experiments themselves** are temporal, so they live as posts on the **Initiatives**
-blog, each with a kind that flips from **experiment plan** 📝 to **experiment result** 📊 as
-the outcome lands:
-
-- **[Support CTA: link vs button](/initiatives/support-button-copy)** (running): does a
-  styled button draw more donate clicks than a plain text link?
-
-> An interactive **Experimentation board** indexes these posts by stage (plan → running →
-> result). The board replaces the old timeline table that used to sit here. Lifecycle:
-> `proposed → designed → draft → running → analyzing → concluded → rolled-out / abandoned`.
+This page is the **durable** framework: how I think about experiments. The **individual, dated
+experiments themselves** are temporal, so they live as posts on the **[Initiatives](/initiatives)**
+blog (each a card on the board above), with a kind that flips from **experiment plan** 📝 to
+**experiment result** 📊 as the outcome lands. Lifecycle:
+`proposed → designed → running → analyzing → concluded → rolled-out / abandoned`.
 
 ### The experiment lifecycle (skills)
 
