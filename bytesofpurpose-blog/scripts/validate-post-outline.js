@@ -121,6 +121,31 @@ const CHECKS = {
   // legend
   'legend-explainer': (fm, body) =>
     /<PowerLegend[\s/>]/.test(body) || /^\|.*\|/m.test(body) || /^\s*[-*]\s+\[/m.test(body),
+  // learning-plan
+  'goal-outcome': (fm, body) =>
+    /^#{1,4}\s+.*\b(goals?|outcomes?|what you('|’)ll learn|objectives?|why)\b/im.test(body) ||
+    /\*\*(goals?|outcomes?|objectives?)\b/im.test(body),
+  curriculum: (fm, body) =>
+    /^\s*\d+\.\s+\S/m.test(body) || // numbered curriculum
+    /^#{1,4}\s+.*\b(module|milestones?|week\s*\d|stage|phase|step|curriculum|syllabus)\b/im.test(body) ||
+    /^\s*[-*]\s+\[[ xX]\]\s+\S/m.test(body), // a task checklist of milestones
+  resources: (fm, body) =>
+    /^#{1,4}\s+.*\b(resources?|reading|references?|materials?|further reading)\b/im.test(body) ||
+    /<References[\s/>]/.test(body),
+  checkpoint: (fm, body) =>
+    /^#{1,4}\s+.*\b(checkpoint|prerequisites?|pre-?reqs?|you('|’)re done when|done when|assessment|self-?check|how you('|’)ll know)\b/im.test(body) ||
+    /\*\*(prerequisites?|checkpoint)\b/im.test(body),
+  // experiment-plan
+  hypothesis: (fm, body) =>
+    /^#{1,4}\s+.*\b(hypothes[ie]s|prediction|we believe)\b/im.test(body) ||
+    /\*\*(hypothesis|prediction)\b/im.test(body),
+  'experiment-design': (fm, body) =>
+    /^#{1,4}\s+.*\b(design|setup|method(ology)?|how we('|’)ll run it|how it runs|variants?|conditions?|metrics?)\b/im.test(body) ||
+    /\*\*(design|setup|method)\b/im.test(body),
+  // experiment-result
+  outcome: (fm, body) =>
+    /^#{1,4}\s+.*\b(outcomes?|results?|findings?|what happened)\b/im.test(body) ||
+    /\*\*(outcomes?|results?|findings?)\b/im.test(body),
 };
 
 // OUTLINES is built FROM the JSON: for each kind, its outline specs (id + label) paired
