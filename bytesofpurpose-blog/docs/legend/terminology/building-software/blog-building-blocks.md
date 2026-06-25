@@ -1,6 +1,6 @@
 ---
-slug: /terminology/software-development/terminology-blog
-title: '🪪 Blog Terms'
+slug: /terminology/building-software/blog-building-blocks
+title: '🧱 Blog Building Blocks'
 description: 'Definitions and distinctions between functions, mechanics, techniques, and strategies in blog development'
 authors: [oeid]
 tags: [terminology, definitions, blog, mechanics, techniques, strategies]
