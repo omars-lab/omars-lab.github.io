@@ -1,0 +1,107 @@
+/* TaskList — theme-aware (Infima vars), mobile-first. Styles a markdown task list with the
+   capture tags rendered as chips. */
+
+.taskList {
+  margin: 1rem 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  padding: 0.5rem 0.25rem;
+  min-height: 44px; /* comfortable touch row */
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.itemDone .text {
+  text-decoration: line-through;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.checkbox {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--ifm-color-emphasis-700);
+  flex: 0 0 auto;
+}
+
+.itemDone .checkbox {
+  color: var(--ifm-color-success);
+}
+
+.text {
+  flex: 1 1 60%;
+  min-width: 12ch;
+}
+
+/* ── Tag chips ─────────────────────────────────────────────────────────── */
+.tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.tagDue {
+  background: var(--ifm-color-info-contrast-background, #e7f5ff);
+  color: var(--ifm-color-info-dark, #1971c2);
+}
+
+.tagDone {
+  background: var(--ifm-color-success-contrast-background, #ebfbee);
+  color: var(--ifm-color-success-dark, #2b8a3e);
+}
+
+.tagRecur {
+  background: var(--ifm-color-warning-contrast-background, #fff3bf);
+  color: var(--ifm-color-warning-dark, #b08900);
+}
+
+.tagStamp {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-700);
+}
+
+.tagHash {
+  background: transparent;
+  color: var(--ifm-color-primary);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.summary {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+@media (max-width: 600px) {
+  .text {
+    flex-basis: 100%; /* tags wrap below the text on narrow screens */
+  }
+}

@@ -40,6 +40,7 @@ hook `.claude/hooks/block-generated-edits.sh` (registered in `.claude/settings.j
   `src/components/Changelog/changelog-data.json` (← `generate-changelog-data.js`),
   `src/components/Vote/ideas-data.json` (← `generate-ideas-data.js`),
   `src/components/KanbanBoard/kanban-data.json` (← `generate-kanban-data.js`),
+  `src/components/Todos/todos-data.json` (← `generate-todos-data.js`),
   `designs/_binary-pyramid-variants.js` (← `generate-logo-variants-data.js`, source
   `src/lib/binary-pyramid-logo.js`).
 - **Build-derived dirs** (never source): `build*/`, `.docusaurus/`, `node_modules/`,
@@ -237,6 +238,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Premium infra setup | `manage-infrastructure` | provision the premium Worker: scope CF_API_TOKEN (confirm-token-scopes.sh), set STATICRYPT_PASSPHRASE in .env, wrangler deploy + verify; `make rotate-premium-secret` |
 | Analytics setup | `setup-posthog` | obtain/place the 4 PostHog keys; CLI install; key gotchas |
 | Analytics queries | `query-posthog` | official @posthog/cli readback, HogQL, confirmations |
+| Mature content | `mature-content` | INTERVIEW-driven draft→ready maturing of rough content (a raw idea, a thin draft/doc, OR an existing post to **clean up / harden**): the maturity GATES (captured→motivated→justified→scoped→planned→measurable→ready) + the question set that fills each (motivation/value/scope/to-dos/success criteria) + the organized output. ENUMERATES the clean-up tasks up front (TaskCreate). Idea-maturing outputs board-ready frontmatter → hands to `groom-initiatives`. Triggers on "clean up / harden / firm up / make this real" |
 | Groom initiatives | `groom-initiatives` | the board-aware contract for temporal work: a new idea/experiment is an `/initiatives` POST whose `kind`/`stage`/`priority` frontmatter make it a kanban card; advancing = a `stage` edit; concluding = distill the durable learning UP into `/craft`. Knows the Experimentation + Ideas boards, their columns, the kind→board map |
 | Experiment design | `design-experiment` | pre-experiment design doc (hypothesis, placement rationale) as an `/initiatives` experiment POST (`kind: experiment-plan` 📝, `stage`) → a card on the Experimentation board (no more `/craft` doc + README timeline) |
 | A/B testing (execute) | `run-ab-test` | flag injection point, create/validate/launch (REST API), Playwright |

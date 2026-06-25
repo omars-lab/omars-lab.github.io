@@ -7,6 +7,10 @@ const darkTheme = themes.oneDark;
 // A11y: label GFM task-list checkboxes (else axe/WCAG "label" rule fails).
 const rehypeTaskListLabels = require('./plugins/rehype-task-list-labels');
 
+// Lift a markdown task list inside <TaskList> into the component's `items` prop (so the
+// special capture tags render as styled chips). MDAST stage, before the JSX → React step.
+const remarkTaskList = require('./plugins/remark-task-list');
+
 // Premium hard-gate: encrypt `premium: true` doc bodies at MDX-compile time (rehype stage)
 // so plaintext is in NEITHER the built HTML NOR the JS bundle. No-ops without
 // STATICRYPT_PASSPHRASE (dev/authoring). See the premium-content-gating design.
@@ -156,6 +160,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               routeBasePath: 'initiatives',
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
+              remarkPlugins: [remarkTaskList],
               rehypePlugins: [rehypeTaskListLabels],
               // SEO: give the blog index a real title + meta description (the
               // default description was just "Blog" — ~4 chars, fails SEO checks).
@@ -223,6 +228,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           path: 'docs/craft',
           routeBasePath: 'craft',
           sidebarPath: require.resolve('./sidebars-craft.js'),
+          remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
@@ -240,6 +246,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           path: 'docs/journey',
           routeBasePath: 'journey',
           sidebarPath: require.resolve('./sidebars-self.js'),
+          remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
@@ -442,8 +449,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
             // is automatic via createRedirects.
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
-            // C5: the "Start Here" guide became the Legend hub (slug a-guide-to-these-posts → legend).
-            {from: "/initiatives/a-guide-to-these-posts", to: "/initiatives/legend"},
+            // The "Start Here" guide → Legend hub → standalone /legend page (its own CX, no
+            // Initiatives sidebar). Both old /initiatives URLs 301 to the standalone page.
+            {from: "/initiatives/a-guide-to-these-posts", to: "/legend"},
+            {from: "/initiatives/legend", to: "/legend"},
             // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
             // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
             // legacy /thoughts,/blog hops — list all three old roots explicitly.
@@ -751,10 +760,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             },
             {
               // 'Legend' — the site's map/front-door (durable vs temporal, the post-kind
-              // emoji, where the glossaries live). It's the `kind: legend` guide post,
-              // served at /initiatives/legend (a guide TO the posts, so it lives with them).
+              // emoji, where the glossaries live). A STANDALONE page at /legend (its own
+              // clean CX, no Initiatives/Posts sidebar), like /welcome, /mindset, /glossary.
               label: 'Legend',
-              to: '/initiatives/legend',
+              to: '/legend',
               position: 'left'
             },
             {
@@ -770,6 +779,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               // signal which upcoming posts they want next (PostHog 'idea_voted').
               label: 'Vote',
               to: '/vote',
+              position: 'left'
+            },
+            {
+              // 'Todos' (/todos) — the site-wide rollup of tracked markdown tasks across
+              // posts (open/done/scheduled), generated from the content by generate-todos.
+              label: 'Todos',
+              to: '/todos',
               position: 'left'
             },
             {

@@ -12,6 +12,7 @@ import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
+import TaskList from '@site/src/components/TaskList';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -47,6 +48,9 @@ export default {
   // link to the post. <KanbanModalHost/> must be mounted in Root.tsx. Use as
   // <KanbanBoard board="experiments"/> or board="ideas".
   KanbanBoard,
+  // TaskList: wrap a markdown task list to render its capture tags (>due, @done(), ~Nx~,
+  // #stamp/#tag) as styled chips instead of raw text. The markdown stays the source of truth.
+  TaskList,
   // System-design posts: a diagram paired with a generated numbered legend (the badges
   // ①②③ are authored into the mermaid labels; this renders the matching explanations).
   DiagramWithFootnotes,

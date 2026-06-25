@@ -268,11 +268,12 @@ function checkFile(file) {
   return findings;
 }
 
-// Drift check: the READER legend (the "Start Here" post's kind->emoji table) must list the
-// same emoji as the MACHINE legend (blog-kinds.json). They drift when a kind is added to one
-// and not the other (e.g. design-story added to the JSON but not the post). We match on the
-// EMOJI column (stable; the post uses display names like "System design", not kebab keys).
-const LEGEND_POST = path.join(ROOT, 'blog', '2026-06-24-a-guide-to-these-posts.mdx');
+// Drift check: the READER legend (the standalone Legend page's kind->emoji table) must list
+// the same emoji as the MACHINE legend (blog-kinds.json). They drift when a kind is added to
+// one and not the other (e.g. design-story added to the JSON but not the page). We match on the
+// EMOJI column (stable; the page uses display names like "System design", not kebab keys).
+// (The Legend moved from a blog post to a standalone page at /legend; this path follows it.)
+const LEGEND_POST = path.join(ROOT, 'src', 'pages', 'legend.mdx');
 function checkLegendDrift() {
   if (!fs.existsSync(LEGEND_POST)) return [];
   let body;
