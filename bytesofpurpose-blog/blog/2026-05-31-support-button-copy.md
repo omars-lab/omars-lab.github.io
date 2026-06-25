@@ -1,11 +1,15 @@
 ---
-slug: /product-management/experiments/2026-05-31-support-button-copy
-title: '🔬 Support CTA: link vs button'
+slug: support-button-copy
+title: 'Support CTA: link vs button'
+kind: experiment-plan
+sidebar_label: 'Support CTA test'
 description: 'A/B test: does a styled button draw more PayPal donate clicks than a plain text link, with identical "$5 coffee" copy?'
 authors: [oeid]
 tags: [experiments, ab-testing, posthog]
-draft: true
-sidebar_position: 1
+date: 2026-05-31
+draft: false
+stage: running
+priority: medium
 ---
 
 > **Status:** `running` (re-scoped 2026-06-01 from a copy test to a presentation test; same flag key) · **Owner:** Omar · **Flag:** `support-button-copy` · **Created:** 2026-05-31

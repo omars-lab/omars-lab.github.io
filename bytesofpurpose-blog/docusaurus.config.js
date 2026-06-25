@@ -437,6 +437,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/interview-prep/understanding-what-companies-expect", to: "/craft/interview-prep/understanding-what-companies-expect"},
             {from: "/docs/craft/product-management", to: "/craft/product-management"},
             {from: "/docs/craft/product-management/experiments", to: "/craft/product-management/experiments"},
+            // Durable/temporal reframe (C3): the dated experiment INSTANCE moved out of
+            // /craft (durable) into /initiatives (temporal) as an experiment-plan post. The
+            // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
+            // is automatic via createRedirects.
+            {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
             {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
