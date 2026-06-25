@@ -18,9 +18,10 @@ function HomepageHeader() {
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         {/* Four-card chooser (folded in from the old /welcome page): Craft = what I
-            impact (the outward work, shared); Self = who I am (the inward journey);
-            Thoughts = what I'm thinking lately (the blog); Mindset = the quotes that
-            move me. Each card leads with an arched illustration, then title + body. */}
+            impact (the durable outward work, shared); Self = who I am (the inward
+            journey); Initiatives = the dated, temporal things I've actually done (the
+            blog); Mindset = the quotes that move me. Each card leads with an arched
+            illustration, then title + body. */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
             <div className={styles.chooserCardImageWrap}>
@@ -50,7 +51,7 @@ function HomepageHeader() {
             <div className={styles.chooserCardTitle}>🛣️ Discover My Journey</div>
             <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
-          <Link className={styles.chooserCard} to="/thoughts">
+          <Link className={styles.chooserCard} to="/initiatives">
             <div className={styles.chooserCardImageWrap}>
               <img
                 className={styles.chooserCardImage}
@@ -61,8 +62,8 @@ function HomepageHeader() {
                 height={400}
               />
             </div>
-            <div className={styles.chooserCardTitle}>💭 Browse My Thoughts</div>
-            <p className={styles.chooserCardBody}>What I'm thinking about lately.</p>
+            <div className={styles.chooserCardTitle}>💭 Browse My Initiatives</div>
+            <p className={styles.chooserCardBody}>The dated things I've actually done.</p>
           </Link>
           <Link className={styles.chooserCard} to="/mindset">
             <div className={styles.chooserCardImageWrap}>

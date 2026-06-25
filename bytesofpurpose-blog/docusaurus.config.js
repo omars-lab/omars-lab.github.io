@@ -148,10 +148,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // shows Self and vice-versa. The preset's default docs instance is disabled.
             docs: false,
             blog: {
-              // Served at /thoughts (matches the 'Thoughts' navbar item + the
-              // homepage "Browse My Thoughts" card). Old /blog/* URLs 301 → /thoughts/*
-              // via client-redirects below.
-              routeBasePath: 'thoughts',
+              // Served at /initiatives — the TEMPORAL half of the site (dated
+              // initiatives, experiments, project logs), sibling to the durable
+              // /craft docs. Matches the 'Initiatives' navbar item + the homepage
+              // card. Old /thoughts/* AND /blog/* URLs 301 → /initiatives/* via
+              // client-redirects below (two-hop legacy: /blog → /thoughts → /initiatives).
+              routeBasePath: 'initiatives',
               blogSidebarTitle: 'Posts',
               blogSidebarCount: 'ALL',
               rehypePlugins: [rehypeTaskListLabels],
@@ -669,17 +671,22 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/techniques/tool-usage-techniques/establishing-tool-usage-patterns", to: "/craft/productivity/tool-usage/establishing-tool-usage-patterns"},
             {from: "/docs/techniques/tool-usage-techniques/tool-usage-techniques", to: "/craft/productivity/tool-usage"},
           ],
-          // Route renames (2026-06): the Self docs instance moved /self/* → /journey/*
-          // and the blog moved /blog/* → /thoughts/*. createRedirects runs for EVERY
-          // generated path, so every new /journey/* and /thoughts/* page gets a 301 from
-          // its old /self/* or /blog/* URL — old links and shares never break (CLAUDE.md
-          // tenet: a move is paired with a {from,to} redirect).
+          // Route renames: the Self docs instance moved /self/* → /journey/* (2026-06),
+          // and the blog moved through TWO renames — /blog/* → /thoughts/* (2026-06) →
+          // /initiatives/* (2026-06, durable/temporal reframe). createRedirects runs for
+          // EVERY generated path, so every new /journey/* and /initiatives/* page emits a
+          // 301 from its old URL(s) — old links and shares never break (CLAUDE.md tenet: a
+          // move is paired with a {from,to} redirect). The blog emits BOTH legacy roots so
+          // a /blog/* OR a /thoughts/* link still lands on the final /initiatives/* page.
           createRedirects(existingPath) {
             if (existingPath.startsWith('/journey')) {
               return [existingPath.replace(/^\/journey/, '/self')];
             }
-            if (existingPath.startsWith('/thoughts')) {
-              return [existingPath.replace(/^\/thoughts/, '/blog')];
+            if (existingPath.startsWith('/initiatives')) {
+              return [
+                existingPath.replace(/^\/initiatives/, '/thoughts'),
+                existingPath.replace(/^\/initiatives/, '/blog'),
+              ];
             }
             return undefined; // no redirect for other paths
           },
@@ -716,15 +723,15 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left',
             },
             {
-              // 'Thoughts' (the blog, served at /thoughts) — matches the homepage
-              // "Browse My Thoughts" card.
-              label: 'Thoughts',
-              to: '/thoughts',
+              // 'Initiatives' (the blog, served at /initiatives) — the TEMPORAL half:
+              // dated initiatives, experiments, project logs. Matches the homepage card.
+              label: 'Initiatives',
+              to: '/initiatives',
               position: 'left'
             },
             {
               // 'Mindset' (the quotes-that-moved-me page) — matches the homepage
-              // "Explore My Mindset" card. Sits right after Thoughts.
+              // "Explore My Mindset" card. Sits right after Initiatives.
               label: 'Mindset',
               to: '/mindset',
               position: 'left'

@@ -58,7 +58,7 @@ function BlogSidebarMobileSecondaryMenu({sidebar}: any) {
       {tag && (
         <div className={clsx('menu__list-item-collapsible', styles.mobileSectionTitle)}>
           Tagged: {tag}{' '}
-          <Link to="/thoughts" aria-label={`Clear the "${tag}" tag filter`}>
+          <Link to="/initiatives" aria-label={`Clear the "${tag}" tag filter`}>
             &times;
           </Link>
         </div>

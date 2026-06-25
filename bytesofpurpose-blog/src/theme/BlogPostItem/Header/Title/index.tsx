@@ -29,7 +29,7 @@ function vscodeUriForSource(
 // Part of the ingress-attribution layer (see src/ingress-attribution-plan.md).
 //
 // It also renders the same dev-only "D" draft badge used in the Craft/Journey
-// docs sidebar — here for the Thoughts (/thoughts) and Designs (/designs) blogs,
+// docs sidebar — here for the Initiatives (/initiatives) and Designs (/designs) blogs,
 // which have no docs sidebar so drafts surface as list cards + the post header.
 // Blog posts carry their own frontmatter, so we read frontMatter.draft directly
 // (no draft-docs plugin walk needed). Gated to localhost + non-prod exactly like

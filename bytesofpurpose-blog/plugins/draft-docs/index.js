@@ -46,14 +46,14 @@ try {
 module.exports = function draftDocsPlugin(context) {
   const docsDir = path.join(context.siteDir, 'docs');
 
-  // The two BLOG instances: Thoughts (source blog/, route /thoughts) and Designs
+  // The two BLOG instances: Initiatives (source blog/, route /initiatives) and Designs
   // (source designs/, route /designs). Their sidebar items carry only a permalink
   // (no `draft` flag), so the swizzled BlogSidebar matches the permalink against
   // the blogDraftPermalinks set published here — the same pattern the docs sidebar
   // uses. (The blog POST header reads frontMatter.draft directly and needs none of
   // this; this set exists for the sidebar list, where frontmatter isn't available.)
   const blogInstances = [
-    {dir: path.join(context.siteDir, 'blog'), base: '/thoughts'},
+    {dir: path.join(context.siteDir, 'blog'), base: '/initiatives'},
     {dir: path.join(context.siteDir, 'designs'), base: '/designs'},
   ];
 

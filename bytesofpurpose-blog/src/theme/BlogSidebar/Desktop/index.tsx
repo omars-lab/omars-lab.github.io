@@ -15,7 +15,7 @@ import styles from './styles.module.css';
 
 // Swizzled @theme/BlogSidebar/Desktop: identical to upstream, except the post
 // list renders the dev/localhost-only "D" draft badge next to draft posts — the
-// same badge used in the Craft/Journey docs sidebar, now on the Thoughts and
+// same badge used in the Craft/Journey docs sidebar, now on the Initiatives and
 // Designs blog "Posts" sidebar. Draft state comes from the blogDraftPermalinks
 // set published by plugins/draft-docs (blog sidebar items carry only a permalink,
 // no draft flag). Gated to localhost + non-prod; no-op in production.
@@ -88,7 +88,7 @@ function BlogSidebarDesktop({sidebar}: any): React.JSX.Element {
             <span className={styles.tagFacet}>
               <span className={styles.tagFacetLabel}>{tag}</span>
               <Link
-                to="/thoughts"
+                to="/initiatives"
                 className={styles.tagFacetClear}
                 aria-label={`Clear the "${tag}" tag filter`}
                 title="Show all posts">

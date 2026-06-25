@@ -24,7 +24,7 @@ A two-person founding team cannot hand-prospect enough qualified ecommerce leads
 
 This design is an autonomous engine that discovers sites, scans their public pages for growth-marketing problems, estimates size, finds and verifies a contact, scores the lead with explainable reasons, and drafts a personalized outreach message for a human to send. Outreach stays draft-only, with a human on every send.
 
-It is also the front door to a bigger idea: the scanning intelligence that *finds* what is wrong is the same engine that will later *fix* it (see the [Self-Healing Storefront](/thoughts/self-healing-storefront)).
+It is also the front door to a bigger idea: the scanning intelligence that *finds* what is wrong is the same engine that will later *fix* it (see the [Self-Healing Storefront](/initiatives/self-healing-storefront)).
 
 ## Why it's worth reading
 

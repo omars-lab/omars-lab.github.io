@@ -31,7 +31,7 @@ const PH_BASE = process.env.PH_BASE_URL || 'http://localhost:4173';
 // share-control and the bookmarklet assertions below.
 const DOC_URL = '/craft';
 // "Docs vs Blogs" is a CRAFT doc (its canonical home is /craft/blogging/...), NOT a
-// blog post — there is no /thoughts/docs-vs-blog-posts page. Point straight at the
+// blog post — there is no /initiatives/docs-vs-blog-posts page. Point straight at the
 // canonical permalink so the share-control assertions exercise the real rendered page.
 const BLOG_URL = '/craft/blogging/docs-vs-blog-posts';
 
@@ -122,7 +122,7 @@ test.describe('Ingress attribution (production build)', () => {
     await expect(page.locator('[data-testid="share-control"]').first()).toBeVisible();
 
     // Blog list/index: title renders as a linked <h2>, share control omitted.
-    await page.goto('/thoughts', { waitUntil: 'domcontentloaded' });
+    await page.goto('/initiatives', { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-testid="share-control"]')).toHaveCount(0);
   });
 

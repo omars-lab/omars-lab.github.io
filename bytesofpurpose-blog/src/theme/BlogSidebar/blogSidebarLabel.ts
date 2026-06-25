@@ -67,7 +67,7 @@ function useBlogPostTags(): Record<string, string[]> {
 
 /**
  * The tag slug the current page is filtered by, or null. Reads the URL: a blog tag page is
- * `<route>/tags/<tagSlug>` (e.g. /thoughts/tags/technical-debt). Pass the current pathname.
+ * `<route>/tags/<tagSlug>` (e.g. /initiatives/tags/technical-debt). Pass the current pathname.
  */
 export function currentTagSlug(pathname: string): string | null {
   const m = pathname.match(/\/tags\/([^/]+)\/?$/);

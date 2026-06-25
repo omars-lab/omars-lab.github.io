@@ -39,7 +39,7 @@ export default function LatestPosts(): React.JSX.Element | null {
       <div className="container">
         <div className={styles.header}>
           <h2 className={styles.heading}>Latest from the blog</h2>
-          <Link to="/thoughts" className={styles.viewAll}>
+          <Link to="/initiatives" className={styles.viewAll}>
             View all posts →
           </Link>
         </div>
