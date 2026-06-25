@@ -6,7 +6,7 @@ sidebar_label: 'Idea: Script usage'
 description: 'A board-ready idea: instrument my shell functions to log how often each is used, so I can confidently retire the dead ones, and turn the instrumentation into a reusable technique.'
 authors: [oeid]
 tags: [ideas, scripting, automation, self-quantifying]
-date: 2026-06-25
+date: 2022-05-07
 draft: false
 board: ideas
 stage: backlog

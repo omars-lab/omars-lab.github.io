@@ -32,7 +32,7 @@ Reorganized the whole site around one idea: durable knowledge (`/craft` + `/jour
 - Build the interactive KanbanBoard component + generator + the Experimentation board post (board-parameterized, card→modal→post, e2e green)
 - Visual + mobile audit of the KanbanBoard: found + fixed an off-screen-column bug on phones (auto-scroll to the first populated column) + a standing visual/mobile convention
 - A `/designs` post showcasing the blog build system (folders, generate-assets, frontmatter→data→component, the fail-closed hygiene)
-- Legend hub at `/initiatives/legend`: the durable-vs-temporal explainer + the post-kind emoji table + where the glossaries live
+- Legend hub at `/legend`: the durable-vs-temporal explainer + the post-kind emoji table + where the glossaries live
 - Single Glossary home at `/glossary` with an A-to-Z term index (index-hub; topic glossaries stay near their topics)
 - New Craft Leadership topic + move how-i-ask-others-questions into it (durable people skill)
 - Journey: rename Personal Growth → Personal Habits (label-only) + new Self Reflection topic + the `ask-myself` tag across 27 question-set posts

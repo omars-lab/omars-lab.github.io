@@ -74,6 +74,19 @@ done-history). Don't flatten `- [ ]` captures into plain `-` bullets; that strip
 This same rule is why the "enumerate the tasks up front" step uses TaskCreate AND why the worked
 to-do list in the matured output stays in checkbox form.
 
+**Don't strip the date / scheduling breadcrumbs.** Raw captures carry meaningful tags: `>YYYY-MM-DD`
+(a scheduled/due date), `@done(YYYY-MM-DD)` (when it was finished), `#YYYY-MM-DD` (a date stamp),
+`~Nx~` (recurrence/effort). These ARE signal — keep them on the item (e.g. as inline code), do not
+delete them as "noise." They feed the date-origin rule below and the `<TaskList>` rendering.
+
+**Date a matured piece to its TRUE ORIGIN, not today.** When an idea/post is matured out of an old
+capture, its `date` (and the `YYYY-MM-DD-` filename prefix for a blog post) should reflect when the
+idea actually ORIGINATED, traced from the todo's own implied dates — NOT today's date and NOT the
+git commit date. **Pick the OLDEST** concrete date among the item's breadcrumbs (and its
+surrounding capture cluster if the item itself has none). This mirrors the repo convention of
+re-dating imported posts to their true, breadcrumb-traced origin. If there is genuinely no date
+evidence, say so and ask the user rather than defaulting to today.
+
 ## Show the user — stay on the same page
 
 Maturing is collaborative, not a silent rewrite. SHOW the user the content as you work so you

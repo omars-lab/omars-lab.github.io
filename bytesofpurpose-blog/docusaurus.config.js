@@ -449,8 +449,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
             // is automatic via createRedirects.
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
-            // C5: the "Start Here" guide became the Legend hub (slug a-guide-to-these-posts → legend).
-            {from: "/initiatives/a-guide-to-these-posts", to: "/initiatives/legend"},
+            // The "Start Here" guide → Legend hub → standalone /legend page (its own CX, no
+            // Initiatives sidebar). Both old /initiatives URLs 301 to the standalone page.
+            {from: "/initiatives/a-guide-to-these-posts", to: "/legend"},
+            {from: "/initiatives/legend", to: "/legend"},
             // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
             // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
             // legacy /thoughts,/blog hops — list all three old roots explicitly.
@@ -758,10 +760,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             },
             {
               // 'Legend' — the site's map/front-door (durable vs temporal, the post-kind
-              // emoji, where the glossaries live). It's the `kind: legend` guide post,
-              // served at /initiatives/legend (a guide TO the posts, so it lives with them).
+              // emoji, where the glossaries live). A STANDALONE page at /legend (its own
+              // clean CX, no Initiatives/Posts sidebar), like /welcome, /mindset, /glossary.
               label: 'Legend',
-              to: '/initiatives/legend',
+              to: '/legend',
               position: 'left'
             },
             {
