@@ -40,6 +40,7 @@ hook `.claude/hooks/block-generated-edits.sh` (registered in `.claude/settings.j
   `src/components/Changelog/changelog-data.json` (← `generate-changelog-data.js`),
   `src/components/Vote/ideas-data.json` (← `generate-ideas-data.js`),
   `src/components/KanbanBoard/kanban-data.json` (← `generate-kanban-data.js`),
+  `src/components/Todos/todos-data.json` (← `generate-todos-data.js`),
   `designs/_binary-pyramid-variants.js` (← `generate-logo-variants-data.js`, source
   `src/lib/binary-pyramid-logo.js`).
 - **Build-derived dirs** (never source): `build*/`, `.docusaurus/`, `node_modules/`,

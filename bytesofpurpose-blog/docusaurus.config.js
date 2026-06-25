@@ -782,6 +782,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left'
             },
             {
+              // 'Todos' (/todos) — the site-wide rollup of tracked markdown tasks across
+              // posts (open/done/scheduled), generated from the content by generate-todos.
+              label: 'Todos',
+              to: '/todos',
+              position: 'left'
+            },
+            {
               // "Support" tab → the dedicated /support page (headshot + the ways
               // to support: Shopify store, GitHub, LinkedIn, Buy Me a Coffee).
               // Replaces the old standalone "Buy Me a Coffee" navbar button; the
