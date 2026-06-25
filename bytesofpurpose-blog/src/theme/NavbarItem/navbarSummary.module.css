@@ -1,0 +1,71 @@
+/* Navbar item hover-summary popup. A DESKTOP affordance: shown on hover or keyboard
+   focus-within, positioned just below the item. Suppressed on narrow screens / the mobile
+   nav drawer (which has no hover and where a popover would fight the touch UI). */
+
+.navItemWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.summaryPopup {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  z-index: var(--ifm-z-index-fixed, 200);
+
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  font-weight: 400;
+  white-space: normal;
+  text-align: left;
+
+  color: var(--ifm-tooltip-color, var(--ifm-font-color-base));
+  background: var(--ifm-background-surface-color, var(--ifm-background-color));
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.16);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+/* A small arrow pointing up at the item. */
+.summaryPopup::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--ifm-color-emphasis-200);
+}
+
+/* Show on hover OR keyboard focus within the item (so tabbing users see it too). */
+.navItemWrap:hover .summaryPopup,
+.navItemWrap:focus-within .summaryPopup {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* The popup is a pointer-device affordance. On the mobile nav drawer (<= 996px is Docusaurus'
+   navbar breakpoint) the items stack vertically and there is no hover, so suppress it entirely
+   to avoid layout/overlap surprises in the drawer. */
+@media (max-width: 996px) {
+  .summaryPopup {
+    display: none;
+  }
+}
+
+/* Don't animate for users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .summaryPopup {
+    transition: none;
+  }
+}
