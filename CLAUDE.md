@@ -152,6 +152,22 @@ the work):
    delete. Leave pending/in_progress tasks untouched.
 The CLAUDE-CHANGELOG.md is the durable record; the task list is just the working set.
 
+## ⚠️ Tenet: durable (`/craft` + `/journey`) vs temporal (`/initiatives`)
+
+The site is organized around ONE question: **does this stay true over time, or is it a dated
+thing I did?** Place content accordingly.
+- **DURABLE → `/craft` (how I see the world) + `/journey` (how I see myself).** Distilled
+  learnings, frameworks, strategy, terminology — return-to knowledge. The lasting LESSON.
+- **TEMPORAL → `/initiatives` (the blog, formerly `/thoughts`).** Dated initiatives,
+  experiments, project logs — the specific things actually done. The EVIDENCE. A temporal post
+  links **up** to the durable insight it informed.
+So a new experiment/idea/project is an **`/initiatives` POST** (its `kind`/`stage`/`priority`
+frontmatter make it a card on a kanban **board** — see `groom-initiatives` + the Experimentation
+board), NOT a `/craft` doc; on conclusion the durable learning is **distilled up into `/craft`**.
+The **Legend** hub (`/initiatives/legend`) explains this model to readers; the build system is
+documented at `/designs/design-build-system`; the single **Glossary** is `/glossary`. When you
+add content, ask "durable or temporal?" first, then pick the home.
+
 ## ⚠️ Operating convention: structure decisions must update the structure checks
 
 The docs are **two SEPARATE Docusaurus docs instances** (not one `/docs` instance):
@@ -163,11 +179,12 @@ Each is registered as its own `@docusaurus/plugin-content-docs` in `docusaurus.c
 (`id: 'craft'` path `docs/craft` routeBasePath `/craft` sidebar `sidebars-craft.js`;
 `id: 'self'` path `docs/journey` routeBasePath `/journey` sidebar `sidebars-self.js`), and the
 preset's default docs is **disabled** (`docs: false`). The navbar labels are **Craft** and
-**Journey** (the blog is **Thoughts** at `/thoughts`; the **Designs** blog at `/designs`).
-Each navbar item is a `docSidebar` with its own `docsPluginId`, so **clicking Craft shows
-ONLY craft topics and Journey ONLY journey topics** — the two never mix. (Old `/self/*` and
-`/blog/*` URLs 301 → `/journey/*` and `/thoughts/*` via the `createRedirects` in the
-client-redirects plugin.) The **Welcome chooser is a standalone page**
+**Journey** (the blog is **Initiatives** at `/initiatives`; the **Designs** blog at `/designs`;
+a **Legend** navbar item → `/initiatives/legend`). Each navbar item is a `docSidebar` with its
+own `docsPluginId`, so **clicking Craft shows ONLY craft topics and Journey ONLY journey
+topics** — the two never mix. (Old `/self/*` URLs 301 → `/journey/*`; the blog went through TWO
+renames — `/blog/*` → `/thoughts/*` → `/initiatives/*` — so `createRedirects` emits BOTH legacy
+roots, i.e. a `/blog/*` OR a `/thoughts/*` link lands on the final `/initiatives/*` page.) The **Welcome chooser is a standalone page**
 (`src/pages/welcome.mdx`, served at `/welcome`, in NEITHER instance) with two CTAs
 ("discover my world" → `/craft`, "observe what I discovered about myself" → `/self`); it
 is the homepage CTA target. Below the instance level is the recurring per-topic folder
