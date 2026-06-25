@@ -18,11 +18,13 @@
  *   - it is inside a <TaskList> block (the author opted it in).
  * Everything else (generic doc checklists) is counted but NOT listed, so the page stays signal.
  *
- * OUTPUT (gitignored): src/components/Todos/todos-data.json
- *   { generatedAtNote, totals:{open,done,total,scheduled,tracked}, items:[ {text, done, source:
- *     {title,permalink}, due, doneDate, recurrence, datestamps[], hashtags[]} ] }
- * (Dates are passed through as strings; "age/overdue" is computed in the UI against the day it
- * loads — the generator must stay deterministic, so it does NOT compute "days past due" itself.)
+ * OUTPUT (gitignored): src/components/Todos/todos-data.json — aggregated PER POST (not a flat
+ * task list, which is noise: raw markdown-link lines + in-post notes). One row per post:
+ *   { generatedAtNote, totals:{open,done,total,scheduled,tracked,posts},
+ *     posts:[ {title, permalink, open, done, scheduled, total, latestDue} ] }
+ * The tasks themselves live in the post (rendered by <TaskList>); /todos is the rollup. Dates
+ * are strings; "age" is computed in the UI against the day it loads (the generator stays
+ * deterministic and does NOT bake in "days past due").
  */
 
 const fs = require('fs');
@@ -80,8 +82,11 @@ function sourceOf(relPath, base, fm) {
 }
 
 function build() {
-  const items = [];
-  let total = 0;
+  // Aggregate PER POST, not per task: the page shows one row per post with its task counts,
+  // and the tasks themselves live in the post (rendered by <TaskList>). A flat list of every
+  // task is noise (raw markdown-link lines, in-post "look into" notes); the rollup is signal.
+  const posts = []; // one entry per post that has tracked tasks
+  let total = 0; // every markdown checkbox across the corpus (for the headline total)
   let openCount = 0;
   let doneCount = 0;
 
@@ -102,8 +107,14 @@ function build() {
       const inTrackedArea = TRACKED_AREAS.some((a) => rel.includes(a));
       const inTaskList = /<TaskList[\s>]/.test(body);
 
-      const lines = body.split('\n');
-      for (const line of lines) {
+      // Per-post tally.
+      let pOpen = 0;
+      let pDone = 0;
+      let pScheduled = 0;
+      let pTracked = 0; // tasks in this post that count toward the listing (tracked)
+      let latestDue = null; // newest due date among this post's open scheduled tasks
+
+      for (const line of body.split('\n')) {
         const m = line.match(TASK_RE);
         if (!m) continue;
         total += 1;
@@ -115,39 +126,52 @@ function build() {
         const due = parsed.tags.find((t) => t.kind === 'due');
         const doneTag = parsed.tags.find((t) => t.kind === 'done');
         const recur = parsed.tags.find((t) => t.kind === 'recurrence');
-        const datestamps = parsed.tags.filter((t) => t.kind === 'datestamp').map((t) => t.value);
-        const hashtags = parsed.tags.filter((t) => t.kind === 'hashtag').map((t) => t.value);
-
+        const datestamps = parsed.tags.filter((t) => t.kind === 'datestamp');
         const hasBreadcrumb = !!(due || doneTag || recur || datestamps.length);
-        // Include only genuinely-tracked todos in the LISTING (everything is COUNTED above).
-        if (!(hasBreadcrumb || inTrackedArea || inTaskList)) continue;
 
-        items.push({
-          text: parsed.text,
-          done: parsed.done,
-          source: src,
-          due: due ? due.value : null,
-          doneDate: doneTag ? doneTag.value : null,
-          recurrence: recur ? recur.value : null,
-          datestamps,
-          hashtags,
+        // Only genuinely-tracked tasks count toward a post's rollup (everything is in `total`).
+        if (!(hasBreadcrumb || inTrackedArea || inTaskList)) continue;
+        pTracked += 1;
+        if (parsed.done) pDone += 1;
+        else pOpen += 1;
+        if (due && !parsed.done) {
+          pScheduled += 1;
+          if (!latestDue || due.value > latestDue) latestDue = due.value;
+        }
+      }
+
+      if (pTracked > 0) {
+        posts.push({
+          title: src.title,
+          permalink: src.permalink,
+          open: pOpen,
+          done: pDone,
+          scheduled: pScheduled,
+          total: pTracked,
+          latestDue,
         });
       }
     }
   }
 
-  // Newest scheduled first; undated after; done last.
-  items.sort((a, b) => {
-    if (a.done !== b.done) return a.done ? 1 : -1;
-    return (b.due || '').localeCompare(a.due || '');
+  // Most actionable first: posts with open tasks before fully-done ones; then by open count,
+  // then by a scheduled date (soonest-captured surfaces), then alphabetically.
+  posts.sort((a, b) => {
+    const aActive = a.open > 0 ? 0 : 1;
+    const bActive = b.open > 0 ? 0 : 1;
+    if (aActive !== bActive) return aActive - bActive;
+    if (b.open !== a.open) return b.open - a.open;
+    if ((b.latestDue || '') !== (a.latestDue || '')) return (b.latestDue || '').localeCompare(a.latestDue || '');
+    return a.title.localeCompare(b.title);
   });
 
-  const scheduled = items.filter((i) => i.due && !i.done).length;
+  const scheduled = posts.reduce((n, p) => n + p.scheduled, 0);
+  const tracked = posts.reduce((n, p) => n + p.total, 0);
   return {
     generatedAtNote:
       'Generated by scripts/generate-todos-data.js (npm run generate-assets). Do not hand-edit.',
-    totals: {open: openCount, done: doneCount, total, scheduled, tracked: items.length},
-    items,
+    totals: {open: openCount, done: doneCount, total, scheduled, tracked, posts: posts.length},
+    posts,
   };
 }
 
@@ -156,6 +180,7 @@ const outDir = path.dirname(outputFile);
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, {recursive: true});
 fs.writeFileSync(outputFile, JSON.stringify(data, null, 2), 'utf8');
 console.log(
-  `Generated todos data: ${data.totals.tracked} tracked of ${data.totals.total} total ` +
-    `(${data.totals.open} open, ${data.totals.scheduled} scheduled) -> ${path.relative(ROOT, outputFile)}`,
+  `Generated todos data: ${data.totals.posts} posts with tracked tasks ` +
+    `(${data.totals.tracked} tracked of ${data.totals.total} total, ${data.totals.scheduled} ` +
+    `scheduled) -> ${path.relative(ROOT, outputFile)}`,
 );
