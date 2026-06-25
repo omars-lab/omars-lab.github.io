@@ -835,6 +835,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               title: 'Other Works',
               items: [
                 {
+                  // The single Glossary home — every term of art, with an A-to-Z
+                  // index linking each to its definition. A reference resource.
+                  label: 'Glossary',
+                  to: '/glossary',
+                  position: 'right',
+                },
+                {
                   // "What's New" (changelog) — moved here from the navbar; a
                   // secondary destination rather than primary reader nav.
                   label: "What's New",
