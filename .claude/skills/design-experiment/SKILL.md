@@ -13,7 +13,7 @@ The experiment is an **`/initiatives` blog POST** (the temporal half of the site
 `/craft` doc:
 `bytesofpurpose-blog/blog/<YYYY-MM-DD>-<flag-key>.md` with `kind: experiment-plan` 📝,
 `stage: designed` (or `proposed`), and `priority`. It is a card on the **Experimentation
-board** (`/initiatives/experimentation`, `<KanbanBoard board="experiments"/>`) — the card's
+board** (`/craft/product-management/experiments`, `<KanbanBoard board="experiments"/>`) — the card's
 column is its `stage` frontmatter. There is no `_TEMPLATE.md` and no README timeline table;
 the board replaces them. The durable PM experiment FRAMEWORK stays in
 `/craft/product-management/experiments` (the lasting how-to, not the dated instance). See the

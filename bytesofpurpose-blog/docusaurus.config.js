@@ -481,6 +481,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/legend/terminology/productivity/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
             {from: "/legend/terminology/productivity/emojis", to: "/legend/terminology/site-conventions/emojis"},
             {from: "/legend/terminology/companies", to: "/legend/terminology/companies-and-career"},
+            // The Experimentation board moved from a standalone /initiatives post onto the durable
+            // /craft experiments page (the experiment POSTS stay in /initiatives). It left
+            // /initiatives, so list all three old roots explicitly.
+            {from: "/initiatives/experimentation", to: "/craft/product-management/experiments"},
+            {from: "/thoughts/experimentation", to: "/craft/product-management/experiments"},
+            {from: "/blog/experimentation", to: "/craft/product-management/experiments"},
             // Legend-as-instance: the glossary + all terminology moved OUT of /craft into the
             // Legend instance (/legend/...). Old URLs 301 to their new homes.
             {from: "/glossary", to: "/legend/glossary"},

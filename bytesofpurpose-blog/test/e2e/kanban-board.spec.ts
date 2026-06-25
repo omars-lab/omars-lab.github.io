@@ -1,19 +1,20 @@
 import {test, expect} from '@playwright/test';
 
 /**
- * KanbanBoard on the Experimentation board post (/initiatives/experimentation).
+ * KanbanBoard on the durable Experiments page (/craft/product-management/experiments).
  *
  * The board is generated from blog frontmatter (scripts/generate-kanban-data.js →
- * kanban-data.json) and rendered by src/components/KanbanBoard. The post + the experiment
- * card are PUBLISHED (draft:false), so this runs in both dev (:3000) and the prod build.
+ * kanban-data.json) and rendered by src/components/KanbanBoard. The experiment posts stay on
+ * the /initiatives blog; the board itself lives on the Craft experiments page. That page +
+ * the experiment card are PUBLISHED, so this runs in both dev (:3000) and the prod build.
  *
- * Asserts the three things C4 promises:
+ * Asserts the three things the board promises:
  *   1. the board renders its columns,
  *   2. an experiment card appears (the support-button-copy experiment),
  *   3. clicking a card opens the detail modal with a link to the full post.
  */
 
-const BOARD_POST = '/initiatives/experimentation';
+const BOARD_POST = '/craft/product-management/experiments';
 
 test.describe('KanbanBoard — Experimentation board', () => {
   test.beforeEach(async ({page}) => {

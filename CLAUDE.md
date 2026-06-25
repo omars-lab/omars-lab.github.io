@@ -294,7 +294,7 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 - An experiment is **one `/initiatives` blog post** (`bytesofpurpose-blog/blog/<date>-<flag>.md`)
   with `kind: experiment-plan` 📝 → `experiment-result` 📊 (the kind flips when the Outcome
   lands) and a `stage` that places it as a card on the **Experimentation board**
-  (`/initiatives/experimentation`, `<KanbanBoard board="experiments"/>`). The board (generated
+  (`/craft/product-management/experiments`, `<KanbanBoard board="experiments"/>`). The board (generated
   from frontmatter) **replaced** the old `/craft` experiments doc + README timeline table + the
   `_TEMPLATE.md`; the durable PM experiment FRAMEWORK stays at `/craft/product-management/experiments`.
   Lifecycle: `design-experiment` → `run-ab-test` → `analyze-experiment` → `decide-experiment`
