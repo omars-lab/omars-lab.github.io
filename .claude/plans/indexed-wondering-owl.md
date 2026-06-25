@@ -78,6 +78,15 @@ lives in the transcript but THIS FILE survives. The embedded "Task list (loop-re
 below mirrors the tracked tasks 1:1 (IDs, dependencies, verify gates) so work can resume from
 the file alone. If you resume and the task list is empty, re-create the tasks from that table.
 
+> **PROGRESS (branch `feat/durable-temporal-reframe`):** ✅ C1 rename (`f428e22e`) ·
+> ✅ CB1 generated-asset pipeline+guard (`16bb4b95`) · ✅ C2 post-kinds (`870c826c`) ·
+> ✅ C3 move experiment to /initiatives (`5fa5cf73`, post PUBLISHED so its redirect target
+> exists) · ✅ C4 KanbanBoard+generator+board post (`cd49994f`, e2e 2/2 green). **NEXT
+> unblocked: CB3** (visual+mobile validation of the board — the user's explicit ask, best
+> done with eyes-on) **and C5** (PM cleanup + Legend hub + glossary home — larger content
+> reorg with execution decisions). C6/C7 also unblocked (need only C1). Remaining: C5, C6,
+> C7, C8, C9, CB2, CB3, C10 (last, opens PR — no merge).
+
 **Loop-readiness:** the work is shaped as 10 dependency-ordered commits (C1–C10), each a
 self-contained task with its own verify gate. To drive autonomously:
 `/loop implement the next unblocked commit from .claude/plans/indexed-wondering-owl.md`.
