@@ -52,7 +52,17 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 4. **MDX content bugs fail the build late** (during SSR), e.g. bare `<br>` (use
    `<br/>`) or unescaped `{word}` in `.mdx` (wrap in backticks). Run `make check`
    and a full build before deploying. See the `author-blog-post` skill.
-5. Deploy publishes to the `gh-pages` branch via `yarn deploy` (USE_SSH, GIT_USER).
+5. **Stale `.docusaurus` route cache → `Module not found: @generated/…` build failure.**
+   A build that aborts with a flood of `Module not found: Error: Can't resolve
+   '@generated/docusaurus-plugin-content-docs/craft/p/craft-tags-*.json'` (or similar
+   `@generated/.../p/*.json`) is NOT a content bug — it's a stale `.docusaurus` generated-
+   routes cache disagreeing with the current content (common after un-drafting/renaming/
+   deleting posts, or switching branches). **Fix: fully clear the caches and rebuild:**
+   `rm -rf bytesofpurpose-blog/{.docusaurus,node_modules/.cache,build}` then re-run the
+   build. (`make build-premium` clears `node_modules/.cache` + `.docusaurus`, but a stale
+   `build/` or a partial clear can still bite — when in doubt, nuke all three.) Hit this
+   mid-deploy on the 2026-06 publish; the clear-and-rebuild resolved it cleanly.
+6. Deploy publishes to the `gh-pages` branch via `yarn deploy` (USE_SSH, GIT_USER).
 
 ## Procedure
 

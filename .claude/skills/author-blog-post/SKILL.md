@@ -64,6 +64,25 @@ sidebar_label: "What Is GTM?"  # SHORT (<= 3 CONTENT words) sidebar entry; NO em
   don't count). For the "What I Ask Myself" series, drop the repeated prefix
   (e.g. `sidebar_label: "Finding Purpose"`). Required mechanism: the blog plugin does NOT
   read `sidebar_label` natively; our `draft-docs` plugin + `BlogSidebar` swizzle do.
+- **`pinned: true`** lifts a post ABOVE the year groups into a top **"Guides"** section
+  (the dated posts sit under a **"Posts"** heading below). Any **`kind: legend`** pins
+  automatically (an index/keystone shouldn't be buried by its date). The post keeps its real
+  date; only sidebar PLACEMENT changes.
+
+> **Where the sidebar behaviors live (when you need to change one).** The Posts-sidebar
+> features are NOT Docusaurus defaults — they're a swizzle + plugin pair:
+> - **`plugins/draft-docs/index.js`** walks every blog post and publishes maps via global
+>   data: `blogSidebarLabels` (the rendered `<kind emoji> + (sidebar_label||title)`),
+>   `blogPinnedPermalinks` (pinned/legend posts), `blogDraftPermalinks` (the dev-only "D"
+>   badge), and `blogPostTags` (permalink → tag slugs).
+> - **`src/theme/BlogSidebar/{Desktop,Mobile}/index.tsx`** (+ the `blogSidebarLabel.ts`
+>   helpers) consume those: render the short label, the Guides/Posts split, and — on a
+>   `/thoughts/tags/<tag>` page — **scope the sidebar to that tag** and show a **cancelable
+>   facet chip** (`<tag> ✕`, the × clears back to `/thoughts`). So the sidebar matches the
+>   tag-filtered main area instead of listing every post.
+> Add a new per-post sidebar behavior by publishing a map in the plugin and reading it in
+> the swizzle (mirror how `pinned`/tags work). The `kind → emoji` itself comes from
+> `blog-kinds.json` (the plugin reads it); never hand-type an emoji in a title or label.
 
 **Validation (warn-tier, via `validate-post-outline.js` + its `Write|Edit` hook). All read
 their rules from `blog-kinds.json`, and the hook prints the FULL legend + the kind's contract
