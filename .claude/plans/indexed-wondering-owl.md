@@ -181,7 +181,15 @@ Broadest-surface change; doing it first means every later commit targets final r
 (Tasks #11-component, #14-board.) Depends on Commit 3 (experiment posts exist as data).
 - New: `src/components/KanbanBoard/{index.tsx, KanbanBoard.module.css, types.ts}`; a card
   modal reusing the **Question** CustomEvent+host pattern from
-  `packages/blog-ui/src/components/Question/index.tsx`.
+  `packages/blog-ui/src/components/Question/index.tsx` (NB: that file is at the REPO-ROOT
+  `packages/blog-ui`, the `@omars-lab/blog-ui` workspace package — Question lives in the
+  PACKAGE, mounted via `QuestionModalHost` in `src/theme/Root.tsx`). **Decision (execution):
+  KanbanBoard goes in the SITE's `src/components/KanbanBoard/` (per plan), NOT the package —
+  it's site-specific (reads site post frontmatter via the generated `kanban-data.json`), and
+  the modal-host can mount in `Root.tsx` next to `QuestionModalHost`. Pattern to copy from
+  Question: a single `CustomEvent` ('bop:kanban-card-modal'), an SSR-safe `KanbanModalHost`
+  (mount once in Root), `role="dialog" aria-modal="true"`, scrim-click + Escape + Close
+  dismissal.**
 - New: `scripts/generate-kanban-data.js` — scans posts of a given kind, reads frontmatter
   (`stage`/column, `priority`, `title`, `summary`, permalink) → `kanban-data.json` (mirror
   `generate-ideas-data.js`). **Per CB1: add it to the `generate-assets` npm target (NOT a new

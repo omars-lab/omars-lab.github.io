@@ -11,6 +11,7 @@ import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
+import KanbanBoard from '@site/src/components/KanbanBoard';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -41,6 +42,11 @@ export default {
   // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
   PremiumGate,
   Premium,
+  // KanbanBoard: an interactive board indexing temporal posts (experiments, ideas) as
+  // cards generated from frontmatter (kanban-data.json); card click opens a modal with a
+  // link to the post. <KanbanModalHost/> must be mounted in Root.tsx. Use as
+  // <KanbanBoard board="experiments"/> or board="ideas".
+  KanbanBoard,
   // System-design posts: a diagram paired with a generated numbered legend (the badges
   // ①②③ are authored into the mermaid labels; this renders the matching explanations).
   DiagramWithFootnotes,

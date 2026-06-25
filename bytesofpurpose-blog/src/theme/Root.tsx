@@ -4,6 +4,7 @@ import ToastHost from '@site/src/components/Toast';
 import SignInModalHost from '@site/src/components/SignInModal';
 import {AuthProvider} from '@site/src/lib/auth';
 import {QuestionModalHost} from '@omars-lab/blog-ui';
+import {KanbanModalHost} from '@site/src/components/KanbanBoard';
 
 // Swizzled @theme/Root: wraps the entire app (above the router, persists across
 // navigation). The default Root just renders its children; we additionally:
@@ -21,6 +22,7 @@ export default function Root({children}: {children: React.ReactNode}): React.JSX
       <ToastHost />
       <SignInModalHost />
       <QuestionModalHost />
+      <KanbanModalHost />
     </AuthProvider>
   );
 }
