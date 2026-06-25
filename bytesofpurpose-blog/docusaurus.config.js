@@ -442,6 +442,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // durable experiments landing stays as a stub. Legacy two-hop (/thoughts,/blog)
             // is automatic via createRedirects.
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
+            // C5: the "Start Here" guide became the Legend hub (slug a-guide-to-these-posts → legend).
+            {from: "/initiatives/a-guide-to-these-posts", to: "/initiatives/legend"},
             {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
@@ -739,6 +741,14 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               // "Explore My Mindset" card. Sits right after Initiatives.
               label: 'Mindset',
               to: '/mindset',
+              position: 'left'
+            },
+            {
+              // 'Legend' — the site's map/front-door (durable vs temporal, the post-kind
+              // emoji, where the glossaries live). It's the `kind: legend` guide post,
+              // served at /initiatives/legend (a guide TO the posts, so it lives with them).
+              label: 'Legend',
+              to: '/initiatives/legend',
               position: 'left'
             },
             {
