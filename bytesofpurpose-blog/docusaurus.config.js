@@ -444,6 +444,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
             // C5: the "Start Here" guide became the Legend hub (slug a-guide-to-these-posts → legend).
             {from: "/initiatives/a-guide-to-these-posts", to: "/initiatives/legend"},
+            // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
+            // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
+            // legacy /thoughts,/blog hops — list all three old roots explicitly.
+            {from: "/initiatives/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
+            {from: "/thoughts/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
+            {from: "/blog/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
             {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
