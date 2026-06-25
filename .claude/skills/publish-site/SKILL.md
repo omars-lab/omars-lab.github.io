@@ -67,6 +67,22 @@ before deploy.
 > Blog vs docs: in a production build Docusaurus excludes `draft: true` from routes &
 > sitemap (verified — a draft doc 404s live). So un-drafting is what makes a page public.
 
+> **⚠️ Publish the whole link CLUSTER, not one post in isolation.** If a post you publish
+> links to ANOTHER draft (e.g. a `/thoughts` design-story post links its `/designs` HLD, or
+> any post links a sibling that's still `draft: true`), the link 404s in production because
+> the target is excluded from the prod build. The **prod build is what catches this**: a
+> bare `yarn build` (or `make build-premium`) prints `Broken link on source page path = …
+> -> linking to /<target>`. So after un-drafting, ALWAYS run a full prod build and grep for
+> `Broken link`; if a published post points at a draft, **un-draft the linked target too**
+> (publish the cluster together) — or, if the target isn't ready, soften/remove the link.
+> This bit the 2026-06 design-showcase publish: the 4 design-story posts shipped pointing at
+> draft HLDs; the fix was to publish the 5 linked `/designs` docs in the same pass. (Broken
+> ANCHORS, `-> linking to #section`, are warn-tier by site policy — `onBrokenAnchors: 'warn'`
+> in `docusaurus.config.js` — so they don't fail the build, but they're worth fixing in
+> freshly-published content: match the link's `#anchor` to the target heading's real
+> github-slugger id, e.g. a `### 13.3 Open Questions` heading is `#133-open-questions`,
+> and a heading with a dropped `&`/emoji between spaces yields a double hyphen `--`.)
+
 ## Step 3 — Deploy
 
 Hand off to the **deploy-site** skill (or inline):
@@ -94,5 +110,7 @@ PostHog beacon lives in the JS bundle (not inline HTML) — check
 |---|---|---|
 | Un-drafted page still 404s live | Deploy didn't run / propagation lag | Re-run `make deploy`; GH Pages takes 1–2 min. |
 | Build fails right after un-drafting | Draft had MDX breakers never built before | Fix per `author-blog-post` (`<br/>`, backtick `{braces}`); rebuild. |
+| `Broken link … -> linking to /<x>` after un-drafting | A published post links a still-`draft:true` target (excluded from prod) | Publish the whole cluster: un-draft the linked target too (or soften the link). |
+| `Module not found: @generated/…craft-tags-*.json` during the deploy build | Stale `.docusaurus` route cache | `rm -rf bytesofpurpose-blog/{.docusaurus,node_modules/.cache,build}` then rebuild (see `deploy-site`). |
 | `make deploy` aborts on secret-scan | A real or historical leak | See `manage-repo-security` / the leaked-creds memory; don't bypass. |
 | Scorer lists a finished post as "review" | Short but complete (e.g. a tight how-to) | Score is a hint, not a gate — publish if you judge it ready. |
