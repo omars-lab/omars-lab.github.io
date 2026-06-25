@@ -24,3 +24,4 @@ dedup an issue outside the normal flow, update its status here in the same step.
 | 29 | closed (#30) | flaky-test-ab-copy-drift | [#29](https://github.com/omars-lab/omars-lab.github.io/issues/29) support-ab-test copy drifts from live flag payload | frontend-design regression 2026-06-05 | (e2e, no screenshot) |
 
 All screenshots: `~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/2026-06-03/`
+| 79 | open | _(set key)_ | [#79](https://github.com/omars-lab/omars-lab.github.io/issues/79) | _(set source)_ | _(set path)_ |

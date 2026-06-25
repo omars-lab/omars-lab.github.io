@@ -8,32 +8,41 @@
    Design tokens
    ========================================================================== */
 :root {
-  /* Brand palette — burnt terracotta, mirroring the portfolio accent (#E4572E).
-     Replaces the old generic blue. The base is deepened to #b33e1e so coral text
-     and the active nav link clear WCAG AA (4.71:1) on the cream paper — the brighter
-     #E4572E only reaches 3.6:1 there. Steps follow Infima's ±shade math. The brighter
-     portfolio coral is kept as --brand-coral for large/decorative accents (hero rule,
-     non-text fills) where AA-for-text doesn't apply. */
-  --ifm-color-primary: #b33e1e;
-  --ifm-color-primary-dark: #a1381b;
-  --ifm-color-primary-darker: #983519;
-  --ifm-color-primary-darkest: #7d2c15;
-  --ifm-color-primary-light: #c5462a;
-  --ifm-color-primary-lighter: #d34a22;
-  --ifm-color-primary-lightest: #e4673f;
-  --brand-coral: #e4572e;
+  /* Brand palette — the "tea party" set, leaned MASCULINE: deep forest green
+     (#448061) is the hero/primary; the pink/mint/light-green pastels are SPARING
+     accents only (chips, hovers, tints — see --tea-* below), never page surfaces.
+     The base is darkened slightly to #3c7256 so green TEXT/links clear WCAG AA
+     (5.62:1 on white; #448061 is 4.66, fine for buttons/large UI). Steps follow
+     Infima's ±shade math. The deep green #448061 is kept as --brand-green for
+     large/decorative fills (hero rule, non-text accents) where AA-for-text
+     doesn't apply. */
+  --ifm-color-primary: #3c7256;
+  --ifm-color-primary-dark: #36664d;
+  --ifm-color-primary-darker: #335f48;
+  --ifm-color-primary-darkest: #2a4f3c;
+  --ifm-color-primary-light: #448061;
+  --ifm-color-primary-lighter: #4a8a69;
+  --ifm-color-primary-lightest: #5a9c7c;
+  --brand-green: #448061;
+
+  /* The tea-party pastels — ACCENTS ONLY (backgrounds for chips/pills/tints, never
+     text). Deep-green ink (--tea-ink) sits on them at AA (mint 6.62, pink 5.10). */
+  --tea-pink: #ffc5d3;
+  --tea-mint: #adfff5;
+  --tea-green: #d2ffc4;
+  --tea-ink: #2f5d47;
 
   /* Tint used behind feature icons / soft surfaces */
-  --ifm-color-primary-contrast-background: rgba(179, 62, 30, 0.09);
+  --ifm-color-primary-contrast-background: rgba(68, 128, 97, 0.1);
 
-  /* Editorial surface — warm cream "paper" (light mode). Cards lift a touch
-     lighter than the page so they read as raised. Ink is a warm near-black with a
-     warm-gray secondary, matching the portfolio (#1A1A1A / #4A4742). */
-  --ifm-background-color: #ece7df;
-  --ifm-background-surface-color: #f4f0e8;
-  --ifm-font-color-base: #1a1a1a;
-  --ifm-heading-color: #1a1a1a;
-  --ifm-color-content-secondary: #4a4742;
+  /* Editorial surface — a cool, muted off-white (light mode); masculine, not the
+     old warm cream and not pink. Cards lift a touch lighter than the page so they
+     read as raised. Ink is a near-black with a cool-gray secondary. */
+  --ifm-background-color: #eef1ef;
+  --ifm-background-surface-color: #f4f6f5;
+  --ifm-font-color-base: #1a1d1b;
+  --ifm-heading-color: #14201a;
+  --ifm-color-content-secondary: #46504b;
 
   /* Typography — Fraunces (headings) + Geist (body), loaded via headTags in
      docusaurus.config.js. Fraunces is an old-style serif; it reads best around
@@ -49,18 +58,17 @@
   /* Shape + elevation */
   --ifm-global-radius: 0.5rem;
   --ifm-button-border-radius: 0.4rem;
-  --ifm-card-background-color: #f4f0e8;
-  --ifm-navbar-background-color: #ece7df;
-  --ifm-navbar-shadow: 0 1px 0 rgba(26, 26, 26, 0.08);
-  --ifm-global-shadow-lw: 0 1px 3px rgba(26, 26, 26, 0.08);
-  --ifm-global-shadow-md: 0 6px 20px rgba(26, 26, 26, 0.1);
+  --ifm-card-background-color: #f4f6f5;
+  --ifm-navbar-background-color: #eef1ef;
+  --ifm-navbar-shadow: 0 1px 0 rgba(20, 32, 26, 0.08);
+  --ifm-global-shadow-lw: 0 1px 3px rgba(20, 32, 26, 0.08);
+  --ifm-global-shadow-md: 0 6px 20px rgba(20, 32, 26, 0.1);
 
-  /* Scrollbars — Infima defaults to a near-white track (#f1f1f1) that reads as a
-     bright strip against the warm cream paper. Match the track to the page and the
-     thumb to the warm-gray secondary ink so the scrollbar blends with the theme. */
-  --ifm-scrollbar-track-background-color: #ece7df;
-  --ifm-scrollbar-thumb-background-color: #c9c2b6;
-  --ifm-scrollbar-thumb-hover-background-color: #b3aa9b;
+  /* Scrollbars — match the track to the page and the thumb to a cool gray so the
+     scrollbar blends with the muted off-white theme. */
+  --ifm-scrollbar-track-background-color: #eef1ef;
+  --ifm-scrollbar-thumb-background-color: #c4ccc7;
+  --ifm-scrollbar-thumb-hover-background-color: #adb6b0;
 
   /* Premium ("gold") palette — shared by the sidebar lock items, the locked
      info pane, and the CTA cards so every premium surface reads consistently.
@@ -82,34 +90,38 @@
 /* Dark mode: lift the primary so links/buttons keep AA contrast on dark
    surfaces, and define dark equivalents of the custom tokens above. */
 html[data-theme='dark'] {
-  /* Coral lifted toward salmon so links/buttons keep AA on the warm-ink surface. */
-  --ifm-color-primary: #f0805a;
-  --ifm-color-primary-dark: #ed6c41;
-  --ifm-color-primary-darker: #eb6234;
-  --ifm-color-primary-darkest: #d44a1d;
-  --ifm-color-primary-light: #f39473;
-  --ifm-color-primary-lighter: #f59e80;
-  --ifm-color-primary-lightest: #f9bca8;
+  /* Green brightened to #6fbf95 so links/buttons keep AA (7.56:1) on the deep-slate
+     surface — the light-mode #448061 is too dark on dark (3.56:1). */
+  --ifm-color-primary: #6fbf95;
+  --ifm-color-primary-dark: #5aa37c;
+  --ifm-color-primary-darker: #4f9270;
+  --ifm-color-primary-darkest: #41785c;
+  --ifm-color-primary-light: #82c9a4;
+  --ifm-color-primary-lighter: #8fd1ae;
+  --ifm-color-primary-lightest: #b0e0c8;
 
-  --ifm-color-primary-contrast-background: rgba(240, 128, 90, 0.14);
+  --ifm-color-primary-contrast-background: rgba(111, 191, 149, 0.16);
 
-  /* Warm-ink surfaces — the dark-mode sibling of the cream paper (warm, not cold
-     gray) so the two themes share one editorial temperature. */
-  --ifm-background-color: #1a1715;
-  --ifm-background-surface-color: #211d1a;
-  --ifm-font-color-base: #ece7df;
-  --ifm-heading-color: #f4f0e8;
-  --ifm-color-content-secondary: #b8b0a6;
-  --ifm-card-background-color: #211d1a;
-  --ifm-navbar-background-color: #1a1715;
+  /* Tea pastels stay the same hues; --tea-ink stays a DARK green so it reads on the
+     bright pastel accent fills (which are light) in dark mode too. */
+  --tea-ink: #14241c;
+
+  /* Deep-slate surfaces — the masculine, grounded dark base (cool charcoal-green,
+     not warm). The two modes share the green/pastel accents, not the temperature. */
+  --ifm-background-color: #1c1f1e;
+  --ifm-background-surface-color: #242827;
+  --ifm-font-color-base: #e7ebe9;
+  --ifm-heading-color: #f4f6f5;
+  --ifm-color-content-secondary: #a7b0ab;
+  --ifm-card-background-color: #242827;
+  --ifm-navbar-background-color: #1c1f1e;
   --ifm-navbar-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
   --ifm-global-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.5);
 
-  /* Scrollbars — warm-ink equivalents of the light overrides (Infima's dark
-     defaults are a cold #444/#686868 that clash with the warm surface). */
-  --ifm-scrollbar-track-background-color: #1a1715;
-  --ifm-scrollbar-thumb-background-color: #3a342f;
-  --ifm-scrollbar-thumb-hover-background-color: #4a433c;
+  /* Scrollbars — cool-slate equivalents of the light overrides. */
+  --ifm-scrollbar-track-background-color: #1c1f1e;
+  --ifm-scrollbar-thumb-background-color: #36403b;
+  --ifm-scrollbar-thumb-hover-background-color: #47524c;
 
   /* Premium gold, lifted for contrast on dark surfaces. */
   --premium-gold: #e2c466; /* readable gold text on dark bg */
@@ -165,13 +177,20 @@ h6 {
   transform: translateY(-1px);
 }
 
-/* In dark mode the primary is a light salmon (#f0805a); white text on it fails AA.
-   Use dark ink instead. Keep white on hover (the darker primary-dark step). */
+/* In dark mode the primary is a light green (#6fbf95); white text on it fails AA
+   (2.2:1). Use dark ink instead. Keep white on hover (the darker primary-dark step). */
 html[data-theme='dark'] .navbar-coffee {
-  color: #1a1715;
+  color: #14241c;
 }
 html[data-theme='dark'] .navbar-coffee:hover {
   color: #fff;
+}
+
+/* Same reason for ALL primary buttons in dark mode: the light-green primary needs DARK
+   button text for AA (Infima defaults to white). Light mode keeps white on the deeper
+   green (5.62:1). */
+html[data-theme='dark'] {
+  --ifm-button-color: #14241c;
 }
 
 .navbar-coffee__icon {
@@ -500,10 +519,10 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
    A hairline top border ties it to the page instead of butting hard against it.
    ========================================================================== */
 .footer--dark {
-  --ifm-footer-background-color: #1a1715;
-  --ifm-footer-color: #c9c2b8;
-  --ifm-footer-link-color: #c9c2b8;
-  --ifm-footer-title-color: #f4f0e8;
+  --ifm-footer-background-color: #1c1f1e;
+  --ifm-footer-color: #c4ccc7;
+  --ifm-footer-link-color: #c4ccc7;
+  --ifm-footer-title-color: #f4f6f5;
   border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 .footer--dark .footer__link-item:hover {
@@ -665,7 +684,7 @@ html::-webkit-scrollbar-thumb:hover {
   transition: background-color 0.12s ease;
 }
 .markdown table tbody tr:hover {
-  background: rgba(179, 62, 30, 0.05);
+  background: rgba(68, 128, 97, 0.06);
 }
 
 /* Numeric columns line up for comparison: opt a cell in by wrapping its value in
@@ -750,4 +769,35 @@ html[data-theme='dark'] .markdown table.large-table tbody tr:nth-child(even) {
 }
 html[data-theme='dark'] .insider-tip h4 {
   color: var(--premium-gold-bright, #d4af37);
+}
+
+/* ==========================================================================
+   Tea-party accents — the pink/mint/light-green pastels used SPARINGLY (chips,
+   tag pills, a hero rule). The green primary carries the weight; these are pops.
+   Pastels are only ever ACCENT FILLS (never text); --tea-ink rides on them at AA.
+   ========================================================================== */
+
+/* A thin tri-color rule under the homepage hero eyebrow — the only "decorative"
+   use of all three pastels at once. Non-text, so AA-for-text doesn't apply. */
+.heroEyebrow_src-pages-index-module::after,
+[class*='heroEyebrow']::after {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.5rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--tea-pink), var(--tea-mint), var(--tea-green));
+}
+
+/* Blog/doc tag pills — tint with mint + deep-green ink (a sparing pastel pop on an
+   otherwise green/neutral page). Docusaurus renders tags as `.tag_*` links. */
+[class*='tag_'] {
+  background: var(--tea-mint) !important;
+  color: var(--tea-ink) !important;
+  border-color: transparent !important;
+}
+[class*='tag_']:hover {
+  background: var(--tea-green) !important;
+  color: var(--tea-ink) !important;
 }
