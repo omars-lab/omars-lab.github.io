@@ -21,6 +21,18 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-06-26] The Components reference, the Handbook rename, and redirect-chain safety
+<!-- meta: type=feature category=development priority=high component=Site -->
+Turned the embed-component docs into a real Components reference and hardened the redirect tooling around it. The embed-* docs moved into a `kind: showcase` 🎛️ Components section, each showcase gained an auto-generated "Used in" list (a `usage_pattern` scans the corpus, so the list can never go stale), and Playwright proves each one renders. Then renamed the whole section from Legend to Handbook (the handbook for navigating the blog), moving every `/legend/*` URL to `/handbook/*` with the redirects, structure checks, and cross-links kept in lockstep. Two redirect build-breaks along the way (a raw `<Gif>` in a changelog summary, a stale redirect to a moved-away slug) became permanent guards: the validator now catches chains a to b to c and suggests collapsing to a to c. Finished by surfacing the Changelog from the Handbook sidebar and writing the `manage-changelog` skill.
+
+- Move the embed-component docs into a `kind: showcase` 🎛️ Components reference (Phase 1)
+- Auto-generate a "Used in" list per showcase: `usage_pattern` frontmatter, a corpus-scanning generator, the `<UsedIn>` component, and a `maintain-showcase` skill (Phase 2)
+- Prove each Components showcase renders + functions with Playwright (mermaid svg, `<Card>` demo, inline TOC, the "Used in" block), and repoint two stale graph specs (Phase 3)
+- Rename the Legend docs instance to Handbook: `/legend/*` to `/handbook/*`, internal id kept as 'legend' the way Journey kept 'self'
+- Detect redirect chains (a to b to c) in validate-redirects and suggest collapsing to a to c, aware of the createRedirects wildcards
+- Surface the Changelog from the Handbook sidebar (a link out to the rich `/changelog` page, not a duplicate)
+- Write the `manage-changelog` skill: the batch format, the regenerate step, the archive loop, and the MDX-safe + de-em-dashed summary rules
+
 ## [2026-06-26] The temporal content model: Thoughts / Mindset / Questions + four boards
 <!-- meta: type=feature category=development priority=high component=Site -->
 Reframed the temporal half of the site around one distinction the user drew out. A THOUGHT is an idea that *occurred* to me; it graduates three ways: act on it → an Initiative, deliberately keep it to shape how I think → Mindset, distill it → Craft. Then built it out into four standalone blog instances (Thoughts / Mindset / Questions / Initiatives) plus four durable kanban boards (Ideas / Experiments / Research, each in /craft indexing temporal posts). Along the way: a Mindset quote-set kit with a hover Focus-word highlight, an `organize-post` classifier and a `name-post` skill (title voice must match a post's nature), an SEO validator and a fast a11y-contrast guard, and a sweep that retitled the "my first" ideas as questions, folded POCs into the Experiments board, retired a stale /craft pipeline doc, and gave each first-time idea its own classified board card.
