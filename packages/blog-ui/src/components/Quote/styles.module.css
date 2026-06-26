@@ -1,0 +1,105 @@
+/* Quote — an editorial pull-quote (the quote is the hero), riding on the tea-party theme tokens.
+   Deliberately NOT a card: generous space, large display type, quiet attribution, reflection on
+   reveal. The reading rhythm of a curated page, not a task grid. */
+
+.quote {
+  margin: 2.5rem 0;
+  padding: 0 0 0 1.25rem;
+  border-left: 3px solid var(--brand-green, var(--ifm-color-primary));
+}
+
+.text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ifm-heading-color);
+  font-style: normal;
+}
+
+/* Render the typographic quotation marks so authors don't type them. */
+.text::before {
+  content: '\201C';
+}
+.text::after {
+  content: '\201D';
+}
+
+.attribution {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.source {
+  font-weight: 600;
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-700));
+}
+.source::before {
+  content: '\2014\00a0'; /* em-dash + nbsp, as the attribution lead-in */
+}
+
+.cite {
+  font-style: italic;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* ── Reflection (why it moved me) — quiet, on reveal ─────────────────── */
+
+.reflectionWrap {
+  margin-top: 0.75rem;
+}
+
+.reflectionToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--ifm-color-primary);
+}
+.reflectionToggle:hover {
+  text-decoration: underline;
+}
+
+.chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  font-size: 1.1em;
+  line-height: 1;
+}
+.chevronOpen {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+.reflection {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  background: var(--ifm-color-primary-contrast-background, var(--ifm-color-emphasis-100));
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ifm-color-content, var(--ifm-color-emphasis-800));
+}
+.reflection > :last-child {
+  margin-bottom: 0;
+}

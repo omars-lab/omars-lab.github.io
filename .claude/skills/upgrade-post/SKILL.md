@@ -325,6 +325,48 @@ series shares. Drop it in with no props:
   in the SAME change so the narrative doesn't drift from the icons. The component doc-comment
   and this skill both point at that post as the canonical legend.
 
+### Quote + QuoteSet (the quotes-that-moved-me kit)
+
+WHAT: the quote analog of the question kit, but a DELIBERATELY DIFFERENT CX. A question is
+something you ACT on (a clickable card with scheduling badges + a modal); a quote is something
+you RECEIVE and savor. So `<Quote>` is an **editorial pull-quote**: the quote text is the hero
+(large display type, a green left-border, generous space), the attribution is quiet beneath it,
+and "why it moved me" REVEALS on demand rather than competing with the quote. No badges, no
+priority sort, no modal. WHEN: a `quote-set` post (the `💬` kind in `blog-kinds.json`) or the
+`/mindset` page — anywhere you present curated quotes. HOW:
+
+```mdx
+## On the work itself
+
+<SectionBanner why="The lines I reach for when I am tempted to chase a breakthrough." />
+
+<QuoteSet>
+
+<Quote source="Will Durant" cite="often attributed to Aristotle"
+  reflection="It reframed mastery as something I build in the small reps rather than chase in a breakthrough.">
+We are what we repeatedly do. Excellence, then, is not an act, but a habit.
+</Quote>
+
+</QuoteSet>
+```
+
+- **`<Quote>` props:** the quote text is the children (write it plain, NO surrounding `"` —
+  the component renders the typographic quotation marks). `source` = attribution (quiet, with a
+  leading em-dash supplied by CSS). `cite` (optional) = the work/origin (rendered italic after
+  the source). `reflection` (optional) = why it moved me, hidden behind a "why it moved me ›"
+  toggle (a quiet reveal, not a modal). A quote with no `reflection` just shows the pull-quote.
+- **`<QuoteSet>`** wraps the quotes in a theme and lays them out as a VERTICAL READING FLOW
+  (room to breathe), not a grid. Optional `theme` prop renders a small eyebrow label when the
+  set is not already under an H2. No sort — quotes render in authored order (received, not
+  ranked). One `<QuoteSet>` per H2 section; blank lines around the tags so MDX parses blocks.
+- The `quote-set` kind's outline (validate-post-outline) wants themed H2 sections + `<Quote>`
+  cards + a `description`. The `/mindset` page is the front door that surfaces the quote-set
+  posts; quote sets are NOT a `/thoughts` thought-kind (they live with Mindset, not Thoughts).
+- Both are in `@omars-lab/blog-ui` and registered in `MDXComponents.tsx` — no import in `.mdx`.
+  Reflects on demand with `prefers-reduced-motion` respected (the chevron transition is gated).
+  The file must be `.mdx`. After changing the kit, rebuild the package (`yarn build` in
+  `packages/blog-ui`) + reinstall the `file:` dep so the blog picks up the new `dist/`.
+
 ### react-icons in blog-ui (bundling gotcha)
 
 The Question badges use `react-icons/gi`. `react-icons` is a **regular dependency** of
