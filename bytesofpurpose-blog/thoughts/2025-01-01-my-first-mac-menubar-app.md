@@ -1,18 +1,20 @@
 ---
 slug: my-first-mac-menubar-app
-title: '💡 My First Mac Menu Bar App'
-description: 'Learning to create a macOS menu bar application with NotePlan task integration.'
+title: '💡 Should I Build a Mac Menu-Bar App?'
+sidebar_label: '💡 Menu-bar app?'
+description: 'A thought I am weighing: should I build my first macOS menu-bar app to show my NotePlan task counts at a glance?'
 authors: [oeid]
-tags: [macos, menu-bar, app, noteplan, swift, development]
+tags: [macos, menu-bar, app, noteplan, swift, idea]
 date: 2025-01-01T10:00
-kind: reflection
+kind: idea
 board: ideas
 stage: backlog
 priority: low
 draft: true
 ---
 
-An unactioned idea: build my first macOS menu-bar app showing my NotePlan task counts at a glance.
+A thought I keep coming back to: **should I build my first macOS menu-bar app?** One that shows my
+NotePlan task counts at a glance. I have not committed to it; these are the questions I am weighing.
 
 <!-- truncate -->
 
