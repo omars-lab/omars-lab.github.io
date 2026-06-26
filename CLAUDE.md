@@ -260,6 +260,21 @@ message. If the validator doesn't yet encode a rule you just introduced, add the
 it as part of the decision. The skill's SKILL.md is the source of truth for the contract;
 keep it and the checks in lockstep.
 
+**SEO is validated in two modes** by `scripts/validate-seo.js`, which SHARES its description/title
+rule logic with the structure validator via `scripts/lib/seo-frontmatter.js` (the single source of
+truth for the thresholds — extend it, don't duplicate). Mode 1 (`make validate-seo`, default; the
+warn-only PostToolUse hook `.claude/hooks/validate-seo-hook.sh` runs it `--file`-scoped) audits
+SOURCE frontmatter across ALL content — crucially the blog instances (`blog`/`designs`/`thoughts`/
+`changelog`) that `validate-docs-structure.js` deliberately skips — for description-missing/length/
+duplicate, title-missing/length (≤60/70ch), keywords-format, and image-missing (a per-post `image:`
+not on disk → a 404 og:image). Mode 2 (`make validate-seo-built`, run AFTER `make build` in the
+deploy path; too slow for the hook) walks the BUILT `build/**/*.html` and asserts the `<head>` the
+site actually shipped — ERROR-tier (deploy-aborting) on an empty title/description/og:title/og:image/
+twitter:card/canonical or an unresolvable og:image, warn on missing og:description/og:url + corpus
+title/description duplicates. It skips client-redirect stubs + auto-generated listing/utility pages
+(tags/authors/pagination/storybook). When you add an SEO-affecting field or rule, update the shared
+lib + both validators in lockstep.
+
 ## The site
 
 Docusaurus 3 blog/docs (`bytesofpurpose-blog/`) → GitHub Pages (`gh-pages`) →

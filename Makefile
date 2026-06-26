@@ -104,6 +104,18 @@ validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, ca
 		if [ $$rc -eq 2 ]; then echo "✗ structure: ERROR-tier violations — see above."; exit 1; fi; \
 		exit 0
 
+validate-seo: ## Lint SEO frontmatter across ALL content (description/title/keywords/image) — advisory
+	@# Mode 1 (source): the cheap, corpus-wide frontmatter audit (the blog instances the docs
+	@# validator skips + title/keywords/image). Always exits 0 — warn-tier advisory like the other
+	@# content lints. The built-HTML audit is the separate `validate-seo-built` (run after a build).
+	( cd ${SITEROOT} && node scripts/validate-seo.js )
+
+validate-seo-built: ## Audit the BUILT HTML <head> SEO (og/canonical/sitemap) — run AFTER `make build`
+	@# Mode 2 (--built): walks build/**/*.html and asserts the meta the site ACTUALLY shipped.
+	@# Exit 2 (deploy-aborting) on an ERROR-tier defect (empty title/description/og:*/canonical, or
+	@# an og:image that doesn't resolve in build/). Belongs in the deploy/CI path, not the edit hook.
+	( cd ${SITEROOT} && node scripts/validate-seo.js --built )
+
 verify-premium: ## BLOCKING premium hard-gate check: no `premium:true` body cleartext in build/ (HTML or JS)
 	@# Run AFTER a build. Exit 2 (deploy-aborting) if any premium body leaked, or a sidecar
 	@# is missing. Also wired into deploy-site step 3b + the .githooks/pre-push hook.
