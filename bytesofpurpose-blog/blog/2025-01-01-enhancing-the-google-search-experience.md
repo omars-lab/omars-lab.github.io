@@ -1,14 +1,22 @@
 ---
-slug: /product-management/pocs/enhancing-the-google-search-experience
+slug: enhancing-the-google-search-experience
 title: '🛠️ Enhancing the Google Search Experience'
-sidebar_label: '🛠️ Google Search Experience'
+sidebar_label: '🛠️ Google Search POC'
 description: 'A proof of concept exploring ways to improve Google search results, especially the SGE Generative AI Responses.'
 authors: [oeid]
-tags: [pocs, google-search, browser-extension, ai-filtering, search-optimization, user-experience, seo, sge]
+tags: [pocs, google-search, browser-extension, ai-filtering, search-optimization, sge]
+date: 2025-01-01
+kind: experiment-result
+board: experiments
+stage: concluded
+priority: medium
 draft: false
 ---
 
-# Enhancing the Google Search Experience
+A proof of concept I ran on my own search presence: an acted-on experiment to see what it takes to
+change what Google says about my sites, with before/after results.
+
+<!-- truncate -->
 
 ## Purpose of POC
 
@@ -111,7 +119,17 @@ I want to see what it will take to change what google says about my website(s). 
     * [developers.google.com: Profile Page](https://developers.google.com/search/docs/appearance/structured-data/profile-page)
 
 
-# Motviation
-* [ ] I should do a proof of concept updating the auto generated response for my website
-* [ ] [semrush.com: Google Sge](https://www.semrush.com/blog/google-sge/)
-* [ ] [google.com: Search](https://www.google.com/search?q=what+os+the+bytesofpurose+website+about)
+## Decision and learnings
+
+The before/after comparison above confirmed the POC's premise: structured data and SEO/SGE-focused
+metadata measurably change how Google represents the site in its results and Generative AI
+responses. The concrete takeaway I keep: the search experience IS editable, through the structured
+data and snippets Google reads, so it is worth treating my own search presence as something I shape
+rather than accept. The open follow-ups (testing how Google views the site, and feeding it better
+content) are captured below as the next steps.
+
+## Open follow-ups
+
+* How do I do a proof of concept updating the auto-generated SGE response for my website?
+* [semrush.com: Google SGE](https://www.semrush.com/blog/google-sge/)
+* [google.com: Search](https://www.google.com/search?q=what+is+the+bytesofpurpose+website+about)
