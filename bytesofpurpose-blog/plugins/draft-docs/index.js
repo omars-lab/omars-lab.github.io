@@ -46,15 +46,18 @@ try {
 module.exports = function draftDocsPlugin(context) {
   const docsDir = path.join(context.siteDir, 'docs');
 
-  // The two BLOG instances: Initiatives (source blog/, route /initiatives) and Designs
-  // (source designs/, route /designs). Their sidebar items carry only a permalink
-  // (no `draft` flag), so the swizzled BlogSidebar matches the permalink against
-  // the blogDraftPermalinks set published here — the same pattern the docs sidebar
-  // uses. (The blog POST header reads frontMatter.draft directly and needs none of
-  // this; this set exists for the sidebar list, where frontmatter isn't available.)
+  // The BLOG instances: Initiatives (blog/, /initiatives), Designs (designs/, /designs), and
+  // Thoughts (thoughts/, /thoughts — the unactioned ideas/questions/...). Their sidebar items
+  // carry only a permalink (no `draft` flag), so the swizzled BlogSidebar matches the permalink
+  // against the blogDraftPermalinks set published here — the same pattern the docs sidebar uses.
+  // (The blog POST header reads frontMatter.draft directly and needs none of this; this set
+  // exists for the sidebar list, where frontmatter isn't available.) This list ALSO feeds the
+  // pinned-permalinks (kind: legend / pinned: true → the "Guides" section), so a new blog
+  // instance must be added here or its legend posts fall into the year groups.
   const blogInstances = [
     {dir: path.join(context.siteDir, 'blog'), base: '/initiatives'},
     {dir: path.join(context.siteDir, 'designs'), base: '/designs'},
+    {dir: path.join(context.siteDir, 'thoughts'), base: '/thoughts'},
   ];
 
   return {
