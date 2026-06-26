@@ -13,6 +13,7 @@ import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
 import TaskList from '@site/src/components/TaskList';
+import ThoughtKind, {ThoughtKindLegend} from '@site/src/components/ThoughtKind';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -78,4 +79,11 @@ export default {
   // rendered from the same source as the card badges so it can't drift. Used in the
   // "What I Ask Myself" keystone post.
   PowerLegend,
+  // Thoughts taxonomy: <ThoughtKind kind="simulation"/> is a badge labeling a thought by its
+  // KIND (idea/question/simulation/prediction/critique/principle/design), and
+  // <ThoughtKindLegend/> renders all of them. Both read straight from the `thought: true` kinds
+  // in scripts/lib/blog-kinds.json (the source of truth), so they can't drift. Used on the
+  // /thoughts landing.
+  ThoughtKind,
+  ThoughtKindLegend,
 };

@@ -1,0 +1,71 @@
+/* ThoughtKind badge + legend. Mirrors the question-set kit's badge/legend styling and rides on
+   the tea-party theme tokens (the mint pill + deep-green ink, AA-safe, same as the tag pills). */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  background: var(--tea-mint, var(--ifm-color-emphasis-200));
+  color: var(--tea-ink, var(--ifm-color-emphasis-900));
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.emoji {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.label {
+  font-weight: 600;
+}
+
+/* ── Legend (all thought kinds at once) ──────────────────────────────── */
+
+.legend {
+  margin: 1.25rem 0;
+  padding: 0.5rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.legendRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.legendEmoji {
+  flex: 0 0 auto;
+  width: 1.6rem;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.legendText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  margin: 0;
+}
+
+.legendName {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ifm-heading-color);
+}
+
+.legendGloss {
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-700));
+  line-height: 1.4;
+}

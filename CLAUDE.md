@@ -172,13 +172,17 @@ The site is organized around ONE question: **does this stay true over time, or i
 thing I did?** Place content accordingly.
 - **DURABLE → `/craft` (how I see the world) + `/journey` (how I see myself).** Distilled
   learnings, frameworks, strategy, terminology — return-to knowledge. The lasting LESSON.
-- **TEMPORAL → `/initiatives` (the blog) + `/thoughts` (Thoughts & Ideas).** Dated things, the
+- **TEMPORAL → `/initiatives` (the blog) + `/thoughts` (Thoughts).** Dated things, the
   EVIDENCE. The temporal half splits AGAIN by **have I acted on it yet?**:
-  - **`/thoughts` (Thoughts & Ideas) = UNACTIONED ideas** I have HAD but NOT acted on (captures,
-    "should I…", "what would it take…", things that have not materialized). A candidate, not a
-    commitment. The route `/thoughts` is now this REAL blog instance (it used to be a legacy
-    redirect to `/initiatives`; that hop was retired — `/initiatives` emits only its `/blog/*`
-    legacy root now).
+  - **`/thoughts` (Thoughts) = UNACTIONED thoughts** I have HAD but NOT acted on. Navbar label is
+    just **"Thoughts"**; the collection holds KINDS of thought, each set by the post's `kind:`
+    (source of truth `scripts/lib/blog-kinds.json`, kinds flagged `thought: true`): `idea` 💡
+    (might build), `question-set` ❓ (questions I ask myself), `simulation` 🔮 (if X then Y then Z),
+    `prediction` 🎯 (a bet), `critique` 🔍 (what's wrong / how it works), `principle` 🪞 (an
+    observation becoming a rule), `design-story` 📐 (how it would be built). The reader legend is
+    the `/thoughts/about-my-thoughts` landing (renders `<ThoughtKindLegend>`). The route `/thoughts`
+    is now this REAL blog instance (it used to be a legacy redirect to `/initiatives`; that hop was
+    retired — `/initiatives` emits only its `/blog/*` legacy root now).
   - **`/initiatives` = ACTED-ON ideas** — the specific dated things I actually did (experiments,
     project logs, posts). An idea **graduates** from `/thoughts` to `/initiatives` the moment I
     start acting on it; each Initiative links **up** to the durable insight it informed.

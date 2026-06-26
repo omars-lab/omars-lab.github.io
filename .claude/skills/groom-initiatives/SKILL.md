@@ -42,6 +42,28 @@ right instance. A post opts into a board by its **kind** (experiments) or an exp
 (Synonyms are accepted, e.g. `draft`→`designed`, `live`→`running`, `done`→`concluded`,
 `wip`→`building` — see the generator's `STAGE_SYNONYMS`.)
 
+## The kinds of a Thought (the /thoughts taxonomy)
+
+A `/thoughts` post is an UNACTIONED thought, and there are KINDS of thought — set by the post's
+`kind:` frontmatter (the same kind system the rest of the site uses; the source of truth is
+`scripts/lib/blog-kinds.json`, where each thought kind carries `thought: true` + a `thoughtGloss`,
+and the validator + the `<ThoughtKindLegend>` render from it):
+
+| `kind:` | Emoji | The thought is… |
+|---|---|---|
+| `idea` | 💡 | something I might build or do (also the `board: ideas` kind) |
+| `question-set` | ❓ | a set of questions I ask myself (the question-set kit + the Legend) |
+| `simulation` | 🔮 | a hypothetical walk-through ("if X then Y then Z; what if 1,2,3") |
+| `prediction` | 🎯 | a falsifiable bet about the future |
+| `critique` | 🔍 | an evaluation of something that exists (what's wrong / how it works) |
+| `principle` | 🪞 | an observation maturing into a rule (the raw feeder for a durable Craft lesson) |
+| `design-story` | 📐 | how something would be structured (the shipped HLD lives in `/designs`) |
+
+The `/thoughts` landing (`/thoughts/about-my-thoughts`) is the reader-facing legend. When you
+publish or classify a `/thoughts` post, set the most specific kind; an `idea` graduates to an
+`/initiatives` project when acted on, a `principle` graduates UP into `/craft` when it holds. The
+**`organize-post`** skill classifies an arbitrary post into the right home + kind.
+
 ## Required frontmatter for a board card
 
 ```yaml
