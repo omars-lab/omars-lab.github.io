@@ -177,6 +177,10 @@ function build() {
           stage: resolveColumn(boardId, fm.stage, kind),
           priority: (fm.priority || 'medium').toString(),
           kind,
+          // Optional CLASSIFICATION of the card (a `class:` frontmatter field, e.g. `first-time`).
+          // A class groups a SUBSET of a board's cards by what kind of thing they are (e.g. the
+          // "first-time / new things" ideas) without being a card itself. Rendered as a badge.
+          class: fm.class ? fm.class.toString() : '',
           date: isoDate(fm.date),
         });
       }

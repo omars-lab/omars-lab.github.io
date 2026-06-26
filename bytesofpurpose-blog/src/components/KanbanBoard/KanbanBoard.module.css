@@ -160,6 +160,19 @@
   color: var(--ifm-color-emphasis-600);
 }
 
+/* Classification badge (e.g. "🌱 First-time") — a subset grouping, tea-party mint like the
+   tag pills + ThoughtKind badges. */
+.classBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--tea-mint, var(--ifm-color-emphasis-200));
+  color: var(--tea-ink, var(--ifm-color-emphasis-900));
+}
+
 /* Pills (priority + column badge) */
 .pill {
   display: inline-flex;

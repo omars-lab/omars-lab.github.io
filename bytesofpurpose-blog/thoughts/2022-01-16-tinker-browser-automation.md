@@ -7,10 +7,11 @@ authors: [oeid]
 tags: [browser-automation, automa, chrome-extension, automation, idea]
 date: 2022-01-16T10:00
 kind: idea
+class: first-time
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 A thought I keep coming back to: **should I tinker with browser-automation tools like Automa** to
