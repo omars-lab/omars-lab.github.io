@@ -246,9 +246,12 @@ clean: ## Clean build artifacts and dependencies
 	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
 PORT ?= 3000
-start: build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
+start: build-blog-ui build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	# Builds Storybook first so it's available at /storybook/
+	# Rebuilds @omars-lab/blog-ui first (its dist/ is gitignored + consumed built) so the dev
+	# server always renders the CURRENT components, never a stale dist from a fresh clone or an
+	# un-rebuilt edit — see `make build-blog-ui`.
 	# Dynamic data assets are auto-generated via the npm 'prestart' hook
 	# (npm run generate-assets) before starting — see `make generate-assets`.
 	@# Dev/prod parity for premium: export STATICRYPT_PASSPHRASE from the gitignored .env so
@@ -268,8 +271,9 @@ start: build-storybook ## Start the development server (use PORT=8080 to specify
 	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP CF_ACCESS_CLIENT_ID=$$CID CF_ACCESS_CLIENT_SECRET=$$CSEC yarn start --port ${PORT} )
 
 PORT ?= 3000
-start-prod: ## Start the development server with NODE_ENV=production
+start-prod: build-blog-ui ## Start the development server with NODE_ENV=production
 	# Starts the development server in production mode, includes drafts and monitors and auto deploys updates
+	# Rebuilds @omars-lab/blog-ui first (gitignored dist/, consumed built) so it isn't stale.
 	( cd ${SITEROOT} && NODE_ENV=production yarn start --port ${PORT} )
 
 clear: ## Clear Docusaurus cache
