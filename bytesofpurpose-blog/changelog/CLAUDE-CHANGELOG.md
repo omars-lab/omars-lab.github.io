@@ -52,6 +52,21 @@ Reorganized the whole site around one idea: durable knowledge (`/craft` + `/jour
 - Board-aware groom-initiatives skill + rework the 5 experiment-lifecycle skills onto the post+board model
 - Semantic glossary-linking: a regex hook triages candidate files, a `link-glossary-terms` skill makes the term-of-art-vs-casual call and links only genuine first uses
 
+## [2026-06-23] CI-built Pages deploy + a GIF component, with the writeups
+<!-- meta: type=feature category=development priority=high component=Site -->
+Gave the getting-started guide a CI-built GitHub Pages deploy (build from source, no committed output to drift), wired so it installs the published @omars-lab/blog-ui from GitHub Packages using the default Actions token, validated with actionlint and proven live end to end (two real .npmrc-token bugs surfaced only by running it). Wrote it up as a paired /designs design doc + /thoughts post with validated source links. Then brought getting-started's GIF approach into the blog as BOTH a <Gif> presentation component (accessible: reduced-motion poster, play/pause, terminal frame) and a parameterized terminal-session GIF generator, shipped as blog-ui v0.3.0.
+
+- How does the Actions Pages deploy authenticate to GitHub Packages to install @omars-lab/blog-ui (the default Actions token reads a same-owner public package; no PAT)
+- Switch getting-started Pages from legacy serve-from-branch to Actions-based deploy (upload-pages-artifact@v4 + deploy-pages@v4; Pages source flipped to GitHub Actions; build output no longer committed)
+- Keep a manual `make deploy` Makefile target as the fallback deploy path (one target = gh workflow run, after `make validate-config`)
+- Add `make validate-config` (actionlint) + `make deploy` dry-run to verify the workflow before it runs (validated clean + proven to catch errors)
+- Write a design doc capturing the Actions-based Pages deploy approach (a /designs post, with source links)
+- Turn the deploy-approach design doc into a blog post with source links (the /thoughts companion, tied to the package arc)
+- Add a <Gif> presentation component to @omars-lab/blog-ui (framed, captioned, lazy, reduced-motion poster + play/pause toggle, terminal frame)
+- Port the synthesized-terminal-GIF generator into the blog as reusable tooling (parameterized Pillow + gifsicle, JSON-spec driven; author-terminal-gif skill)
+- Should gitleaks run in CI (not just local pre-commit) for getting-started + blog repos (yes; added server-side gitleaks CI to both, fail-closed)
+- Released @omars-lab/blog-ui v0.3.0 (the <Gif> component), live in GitHub Packages alongside 0.1.0 + 0.2.0
+
 ## [2026-06-23] @omars-lab/blog-ui: a publishable component package, proven cross-repo
 <!-- meta: type=feature category=development priority=high component=Site -->
 Extracted the four reusable design-post components (Walkthrough, Mockup, DiagramWithFootnotes, Assumption) into a publishable `@omars-lab/blog-ui` ESM React package, built the release pipeline to GitHub Packages, and proved it consumable from another repo by converting getting-started-with-claude-agents into a Vite app that installs and renders it. Then exercised the pipeline a second time: extended the Walkthrough with multi-custom-scene support, used it so the self-healing-storefront design opens on a live store-scan with an issue warning, and shipped it as v0.2.0. Closed the loop on security by adding server-side gitleaks CI to both repos.
