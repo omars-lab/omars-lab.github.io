@@ -21,6 +21,19 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-06-25] Thoughts collection + taxonomy, the quote-set Mindset, and a masculine re-theme
+<!-- meta: type=feature category=development priority=high component=Site -->
+Split the temporal half of the site by whether an idea was acted on (`/initiatives` = acted-on, the new `/thoughts` = unactioned), then gave Thoughts a 7-kind taxonomy with drift-proof badges, an `organize-post` classifier skill, and the 26 question sets as its first real content. Separately rebuilt `/mindset` into a real "quotes that moved me" experience with an editorial pull-quote kit, and re-themed the whole blog on a masculine, dark-grounded tea-party palette. Every move paired with redirects; no files deleted.
+
+- Re-theme the blog on the tea-party palette (green primary, pastel accents), leaned masculine + AA-contrast-verified
+- New `/thoughts` (Thoughts) blog instance for UNACTIONED ideas + the durable Ideas board on `/craft`
+- Move "What I Ask Myself" into the Legend instance + name the collection "Thoughts" (navbar + homepage card)
+- Define the Thoughts taxonomy (7 kinds: idea/question/simulation/prediction/critique/principle/design) in blog-kinds.json + a `<ThoughtKind>`/`<ThoughtKindLegend>` badge kit + a `/thoughts` landing, all in lockstep
+- Move the 26 question-set posts `/initiatives` → `/thoughts` (questions are a kind of thought)
+- New `organize-post` skill: classify a post → decide its home (durable/temporal, acted-on/unactioned) + kind, splitting mixed posts
+- Rebuild `/mindset` into the quotes-that-moved-me experience: a `<Quote>`/`<QuoteSet>` editorial pull-quote kit (received/savored, distinct from question cards) + `kind: quote-set` 💬 + a seed post
+- Document the quote kit in the upgrade-post skill; add a `build-blog-ui` Make target so the site can never ship stale components (fail-closed)
+
 ## [2026-06-25] Durable vs temporal reframe: Initiatives, boards, kinds, Legend, glossary
 <!-- meta: type=feature category=development priority=high component=Site -->
 Reorganized the whole site around one idea: durable knowledge (`/craft` + `/journey`) vs temporal initiatives (`/initiatives`, renamed from `/thoughts`). Renamed the blog with two-hop legacy redirects; added experiment post-kinds and moved the experiment to `/initiatives` as a board card; built an interactive KanbanBoard (generated from frontmatter) with an Experimentation board; stood up a Legend hub explaining the model, a single Glossary home, and a Craft Leadership + Journey Self-Reflection topic; made the skills board-aware; and built a semantic glossary-linking system. Along the way, hardened the build into a fail-closed generated-asset pipeline and audited the new components on mobile.
