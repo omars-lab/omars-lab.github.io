@@ -136,6 +136,14 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "showcase": {
+      "emoji": "🎛️",
+      "description": "A showcase of one structural ABILITY of the blog: an embeddable component or technique (a card, a diagram, a code embed), demonstrated live, with a 'used in' index of the posts that leverage it. Lives in /legend/components (the site's component reference).",
+      "outline": [
+        {"id": "demonstrates", "label": "a live demonstration of the technique (the component rendered in the body, or a code/usage example showing how to embed it)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "event-recap": {
       "emoji": "🎙️",
       "description": "A recap of a conference or event.",
