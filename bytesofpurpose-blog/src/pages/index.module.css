@@ -56,24 +56,107 @@
   flex-wrap: wrap;
 }
 
-/* Four chooser cards in the hero (Craft / Journey / Thoughts / Mindset), laid out
-   as a balanced 2×2 grid on desktop. The max-width holds exactly two cards
-   (2 × 340px + gap) per row so it never breaks to an unbalanced 3+1; the cards
-   stack to a single column on mobile (flex-wrap). */
-.chooser {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 760px;
+/* Film-strip chooser (Craft / Journey / Thoughts / Mindset, plus any cards added to
+   CHOOSER_CARDS). The cards auto-scroll sideways in a seamless, infinite loop.
+
+   How the seam-free loop works: the track renders the card list TWICE and animates from
+   translateX(0) to translateX(-50%). At -50% the track has moved exactly one full card-set
+   to the left, so the second copy now sits where the first copy started: the keyframe resets
+   to 0 with the strip pixel-identical, so there is no visible jump. The viewport clips the
+   overflow to a single row.
+
+   The strip pauses on hover/focus-within so a card can be read and clicked. The speed is set
+   by --strip-duration; it scales with the number of cards so adding a card keeps a steady pace.
+   prefers-reduced-motion users get a static, horizontally-scrollable strip (no auto-motion). */
+.chooserViewport {
+  --strip-duration: 32s;
+  max-width: 1000px;
   margin: 0 auto;
+  /* Clip the conveyor horizontally only. The viewport must NOT clip vertically: a card's hover
+     lift (translateY) + its arch drop-shadow extend above/below the row, and an `overflow:hidden`
+     (both axes) crops the card top on hover. overflow-x:hidden + overflow-y:visible keeps the
+     loop clipped sideways while letting the lift breathe. The padding-block reserves the room. */
+  overflow-x: hidden;
+  overflow-y: visible;
+  padding-block: 1rem;
+  /* Soft fade at both edges so cards slide in/out of view instead of hard-clipping. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+
+.chooserTrack {
+  display: flex;
+  width: max-content;
+  animation: chooserScroll var(--strip-duration) linear infinite;
+}
+
+/* Spacing lives as a per-card right margin (NOT flex `gap`). With `gap`, translateX(-50%) does
+   not equal one whole set + its trailing gap, so the loop seam drifts; baking the gap into each
+   card's own width makes -50% land pixel-exact on the duplicate. Every card (original + the
+   aria-hidden duplicate) carries the same margin, so the track tiles uniformly. */
+.chooserTrack > .chooserCard {
+  margin-right: 1.5rem;
+  flex: 0 0 auto;
+}
+
+/* Pause the conveyor when a MOUSE user engages with it (hover or keyboard focus), so a card is a
+   stable, clickable target rather than a moving one. Touch has no hover, so this can't be the only
+   stop mechanism: touch devices get the user-driven swipe reel below instead. */
+.chooserViewport:hover .chooserTrack,
+.chooserViewport:focus-within .chooserTrack {
+  animation-play-state: paused;
+}
+
+@keyframes chooserScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* The user-driven SWIPE REEL: no auto-motion, the strip is a native horizontally-scrollable,
+   snap-to-card reel the user drives themselves. Used in the two cases where auto-scroll is wrong:
+     1. prefers-reduced-motion (the user asked for no motion), and
+     2. TOUCH devices (no hover means no way to pause an auto-marquee, and tapping a moving card is
+        broken; a thumb-swiped reel is the native mobile expectation).
+   The duplicate card set stays in the DOM but is aria-hidden, so it just reads as extra scroll. */
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .chooserViewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .chooserTrack {
+    animation: none;
+  }
+  .chooserCard {
+    scroll-snap-align: center;
+  }
 }
 
 /* Cards sit on the cream paper now (not a translucent layer over a gradient), so
-   they read as raised tiles: surface bg, hairline border, coral accent on hover. */
+   they read as raised tiles: surface bg, hairline border, coral accent on hover.
+   In the film strip the width is FIXED (not flex-grow) so the marquee math stays exact and the
+   cards don't resize as they scroll. */
 .chooserCard {
-  flex: 1 1 300px;
-  max-width: 350px;
+  flex: 0 0 auto;
+  width: 300px;
   text-align: center;
   padding: 1.5rem 1.5rem 1.6rem;
   border-radius: 14px;
@@ -117,12 +200,16 @@
   transform: scale(1.03);
 }
 
+/* Reserve room for up to TWO lines on the title AND the body, so a 1-line blurb and a 2-line blurb
+   (e.g. "Who I'm becoming." vs "How I architected and shipped things.") produce the SAME card
+   height: the cards stay uniform in the strip no matter how long each line is. */
 .chooserCardTitle {
   font-family: var(--ifm-heading-font-family);
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 0.4rem;
   color: var(--ifm-heading-color);
+  min-height: calc(1.3rem * 1.25 * 2);
 }
 
 .chooserCardBody {
@@ -130,6 +217,7 @@
   line-height: 1.45;
   color: var(--ifm-color-content-secondary);
   margin: 0;
+  min-height: calc(0.98rem * 1.45 * 2);
 }
 
 @media screen and (max-width: 966px) {
