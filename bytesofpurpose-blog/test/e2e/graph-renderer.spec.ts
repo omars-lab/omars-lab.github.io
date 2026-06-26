@@ -18,7 +18,7 @@ import { test, expect } from '@playwright/test';
 test.describe('GraphRenderer E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the graph component page
-    const response = await page.goto('/craft/blogging/embed-structural-components/graph', {
+    const response = await page.goto('/legend/components/structural/graph', {
       waitUntil: 'domcontentloaded',
     });
     

@@ -153,3 +153,4 @@ count. The JSON is gitignored, so the change you COMMIT is the `usage_pattern` e
 | `src/components/UsedIn/component-usage.json` | generated output (gitignored; never hand-edit) |
 | `scripts/lib/blog-kinds.json` | defines `kind: showcase` 🎛️ |
 | `scripts/validate-post-outline.js` | the `demonstrates` check for showcases |
+| `test/e2e/showcase-components.spec.ts` | the e2e proof: each showcase loads at its slug, `<UsedIn>` renders (populated + empty), the live demos render (mermaid svg / Card / TOCInline). In the `dev` Playwright project; run via `make test-e2e`. Add a row to its `SHOWCASES` list when you add a showcase. |
