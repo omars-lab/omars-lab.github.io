@@ -21,6 +21,30 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-06-26] The temporal content model: Thoughts / Mindset / Questions + four boards
+<!-- meta: type=feature category=development priority=high component=Site -->
+Reframed the temporal half of the site around one distinction the user drew out. A THOUGHT is an idea that *occurred* to me; it graduates three ways: act on it → an Initiative, deliberately keep it to shape how I think → Mindset, distill it → Craft. Then built it out into four standalone blog instances (Thoughts / Mindset / Questions / Initiatives) plus four durable kanban boards (Ideas / Experiments / Research, each in /craft indexing temporal posts). Along the way: a Mindset quote-set kit with a hover Focus-word highlight, an `organize-post` classifier and a `name-post` skill (title voice must match a post's nature), an SEO validator and a fast a11y-contrast guard, and a sweep that retitled the "my first" ideas as questions, folded POCs into the Experiments board, retired a stale /craft pipeline doc, and gave each first-time idea its own classified board card.
+
+- Add the `<Focus>` word-highlight that sweeps in on quote hover (reduced-motion safe)
+- Retitle the "my first X" thought ideas as the questions they are (the name-post rule's first use)
+- Each hello-world idea is its own Ideas-board card with a "first-time" classification badge (Hello Worlds = a class, not a card)
+- Research board: research thoughts get the board/blog split + the stale research doc fixed
+- Fold POCs into Initiatives + the Experiments board (acted-on validation work)
+- Retire the stale /craft initiatives doc (contradicted the model) → redirect to the Legend
+- Move affirmations into the Mindset section; stand up the Mindset blog instance + the Thoughts-vs-Mindset reframe
+- New /questions collection: the 26 question-sets get their own home (not all questions are mindset-shaping)
+- New `name-post` skill + validate-post-naming scan/hook (a thought reads as a question, not a finished thing)
+- New `organize-post` classifier skill; SEO validator (source + built-HTML); fast WCAG-AA contrast guard
+- Encode the model in lockstep: the Legend guide, CLAUDE.md tenet, navbar hover summaries, the About pages (taught by example), blog-kinds.json, and the structure checks
+
+## [2026-06-23] CI-built Pages deploy + a GIF component, with the writeups
+<!-- meta: type=feature category=development priority=medium component=Site -->
+Moved the production deploy from a local `make deploy` to a CI-built GitHub Pages workflow, and added a reusable `<Gif>` media component. Both are documented in their own writeups.
+
+- Switch the gh-pages deploy to a CI-built GitHub Pages workflow (build in Actions, not locally)
+- Add a reusable `<Gif>` component for recorded/synthesized clips (lazy, reduced-motion poster, play/pause)
+- Write up both the CI-deploy migration and the GIF component
+
 ## [2026-06-25] Thoughts collection + taxonomy, the quote-set Mindset, and a masculine re-theme
 <!-- meta: type=feature category=development priority=high component=Site -->
 Split the temporal half of the site by whether an idea was acted on (`/initiatives` = acted-on, the new `/thoughts` = unactioned), then gave Thoughts a 7-kind taxonomy with drift-proof badges, an `organize-post` classifier skill, and the 26 question sets as its first real content. Separately rebuilt `/mindset` into a real "quotes that moved me" experience with an editorial pull-quote kit, and re-themed the whole blog on a masculine, dark-grounded tea-party palette. Every move paired with redirects; no files deleted.
