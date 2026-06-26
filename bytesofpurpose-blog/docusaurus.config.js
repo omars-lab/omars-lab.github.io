@@ -252,21 +252,27 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
       ],
-      // 🧭 Legend — its OWN docs instance: the map for the whole site. Served at /legend
-      // (folder docs/legend) with its own sidebar (like Craft/Journey), holding the
-      // durable/temporal explainer + the post-kind emoji + all the terminology + the glossary.
-      // Replaced the old standalone /legend page so the section is navigable in a sidebar.
+      // 📘 Handbook: its OWN docs instance, the handbook for navigating the blog. Served at
+      // /handbook (folder docs/handbook) with its own sidebar (like Craft/Journey), holding the
+      // durable/temporal explainer + the post-kind emoji + all the terminology + the glossary +
+      // the component reference. The internal plugin id stays 'legend' even though the route is
+      // /handbook (the same way the Journey instance kept id 'self'); only the route + the navbar
+      // label are reader-facing. Old /legend/* URLs 301 to /handbook/* via createRedirects below.
       [
         '@docusaurus/plugin-content-docs',
         {
           id: 'legend',
-          path: 'docs/legend',
-          routeBasePath: 'legend',
-          sidebarPath: require.resolve('./sidebars-legend.js'),
+          path: 'docs/handbook',
+          routeBasePath: 'handbook',
+          sidebarPath: require.resolve('./sidebars-handbook.js'),
           remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
           editUrl:
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
+          // NOTE: the /legend/* -> /handbook/* wildcard backstop for this rename lives in the
+          // @docusaurus/plugin-client-redirects createRedirects() below (a docs instance does NOT
+          // accept createRedirects; that option is blog-only). The explicit {from,to} redirects
+          // were also repointed to /handbook (a move pairs with a redirect, the CLAUDE.md tenet).
         },
       ],
       // 💡 Thoughts & Ideas — its OWN blog instance (served at /thoughts): the UNACTIONED
@@ -410,34 +416,34 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // #71 PHASE 1: the embed-component docs moved /craft/blogging/embed-* →
             // /legend/components/* (a Components reference, kind: showcase). The live old
             // /craft URLs 301 to the new /legend homes.
-            {from: "/craft/blogging/embed-code", to: "/legend/components/code"},
-            {from: "/craft/blogging/embed-code/code-cells", to: "/legend/components/code/code-cells"},
-            {from: "/craft/blogging/embed-code/code-gists", to: "/legend/components/code/code-gists"},
-            {from: "/craft/blogging/embed-code/code-jupyter-notebooks", to: "/legend/components/code/code-jupyter-notebooks"},
-            {from: "/craft/blogging/embed-diagrams", to: "/legend/components/diagrams"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-figma", to: "/legend/components/diagrams/diagrams-figma"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-flow-charts", to: "/legend/components/diagrams/diagrams-flow-charts"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-google-drawing", to: "/legend/components/diagrams/diagrams-google-drawing"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-kanban-customization", to: "/legend/components/diagrams/diagrams-kanban-customization"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-mermaid", to: "/legend/components/diagrams/diagrams-mermaid"},
-            {from: "/craft/blogging/embed-diagrams/diagrams-puml-sequence", to: "/legend/components/diagrams/diagrams-puml-sequence"},
-            {from: "/craft/blogging/embed-external-components", to: "/legend/components/external"},
-            {from: "/craft/blogging/embed-external-components/html-react-elements", to: "/legend/components/external/html-react-elements"},
-            {from: "/craft/blogging/embed-external-components/images-svgs", to: "/legend/components/external/images-svgs"},
-            {from: "/craft/blogging/embed-external-components/tips", to: "/legend/components/external/tips"},
-            {from: "/craft/blogging/embed-external-components/videos-youtube", to: "/legend/components/external/videos-youtube"},
-            {from: "/craft/blogging/embed-structural-components", to: "/legend/components/structural"},
-            {from: "/craft/blogging/embed-structural-components/adding-truncate-sections", to: "/legend/components/structural/adding-truncate-sections"},
-            {from: "/craft/blogging/embed-structural-components/card", to: "/legend/components/structural/card"},
-            {from: "/craft/blogging/embed-structural-components/details", to: "/legend/components/structural/details"},
-            {from: "/craft/blogging/embed-structural-components/fancy-button", to: "/legend/components/structural/fancy-button"},
-            {from: "/craft/blogging/embed-structural-components/footer", to: "/legend/components/structural/footer"},
-            {from: "/craft/blogging/embed-structural-components/graph", to: "/legend/components/structural/graph"},
-            {from: "/craft/blogging/embed-structural-components/header", to: "/legend/components/structural/header"},
-            {from: "/craft/blogging/embed-structural-components/highlight", to: "/legend/components/structural/highlight"},
-            {from: "/craft/blogging/embed-structural-components/links", to: "/legend/components/structural/links"},
-            {from: "/craft/blogging/embed-structural-components/table-of-content", to: "/legend/components/structural/table-of-content"},
-            {from: "/craft/blogging/embed-structural-components/timeline", to: "/legend/components/structural/timeline"},
+            {from: "/craft/blogging/embed-code", to: "/handbook/components/code"},
+            {from: "/craft/blogging/embed-code/code-cells", to: "/handbook/components/code/code-cells"},
+            {from: "/craft/blogging/embed-code/code-gists", to: "/handbook/components/code/code-gists"},
+            {from: "/craft/blogging/embed-code/code-jupyter-notebooks", to: "/handbook/components/code/code-jupyter-notebooks"},
+            {from: "/craft/blogging/embed-diagrams", to: "/handbook/components/diagrams"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-figma", to: "/handbook/components/diagrams/diagrams-figma"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-flow-charts", to: "/handbook/components/diagrams/diagrams-flow-charts"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-google-drawing", to: "/handbook/components/diagrams/diagrams-google-drawing"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-kanban-customization", to: "/handbook/components/diagrams/diagrams-kanban-customization"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-mermaid", to: "/handbook/components/diagrams/diagrams-mermaid"},
+            {from: "/craft/blogging/embed-diagrams/diagrams-puml-sequence", to: "/handbook/components/diagrams/diagrams-puml-sequence"},
+            {from: "/craft/blogging/embed-external-components", to: "/handbook/components/external"},
+            {from: "/craft/blogging/embed-external-components/html-react-elements", to: "/handbook/components/external/html-react-elements"},
+            {from: "/craft/blogging/embed-external-components/images-svgs", to: "/handbook/components/external/images-svgs"},
+            {from: "/craft/blogging/embed-external-components/tips", to: "/handbook/components/external/tips"},
+            {from: "/craft/blogging/embed-external-components/videos-youtube", to: "/handbook/components/external/videos-youtube"},
+            {from: "/craft/blogging/embed-structural-components", to: "/handbook/components/structural"},
+            {from: "/craft/blogging/embed-structural-components/adding-truncate-sections", to: "/handbook/components/structural/adding-truncate-sections"},
+            {from: "/craft/blogging/embed-structural-components/card", to: "/handbook/components/structural/card"},
+            {from: "/craft/blogging/embed-structural-components/details", to: "/handbook/components/structural/details"},
+            {from: "/craft/blogging/embed-structural-components/fancy-button", to: "/handbook/components/structural/fancy-button"},
+            {from: "/craft/blogging/embed-structural-components/footer", to: "/handbook/components/structural/footer"},
+            {from: "/craft/blogging/embed-structural-components/graph", to: "/handbook/components/structural/graph"},
+            {from: "/craft/blogging/embed-structural-components/header", to: "/handbook/components/structural/header"},
+            {from: "/craft/blogging/embed-structural-components/highlight", to: "/handbook/components/structural/highlight"},
+            {from: "/craft/blogging/embed-structural-components/links", to: "/handbook/components/structural/links"},
+            {from: "/craft/blogging/embed-structural-components/table-of-content", to: "/handbook/components/structural/table-of-content"},
+            {from: "/craft/blogging/embed-structural-components/timeline", to: "/handbook/components/structural/timeline"},
             // Two-instance split (craft @ /craft, self @ /self): preserve BOTH prior URL
             // generations (original themed slugs AND interim /docs/craft|self/* slugs) →
             // final /craft|self/* permalinks. draft:true targets omitted (prod-excluded).
@@ -452,7 +458,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/companies/mental-models/skills/leadership-principles-companies-look-for", to: "/craft/companies/mental-models/skills/understanding-desireable-leadership-skills"},
             {from: "/docs/companies/mental-models/skills/soft-skills-interview-evaluation", to: "/craft/companies/mental-models/skills/understanding-desireable-soft-skills"},
             {from: "/docs/companies/mental-models/skills/technical-skills-interview-evaluation", to: "/craft/companies/mental-models/skills/understanding-desireable-tech-skills"},
-            {from: "/docs/companies/terminology", to: "/legend/terminology/companies-and-career"},
+            {from: "/docs/companies/terminology", to: "/handbook/terminology/companies-and-career"},
             {from: "/docs/craft", to: "/craft"},
             {from: "/docs/craft/blogging", to: "/craft/blogging"},
             {from: "/docs/craft/blogging/adding-content", to: "/craft/blogging/adding-content"},
@@ -469,34 +475,34 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/blogging/diagramming/diagrams-as-text", to: "/craft/blogging/diagramming/diagrams-as-text"},
             {from: "/docs/craft/blogging/diagramming/getting-icons", to: "/craft/blogging/diagramming/getting-icons"},
             {from: "/docs/craft/blogging/docs-vs-blog-posts", to: "/craft/blogging/docs-vs-blog-posts"},
-            {from: "/docs/craft/blogging/embed-code", to: "/legend/components/code"},
-            {from: "/docs/craft/blogging/embed-code/code-cells", to: "/legend/components/code/code-cells"},
-            {from: "/docs/craft/blogging/embed-code/code-gists", to: "/legend/components/code/code-gists"},
-            {from: "/docs/craft/blogging/embed-code/code-jupyter-notebooks", to: "/legend/components/code/code-jupyter-notebooks"},
-            {from: "/docs/craft/blogging/embed-diagrams", to: "/legend/components/diagrams"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-figma", to: "/legend/components/diagrams/diagrams-figma"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-flow-charts", to: "/legend/components/diagrams/diagrams-flow-charts"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-google-drawing", to: "/legend/components/diagrams/diagrams-google-drawing"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-kanban-customization", to: "/legend/components/diagrams/diagrams-kanban-customization"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-mermaid", to: "/legend/components/diagrams/diagrams-mermaid"},
-            {from: "/docs/craft/blogging/embed-diagrams/diagrams-puml-sequence", to: "/legend/components/diagrams/diagrams-puml-sequence"},
-            {from: "/docs/craft/blogging/embed-external-components", to: "/legend/components/external"},
-            {from: "/docs/craft/blogging/embed-external-components/html-react-elements", to: "/legend/components/external/html-react-elements"},
-            {from: "/docs/craft/blogging/embed-external-components/images-svgs", to: "/legend/components/external/images-svgs"},
-            {from: "/docs/craft/blogging/embed-external-components/tips", to: "/legend/components/external/tips"},
-            {from: "/docs/craft/blogging/embed-external-components/videos-youtube", to: "/legend/components/external/videos-youtube"},
-            {from: "/docs/craft/blogging/embed-structural-components", to: "/legend/components/structural"},
-            {from: "/docs/craft/blogging/embed-structural-components/adding-truncate-sections", to: "/legend/components/structural/adding-truncate-sections"},
-            {from: "/docs/craft/blogging/embed-structural-components/card", to: "/legend/components/structural/card"},
-            {from: "/docs/craft/blogging/embed-structural-components/details", to: "/legend/components/structural/details"},
-            {from: "/docs/craft/blogging/embed-structural-components/fancy-button", to: "/legend/components/structural/fancy-button"},
-            {from: "/docs/craft/blogging/embed-structural-components/footer", to: "/legend/components/structural/footer"},
-            {from: "/docs/craft/blogging/embed-structural-components/graph", to: "/legend/components/structural/graph"},
-            {from: "/docs/craft/blogging/embed-structural-components/header", to: "/legend/components/structural/header"},
-            {from: "/docs/craft/blogging/embed-structural-components/highlight", to: "/legend/components/structural/highlight"},
-            {from: "/docs/craft/blogging/embed-structural-components/links", to: "/legend/components/structural/links"},
-            {from: "/docs/craft/blogging/embed-structural-components/table-of-content", to: "/legend/components/structural/table-of-content"},
-            {from: "/docs/craft/blogging/embed-structural-components/timeline", to: "/legend/components/structural/timeline"},
+            {from: "/docs/craft/blogging/embed-code", to: "/handbook/components/code"},
+            {from: "/docs/craft/blogging/embed-code/code-cells", to: "/handbook/components/code/code-cells"},
+            {from: "/docs/craft/blogging/embed-code/code-gists", to: "/handbook/components/code/code-gists"},
+            {from: "/docs/craft/blogging/embed-code/code-jupyter-notebooks", to: "/handbook/components/code/code-jupyter-notebooks"},
+            {from: "/docs/craft/blogging/embed-diagrams", to: "/handbook/components/diagrams"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-figma", to: "/handbook/components/diagrams/diagrams-figma"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-flow-charts", to: "/handbook/components/diagrams/diagrams-flow-charts"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-google-drawing", to: "/handbook/components/diagrams/diagrams-google-drawing"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-kanban-customization", to: "/handbook/components/diagrams/diagrams-kanban-customization"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-mermaid", to: "/handbook/components/diagrams/diagrams-mermaid"},
+            {from: "/docs/craft/blogging/embed-diagrams/diagrams-puml-sequence", to: "/handbook/components/diagrams/diagrams-puml-sequence"},
+            {from: "/docs/craft/blogging/embed-external-components", to: "/handbook/components/external"},
+            {from: "/docs/craft/blogging/embed-external-components/html-react-elements", to: "/handbook/components/external/html-react-elements"},
+            {from: "/docs/craft/blogging/embed-external-components/images-svgs", to: "/handbook/components/external/images-svgs"},
+            {from: "/docs/craft/blogging/embed-external-components/tips", to: "/handbook/components/external/tips"},
+            {from: "/docs/craft/blogging/embed-external-components/videos-youtube", to: "/handbook/components/external/videos-youtube"},
+            {from: "/docs/craft/blogging/embed-structural-components", to: "/handbook/components/structural"},
+            {from: "/docs/craft/blogging/embed-structural-components/adding-truncate-sections", to: "/handbook/components/structural/adding-truncate-sections"},
+            {from: "/docs/craft/blogging/embed-structural-components/card", to: "/handbook/components/structural/card"},
+            {from: "/docs/craft/blogging/embed-structural-components/details", to: "/handbook/components/structural/details"},
+            {from: "/docs/craft/blogging/embed-structural-components/fancy-button", to: "/handbook/components/structural/fancy-button"},
+            {from: "/docs/craft/blogging/embed-structural-components/footer", to: "/handbook/components/structural/footer"},
+            {from: "/docs/craft/blogging/embed-structural-components/graph", to: "/handbook/components/structural/graph"},
+            {from: "/docs/craft/blogging/embed-structural-components/header", to: "/handbook/components/structural/header"},
+            {from: "/docs/craft/blogging/embed-structural-components/highlight", to: "/handbook/components/structural/highlight"},
+            {from: "/docs/craft/blogging/embed-structural-components/links", to: "/handbook/components/structural/links"},
+            {from: "/docs/craft/blogging/embed-structural-components/table-of-content", to: "/handbook/components/structural/table-of-content"},
+            {from: "/docs/craft/blogging/embed-structural-components/timeline", to: "/handbook/components/structural/timeline"},
             {from: "/docs/craft/blogging/prompts", to: "/craft/blogging/prompts"},
             {from: "/docs/craft/blogging/prompts/blog-post-author", to: "/craft/blogging/prompts/blog-post-author"},
             {from: "/docs/craft/blogging/prompts/docusaurus-maintenance-system", to: "/craft/blogging/prompts/docusaurus-maintenance-system"},
@@ -525,7 +531,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/companies/skills/dealing-with-challenges", to: "/craft/companies/skills/dealing-with-challenges"},
             {from: "/docs/craft/companies/skills/managing-complexity", to: "/craft/companies/skills/managing-complexity"},
             {from: "/docs/craft/companies/skills/my-problem-solving-approach", to: "/craft/companies/skills/my-problem-solving-approach"},
-            {from: "/docs/craft/companies/terminology", to: "/legend/terminology/companies-and-career"},
+            {from: "/docs/craft/companies/terminology", to: "/handbook/terminology/companies-and-career"},
             {from: "/docs/craft/entrepreneurship", to: "/craft/entrepreneurship"},
             {from: "/docs/craft/generative-ai", to: "/craft/generative-ai"},
             {from: "/docs/craft/generative-ai/building-systems/approach-in-building-systems", to: "/craft/generative-ai/building-systems/approach-in-building-systems"},
@@ -574,19 +580,19 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/product-management/experiments/2026-05-31-support-button-copy", to: "/initiatives/support-button-copy"},
             // The "Start Here" guide → Legend hub → standalone /legend page → the Legend docs
             // INSTANCE (own sidebar). /legend is still the README, so these still land right.
-            {from: "/initiatives/a-guide-to-these-posts", to: "/legend"},
-            {from: "/initiatives/legend", to: "/legend"},
+            {from: "/initiatives/a-guide-to-these-posts", to: "/handbook"},
+            {from: "/initiatives/legend", to: "/handbook"},
             // Terminology reorg: the terminology pages were re-bucketed by SUBJECT under
             // /legend/terminology/{building-software,getting-things-done,site-conventions,...}.
             // Old /legend/terminology/* URLs (shipped in the Legend-instance PR) 301 to the new
             // homes. (The 2 draft pages — blog-building-blocks, acronyms — get no redirect: a
             // redirect to a draft target fails the prod build; the validate-redirects gate bites.)
-            {from: "/legend/terminology/software-development/terminology-portfolio", to: "/legend/terminology/building-software/architecture"},
-            {from: "/legend/terminology/productivity/terminology-development", to: "/legend/terminology/getting-things-done/planning-and-lifecycle"},
-            {from: "/legend/terminology/productivity/terminology-cli", to: "/legend/terminology/getting-things-done/work-units"},
-            {from: "/legend/terminology/productivity/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
-            {from: "/legend/terminology/productivity/emojis", to: "/legend/terminology/site-conventions/emojis"},
-            {from: "/legend/terminology/companies", to: "/legend/terminology/companies-and-career"},
+            {from: "/legend/terminology/software-development/terminology-portfolio", to: "/handbook/terminology/building-software/architecture"},
+            {from: "/legend/terminology/productivity/terminology-development", to: "/handbook/terminology/getting-things-done/planning-and-lifecycle"},
+            {from: "/legend/terminology/productivity/terminology-cli", to: "/handbook/terminology/getting-things-done/work-units"},
+            {from: "/legend/terminology/productivity/terminology-project-management", to: "/handbook/terminology/getting-things-done/project-management"},
+            {from: "/legend/terminology/productivity/emojis", to: "/handbook/terminology/site-conventions/emojis"},
+            {from: "/legend/terminology/companies", to: "/handbook/terminology/companies-and-career"},
             // The Experimentation board moved from a standalone /initiatives post onto the durable
             // /craft experiments page (the experiment POSTS stay in /initiatives). It left
             // /initiatives, so list the old roots explicitly. (The /thoughts/* legacy hop was
@@ -595,15 +601,15 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/blog/experimentation", to: "/craft/product-management/experiments"},
             // Legend-as-instance: the glossary + all terminology moved OUT of /craft into the
             // Legend instance (/legend/...). Old URLs 301 to their new homes.
-            {from: "/glossary", to: "/legend/glossary"},
-            {from: "/craft/software-development/terminology", to: "/legend/terminology/building-software"},
-            {from: "/craft/software-development/terminology/terminology-portfolio", to: "/legend/terminology/building-software/architecture"},
-            {from: "/craft/productivity/terminology", to: "/legend/terminology/getting-things-done"},
-            {from: "/craft/productivity/terminology/terminology-development", to: "/legend/terminology/getting-things-done/planning-and-lifecycle"},
-            {from: "/craft/productivity/terminology/terminology-cli", to: "/legend/terminology/getting-things-done/work-units"},
-            {from: "/craft/productivity/terminology/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
-            {from: "/craft/productivity/terminology/emojis", to: "/legend/terminology/site-conventions/emojis"},
-            {from: "/craft/companies/terminology", to: "/legend/terminology/companies-and-career"},
+            {from: "/glossary", to: "/handbook/glossary"},
+            {from: "/craft/software-development/terminology", to: "/handbook/terminology/building-software"},
+            {from: "/craft/software-development/terminology/terminology-portfolio", to: "/handbook/terminology/building-software/architecture"},
+            {from: "/craft/productivity/terminology", to: "/handbook/terminology/getting-things-done"},
+            {from: "/craft/productivity/terminology/terminology-development", to: "/handbook/terminology/getting-things-done/planning-and-lifecycle"},
+            {from: "/craft/productivity/terminology/terminology-cli", to: "/handbook/terminology/getting-things-done/work-units"},
+            {from: "/craft/productivity/terminology/terminology-project-management", to: "/handbook/terminology/getting-things-done/project-management"},
+            {from: "/craft/productivity/terminology/emojis", to: "/handbook/terminology/site-conventions/emojis"},
+            {from: "/craft/companies/terminology", to: "/handbook/terminology/companies-and-career"},
             // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
             // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
             // legacy /blog hop — list the old roots explicitly. (No /thoughts hop: /thoughts is now
@@ -637,8 +643,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // the map for the question-set series. It left /initiatives, so createRedirects no
             // longer emits its legacy /blog hop — list both old roots explicitly. (The themed
             // question-set POSTS themselves moved to /thoughts — see the #50 block below.)
-            {from: "/initiatives/what-i-ask-myself", to: "/legend/what-i-ask-myself"},
-            {from: "/blog/what-i-ask-myself", to: "/legend/what-i-ask-myself"},
+            {from: "/initiatives/what-i-ask-myself", to: "/handbook/what-i-ask-myself"},
+            {from: "/blog/what-i-ask-myself", to: "/handbook/what-i-ask-myself"},
             // Mindset section: the mindset posts (the affirmations deck, the quotes-that-moved-me
             // quote set, the song-of-life meditation) moved out of the /initiatives blog into the
             // new /mindset blog instance (each part of the mindset is its own post). Each old root
@@ -766,8 +772,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // (Ideas→Research→POCs→Experiments→Initiatives→Projects) that contradicts the current
             // model (where /initiatives = things I have ACTED ON). Retired; the model now lives in
             // the Legend. Redirect the old doc URL + the live /craft URL → /legend.
-            {from: "/docs/craft/product-management/initiatives", to: "/legend"},
-            {from: "/craft/product-management/initiatives", to: "/legend"},
+            {from: "/docs/craft/product-management/initiatives", to: "/handbook"},
+            {from: "/craft/product-management/initiatives", to: "/handbook"},
             // POCs folded into the Experiments board (both are acted-on validation work): the
             // /craft pocs page is gone (folds → /craft/product-management/experiments), and the
             // one real POC moved to /initiatives as a concluded experiment-result. Repoint the old
@@ -793,11 +799,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/productivity/processes/process-interview", to: "/craft/productivity/processes/process-interview"},
             {from: "/docs/craft/productivity/prompts/daily-todo-carry-over", to: "/craft/productivity/prompts/daily-todo-carry-over"},
             {from: "/docs/craft/productivity/prompts/kanban-board-customization", to: "/craft/productivity/prompts/kanban-board-customization"},
-            {from: "/docs/craft/productivity/terminology", to: "/legend/terminology/getting-things-done"},
-            {from: "/docs/craft/productivity/terminology/emojis", to: "/legend/terminology/site-conventions/emojis"},
-            {from: "/docs/craft/productivity/terminology/terminology-cli", to: "/legend/terminology/getting-things-done/work-units"},
-            {from: "/docs/craft/productivity/terminology/terminology-development", to: "/legend/terminology/getting-things-done/planning-and-lifecycle"},
-            {from: "/docs/craft/productivity/terminology/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
+            {from: "/docs/craft/productivity/terminology", to: "/handbook/terminology/getting-things-done"},
+            {from: "/docs/craft/productivity/terminology/emojis", to: "/handbook/terminology/site-conventions/emojis"},
+            {from: "/docs/craft/productivity/terminology/terminology-cli", to: "/handbook/terminology/getting-things-done/work-units"},
+            {from: "/docs/craft/productivity/terminology/terminology-development", to: "/handbook/terminology/getting-things-done/planning-and-lifecycle"},
+            {from: "/docs/craft/productivity/terminology/terminology-project-management", to: "/handbook/terminology/getting-things-done/project-management"},
             {from: "/docs/craft/productivity/tool-usage", to: "/craft/productivity/tool-usage"},
             {from: "/docs/craft/productivity/tool-usage/establishing-tool-usage-patterns", to: "/craft/productivity/tool-usage/establishing-tool-usage-patterns"},
             {from: "/docs/craft/software-development", to: "/craft/software-development"},
@@ -818,8 +824,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/software-development/scripting/projects/parsing-json", to: "/craft/software-development/scripting/projects/parsing-json"},
             {from: "/docs/craft/software-development/scripting/projects/terminal-calendar", to: "/craft/software-development/scripting/projects/terminal-calendar"},
             {from: "/docs/craft/software-development/scripting/projects/terminal-links", to: "/craft/software-development/scripting/projects/terminal-links"},
-            {from: "/docs/craft/software-development/terminology", to: "/legend/terminology/building-software"},
-            {from: "/docs/craft/software-development/terminology/terminology-portfolio", to: "/legend/terminology/building-software/architecture"},
+            {from: "/docs/craft/software-development/terminology", to: "/handbook/terminology/building-software"},
+            {from: "/docs/craft/software-development/terminology/terminology-portfolio", to: "/handbook/terminology/building-software/architecture"},
             {from: "/docs/craft/software-development/workspace/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks/setup-machine"},
             {from: "/docs/craft/software-development/workspace/setup/running-ha-on-mac-mini", to: "/craft/software-development/workspace/setup/running-ha-on-mac-mini"},
             {from: "/docs/craft/software-development/workspace/tips", to: "/craft/software-development/workspace/tips"},
@@ -831,13 +837,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craftsmanship/tools/tools", to: "/craft/software-development/workspace/tools"},
             {from: "/docs/craftsmanship/workspace/autom8-ha-on-mac-mini", to: "/craft/software-development/workspace/setup/running-ha-on-mac-mini"},
             {from: "/docs/craftsmanship/workspace/running-llms-locally", to: "/craft/generative-ai/my-genai-workflow/running-llms-locally"},
-            {from: "/docs/definitions/development-terminology", to: "/legend/terminology/getting-things-done/planning-and-lifecycle"},
-            {from: "/docs/definitions/emojis-for-activities", to: "/legend/terminology/site-conventions/emojis"},
-            {from: "/docs/definitions/terminology-cli", to: "/legend/terminology/getting-things-done/work-units"},
-            {from: "/docs/definitions/terminology-portfolio", to: "/legend/terminology/building-software/architecture"},
-            {from: "/docs/definitions/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
+            {from: "/docs/definitions/development-terminology", to: "/handbook/terminology/getting-things-done/planning-and-lifecycle"},
+            {from: "/docs/definitions/emojis-for-activities", to: "/handbook/terminology/site-conventions/emojis"},
+            {from: "/docs/definitions/terminology-cli", to: "/handbook/terminology/getting-things-done/work-units"},
+            {from: "/docs/definitions/terminology-portfolio", to: "/handbook/terminology/building-software/architecture"},
+            {from: "/docs/definitions/terminology-project-management", to: "/handbook/terminology/getting-things-done/project-management"},
             {from: "/docs/development", to: "/craft/software-development"},
-            {from: "/docs/development/initiatives/initiatives", to: "/legend"},
+            {from: "/docs/development/initiatives/initiatives", to: "/handbook"},
             {from: "/docs/development/pocs/enhancing-the-google-search-experience", to: "/initiatives/enhancing-the-google-search-experience"},
             {from: "/docs/development/pocs/pocs", to: "/craft/product-management/experiments"},
             {from: "/docs/development/projects/experiments/experiments", to: "/craft/product-management/experiments"},
@@ -847,7 +853,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/development/research/research", to: "/craft/product-management/research"},
             {from: "/docs/development/roadmaps/blog-roadmap", to: "/craft/product-management/roadmaps/1-blog-roadmap"},
             {from: "/docs/development/roadmaps/portfolio-roadmap", to: "/craft/product-management/roadmaps/2-portfolio-roadmap"},
-            {from: "/docs/development/terminology", to: "/legend/terminology/building-software"},
+            {from: "/docs/development/terminology", to: "/handbook/terminology/building-software"},
             {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/thoughts/hello-worlds"},
             {from: "/docs/development/tinkering/tinkering", to: "/craft/product-management/tinkering"},
             {from: "/docs/entrepreneurship", to: "/craft/entrepreneurship"},
@@ -890,7 +896,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
             {from: "/docs/product-management", to: "/craft/product-management"},
             {from: "/docs/productivity", to: "/craft/productivity"},
-            {from: "/docs/productivity/terminology", to: "/legend/terminology/getting-things-done"},
+            {from: "/docs/productivity/terminology", to: "/handbook/terminology/getting-things-done"},
             {from: "/docs/prompts/analyze/sql-query-analyzer", to: "/craft/software-development/prompts/sql-query-analyzer"},
             {from: "/docs/prompts/author/blog-post-author", to: "/craft/blogging/prompts/blog-post-author"},
             {from: "/docs/prompts/draw/kanban-board-customization", to: "/craft/productivity/prompts/kanban-board-customization"},
@@ -956,33 +962,33 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/techniques/blogging-techniques/blog-post-triggers", to: "/craft/blogging/blog-post-triggers"},
             {from: "/docs/techniques/blogging-techniques/changelog-system", to: "/craft/blogging/changelog-system"},
             {from: "/docs/techniques/blogging-techniques/docs-vs-blog-posts", to: "/craft/blogging/docs-vs-blog-posts"},
-            {from: "/docs/techniques/blogging-techniques/embed-code/embed-code", to: "/legend/components/code"},
-            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-code-cells", to: "/legend/components/code/code-cells"},
-            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-gist", to: "/legend/components/code/code-gists"},
-            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-jupyter-notebooks", to: "/legend/components/code/code-jupyter-notebooks"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/diagrams-mermaid", to: "/legend/components/diagrams/diagrams-mermaid"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/embed-diagrams", to: "/legend/components/diagrams"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-figma", to: "/legend/components/diagrams/diagrams-figma"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-flow-charts", to: "/legend/components/diagrams/diagrams-flow-charts"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-google-drawings", to: "/legend/components/diagrams/diagrams-google-drawing"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-kanban-customization", to: "/legend/components/diagrams/diagrams-kanban-customization"},
-            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-sequence-diagrams", to: "/legend/components/diagrams/diagrams-puml-sequence"},
-            {from: "/docs/techniques/blogging-techniques/embed-external-components/external-components", to: "/legend/components/external"},
-            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-react-elems", to: "/legend/components/external/html-react-elements"},
-            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-svg", to: "/legend/components/external/images-svgs"},
-            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-youtube-videos", to: "/legend/components/external/videos-youtube"},
-            {from: "/docs/techniques/blogging-techniques/embed-external-components/tips", to: "/legend/components/external/tips"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/card", to: "/legend/components/structural/card"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/details", to: "/legend/components/structural/details"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/fancy-button", to: "/legend/components/structural/fancy-button"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/footer", to: "/legend/components/structural/footer"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/graph", to: "/legend/components/structural/graph"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/header", to: "/legend/components/structural/header"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/highlight", to: "/legend/components/structural/highlight"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/mechanics-docusaurus-linking", to: "/legend/components/structural/links"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/table-of-content", to: "/legend/components/structural/table-of-content"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/timeline", to: "/legend/components/structural/timeline"},
-            {from: "/docs/techniques/blogging-techniques/embed-structural-components/truncate", to: "/legend/components/structural/adding-truncate-sections"},
+            {from: "/docs/techniques/blogging-techniques/embed-code/embed-code", to: "/handbook/components/code"},
+            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-code-cells", to: "/handbook/components/code/code-cells"},
+            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-gist", to: "/handbook/components/code/code-gists"},
+            {from: "/docs/techniques/blogging-techniques/embed-code/mx-docx-embedd-jupyter-notebooks", to: "/handbook/components/code/code-jupyter-notebooks"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/diagrams-mermaid", to: "/handbook/components/diagrams/diagrams-mermaid"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/embed-diagrams", to: "/handbook/components/diagrams"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-figma", to: "/handbook/components/diagrams/diagrams-figma"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-flow-charts", to: "/handbook/components/diagrams/diagrams-flow-charts"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-google-drawings", to: "/handbook/components/diagrams/diagrams-google-drawing"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-kanban-customization", to: "/handbook/components/diagrams/diagrams-kanban-customization"},
+            {from: "/docs/techniques/blogging-techniques/embed-diagrams/mx-docx-embedd-sequence-diagrams", to: "/handbook/components/diagrams/diagrams-puml-sequence"},
+            {from: "/docs/techniques/blogging-techniques/embed-external-components/external-components", to: "/handbook/components/external"},
+            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-react-elems", to: "/handbook/components/external/html-react-elements"},
+            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-svg", to: "/handbook/components/external/images-svgs"},
+            {from: "/docs/techniques/blogging-techniques/embed-external-components/mx-docx-embedd-youtube-videos", to: "/handbook/components/external/videos-youtube"},
+            {from: "/docs/techniques/blogging-techniques/embed-external-components/tips", to: "/handbook/components/external/tips"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/card", to: "/handbook/components/structural/card"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/details", to: "/handbook/components/structural/details"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/fancy-button", to: "/handbook/components/structural/fancy-button"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/footer", to: "/handbook/components/structural/footer"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/graph", to: "/handbook/components/structural/graph"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/header", to: "/handbook/components/structural/header"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/highlight", to: "/handbook/components/structural/highlight"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/mechanics-docusaurus-linking", to: "/handbook/components/structural/links"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/table-of-content", to: "/handbook/components/structural/table-of-content"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/timeline", to: "/handbook/components/structural/timeline"},
+            {from: "/docs/techniques/blogging-techniques/embed-structural-components/truncate", to: "/handbook/components/structural/adding-truncate-sections"},
             {from: "/docs/techniques/development-techniques/ci-cd-techniques", to: "/craft/software-development/backend-development/techniques/ci-cd-techniques"},
             {from: "/docs/techniques/development-techniques/development-techniques", to: "/craft/software-development/backend-development/techniques"},
             {from: "/docs/techniques/development-techniques/tool-composition-techniques/readme", to: "/craft/software-development/frontend-development/techniques/tool-composition"},
@@ -1024,6 +1030,14 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             }
             if (existingPath.startsWith('/initiatives')) {
               return [existingPath.replace(/^\/initiatives/, '/blog')];
+            }
+            // The Handbook docs instance was renamed /legend -> /handbook (2026-06; internal id
+            // stays 'legend'). Every built /handbook/* page emits a 301 from its old /legend/*
+            // URL, so old links and shares never break (the explicit redirects above were also
+            // repointed to /handbook). A docs instance can't carry createRedirects itself, so the
+            // wildcard backstop lives here on the client-redirects plugin.
+            if (existingPath.startsWith('/handbook')) {
+              return [existingPath.replace(/^\/handbook/, '/legend')];
             }
             return undefined; // no redirect for other paths
           },
@@ -1090,11 +1104,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left'
             },
             {
-              // 'Legend' — its OWN docs instance (id 'legend', route /legend) with its own
-              // sidebar (like Craft/Journey): the durable/temporal explainer + post-kind emoji,
-              // the glossary, and all the terminology. A docSidebar so clicking it shows ONLY
-              // the Legend sidebar.
-              label: 'Legend',
+              // 'Handbook': its OWN docs instance (internal id 'legend', route /handbook) with
+              // its own sidebar (like Craft/Journey): the handbook for navigating the blog, holding
+              // the durable/temporal explainer + post-kind emoji, the glossary, all the terminology,
+              // and the component reference. A docSidebar so clicking it shows ONLY the Handbook
+              // sidebar. (Internal id stays 'legend' like Journey kept 'self'; only route + label
+              // are reader-facing. Old /legend/* URLs 301 to /handbook/* via createRedirects.)
+              label: '📘 Handbook',
               type: 'docSidebar', sidebarId: 'legendSidebar', docsPluginId: 'legend',
               position: 'left'
             },
@@ -1186,7 +1202,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
                   // The single Glossary home — every term of art, with an A-to-Z
                   // index linking each to its definition. Lives in the Legend instance.
                   label: 'Glossary',
-                  to: '/legend/glossary',
+                  to: '/handbook/glossary',
                   position: 'right',
                 },
                 {

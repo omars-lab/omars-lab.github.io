@@ -41,7 +41,7 @@ const BUILD_DIR = path.join(ROOT, 'build');
 // Content roots scanned in Mode 1. Docs are covered by validate-docs-structure.js for
 // description already, but title/keywords/image are NOT, so include docs here too (the
 // description checks are idempotent — a doubled warn is deduped by the caller's reporting).
-const DOCS_ROOTS = ['docs/craft', 'docs/journey', 'docs/legend'];
+const DOCS_ROOTS = ['docs/craft', 'docs/journey', 'docs/handbook'];
 const BLOG_ROOTS = ['blog', 'designs', 'thoughts', 'changelog', 'mindset', 'questions'];
 const ALL_ROOTS = [...DOCS_ROOTS, ...BLOG_ROOTS];
 
