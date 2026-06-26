@@ -150,6 +150,70 @@
   }
 }
 
+/* ── Camera-flash hero (A/B test variant) ─────────────────────────────────────────────────
+   ONE card at a time, stacked; a white flash blooms from the arch center and the scene switches
+   to the next card at peak white. The cards are absolutely stacked so they cross-fade in place. */
+.flashViewport {
+  display: flex;
+  justify-content: center;
+}
+.flashStage {
+  position: relative;
+  width: 300px;
+  /* Reserve the full card height so the stage doesn't collapse (cards are absolutely positioned).
+     The slides set the real height; this is a floor so layout is stable before hydration. */
+  min-height: 380px;
+}
+.flashSlide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  /* Inactive slides are non-interactive + faded; the active one fades in. The fade is quick so the
+     swap reads as the flash revealing a new scene, not a slow dissolve. */
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.flashSlideActive {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The white flash: a radial bloom centered on the arch (the arch sits in the upper portion of the
+   card, so the bloom origin is high). `flashOn` drives it to full white, then it eases back out. */
+.flash {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: radial-gradient(
+    circle at 50% 38%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.96) 30%,
+    rgba(255, 255, 255, 0) 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+  /* Asymmetric: snap to white fast (the "flash"), ease out slower (the scene settling). */
+  transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  transform: scale(0.6);
+}
+.flashOn {
+  opacity: 1;
+  transform: scale(1.25);
+  transition: opacity 0.16s ease-in, transform 0.32s ease-in;
+}
+
+/* Reduced motion: no blinding flash. The slides still cross-fade (a calm switch), but the white
+   bloom is dialed out so it's not a strobe. */
+@media (prefers-reduced-motion: reduce) {
+  .flash,
+  .flashOn {
+    opacity: 0;
+    transition: none;
+  }
+}
+
 /* Cards sit on the cream paper now (not a translucent layer over a gradient), so
    they read as raised tiles: surface bg, hairline border, coral accent on hover.
    In the film strip the width is FIXED (not flex-grow) so the marquee math stays exact and the

@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
+import posthog from 'posthog-js';
+import {EXPERIMENTS, resolveVariant} from '../experiments';
 
 /* The hero chooser cards (folded in from the old /welcome page). To ADD a card, append an
    entry here and drop its arched PNG in static/img/cards/, and the film strip + the seamless loop
@@ -81,16 +84,25 @@ const CHOOSER_CARDS: ReadonlyArray<{
 function ChooserCard({
   card,
   duplicate = false,
+  variant = 'scroll',
 }: {
   card: (typeof CHOOSER_CARDS)[number];
   duplicate?: boolean;
+  /** The hero animation the user saw when they clicked: the A/B conversion dimension. */
+  variant?: string;
 }) {
   return (
     <Link
       className={styles.chooserCard}
       to={card.to}
       aria-hidden={duplicate || undefined}
-      tabIndex={duplicate ? -1 : undefined}>
+      tabIndex={duplicate ? -1 : undefined}
+      onClick={() => {
+        // A/B conversion event for EXPERIMENTS['homepage-hero-anim']: which hero animation was on
+        // screen, and which destination the visitor chose. Exposure ($feature_flag_called) is
+        // recorded separately by getFeatureFlag in resolveVariant.
+        posthog.capture('hero card clicked', {hero_variant: variant, destination: card.to});
+      }}>
       <div className={styles.chooserCardImageWrap}>
         <img
           className={styles.chooserCardImage}
@@ -107,6 +119,92 @@ function ChooserCard({
   );
 }
 
+/* CONTROL hero: the seamless scrolling film strip. The cards auto-scroll sideways in an infinite
+   loop. We render the card list TWICE inside the moving track; the keyframe translates the track by
+   exactly half its width (one full set), so when it resets the second copy is pixel-aligned with
+   where the first started: no visible seam. It pauses on hover/focus (so a card is clickable), and
+   touch / prefers-reduced-motion users get a user-driven swipe reel instead (CSS turns the
+   animation off). The duplicate set is aria-hidden so screen readers + keyboard see each card once. */
+function ChooserStrip() {
+  return (
+    <div className={styles.chooserViewport}>
+      <div className={styles.chooserTrack}>
+        {CHOOSER_CARDS.map((card) => (
+          <ChooserCard key={card.to} card={card} variant="scroll" />
+        ))}
+        {/* Seamless-loop duplicate: identical flex children, just a11y/keyboard-hidden. */}
+        {CHOOSER_CARDS.map((card) => (
+          <ChooserCard key={`dup-${card.to}`} card={card} duplicate variant="scroll" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* TEST hero: the camera-flash rotator. ONE card is shown at a time. Every few seconds a white
+   flash blooms from the center of the arch, fills the card, and at peak-white the card content
+   swaps to the next destination; the flash then fades to reveal the new "scene" (like a photo
+   being taken and the subject changing). All cards stay in the DOM stacked on top of each other;
+   only the active one is visible/opaque, so the active card is always a real, focusable link.
+   prefers-reduced-motion users get a plain cross-fade with no flash (the CSS dials the flash out).
+   The rotation pauses on hover/focus so the visible card is a stable target. */
+const FLASH_INTERVAL_MS = 4000;
+
+function ChooserFlash() {
+  const [active, setActive] = useState(0);
+  const [flashing, setFlashing] = useState(false);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const tick = window.setInterval(() => {
+      // Fire the flash, then swap the active card at peak white (~half the flash), then clear.
+      setFlashing(true);
+      window.setTimeout(() => setActive((i) => (i + 1) % CHOOSER_CARDS.length), 320);
+      window.setTimeout(() => setFlashing(false), 640);
+    }, FLASH_INTERVAL_MS);
+    return () => window.clearInterval(tick);
+  }, [paused]);
+
+  return (
+    <div
+      className={styles.flashViewport}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}>
+      <div className={styles.flashStage}>
+        {CHOOSER_CARDS.map((card, i) => (
+          <div
+            key={card.to}
+            className={clsx(
+              styles.flashSlide,
+              i === active && styles.flashSlideActive,
+            )}
+            aria-hidden={i === active ? undefined : true}>
+            <ChooserCard card={card} duplicate={i !== active} variant="flash" />
+          </div>
+        ))}
+        {/* The white flash overlay: radiates from the arch center, opacity driven by `flashing`. */}
+        <div
+          className={clsx(styles.flash, flashing && styles.flashOn)}
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
+}
+
+/* Pick the hero animation by the A/B variant. SSR + no-PostHog default is the scrolling strip
+   (control), so the page renders fully without JS and only the client swaps to the flash variant
+   for users bucketed into `test`. */
+function HeroChooser() {
+  const exp = EXPERIMENTS['homepage-hero-anim'];
+  const [variant, setVariant] = useState('control');
+  useEffect(() => resolveVariant(exp, setVariant), [exp]);
+  return variant === 'test' ? <ChooserFlash /> : <ChooserStrip />;
+}
+
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -115,25 +213,10 @@ function HomepageHeader() {
         <p className={styles.heroEyebrow}>Engineering · Faith · Craft</p>
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-        {/* Film-strip chooser: the cards auto-scroll sideways in a seamless, infinite loop
-            (a conveyor). We render the card list TWICE inside the moving track; the keyframe
-            translates the track by exactly half its width (one full set), so when it resets the
-            second copy is pixel-aligned with where the first started: no visible seam. The strip
-            pauses on hover/focus (so a card is clickable), and prefers-reduced-motion users get a
-            static, scrollable, wrapped grid instead (the CSS turns the animation off). The
-            duplicate set is aria-hidden so screen readers and keyboard tab order see each card
-            once. */}
-        <div className={styles.chooserViewport}>
-          <div className={styles.chooserTrack}>
-            {CHOOSER_CARDS.map((card) => (
-              <ChooserCard key={card.to} card={card} />
-            ))}
-            {/* Seamless-loop duplicate: identical flex children, just a11y/keyboard-hidden. */}
-            {CHOOSER_CARDS.map((card) => (
-              <ChooserCard key={`dup-${card.to}`} card={card} duplicate />
-            ))}
-          </div>
-        </div>
+        {/* The hero animation is A/B-tested (EXPERIMENTS['homepage-hero-anim']): control = the
+            scrolling strip, test = the camera-flash rotator. BrowserOnly so the flag read +
+            timers run client-side only; the SSR fallback is the strip (control). */}
+        <BrowserOnly fallback={<ChooserStrip />}>{() => <HeroChooser />}</BrowserOnly>
       </div>
     </header>
   );

@@ -32,6 +32,19 @@ export const EXPERIMENTS = {
       test: 'Buy me a coffee ☕',
     },
   },
+
+  // Homepage hero ANIMATION test: does the way the chooser cards animate change how often a
+  // visitor clicks into a section? control = the seamless scrolling film strip; test = the
+  // camera-flash rotator (one card at a time, a white flash blooms from the arch and the scene
+  // switches to the next). Same cards + copy in both arms; only the PRESENTATION differs. The
+  // payload is the variant id (the homepage reads it to pick which hero component to render).
+  'homepage-hero-anim': {
+    key: 'homepage-hero-anim',
+    variants: {
+      control: 'scroll',
+      test: 'flash',
+    },
+  },
 } satisfies Record<string, Experiment>;
 
 export type ExperimentKey = keyof typeof EXPERIMENTS;
