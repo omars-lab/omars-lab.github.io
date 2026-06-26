@@ -62,6 +62,15 @@ storybook: ## Start Storybook development server (with optional type-check)
 build-storybook: ## Build Storybook for production
 	( cd ${SITEROOT} && yarn build-storybook )
 
+build-blog-ui: ## Rebuild the @omars-lab/blog-ui package so its dist/ is current before a site build
+	@# The blog consumes the BUILT dist/ of the file:../packages/blog-ui dep (dist/ is gitignored,
+	@# so a fresh clone or an un-rebuilt edit would ship STALE components). Rebuild it + reinstall
+	@# the file: dep so the blog's node_modules copy is fresh. This is a prerequisite of `build`
+	@# and `deploy` so the published site always has the current components (fail-closed: you can
+	@# never deploy stale blog-ui by forgetting to rebuild it).
+	( cd packages/blog-ui && yarn build )
+	( cd ${SITEROOT} && yarn add @omars-lab/blog-ui@file:../packages/blog-ui )
+
 init-site: ## Initialize a new Docusaurus site
 	test -d ${SITEROOT} || npx @docusaurus/init@latest init ${SITENAME} classic --typescript
 
@@ -257,7 +266,7 @@ generate-assets: ## Regenerate ALL dynamic data assets from frontmatter (changel
 	# NEVER hand-edit the outputs — edit the generator or the frontmatter source.
 	( cd ${SITEROOT} && yarn generate-assets )
 
-build: build-storybook ## Build the site for production
+build: build-blog-ui build-storybook ## Build the site for production
 	# Bundles your website into static files for production.
 	# Dynamic data assets are auto-generated via the npm 'prebuild' hook
 	# (npm run generate-assets) before building — see `make generate-assets`.
@@ -279,7 +288,7 @@ install-hooks: ## Enable the local pre-commit secret-scan hook
 	git config core.hooksPath .githooks
 	@echo "✓ pre-commit secret scanning enabled (core.hooksPath=.githooks)"
 
-deploy: secret-scan build-storybook ## Deploy the site to GitHub Pages (runs a secret scan first)
+deploy: secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub Pages (runs a secret scan first)
 	# Publishes the website to GitHub pages.
 	@# `static/storybook/` is a GENERATED artifact (gitignored, not tracked) that
 	@# Docusaurus copies verbatim from static/ — `yarn deploy` does NOT regenerate it.

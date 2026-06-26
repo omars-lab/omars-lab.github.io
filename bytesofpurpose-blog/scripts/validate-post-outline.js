@@ -102,6 +102,8 @@ const CHECKS = {
   sections: (fm, body) => hasH2(body),
   'question-cards': (fm, body) => /<Question[\s>]/.test(body),
   'section-banner': (fm, body) => /<SectionBanner[\s>]/.test(body),
+  // quote-set
+  'quote-cards': (fm, body) => /<Quote[\s>]/.test(body),
   // framework
   'framework-laid-out': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) ||

@@ -76,8 +76,17 @@
     },
     "reflection": {
       "emoji": "💭",
-      "description": "A personal essay or set of takeaways ('Notes From', 'What X Taught Me', affirmations).",
+      "description": "A personal essay or set of takeaways ('Notes From', 'What X Taught Me').",
       "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "quote-set": {
+      "emoji": "💬",
+      "description": "A themed set of quotes that moved me, with my reflection on why ('quotes that moved me', affirmations). Surfaced on /mindset; each quote is a <Quote> pull-quote inside a <QuoteSet>.",
+      "outline": [
+        {"id": "sections", "label": "themed H2 sections (quotes grouped by theme, not a flat list)"},
+        {"id": "quote-cards", "label": "one or more <Quote> pull-quotes inside a <QuoteSet> (each quote is a component, not a bare blockquote)"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },

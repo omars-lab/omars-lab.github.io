@@ -1,0 +1,14 @@
+/* QuoteSet — a themed column of quotes, vertical reading flow with breathing room. */
+
+.set {
+  margin: 1.5rem 0 2.5rem;
+}
+
+.theme {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}

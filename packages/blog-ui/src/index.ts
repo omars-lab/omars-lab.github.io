@@ -46,3 +46,12 @@ export type {
 
 export {default as QuestionSection} from './components/QuestionSection';
 export type {QuestionSectionProps} from './components/QuestionSection';
+
+// Quote kit — the analog of the question kit, but for quotes that moved me. A quote is RECEIVED
+// and savored (an editorial pull-quote with a reveal-on-demand reflection), not actioned like a
+// question, so the CX is deliberately different (no badges/modal/priority sort).
+export {default as Quote} from './components/Quote';
+export type {QuoteProps} from './components/Quote';
+
+export {default as QuoteSet} from './components/QuoteSet';
+export type {QuoteSetProps} from './components/QuoteSet';

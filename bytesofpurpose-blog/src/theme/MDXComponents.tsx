@@ -26,6 +26,8 @@ import {
   Question,
   QuestionSection,
   PowerLegend,
+  Quote,
+  QuoteSet,
 } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
 
@@ -86,4 +88,10 @@ export default {
   // /thoughts landing.
   ThoughtKind,
   ThoughtKindLegend,
+  // Quote kit — for "quotes that moved me" sets on /mindset. <Quote> is an editorial pull-quote
+  // (the quote is the hero; attribution quiet; the "why it moved me" reflection reveals on
+  // demand), and <QuoteSet> lays a themed set out as a vertical reading flow. Deliberately a
+  // different CX from <Question> (received/savored, not actioned).
+  Quote,
+  QuoteSet,
 };
