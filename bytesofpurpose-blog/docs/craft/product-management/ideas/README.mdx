@@ -1,18 +1,49 @@
 ---
 slug: /product-management/ideas
 title: '💡 Ideas'
-description: 'A running collection of product and project ideas I have had, the raw front of the idea-to-ship lifecycle.'
+description: 'The Ideas board: a running index of product and project ideas I have had but not yet acted on, the raw front of the idea-to-ship lifecycle.'
 authors: [oeid]
 tags: [ideas, deep-dives, technical, exploration]
-draft: true
+draft: false
 ---
 
 # Ideas
 
 This is the raw front of the idea-to-ship lifecycle: where a rough thought is captured before
-it is groomed into something real. An idea here is a candidate, not a commitment. The good ones
-graduate into initiatives, then projects, and once shipped and reflected on, the durable lesson
-is distilled back into the relevant Craft topic.
+it is groomed into something real. An idea here is a candidate, not a commitment.
+
+## Actioned vs. unactioned: where an idea lives
+
+The dividing line is whether I have **acted on** the idea, not whether it is finished:
+
+- An idea I have **had but not acted on** is a post on the **[Thoughts & Ideas](/thoughts)**
+  blog. These are the unmaterialized ones: a "should I…", a "what would it take…", a captured
+  backlog item.
+- The moment I **start acting on it**, it graduates out of Thoughts & Ideas and becomes a dated
+  **[Initiative](/initiatives)** (an experiment, a project log, a real attempt). Once shipped and
+  reflected on, the durable lesson is distilled back into the relevant Craft topic.
+
+This page is the **durable** half: the board that indexes the unactioned ideas and the framework
+for maturing them. The idea **posts themselves** are temporal, so they live on the
+[Thoughts & Ideas](/thoughts) blog. It is exactly the same split the
+[Experiments](/product-management/experiments) page uses, where the durable board lives here in
+Craft and the dated experiment posts live on a blog.
+
+## The Ideas board
+
+Ideas appear here as cards, generated from the frontmatter of the
+[Thoughts & Ideas](/thoughts) posts that carry `board: ideas`. A card's column is its `stage`,
+read straight from the post, so the board can never drift from the posts it indexes. Click a card
+to open the idea.
+
+<KanbanBoard board="ideas" />
+
+| Column | What it means |
+|---|---|
+| Backlog | Captured, still raw, not yet groomed. |
+| Exploring | Being matured: motivation, value, scope, and a plan are taking shape. |
+| Building | I have started acting on it (at this point it usually also becomes an Initiative). |
+| Shipped | Done; the durable lesson is ready to distill into Craft. |
 
 ## How an idea matures
 
@@ -23,19 +54,11 @@ scope), **the steps** (a real to-do list), and **how I'll know it worked** (succ
 Only then is it ready to act on. The `mature-content` skill runs that interview; once an idea is
 board-ready, `groom-initiatives` advances it across the board.
 
-## The Ideas board
+## Where the ideas live
 
-Ideas that are board-ready appear here as cards, generated from their frontmatter. The board is
-empty until ideas are published with `board: ideas`; capture lives in the backlog notes below
-until then.
+The captured, still-unactioned ideas are posts on the **[Thoughts & Ideas](/thoughts)** blog,
+grouped by theme:
 
-<KanbanBoard board="ideas" />
-
-## Captured backlog
-
-Raw, still-draft captures, grouped by theme, waiting to be groomed:
-
-- [Software & Tooling Ideas](/product-management/ideas/software-and-tooling-ideas): scripting,
-  automation, link hygiene, and app ideas.
-- [Hello Worlds](/product-management/ideas/hello-worlds): "my first" learning projects across
-  technologies.
+- [Software & Tooling Ideas](/thoughts/software-and-tooling-ideas): scripting, automation, link
+  hygiene, and app ideas.
+- [Hello Worlds](/thoughts/hello-worlds): "my first" learning projects across technologies.

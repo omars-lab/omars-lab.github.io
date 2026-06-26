@@ -126,20 +126,23 @@ local-path links, fragments that went nowhere).
 
 ## The idea application (→ board-ready, hands to groom-initiatives)
 
-When the content is an **idea**, "ready" (gate 6) means it can become a card on the Ideas board.
-The output is an idea doc/post with the board frontmatter:
+When the content is an **idea** I have NOT acted on yet, "ready" (gate 6) means it can become a
+card on the **Ideas board** (`/craft/product-management/ideas`). An unactioned idea is published
+as a **`/thoughts`** (Thoughts & Ideas) blog post, NOT an `/initiatives` post — `/initiatives` is
+for ideas already ACTED ON. The output is an idea post (in `thoughts/`) with the board frontmatter:
 
 ```yaml
-kind: <a blog kind, or board: ideas for the Ideas board>
+kind: <a blog kind, e.g. reflection>
+board: ideas          # opts the post onto the Ideas board
 stage: backlog        # the first column; advances via groom-initiatives
 priority: <core|high|medium|low>
 title, description, ...
 ```
 
 Then hand off to **`groom-initiatives`**, which owns ADVANCING the card across the board (a
-`stage` edit), and to **`author-blog-post`** for the MDX/frontmatter mechanics if it's published
-as an `/initiatives` post. This skill FORMS the idea; groom-initiatives MOVES it; the durable
-learning is distilled back into `/craft` when it concludes.
+`stage` edit) and the `/thoughts` → `/initiatives` graduation when work begins, and to
+**`author-blog-post`** for the MDX/frontmatter mechanics. This skill FORMS the idea;
+groom-initiatives MOVES it; the durable learning is distilled back into `/craft` when it concludes.
 
 ## Hardening / cleaning up an existing post (a first-class case)
 

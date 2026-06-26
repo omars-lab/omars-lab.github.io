@@ -41,6 +41,7 @@ const DOCS_INSTANCES = [
 const BLOG_INSTANCES = [
   {dir: 'blog', base: '/initiatives'},
   {dir: 'designs', base: '/designs'},
+  {dir: 'thoughts', base: '/thoughts'}, // UNACTIONED idea posts (Thoughts & Ideas instance)
 ];
 
 function walk(absDir, out = []) {

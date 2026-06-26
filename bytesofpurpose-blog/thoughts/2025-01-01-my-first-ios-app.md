@@ -1,15 +1,22 @@
 ---
-slug: /product-management/ideas/my-first-ios-app
+slug: my-first-ios-app
 title: '💡 My First iOS App'
-sidebar_label: '💡 iOS App'
 description: 'Learning to develop iOS applications with Swift, focusing on calendar and dashboard functionality.'
 authors: [oeid]
 tags: [ios, swift, mobile, app-development, calendar, learning]
 date: 2025-01-01T10:00
+kind: reflection
+board: ideas
+stage: backlog
+priority: low
 draft: true
 ---
 
-# Priorities
+An unactioned idea: build my first iOS app — a calendar/dashboard I have wanted to make.
+
+<!-- truncate -->
+
+## Priorities
   - I need to make my own ios app
 
   

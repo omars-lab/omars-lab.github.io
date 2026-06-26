@@ -9,6 +9,7 @@ const SUMMARIES: Record<string, string> = {
   Craft: 'How I see the world: durable learnings, frameworks, and strategy. The lasting lessons.',
   Journey: 'How I see myself: faith and personal growth. Durable, inward.',
   Initiatives: 'The temporal half: dated experiments, project logs, and posts. What I actually did.',
+  'Thoughts & Ideas': 'Ideas I have had but not acted on yet: captures and "should I" thoughts that have not materialized. Acted-on ideas live in Initiatives.',
   Mindset: 'The quotes and ideas that moved me.',
   Legend: 'The map for the whole site: durable vs temporal, the post-kind emoji, and the glossaries.',
   Designs: 'Full system-design write-ups: how something was architected and shipped.',
@@ -39,8 +40,14 @@ export default function NavbarItem({type, ...props}: {type?: string} & Record<st
     throw new Error(`No NavbarItem component found for type "${type}".`);
   }
 
-  const item = <NavbarItemComponent {...props} />;
-  const summary = typeof props.label === 'string' ? SUMMARIES[props.label] : undefined;
+  // An `html` navbar item (e.g. the 2-line "Thoughts & Ideas" label) has no `label` to key the
+  // summary by, so it carries an explicit `data-summary-key`. Pull it out of the props before
+  // rendering so it is NOT forwarded onto the DOM as an unknown attribute.
+  const {'data-summary-key': summaryKey, ...rest} = props;
+  const item = <NavbarItemComponent {...rest} />;
+  const summaryName =
+    typeof props.label === 'string' ? props.label : typeof summaryKey === 'string' ? summaryKey : undefined;
+  const summary = summaryName ? SUMMARIES[summaryName] : undefined;
 
   // Only desktop, left-positioned primary items get the popup (skip dropdowns + right-side
   // utility controls, where a popover would be awkward).

@@ -36,7 +36,15 @@ const path = require('path');
 const matter = require('gray-matter');
 
 const ROOT = path.join(__dirname, '..');
-const BLOG_DIR = path.join(ROOT, 'blog');
+// The board cards come from TWO blog instances now: experiment posts live on /initiatives
+// (blog/), and idea posts (board: ideas) live on /thoughts (the Thoughts & Ideas instance —
+// UNACTIONED ideas). Each source carries its own permalink base so a card links to the right
+// instance. (An experiment post is never in /thoughts and an idea post can be in either, by its
+// `board: ideas` frontmatter; the de-dup in build() handles a post that somehow matches both.)
+const SOURCES = [
+  {dir: path.join(ROOT, 'blog'), base: '/initiatives'},
+  {dir: path.join(ROOT, 'thoughts'), base: '/thoughts'},
+];
 const outputFile = path.join(ROOT, 'src', 'components', 'KanbanBoard', 'kanban-data.json');
 
 // Board definitions: each board's ordered columns + how a post qualifies for it.
@@ -94,12 +102,12 @@ function resolveColumn(board, stageRaw, kind) {
   return def.columns[0]; // unknown/empty stage → first column
 }
 
-// Blog permalink: the route base is /initiatives (see docusaurus.config blog
-// routeBasePath). A post's slug is its frontmatter `slug` or the de-dated filename.
-const BLOG_BASE = '/initiatives';
-function permalinkFor(fileSlug, fm) {
+// Blog permalink: base is the source instance's routeBasePath (/initiatives or /thoughts;
+// see docusaurus.config blog routeBasePath). A post's slug is its frontmatter `slug` or the
+// de-dated filename.
+function permalinkFor(base, fileSlug, fm) {
   const slug = (fm.slug || fileSlug).toString().replace(/^\//, '');
-  return `${BLOG_BASE}/${slug}`;
+  return `${base}/${slug}`;
 }
 
 // gray-matter parses a YAML `date: 2026-05-31` into a JS Date. Normalize any date value
@@ -124,39 +132,41 @@ function listPosts(dir) {
 function build() {
   const boards = Object.fromEntries(Object.keys(BOARDS).map((b) => [b, []]));
 
-  for (const name of listPosts(BLOG_DIR)) {
-    const raw = fs.readFileSync(path.join(BLOG_DIR, name), 'utf-8');
-    let fm;
-    try {
-      fm = matter(raw).data || {};
-    } catch {
-      continue; // unparseable frontmatter — other validators flag it
-    }
-    // Drafts are dev-only; the prod build excludes them, so a card linking to a draft
-    // would 404 in prod. Skip drafts here so the board only ever cards published posts.
-    if (fm.draft === true) continue;
+  for (const {dir, base} of SOURCES) {
+    for (const name of listPosts(dir)) {
+      const raw = fs.readFileSync(path.join(dir, name), 'utf-8');
+      let fm;
+      try {
+        fm = matter(raw).data || {};
+      } catch {
+        continue; // unparseable frontmatter — other validators flag it
+      }
+      // Drafts are dev-only; the prod build excludes them, so a card linking to a draft
+      // would 404 in prod. Skip drafts here so the board only ever cards published posts.
+      if (fm.draft === true) continue;
 
-    const fileSlug = name.replace(/\.(md|mdx)$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
-    const kind = (fm.kind || '').toString();
+      const fileSlug = name.replace(/\.(md|mdx)$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+      const kind = (fm.kind || '').toString();
 
-    // Which board(s) does this post belong to?
-    const targetBoards = [];
-    for (const [boardId, def] of Object.entries(BOARDS)) {
-      if (def.kinds.includes(kind)) targetBoards.push(boardId);
-    }
-    if (fm.board && boards[fm.board]) targetBoards.push(fm.board);
+      // Which board(s) does this post belong to?
+      const targetBoards = [];
+      for (const [boardId, def] of Object.entries(BOARDS)) {
+        if (def.kinds.includes(kind)) targetBoards.push(boardId);
+      }
+      if (fm.board && boards[fm.board]) targetBoards.push(fm.board);
 
-    for (const boardId of new Set(targetBoards)) {
-      boards[boardId].push({
-        slug: fm.slug ? fm.slug.toString().replace(/^\//, '') : fileSlug,
-        title: (fm.title || fileSlug).toString().replace(/^['"]|['"]$/g, ''),
-        summary: (fm.summary || fm.description || '').toString(),
-        permalink: permalinkFor(fileSlug, fm),
-        stage: resolveColumn(boardId, fm.stage, kind),
-        priority: (fm.priority || 'medium').toString(),
-        kind,
-        date: isoDate(fm.date),
-      });
+      for (const boardId of new Set(targetBoards)) {
+        boards[boardId].push({
+          slug: fm.slug ? fm.slug.toString().replace(/^\//, '') : fileSlug,
+          title: (fm.title || fileSlug).toString().replace(/^['"]|['"]$/g, ''),
+          summary: (fm.summary || fm.description || '').toString(),
+          permalink: permalinkFor(base, fileSlug, fm),
+          stage: resolveColumn(boardId, fm.stage, kind),
+          priority: (fm.priority || 'medium').toString(),
+          kind,
+          date: isoDate(fm.date),
+        });
+      }
     }
   }
 

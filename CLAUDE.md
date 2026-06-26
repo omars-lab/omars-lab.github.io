@@ -172,15 +172,25 @@ The site is organized around ONE question: **does this stay true over time, or i
 thing I did?** Place content accordingly.
 - **DURABLE → `/craft` (how I see the world) + `/journey` (how I see myself).** Distilled
   learnings, frameworks, strategy, terminology — return-to knowledge. The lasting LESSON.
-- **TEMPORAL → `/initiatives` (the blog, formerly `/thoughts`).** Dated initiatives,
-  experiments, project logs — the specific things actually done. The EVIDENCE. A temporal post
-  links **up** to the durable insight it informed.
-So a new experiment/idea/project is an **`/initiatives` POST** (its `kind`/`stage`/`priority`
-frontmatter make it a card on a kanban **board** — see `groom-initiatives` + the Experimentation
-board), NOT a `/craft` doc; on conclusion the durable learning is **distilled up into `/craft`**.
-The **Legend** hub (`/initiatives/legend`) explains this model to readers; the build system is
-documented at `/designs/design-build-system`; the single **Glossary** is `/glossary`. When you
-add content, ask "durable or temporal?" first, then pick the home.
+- **TEMPORAL → `/initiatives` (the blog) + `/thoughts` (Thoughts & Ideas).** Dated things, the
+  EVIDENCE. The temporal half splits AGAIN by **have I acted on it yet?**:
+  - **`/thoughts` (Thoughts & Ideas) = UNACTIONED ideas** I have HAD but NOT acted on (captures,
+    "should I…", "what would it take…", things that have not materialized). A candidate, not a
+    commitment. The route `/thoughts` is now this REAL blog instance (it used to be a legacy
+    redirect to `/initiatives`; that hop was retired — `/initiatives` emits only its `/blog/*`
+    legacy root now).
+  - **`/initiatives` = ACTED-ON ideas** — the specific dated things I actually did (experiments,
+    project logs, posts). An idea **graduates** from `/thoughts` to `/initiatives` the moment I
+    start acting on it; each Initiative links **up** to the durable insight it informed.
+So a raw **idea I have NOT started** is a **`/thoughts` POST** (`board: ideas` frontmatter makes
+it a card on the **Ideas board** at `/craft/product-management/ideas`); once I **act on it** it
+becomes an **`/initiatives` POST** (its `kind`/`stage`/`priority` make it a card on the
+Experimentation board — see `groom-initiatives`), NOT a `/craft` doc; on conclusion the durable
+learning is **distilled up into `/craft`**. Both kanban boards live in `/craft` (durable) and
+index the temporal posts that live on the blogs — same split for ideas and experiments. The
+**Legend** hub (`/legend`) explains this model to readers; the build system is documented at
+`/designs/design-build-system`; the single **Glossary** is `/legend/glossary`. When you add
+content, ask "durable or temporal?" then "acted on or not?" and pick the home.
 
 ## ⚠️ Operating convention: structure decisions must update the structure checks
 
