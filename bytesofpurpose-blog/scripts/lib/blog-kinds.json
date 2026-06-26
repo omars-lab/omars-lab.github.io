@@ -1,13 +1,68 @@
 {
-  "__doc__": "SINGLE SOURCE OF TRUTH for the blog post-kind taxonomy. Each kind declares its sidebar `emoji`, a one-line `description`, and an `outline` (the structural elements a post of that kind should contain). A post's emoji reflects its KIND (document type), not its topic, so the Posts sidebar is scannable by type. CONSUMERS: scripts/validate-post-outline.js reads emoji/description/outline from here (the outline `id`s map to test functions in that file's CHECKS registry); the draft-docs plugin reads `emoji` to prepend it to the sidebar label (authors never type the emoji); the validate-post-outline-hook surfaces these on a finding. The reader-facing mirror is the 'Start Here' post (blog/2026-06-24-a-guide-to-these-posts.mdx), whose kind->emoji table is drift-checked against this file. The author-blog-post skill POINTS here rather than re-listing. LOCKSTEP: to add/change a kind, edit (1) this file, (2) a matching CHECKS entry in validate-post-outline.js if it has a new outline id, (3) the Start Here legend table. Mirrors the docs emoji system (scripts/lib/emoji-map.json).",
+  "__doc__": "SINGLE SOURCE OF TRUTH for the blog post-kind taxonomy. Each kind declares its sidebar `emoji`, a one-line `description`, and an `outline` (the structural elements a post of that kind should contain). A kind that represents an UNACTIONED THOUGHT (a /thoughts-collection post) also carries `thought: true` and a `thoughtGloss` (the short reader-facing gloss shown in the Thoughts legend/badge). A post's emoji reflects its KIND (document type), not its topic, so the Posts sidebar is scannable by type. CONSUMERS: scripts/validate-post-outline.js reads emoji/description/outline from here (the outline `id`s map to test functions in that file's CHECKS registry); the draft-docs plugin reads `emoji` to prepend it to the sidebar label (authors never type the emoji); the validate-post-outline-hook surfaces these on a finding; the <ThoughtKind>/<ThoughtKindLegend> blog-ui components render the `thought: true` kinds (emoji + thoughtGloss) so the Thoughts legend can never drift from this file. The reader-facing mirror is the 'Start Here' post (blog/2026-06-24-a-guide-to-these-posts.mdx), whose kind->emoji table is drift-checked against this file. The author-blog-post skill POINTS here rather than re-listing. THOUGHTS TAXONOMY: the unactioned-thought kinds (thought: true) are the kinds of a /thoughts post — idea, question-set, simulation, prediction, critique, principle, design-story. An idea GRADUATES to /initiatives when acted on; a principle/observation graduates UP to durable /craft. LOCKSTEP: to add/change a kind, edit (1) this file, (2) a matching CHECKS entry in validate-post-outline.js if it has a new outline id, (3) the Start Here legend table, (4) the Thoughts legend if `thought: true`. Mirrors the docs emoji system (scripts/lib/emoji-map.json).",
   "kinds": {
+    "idea": {
+      "emoji": "💡",
+      "description": "An unactioned idea: something I might build or do, captured before I've acted on it. The raw front of the idea-to-ship lifecycle (a /thoughts post; graduates to an /initiatives project when I act on it).",
+      "thought": true,
+      "thoughtGloss": "Something I might build or do",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "question-set": {
       "emoji": "❓",
       "description": "A set of introspective questions to ask yourself (the 'What I Ask Myself' / 'Questions for' series).",
+      "thought": true,
+      "thoughtGloss": "A question I ask myself",
       "outline": [
         {"id": "sections", "label": "themed H2 sections (questions grouped by theme, not a flat list)"},
         {"id": "question-cards", "label": "one or more <Question> cards (each question is a card, not a bare bullet)"},
         {"id": "section-banner", "label": "a <SectionBanner> (the per-section \"why these questions matter\" callout)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "simulation": {
+      "emoji": "🔮",
+      "description": "A hypothetical walk-through of how something could unfold: 'if X then Y then Z; what if 1, 2, 3?'. Exploratory branching, no commitment (a /thoughts post). A pre-meditated action is a simulation resolved into 'if I'm ever in X, I will do Y'.",
+      "thought": true,
+      "thoughtGloss": "If X then Y then Z; what if 1, 2, 3?",
+      "outline": [
+        {"id": "scenario", "label": "a scenario / starting condition (an H2 or bold line stating the 'if X' the walk-through branches from)"},
+        {"id": "branches", "label": "the branches or steps it walks (if/then chains, numbered steps, or a decision list)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "prediction": {
+      "emoji": "🎯",
+      "description": "A falsifiable bet about the future: 'I think X will happen'. Distinct from a simulation (which explores branches without committing); a prediction calls one outcome so it can be scored later (a /thoughts post).",
+      "thought": true,
+      "thoughtGloss": "A falsifiable bet about the future",
+      "outline": [
+        {"id": "claim", "label": "the prediction stated as a falsifiable claim (a bold **Prediction:** line or an H2 stating what will happen)"},
+        {"id": "rationale", "label": "the reasoning / when it resolves (why I believe it, and how/when I'll know if it was right)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "critique": {
+      "emoji": "🔍",
+      "description": "An evaluative thought about something that already exists: what's wrong with X and what I'd change (critique), or how X actually works and what's really going on (analysis) (a /thoughts post).",
+      "thought": true,
+      "thoughtGloss": "What's wrong with X, or how X really works",
+      "outline": [
+        {"id": "subject", "label": "the subject under critique/analysis (named up front: what is being evaluated)"},
+        {"id": "assessment", "label": "the assessment (what's wrong / what I'd change, or how it works / what's really going on)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "principle": {
+      "emoji": "🪞",
+      "description": "An observation maturing into a rule I live by: 'I noticed X tends to happen' becoming 'so I now always Y'. The raw feeder that graduates UP into a durable /craft framework once it holds (a /thoughts post).",
+      "thought": true,
+      "thoughtGloss": "An observation maturing into a rule I live by",
+      "outline": [
+        {"id": "observation", "label": "the observation (the pattern noticed: 'I noticed that X')"},
+        {"id": "principle", "label": "the principle it implies (the rule it suggests living by: 'so I now Y')"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
@@ -38,6 +93,8 @@
     "design-story": {
       "emoji": "📐",
       "description": "The story/motivation BEHIND a design: a narrative front-door that links to the formal HLD in /designs (not the HLD itself, which lives in /designs).",
+      "thought": true,
+      "thoughtGloss": "How X would actually be structured",
       "outline": [
         {"id": "links-to-design", "label": "a link to the formal design doc in /designs (a design-story narrates the WHY and points to the HLD; the HLD itself lives in /designs)"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}

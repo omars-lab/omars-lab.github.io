@@ -146,6 +146,37 @@ const CHECKS = {
   outcome: (fm, body) =>
     /^#{1,4}\s+.*\b(outcomes?|results?|findings?|what happened)\b/im.test(body) ||
     /\*\*(outcomes?|results?|findings?)\b/im.test(body),
+  // simulation (a /thoughts kind): a scenario it branches from + the branches/steps it walks
+  scenario: (fm, body) =>
+    /^#{1,4}\s+.*\b(scenario|situation|setup|starting (point|condition)|if\b)/im.test(body) ||
+    /\*\*(scenario|situation|if)\b/im.test(body) ||
+    /\bif\b.+\bthen\b/i.test(body),
+  branches: (fm, body) =>
+    /\bif\b.+\bthen\b/i.test(body) || // if/then chains
+    /^\s*\d+\.\s+\S/m.test(body) || // numbered steps
+    /\b(what if|then maybe|otherwise|else)\b/i.test(body),
+  // prediction (a /thoughts kind): a falsifiable claim + the reasoning / when it resolves
+  claim: (fm, body) =>
+    /^#{1,4}\s+.*\b(prediction|i (predict|bet|expect)|will\b)/im.test(body) ||
+    /\*\*(prediction|i predict|i bet)\b/im.test(body),
+  rationale: (fm, body) =>
+    /^#{1,4}\s+.*\b(rationale|reasoning|why|because|resolves?|when (i('|’)ll know|this resolves))\b/im.test(body) ||
+    /\b(because|i (think|believe)|i('|’)ll know|resolves? (when|by))\b/i.test(body),
+  // critique (a /thoughts kind): the subject under evaluation + the assessment
+  subject: (fm, body) =>
+    /^#{1,4}\s+.*\b(subject|what i('|’)m (critiquing|analyzing)|the (problem|critique|analysis))\b/im.test(body) ||
+    hasH2(body), // any structured framing names the subject
+  assessment: (fm, body) =>
+    /^#{1,4}\s+.*\b(assessment|critique|analysis|what('|’)s wrong|what i('|’)d change|how it works|what('|’)s really going on)\b/im.test(body) ||
+    /\*\*(assessment|critique|analysis)\b/im.test(body),
+  // principle (a /thoughts kind): the observation noticed + the rule it implies
+  observation: (fm, body) =>
+    /^#{1,4}\s+.*\b(observation|i noticed|i('|’)ve noticed|the pattern)\b/im.test(body) ||
+    /\b(i noticed|i('|’)ve noticed|i keep seeing|tends to)\b/i.test(body),
+  principle: (fm, body) =>
+    /^#{1,4}\s+.*\b(principle|the rule|so i now|takeaway|what i (do|live by))\b/im.test(body) ||
+    /\*\*(principle|the rule)\b/im.test(body) ||
+    /\bso i now\b/i.test(body),
 };
 
 // OUTLINES is built FROM the JSON: for each kind, its outline specs (id + label) paired
