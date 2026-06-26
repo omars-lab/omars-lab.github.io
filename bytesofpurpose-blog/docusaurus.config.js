@@ -283,7 +283,10 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           id: 'thoughts',
           routeBasePath: 'thoughts',
           path: './thoughts',
-          blogSidebarTitle: 'Ideas',
+          // The sidebar section heading for the dated posts (below the pinned "Guides"). The
+          // collection is "Thoughts" — it holds more than ideas (questions, simulations,
+          // predictions, critiques, principles, designs), so the heading is "Thoughts", not "Ideas".
+          blogSidebarTitle: 'Thoughts',
           blogSidebarCount: 'ALL',
           remarkPlugins: [remarkTaskList],
           rehypePlugins: [rehypeTaskListLabels],
