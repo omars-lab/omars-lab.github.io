@@ -13,7 +13,7 @@ import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
 import TaskList from '@site/src/components/TaskList';
-import ThoughtKind, {ThoughtKindLegend} from '@site/src/components/ThoughtKind';
+import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -89,6 +89,8 @@ export default {
   // /thoughts landing.
   ThoughtKind,
   ThoughtKindLegend,
+  // MindsetKindLegend: the same, for the curated MINDSET kinds (question-set/quote-set/principle).
+  MindsetKindLegend,
   // Quote kit — for "quotes that moved me" sets on /mindset. <Quote> is an editorial pull-quote
   // (the quote is the hero; attribution quiet; the "why it moved me" reflection reveals on
   // demand), and <QuoteSet> lays a themed set out as a vertical reading flow. Deliberately a

@@ -31,13 +31,24 @@ The whole site hangs on two questions, then a kind. Walk them top-down:
 > date I did/thought X". A durable claim that is really one person's dated experiment is temporal
 > EVIDENCE that should link UP to the durable lesson, not masquerade as the lesson.
 
-### 2. (If temporal) Acted on, or not yet? — *have I done anything about this?*
+### 2. (If temporal) Which graduation? — *what am I doing with this thought?*
 
-- **ACTED ON** → a dated thing I actually did: an experiment, a project log, a post about work
-  done. Home: **`/initiatives`** (the blog). An experiment is `kind: experiment-plan/result` (a
-  card on the Experimentation board — see `groom-initiatives`).
-- **NOT acted on** → a thought I have had but not acted on. Home: **`/thoughts`** (the Thoughts
-  collection). Go to question 3 to pick the kind.
+A temporal piece starts as a **Thought** (an idea that OCCURRED to me), and a thought graduates
+three ways depending on what I do with it:
+
+- **Acted on it** → a dated thing I did: an experiment, a project log, a post about work done.
+  Home: **`/initiatives`**. An experiment is `kind: experiment-plan/result` (a card on the
+  Experimentation board — see `groom-initiatives`).
+- **Deliberately KEEP it to shape how I think** → a curated input. Home: **`/mindset`**. The line
+  vs a plain Thought is **occurrence vs. curation**: a question that just *occurred* to me is a
+  Thought; the set I *chose to ask myself to shape who I am* is Mindset. Mindset kinds (`mindset:
+  true` in `blog-kinds.json`): `question-set` ❓, `quote-set` 💬, `principle` 🪞.
+- **Not acted on, not (yet) curated** → it stays a **Thought**. Home: **`/thoughts`**. Thought
+  kinds (`thought: true`): `idea` 💡, `simulation` 🔮, `prediction` 🎯, `critique` 🔍,
+  `design-story` 📐. Go to question 3 to pick the kind.
+
+(A thought can also graduate UP to durable `/craft` when it distills into a lasting lesson — that
+is question 1's DURABLE branch.)
 
 > Tell: "I built/ran/shipped X" is acted-on (/initiatives). "I could build X / I keep asking X /
 > what if X" is unactioned (/thoughts). The moment work begins on a /thoughts post it GRADUATES to

@@ -23,36 +23,41 @@ interface KindMeta {
   description: string;
   thought?: boolean;
   thoughtGloss?: string;
+  mindset?: boolean;
+  mindsetGloss?: string;
 }
 
 const KINDS = (blogKinds as {kinds: Record<string, KindMeta>}).kinds;
 
-// The thought kinds, in a deliberate reading order (generative → interrogative → evaluative →
-// distilling → design). Any kind flagged `thought: true` that isn't listed still falls through
-// to the end, so adding a thought kind to the JSON surfaces it here even before this list is
-// updated.
-const THOUGHT_ORDER = [
-  'idea',
-  'question-set',
-  'simulation',
-  'prediction',
-  'critique',
-  'principle',
-  'design-story',
-];
+// Reading order per collection. A flagged kind not listed falls through to the end, so adding a
+// kind to the JSON surfaces it even before these lists are updated.
+const THOUGHT_ORDER = ['idea', 'simulation', 'prediction', 'critique', 'design-story'];
+const MINDSET_ORDER = ['question-set', 'quote-set', 'principle'];
 
-export function thoughtKinds(): string[] {
-  const flagged = Object.keys(KINDS).filter((k) => KINDS[k]?.thought);
-  const ordered = THOUGHT_ORDER.filter((k) => flagged.includes(k));
+function kindsFor(flag: 'thought' | 'mindset', order: string[]): string[] {
+  const flagged = Object.keys(KINDS).filter((k) => KINDS[k]?.[flag]);
+  const ordered = order.filter((k) => flagged.includes(k));
   const rest = flagged.filter((k) => !ordered.includes(k));
   return [...ordered, ...rest];
 }
 
-/** Human label for a kind: the gloss's subject, derived from the kind id (idea → "Idea"). */
+export function thoughtKinds(): string[] {
+  return kindsFor('thought', THOUGHT_ORDER);
+}
+export function mindsetKinds(): string[] {
+  return kindsFor('mindset', MINDSET_ORDER);
+}
+
+// The gloss to show for a kind: prefer its collection-specific gloss, else the description.
+function kindGloss(meta: KindMeta): string {
+  return meta.mindsetGloss || meta.thoughtGloss || meta.description;
+}
+
+/** Human label for a kind: a friendly noun derived from the kind id (idea → "Idea"). */
 function kindLabel(kind: string): string {
-  // question-set reads better as "Question"; design-story as "Design"; otherwise title-case.
   const overrides: Record<string, string> = {
     'question-set': 'Question',
+    'quote-set': 'Quote',
     'design-story': 'Design',
     critique: 'Critique',
   };
@@ -71,12 +76,12 @@ export interface ThoughtKindProps {
 
 const ThoughtKind: React.FC<ThoughtKindProps> = ({kind, showLabel = true, className, style}) => {
   const meta = KINDS[kind];
-  if (!meta || !meta.thought) {
-    // Not a known thought kind — render nothing rather than a misleading badge.
+  if (!meta || !(meta.thought || meta.mindset)) {
+    // Not a known thought/mindset kind — render nothing rather than a misleading badge.
     return null;
   }
   const label = kindLabel(kind);
-  const gloss = meta.thoughtGloss || meta.description;
+  const gloss = kindGloss(meta);
   return (
     <Tooltip
       content={
@@ -98,35 +103,48 @@ const ThoughtKind: React.FC<ThoughtKindProps> = ({kind, showLabel = true, classN
 
 export default ThoughtKind;
 
-export interface ThoughtKindLegendProps {
+export interface KindLegendProps {
   className?: string;
   style?: CSSProperties;
 }
 
-/**
- * ThoughtKindLegend — the canonical reader-facing legend of the thought kinds, rendered straight
- * from blog-kinds.json (the `thought: true` kinds). Drop it on the /thoughts landing. Same role
- * <PowerLegend> plays for the question-set kit: generated from the source of truth so it can
- * never drift from the badges the posts actually carry.
- */
-export function ThoughtKindLegend({className, style}: ThoughtKindLegendProps): React.JSX.Element {
+/** Shared legend renderer — a <dl> of {emoji, label, gloss} for the given kind ids. */
+function KindLegend({kinds, className, style}: KindLegendProps & {kinds: string[]}): React.JSX.Element {
   return (
     <dl className={clsx(styles.legend, className)} style={style}>
-      {thoughtKinds().map((kind) => {
+      {kinds.map((kind) => {
         const meta = KINDS[kind];
-        const label = kindLabel(kind);
         return (
           <div key={kind} className={styles.legendRow}>
             <dt className={styles.legendEmoji} aria-hidden="true">
               {meta.emoji}
             </dt>
             <dd className={styles.legendText}>
-              <span className={styles.legendName}>{label}</span>
-              <span className={styles.legendGloss}>{meta.thoughtGloss || meta.description}</span>
+              <span className={styles.legendName}>{kindLabel(kind)}</span>
+              <span className={styles.legendGloss}>{kindGloss(meta)}</span>
             </dd>
           </div>
         );
       })}
     </dl>
   );
+}
+
+/**
+ * ThoughtKindLegend — the canonical reader-facing legend of the THOUGHT kinds (ideas that occurred
+ * to me: idea/simulation/prediction/critique/design), rendered straight from blog-kinds.json (the
+ * `thought: true` kinds). Drop it on the /thoughts landing. Generated from the source of truth so
+ * it can never drift from the badges the posts carry.
+ */
+export function ThoughtKindLegend(props: KindLegendProps): React.JSX.Element {
+  return <KindLegend kinds={thoughtKinds()} {...props} />;
+}
+
+/**
+ * MindsetKindLegend — the same, for the MINDSET kinds (the curated inputs I keep to shape my
+ * thinking: question-set/quote-set/principle, the `mindset: true` kinds). Drop it on the /mindset
+ * landing.
+ */
+export function MindsetKindLegend(props: KindLegendProps): React.JSX.Element {
+  return <KindLegend kinds={mindsetKinds()} {...props} />;
 }
