@@ -5,16 +5,21 @@ description: Capture and advance a temporal initiative (an idea, experiment, or 
 
 # Groom initiatives (board-aware capture + advancement)
 
-The site is split **durable vs temporal** (see the Legend hub, `/initiatives/legend`):
+The site is split **durable vs temporal** (see the Legend hub, `/legend`):
 
 - **`/craft` (+ `/journey`) = DURABLE** — distilled learnings, frameworks, strategy. The
   lasting lesson.
-- **`/initiatives` (the blog) = TEMPORAL** — the dated things actually done: ideas,
-  experiments, project logs. Each links **up** to the durable Craft insight it informed.
+- **TEMPORAL = two blogs, split by whether I have ACTED on the idea yet:**
+  - **`/thoughts` (Thoughts & Ideas) = UNACTIONED** — ideas I have HAD but not acted on
+    (captures, "should I…", not yet materialized). A candidate, not a commitment.
+  - **`/initiatives` (the blog) = ACTED-ON** — the dated things actually done: experiments,
+    project logs, posts. Each links **up** to the durable Craft insight it informed.
 
-A temporal initiative is therefore an **`/initiatives` blog post**, never a `/craft` doc. Its
-frontmatter makes it a **card on a kanban board**; advancing the work = editing one frontmatter
-field. This skill is the contract for that lifecycle.
+An idea **graduates** from `/thoughts` to `/initiatives` the moment work begins on it. So a raw
+**unactioned idea is a `/thoughts` post**; an **acted-on experiment/project is an `/initiatives`
+post**; neither is ever a `/craft` doc. Its frontmatter makes it a **card on a kanban board** (the
+boards live in `/craft`, durable; the posts live on the blogs, temporal); advancing the work =
+editing one frontmatter field. This skill is the contract for that lifecycle.
 
 ## The boards (the board-aware part)
 
@@ -24,13 +29,15 @@ the `<KanbanBoard board="…"/>` component renders them. **Never hand-edit kanba
 it regenerates (the `block-generated-edits` hook refuses writes to it). To move a card, edit
 the POST.
 
-| Board | A card is a post with… | Columns (the `stage` values) |
-|---|---|---|
-| **experiments** | `kind: experiment-plan` 📝 or `kind: experiment-result` 📊 | `proposed` → `designed` → `running` → `analyzing` → `concluded` |
-| **ideas** | any kind + explicit `board: ideas` frontmatter | `backlog` → `exploring` → `building` → `shipped` |
+| Board | Lives at | A card is a post (in…) with… | Columns (the `stage` values) |
+|---|---|---|---|
+| **experiments** | `/craft/product-management/experiments` | an `/initiatives` post, `kind: experiment-plan` 📝 / `experiment-result` 📊 | `proposed` → `designed` → `running` → `analyzing` → `concluded` |
+| **ideas** | `/craft/product-management/ideas` | a **`/thoughts`** post + explicit `board: ideas` frontmatter | `backlog` → `exploring` → `building` → `shipped` |
 
-A post opts into a board by its **kind** (experiments) or an explicit **`board: ideas`**
-(ideas) — never by accident. A `kind: experiment-result` post always shows in the terminal
+The generator (`generate-kanban-data.js`) scans BOTH blog dirs: `blog/` (→ `/initiatives`, the
+experiment posts) and `thoughts/` (→ `/thoughts`, the idea posts), and links each card to the
+right instance. A post opts into a board by its **kind** (experiments) or an explicit
+**`board: ideas`** (ideas) — never by accident. A `kind: experiment-result` post always shows in the terminal
 `concluded` column regardless of `stage`. Unknown/empty `stage` → the board's first column.
 (Synonyms are accepted, e.g. `draft`→`designed`, `live`→`running`, `done`→`concluded`,
 `wip`→`building` — see the generator's `STAGE_SYNONYMS`.)
@@ -53,9 +60,12 @@ board.
 
 ## The lifecycle
 
-1. **Capture.** A new idea/experiment is a NEW `/initiatives` post (start from the
-   `author-blog-post` skill for the MDX/frontmatter pitfalls). Set `kind` + `stage` (first
-   column) + `priority`. For an idea, add `board: ideas`. Publish when it's real enough to show.
+1. **Capture.** A new UNACTIONED idea is a NEW **`/thoughts`** post (`board: ideas`); a new
+   experiment/acted-on initiative is a NEW **`/initiatives`** post. (Start from the
+   `author-blog-post` skill for the MDX/frontmatter pitfalls.) Set `kind` + `stage` (first
+   column) + `priority`. Publish when it's real enough to show. When an idea moves from "thought
+   about" to "working on it," MOVE the post `blog/` ↔ `thoughts/` and pair the move with a
+   `{from,to}` redirect (the move/split-don't-delete + redirect rules).
 2. **Advance.** Moving the work forward = changing **one field**: bump `stage` to the next
    column (e.g. `designed` → `running`). For an experiment, the `kind` itself flips
    `experiment-plan` 📝 → `experiment-result` 📊 once the Outcome lands (the

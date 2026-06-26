@@ -34,7 +34,8 @@ The content lives in a few top-level trees, split by the site's organizing idea
 | Folder | What it holds |
 |---|---|
 | `docs/craft/`, `docs/journey/` | the two DURABLE docs instances (Craft, Journey): distilled learnings, frameworks, terminology |
-| `blog/` | the TEMPORAL Initiatives blog: dated posts, experiments, project logs |
+| `blog/` | the TEMPORAL Initiatives blog: dated posts and experiments I have ACTED on |
+| `thoughts/` | the TEMPORAL Thoughts & Ideas blog: ideas I have HAD but not acted on yet |
 | `designs/` | the Designs blog: full design write-ups like this one |
 | `src/components/`, `packages/blog-ui/` | the React components (site-specific and the shared UI package) |
 | `plugins/` | Docusaurus plugins (draft awareness, recent posts) |
@@ -66,7 +67,7 @@ file, to a component.
 |---|---|---|---|
 | `generate-changelog-data.js` | the changelog entries | `src/components/Changelog/changelog-data.json` | the Changelog timeline |
 | `generate-ideas-data.js` | the `ideas/` posts | `src/components/Vote/ideas-data.json` | the Vote page |
-| `generate-kanban-data.js` | blog posts' `kind`/`stage`/`priority` | `src/components/KanbanBoard/kanban-data.json` | the KanbanBoard (Experimentation + Ideas boards) |
+| `generate-kanban-data.js` | `kind`/`stage`/`priority` of the `blog/` (Initiatives) + `thoughts/` (Ideas) posts | `src/components/KanbanBoard/kanban-data.json` | the KanbanBoard (Experimentation + Ideas boards) |
 | `generate-logo-variants-data.js` | the binary-pyramid logo source | `designs/_binary-pyramid-variants.js` | the logo preview |
 
 The kanban one is the clearest example of the pattern. A card on the

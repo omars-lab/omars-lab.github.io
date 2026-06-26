@@ -269,6 +269,32 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
       ],
+      // 💡 Thoughts & Ideas — its OWN blog instance (served at /thoughts): the UNACTIONED
+      // half of the temporal split. /initiatives holds ideas I have ACTED ON (they
+      // materialized into something dated and real); /thoughts holds ideas I have HAD but
+      // NOT acted on yet — captures, "should I…", "what would it take…", things that have
+      // not materialized. An idea graduates OUT of /thoughts and INTO /initiatives the
+      // moment I start acting on it. The Ideas board on /craft/product-management/ideas
+      // indexes these posts by their `board: ideas` frontmatter (same split as experiments:
+      // the durable board lives in /craft, the temporal posts live in a blog).
+      [
+        '@docusaurus/plugin-content-blog',
+        {
+          id: 'thoughts',
+          routeBasePath: 'thoughts',
+          path: './thoughts',
+          blogSidebarTitle: 'Ideas',
+          blogSidebarCount: 'ALL',
+          remarkPlugins: [remarkTaskList],
+          rehypePlugins: [rehypeTaskListLabels],
+          showReadingTime: true,
+          blogTitle: 'Bytes of Purpose — Thoughts & Ideas',
+          blogDescription:
+            'Ideas I have had but not yet acted on: captured thoughts, app and tooling ideas, and "should I build this" experiments that have not materialized. Acted-on ideas live in Initiatives.',
+          editUrl:
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/thoughts/',
+        },
+      ],
       // https://docusaurus.io/docs/blog#multiple-blogs
       [
         '@docusaurus/plugin-content-blog',
@@ -483,9 +509,9 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/legend/terminology/companies", to: "/legend/terminology/companies-and-career"},
             // The Experimentation board moved from a standalone /initiatives post onto the durable
             // /craft experiments page (the experiment POSTS stay in /initiatives). It left
-            // /initiatives, so list all three old roots explicitly.
+            // /initiatives, so list the old roots explicitly. (The /thoughts/* legacy hop was
+            // RETIRED — /thoughts is now the Thoughts & Ideas blog instance, not a legacy root.)
             {from: "/initiatives/experimentation", to: "/craft/product-management/experiments"},
-            {from: "/thoughts/experimentation", to: "/craft/product-management/experiments"},
             {from: "/blog/experimentation", to: "/craft/product-management/experiments"},
             // Legend-as-instance: the glossary + all terminology moved OUT of /craft into the
             // Legend instance (/legend/...). Old URLs 301 to their new homes.
@@ -500,11 +526,21 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/companies/terminology", to: "/legend/terminology/companies-and-career"},
             // C6: "How I Ask Others Questions" moved from the /initiatives blog into the durable
             // /craft/leadership topic. It left /initiatives, so createRedirects no longer emits its
-            // legacy /thoughts,/blog hops — list all three old roots explicitly.
+            // legacy /blog hop — list the old roots explicitly. (No /thoughts hop: /thoughts is now
+            // the Thoughts & Ideas blog instance, not a legacy root.)
             {from: "/initiatives/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
-            {from: "/thoughts/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
             {from: "/blog/how-i-ask-others-questions", to: "/craft/leadership/how-i-ask-others-questions"},
-            {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
+            // Thoughts & Ideas split (2026-06): the UNACTIONED idea posts moved OUT of the durable
+            // /craft/product-management/ideas docs folder into the NEW /thoughts blog instance (and
+            // idea-track-script-usage moved /initiatives → /thoughts). The /craft ideas page is now
+            // just the durable Ideas board; the idea POSTS live in /thoughts. Repoint the old
+            // hello-worlds redirect to its new /thoughts home, and add the new moves. (Only the
+            // PUBLISHED targets get a redirect — a redirect to a draft target fails the prod build;
+            // the 5 still-draft idea posts get their redirects when they are un-drafted.)
+            {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
+            {from: "/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
+            {from: "/initiatives/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
+            {from: "/blog/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
             {from: "/docs/craft/product-management/pocs/enhancing-the-google-search-experience", to: "/craft/product-management/pocs/enhancing-the-google-search-experience"},
@@ -743,17 +779,19 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           // /initiatives/* (2026-06, durable/temporal reframe). createRedirects runs for
           // EVERY generated path, so every new /journey/* and /initiatives/* page emits a
           // 301 from its old URL(s) — old links and shares never break (CLAUDE.md tenet: a
-          // move is paired with a {from,to} redirect). The blog emits BOTH legacy roots so
-          // a /blog/* OR a /thoughts/* link still lands on the final /initiatives/* page.
+          // move is paired with a {from,to} redirect).
+          //
+          // NOTE: the /thoughts legacy hop was RETIRED (2026-06) when /thoughts was reclaimed
+          // as its OWN blog instance (Thoughts & Ideas — unactioned ideas). /initiatives now
+          // emits ONLY its /blog/* legacy root; a /thoughts/* URL is a REAL page of the new
+          // instance, not a redirect to /initiatives. (A /thoughts hop here would shadow the
+          // new instance's pages — the validate-redirects gate would flag the from-collision.)
           createRedirects(existingPath) {
             if (existingPath.startsWith('/journey')) {
               return [existingPath.replace(/^\/journey/, '/self')];
             }
             if (existingPath.startsWith('/initiatives')) {
-              return [
-                existingPath.replace(/^\/initiatives/, '/thoughts'),
-                existingPath.replace(/^\/initiatives/, '/blog'),
-              ];
+              return [existingPath.replace(/^\/initiatives/, '/blog')];
             }
             return undefined; // no redirect for other paths
           },
@@ -795,6 +833,17 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               label: 'Initiatives',
               to: '/initiatives',
               position: 'left'
+            },
+            {
+              // 'Thoughts & Ideas' (the /thoughts blog) — the UNACTIONED half: ideas I have
+              // HAD but not acted on yet (captures, "should I…", things that have not
+              // materialized). Sibling to Initiatives (ACTED-ON ideas). A 2-line `html` label
+              // ('Thoughts &' / 'Ideas') per the design; the hover summary is keyed by its
+              // data-summary-key (see src/theme/NavbarItem) since html items carry no `label`.
+              html: 'Thoughts &amp;<br/>Ideas',
+              to: '/thoughts',
+              position: 'left',
+              'data-summary-key': 'Thoughts & Ideas',
             },
             {
               // 'Mindset' (the quotes-that-moved-me page) — matches the homepage
