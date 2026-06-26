@@ -43,6 +43,7 @@ src/components/Changelog/changelog-data.json
 src/components/Vote/ideas-data.json
 src/components/KanbanBoard/kanban-data.json
 src/components/Todos/todos-data.json
+src/components/UsedIn/component-usage.json
 
 # Generated logo-variant SVG data (build artifact; source: src/lib/binary-pyramid-logo.js)
 designs/_binary-pyramid-variants.js
