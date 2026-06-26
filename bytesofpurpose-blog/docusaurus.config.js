@@ -848,7 +848,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/development/roadmaps/blog-roadmap", to: "/craft/product-management/roadmaps/1-blog-roadmap"},
             {from: "/docs/development/roadmaps/portfolio-roadmap", to: "/craft/product-management/roadmaps/2-portfolio-roadmap"},
             {from: "/docs/development/terminology", to: "/legend/terminology/building-software"},
-            {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/craft/product-management/ideas/hello-worlds"},
+            {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/thoughts/hello-worlds"},
             {from: "/docs/development/tinkering/tinkering", to: "/craft/product-management/tinkering"},
             {from: "/docs/entrepreneurship", to: "/craft/entrepreneurship"},
             {from: "/docs/faith", to: "/journey/faith"},

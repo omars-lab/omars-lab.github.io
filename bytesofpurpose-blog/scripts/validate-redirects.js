@@ -146,8 +146,6 @@ function isWhitelisted(to, published) {
   if (/\/tags(\/|$)/.test(to)) return true;
   // The changelog instance generates per-entry pages from changelog/.
   if (to === '/changelog' || to.startsWith('/changelog/')) return true;
-  // A redirect whose target is itself another redirect's `from` resolves transitively; allow
-  // if the eventual target is published (handled by the caller via the chain check).
   return published.has(norm(to));
 }
 
@@ -169,17 +167,19 @@ function main() {
   const findings = [];
 
   const froms = new Map(); // from → count (for duplicate detection)
-  // A `from` that is itself redirected elsewhere counts as a valid transitive target.
-  const fromSet = new Set(redirects.map((r) => norm(r.from)));
+  // NOTE: Docusaurus's client-redirects plugin does NOT chain redirects — a `to:` must point at a
+  // REAL published page. A `to:` that lands on another redirect's `from:` resolves to a 404 at
+  // build time ("createRedirects to invalid paths"), NOT transitively to that redirect's target.
+  // So the `to:` set is validated against published pages ONLY; do not treat a `from:` as a valid
+  // target (that false-negative once shipped a build-breaking redirect to a moved-away slug).
 
   for (const {from, to} of redirects) {
     const nFrom = norm(from);
     const nTo = norm(to);
     froms.set(nFrom, (froms.get(nFrom) || 0) + 1);
 
-    // to-missing / to-draft: the target must be a published page (or a whitelisted dynamic
-    // route, or a transitive redirect that eventually lands somewhere published).
-    if (!isWhitelisted(nTo, published) && !fromSet.has(nTo)) {
+    // to-missing / to-draft: the target must be a published page (or a whitelisted dynamic route).
+    if (!isWhitelisted(nTo, published)) {
       if (draft.has(nTo)) {
         findings.push({tier: 'error', id: 'to-draft', from, to, detail: `redirect target ${to} is a DRAFT page (excluded from the prod build → invalid). Publish it or drop the redirect.`});
       } else {

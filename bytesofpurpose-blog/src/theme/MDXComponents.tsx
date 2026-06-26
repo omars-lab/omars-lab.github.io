@@ -14,6 +14,7 @@ import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
 import TaskList from '@site/src/components/TaskList';
 import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
+import UsedIn from '@site/src/components/UsedIn';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -99,4 +100,9 @@ export default {
   QuoteSet,
   // <Focus> marks the powerful word(s) in a <Quote>; a highlight sweeps in under them on hover.
   Focus,
+  // UsedIn: the "used in" list on a showcase doc. The published posts that actually use this
+  // component/technique, generated from the corpus by generate-component-usage.js (component-
+  // usage.json) so it can't go stale. Drop <UsedIn slug="/components/structural/card"/> on a
+  // showcase; pass the showcase's own slug. Detection is the showcase's `usage_pattern` frontmatter.
+  UsedIn,
 };
