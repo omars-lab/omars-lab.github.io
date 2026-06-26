@@ -103,3 +103,45 @@
 .reflection > :last-child {
   margin-bottom: 0;
 }
+
+/* ── Focus words: a highlight that sweeps in on hover ────────────────── */
+
+/* A focus word looks normal by default; a green highlight underline is drawn behind it but
+   clipped to 0 width, anchored left. The sweep happens on the PARENT .quote:hover, so hovering
+   anywhere on the quote animates all its focus words together. */
+.focus {
+  position: relative;
+  font-weight: 600;
+  white-space: nowrap;
+  /* The highlight lives in a background-image sized to 0% width; hover grows it to 100%. */
+  background-image: linear-gradient(var(--tea-mint, #adfff5), var(--tea-mint, #adfff5));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 0.32em;
+  transition: background-size 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  /* tiny nudge so the highlight reads as "under" the word, not through it */
+  padding-bottom: 0.02em;
+}
+
+.quote:hover .focus {
+  background-size: 100% 0.32em;
+}
+
+/* Stagger: later focus words start a touch after earlier ones, so the eye is led across. */
+.quote:hover .focus:nth-of-type(2) {
+  transition-delay: 0.12s;
+}
+.quote:hover .focus:nth-of-type(3) {
+  transition-delay: 0.24s;
+}
+.quote:hover .focus:nth-of-type(n + 4) {
+  transition-delay: 0.36s;
+}
+
+/* Reduced-motion: no sweep — show the highlight statically so the emphasis still reads. */
+@media (prefers-reduced-motion: reduce) {
+  .focus {
+    background-size: 100% 0.32em;
+    transition: none;
+  }
+}
