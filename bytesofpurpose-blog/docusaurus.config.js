@@ -541,6 +541,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
             {from: "/initiatives/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
             {from: "/blog/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
+            // "What I Ask Myself" (the question-set LEGEND post: the icon system + the practice)
+            // moved from the /initiatives blog into the Legend docs INSTANCE, where it belongs as
+            // the map for the question-set series. It left /initiatives, so createRedirects no
+            // longer emits its legacy /blog hop — list both old roots explicitly. (The themed
+            // question-set POSTS it links to stay in /initiatives; only the legend moved.)
+            {from: "/initiatives/what-i-ask-myself", to: "/legend/what-i-ask-myself"},
+            {from: "/blog/what-i-ask-myself", to: "/legend/what-i-ask-myself"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
             {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
             {from: "/docs/craft/product-management/pocs/enhancing-the-google-search-experience", to: "/craft/product-management/pocs/enhancing-the-google-search-experience"},
@@ -835,15 +842,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left'
             },
             {
-              // 'Thoughts & Ideas' (the /thoughts blog) — the UNACTIONED half: ideas I have
-              // HAD but not acted on yet (captures, "should I…", things that have not
-              // materialized). Sibling to Initiatives (ACTED-ON ideas). A 2-line `html` label
-              // ('Thoughts &' / 'Ideas') per the design; the hover summary is keyed by its
-              // data-summary-key (see src/theme/NavbarItem) since html items carry no `label`.
-              html: 'Thoughts &amp;<br/>Ideas',
+              // 'Thoughts' (the /thoughts blog) — the UNACTIONED half: ideas I have HAD but not
+              // acted on yet (captures, "should I…", things that have not materialized). Sibling
+              // to Initiatives (ACTED-ON ideas). Single-line label aligned with its neighbors;
+              // the hover summary (keyed by the label below) carries the fuller framing.
+              label: 'Thoughts',
               to: '/thoughts',
               position: 'left',
-              'data-summary-key': 'Thoughts & Ideas',
             },
             {
               // 'Mindset' (the quotes-that-moved-me page) — matches the homepage
