@@ -31,7 +31,7 @@ const CRAFT_TOPICS = [
   'Companies',
   'Entrepreneurship',
 ];
-const SELF_TOPICS = ['Faith', 'Personal Growth'];
+const SELF_TOPICS = ['Faith', 'Personal Habits'];
 
 // The sidebar nav (Docusaurus doc sidebar). Scope all sidebar queries to it so we
 // don't accidentally match the navbar's own "Craft"/"Journey" items.
@@ -50,8 +50,10 @@ test.describe('Craft/Journey — navbar', () => {
   test('navbar shows Craft and Journey (and not the old "Learn")', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     const navbar = page.locator('.navbar');
-    await expect(navbar.getByRole('link', { name: 'Craft', exact: true })).toBeVisible();
-    await expect(navbar.getByRole('link', { name: 'Journey', exact: true })).toBeVisible();
+    // The navbar labels lead with a consistent emoji (e.g. "💻 Craft"), so match by substring
+    // rather than exact text so an emoji tweak doesn't break the assertion.
+    await expect(navbar.getByRole('link', { name: /Craft/ })).toBeVisible();
+    await expect(navbar.getByRole('link', { name: /Journey/ })).toBeVisible();
     await expect(navbar.getByRole('link', { name: 'Learn', exact: true })).toHaveCount(0);
   });
 });

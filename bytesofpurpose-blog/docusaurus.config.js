@@ -1062,21 +1062,21 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
           },
           items: [
             {
-              label: 'Craft',
+              label: '💻 Craft',
               type: 'docSidebar', sidebarId: 'craftSidebar', docsPluginId: 'craft',
               position: 'left',
             },
             {
               // 'Journey' (the inward/personal docs instance, id 'self') — matches the
               // homepage "Discover My Journey" card. Served at /journey (old /self/* 301s).
-              label: 'Journey',
+              label: '🛣️ Journey',
               type: 'docSidebar', sidebarId: 'selfSidebar', docsPluginId: 'self',
               position: 'left',
             },
             {
               // 'Initiatives' (the blog, served at /initiatives) — the TEMPORAL half:
               // dated initiatives, experiments, project logs. Matches the homepage card.
-              label: 'Initiatives',
+              label: '📝 Initiatives',
               to: '/initiatives',
               position: 'left'
             },
@@ -1085,21 +1085,21 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               // acted on yet (captures, "should I…", things that have not materialized). Sibling
               // to Initiatives (ACTED-ON ideas). Single-line label aligned with its neighbors;
               // the hover summary (keyed by the label below) carries the fuller framing.
-              label: 'Thoughts',
+              label: '💭 Thoughts',
               to: '/thoughts',
               position: 'left',
             },
             {
               // 'Mindset' (the /mindset blog) — the curated inputs I keep to shape how I think
               // (quotes, affirmations, principles).
-              label: 'Mindset',
+              label: '🧠 Mindset',
               to: '/mindset',
               position: 'left'
             },
             {
               // 'Questions' (the /questions blog) — the important SETS of questions I ask, both
               // introspective and practical. A peer collection (not all questions are Mindset).
-              label: 'Questions',
+              label: '❓ Questions',
               to: '/questions',
               position: 'left'
             },
@@ -1115,7 +1115,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               position: 'left'
             },
             {
-              label: 'Designs',
+              label: '📐 Designs',
               to: '/designs',
               position: 'left'
             },
@@ -1125,14 +1125,14 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {
               // Reader-facing "Vote on Post Ideas" page (/vote) — lets readers
               // signal which upcoming posts they want next (PostHog 'idea_voted').
-              label: 'Vote',
+              label: '🗳️ Vote',
               to: '/vote',
               position: 'left'
             },
             {
               // 'Todos' (/todos) — the site-wide rollup of tracked markdown tasks across
               // posts (open/done/scheduled), generated from the content by generate-todos.
-              label: 'Todos',
+              label: '✅ Todos',
               to: '/todos',
               position: 'left'
             },
@@ -1142,7 +1142,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               // Replaces the old standalone "Buy Me a Coffee" navbar button; the
               // support-button-copy A/B experiment now lives on that page's coffee
               // CTA (see src/components/Support).
-              label: 'Support',
+              label: '❤️ Support',
               to: '/support',
               position: 'left'
             },
@@ -1189,7 +1189,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
                   position: 'right',
                 },
                 {
-                  label: 'Support',
+                  label: '❤️ Support',
                   href: 'https://buymeacoffee.com/omareid',
                   position: 'right',
                 },

@@ -5,18 +5,21 @@ import styles from './navbarSummary.module.css';
 // One-line summary per navbar item, keyed by its `label`. The source of truth for the hover
 // popups — keep in sync with the navbar items in docusaurus.config.js. An item with no entry
 // here renders normally (no popup).
+// Keyed by the navbar item's EXACT label (the lookup is SUMMARIES[label]). Every navbar item now
+// leads with a consistent emoji, so each key includes that emoji prefix (matching the label in
+// docusaurus.config.js). When you change a navbar label, change its key here in the same edit.
 const SUMMARIES: Record<string, string> = {
-  Craft: 'How I see the world: durable learnings, frameworks, and strategy. The lasting lessons.',
-  Journey: 'How I see myself: faith and personal growth. Durable, inward.',
-  Initiatives: 'The temporal half: dated experiments, project logs, and posts. What I actually did.',
-  Thoughts: 'Ideas that occurred to me but I have not acted on: things I might build, simulations, predictions, critiques. A thought graduates to an Initiative when I act on it, or to Mindset when I keep it to shape my thinking.',
-  Mindset: 'The inputs I deliberately keep to shape how I think: the quotes that moved me, the affirmations I return to, the principles I live by. Curated, not just occurred.',
-  Questions: 'The important sets of questions I ask, introspective and practical: the questions I ask myself to shape who I am, and the ones worth asking before starting something.',
+  '💻 Craft': 'How I see the world: durable learnings, frameworks, and strategy. The lasting lessons.',
+  '🛣️ Journey': 'How I see myself: faith and personal growth. Durable, inward.',
+  '📝 Initiatives': 'The temporal half: dated experiments, project logs, and posts. What I actually did.',
+  '💭 Thoughts': 'Ideas that occurred to me but I have not acted on: things I might build, simulations, predictions, critiques. A thought graduates to an Initiative when I act on it, or to Mindset when I keep it to shape my thinking.',
+  '🧠 Mindset': 'The inputs I deliberately keep to shape how I think: the quotes that moved me, the affirmations I return to, the principles I live by. Curated, not just occurred.',
+  '❓ Questions': 'The important sets of questions I ask, introspective and practical: the questions I ask myself to shape who I am, and the ones worth asking before starting something.',
   '📘 Handbook': 'The handbook for navigating the blog: durable vs temporal, the post-kind emoji, the glossary and terminology, and the component reference.',
-  Designs: 'Full system-design write-ups: how something was architected and shipped.',
-  Vote: 'Tell me which upcoming posts you want next.',
-  Todos: 'A rollup of every tracked task across the site: open, done, and scheduled.',
-  Support: 'Ways to support the work: the shop, GitHub, LinkedIn, and a coffee.',
+  '📐 Designs': 'Full system-design write-ups: how something was architected and shipped.',
+  '🗳️ Vote': 'Tell me which upcoming posts you want next.',
+  '✅ Todos': 'A rollup of every tracked task across the site: open, done, and scheduled.',
+  '❤️ Support': 'Ways to support the work: the shop, GitHub, LinkedIn, and a coffee.',
 };
 
 function normalizeComponentType(type: string | undefined, props: Record<string, unknown>): string {
