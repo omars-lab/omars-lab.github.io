@@ -9,7 +9,7 @@ const SUMMARIES: Record<string, string> = {
   Craft: 'How I see the world: durable learnings, frameworks, and strategy. The lasting lessons.',
   Journey: 'How I see myself: faith and personal growth. Durable, inward.',
   Initiatives: 'The temporal half: dated experiments, project logs, and posts. What I actually did.',
-  'Thoughts & Ideas': 'Ideas I have had but not acted on yet: captures and "should I" thoughts that have not materialized. Acted-on ideas live in Initiatives.',
+  Thoughts: 'Thoughts I have not acted on yet: ideas I might build, and questions I ask myself. Acted-on ideas graduate to Initiatives.',
   Mindset: 'The quotes and ideas that moved me.',
   Legend: 'The map for the whole site: durable vs temporal, the post-kind emoji, and the glossaries.',
   Designs: 'Full system-design write-ups: how something was architected and shipped.',

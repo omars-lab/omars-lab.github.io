@@ -19,9 +19,10 @@ function HomepageHeader() {
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         {/* Four-card chooser (folded in from the old /welcome page): Craft = what I
             impact (the durable outward work, shared); Self = who I am (the inward
-            journey); Initiatives = the dated, temporal things I've actually done (the
-            blog); Mindset = the quotes that move me. Each card leads with an arched
-            illustration, then title + body. */}
+            journey); Thoughts = the ideas I've had but not acted on yet (the /thoughts
+            blog, whose thought-bubble pose fits the unactioned ideas); Mindset = the
+            quotes that move me. Each card leads with an arched illustration, then title +
+            body. (Initiatives, the acted-on things, lives in the navbar, not a hero card.) */}
         <div className={styles.chooser}>
           <Link className={styles.chooserCard} to="/craft">
             <div className={styles.chooserCardImageWrap}>
@@ -51,7 +52,7 @@ function HomepageHeader() {
             <div className={styles.chooserCardTitle}>🛣️ Discover My Journey</div>
             <p className={styles.chooserCardBody}>Who I'm becoming.</p>
           </Link>
-          <Link className={styles.chooserCard} to="/initiatives">
+          <Link className={styles.chooserCard} to="/thoughts">
             <div className={styles.chooserCardImageWrap}>
               <img
                 className={styles.chooserCardImage}
@@ -62,8 +63,8 @@ function HomepageHeader() {
                 height={400}
               />
             </div>
-            <div className={styles.chooserCardTitle}>💭 Browse My Initiatives</div>
-            <p className={styles.chooserCardBody}>The dated things I've actually done.</p>
+            <div className={styles.chooserCardTitle}>💭 Browse My Thoughts</div>
+            <p className={styles.chooserCardBody}>Ideas I've had but not acted on yet.</p>
           </Link>
           <Link className={styles.chooserCard} to="/mindset">
             <div className={styles.chooserCardImageWrap}>
