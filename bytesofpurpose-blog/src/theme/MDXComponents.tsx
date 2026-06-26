@@ -28,6 +28,7 @@ import {
   PowerLegend,
   Quote,
   QuoteSet,
+  Focus,
 } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
 
@@ -94,4 +95,6 @@ export default {
   // different CX from <Question> (received/savored, not actioned).
   Quote,
   QuoteSet,
+  // <Focus> marks the powerful word(s) in a <Quote>; a highlight sweeps in under them on hover.
+  Focus,
 };

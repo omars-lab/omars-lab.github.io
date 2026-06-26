@@ -3,15 +3,17 @@ import posthog from 'posthog-js';
 // @ts-ignore - Docusaurus theme module
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
-import { Quote } from '@omars-lab/blog-ui';
+import { Quote, Focus } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
 import styles from './mindset.module.css';
 
 // A few featured quotes shown inline on the landing (the <Quote> pull-quote CX). The full,
 // growing collection lives in the quote-set posts linked below; this page is the front door.
+// `quote` is a ReactNode so the powerful words can be wrapped in <Focus> (they highlight-sweep
+// when the quote is hovered).
 type Featured = {
   id: string;
-  quote: string;
+  quote: React.ReactNode;
   source: string;
   cite?: string;
   reflection: string;
@@ -20,7 +22,12 @@ type Featured = {
 const FEATURED: Featured[] = [
   {
     id: 'habit',
-    quote: 'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',
+    quote: (
+      <>
+        We are what we <Focus>repeatedly do</Focus>. Excellence, then, is not an act, but a{' '}
+        <Focus>habit</Focus>.
+      </>
+    ),
     source: 'Will Durant',
     cite: 'often attributed to Aristotle',
     reflection:
@@ -28,7 +35,11 @@ const FEATURED: Featured[] = [
   },
   {
     id: 'obstacle',
-    quote: 'The obstacle is the way.',
+    quote: (
+      <>
+        The <Focus>obstacle</Focus> is the <Focus>way</Focus>.
+      </>
+    ),
     source: 'Marcus Aurelius',
     cite: 'via Ryan Holiday',
     reflection:

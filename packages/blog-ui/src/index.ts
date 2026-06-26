@@ -53,5 +53,10 @@ export type {QuestionSectionProps} from './components/QuestionSection';
 export {default as Quote} from './components/Quote';
 export type {QuoteProps} from './components/Quote';
 
+// <Focus> marks the powerful word(s) inside a <Quote>; a highlight sweeps in under them when the
+// quote is hovered (reduced-motion safe). Only meaningful inside a <Quote>.
+export {default as Focus} from './components/Quote/Focus';
+export type {FocusProps} from './components/Quote/Focus';
+
 export {default as QuoteSet} from './components/QuoteSet';
 export type {QuoteSetProps} from './components/QuoteSet';
