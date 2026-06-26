@@ -159,10 +159,9 @@ const LEGACY_SLUG_PREFIXES = ['/mental-models/'];
 const BLOG_TRIGGERS = new Set(['conference', 'book', 'solution', 'poc', 'milestone', 'opinion']);
 const BLOG = path.join(ROOT, 'blog');
 
-// Description length bounds. Lower keeps it meaningful for the share message; upper
-// keeps it within the ~160-char window search engines / social cards display.
-const DESC_MIN = 50;
-const DESC_MAX = 160;
+// Description length bounds — re-exported from the shared SEO lib (scripts/lib/seo-frontmatter.js)
+// so this validator and validate-seo.js never diverge on the thresholds (extend, don't duplicate).
+const {DESC_MIN, DESC_MAX, checkDescription: seoCheckDescription} = require('./lib/seo-frontmatter');
 
 // Folder names that echo a format/framing word instead of a reader topic.
 const FRAMING_RE = /-techniques$|-craftsmanship$|^definitions$/;
@@ -380,19 +379,8 @@ function checkBlogTrigger(file, data) {
 // `description:` powers og:description (SEO/social preview) AND the ShareButton share
 // message ("Here's what it covers: <description>"). See src/ingress-attribution-plan.md.
 function checkDescription(file, data) {
-  const desc = typeof data.description === 'string' ? data.description.trim() : '';
-  if (!desc) {
-    add('description-missing', rel(file),
-      'doc has no frontmatter `description:` — add one (feeds SEO + the share message)');
-    return;
-  }
-  if (desc.length < DESC_MIN) {
-    add('description-length', rel(file),
-      `description is ${desc.length} chars — shorter than ${DESC_MIN}; too thin for a useful SEO/share summary`);
-  } else if (desc.length > DESC_MAX) {
-    add('description-length', rel(file),
-      `description is ${desc.length} chars — longer than ${DESC_MAX}; it will be truncated in search/social cards`);
-  }
+  // Delegate to the shared SEO lib so the docs validator + validate-seo.js use identical rules.
+  for (const f of seoCheckDescription(data)) add(f.id, rel(file), f.detail);
 }
 
 // --- recurse the tree, applying structural checks ------------------------
