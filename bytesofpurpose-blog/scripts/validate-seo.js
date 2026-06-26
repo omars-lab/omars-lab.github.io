@@ -42,7 +42,7 @@ const BUILD_DIR = path.join(ROOT, 'build');
 // description already, but title/keywords/image are NOT, so include docs here too (the
 // description checks are idempotent — a doubled warn is deduped by the caller's reporting).
 const DOCS_ROOTS = ['docs/craft', 'docs/journey', 'docs/legend'];
-const BLOG_ROOTS = ['blog', 'designs', 'thoughts', 'changelog', 'mindset'];
+const BLOG_ROOTS = ['blog', 'designs', 'thoughts', 'changelog', 'mindset', 'questions'];
 const ALL_ROOTS = [...DOCS_ROOTS, ...BLOG_ROOTS];
 
 const args = process.argv.slice(2);

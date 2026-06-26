@@ -177,18 +177,20 @@ thing I did?** Place content accordingly.
   ways depending on what I do with it:
   - **act on it → `/initiatives`** (a dated thing I did: experiment, project log, post);
   - **deliberately KEEP it to shape how I think → `/mindset`** (the curated inputs that influence
-    me: quotes that moved me, affirmations, the questions I ask myself);
+    me: quotes that moved me, affirmations, principles I live by);
   - **distill it into a lasting lesson → `/craft`** (or `/journey`).
-  The line between a **Thought** and a **Mindset** post is **occurrence vs. curation**: a question
-  that just occurred to me is a Thought; the set I *deliberately ask myself to shape who I am* is
-  Mindset. KINDS are set by the post's `kind:` (source of truth `scripts/lib/blog-kinds.json`):
-  THOUGHT kinds (`thought: true`) = `idea` 💡 / `simulation` 🔮 / `prediction` 🎯 / `critique` 🔍 /
-  `design-story` 📐 (ideas that occurred to me); MINDSET kinds (`mindset: true`) = `question-set` ❓
-  / `quote-set` 💬 / `principle` 🪞 (curated inputs I keep). A kind is one OR the other, never both.
-  Reader legends: `/thoughts/about-my-thoughts` (`<ThoughtKindLegend>`) + `/mindset/about-my-mindset`
-  (`<MindsetKindLegend>`), each teaching the occurrence-vs-curation boundary by EXAMPLE. `/mindset`
-  is a REAL blog instance now (was a `src/pages/mindset.tsx` page); `/thoughts` likewise (was a
-  legacy redirect; `/initiatives` emits only its `/blog/*` legacy root).
+  Plus a FOURTH temporal collection, **`/questions`**: the important SETS of questions I ask
+  (introspective + practical) — their own thing, since not all questions are mindset-shaping.
+  The line between a **Thought** and a curated collection is **occurrence vs. curation**: a quote
+  that just occurred to me is a Thought; *keeping* it is Mindset; a deliberate *set of questions*
+  becomes Questions. KINDS are set by the post's `kind:` (source of truth `scripts/lib/blog-kinds.json`),
+  and each kind carries ONE collection flag: THOUGHT (`thought: true`) = `idea` 💡 / `simulation` 🔮
+  / `prediction` 🎯 / `critique` 🔍 / `design-story` 📐; MINDSET (`mindset: true`) = `quote-set` 💬 /
+  `principle` 🪞; QUESTIONS (`question: true`) = `question-set` ❓. A kind has exactly one flag.
+  Reader legends: `/thoughts/about-my-thoughts` (`<ThoughtKindLegend>`), `/mindset/about-my-mindset`
+  (`<MindsetKindLegend>`), `/questions/about-my-questions`, each teaching the boundary by EXAMPLE.
+  `/mindset`, `/thoughts`, and `/questions` are all REAL blog instances (mindset was a
+  `src/pages/mindset.tsx` page; `/initiatives` emits only its `/blog/*` legacy root).
 So a raw **idea that occurred to me** is a **`/thoughts` POST** (`board: ideas` makes it a card on
 the **Ideas board** at `/craft/product-management/ideas`); once I **act on it** it becomes an
 **`/initiatives` POST**; if I **keep it to shape my thinking** it becomes a **`/mindset` POST**;
