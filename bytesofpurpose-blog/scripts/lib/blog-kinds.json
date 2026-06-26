@@ -55,6 +55,16 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "research": {
+      "emoji": "🔬",
+      "description": "Something I want to research or learn before deciding: a systematic investigation I have not run yet (a /thoughts post, carded on the Research board). What must I find out to act on an idea?",
+      "thought": true,
+      "thoughtGloss": "Something I want to research before deciding",
+      "outline": [
+        {"id": "research-questions", "label": "the questions to investigate (what I need to find out, as a list or H2 sections)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "principle": {
       "emoji": "🪞",
       "description": "An observation maturing into a rule I live by: 'I noticed X tends to happen' becoming 'so I now always Y'. The raw feeder that graduates UP into a durable /craft framework once it holds (a /thoughts post).",

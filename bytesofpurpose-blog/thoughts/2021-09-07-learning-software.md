@@ -1,15 +1,24 @@
 ---
-slug: /product-management/research/learning-software
-title: '🔬 Learning Software'
-description: 'Learning goals and resources for software development best practices, architecture, and scaling.'
+slug: learning-software
+title: '🔬 What Should I Learn About Software?'
+sidebar_label: '🔬 Learning software'
+description: 'A research thought I am weighing: what should I learn about software development best practices, architecture, and scaling?'
 authors: [oeid]
-tags: [software-development, architecture, best-practices, learning, scaling]
+tags: [software-development, architecture, best-practices, research, scaling]
 date: 2021-09-07T10:00
+kind: research
+board: research
+stage: backlog
+priority: low
 draft: true
 ---
 
-# Learning Software
-- What general concepts can I learn about software?
+A research thought: **what should I learn about software** to level up on best practices,
+architecture, and scaling? These are the questions and resources I am gathering before I dig in.
+
+<!-- truncate -->
+
+## What general concepts can I learn about software?
 
 # Best Practices
 - [x] Print SDE thingy ... @done(2021-09-07T15:52:51-05:00)

@@ -1,7 +1,7 @@
 ---
 slug: /product-management/research
 title: '🔬 Research'
-description: 'Research planning and investigation to inform decisions about ideas - what must I research to act on my ideas?'
+description: 'The Research board: the things I want to research or learn before deciding, and the durable framework for how I run a research investigation.'
 authors: [oeid]
 tags: [research, planning, investigation, decision-making, ideas]
 draft: false
@@ -9,37 +9,31 @@ draft: false
 
 # Research
 
-Research is the second step in the development lifecycle. After having ideas, research helps you understand what you need to know before deciding whether to act on an idea, hold it, or discard it.
+A **research** is something I want to investigate or learn before deciding: a systematic
+investigation I have not run yet. "What must I find out to act on this idea, or to level up?"
 
-## What Is Research?
+## The Research board
 
-Research is **systematic investigation** to inform decision-making about ideas:
+The board below is the live index of my research. Each card is one research post (a 🔬 `research`
+thought on the [Thoughts](/thoughts) blog), and it moves across the board as the work moves: from
+**backlog** (something I want to research), through **researching** (actively investigating), to
+**learned** (the findings are captured). A card's column is its `stage`, read straight from the
+post's frontmatter, so the board can never drift from the posts it indexes. Click a card to open it.
 
-- 🔍 **Investigation** - Deep dives into technical topics, technologies, and approaches
-- 📊 **Information Gathering** - Collecting data, examples, and best practices
-- 🎯 **Decision Support** - Research should help you make informed decisions
-- 📋 **Planning Foundation** - Research helps you create actionable plans
+<KanbanBoard board="research" />
 
-## Development Progression
+| Column | What it means |
+|---|---|
+| Backlog | Something I want to research, not started. |
+| Researching | Actively investigating: reading, prototyping, gathering. |
+| Learned | The investigation is done; the findings are captured. |
 
-Understanding how ideas evolve through the development lifecycle:
-
-1. **Ideas** → Initial thoughts and concepts
-2. **Research** → Investigation and planning (you are here)
-3. **POCs** → Proof of concepts to validate approaches
-4. **Experiments** → Small, focused experiments for learning
-5. **Initiatives** → Ready to get started (blueprints, designs, execution plan)
-6. **Projects** → Actively being worked on
-
-## Research Outcomes
-
-At the end of research, you should be able to make a decision:
-
-- ✅ **Act on the idea** → Move to POC, experiment, or initiative
-- ⏸️ **Hold the idea** → Not ready yet, needs more information or different timing
-- ❌ **Discard the idea** → Not viable, not aligned with goals, or superseded
-
-Research should help you **put a plan together** for the next steps.
+This page is the **durable** half: the board that indexes the research and the framework for how I
+run an investigation. The research **posts themselves** are temporal, so they live on the
+[Thoughts](/thoughts) blog (each a card above), exactly the same split the
+[Experiments](/product-management/experiments) and [Ideas](/product-management/ideas) boards use.
+A research that concludes in a lasting lesson distills up into the relevant Craft topic; one that
+leads to building something graduates into an Initiative.
 
 ## What Must I Research?
 
@@ -119,23 +113,14 @@ When researching an idea, ensure you:
 
 ## Research → Next Steps
 
-After completing research, you should have enough information to:
+Once the research is **learned**, it graduates the same way any thought does:
 
-1. **Move to POC** - If you need to validate a specific approach
-2. **Start an Experiment** - If you need to test assumptions
-3. **Create an Initiative** - If you have enough information to plan execution
-4. **Hold the Idea** - If more information or better timing is needed
-5. **Discard the Idea** - If research shows it's not viable
-
-## What You'll Find Here
-
-- Research investigations into technical topics
-- Deep dives into technologies and approaches
-- Research findings and learnings
-- Decision frameworks based on research
-- Research plans and methodologies
-- **Learning Topics** - Learning goals, plans, and resources for various technologies and concepts (backend, frontend, business, software)
+1. **Act on it → an Initiative** - if I have enough to start building or experimenting.
+2. **Keep the lesson → Craft** - if the finding is durable knowledge worth returning to.
+3. **Hold it** - if more information or better timing is needed.
+4. **Discard it** - if the research shows it is not worth pursuing.
 
 ---
 
-**Remember**: Research is not about perfection, it's about gathering enough information to make an informed decision about whether and how to proceed with an idea.
+**Remember**: research is not about perfection, it is about learning enough to make an informed
+decision about whether and how to proceed.

@@ -31,7 +31,7 @@ const KINDS = (blogKinds as {kinds: Record<string, KindMeta>}).kinds;
 
 // Reading order per collection. A flagged kind not listed falls through to the end, so adding a
 // kind to the JSON surfaces it even before these lists are updated.
-const THOUGHT_ORDER = ['idea', 'simulation', 'prediction', 'critique', 'design-story'];
+const THOUGHT_ORDER = ['idea', 'research', 'simulation', 'prediction', 'critique', 'design-story'];
 const MINDSET_ORDER = ['question-set', 'quote-set', 'principle'];
 
 function kindsFor(flag: 'thought' | 'mindset', order: string[]): string[] {
