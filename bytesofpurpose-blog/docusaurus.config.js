@@ -721,8 +721,14 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/mindset/questions-for-starting-a-business", to: "/questions/questions-for-starting-a-business"},
             {from: "/mindset/the-questions-i-want-to-answer", to: "/questions/the-questions-i-want-to-answer"},
             {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
-            {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/pocs"},
-            {from: "/docs/craft/product-management/pocs/enhancing-the-google-search-experience", to: "/craft/product-management/pocs/enhancing-the-google-search-experience"},
+            // POCs folded into the Experiments board (both are acted-on validation work): the
+            // /craft pocs page is gone (folds → /craft/product-management/experiments), and the
+            // one real POC moved to /initiatives as a concluded experiment-result. Repoint the old
+            // doc URLs + the live /craft/.../pocs URLs accordingly.
+            {from: "/docs/craft/product-management/pocs", to: "/craft/product-management/experiments"},
+            {from: "/craft/product-management/pocs", to: "/craft/product-management/experiments"},
+            {from: "/docs/craft/product-management/pocs/enhancing-the-google-search-experience", to: "/initiatives/enhancing-the-google-search-experience"},
+            {from: "/craft/product-management/pocs/enhancing-the-google-search-experience", to: "/initiatives/enhancing-the-google-search-experience"},
             {from: "/docs/craft/product-management/projects", to: "/craft/product-management/projects"},
             {from: "/docs/craft/product-management/research", to: "/craft/product-management/research"},
             {from: "/docs/craft/product-management/roadmaps/1-blog-roadmap", to: "/craft/product-management/roadmaps/1-blog-roadmap"},
@@ -785,8 +791,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/definitions/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
             {from: "/docs/development", to: "/craft/software-development"},
             {from: "/docs/development/initiatives/initiatives", to: "/craft/product-management/initiatives"},
-            {from: "/docs/development/pocs/enhancing-the-google-search-experience", to: "/craft/product-management/pocs/enhancing-the-google-search-experience"},
-            {from: "/docs/development/pocs/pocs", to: "/craft/product-management/pocs"},
+            {from: "/docs/development/pocs/enhancing-the-google-search-experience", to: "/initiatives/enhancing-the-google-search-experience"},
+            {from: "/docs/development/pocs/pocs", to: "/craft/product-management/experiments"},
             {from: "/docs/development/projects/experiments/experiments", to: "/craft/product-management/experiments"},
             {from: "/docs/development/projects/frontend-projects/sites/website-blog", to: "/craft/software-development/frontend-development/projects/website-blog"},
             {from: "/docs/development/projects/frontend-projects/sites/website-portfolio", to: "/craft/software-development/frontend-development/projects/website-portfolio"},
