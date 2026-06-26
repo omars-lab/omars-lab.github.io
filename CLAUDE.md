@@ -172,26 +172,28 @@ The site is organized around ONE question: **does this stay true over time, or i
 thing I did?** Place content accordingly.
 - **DURABLE → `/craft` (how I see the world) + `/journey` (how I see myself).** Distilled
   learnings, frameworks, strategy, terminology — return-to knowledge. The lasting LESSON.
-- **TEMPORAL → `/initiatives` (the blog) + `/thoughts` (Thoughts).** Dated things, the
-  EVIDENCE. The temporal half splits AGAIN by **have I acted on it yet?**:
-  - **`/thoughts` (Thoughts) = UNACTIONED thoughts** I have HAD but NOT acted on. Navbar label is
-    just **"Thoughts"**; the collection holds KINDS of thought, each set by the post's `kind:`
-    (source of truth `scripts/lib/blog-kinds.json`, kinds flagged `thought: true`): `idea` 💡
-    (might build), `question-set` ❓ (questions I ask myself), `simulation` 🔮 (if X then Y then Z),
-    `prediction` 🎯 (a bet), `critique` 🔍 (what's wrong / how it works), `principle` 🪞 (an
-    observation becoming a rule), `design-story` 📐 (how it would be built). The reader legend is
-    the `/thoughts/about-my-thoughts` landing (renders `<ThoughtKindLegend>`). The route `/thoughts`
-    is now this REAL blog instance (it used to be a legacy redirect to `/initiatives`; that hop was
-    retired — `/initiatives` emits only its `/blog/*` legacy root now).
-  - **`/initiatives` = ACTED-ON ideas** — the specific dated things I actually did (experiments,
-    project logs, posts). An idea **graduates** from `/thoughts` to `/initiatives` the moment I
-    start acting on it; each Initiative links **up** to the durable insight it informed.
-So a raw **idea I have NOT started** is a **`/thoughts` POST** (`board: ideas` frontmatter makes
-it a card on the **Ideas board** at `/craft/product-management/ideas`); once I **act on it** it
-becomes an **`/initiatives` POST** (its `kind`/`stage`/`priority` make it a card on the
-Experimentation board — see `groom-initiatives`), NOT a `/craft` doc; on conclusion the durable
-learning is **distilled up into `/craft`**. Both kanban boards live in `/craft` (durable) and
-index the temporal posts that live on the blogs — same split for ideas and experiments. The
+- **TEMPORAL = a THOUGHT and its three graduations.** A **`/thoughts` (Thoughts)** post is an
+  **idea that OCCURRED to me** but I have not acted on (the raw mental event). It graduates THREE
+  ways depending on what I do with it:
+  - **act on it → `/initiatives`** (a dated thing I did: experiment, project log, post);
+  - **deliberately KEEP it to shape how I think → `/mindset`** (the curated inputs that influence
+    me: quotes that moved me, affirmations, the questions I ask myself);
+  - **distill it into a lasting lesson → `/craft`** (or `/journey`).
+  The line between a **Thought** and a **Mindset** post is **occurrence vs. curation**: a question
+  that just occurred to me is a Thought; the set I *deliberately ask myself to shape who I am* is
+  Mindset. KINDS are set by the post's `kind:` (source of truth `scripts/lib/blog-kinds.json`):
+  THOUGHT kinds (`thought: true`) = `idea` 💡 / `simulation` 🔮 / `prediction` 🎯 / `critique` 🔍 /
+  `design-story` 📐 (ideas that occurred to me); MINDSET kinds (`mindset: true`) = `question-set` ❓
+  / `quote-set` 💬 / `principle` 🪞 (curated inputs I keep). A kind is one OR the other, never both.
+  Reader legends: `/thoughts/about-my-thoughts` (`<ThoughtKindLegend>`) + `/mindset/about-my-mindset`
+  (`<MindsetKindLegend>`), each teaching the occurrence-vs-curation boundary by EXAMPLE. `/mindset`
+  is a REAL blog instance now (was a `src/pages/mindset.tsx` page); `/thoughts` likewise (was a
+  legacy redirect; `/initiatives` emits only its `/blog/*` legacy root).
+So a raw **idea that occurred to me** is a **`/thoughts` POST** (`board: ideas` makes it a card on
+the **Ideas board** at `/craft/product-management/ideas`); once I **act on it** it becomes an
+**`/initiatives` POST**; if I **keep it to shape my thinking** it becomes a **`/mindset` POST**;
+on conclusion the durable learning is **distilled up into `/craft`**. The kanban boards live in
+`/craft` (durable) and index the temporal posts on the blogs. The
 **Legend** hub (`/legend`) explains this model to readers; the build system is documented at
 `/designs/design-build-system`; the single **Glossary** is `/legend/glossary`. When you add
 content, ask "durable or temporal?" then "acted on or not?" and pick the home.

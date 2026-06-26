@@ -58,6 +58,7 @@ module.exports = function draftDocsPlugin(context) {
     {dir: path.join(context.siteDir, 'blog'), base: '/initiatives'},
     {dir: path.join(context.siteDir, 'designs'), base: '/designs'},
     {dir: path.join(context.siteDir, 'thoughts'), base: '/thoughts'},
+    {dir: path.join(context.siteDir, 'mindset'), base: '/mindset'},
   ];
 
   return {
