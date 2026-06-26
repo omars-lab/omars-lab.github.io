@@ -20,6 +20,14 @@ production deploy (gh-pages) see `deploy-site`; for post-deploy live checks see
 - Override the port: `make start PORT=8080`.
 - `make start` builds Storybook first (so `/storybook/` works) and runs the `prestart`
   hook (regenerates changelog/ideas/logo data) — so the first boot takes a minute or two.
+- **`make start` ALSO rebuilds `@omars-lab/blog-ui` first** (the `build-blog-ui` prereq). The blog
+  consumes the package's BUILT `dist/`, which is gitignored — so a fresh clone, or editing a
+  blog-ui component (`<Quote>`, `<Question>`, `<Walkthrough>`, …) without rebuilding, would render a
+  STALE component with no warning. `start` / `start-prod` / `build` / `deploy` all depend on
+  `build-blog-ui` so this can't happen by omission (fail-closed). If you change a blog-ui component
+  mid-session (the dev server is already up), run `make build-blog-ui` and the HMR picks up the new
+  `dist/`; you don't need a full restart for that (a restart is only for the stale-route-table
+  gotcha below).
 - **Drafts render ONLY on the dev server** (`make start` / `make start-prod`), with a
   "DRAFT PAGE" banner and a `D` sidebar badge. They are excluded from `make build`/
   `make serve` and from production. So if you're previewing a `draft: true` page, you MUST
