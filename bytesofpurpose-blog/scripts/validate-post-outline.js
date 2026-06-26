@@ -107,6 +107,11 @@ const CHECKS = {
   // research: the questions to investigate (a list, a checklist, or H2/H3 question sections)
   'research-questions': (fm, body) =>
     /^\s*[-*]\s+\S/m.test(body) || /^\s*[-*]\s+\[[ xX]\]/m.test(body) || hasH2(body) || /\?/.test(body),
+  // showcase: a demonstration of the technique — a component tag, a code fence, an embed/iframe,
+  // an image, OR (for a landing/index showcase) links out to the showcases it groups.
+  demonstrates: (fm, body) =>
+    /<[A-Za-z]\w+[\s/>]/.test(body) || /```/.test(body) || /<iframe[\s>]/i.test(body) ||
+    /!\[[^\]]*\]\(/.test(body) || /^\s*[-*]\s+\[/m.test(body),
   // framework
   'framework-laid-out': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) ||

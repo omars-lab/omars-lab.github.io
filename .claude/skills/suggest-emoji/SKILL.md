@@ -30,7 +30,7 @@ a folder and applies it. The deterministic half (file mutation) is
 - A new docs folder needs a sidebar emoji.
 
 `<folder>` is a path relative to `docs/`, instance included
-(e.g. `craft/blogging/embed-diagrams`).
+(e.g. `legend/components/diagrams`).
 
 ## The decision: standard vs non-standard folder
 

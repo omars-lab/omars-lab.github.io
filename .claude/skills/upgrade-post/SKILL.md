@@ -1,6 +1,6 @@
 ---
 name: upgrade-post
-description: Make an existing blog post or doc richer by weaving in the site's reusable MDX components — animated mermaid diagrams (marching dashes + a traveling flow-dot), the DiagramWithFootnotes numbered-legend wrapper, admonitions, Carousel/CategoryCarousel, SvgVariantGrid, Premium/PremiumGate, ShareButton, Evidence footnotes, Timeline, Card, and Tabs. The catalog of WHAT each component is, WHEN to reach for it, the exact MDX snippet, and the gotchas. Use when asked to "make this post better / richer / more visual", to add a diagram/animation/callout/carousel to a page, or after drafting content when deciding which components fit. Content-origin-agnostic (any post or doc, not just imports). Pairs with author-blog-post (frontmatter + MDX pitfalls), import-co-design (which calls this for the enrichment step), and the reader-facing component docs under docs/craft/blogging/embed-*.
+description: Make an existing blog post or doc richer by weaving in the site's reusable MDX components — animated mermaid diagrams (marching dashes + a traveling flow-dot), the DiagramWithFootnotes numbered-legend wrapper, admonitions, Carousel/CategoryCarousel, SvgVariantGrid, Premium/PremiumGate, ShareButton, Evidence footnotes, Timeline, Card, and Tabs. The catalog of WHAT each component is, WHEN to reach for it, the exact MDX snippet, and the gotchas. Use when asked to "make this post better / richer / more visual", to add a diagram/animation/callout/carousel to a page, or after drafting content when deciding which components fit. Content-origin-agnostic (any post or doc, not just imports). Pairs with author-blog-post (frontmatter + MDX pitfalls), import-co-design (which calls this for the enrichment step), and the reader-facing component showcases under docs/legend/components/*.
 ---
 
 # Upgrade a post with the site's components
@@ -414,7 +414,7 @@ invalid"). If you add an icon from a new react-icons subpath, it's already cover
   SvgVariantGrid, Premium, PremiumGate, ShareButton, Timeline, Card, …).
 - `bytesofpurpose-blog/src/theme/MDXComponents.tsx` — what's globally available in MDX.
 - `bytesofpurpose-blog/src/mermaid-flow-dot.js` + `src/css/custom.css` — the animation.
-- `docs/craft/blogging/embed-*` + `diagramming/` — the reader-facing how-to docs.
+- `docs/legend/components/*` (the showcase docs, kind: showcase) — the reader-facing component reference.
 
 ## Learnings log (newest first)
 
