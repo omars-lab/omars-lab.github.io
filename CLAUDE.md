@@ -236,12 +236,17 @@ instance routeBasePath) — keep it in lockstep if the instance layout changes.
 **Redirects are validated:** `scripts/validate-redirects.js` (`make validate-redirects`) reads
 the real redirects array from `docusaurus.config.js` and cross-checks every `to:` against the
 published-URL set (honoring `draft:`), catching the build-breakers — a redirect `to:` a missing
-or **draft** target (both ERROR-tier, would fail the prod build), a `from:` that shadows a real
-page, or a duplicate `from:` — in seconds instead of at the next full build. The PostToolUse
-hook `.claude/hooks/validate-redirects-hook.sh` (registered in `.claude/settings.json`) blocks an
-edit to `docusaurus.config.js` that introduces an ERROR-tier redirect. When you MOVE a page, you
-must also **repoint any existing redirect whose `to:` pointed at the old slug** (not just add a
-new `from`→new redirect) — the validator/hook now catches the ones you'd otherwise miss.
+or **draft** target, or a **chain** `a→b→c` (a `to:` that is itself redirected again, including
+through the programmatic `createRedirects` wildcards: Docusaurus does NOT follow chains, so `a→b`
+lands on a redirect stub = 404; the finding suggests the collapse `a→c`) — all three ERROR-tier,
+would fail the prod build — plus a `from:` that shadows a real page or a duplicate `from:` (warn),
+in seconds instead of at the next full build. The PostToolUse hook
+`.claude/hooks/validate-redirects-hook.sh` (registered in `.claude/settings.json`) blocks an edit
+to `docusaurus.config.js` that introduces an ERROR-tier redirect. When you MOVE a page, you must
+also **repoint any existing redirect whose `to:` pointed at the old slug** (not just add a new
+`from`→new redirect), and **collapse any chain** the move creates — the validator/hook now catches
+both. The chain check knows the wildcard prefix-rewrites (`WILDCARD_REWRITES` in the validator);
+keep that list in lockstep with `createRedirects` in `docusaurus.config.js`.
 into **domain sub-topics** (e.g. `Software Development` → `backend-development/`,
 `frontend-development/`, `scripting/`, `plugins/`, each with `research/projects/
 techniques/tinkering/`); the idea→ship LIFECYCLE is the separate `Product Management`

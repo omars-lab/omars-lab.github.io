@@ -14,6 +14,9 @@
  *                     doesn't exist, or its slug differs). [ERROR — this fails the prod build]
  *   - to-draft        a redirect `to:` a DRAFT page (excluded from prod → invalid prod build).
  *                     [ERROR]
+ *   - to-chain        a redirect `to:` (b) that is itself the `from:` of ANOTHER redirect (b→c),
+ *                     i.e. a chain a→b→c. Docusaurus does NOT follow chains: a→b lands on b, which
+ *                     is a redirect stub (a 404), not transitively on c. Collapse it to a→c. [ERROR]
  *   - from-collision  a redirect `from:` that equals a real published URL (the redirect shadows
  *                     a real page; the page wins, the redirect is dead). [warn]
  *   - from-duplicate  the same `from:` appears in more than one redirect. [warn]
@@ -22,7 +25,7 @@
  * the homepage, /404) are whitelisted so they don't false-positive.
  *
  * Usage:  node scripts/validate-redirects.js [--json]
- * Exit:   2 if any ERROR-tier finding (to-missing / to-draft); else 0 (warns don't block).
+ * Exit:   2 if any ERROR-tier finding (to-missing / to-draft / to-chain); else 0 (warns don't block).
  */
 
 const fs = require('fs');
@@ -159,6 +162,27 @@ function loadRedirects() {
   return cr && Array.isArray(cr[1].redirects) ? cr[1].redirects : [];
 }
 
+// The PREFIX-WILDCARD redirects emitted programmatically by the client-redirects plugin's
+// createRedirects(): every built /<routeBasePath>/* page also serves from its old prefix. These
+// are NOT in the explicit `redirects` array, so chain detection (below) needs to know them too —
+// an explicit redirect whose `to:` lands on one of these OLD prefixes would chain through it and
+// 404. Keep this list in lockstep with createRedirects() in docusaurus.config.js (the same
+// hand-maintained-list discipline as DOCS_INSTANCES above).
+const WILDCARD_REWRITES = [
+  {oldPrefix: '/self', newPrefix: '/journey'}, // /self/*   -> /journey/*
+  {oldPrefix: '/blog', newPrefix: '/initiatives'}, // /blog/*  -> /initiatives/*
+  {oldPrefix: '/legend', newPrefix: '/handbook'}, // /legend/* -> /handbook/* (the 2026-06 rename)
+];
+// If `to` falls under a wildcard's OLD prefix, it's redirected again to the NEW prefix (a chain).
+function wildcardTargetOf(to) {
+  for (const {oldPrefix, newPrefix} of WILDCARD_REWRITES) {
+    if (to === oldPrefix || to.startsWith(oldPrefix + '/')) {
+      return newPrefix + to.slice(oldPrefix.length);
+    }
+  }
+  return null;
+}
+
 // ── 3. Validate ────────────────────────────────────────────────────────────
 function main() {
   const json = process.argv.includes('--json');
@@ -173,13 +197,42 @@ function main() {
   // So the `to:` set is validated against published pages ONLY; do not treat a `from:` as a valid
   // target (that false-negative once shipped a build-breaking redirect to a moved-away slug).
 
+  // from → to map, for chain detection (a→b→c). Keep the FINAL target of each `from` so the
+  // suggested collapse points at the chain's end. (A duplicate `from` is itself flagged below;
+  // for chain purposes the last one wins, which matches "follow the chain to its end".)
+  const fromMap = new Map(redirects.map((r) => [norm(r.from), norm(r.to)]));
+  // One hop from `cur`: an explicit redirect's `from`, OR a programmatic wildcard old-prefix.
+  const nextHop = (cur) => (fromMap.has(cur) ? fromMap.get(cur) : wildcardTargetOf(cur));
+  // Resolve a path through the redirect chain to its terminal target (the page a→b→…→z lands on
+  // if chains DID transit). Bounded + cycle-guarded so a redirect loop can't spin forever.
+  const resolveChainEnd = (start) => {
+    const seen = new Set();
+    let cur = start;
+    let next;
+    while ((next = nextHop(cur)) && !seen.has(cur)) {
+      seen.add(cur);
+      cur = next;
+    }
+    return cur;
+  };
+
   for (const {from, to} of redirects) {
     const nFrom = norm(from);
     const nTo = norm(to);
     froms.set(nFrom, (froms.get(nFrom) || 0) + 1);
 
-    // to-missing / to-draft: the target must be a published page (or a whitelisted dynamic route).
-    if (!isWhitelisted(nTo, published)) {
+    // to-chain: the target (b) is redirected AGAIN — either it's another redirect's explicit
+    // `from:` (b→c), or it falls under a programmatic wildcard old-prefix (e.g. /legend/* that
+    // the rename's createRedirects sends to /handbook/*). Either way it's a chain a→b→c, and
+    // Docusaurus does NOT follow chains: a→b lands on b (a redirect stub = 404), not on c. Report
+    // it with the collapse suggestion (a→<chain end>). Checked before to-missing so the message is
+    // the actionable one (collapse the chain), not the generic "target missing".
+    const chainsAgain = nTo !== nFrom && (fromMap.has(nTo) || wildcardTargetOf(nTo));
+    if (chainsAgain) {
+      const end = resolveChainEnd(nTo);
+      findings.push({tier: 'error', id: 'to-chain', from, to, detail: `redirect target ${to} is itself redirected again (a chain ${nFrom} → ${nTo} → …). Docusaurus does not follow chains, so this lands on a redirect stub (a 404), not the chain's end. Collapse it: point ${from} directly to ${end}.`});
+    } else if (!isWhitelisted(nTo, published)) {
+      // to-missing / to-draft: the target must be a published page (or a whitelisted dynamic route).
       if (draft.has(nTo)) {
         findings.push({tier: 'error', id: 'to-draft', from, to, detail: `redirect target ${to} is a DRAFT page (excluded from the prod build → invalid). Publish it or drop the redirect.`});
       } else {

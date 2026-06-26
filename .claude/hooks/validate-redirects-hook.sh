@@ -1,7 +1,8 @@
 #!/bin/bash
 # PostToolUse hook for Edit|Write on docusaurus.config.js: surface ERROR-tier redirect problems
-# (a redirect whose `to:` target is missing or draft would FAIL the prod build). Catches the
-# break in seconds instead of at the next slow build.
+# (a redirect whose `to:` target is missing, draft, OR itself redirected again — a chain a→b→c
+# Docusaurus won't follow — would FAIL the prod build). Catches the break in seconds instead of
+# at the next slow build.
 #
 # Exit 2 marks the edit as failed + feeds stderr back so the model self-corrects (fix the target
 # or drop the redirect). Warn-tier findings (dead/duplicate redirects) are left for the full
@@ -26,10 +27,11 @@ rc=$?
 
 if [ "$rc" -eq 2 ]; then
   {
-    echo "🔀 Redirect problem: a redirect target is MISSING or DRAFT (would fail the prod build)."
+    echo "🔀 Redirect problem (would fail the prod build): a redirect target is MISSING, DRAFT, or"
+    echo "   itself redirected again (a chain a→b→c — Docusaurus does not follow chains)."
     printf '%s\n' "$out" | grep -A1 "error:redirect-"
     echo ""
-    echo "Fix the target (a moved slug?) or drop the redirect. Full check:"
+    echo "Fix the target (a moved slug? collapse the chain to a→c?) or drop the redirect. Full check:"
     echo "  ( cd $proj && make validate-redirects )"
   } >&2
   exit 2
