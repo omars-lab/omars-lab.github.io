@@ -19,7 +19,7 @@ import {
 test.describe('GraphRenderer Title Rendering E2E', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the graph component page
-    const response = await page.goto('/legend/components/structural/graph', {
+    const response = await page.goto('/handbook/components/structural/graph', {
       waitUntil: 'domcontentloaded',
     });
     

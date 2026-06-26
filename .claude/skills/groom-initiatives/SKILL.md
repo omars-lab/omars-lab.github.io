@@ -5,7 +5,7 @@ description: Capture and advance a temporal initiative (an idea, experiment, or 
 
 # Groom initiatives (board-aware capture + advancement)
 
-The site is split **durable vs temporal** (see the Legend hub, `/legend`):
+The site is split **durable vs temporal** (see the Legend hub, `/handbook`):
 
 - **`/craft` (+ `/journey`) = DURABLE** — distilled learnings, frameworks, strategy. The
   lasting lesson.

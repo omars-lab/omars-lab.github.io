@@ -12,7 +12,7 @@ const SUMMARIES: Record<string, string> = {
   Thoughts: 'Ideas that occurred to me but I have not acted on: things I might build, simulations, predictions, critiques. A thought graduates to an Initiative when I act on it, or to Mindset when I keep it to shape my thinking.',
   Mindset: 'The inputs I deliberately keep to shape how I think: the quotes that moved me, the affirmations I return to, the principles I live by. Curated, not just occurred.',
   Questions: 'The important sets of questions I ask, introspective and practical: the questions I ask myself to shape who I am, and the ones worth asking before starting something.',
-  Legend: 'The map for the whole site: durable vs temporal, the post-kind emoji, and the glossaries.',
+  '📘 Handbook': 'The handbook for navigating the blog: durable vs temporal, the post-kind emoji, the glossary and terminology, and the component reference.',
   Designs: 'Full system-design write-ups: how something was architected and shipped.',
   Vote: 'Tell me which upcoming posts you want next.',
   Todos: 'A rollup of every tracked task across the site: open, done, and scheduled.',

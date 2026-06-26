@@ -36,7 +36,7 @@ const ROOT = path.join(__dirname, '..');
 const DOCS_INSTANCES = [
   {dir: 'docs/craft', base: '/craft'},
   {dir: 'docs/journey', base: '/journey'},
-  {dir: 'docs/legend', base: '/legend'},
+  {dir: 'docs/handbook', base: '/handbook'},
 ];
 const BLOG_INSTANCES = [
   {dir: 'blog', base: '/initiatives'},

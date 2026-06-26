@@ -3,7 +3,7 @@
 /**
  * generate-component-usage.js — build the "used in" index for the showcase docs.
  *
- * Each showcase under docs/legend/components/* demonstrates one blog ability (a <Card>, a mermaid
+ * Each showcase under docs/handbook/components/* demonstrates one blog ability (a <Card>, a mermaid
  * diagram, a code embed). This scans every PUBLISHED post/doc for that technique and emits, per
  * showcase, the list of pages that actually use it — so a showcase's "Used in" list is generated
  * from reality and can never go stale (the same drift-proof model as the kanban/changelog data).
@@ -27,14 +27,14 @@ const path = require('path');
 const matter = require('gray-matter');
 
 const ROOT = path.join(__dirname, '..');
-const SHOWCASES_DIR = path.join(ROOT, 'docs', 'legend', 'components');
+const SHOWCASES_DIR = path.join(ROOT, 'docs', 'handbook', 'components');
 const outputFile = path.join(ROOT, 'src', 'components', 'UsedIn', 'component-usage.json');
 
 // Content roots to scan for usage, with their permalink base (mirrors the other generators).
 const DOCS_INSTANCES = [
   {dir: 'docs/craft', base: '/craft'},
   {dir: 'docs/journey', base: '/journey'},
-  {dir: 'docs/legend', base: '/legend'},
+  {dir: 'docs/handbook', base: '/handbook'},
 ];
 const BLOG_INSTANCES = [
   {dir: 'blog', base: '/initiatives'},
@@ -75,7 +75,7 @@ function permalinkFor(file, data, base, isBlog) {
     return `${base}/${(data.slug || fileSlug).toString().replace(/^\//, '')}`;
   }
   // docs path-derived
-  const instDir = base === '/craft' ? 'docs/craft' : base === '/journey' ? 'docs/journey' : 'docs/legend';
+  const instDir = base === '/craft' ? 'docs/craft' : base === '/journey' ? 'docs/journey' : 'docs/handbook';
   const rel = path.relative(path.join(ROOT, instDir), file).replace(/\.mdx?$/, '');
   const segs = rel.split(path.sep).filter((s) => !/^README$|^index$/i.test(s));
   return [base, ...segs].filter(Boolean).join('/');

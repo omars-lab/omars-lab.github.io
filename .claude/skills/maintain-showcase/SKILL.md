@@ -1,11 +1,11 @@
 ---
 name: maintain-showcase
-description: Maintain the component showcases under docs/legend/components/* — the site's reference for its embeddable abilities (a card, a diagram, a code embed, a YouTube/Figma embed). Each showcase is a `kind: showcase` 🎛️ doc that demonstrates ONE technique live and carries an auto-generated "used in" index of the published posts that actually leverage it. Use when adding a NEW showcase, when a showcase's "Used in" list looks wrong (empty when it shouldn't be, or noisy/over-matching), when adding a new reusable component that deserves a showcase, or when the detection pattern needs tuning. Owns the `usage_pattern` → `<UsedIn>` → generate-component-usage.js loop. Pairs with upgrade-post (the catalog of what each component is + when to use it), author-blog-post (frontmatter/MDX mechanics), and review-reader-experience (the IA the showcases live in).
+description: Maintain the component showcases under docs/handbook/components/* — the site's reference for its embeddable abilities (a card, a diagram, a code embed, a YouTube/Figma embed). Each showcase is a `kind: showcase` 🎛️ doc that demonstrates ONE technique live and carries an auto-generated "used in" index of the published posts that actually leverage it. Use when adding a NEW showcase, when a showcase's "Used in" list looks wrong (empty when it shouldn't be, or noisy/over-matching), when adding a new reusable component that deserves a showcase, or when the detection pattern needs tuning. Owns the `usage_pattern` → `<UsedIn>` → generate-component-usage.js loop. Pairs with upgrade-post (the catalog of what each component is + when to use it), author-blog-post (frontmatter/MDX mechanics), and review-reader-experience (the IA the showcases live in).
 ---
 
 # Maintain a component showcase
 
-A **showcase** is one doc under `docs/legend/components/*` that demonstrates a single
+A **showcase** is one doc under `docs/handbook/components/*` that demonstrates a single
 structural ABILITY of the blog — a `<Card>`, a mermaid diagram, a code embed, a Figma/YouTube
 embed — rendered live, so a reader (or future me) can see what it looks like and copy how to
 embed it. The showcases together are the site's **component reference**, the `🎛️ Components`
@@ -21,7 +21,7 @@ above all the **"Used in" index** that links each technique to the posts that ac
 
 ## The anatomy of a showcase doc
 
-Every showcase under `docs/legend/components/*` is a `kind: showcase` doc with:
+Every showcase under `docs/handbook/components/*` is a `kind: showcase` doc with:
 
 1. **An absolute `slug:`** under `/components/*` (e.g. `/components/structural/card`). Instance-
    relative under the `legend` instance; a move pairs with a `{from,to}` redirect like any page.
@@ -105,7 +105,7 @@ hits — that's worse than an honest empty line.
 ## Playbook A — add a NEW showcase
 
 1. **Decide it's a showcase.** It demonstrates one embeddable ability of the blog. Home it under
-   the right `docs/legend/components/<group>/` (`structural` / `diagrams` / `code` / `external`).
+   the right `docs/handbook/components/<group>/` (`structural` / `diagrams` / `code` / `external`).
    New group → add a `_category_.json` and a README landing.
 2. **Write the doc:** absolute `slug:` under `/components/*`, `kind: showcase`, a `description:`,
    and a **live demonstration** (render the component AND/OR a code example — not prose alone, or
@@ -127,7 +127,7 @@ hits — that's worse than an honest empty line.
 | Huge / noisy list | pattern too broad (matches incidental text) | tighten to a component tag / URL fingerprint; or scope it (e.g. `](/initiatives/` not `](`) |
 | Two showcases list identical posts | shared marker | apply the **overlap rule** — give the specific showcase a subset marker |
 | A draft post appears | (shouldn't — generator excludes drafts) | confirm the post's `draft: true`; if it's published it's a legit hit |
-| The showcase lists ITSELF | (shouldn't — generator self-excludes) | confirm the file is under `docs/legend/components/` |
+| The showcase lists ITSELF | (shouldn't — generator self-excludes) | confirm the file is under `docs/handbook/components/` |
 
 After any pattern change: **regenerate** (`npm run generate-component-usage`) and re-check the
 count. The JSON is gitignored, so the change you COMMIT is the `usage_pattern` edit, not the JSON.
@@ -147,7 +147,7 @@ count. The JSON is gitignored, so the change you COMMIT is the `usage_pattern` e
 
 | File | Role |
 |---|---|
-| `docs/legend/components/**` | the showcase docs (source: `slug`, `kind: showcase`, `usage_pattern`, demonstration, `<UsedIn>`) |
+| `docs/handbook/components/**` | the showcase docs (source: `slug`, `kind: showcase`, `usage_pattern`, demonstration, `<UsedIn>`) |
 | `scripts/generate-component-usage.js` | the generator (scans corpus → JSON) |
 | `src/components/UsedIn/{index.tsx,styles.module.css}` | the `<UsedIn>` component |
 | `src/components/UsedIn/component-usage.json` | generated output (gitignored; never hand-edit) |
