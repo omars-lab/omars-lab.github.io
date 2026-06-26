@@ -93,7 +93,11 @@ linking UP to the durable one. Split along that seam.
    ASK the user one or two sharp questions rather than guessing — the placement must be right.
 5. **Output a placement decision**: for each piece, its home, its `kind:` (+ `board: ideas`/`stage`
    if it is an idea), a slug, and a one-line why. If the post is mixed, lead with the SPLIT PLAN.
-6. **Hand off.** An under-specified piece → `mature-content` (the interview that firms it up). A
+6. **Name it in the right voice.** Once the kind/home is decided, the TITLE must match the nature
+   (a `/thoughts` thought reads as a QUESTION, an `/initiatives` post as what was DONE, a `/craft`
+   doc as the lasting CONCEPT) → run `name-post`. A just-classified idea is exactly where the
+   "titled like a finished thing" smell hides.
+7. **Hand off.** An under-specified piece → `mature-content` (the interview that firms it up). A
    board-ready idea/experiment → `groom-initiatives` (to card it). The MDX/frontmatter mechanics →
    `author-blog-post`. A re-home of an existing published post → pair the move with a `{from,to}`
    redirect (the validate-redirects gate guards it).
