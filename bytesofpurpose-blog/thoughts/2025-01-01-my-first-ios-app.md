@@ -1,18 +1,20 @@
 ---
 slug: my-first-ios-app
-title: '💡 My First iOS App'
-description: 'Learning to develop iOS applications with Swift, focusing on calendar and dashboard functionality.'
+title: '💡 Should I Build My First iOS App?'
+sidebar_label: '💡 iOS app?'
+description: 'A thought I am weighing: should I build my first iOS app, a calendar/dashboard I have wanted to make?'
 authors: [oeid]
-tags: [ios, swift, mobile, app-development, calendar, learning]
+tags: [ios, swift, mobile, app-development, calendar, idea]
 date: 2025-01-01T10:00
-kind: reflection
+kind: idea
 board: ideas
 stage: backlog
 priority: low
 draft: true
 ---
 
-An unactioned idea: build my first iOS app — a calendar/dashboard I have wanted to make.
+A thought I keep coming back to: **should I build my first iOS app?** A calendar/dashboard I have
+wanted to make. I have not committed to it; these are the questions and references I am weighing.
 
 <!-- truncate -->
 
