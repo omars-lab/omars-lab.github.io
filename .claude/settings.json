@@ -58,6 +58,11 @@
           },
           {
             "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-post-naming-hook.sh\"",
+            "timeout": 15
+          },
+          {
+            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-glossary-links-hook.sh\"",
             "timeout": 20
           },

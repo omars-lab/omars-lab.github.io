@@ -110,6 +110,12 @@ check-contrast: ## Fast WCAG-AA contrast gate on the theme's color vars (complem
 	@# .claude/hooks/check-contrast-hook.sh runs this at edit time; this target is the blocking gate.
 	( cd ${SITEROOT} && node scripts/check-contrast.js )
 
+validate-naming: ## Check /thoughts post titles read as questions, not completed initiatives (advisory)
+	@# Warn-tier: flags an unactioned-thought post titled like a finished thing ("My First X",
+	@# "Building X") instead of the question it should be ("Should I build X?"). Always exits 0.
+	@# The warn hook .claude/hooks/validate-post-naming-hook.sh runs it on a thoughts/ edit.
+	( cd ${SITEROOT} && node scripts/validate-post-naming.js )
+
 validate-seo: ## Lint SEO frontmatter across ALL content (description/title/keywords/image) — advisory
 	@# Mode 1 (source): the cheap, corpus-wide frontmatter audit (the blog instances the docs
 	@# validator skips + title/keywords/image). Always exits 0 — warn-tier advisory like the other
