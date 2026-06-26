@@ -12,9 +12,9 @@
     },
     "question-set": {
       "emoji": "❓",
-      "description": "A set of introspective questions I deliberately ask myself to shape how I think (the 'What I Ask Myself' / 'Questions for' series). A curated Mindset input, not a one-off thought.",
-      "mindset": true,
-      "mindsetGloss": "Questions I deliberately ask myself",
+      "description": "A set of questions I ask — introspective ('What I Ask Myself') or practical ('Questions for starting a business'). Its own /questions collection: important sets of questions, not all of them mindset-shaping.",
+      "question": true,
+      "questionGloss": "A set of questions I ask",
       "outline": [
         {"id": "sections", "label": "themed H2 sections (questions grouped by theme, not a flat list)"},
         {"id": "question-cards", "label": "one or more <Question> cards (each question is a card, not a bare bullet)"},
