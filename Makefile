@@ -104,6 +104,12 @@ validate-structure: ## Lint the topic-based docs IA contract (absolute slugs, ca
 		if [ $$rc -eq 2 ]; then echo "✗ structure: ERROR-tier violations — see above."; exit 1; fi; \
 		exit 0
 
+check-contrast: ## Fast WCAG-AA contrast gate on the theme's color vars (complements the axe e2e gate)
+	@# Exit 2 if any critical fg/bg theme pair (body/links/buttons/tea-ink, light + dark) drops
+	@# below AA — a contrast regression the slow axe gate would also fail. The warn-tier hook
+	@# .claude/hooks/check-contrast-hook.sh runs this at edit time; this target is the blocking gate.
+	( cd ${SITEROOT} && node scripts/check-contrast.js )
+
 validate-seo: ## Lint SEO frontmatter across ALL content (description/title/keywords/image) — advisory
 	@# Mode 1 (source): the cheap, corpus-wide frontmatter audit (the blog instances the docs
 	@# validator skips + title/keywords/image). Always exits 0 — warn-tier advisory like the other

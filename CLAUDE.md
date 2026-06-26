@@ -275,6 +275,18 @@ title/description duplicates. It skips client-redirect stubs + auto-generated li
 (tags/authors/pagination/storybook). When you add an SEO-affecting field or rule, update the shared
 lib + both validators in lockstep.
 
+**A11y contrast is guarded fast** by `scripts/check-contrast.js` (`make check-contrast`), the
+millisecond complement to the e2e axe gate (`test/e2e/accessibility.spec.ts`, which only runs on a
+full prod build). It reads the theme's color variables from `src/css/custom.css` (the `:root` light
+block + the `html[data-theme='dark']` block), resolves the critical foreground/background PAIRS
+(body/secondary/heading text on the page + cards, primary links, button text on the primary fill,
+`--tea-ink` on each pastel accent — both themes), and computes the WCAG 2 contrast ratio for each.
+Exit 2 if any pair drops below AA (4.5:1 text / 3.0:1 large+UI) — a regression the axe gate would
+also fail. The warn-tier PostToolUse hook `.claude/hooks/check-contrast-hook.sh` (registered in
+`.claude/settings.json`) runs it on a `custom.css` edit and surfaces failures without blocking; the
+blocking gate is `make check-contrast`. When you add a themed fg/bg surface meant to be readable,
+add its pair to the `PAIRS` manifest so the guard covers it.
+
 ## The site
 
 Docusaurus 3 blog/docs (`bytesofpurpose-blog/`) → GitHub Pages (`gh-pages`) →
