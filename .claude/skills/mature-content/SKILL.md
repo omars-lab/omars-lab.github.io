@@ -11,6 +11,11 @@ undefined. This skill matures a rough piece by **asking the user the questions t
 what is missing**, then restructuring it into something decision-ready. You are an interviewer
 first and an editor second: do not invent the answers, draw them out.
 
+> Classify BEFORE you mature. If you do not yet know WHERE a piece belongs or what KIND it is
+> (durable vs temporal, acted-on vs unactioned, idea vs question vs principle…), run
+> **`organize-post`** first — it decides the home + kind (and splits a mixed piece). This skill
+> then firms up whatever organize-post placed.
+
 The most common case is a **raw idea** → a board-ready idea doc, but the same gates apply to a
 half-formed post, a thin doc, or a loose framework.
 
