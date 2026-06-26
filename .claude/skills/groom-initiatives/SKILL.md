@@ -31,8 +31,9 @@ the POST.
 
 | Board | Lives at | A card is a post (in…) with… | Columns (the `stage` values) |
 |---|---|---|---|
-| **experiments** | `/craft/product-management/experiments` | an `/initiatives` post, `kind: experiment-plan` 📝 / `experiment-result` 📊 | `proposed` → `designed` → `running` → `analyzing` → `concluded` |
+| **experiments** | `/craft/product-management/experiments` | an `/initiatives` post, `kind: experiment-plan` 📝 / `experiment-result` 📊 (POCs fold in here too) | `proposed` → `designed` → `running` → `analyzing` → `concluded` |
 | **ideas** | `/craft/product-management/ideas` | a **`/thoughts`** post + explicit `board: ideas` frontmatter | `backlog` → `exploring` → `building` → `shipped` |
+| **research** | `/craft/product-management/research` | a **`/thoughts`** post, `kind: research` 🔬 (or explicit `board: research`) | `backlog` → `researching` → `learned` |
 
 The generator (`generate-kanban-data.js`) scans BOTH blog dirs: `blog/` (→ `/initiatives`, the
 experiment posts) and `thoughts/` (→ `/thoughts`, the idea posts), and links each card to the

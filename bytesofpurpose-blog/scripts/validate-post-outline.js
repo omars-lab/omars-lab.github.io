@@ -104,6 +104,9 @@ const CHECKS = {
   'section-banner': (fm, body) => /<SectionBanner[\s>]/.test(body),
   // quote-set
   'quote-cards': (fm, body) => /<Quote[\s>]/.test(body),
+  // research: the questions to investigate (a list, a checklist, or H2/H3 question sections)
+  'research-questions': (fm, body) =>
+    /^\s*[-*]\s+\S/m.test(body) || /^\s*[-*]\s+\[[ xX]\]/m.test(body) || hasH2(body) || /\?/.test(body),
   // framework
   'framework-laid-out': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) ||

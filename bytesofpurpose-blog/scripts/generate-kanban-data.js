@@ -62,6 +62,12 @@ const BOARDS = {
     kinds: [],
     columns: ['backlog', 'exploring', 'building', 'shipped'],
   },
+  research: {
+    // Research posts (kind: research 🔬 — things I want to investigate before deciding) auto-belong;
+    // any post can also opt in with `board: research`. Lifecycle: want-to → investigating → done.
+    kinds: ['research'],
+    columns: ['backlog', 'researching', 'learned'],
+  },
 };
 
 // Map a post's `stage` frontmatter to a board column. Accepts a few synonyms so authors
@@ -88,6 +94,13 @@ const STAGE_SYNONYMS = {
   wip: 'building',
   ship: 'shipped',
   shipped: 'shipped',
+  // research (backlog → researching → learned). `backlog` is shared with ideas; the columns
+  // researching/learned match directly. Friendly synonyms that don't collide with the above:
+  investigating: 'researching',
+  researching: 'researching',
+  learn: 'learned',
+  learnt: 'learned',
+  learned: 'learned',
 };
 
 function resolveColumn(board, stageRaw, kind) {
