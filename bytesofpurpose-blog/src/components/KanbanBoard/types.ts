@@ -19,6 +19,8 @@ export interface KanbanCard {
   priority: string;
   /** The post kind (experiment-plan, experiment-result, …) — drives the kind emoji. */
   kind: string;
+  /** Optional classification grouping a subset of a board's cards (e.g. 'first-time'). Badge. */
+  class?: string;
   /** YYYY-MM-DD (may be empty). */
   date: string;
 }

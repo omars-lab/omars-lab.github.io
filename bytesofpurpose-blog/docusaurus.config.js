@@ -588,6 +588,17 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // the 5 still-draft idea posts get their redirects when they are un-drafted.)
             {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
             {from: "/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
+            // The 4 "first-time" idea posts (my-first-* / tinker-*) were un-drafted (#59) so each is
+            // its own card on the Ideas board; now that they're published, their old /craft ideas
+            // doc URLs 301 to their /thoughts home.
+            {from: "/docs/craft/product-management/ideas/my-first-ios-app", to: "/thoughts/my-first-ios-app"},
+            {from: "/craft/product-management/ideas/my-first-ios-app", to: "/thoughts/my-first-ios-app"},
+            {from: "/docs/craft/product-management/ideas/my-first-mac-menubar-app", to: "/thoughts/my-first-mac-menubar-app"},
+            {from: "/craft/product-management/ideas/my-first-mac-menubar-app", to: "/thoughts/my-first-mac-menubar-app"},
+            {from: "/docs/craft/product-management/ideas/my-first-noteplan-plugin", to: "/thoughts/my-first-noteplan-plugin"},
+            {from: "/craft/product-management/ideas/my-first-noteplan-plugin", to: "/thoughts/my-first-noteplan-plugin"},
+            {from: "/docs/craft/product-management/ideas/tinker-browser-automation", to: "/thoughts/tinker-browser-automation"},
+            {from: "/craft/product-management/ideas/tinker-browser-automation", to: "/thoughts/tinker-browser-automation"},
             {from: "/initiatives/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
             {from: "/blog/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
             // "What I Ask Myself" (the question-set LEGEND post: the icon system + the practice)

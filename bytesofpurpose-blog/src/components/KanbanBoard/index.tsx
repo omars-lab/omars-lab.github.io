@@ -63,6 +63,16 @@ const PRIORITY_LABEL: Record<string, string> = {
   low: 'Low',
 };
 
+// Card CLASSIFICATION → {emoji, label} for the class badge. A class groups a subset of a board's
+// cards by what KIND of thing they are (e.g. the "first-time / new things" ideas), without being a
+// card itself. An unknown class falls back to its raw value, title-cased.
+const CLASS_META: Record<string, {emoji: string; label: string}> = {
+  'first-time': {emoji: '🌱', label: 'First-time'},
+};
+function classMeta(cls: string): {emoji: string; label: string} {
+  return CLASS_META[cls] || {emoji: '', label: cls.charAt(0).toUpperCase() + cls.slice(1).replace(/-/g, ' ')};
+}
+
 const DATA = kanbanData as KanbanData;
 
 /* ── Card → modal CustomEvent (mirrors Question's openQuestionModal) ──────── */
@@ -125,6 +135,14 @@ function Card({card, columnLabel}: CardProps): React.JSX.Element {
       </span>
       {card.summary && <span className={styles.cardSummary}>{card.summary}</span>}
       <span className={styles.cardMeta}>
+        {card.class && (
+          <span className={styles.classBadge}>
+            {classMeta(card.class).emoji && (
+              <span aria-hidden="true">{classMeta(card.class).emoji} </span>
+            )}
+            {classMeta(card.class).label}
+          </span>
+        )}
         {card.priority && (
           <span className={clsx(styles.pill, styles[`priority_${card.priority}`])}>
             {priorityLabel}

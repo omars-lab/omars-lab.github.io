@@ -7,10 +7,11 @@ authors: [oeid]
 tags: [macos, menu-bar, app, noteplan, swift, idea]
 date: 2025-01-01T10:00
 kind: idea
+class: first-time
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 A thought I keep coming back to: **should I build my first macOS menu-bar app?** One that shows my
