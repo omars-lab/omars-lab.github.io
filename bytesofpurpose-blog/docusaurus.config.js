@@ -720,7 +720,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/mindset/questions-for-starting-a-blog", to: "/questions/questions-for-starting-a-blog"},
             {from: "/mindset/questions-for-starting-a-business", to: "/questions/questions-for-starting-a-business"},
             {from: "/mindset/the-questions-i-want-to-answer", to: "/questions/the-questions-i-want-to-answer"},
-            {from: "/docs/craft/product-management/initiatives", to: "/craft/product-management/initiatives"},
+            // The /craft/product-management/initiatives doc described a DEFUNCT pre-active pipeline
+            // (Ideas→Research→POCs→Experiments→Initiatives→Projects) that contradicts the current
+            // model (where /initiatives = things I have ACTED ON). Retired; the model now lives in
+            // the Legend. Redirect the old doc URL + the live /craft URL → /legend.
+            {from: "/docs/craft/product-management/initiatives", to: "/legend"},
+            {from: "/craft/product-management/initiatives", to: "/legend"},
             // POCs folded into the Experiments board (both are acted-on validation work): the
             // /craft pocs page is gone (folds → /craft/product-management/experiments), and the
             // one real POC moved to /initiatives as a concluded experiment-result. Repoint the old
@@ -790,7 +795,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/definitions/terminology-portfolio", to: "/legend/terminology/building-software/architecture"},
             {from: "/docs/definitions/terminology-project-management", to: "/legend/terminology/getting-things-done/project-management"},
             {from: "/docs/development", to: "/craft/software-development"},
-            {from: "/docs/development/initiatives/initiatives", to: "/craft/product-management/initiatives"},
+            {from: "/docs/development/initiatives/initiatives", to: "/legend"},
             {from: "/docs/development/pocs/enhancing-the-google-search-experience", to: "/initiatives/enhancing-the-google-search-experience"},
             {from: "/docs/development/pocs/pocs", to: "/craft/product-management/experiments"},
             {from: "/docs/development/projects/experiments/experiments", to: "/craft/product-management/experiments"},
