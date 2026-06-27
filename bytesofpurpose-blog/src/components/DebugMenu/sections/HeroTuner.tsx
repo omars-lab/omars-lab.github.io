@@ -59,12 +59,12 @@ function HeroTunerBody(): React.JSX.Element {
     writeHeroParamsToUrl(values);
   }, [values]);
 
-  // The mask overlay: toggle a class on the hero root that the CSS uses to show the arch mask at 50%.
+  // The mask overlay: toggle an attribute on the hero root that the CSS uses to tint the arch mask, so
+  // you can see it vs the drawn arch. Driven purely by the `overlay` state (no unmount cleanup), so the
+  // overlay PERSISTS when you close the panel to look at the hero; unchecking the box removes it.
   React.useEffect(() => {
     const root = heroRoot();
-    if (!root) return undefined;
-    root.toggleAttribute('data-hero-mask-overlay', overlay);
-    return () => root.removeAttribute('data-hero-mask-overlay');
+    if (root) root.toggleAttribute('data-hero-mask-overlay', overlay);
   }, [overlay]);
 
   const set = (key: string, v: string) => setValues((s) => ({...s, [key]: v}));

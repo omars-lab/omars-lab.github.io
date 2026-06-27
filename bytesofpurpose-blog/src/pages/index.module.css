@@ -455,8 +455,11 @@
   overflow: hidden;
   isolation: isolate;
   transform: var(--arch-flip, none);
-  -webkit-mask-image: url(/img/cards/arch-inner.png);
-  mask-image: url(/img/cards/arch-inner.png);
+  /* WHITE-interior arch mask (traced from a scene PNG): white = REVEALED under mask-mode:luminance, so
+     the scene shows THROUGH the arch opening. (The older arch-inner.png is black-interior = HIDES the
+     interior, which left these arches empty.) See scripts/trace-arch-mask.js + the masks design post. */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
   -webkit-mask-size: var(--arch-size, contain);
@@ -491,10 +494,10 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* Same tunable arch mask as the peek, so the glow stays clipped to the SAME opening. */
+  /* Same WHITE-interior arch mask as the peek, so the glow stays clipped to the SAME opening. */
   transform: var(--arch-flip, none);
-  -webkit-mask-image: url(/img/cards/arch-inner.png);
-  mask-image: url(/img/cards/arch-inner.png);
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
   -webkit-mask-size: var(--arch-size, contain);
@@ -570,7 +573,6 @@
    and pin --arch-x/-y/-size to line them up. Pure dev affordance: only active under the attribute,
    which only the localhost-gated panel sets. */
 [data-hero-mask-overlay] .boutiqueArch::after,
-[data-hero-mask-overlay].studioDoorway::after,
 [data-hero-mask-overlay] .studioDoorway::after {
   content: '';
   position: absolute;
@@ -579,8 +581,10 @@
   pointer-events: none;
   background: rgba(255, 0, 128, 0.45);
   transform: var(--arch-flip, none);
-  -webkit-mask-image: url(/img/cards/arch-inner.png);
-  mask-image: url(/img/cards/arch-inner.png);
+  /* White-interior mask so the pink overlay fills the arch OPENING (where the scene shows), making it
+     obvious how the mask sits vs the drawn arch as you nudge --arch-x/-y/-size. */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
   -webkit-mask-size: var(--arch-size, contain);
@@ -701,10 +705,11 @@
   z-index: 2;
   overflow: hidden;
   isolation: isolate;
-  /* Tunable arch mask (the Hero Tuner drives --arch-x/-y/-size/-flip; baked fallbacks here). */
+  /* Tunable WHITE-interior arch mask (white = revealed under luminance; the Hero Tuner drives
+     --arch-x/-y/-size/-flip; baked fallbacks here). */
   transform: var(--arch-flip, none);
-  -webkit-mask-image: url(/img/cards/arch-inner.png);
-  mask-image: url(/img/cards/arch-inner.png);
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
   -webkit-mask-mode: luminance;
   mask-mode: luminance;
   -webkit-mask-size: var(--arch-size, contain);
