@@ -471,16 +471,17 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE CREATIVE STUDIO + its STANDING SIGN. Two things standing on the ground: a freestanding
-          studio sign (the Vestaboard on a post) on the LEFT, and the studio itself on the RIGHT, which
-          is the scene art's OWN arched doorway (one arch, the picture's own) that you peek inside.
-          They share a ground line so they read as one outdoor scene. NO CSS facade/wall, NO second
-          arch: just the sign + the picture. */}
-      <div className={styles.studioScene}>
+      {/* THE STUDIO FACADE: a Moroccan riad wall. A zellij tile CORNICE runs across the top; the wall
+          is warm terracotta; the Vestaboard HANGS from a wall bracket on the LEFT; the arched WINDOW
+          on the RIGHT is the scene art's own arch, set into the wall, giving a peek at the project. */}
+      <div className={styles.studioFacade}>
+        {/* The zellij mosaic cornice band across the top of the wall. */}
+        <div className={styles.studioCornice} aria-hidden="true" />
+
         <div className={styles.studioRow}>
-          {/* LEFT: the STANDING SIGN. The Vestaboard mounted on a post planted in the ground (a
-              monument/A-frame studio sign), with a gentle idle sway. One persistent board (it flips). */}
-          <div className={styles.studioSignStand}>
+          {/* LEFT: the Vestaboard HANGING from a wall bracket (a mount bar + two chains), swaying
+              gently. One persistent board (it flips, never re-mounts). */}
+          <div className={styles.studioSignHanger}>
             <div className={styles.studioSignSwing}>
               <div className={styles.studioSign}>
                 <SplitFlap
@@ -491,14 +492,11 @@ function ChooserStudio() {
                 />
               </div>
             </div>
-            <span className={styles.studioSignPost} aria-hidden="true" />
           </div>
 
-          {/* RIGHT: the STUDIO. The scene art's own arched doorway is the studio; you peek straight in
-              at the current project. On a change the inside CROSS-FADES to the next. The arch is the
-              picture's OWN (no CSS arch added): a fixed copy holds it still, and the cross-fading peek
-              is clipped to that same arch via the arch-inner.png mask. isolation:isolate contains any
-              GPU layer so it can't seam on hi-DPI (the flash variant's hard-won lesson). */}
+          {/* RIGHT: the arched WINDOW set into the wall. The arch is the scene art's OWN: a fixed copy
+              holds it still, and the cross-fading peek is clipped to that same arch via the
+              white-interior mask. isolation:isolate contains any GPU layer so it can't seam on hi-DPI. */}
           <div className={styles.studioDoorway}>
             <img
               className={styles.studioDoorFixed}
@@ -526,10 +524,6 @@ function ChooserStudio() {
             </div>
           </div>
         </div>
-
-        {/* A simple shared GROUND line both stand on (a warm tiled strip), so the sign + studio read
-            as one outdoor scene rather than two floating widgets. */}
-        <div className={styles.studioGround} aria-hidden="true" />
       </div>
     </Link>
   );

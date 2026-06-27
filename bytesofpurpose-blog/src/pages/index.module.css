@@ -595,12 +595,11 @@
   mask-repeat: no-repeat;
 }
 
-/* ── Creative-studio hero (A/B/C variant C): a STANDING SIGN next to the STUDIO ───────────────────
-   Two things standing on a shared ground: a freestanding studio SIGN (the Vestaboard on a post) on
-   the LEFT, and the STUDIO on the RIGHT, which is the scene art's OWN arched doorway (the picture's
-   own arch, the ONLY arch) that you peek inside. On a project change the inside cross-fades to the
-   next. No CSS facade wall, no second arch: just the sign + the picture, sharing a ground line.
-   Palette accents: deep blue #1f5673, gold #d9a441, warm wood #5c3318. */
+/* ── Creative-studio hero (A/B/C/D variant C): a Moroccan terracotta FACADE ───────────────────────
+   A warm terracotta wall with a zellij tile CORNICE across the top; the Vestaboard HANGS from a wall
+   bracket on the LEFT; the arched WINDOW on the RIGHT (the scene art's own arch) is set into the wall
+   for a peek at the project. Reference: a riad wall, board hung top-left, arched window to the right.
+   Palette: terracotta wall #c66b3d, zellij blue #1f5673 + gold #d9a441. */
 .studioGate {
   display: block;
   width: 100%;
@@ -614,47 +613,94 @@
   text-decoration: none;
   color: inherit;
 }
-.studioScene {
+
+/* The terracotta wall. Wall colour is tunable (--wall); a soft top-light gives it depth. */
+.studioFacade {
   position: relative;
-  width: 100%;
-  padding: 0.5rem 0 0;
+  padding: 0 1.4rem 1.6rem;
+  border-radius: 12px 12px 6px 6px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.16) 0%, rgba(217, 164, 65, 0) 55%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--wall, #c66b3d) 88%, #fff) 0%,
+      var(--wall, #c66b3d) 60%,
+      color-mix(in srgb, var(--wall, #c66b3d) 90%, #000) 100%);
+  background-color: var(--wall, #c66b3d);
+  box-shadow: 0 14px 30px rgba(80, 40, 20, 0.18);
 }
 
-/* The two actors stand side by side on the ground: standing sign LEFT, studio doorway RIGHT. */
+/* The ZELLIJ CORNICE: a geometric mosaic tile band across the top, sitting FLUSH to the top edge. */
+.studioCornice {
+  height: 30px;
+  margin: 0 -1.4rem; /* span the full wall width */
+  background:
+    repeating-linear-gradient(45deg, #d9a441 0 6px, transparent 6px 22px),
+    repeating-linear-gradient(-45deg, #d9a441 0 6px, transparent 6px 22px),
+    repeating-linear-gradient(90deg, #1f5673 0 20px, #e9ddc6 20px 22px, #1f5673 22px 42px),
+    #1f5673;
+  border-bottom: 3px solid #143d52;
+  box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.28);
+}
+
+/* The wall row: the hanging board LEFT, the arched window RIGHT. */
 .studioRow {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(150px, 0.8fr) 1.3fr; /* sign · studio */
-  align-items: end;
+  grid-template-columns: minmax(150px, 0.85fr) 1.25fr; /* board · window */
+  align-items: start;
   gap: 1.2rem;
+  padding-top: 1.6rem;
 }
 
-/* ── The STANDING SIGN (the Vestaboard on a post) ───────────────────────────────────────────────
-   The board sits atop a planted post, swaying very gently. The post grounds it on the shared floor. */
-.studioSignStand {
+/* ── The HANGING board (left): suspended from a wall bracket with a gentle sway ──────────────────
+   Sign offset + scale are tunable (--sign-x/-y/-scale). */
+.studioSignHanger {
   position: relative;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: end;
-  padding-bottom: 0; /* the post reaches the ground line below */
-  /* Sign offset + scale are tunable (--sign-x/-y/-scale); the swing rotation stays on the inner
-     .studioSignSwing so they don't conflict. */
+  justify-content: center;
+  align-self: start;
+  padding-top: 1.5rem; /* room for the mount bar + chains */
   transform: translate(var(--sign-x, 0px), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
-  transform-origin: bottom center;
+  transform-origin: top center;
+}
+.studioSignHanger::before {
+  /* the mount bar bolted to the wall, from which the chains hang */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #5a3a1f 0%, #3a2512 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 .studioSignSwing {
   position: relative;
-  transform-origin: 50% 100%; /* pivot at the post top, so it sways like a planted sign */
+  transform-origin: 50% -1.5rem; /* pivot at the mount, so it sways like a hung sign */
   animation: studioSway 6s ease-in-out infinite alternate;
 }
+.studioSignSwing::before,
+.studioSignSwing::after {
+  /* two chains from the mount bar to the board's top corners */
+  content: '';
+  position: absolute;
+  top: -1.5rem;
+  width: 2px;
+  height: 1.5rem;
+  background: linear-gradient(180deg, #d9a441 0%, #a87a23 100%);
+}
+.studioSignSwing::before { left: 18%; }
+.studioSignSwing::after { right: 18%; }
 @keyframes studioSway {
-  0% { transform: rotate(-0.5deg); }
-  100% { transform: rotate(0.5deg); }
+  0% { transform: rotate(-0.6deg); }
+  100% { transform: rotate(0.6deg); }
 }
 
-/* The sign housing: the dark Vestaboard case framed with a warm gold trim (a hand-painted studio
-   shingle), with two little mounting bolts at the bottom where it meets the post. */
+/* The sign housing: the dark Vestaboard case with a warm gold trim (a hand-painted studio shingle). */
 .studioSign {
   position: relative;
   display: inline-flex;
@@ -667,29 +713,19 @@
   box-shadow:
     inset 0 0.08em 0.12em rgba(255, 255, 255, 0.06),
     inset 0 -0.06em 0.12em rgba(0, 0, 0, 0.7),
-    0 0.6em 1.2em rgba(40, 20, 10, 0.3);
+    0 0.6em 1.4em rgba(40, 20, 10, 0.32);
 }
 
-/* The POST the sign stands on: a wooden upright from the sign down to the ground line. */
-.studioSignPost {
-  width: 12px;
-  height: 46px;
-  margin-top: -2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #4a2e16 0%, #6e4424 45%, #4a2e16 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-}
-
-/* ── The STUDIO doorway (the scene art's OWN arch, the only arch) ────────────────────────────────
-   A fixed copy of the active scene holds the arch + frame still; the peek-inside cross-fades on a
-   change, clipped to that same arch via the arch-inner.png mask so there is exactly ONE arch. */
+/* ── The arched WINDOW (right): the scene art's own arch, set into the wall ──────────────────────
+   A fixed copy of the active scene holds the arch still; the cross-fading peek is clipped to that
+   same arch via the white-interior mask. */
 .studioDoorway {
   position: relative;
   z-index: 1;
   width: 100%;
   aspect-ratio: 300 / 320;
-  align-self: end;
-  filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.22));
+  align-self: start;
+  filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.25));
 }
 .studioDoorFixed {
   position: absolute;
@@ -732,37 +768,27 @@
   opacity: 1;
 }
 
-/* The shared GROUND line: a thin warm tiled strip both the sign-post and the studio stand on, so
-   they read as one outdoor scene. A simple zellij-ish gold/blue dotted band. */
-.studioGround {
-  height: 14px;
-  margin-top: -1px;
-  border-radius: 0 0 8px 8px;
-  background:
-    repeating-linear-gradient(90deg, #d9a441 0 4px, transparent 4px 16px),
-    linear-gradient(180deg, #b8895a 0%, #9c6f44 100%);
-  box-shadow: 0 6px 12px rgba(80, 50, 25, 0.18);
-}
-
 /* Reduced motion: no sway. The peek still cross-fades (a calm switch). */
 @media (prefers-reduced-motion: reduce) {
   .studioSignSwing { animation: none; }
 }
 
-/* Dark theme: warm the post + ground a touch so the scene sits on the dark page nicely. */
-[data-theme='dark'] .studioGround {
+/* Dark theme: deepen the terracotta so the wall reads as warmly-lit at dusk. */
+[data-theme='dark'] .studioFacade {
   background:
-    repeating-linear-gradient(90deg, #d9a441 0 4px, transparent 4px 16px),
-    linear-gradient(180deg, #5a3f28 0%, #3e2c1c 100%);
+    radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.2) 0%, rgba(217, 164, 65, 0) 55%),
+    linear-gradient(180deg, #6e3a1f 0%, #4a2613 100%);
+  background-color: #4a2613;
 }
 
-/* Mobile: keep the sign + studio side-by-side; give the studio a touch more width and shrink the
-   sign so the peek isn't squished. */
+/* Mobile: keep the board + window side-by-side; give the window a touch more width, shrink the sign. */
 @media screen and (max-width: 600px) {
   .studioRow {
-    grid-template-columns: minmax(118px, 0.75fr) 1.25fr;
+    grid-template-columns: minmax(118px, 0.78fr) 1.2fr;
     gap: 0.7rem;
   }
+  .studioFacade { padding-inline: 0.8rem; }
+  .studioCornice { margin-inline: -0.8rem; }
   .studioSign { font-size: 0.74rem; }
 }
 
