@@ -144,47 +144,42 @@ test.describe('Homepage film-strip chooser', () => {
  * deterministically without PostHog.
  */
 test.describe('Homepage hero A/B: camera-flash variant', () => {
-  test('control (default / forced) renders the scrolling strip, not the flash', async ({ page }) => {
+  test('control (default / forced) renders the scrolling strip, not the gate', async ({ page }) => {
     await page.goto('/?ab-homepage-hero-anim=control', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[class*="chooserTrack"]')).toHaveCount(1);
-    await expect(page.locator('[class*="flashStage"]')).toHaveCount(0);
+    await expect(page.locator('[class*="flashGate"]')).toHaveCount(0);
   });
 
-  test('test variant renders the camera-flash rotator, one card visible at a time', async ({ page }) => {
+  test('test variant renders the camera-flash GATE, one arch scene visible at a time', async ({ page }) => {
     await page.goto('/?ab-homepage-hero-anim=test', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // The flash stage replaces the scrolling strip.
-    const stage = page.locator('[class*="flashStage"]');
-    await expect(stage).toHaveCount(1);
+    // The flash gate replaces the scrolling strip. The whole portal is ONE link (the gate).
+    const gate = page.locator('a[class*="flashGate"]');
+    await expect(gate).toHaveCount(1);
     await expect(page.locator('[class*="chooserTrack"]')).toHaveCount(0);
 
-    // All 7 cards are in the DOM (stacked), but exactly ONE slide is the active/visible one.
-    const slides = page.locator('[class*="flashSlide"]');
-    await expect(slides).toHaveCount(EXPECTED_CARDS.length);
-    const activeSlide = page.locator('[class*="flashSlideActive"]');
-    await expect(activeSlide).toHaveCount(1);
+    // All 7 arch scenes are stacked in the DOM, but exactly ONE is the active/visible one.
+    await expect(page.locator('[class*="flashArchImg"]')).toHaveCount(EXPECTED_CARDS.length);
+    await expect(page.locator('[class*="flashArchImgActive"]')).toHaveCount(1);
 
-    // The active card is a real, non-hidden link (focusable + clickable); the rest are aria-hidden.
-    await expect(realCardLinks(page)).toHaveCount(1);
-    await expect(
-      page.locator('header a[class*="chooserCard"][aria-hidden="true"]'),
-    ).toHaveCount(EXPECTED_CARDS.length - 1);
+    // The departure board (the persistent Vestaboard) renders once.
+    await expect(page.locator('[class*="flashBoard"]')).toHaveCount(1);
   });
 
-  test('flash variant rotates to the next card over time', async ({ page }) => {
+  test('flash variant rotates to the next scene over time', async ({ page }) => {
     await page.goto('/?ab-homepage-hero-anim=test', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    const activeHref = () =>
-      page.locator('[class*="flashSlideActive"] a[class*="chooserCard"]').getAttribute('href');
-    const first = await activeHref();
-    expect(first, 'an active card should be showing').toBeTruthy();
+    // The active arch image identifies the current destination; it should change on rotation.
+    const activeSrc = () =>
+      page.locator('[class*="flashArchImgActive"]').getAttribute('src');
+    const first = await activeSrc();
+    expect(first, 'an active arch scene should be showing').toBeTruthy();
 
-    // Wait past one rotation interval (4s) and confirm the active card changed.
     await expect
-      .poll(activeHref, { timeout: 8000, message: 'flash rotator should advance to the next card' })
+      .poll(activeSrc, { timeout: 9000, message: 'flash rotator should advance to the next scene' })
       .not.toBe(first);
   });
 });

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
@@ -9,6 +9,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
+import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
 import {EXPERIMENTS, resolveVariant} from '../experiments';
 
@@ -85,11 +86,18 @@ function ChooserCard({
   card,
   duplicate = false,
   variant = 'scroll',
+  titleNode,
+  hideBody = false,
 }: {
   card: (typeof CHOOSER_CARDS)[number];
   duplicate?: boolean;
   /** The hero animation the user saw when they clicked: the A/B conversion dimension. */
   variant?: string;
+  /** Render this in place of the static title (the flash variant passes the Vestaboard here, so it
+   * lives INSIDE the card and moves with the card's hover-lift). */
+  titleNode?: React.ReactNode;
+  /** Hide the static body line (the flash variant puts the message on the board instead). */
+  hideBody?: boolean;
 }) {
   return (
     <Link
@@ -113,8 +121,8 @@ function ChooserCard({
           height={400}
         />
       </div>
-      <div className={styles.chooserCardTitle}>{card.title}</div>
-      <p className={styles.chooserCardBody}>{card.body}</p>
+      <div className={styles.chooserCardTitle}>{titleNode ?? card.title}</div>
+      {!hideBody && <p className={styles.chooserCardBody}>{card.body}</p>}
     </Link>
   );
 }
@@ -148,60 +156,173 @@ function ChooserStrip() {
    only the active one is visible/opaque, so the active card is always a real, focusable link.
    prefers-reduced-motion users get a plain cross-fade with no flash (the CSS dials the flash out).
    The rotation pauses on hover/focus so the visible card is a stable target. */
-const FLASH_INTERVAL_MS = 4000;
+// Timing choreography (per scene change). The Vestaboard title flip starts a beat BEFORE the
+// flash, and the flash PEAK is timed to land on the flip's MIDPOINT (the char-swap), so the
+// brightest moment masks the mechanical change. Then the light HOLDS, then recedes to reveal the
+// settled new scene + title.
+const FLASH_INTERVAL_MS = 9000; // time one card is shown before the next change fires
+const FLASH_SETTLE_MS = 720; // TOTAL roll time per cell; all cells finish together at this mark
+const FLASH_LEAD_MS = 120; // flip starts this long BEFORE the flash ramps
+// The flash PEAK lands partway through the roll so the brightest moment masks the change; the swap
+// of the arch image happens then too.
+const FLASH_SWAP_MS = 320; // swap the scene image partway through the roll / at the flash peak
+const FLASH_HOLD_MS = 2200; // how long the arch light LINGERS bright before receding (slow flash)
+const FLASH_BOARD_COLS = 14; // Vestaboard columns per row. The board widens by adding blank FILLER
+// tiles (more columns), NOT by stretching the housing, so the bezel border stays the same size.
+const FLASH_BOARD_ROWS = 5; // ALWAYS this many rows: a blank row BEFORE + up to 3 title rows + a
+// blank row AFTER. Fixed, so the board's size/position never changes.
+
+/** Drop a leading emoji (+ its trailing space) from a card title, so the Vestaboard shows letters
+ * only (real flaps carry no emoji). */
+function stripEmoji(s: string): string {
+  return s.replace(/^[^A-Za-z0-9]+/, '').trim();
+}
 
 function ChooserFlash() {
   const [active, setActive] = useState(0);
   const [flashing, setFlashing] = useState(false);
   const [paused, setPaused] = useState(false);
+  const stepTimers = useRef<number[]>([]);
 
+  // ONE scene change: advance by `delta` (the auto-rotate uses +1; the arrows ±1), with the flash +
+  // flip choreography. The flip starts first (advancing `active`, which the board reads), then the
+  // light peaks over the swap, then holds and recedes.
+  const step = useCallback((delta: number) => {
+    stepTimers.current.forEach((t) => window.clearTimeout(t));
+    stepTimers.current = [];
+    setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
+    stepTimers.current.push(window.setTimeout(() => setFlashing(true), FLASH_LEAD_MS));
+    stepTimers.current.push(
+      window.setTimeout(() => setFlashing(false), FLASH_LEAD_MS + FLASH_HOLD_MS),
+    );
+  }, []);
+
+  // Auto-rotate (paused on hover/focus). It re-arms whenever `active` changes, so a manual arrow nav
+  // (which changes `active`) resets the countdown instead of double-firing right after.
   useEffect(() => {
     if (paused) return undefined;
-    const tick = window.setInterval(() => {
-      // Fire the flash, then swap the active card at peak white (~half the flash), then clear.
-      setFlashing(true);
-      window.setTimeout(() => setActive((i) => (i + 1) % CHOOSER_CARDS.length), 320);
-      window.setTimeout(() => setFlashing(false), 640);
-    }, FLASH_INTERVAL_MS);
+    const tick = window.setInterval(() => step(1), FLASH_INTERVAL_MS);
     return () => window.clearInterval(tick);
-  }, [paused]);
+  }, [paused, active, step]);
+
+  useEffect(
+    () => () => stepTimers.current.forEach((t) => window.clearTimeout(t)),
+    [],
+  );
+
+  // ←/→ hop to the previous/next card. GLOBAL listener (on window), so the arrows work whenever the
+  // hero is on screen — not only when the gate happens to be focused (which is why pressing keys
+  // without first clicking/tabbing to the gate did nothing). Ignored while typing in an input.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step(-1);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step]);
 
   return (
-    <div
-      className={styles.flashViewport}
+    <Link
+      className={styles.flashGate}
+      to={CHOOSER_CARDS[active].to}
+      aria-label={stripEmoji(CHOOSER_CARDS[active].title)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}>
-      <div className={styles.flashStage}>
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onClick={() =>
+        posthog.capture('hero card clicked', {
+          hero_variant: 'flash',
+          destination: CHOOSER_CARDS[active].to,
+        })
+      }>
+      {/* THE PORTAL: a fixed-size arch box. The card scenes cross-fade INSIDE it (the "scene"
+          changing); the arch frame + flash light stay put. */}
+      <div className={styles.flashArchBox}>
         {CHOOSER_CARDS.map((card, i) => (
-          <div
+          <img
             key={card.to}
             className={clsx(
-              styles.flashSlide,
-              i === active && styles.flashSlideActive,
+              styles.flashArchImg,
+              i === active && styles.flashArchImgActive,
             )}
-            aria-hidden={i === active ? undefined : true}>
-            <ChooserCard card={card} duplicate={i !== active} variant="flash" />
-          </div>
+            src={useBaseUrl(card.img)}
+            alt={i === active ? card.alt : ''}
+            aria-hidden={i === active ? undefined : true}
+            loading="lazy"
+            width={400}
+            height={400}
+          />
         ))}
-        {/* The white flash overlay: radiates from the arch center, opacity driven by `flashing`. */}
-        <div
-          className={clsx(styles.flash, flashing && styles.flashOn)}
-          aria-hidden="true"
+        {/* The flash light, clipped to the arch silhouette, blooming to fill the whole window. */}
+        <div className={styles.flashArchWrap} aria-hidden="true">
+          <div className={clsx(styles.flashArch, flashing && styles.flashOn)} />
+        </div>
+      </div>
+
+      {/* THE DEPARTURE BOARD: directly beneath the portal, centered on the same axis. One persistent
+          instance (it never re-mounts, so it just flips, never fades), driven by the active title. */}
+      <div className={styles.flashBoard}>
+        <SplitFlap
+          text={stripEmoji(CHOOSER_CARDS[active].title)}
+          columns={FLASH_BOARD_COLS}
+          rows={FLASH_BOARD_ROWS}
+          settleMs={FLASH_SETTLE_MS}
         />
+      </div>
+    </Link>
+  );
+}
+
+/* A neutral, fixed-size SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS
+   fallback). It reserves the hero's height so there is NO layout jump when the real hero swaps in,
+   and it doesn't commit to either arm, so a `test` user never sees the strip flash up first. */
+function ChooserSkeleton() {
+  return (
+    <div className={styles.heroSkeleton} aria-hidden="true">
+      <div className={styles.heroSkeletonCard}>
+        <div className={styles.heroSkeletonArch} />
+        <div className={styles.heroSkeletonLine} />
+        <div className={clsx(styles.heroSkeletonLine, styles.heroSkeletonLineShort)} />
       </div>
     </div>
   );
 }
 
-/* Pick the hero animation by the A/B variant. SSR + no-PostHog default is the scrolling strip
-   (control), so the page renders fully without JS and only the client swaps to the flash variant
-   for users bucketed into `test`. */
+/* Pick the hero animation by the A/B variant. Until the variant resolves we render the skeleton
+   (not the strip), so a `test` user does not see the control strip flash up and then get replaced.
+   FALLBACK: if the flag has not resolved within RESOLVE_TIMEOUT_MS (PostHog blocked, absent, or
+   slow), default to control, so the hero never gets stuck on the skeleton. */
+const RESOLVE_TIMEOUT_MS = 600;
+
 function HeroChooser() {
   const exp = EXPERIMENTS['homepage-hero-anim'];
-  const [variant, setVariant] = useState('control');
-  useEffect(() => resolveVariant(exp, setVariant), [exp]);
+  const [variant, setVariant] = useState<string | null>(null); // null = not resolved yet
+  useEffect(() => {
+    let settled = false;
+    const set = (v: string) => {
+      settled = true;
+      setVariant(v);
+    };
+    const unsub = resolveVariant(exp, set);
+    // Don't let a missing/slow PostHog strand us on the skeleton: fall back to control.
+    const t = window.setTimeout(() => {
+      if (!settled) setVariant('control');
+    }, RESOLVE_TIMEOUT_MS);
+    return () => {
+      window.clearTimeout(t);
+      if (typeof unsub === 'function') unsub();
+    };
+  }, [exp]);
+  if (variant === null) return <ChooserSkeleton />;
   return variant === 'test' ? <ChooserFlash /> : <ChooserStrip />;
 }
 
@@ -214,9 +335,10 @@ function HomepageHeader() {
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         {/* The hero animation is A/B-tested (EXPERIMENTS['homepage-hero-anim']): control = the
-            scrolling strip, test = the camera-flash rotator. BrowserOnly so the flag read +
-            timers run client-side only; the SSR fallback is the strip (control). */}
-        <BrowserOnly fallback={<ChooserStrip />}>{() => <HeroChooser />}</BrowserOnly>
+            scrolling strip, test = the camera-flash rotator. BrowserOnly so the flag read + timers
+            run client-side only; the SSR/no-JS fallback is a neutral skeleton (NOT a committed arm)
+            so neither variant flashes up before the flag resolves. */}
+        <BrowserOnly fallback={<ChooserSkeleton />}>{() => <HeroChooser />}</BrowserOnly>
       </div>
     </header>
   );

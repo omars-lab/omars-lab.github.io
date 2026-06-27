@@ -785,7 +785,9 @@ html[data-theme='dark'] .insider-tip h4 {
   display: block;
   width: 3rem;
   height: 3px;
-  margin-top: 0.5rem;
+  /* margin auto CENTERS this accent rule under the (text-align:center) eyebrow. Without `auto` the
+     3rem block left-aligns into the top-left corner of the hero — the stray gradient sliver. */
+  margin: 0.5rem auto 0;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--tea-pink), var(--tea-mint), var(--tea-green));
 }

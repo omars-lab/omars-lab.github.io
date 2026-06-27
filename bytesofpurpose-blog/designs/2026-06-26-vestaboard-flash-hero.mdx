@@ -1,0 +1,106 @@
+---
+slug: design-vestaboard-flash-hero
+sidebar_position: 16
+title: 'The Departure-Board Hero: a Vestaboard split-flap + camera flash'
+sidebar_label: 'Vestaboard hero'
+kind: design-story
+description: >-
+  The story behind the homepage camera-flash hero: an arched portal whose scene
+  cross-fades behind a flash of light, captioned by a Vestaboard split-flap board
+  that rolls through the alphabet to name the destination. The mechanics, the
+  design iterations, and the subtle bugs (a hi-DPI compositing seam, a white-out
+  flash) it took to get there.
+authors:
+  - oeid
+tags:
+  - design-engineering
+  - animation
+  - frontend
+date: 2026-06-26
+draft: false
+---
+
+The homepage hero asks one question: **which door into my world do you want?** The answer became a
+**departures board**. An arched window (a portal you travel through) shows a scene; a flash of light
+fills the arch; the scene changes; and a split-flap **Vestaboard** beneath it rolls through the
+alphabet to name where this gate goes. It is the A/B "test" arm of the hero experiment (the control
+is a calmer scrolling card strip).
+
+<!-- truncate -->
+
+## 1. The concept
+
+The pairing carries the whole idea: an **arched portrait window** says "a curated destination," and a
+mechanical **split-flap board** says "departures, now boarding." Together they read as *a place you
+travel to*, not a list of links. The hero is ONE click target (the whole gate is a `<Link>`); the
+flash + board just animate which destination it points at.
+
+## 2. The split-flap board (the SplitFlap component)
+
+A real Vestaboard is a grid of character flaps. Each flap is on a drum and **rolls THROUGH the
+alphabet** to reach its letter, so changing a word looks like a cascade of spinning flaps settling
+into place. The component reproduces that:
+
+- **A character deck.** `DECK = ' A..Z0..9 punctuation'`. To go from `D` to `G`, the cell flips
+  `D → E → F → G`, one flap per step, not a single direct swap. That intermediate roll is the
+  signature of a departure board.
+- **Synchronized arrival.** A cell with more steps to travel flips FASTER per step, so every cell in
+  the message lands on its target at the SAME moment. Per-step duration is `settleMs / stepCount`,
+  clamped, so the board settles cleanly instead of finishing raggedly.
+- **A fixed grid with filler.** The title word-wraps into a fixed `columns × rows` grid, centered,
+  with the empty cells rendered as **blank dark flap tiles** (a real board is always full). The grid
+  never changes size between messages, so the board's footprint is constant; only the flaps move.
+- **The housing.** The tiles sit in a dark physical **bezel** with an inner recess + drop shadow, so
+  it reads as one real unit rather than loose letters. Widening the board adds more filler COLUMNS,
+  never stretches the bezel (the border stays the same thickness).
+- **The flap geometry.** Each tile splits at the middle; a folding-down top leaf (old glyph) and a
+  folding-up bottom leaf (new glyph) animate the turn in 3D (`perspective` on the cell, `rotateX` on
+  the leaves). The leaves are **solid opaque** dark faces, which matters (see the bugs below).
+
+## 3. The camera flash, bound to the arch
+
+When the scene changes, a white light **blooms inside the arch and fills it**, masking the swap, like
+a photo being taken and the subject changing. Two details made it work:
+
+- **Bound to the EXACT arch.** The light overlay is masked with `arch-inner.png` (the precise arch
+  silhouette, interior filled black, used as a luminance `mask-image`). So the light is clipped to the
+  real arched window, edge-exact, on every card, including the base lip. A `border-radius`
+  approximation never lined up with the drawn frame; the mask does.
+- **Light OVER the scene, not a white-out.** The bloom is a **semi-transparent** white radial (peak
+  alpha well below 1.0, layered stops). Even at the brightest moment you still see the figure, the
+  frame, the depth. The first attempts went fully opaque white and the scene vanished into a flat
+  void; pulling the peak alpha down fixed it.
+
+The flip starts a beat before the flash, and the flash peak straddles the swap, so the brightest
+instant hides the mechanical change. `←`/`→` arrow keys (a global listener) hop to the previous/next
+destination, each playing the full flash + roll.
+
+## 4. The bugs worth remembering
+
+Two subtle ones, both about **GPU compositing layers**:
+
+- **The white split-flap hairlines.** Mid-flip, faint white lines appeared between the flap halves.
+  Cause: the leaves had transparent gaps, so the bright tile behind showed through the hinge. Fix:
+  make every leaf a **solid opaque** dark face. No gap, no bleed.
+- **The "line that comes and goes."** A faint vertical line appeared in the hero, to the LEFT of the
+  portal, ONLY on a hi-DPI (retina) screen, and ONLY while the flash animated. No DOM element had a
+  border there. Cause: the flash overlay's `mix-blend-mode` / `filter` / `transform` animation forces
+  it onto its own GPU compositing layer, whose fractional-pixel edge paints a seam that can render
+  OUTSIDE the element, and the hero's `overflow: hidden` turned that into a hard line. Fix: contain
+  the animation with `contain: paint` on the portal box (and drop the unnecessary blend/filter), so
+  the layer can't seam into the hero. The tell: it vanished at `devicePixelRatio = 1`.
+
+## 5. How it's wired (A/B)
+
+The hero animation is a PostHog feature-flag experiment, `homepage-hero-anim`: `control` = the
+scrolling strip, `test` = this departure-board hero. Both arms show the SAME destinations and copy;
+only the presentation differs, so a difference in chooser-card clicks is attributable to the
+animation. A `hero card clicked` event (with the variant + destination) is the conversion; exposure is
+the flag read. The design + hypothesis live in the experiment post `/initiatives/homepage-hero-anim`.
+
+## 6. What I'd reuse
+
+The `SplitFlap` component (`src/components/SplitFlap`) is the reusable piece: a Vestaboard display
+that takes text, word-wraps into a fixed grid, and rolls through a character deck with synchronized
+arrival. The arch-mask flash and the gate composition are homepage-specific, but the "bind a light to
+an exact shape with a luminance PNG mask" trick generalizes to any shaped reveal.
