@@ -138,10 +138,11 @@ test.describe('Homepage film-strip chooser', () => {
 });
 
 /**
- * The hero animation is A/B tested (EXPERIMENTS['homepage-hero-anim']): control = the scrolling
- * strip (covered above), test = the camera-flash rotator. On localhost the variant can be forced
- * via the ?ab-<key>=<variant> URL override (src/experiments.ts), so we can drive each arm
- * deterministically without PostHog.
+ * The hero animation is a multi-arm test (EXPERIMENTS['homepage-hero-anim']): control = the scrolling
+ * strip (covered above), test/flash = the camera-flash rotator (covered here), plus the in-progress
+ * variant_c (studio) + variant_d (boutique). On localhost the variant can be forced via the
+ * ?ab-<key>=<variant> URL override (src/experiments.ts) using the variant KEY, so we can drive each
+ * arm deterministically without PostHog.
  */
 test.describe('Homepage hero A/B: camera-flash variant', () => {
   test('control (default / forced) renders the scrolling strip, not the gate', async ({ page }) => {
@@ -191,3 +192,7 @@ test.describe('Homepage hero A/B: camera-flash variant', () => {
       .toBe(first);
   });
 });
+
+// NOTE: variants C (studio) and D (boutique) are still being designed; their e2e assertions land with
+// the 4-arm test update (task #119) once their markup settles. The earlier train-station variant was
+// replaced by studio/boutique, so its tests + baselines were removed.

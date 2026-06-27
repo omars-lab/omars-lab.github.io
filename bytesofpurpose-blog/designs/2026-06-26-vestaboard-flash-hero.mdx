@@ -90,15 +90,42 @@ Two subtle ones, both about **GPU compositing layers**:
   the animation with `contain: paint` on the portal box (and drop the unnecessary blend/filter), so
   the layer can't seam into the hero. The tell: it vanished at `devicePixelRatio = 1`.
 
-## 5. How it's wired (A/B)
+## 5. How it's wired (A/B/C)
 
 The hero animation is a PostHog feature-flag experiment, `homepage-hero-anim`: `control` = the
-scrolling strip, `test` = this departure-board hero. Both arms show the SAME destinations and copy;
-only the presentation differs, so a difference in chooser-card clicks is attributable to the
-animation. A `hero card clicked` event (with the variant + destination) is the conversion; exposure is
-the flag read. The design + hypothesis live in the experiment post `/initiatives/homepage-hero-anim`.
+scrolling strip, `test` = this departure-board hero, `variant_c` = a train-station re-staging
+(section 6). All three arms show the SAME destinations and copy; only the presentation differs, so a
+difference in chooser-card clicks is attributable to the animation. A `hero card clicked` event (with
+the variant + destination) is the conversion; exposure is the flag read. The design + hypothesis live
+in the experiment post `/initiatives/homepage-hero-anim`.
 
-## 6. What I'd reuse
+## 6. Variant C: the same board, hung in a train station
+
+The third arm keeps the portal + Vestaboard but changes the staging: instead of a flash, it asks
+*what if you were standing in a station, watching a train pull through to the next stop?* Two moves
+carry it, both CSS-only and reusing the same scene art:
+
+- **The board HANGS.** The departure board is suspended from a station bracket: a brushed-metal mount
+  bar with two cables dropping to the board, a grounding drop shadow, and a very subtle idle SWAY
+  (a `transform-origin` at the mount + a low-amplitude `ease-in-out alternate` keyframe). The sway is
+  about 0.6 degrees, enough to read as "hanging" without being a distraction.
+- **The scene SLIDES like a train.** The active scene slides off to the left as the next slides in
+  from the right (or the reverse, depending on direction), so for a moment both scenes are in the
+  window together, like one train leaving as another arrives. A horizontal motion **blur**, synced to
+  the slide, peaks at the midpoint and returns to zero at both ends; there is no flash, the slide
+  carries the whole transition.
+
+The retina compositing-seam lesson from section 4 applied directly here: the slide's `filter:
+blur()` is exactly the kind of GPU-layer effect that seams on hi-DPI. So the sliding scenes live in
+an `isolation: isolate`, `overflow: hidden` portal box (its own stacking context, clipped), and the
+blur returns to zero at rest so no blurred layer lingers between slides. Verified clean at
+`devicePixelRatio = 2` mid-slide.
+
+This first pass is deliberately minimal: the slide and the hang. A backlog of station DRESSING (an
+iron train-shed window frame, a warm platform-amber glow, a station clock) is kept as a swappable
+layer, since the slide + hang mechanics are theme-agnostic and could go either Victorian or modern.
+
+## 7. What I'd reuse
 
 The `SplitFlap` component (`src/components/SplitFlap`) is the reusable piece: a Vestaboard display
 that takes text, word-wraps into a fixed grid, and rolls through a character deck with synchronized

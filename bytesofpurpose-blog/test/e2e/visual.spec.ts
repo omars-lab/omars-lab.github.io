@@ -44,7 +44,10 @@ async function openHero(
       /* noop */
     }
   }, theme);
-  await page.goto(`/?ab-homepage-hero-anim=${variant}`, { waitUntil: 'networkidle' });
+  // `load` (not `networkidle`): the dev server holds an HMR websocket open, so `networkidle` never
+  // settles reliably (it times out the goto before the screenshot). `load` fires deterministically;
+  // the fixed settle below covers the client-side hydration of the A/B variant.
+  await page.goto(`/?ab-homepage-hero-anim=${variant}`, { waitUntil: 'load' });
   await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
   // Let the hero resolve + settle (the A/B variant hydrates client-side).
   await page.waitForTimeout(1200);
@@ -100,6 +103,9 @@ test.describe('Homepage hero — visual regression', () => {
         );
         await page.context().close();
       });
+
+      // NOTE: baselines for variant_c (studio) + variant_d (boutique) land once their look settles
+      // (task #119). The earlier train-station variant + its hero-train-* baselines were removed.
     }
   }
 });

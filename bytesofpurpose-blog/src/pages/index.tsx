@@ -12,6 +12,7 @@ import LatestPosts from '../components/LatestPosts';
 import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
 import {EXPERIMENTS, resolveVariant} from '../experiments';
+import {applyHeroParams} from '../lib/hero-tuning';
 
 /* The hero chooser cards (folded in from the old /welcome page). To ADD a card, append an
    entry here and drop its arched PNG in static/img/cards/, and the film strip + the seamless loop
@@ -282,6 +283,258 @@ function ChooserFlash() {
   );
 }
 
+/* ── VARIANT D hero: the BOUTIQUE STOREFRONT ───────────────────────────────────────────────────
+   An upscale stone storefront (inspired by an Aston Martin boutique): THREE arched openings, a tall
+   central arched DOOR flanked by two smaller lit arched WINDOWS, with the Vestaboard SIGN hanging
+   ABOVE the central door. Each arch GLOWS warmly from within (a lit boutique at dusk). The center
+   door shows the current project (a peek inside); the side windows preview the PREV + NEXT projects.
+   On a change all three CROSS-FADE forward and the sign flips. The arches are the scene art's OWN
+   (clipped to the arch interior via the arch-inner.png mask), so no extra arch is drawn.
+   prefers-reduced-motion users get the cross-fade with the glow steady and no shimmer. */
+const BOUTIQUE_INTERVAL_MS = 12000; // time one project is shown before the storefront cycles
+
+function ChooserBoutique() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const step = useCallback((delta: number) => {
+    setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
+  }, []);
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const tick = window.setInterval(() => step(1), BOUTIQUE_INTERVAL_MS);
+    return () => window.clearInterval(tick);
+  }, [paused, active, step]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step(-1);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step]);
+
+  // DEV-ONLY: on localhost, apply any hero-tuning URL params as inline CSS vars on the gate, so a
+  // shared `?ht-...` URL reproduces a tuned look (and the Hero Tuner panel drives this element). No-op
+  // off localhost, so production renders the baked CSS-var defaults.
+  const gateRef = useRef<HTMLAnchorElement | null>(null);
+  useEffect(() => {
+    applyHeroParams(gateRef.current);
+  }, []);
+
+  const n = CHOOSER_CARDS.length;
+  const leftIdx = (active - 1 + n) % n; // prev project, in the left window
+  const rightIdx = (active + 1) % n; // next project, in the right window
+
+  // One lit arched opening: a scene clipped to the arch interior + a warm glow. `which` picks the
+  // index shown; `kind` tags it (door = the clickable center; window = a side preview).
+  const Opening = ({idx, kind}: {idx: number; kind: 'door' | 'window'}) => (
+    <div
+      className={clsx(styles.boutiqueArch, kind === 'door' && styles.boutiqueDoor)}
+      aria-hidden={kind === 'window' ? true : undefined}>
+      {/* the lit interior: every project stacked, the chosen one cross-faded in */}
+      <div className={styles.boutiquePeek}>
+        {CHOOSER_CARDS.map((card, i) => (
+          <img
+            key={card.to}
+            className={clsx(styles.boutiquePeekImg, i === idx && styles.boutiquePeekImgActive)}
+            src={useBaseUrl(card.img)}
+            alt={kind === 'door' && i === idx ? card.alt : ''}
+            loading="lazy"
+            width={400}
+            height={400}
+          />
+        ))}
+      </div>
+      {/* the warm glow spilling from inside the arch */}
+      <span className={styles.boutiqueGlow} aria-hidden="true" />
+    </div>
+  );
+
+  return (
+    <Link
+      ref={gateRef}
+      data-hero-root
+      className={styles.boutiqueGate}
+      to={CHOOSER_CARDS[active].to}
+      aria-label={stripEmoji(CHOOSER_CARDS[active].title)}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onClick={() =>
+        posthog.capture('hero card clicked', {
+          hero_variant: 'boutique',
+          destination: CHOOSER_CARDS[active].to,
+        })
+      }>
+      <div className={styles.boutiqueFront}>
+        {/* The hanging STORE SIGN, above the central door (like a boutique nameplate over the entrance). */}
+        <div className={styles.boutiqueSignWrap}>
+          <div className={styles.boutiqueSign}>
+            <SplitFlap
+              text={stripEmoji(CHOOSER_CARDS[active].title)}
+              columns={FLASH_BOARD_COLS}
+              rows={FLASH_BOARD_ROWS}
+              settleMs={FLASH_SETTLE_MS}
+            />
+          </div>
+        </div>
+
+        {/* The three lit arches: window · DOOR · window. */}
+        <div className={styles.boutiqueArches}>
+          <Opening idx={leftIdx} kind="window" />
+          <Opening idx={active} kind="door" />
+          <Opening idx={rightIdx} kind="window" />
+        </div>
+
+        {/* The stone base / sill the storefront sits on. */}
+        <div className={styles.boutiqueBase} aria-hidden="true" />
+      </div>
+    </Link>
+  );
+}
+
+/* ── VARIANT D hero: the CREATIVE STUDIO ───────────────────────────────────────────────────────
+   A freestanding studio SIGN on a post (the Vestaboard) stands next to the STUDIO on a shared ground
+   line; the studio is the scene art's OWN arched doorway (the only arch) that you peek inside. On a
+   project change the inside CROSS-FADES to the next. No CSS facade/wall, no second arch.
+   prefers-reduced-motion users get the cross-fade with the sign sway held still. */
+const STUDIO_INTERVAL_MS = 12000; // time one project is shown before the inside cross-fades to the next
+
+function ChooserStudio() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  // ONE project change: advance `active`; the peek-inside cross-fades to the new project (CSS), and
+  // the sign flips. No door machinery (a CSS-3D door read as fake, so it was dropped).
+  const step = useCallback((delta: number) => {
+    setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
+  }, []);
+
+  // Auto-rotate (paused on hover/focus); re-arms when `active` changes so a manual arrow nav resets
+  // the countdown instead of double-firing.
+  useEffect(() => {
+    if (paused) return undefined;
+    const tick = window.setInterval(() => step(1), STUDIO_INTERVAL_MS);
+    return () => window.clearInterval(tick);
+  }, [paused, active, step]);
+
+  // ←/→ hop to prev/next, same GLOBAL window listener as the flash gate (works whenever the hero is
+  // on screen, not only when focused). Ignored while typing in an input.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step(-1);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [step]);
+
+  // DEV-ONLY: apply hero-tuning URL params on localhost (the Hero Tuner panel drives this root). No-op
+  // off localhost, so production renders the baked CSS-var defaults.
+  const gateRef = useRef<HTMLAnchorElement | null>(null);
+  useEffect(() => {
+    applyHeroParams(gateRef.current);
+  }, []);
+
+  return (
+    <Link
+      ref={gateRef}
+      data-hero-root
+      className={styles.studioGate}
+      to={CHOOSER_CARDS[active].to}
+      aria-label={stripEmoji(CHOOSER_CARDS[active].title)}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onClick={() =>
+        posthog.capture('hero card clicked', {
+          hero_variant: 'studio',
+          destination: CHOOSER_CARDS[active].to,
+        })
+      }>
+      {/* THE CREATIVE STUDIO + its STANDING SIGN. Two things standing on the ground: a freestanding
+          studio sign (the Vestaboard on a post) on the LEFT, and the studio itself on the RIGHT, which
+          is the scene art's OWN arched doorway (one arch, the picture's own) that you peek inside.
+          They share a ground line so they read as one outdoor scene. NO CSS facade/wall, NO second
+          arch: just the sign + the picture. */}
+      <div className={styles.studioScene}>
+        <div className={styles.studioRow}>
+          {/* LEFT: the STANDING SIGN. The Vestaboard mounted on a post planted in the ground (a
+              monument/A-frame studio sign), with a gentle idle sway. One persistent board (it flips). */}
+          <div className={styles.studioSignStand}>
+            <div className={styles.studioSignSwing}>
+              <div className={styles.studioSign}>
+                <SplitFlap
+                  text={stripEmoji(CHOOSER_CARDS[active].title)}
+                  columns={FLASH_BOARD_COLS}
+                  rows={FLASH_BOARD_ROWS}
+                  settleMs={FLASH_SETTLE_MS}
+                />
+              </div>
+            </div>
+            <span className={styles.studioSignPost} aria-hidden="true" />
+          </div>
+
+          {/* RIGHT: the STUDIO. The scene art's own arched doorway is the studio; you peek straight in
+              at the current project. On a change the inside CROSS-FADES to the next. The arch is the
+              picture's OWN (no CSS arch added): a fixed copy holds it still, and the cross-fading peek
+              is clipped to that same arch via the arch-inner.png mask. isolation:isolate contains any
+              GPU layer so it can't seam on hi-DPI (the flash variant's hard-won lesson). */}
+          <div className={styles.studioDoorway}>
+            <img
+              className={styles.studioDoorFixed}
+              src={useBaseUrl(CHOOSER_CARDS[active].img)}
+              alt={CHOOSER_CARDS[active].alt}
+              loading="lazy"
+              width={400}
+              height={400}
+            />
+            <div className={styles.studioPeek} aria-hidden="true">
+              {CHOOSER_CARDS.map((card, i) => (
+                <img
+                  key={card.to}
+                  className={clsx(
+                    styles.studioPeekImg,
+                    i === active && styles.studioPeekImgActive,
+                  )}
+                  src={useBaseUrl(card.img)}
+                  alt=""
+                  loading="lazy"
+                  width={400}
+                  height={400}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* A simple shared GROUND line both stand on (a warm tiled strip), so the sign + studio read
+            as one outdoor scene rather than two floating widgets. */}
+        <div className={styles.studioGround} aria-hidden="true" />
+      </div>
+    </Link>
+  );
+}
+
 /* A neutral, fixed-size SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS
    fallback). It reserves the hero's height so there is NO layout jump when the real hero swaps in,
    and it doesn't commit to either arm, so a `test` user never sees the strip flash up first. */
@@ -323,7 +576,12 @@ function HeroChooser() {
     };
   }, [exp]);
   if (variant === null) return <ChooserSkeleton />;
-  return variant === 'test' ? <ChooserFlash /> : <ChooserStrip />;
+  // 4-way A/B/C/D: test/flash → the camera-flash gate, variant_c/studio → the Moroccan creative-studio
+  // scene, variant_d/boutique → the lit boutique storefront, else (control/scroll + fallback) → strip.
+  if (variant === 'test' || variant === 'flash') return <ChooserFlash />;
+  if (variant === 'variant_c' || variant === 'studio') return <ChooserStudio />;
+  if (variant === 'variant_d' || variant === 'boutique') return <ChooserBoutique />;
+  return <ChooserStrip />;
 }
 
 function HomepageHeader() {

@@ -1,0 +1,102 @@
+---
+slug: design-building-masks-with-claude
+sidebar_position: 17
+title: 'Building Masks with Claude: a drag-to-URL tuning loop'
+sidebar_label: 'Building masks with Claude'
+description: >-
+  How a slow edit-restart-screenshot loop for pinning an arched image mask
+  became a fast one: a dev-only panel whose drag handles write to the URL, a
+  one-trace-fits-all mask auto-tracer, and a share-the-URL handoff where Claude
+  bakes the tuned values into the CSS.
+authors:
+  - oeid
+tags:
+  - design-engineering
+  - frontend
+  - tooling
+  - workflow
+kind: design-story
+date: 2026-06-27
+draft: true
+---
+
+The homepage hero has several variants, and a few of them clip a scene illustration to an **arched
+opening** (a window, a doorway). The hard part was never the mask itself. It was **pinning it**: getting
+the arch's position, size, and curve to line up with the drawn arch in the art, by feel, one number at a
+time. This is the story of turning that slow loop into a fast one, and the small tool that did it.
+
+<!-- truncate -->
+
+## The slow loop
+
+The first version of the loop looked like this. I would edit a `mask-position` or `mask-size` value in
+the CSS, restart the dev server (or wait for a hot reload), take a screenshot, look at it, decide it
+needed to move "a little left," and go again. Each pass was a context switch and a wait. Pinning one
+arch could take a dozen rounds, and there was more than one arch.
+
+Two things made it worse. First, the values are continuous: "a little left" is not a number, so I was
+guessing and overshooting. Second, the feedback was indirect: I was reading a screenshot of a render of
+a value, not touching the value on the thing itself.
+
+## The insight: the art is consistent
+
+The unlock was noticing that **every scene illustration places the arch in the same spot**. Same
+position, same size, same shape, across all of them. That means there is really only ONE arch to pin.
+Trace it once and the geometry fits every scene. So the problem shrank from "tune N masks" to "pin one
+mask, precisely, once."
+
+That reframed the goal: I did not need a faster way to edit numbers. I needed a way to **set the geometry
+directly and capture it**, so it could be reused and handed off.
+
+## The tool: drag to URL, share, bake
+
+The fix is a small dev-only panel, the **Hero Tuner**, that lives in the existing localhost-only debug
+menu (so none of it ships to production). It does three things:
+
+1. **It exposes every tunable property as a control.** Sliders for the arch position and size, a flip
+   toggle, color pickers, a variant switch. The controls are generated from a single schema, so adding a
+   tunable is one entry.
+2. **Every change writes to two places at once.** It sets a live CSS custom property on the hero (so the
+   page updates instantly, no reload) AND it writes a `ht-` query param to the URL. The URL is now a
+   complete, shareable description of the look.
+3. **A shared URL reproduces the look.** On localhost, the hero reads those `ht-` params on load and
+   applies them. So I can drag a look, copy the URL, and anyone opening it sees exactly what I saw.
+
+The handoff is the nice part. I drag until it is right, hit **Copy URL**, and paste it. Claude reads the
+params, maps each to its CSS variable, and **bakes the values into the CSS as the new defaults**. After
+that the URL is disposable: the look lives in the committed stylesheet, and the panel is not needed to
+see it.
+
+### Why this is safe to ship
+
+The whole mechanism rests on one contract: **every tunable property is written as a CSS variable with a
+baked-in fallback**, like `mask-position: var(--arch-x, center) var(--arch-y, center)`. The panel only
+ever SETS those variables, and only on localhost. So a production build, with no panel and no params,
+renders the fallbacks. Production is byte-for-byte the committed defaults, and a stranger appending `ht-`
+params to the live URL changes nothing. The panel and the param-reading are gated to localhost and dev
+builds, the same gate the debug menu already used.
+
+## Pinning the mask: trace, then nudge
+
+Two methods stack. First, **auto-trace**. A small script reads one scene PNG and floods inward from the
+transparent surround, stopping at the dark arch line. Whatever the flood cannot reach is the arch
+interior, which it paints white on black. That produces a clean, pixel-exact mask in the correct
+polarity (white interior, which a luminance mask treats as the visible region), plus the arch's center
+and size as ready-to-paste params. Because the art is consistent, this one trace seeds every scene.
+
+There is a subtle gotcha worth recording: **polarity**. A white-interior mask REVEALS the interior; a
+black-interior one HIDES it. More than once an arched layer rendered empty, and the cause was a mask of
+the wrong polarity, not a wrong position. The tracer emits the revealing polarity by construction.
+
+Second, **nudge by eye**. The panel has a toggle that overlays the current mask on the live scene as a
+bright tint. With the overlay on, the misalignment is obvious, and the arch sliders move it into place in
+seconds. The tracer gets you within a hair; the overlay closes the gap. Together they replace the dozen
+screenshot rounds with one drag.
+
+## What I would reuse
+
+The pattern generalizes past this hero. Any time a visual property is **continuous and best judged by
+eye**, the same shape applies: put it behind a CSS variable with a baked default, expose it in a dev-only
+panel that writes to the URL, and let a shared URL be the unit of handoff. The human does the part humans
+are good at, judging a look, and the machine does the part machines are good at, turning that look into a
+durable default. The mask was just the first thing that hurt enough to build it.

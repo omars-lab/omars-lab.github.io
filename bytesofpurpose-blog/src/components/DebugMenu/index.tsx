@@ -3,6 +3,7 @@ import {isLocalhost} from '@site/src/experiments';
 import type {DebugSection} from './types';
 import {experimentsSection} from './sections/ExperimentsSection';
 import {linksSection} from './sections/LinksSection';
+import {heroTunerSection} from './sections/HeroTuner';
 import styles from './styles.module.css';
 
 // Floating, localhost-only DEBUG MENU. A general-purpose developer panel whose
@@ -15,7 +16,7 @@ import styles from './styles.module.css';
 // isLocalhost() is the same gate src/experiments.ts uses for the URL override.
 
 // Section registry; append here to add a debug section.
-const SECTIONS: DebugSection[] = [experimentsSection, linksSection];
+const SECTIONS: DebugSection[] = [heroTunerSection, experimentsSection, linksSection];
 
 function DebugMenuInner(): React.JSX.Element {
   const [open, setOpen] = React.useState(false);
