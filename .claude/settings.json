@@ -70,6 +70,11 @@
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-redirects-hook.sh\"",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/hero-anchor-hook.sh\"",
+            "timeout": 20
           }
         ]
       },

@@ -58,6 +58,17 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
+  // Visual-regression tolerances: font anti-aliasing differs slightly machine-to-machine, so allow a
+  // small per-pixel + total-pixel slack. The seam/white-out/overflow artifacts this guards against are
+  // FAR larger than this threshold, so they still fail the diff. Tune up only if it flakes on AA noise.
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.012,
+      threshold: 0.2,
+      animations: 'disabled',
+    },
+  },
+
   projects: [
     {
       // Docs/graph specs against the dev server (:3000). The graph renders hot
@@ -92,6 +103,19 @@ export default defineConfig({
       name: 'bookmark-proof',
       testMatch: /(bookmark-rewrite-proof|bookmarklet-proof)\.spec\.ts$/,
       use: { baseURL: PROD_BASE },
+    },
+    {
+      // VISUAL REGRESSION against the dev server (:3000). Screenshots key surfaces (esp. the homepage
+      // hero, both A/B variants) across a MATRIX of pixel densities (DPR 1 + 2), viewports, and
+      // light/dark, comparing to committed baselines (toHaveScreenshot). This is what catches retina-
+      // only / animation-frame artifacts (a compositing seam, a flash white-out, overflow) that a
+      // single-DPR functional spec is blind to. Uses CHROMIUM for stable, deterministic raster (the
+      // baselines are Chromium-rendered). The visual.spec drives the DPR/viewport matrix itself via
+      // its own browser contexts, so the project browser is only the default fallback.
+      // Run: npx playwright test --project=visual   (first run / intentional change: add --update-snapshots)
+      name: 'visual',
+      testMatch: /visual\.spec\.ts$/,
+      use: { ...devices['Desktop Chrome'], baseURL: DEV_BASE },
     },
     {
       // Premium hard-gate proof against an ENCRYPTED production build (:4173). Asserts the

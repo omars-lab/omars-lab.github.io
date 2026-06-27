@@ -160,7 +160,7 @@ function ChooserStrip() {
 // flash, and the flash PEAK is timed to land on the flip's MIDPOINT (the char-swap), so the
 // brightest moment masks the mechanical change. Then the light HOLDS, then recedes to reveal the
 // settled new scene + title.
-const FLASH_INTERVAL_MS = 9000; // time one card is shown before the next change fires
+const FLASH_INTERVAL_MS = 12000; // time one card is shown before the next change fires
 const FLASH_SETTLE_MS = 720; // TOTAL roll time per cell; all cells finish together at this mark
 const FLASH_LEAD_MS = 120; // flip starts this long BEFORE the flash ramps
 // The flash PEAK lands partway through the roll so the brightest moment masks the change; the swap

@@ -168,18 +168,26 @@ test.describe('Homepage hero A/B: camera-flash variant', () => {
     await expect(page.locator('[class*="flashBoard"]')).toHaveCount(1);
   });
 
-  test('flash variant rotates to the next scene over time', async ({ page }) => {
+  test('flash variant advances on → and goes back on ← (arrow-key nav)', async ({ page }) => {
     await page.goto('/?ab-homepage-hero-anim=test', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // The active arch image identifies the current destination; it should change on rotation.
+    // The active arch image identifies the current destination. We drive the rotation with the arrow
+    // keys (a global keydown listener) rather than waiting out the ~12s auto-interval: it's the same
+    // step() path and far faster/deterministic. The keys work without focusing the gate.
     const activeSrc = () =>
       page.locator('[class*="flashArchImgActive"]').getAttribute('src');
     const first = await activeSrc();
     expect(first, 'an active arch scene should be showing').toBeTruthy();
 
+    await page.keyboard.press('ArrowRight');
     await expect
-      .poll(activeSrc, { timeout: 9000, message: 'flash rotator should advance to the next scene' })
+      .poll(activeSrc, { timeout: 4000, message: '→ should advance to the next scene' })
       .not.toBe(first);
+
+    await page.keyboard.press('ArrowLeft');
+    await expect
+      .poll(activeSrc, { timeout: 4000, message: '← should return to the previous scene' })
+      .toBe(first);
   });
 });
