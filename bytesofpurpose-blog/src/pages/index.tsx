@@ -476,16 +476,17 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE STUDIO FACADE: a Moroccan riad wall with a zellij CORNICE across the top, and THREE
-          arched openings set into the warm terracotta wall: a zellij WINDOW on the LEFT, the carved
-          DOOR in the CENTER with the Vestaboard sign hanging ABOVE it, and the arched WINDOW (the
-          scene art's own arch, a peek at the current project) on the RIGHT. */}
+      {/* THE STUDIO FACADE: a traditional Lebanese central-hall HOME (the triple-arch facade). A
+          pitched terracotta-tile ROOF caps the terracotta wall; THREE arched openings sit in a row
+          (a zellij WINDOW left, the carved DOOR center with the Vestaboard hanging above, the scene
+          peek right), each traced in a gold outline; a wrought-iron BALCONY RAILING runs across the
+          base of the arches. */}
       <div className={styles.studioFacade}>
-        {/* The zellij mosaic cornice band across the top of the wall. */}
-        <div className={styles.studioCornice} aria-hidden="true" />
+        {/* The pitched terracotta-tile roof capping the facade. */}
+        <div className={styles.studioRoof} aria-hidden="true" />
 
         <div className={styles.studioRow}>
-          {/* LEFT: the cleaned zellij WINDOW (static), set into the wall like the others. */}
+          {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
           <div className={styles.studioArch}>
             <img
               className={styles.studioArchImg}
@@ -496,6 +497,7 @@ function ChooserStudio() {
               width={400}
               height={400}
             />
+            <span className={styles.studioWindowRail} aria-hidden="true" />
           </div>
 
           {/* CENTER: the carved DOOR, with the Vestaboard sign HANGING above it. */}
@@ -553,8 +555,11 @@ function ChooserStudio() {
                 />
               ))}
             </div>
+            {/* the GOLD balcony railing in front of the right window too */}
+            <span className={styles.studioWindowRail} aria-hidden="true" />
           </div>
         </div>
+
       </div>
     </Link>
   );
