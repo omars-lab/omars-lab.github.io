@@ -442,7 +442,7 @@ function prefersReducedMotion(): boolean {
 // scroll-jacking models (pin/horizontal) fall back to in-flow behaviour (no 100vh pin). Reactive so
 // a rotate/resize re-renders. SSR-safe (false until mounted).
 const HERO_MOBILE_QUERY = '(max-width: 600px)';
-const STUDIO_BOARD_COLS_MOBILE = 9; // door-only board: far fewer columns so it fits a phone
+const STUDIO_BOARD_COLS_MOBILE = 14; // door-only board: wider board on mobile (smaller tiles fit it)
 
 function useIsMobile(): boolean {
   const [mobile, setMobile] = useState(false);
