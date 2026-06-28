@@ -588,35 +588,19 @@ function ChooserStudio() {
             </div>
           </div>
 
-          {/* RIGHT: the arched WINDOW that PEEKS at the current project. The arch is the scene art's
-              OWN: a fixed copy holds it still, and the cross-fading peek is clipped to that same arch
-              via the white-interior mask. isolation:isolate contains any GPU layer (no hi-DPI seam). */}
-          <div className={styles.studioDoorway}>
+          {/* RIGHT: a second cleaned zellij WINDOW (static), mirroring the left window. The project
+              peek now lives ONLY in the centre door (the door↔scene flash), so both side arches are
+              decorative windows. */}
+          <div className={styles.studioArch}>
             <img
-              className={styles.studioDoorFixed}
-              src={useBaseUrl(CHOOSER_CARDS[active].img)}
-              alt={CHOOSER_CARDS[active].alt}
+              className={styles.studioArchImg}
+              src={useBaseUrl('/img/cards/window.png')}
+              alt=""
+              aria-hidden="true"
               loading="lazy"
               width={400}
               height={400}
             />
-            <div className={styles.studioPeek} aria-hidden="true">
-              {CHOOSER_CARDS.map((card, i) => (
-                <img
-                  key={card.to}
-                  className={clsx(
-                    styles.studioPeekImg,
-                    i === active && styles.studioPeekImgActive,
-                  )}
-                  src={useBaseUrl(card.img)}
-                  alt=""
-                  loading="lazy"
-                  width={400}
-                  height={400}
-                />
-              ))}
-            </div>
-            {/* the GOLD balcony railing in front of the right window too */}
             <span className={styles.studioWindowRail} aria-hidden="true" />
           </div>
           </div>

@@ -632,13 +632,14 @@
   justify-content: flex-end; /* arches sit at the bottom; the board hangs in the upper space */
   padding: 0 0.7rem 0.5rem; /* small side padding so the outer arches sit NEAR the square's edges */
   overflow: hidden;
+  /* BODY is TEAL (swapped with the roof). Tunable via --wall. */
   background:
     radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.16) 0%, rgba(217, 164, 65, 0) 55%),
     linear-gradient(180deg,
-      color-mix(in srgb, var(--wall, #c66b3d) 88%, #fff) 0%,
-      var(--wall, #c66b3d) 60%,
-      color-mix(in srgb, var(--wall, #c66b3d) 90%, #000) 100%);
-  background-color: var(--wall, #c66b3d);
+      color-mix(in srgb, var(--wall, #3f7d72) 88%, #fff) 0%,
+      var(--wall, #3f7d72) 60%,
+      color-mix(in srgb, var(--wall, #3f7d72) 90%, #000) 100%);
+  background-color: var(--wall, #3f7d72);
   /* GOLD rounded outline around the square body (sides + bottom; the TOP edge is the shared eave line
      with the triangle roof, so they overlap as one gold line). */
   border: 3px solid #d9a441;
@@ -662,13 +663,13 @@
   margin: 0 0 -1px; /* sit flush on the body below (the eave overlaps the square's top border) */
   /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  /* solid TEAL (tunable --roof) + the single GOLD hip line; the line's angle/target is tunable via
-     --roof-line (the gradient's split position). */
+  /* ROOF is TERRACOTTA (swapped with the body; tunable --roof) + the single GOLD hip line; the line's
+     target is tunable via --roof-line (the gradient's split position). */
   background:
     linear-gradient(to bottom right,
       transparent calc(var(--roof-line, 50%) - 1px), #d9a441 calc(var(--roof-line, 50%) - 1px) calc(var(--roof-line, 50%) + 1px), transparent calc(var(--roof-line, 50%) + 1px)),
-    var(--roof, #3f7d72); /* plain solid teal */
-  filter: drop-shadow(0 4px 5px rgba(20, 50, 45, 0.35));
+    var(--roof, #c66b3d); /* plain solid terracotta */
+  filter: drop-shadow(0 4px 5px rgba(60, 28, 12, 0.4));
 }
 /* The GOLD outline along the triangle's two SLOPES, drawn as a thin gold line UNDER each sloped edge
    via two linear-gradient lines inside the (clipped) roof, so they ride exactly on the triangle's

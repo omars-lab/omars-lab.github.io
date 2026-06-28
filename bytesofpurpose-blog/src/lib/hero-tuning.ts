@@ -70,8 +70,7 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['boutique'], group: 'Layout', min: 0.85, max: 1.3, step: 0.01},
 
   // ── Style (colors + glow) ────────────────────────────────────────────────────────────────────
-  {key: 'wall', label: 'Wall color', kind: 'color', cssVar: 'wall', default: '#c66b3d',
-   variants: ['studio'], group: 'Style'},
+  // (studio body colour 'wall' lives in the House group below.)
   {key: 'stone', label: 'Stone color', kind: 'color', cssVar: 'stone', default: '#e3ddd0',
    variants: ['boutique'], group: 'Style'},
   {key: 'glow', label: 'Glow', kind: 'color', cssVar: 'glow', default: '#ffce8a',
@@ -90,7 +89,9 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['studio'], group: 'House', min: 0, max: 25, step: 0.5, unit: '%'},
   {key: 'roofLine', label: 'Roof gold-line', kind: 'slider', cssVar: 'roof-line', default: '50%',
    variants: ['studio'], group: 'House', min: 20, max: 80, step: 0.5, unit: '%'},
-  {key: 'roof', label: 'Roof color', kind: 'color', cssVar: 'roof', default: '#3f7d72',
+  {key: 'roof', label: 'Roof color', kind: 'color', cssVar: 'roof', default: '#c66b3d',
+   variants: ['studio'], group: 'House'},
+  {key: 'wall', label: 'Body color', kind: 'color', cssVar: 'wall', default: '#3f7d72',
    variants: ['studio'], group: 'House'},
   // sign-x/-y/-scale already exist in Layout and drive --sign-x/-y/-scale on the studio board.
 ];
