@@ -57,6 +57,19 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `SplitFlap` default export | `src/components/SplitFlap/index.tsx` | the Vestaboard component (text → fixed grid → deck-roll) |
 | `DECK` (in `SplitFlap`) | `src/components/SplitFlap/index.tsx` | the flap charset the cells roll THROUGH (`' A-Z0-9punct'`) |
 | `.foldDown` / `.foldUp` / `.leaf` | `src/components/SplitFlap/styles.module.css` | the 3D flap fold (leaves must stay OPAQUE — see gotchas) |
+| `EXPERIMENTS['homepage-hero-scroll']` | `src/experiments.ts` | the SCROLL-MODEL flag (`control`=`static` timer, `pin`, `inplace`, `horizontal`). Composed with `homepage-hero-anim`: when anim resolves to `studio`, this picks timer vs parallax wrapper. |
+| `useScrollScene` | `src/pages/index.tsx` | the parallax ENGINE: maps a `[0,1]` scroll progress → `{active, mode, flashing}`; crossing a scene band fires the camera flash (scroll-triggered, not timed); reduced-motion snaps with no flash |
+| `useScrollProgress` | `src/pages/index.tsx` | the rAF-throttled, PASSIVE, SSR-safe scroll/resize listener that writes the progress fraction (each model supplies its own `compute`) |
+| `StudioFacade` | `src/pages/index.tsx` | the presentational Lebanese central-hall house (roof + body + 3 arches + hanging board + door↔scene flash), driven by props; rendered by BOTH the timer `ChooserStudio` and `ParallaxStudio` |
+| `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 3 models (`pin`/`inplace`/`horizontal`); pin/horizontal use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel) |
+| `useNavbarSceneHighlight` | `src/pages/index.tsx` | lights the top-navbar `<a>` matching the active scene's destination; only while the hero is on-screen (IntersectionObserver), reverts on leave |
+| `.parallaxSpacer` / `.parallaxStick` | `src/pages/index.module.css` | the tall scroll runway + the sticky pinned viewport (pin/horizontal) |
+| `.parallaxPanTrack` | `src/pages/index.module.css` | the horizontal-pan depth backdrop (the 7 scenes panned behind the facade; isolated, low-opacity) |
+| `.navbarSceneActive` | `src/pages/index.module.css` | the active-scene navbar highlight style |
+
+The parallax pivot's design story (the three scroll models, the navbar sync, the influence) lives in
+the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **Vestaboard** post
+(`designs/2026-06-26-vestaboard-flash-hero.mdx`) covers the reusable board + flash component.
 
 ## How to make common changes
 

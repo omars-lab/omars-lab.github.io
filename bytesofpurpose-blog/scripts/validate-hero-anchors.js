@@ -58,6 +58,18 @@ const ANCHORS = [
   {file: SF_TSX, needle: /const DECK\b/, what: 'SplitFlap/index.tsx: DECK (the flap charset)'},
   {file: SF_TSX, needle: /export default function SplitFlap\b/, what: 'SplitFlap/index.tsx: the SplitFlap component'},
   {file: SF_CSS, needle: /\.foldDown\b/, what: 'SplitFlap/styles.module.css: .foldDown (the flap fold)'},
+
+  // ── The scroll-driven PARALLAX pivot (the House post documents this) ────────────────────────────
+  {file: EXP, needle: /['"]homepage-hero-scroll['"]/, what: "experiments.ts: the 'homepage-hero-scroll' flag key (pin/inplace/horizontal scroll-model A/B/C)"},
+  {file: TSX, needle: /function useScrollScene\b/, what: 'index.tsx: useScrollScene (scroll progress → {active, mode, flashing}; the scroll-triggered flash)'},
+  {file: TSX, needle: /function useScrollProgress\b/, what: 'index.tsx: useScrollProgress (rAF-throttled passive scroll listener → progress)'},
+  {file: TSX, needle: /function StudioFacade\b/, what: 'index.tsx: StudioFacade (the presentational Lebanese house, shared by timer + parallax)'},
+  {file: TSX, needle: /function ParallaxStudio\b/, what: 'index.tsx: ParallaxStudio (the 3 scroll-models: pin/inplace/horizontal)'},
+  {file: TSX, needle: /function useNavbarSceneHighlight\b/, what: 'index.tsx: useNavbarSceneHighlight (light the matching navbar item per active scene)'},
+  {file: CSS, needle: /\.parallaxSpacer\b/, what: 'index.module.css: .parallaxSpacer (the tall scroll runway for pin/horizontal)'},
+  {file: CSS, needle: /\.parallaxStick\b/, what: 'index.module.css: .parallaxStick (the sticky pinned viewport)'},
+  {file: CSS, needle: /\.parallaxPanTrack\b/, what: 'index.module.css: .parallaxPanTrack (the horizontal-pan depth backdrop)'},
+  {file: CSS, needle: /\.navbarSceneActive\b/, what: 'index.module.css: .navbarSceneActive (the active-scene navbar highlight)'},
 ];
 
 const SKILL = path.join(
