@@ -663,13 +663,26 @@
   margin: 0 0 -1px; /* sit flush on the body below (the eave overlaps the square's top border) */
   /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  /* ROOF is TERRACOTTA (swapped with the body; tunable --roof) + the single GOLD hip line; the line's
-     target is tunable via --roof-line (the gradient's split position). */
-  background:
-    linear-gradient(to bottom right,
-      transparent calc(var(--roof-line, 50%) - 1px), #d9a441 calc(var(--roof-line, 50%) - 1px) calc(var(--roof-line, 50%) + 1px), transparent calc(var(--roof-line, 50%) + 1px)),
-    var(--roof, #c66b3d); /* plain solid terracotta */
+  /* ROOF is PLAIN SOLID terracotta (swapped with the body; tunable --roof). The single GOLD hip line
+     is drawn as a thin clipped band in ::before (apex to 1/5-from-the-bottom-right-corner). */
+  background: var(--roof, #c66b3d);
   filter: drop-shadow(0 4px 5px rgba(60, 28, 12, 0.4));
+}
+/* The single GOLD hip line: a thin gold band running from the triangle's TIP (apex, 50% 0) down to a
+   point 1/5 in from the bottom-RIGHT corner (so x = 80%, y = 100%; tunable via --roof-line). Drawn as
+   a narrow quadrilateral clip-path so it is a true straight segment between those two points (a
+   linear-gradient can only band perpendicular to its axis, which can't connect apex→corner cleanly). */
+.studioRoof::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #d9a441;
+  /* a ~2-unit-wide band; the apex pair straddles 50%, the foot pair straddles --roof-line (default 80%)
+     1/5 in from the right corner. left/right edges of the band offset slightly so it has thickness. */
+  clip-path: polygon(
+    49.6% 0, 50.4% 0,
+    calc(var(--roof-line, 80%) + 0.4%) 100%, calc(var(--roof-line, 80%) - 0.4%) 100%);
 }
 /* The GOLD outline along the triangle's two SLOPES, drawn as a thin gold line UNDER each sloped edge
    via two linear-gradient lines inside the (clipped) roof, so they ride exactly on the triangle's

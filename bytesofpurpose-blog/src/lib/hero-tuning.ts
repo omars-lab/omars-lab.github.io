@@ -87,8 +87,10 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['studio'], group: 'House', min: 0, max: 30, step: 0.5, unit: '%'},
   {key: 'doorDrop', label: 'Door drop', kind: 'slider', cssVar: 'door-drop', default: '8%',
    variants: ['studio'], group: 'House', min: 0, max: 25, step: 0.5, unit: '%'},
-  {key: 'roofLine', label: 'Roof gold-line', kind: 'slider', cssVar: 'roof-line', default: '50%',
-   variants: ['studio'], group: 'House', min: 20, max: 80, step: 0.5, unit: '%'},
+  // the hip line's FOOT: x-position where the gold line meets the eave (apex is fixed at 50%). Default
+  // 80% = 1/5 in from the bottom-RIGHT corner.
+  {key: 'roofLine', label: 'Roof gold-line', kind: 'slider', cssVar: 'roof-line', default: '80%',
+   variants: ['studio'], group: 'House', min: 50, max: 95, step: 0.5, unit: '%'},
   {key: 'roof', label: 'Roof color', kind: 'color', cssVar: 'roof', default: '#c66b3d',
    variants: ['studio'], group: 'House'},
   {key: 'wall', label: 'Body color', kind: 'color', cssVar: 'wall', default: '#3f7d72',
