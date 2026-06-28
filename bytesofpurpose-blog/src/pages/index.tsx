@@ -482,10 +482,12 @@ function ChooserStudio() {
           peek right), each traced in a gold outline; a wrought-iron BALCONY RAILING runs across the
           base of the arches. */}
       <div className={styles.studioFacade}>
-        {/* The pitched terracotta-tile roof capping the facade. */}
+        {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
         <div className={styles.studioRoof} aria-hidden="true" />
 
-        <div className={styles.studioRow}>
+        {/* The SQUARE terracotta house body: holds the board + the three arches. */}
+        <div className={styles.studioBody}>
+          <div className={styles.studioRow}>
           {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
           <div className={styles.studioArch}>
             <img
@@ -558,8 +560,8 @@ function ChooserStudio() {
             {/* the GOLD balcony railing in front of the right window too */}
             <span className={styles.studioWindowRail} aria-hidden="true" />
           </div>
+          </div>
         </div>
-
       </div>
     </Link>
   );

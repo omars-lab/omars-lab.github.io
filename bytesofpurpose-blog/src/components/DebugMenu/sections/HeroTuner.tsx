@@ -92,7 +92,7 @@ function HeroTunerBody(): React.JSX.Element {
   const shown = HERO_PARAMS.filter(
     (p) => p.variants.includes('all') || (tag && p.variants.includes(tag)),
   );
-  const groups = ['Arch mask', 'Layout', 'Style'] as const;
+  const groups = ['House', 'Arch mask', 'Layout', 'Style'] as const;
 
   // The shareable param string (also handy to paste to Claude).
   const paramString =

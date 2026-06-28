@@ -29,7 +29,7 @@ export type HeroParam = {
   /** Which hero variant(s) this applies to (for grouping + the panel's variant filter). */
   variants: ReadonlyArray<'studio' | 'boutique' | 'all'>;
   /** A group label for panel organization. */
-  group: 'Arch mask' | 'Layout' | 'Style';
+  group: 'Arch mask' | 'Layout' | 'Style' | 'House';
   /** slider: numeric bounds + unit appended to the value. */
   min?: number;
   max?: number;
@@ -78,6 +78,21 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['boutique'], group: 'Style'},
   {key: 'glowStrength', label: 'Glow strength', kind: 'slider', cssVar: 'glow-strength',
    default: '0.55', variants: ['boutique'], group: 'Style', min: 0, max: 1, step: 0.01},
+
+  // ── House (variant C, the Lebanese central-hall home): the structural knobs ────────────────────
+  // Each maps to a var(--<cssVar>, <default>) on the studio CSS; the defaults here MUST match those
+  // CSS fallbacks. Drag in the panel → URL ht- params → Copy URL to share → Claude bakes as defaults.
+  {key: 'bodyW', label: 'House width', kind: 'slider', cssVar: 'body-w', default: '720px',
+   variants: ['studio'], group: 'House', min: 360, max: 900, step: 5, unit: 'px'},
+  {key: 'winRaise', label: 'Window raise', kind: 'slider', cssVar: 'win-raise', default: '6%',
+   variants: ['studio'], group: 'House', min: 0, max: 30, step: 0.5, unit: '%'},
+  {key: 'doorDrop', label: 'Door drop', kind: 'slider', cssVar: 'door-drop', default: '8%',
+   variants: ['studio'], group: 'House', min: 0, max: 25, step: 0.5, unit: '%'},
+  {key: 'roofLine', label: 'Roof gold-line', kind: 'slider', cssVar: 'roof-line', default: '50%',
+   variants: ['studio'], group: 'House', min: 20, max: 80, step: 0.5, unit: '%'},
+  {key: 'roof', label: 'Roof color', kind: 'color', cssVar: 'roof', default: '#3f7d72',
+   variants: ['studio'], group: 'House'},
+  // sign-x/-y/-scale already exist in Layout and drive --sign-x/-y/-scale on the studio board.
 ];
 
 const URL_PREFIX = 'ht-';

@@ -603,7 +603,7 @@
 .studioGate {
   display: block;
   width: 100%;
-  max-width: 720px;
+  max-width: var(--body-w, 720px); /* tunable house WIDTH (Hero Tuner) */
   margin: 0 auto;
   text-decoration: none;
   color: inherit;
@@ -614,16 +614,23 @@
   color: inherit;
 }
 
-/* The terracotta wall = the SQUARE house BODY. aspect-ratio:1 keeps it square; the roof above is a
-   triangle = half the body's height. The board + the three arches all live INSIDE this square. */
+/* The facade = a vertical stack: the TEAL roof on top, the SQUARE terracotta body below it. */
 .studioFacade {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* The SQUARE house BODY (terracotta wall, gold outline). aspect-ratio:1 keeps it square; the roof
+   above is a triangle = half this body's height. The board + the three arches live INSIDE the body. */
+.studioBody {
   position: relative;
   aspect-ratio: 1 / 1; /* the body is square */
   display: flex;
   flex-direction: column;
   justify-content: flex-end; /* arches sit at the bottom; the board hangs in the upper space */
   padding: 0 0.7rem 0.5rem; /* small side padding so the outer arches sit NEAR the square's edges */
-  border-radius: 4px 4px 6px 6px;
   overflow: hidden;
   background:
     radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.16) 0%, rgba(217, 164, 65, 0) 55%),
@@ -632,10 +639,10 @@
       var(--wall, #c66b3d) 60%,
       color-mix(in srgb, var(--wall, #c66b3d) 90%, #000) 100%);
   background-color: var(--wall, #c66b3d);
-  /* GOLD rounded outline around the square body's perimeter (sides + bottom; the TOP edge is the
-     shared eave line with the triangle roof, so they overlap as one gold line). */
+  /* GOLD rounded outline around the square body (sides + bottom; the TOP edge is the shared eave line
+     with the triangle roof, so they overlap as one gold line). */
   border: 3px solid #d9a441;
-  border-radius: 6px;
+  border-radius: 4px 4px 6px 6px;
   box-shadow: 0 14px 30px rgba(80, 40, 20, 0.18);
 }
 
@@ -655,11 +662,12 @@
   margin: 0 0 -1px; /* sit flush on the body below (the eave overlaps the square's top border) */
   /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  /* solid TEAL (the teal of the original keychain) + the single GOLD hip line apex→bottom-right. */
+  /* solid TEAL (tunable --roof) + the single GOLD hip line; the line's angle/target is tunable via
+     --roof-line (the gradient's split position). */
   background:
     linear-gradient(to bottom right,
-      transparent calc(50% - 1px), #d9a441 calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
-    #3f7d72; /* plain solid teal */
+      transparent calc(var(--roof-line, 50%) - 1px), #d9a441 calc(var(--roof-line, 50%) - 1px) calc(var(--roof-line, 50%) + 1px), transparent calc(var(--roof-line, 50%) + 1px)),
+    var(--roof, #3f7d72); /* plain solid teal */
   filter: drop-shadow(0 4px 5px rgba(20, 50, 45, 0.35));
 }
 /* The GOLD outline along the triangle's two SLOPES, drawn as a thin gold line UNDER each sloped edge
@@ -707,10 +715,16 @@
   height: 100%;
   object-fit: contain;
 }
-/* The centre DOOR rises above the side windows (Lebanese central-hall arcade), but sits a bit LOWER
-   so its base drops toward the ground line (a door reaches the floor, unlike the windows). */
+/* The side WINDOWS (left window + right scene) are RAISED off the floor a bit (tunable --win-raise);
+   a window sits higher on the wall than a door. The centre door reaches the floor. */
+.studioRow > .studioArch,
+.studioDoorway {
+  transform: translateY(calc(-1 * var(--win-raise, 6%)));
+}
+/* The centre DOOR rises above the side windows (Lebanese central-hall arcade), but sits LOWER (toward
+   the floor) than them — it overrides the window-raise. --door-drop tunes how far it drops. */
 .studioCenter .studioArch {
-  transform: translateY(8%) scale(1.12);
+  transform: translateY(var(--door-drop, 8%)) scale(1.12);
   transform-origin: bottom center;
 }
 /* GOLD balcony RAILING in front of each WINDOW only (not the door): a short balustrade at the base of
