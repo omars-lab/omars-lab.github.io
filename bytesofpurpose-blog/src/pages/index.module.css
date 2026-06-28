@@ -885,16 +885,8 @@
     rgba(255, 255, 255, 0.35) 100%
   );
 }
-/* The TIMER hero (ChooserStudio) toggles data-flash to animate the same bloom with a CSS transition
-   (it has no scroll to scrub it); the parallax hero leaves data-flash unset and drives --flash-o. */
-.studioArch[data-flash='on'] .studioFlash {
-  --flash-o: 1;
-  transition: opacity 0.72s ease-out;
-}
-.studioArch[data-flash='off'] .studioFlash {
-  --flash-o: 0;
-  transition: opacity 0.7s ease-in;
-}
+/* The flash opacity is ALWAYS the continuous --flash-o (set by the shared progress model: scroll OR
+   the timer's rAF clock both produce a smooth 0→1→0 ramp), so no per-mode data-flash rules are needed. */
 @media (prefers-reduced-motion: reduce) {
   .studioFlash {
     opacity: 0 !important; /* no strobe; the door/scene just cross-fades */

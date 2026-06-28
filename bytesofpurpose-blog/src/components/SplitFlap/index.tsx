@@ -28,6 +28,49 @@ export interface SplitFlapProps {
    * board's size never changes between messages. Requires `columns`. */
   rows?: number;
   className?: string;
+  /** DRIVEN mode: when set, the flip is controlled EXTERNALLY by `progress` (0..1) flipping from
+   * `fromText` to `text`, instead of self-running on timers. Stop changing `progress` (e.g. stop
+   * scrolling) and the board FREEZES mid-flip. Requires `fromText`. Used by the scroll-driven hero. */
+  progress?: number;
+  /** The text the board is flipping FROM in driven mode (the settled previous message). */
+  fromText?: string;
+}
+
+// A DRIVEN cell: shows the flip from `from`→`to` frozen at an external `progress` (0..1). At p<0.5 the
+// top leaf (old glyph) folds down (rotateX 0→-90); at p≥0.5 the bottom leaf (new glyph) folds up
+// (rotateX 90→0). No timers — the parent's progress fully determines the frame, so it freezes on stop.
+function DrivenCell({from, to, progress}: {from: string; to: string; progress: number}) {
+  const p = Math.min(1, Math.max(0, progress));
+  const flipping = from !== to && p > 0 && p < 1;
+  // settled glyph at the ends; mid-flip we split the rotation across the two leaves at the p=0.5 hinge
+  const settled = p < 0.5 ? from : to;
+  const topAngle = p < 0.5 ? -90 * (p / 0.5) : -90; // old top leaf folding down through the first half
+  const botAngle = p < 0.5 ? 90 : 90 * (1 - (p - 0.5) / 0.5); // new bottom leaf rising in the second half
+  return (
+    <span className={styles.cell} aria-hidden="true">
+      {/* static halves show the settled glyph at rest; during a flip the leaves below cover them */}
+      <span className={clsx(styles.leaf, styles.leafTop)}>
+        <span className={styles.glyph}>{p < 0.5 ? from : to}</span>
+      </span>
+      <span className={clsx(styles.leaf, styles.leafBottom)}>
+        <span className={styles.glyph}>{settled}</span>
+      </span>
+      {flipping && (
+        <>
+          <span
+            className={clsx(styles.leaf, styles.leafTop)}
+            style={{transform: `rotateX(${topAngle}deg)`, transition: 'none'}}>
+            <span className={styles.glyph}>{from}</span>
+          </span>
+          <span
+            className={clsx(styles.leaf, styles.leafBottom)}
+            style={{transform: `rotateX(${botAngle}deg)`, transition: 'none'}}>
+            <span className={styles.glyph}>{to}</span>
+          </span>
+        </>
+      )}
+    </span>
+  );
 }
 
 /** Center `text` within `columns`, padding both sides with spaces so the row is always full. */
@@ -175,26 +218,44 @@ export default function SplitFlap({
   columns,
   rows: fixedRows,
   className,
+  progress,
+  fromText,
 }: SplitFlapProps): React.JSX.Element {
-  // Real split-flap boards are UPPERCASE (the flaps only carry caps). With `columns`, the text
-  // word-wraps into a centered, blank-filler-padded GRID (a real Vestaboard); without it, a single
-  // tight text-width row.
-  const upper = text.toUpperCase();
-  let grid = columns ? wrapToGrid(upper, columns) : [upper];
-  // Fixed row count: pad with blank filler rows so the board's height never changes between
-  // messages. The title is vertically CENTERED (a blank row above + below); with an odd amount of
-  // padding the extra row falls to the bottom. Truncate if the text wrapped past the fixed height.
-  if (columns && fixedRows) {
-    if (grid.length > fixedRows) grid = grid.slice(0, fixedRows);
-    const blank = ' '.repeat(columns);
-    const pad = fixedRows - grid.length;
-    const top = Math.floor(pad / 2); // centered; odd remainder goes to the bottom
-    grid = [
-      ...Array(top).fill(blank),
-      ...grid,
-      ...Array(pad - top).fill(blank),
-    ];
+  // Build the centered/padded GRID for a message (same layout for both the timer + driven paths).
+  const toGrid = (s: string): string[] => {
+    const upper = s.toUpperCase();
+    let g = columns ? wrapToGrid(upper, columns) : [upper];
+    if (columns && fixedRows) {
+      if (g.length > fixedRows) g = g.slice(0, fixedRows);
+      const blank = ' '.repeat(columns);
+      const pad = fixedRows - g.length;
+      const top = Math.floor(pad / 2);
+      g = [...Array(top).fill(blank), ...g, ...Array(pad - top).fill(blank)];
+    }
+    return g;
+  };
+
+  const grid = toGrid(text);
+
+  // DRIVEN mode: the flip is controlled by `progress` (0..1) from `fromText` → `text`. Each cell is a
+  // DrivenCell frozen at that progress, so stopping the progress (e.g. stop scrolling) freezes the
+  // board mid-flip. (No timers.)
+  if (progress != null && fromText != null) {
+    const fromGrid = toGrid(fromText);
+    return (
+      <span className={clsx(styles.board, className)} role="text" aria-label={text}>
+        {grid.map((row, r) => (
+          <span key={r} className={styles.row}>
+            {Array.from(row).map((c, i) => (
+              <DrivenCell key={i} from={fromGrid[r]?.[i] ?? ' '} to={c} progress={progress} />
+            ))}
+          </span>
+        ))}
+      </span>
+    );
   }
+
+  // TIMER mode (default): each Cell self-rolls through the deck on a `text` change.
   return (
     <span className={clsx(styles.board, className)} role="text" aria-label={text}>
       {grid.map((row, r) => (

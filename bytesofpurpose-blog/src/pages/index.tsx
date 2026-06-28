@@ -480,89 +480,114 @@ type SceneState = {
   boardTo: number; // the scene whose title the board is flipping TO
 };
 
-// The fraction of each scene's scroll-slice spent in the TRANSITION zone (the rest is "settled on this
+// The fraction of each scene's slice spent in the TRANSITION zone (the rest is "settled on this
 // scene"). 0.5 ⇒ the back half of every slice is the crossing to the next scene. Larger = longer, more
-// gradual flashes you can scrub through slowly; smaller = the scene holds longer then a quicker cross.
+// gradual transitions; smaller = the scene holds longer then a quicker cross.
 const TRANSITION_FRACTION = 0.5;
 
+// ── ONE progress-driven model, TWO interchangeable drivers ───────────────────────────────────────
+// Every animatable hero piece (the flash bloom, the door↔scene swap, the board flip) is a pure
+// function of ONE normalized progress value p in [0,1] across all `count` scenes (deriveSceneState).
+// That progress is supplied by either driver, and the components never know which:
+//   • SCROLL driver  (useScrollScene): p = f(scroll position) — scrubbable, FREEZES when you stop.
+//   • TIME driver    (useTimerScene):  p ramps on a rAF clock — self-running (the non-parallax hero).
+// So the SAME visuals work "on scroll OR on animation" with no per-component special-casing.
+
+/** PURE: map a single progress p∈[0,1] (across `count` scenes) to the full visual SceneState. */
+function deriveSceneState(p: number, count: number, reduce: boolean): SceneState {
+  const clamped = Math.min(0.999999, Math.max(0, p));
+  const slice = 1 / count;
+  const i = Math.min(count - 1, Math.floor(clamped / slice)); // the scene whose slice we're in
+  const within = (clamped - i * slice) / slice; // 0..1 position within this scene's slice
+  const next = Math.min(count - 1, i + 1);
+
+  const settledFrac = 1 - TRANSITION_FRACTION;
+  if (within < settledFrac || i === next) {
+    // SETTLED on scene i (front of the slice, or the last scene with nowhere to cross to).
+    return {active: i, shown: i, mode: 'scene', flash: 0, boardProgress: 1, boardFrom: i, boardTo: i};
+  }
+  // TRANSITION zone i → next. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
+  const t = (within - settledFrac) / TRANSITION_FRACTION;
+  const flash = reduce ? 0 : Math.sin(Math.PI * t); // smooth 0→1→0 hump, peak at t=0.5
+  const shown = t < 0.5 ? i : next; // door swaps at the bright peak (the swap hides under the flash)
+  const active = t < 0.5 ? i : next; // the gate commits at the midpoint too
+  return {
+    active,
+    shown,
+    mode: 'scene',
+    flash,
+    boardProgress: reduce ? (t < 0.5 ? 0 : 1) : t, // board flips with progress; stop = it halts
+    boardFrom: i,
+    boardTo: next,
+  };
+}
+
 /**
- * Derive the hero's visual state CONTINUOUSLY from a scroll `progress` in [0,1] across `count` scenes.
- *
- * Everything is a pure function of scroll position, so the effect is fully SCRUBBABLE: scroll forward
- * and the flash blooms + the board flips; scroll back and they reverse; STOP scrolling and the whole
- * thing FREEZES at that exact state (you can hang on the flash mid-bloom). No timers drive the visuals.
- *
- * Model: each scene owns a slice of width 1/count. The FRONT (1 - TRANSITION_FRACTION) of a slice is
- * "settled on scene i" (flash 0, board shows scene i's title). The BACK TRANSITION_FRACTION is the
- * crossing to scene i+1: a phase t in [0,1] ramps across it; the flash opacity peaks at t=0.5 (a
- * smooth hump), the DOOR swaps scene i→i+1 at t=0.5 (hidden by the bright peak), and the board flips
- * from scene i's title to scene i+1's title with progress = t.
- *
- * `active` is the scene the gate commits to (it advances at the crossing's midpoint). Reduced-motion
- * collapses the flash (no bloom) and snaps the board.
+ * SCROLL driver: derive the SceneState continuously from a scroll `progress` ref. Fully SCRUBBABLE
+ * (scroll forward/back moves the flash + board + door together; STOP and it freezes). `scrollTick` is
+ * bumped by the wrapper on each scroll frame so this recomputes.
  */
 function useScrollScene(
   progressRef: React.MutableRefObject<number>,
   count: number,
-  // a monotonically-increasing tick the wrapper bumps on every scroll frame, so the hook recomputes
   scrollTick: number,
 ): SceneState {
   const reduce = prefersReducedMotion();
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
-
   return useMemo<SceneState>(() => {
-    // TEST seam: a forced scene pins everything (no transition) for deterministic e2e.
     if (forced != null) {
-      return {
-        active: forced,
-        shown: forced,
-        mode: 'scene',
-        flash: 0,
-        boardProgress: 1,
-        boardFrom: forced,
-        boardTo: forced,
-      };
+      return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFrom: forced, boardTo: forced};
     }
-
-    const p = Math.min(0.999999, Math.max(0, progressRef.current));
-    const slice = 1 / count;
-    const i = Math.min(count - 1, Math.floor(p / slice)); // the scene whose slice we're in
-    const within = (p - i * slice) / slice; // 0..1 position within this scene's slice
-    const next = Math.min(count - 1, i + 1);
-
-    const settledFrac = 1 - TRANSITION_FRACTION;
-    if (within < settledFrac || i === next) {
-      // SETTLED on scene i (front of the slice, or the last scene with nowhere to cross to).
-      return {
-        active: i,
-        shown: i,
-        mode: 'scene',
-        flash: 0,
-        boardProgress: 1,
-        boardFrom: i,
-        boardTo: i,
-      };
-    }
-
-    // In the TRANSITION zone i → next. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
-    const t = (within - settledFrac) / TRANSITION_FRACTION;
-    // flash is a smooth hump peaking at t=0.5 (sin gives a soft 0→1→0); reduced-motion kills it.
-    const flash = reduce ? 0 : Math.sin(Math.PI * t);
-    // the door shows scene i until the bright peak, then scene next (the swap hides under the flash).
-    const shown = t < 0.5 ? i : next;
-    // `active` (the committed scene) flips at the midpoint too, so the gate points where you're heading.
-    const active = t < 0.5 ? i : next;
-    return {
-      active,
-      shown,
-      mode: 'scene',
-      flash,
-      boardProgress: reduce ? (t < 0.5 ? 0 : 1) : t, // board flips with the scroll; stop = it halts
-      boardFrom: i,
-      boardTo: next,
-    };
+    return deriveSceneState(progressRef.current, count, reduce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollTick, count, reduce, forced]);
+}
+
+/**
+ * TIME driver: the SAME model self-running on a rAF clock (for the non-parallax timer hero). Progress
+ * advances at a steady rate, holding on each settled scene and ramping through each transition, looping
+ * back to 0 after the last scene. Paused while `paused` (hover/focus). Reduced-motion → no flash but
+ * the scene still advances. Yields the identical SceneState shape as the scroll driver.
+ */
+function useTimerScene(count: number, paused: boolean): SceneState {
+  const reduce = prefersReducedMotion();
+  // one full loop = count scenes; per scene = a hold (SETTLE) then a crossing (CROSS) to the next.
+  const SETTLE_MS = STUDIO_INTERVAL_MS;
+  const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS;
+  const perScene = SETTLE_MS + CROSS_MS;
+  const loopMs = perScene * count;
+  const [p, setP] = useState(0);
+  // accumulated elapsed ms (persists across pause/resume); advanced each frame by the real delta.
+  const elapsedRef = useRef(0);
+  const lastRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (paused) {
+      lastRef.current = null; // so the next resume starts a fresh delta (no jump)
+      return undefined;
+    }
+    let raf = 0;
+    const tick = (now: number) => {
+      if (lastRef.current == null) lastRef.current = now;
+      elapsedRef.current += now - lastRef.current;
+      lastRef.current = now;
+      const totalMs = elapsedRef.current % loopMs;
+      const sceneIdx = Math.floor(totalMs / perScene);
+      const inScene = totalMs - sceneIdx * perScene;
+      // hold (progress pinned to scene start) then ramp across the transition zone of the slice
+      const within =
+        inScene < SETTLE_MS
+          ? 0
+          : ((inScene - SETTLE_MS) / CROSS_MS) * TRANSITION_FRACTION + (1 - TRANSITION_FRACTION);
+      setP((sceneIdx + within) / count);
+      raf = window.requestAnimationFrame(tick);
+    };
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused, count, loopMs, perScene, SETTLE_MS, CROSS_MS]);
+
+  return deriveSceneState(p, count, reduce);
 }
 
 /**
@@ -616,18 +641,18 @@ function StudioFacade({
   boardProgress,
   boardFrom,
   boardTo,
-  timerFlash = false,
-}: SceneState & {timerFlash?: boolean}): React.JSX.Element {
+}: SceneState): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
-  // The board TEXT: the destination title (or WELCOME in the timer's door mode). When a scroll
-  // transition is in flight (boardProgress < 1), the board is mid-flip between the from/to titles;
-  // because the SplitFlap flips on a TEXT change, we set the text to the target once we're past the
-  // halfway point, so the flip direction tracks the scroll (forward past 0.5 → the next title).
-  const boardScene = boardProgress >= 0.5 ? boardTo : boardFrom;
-  const boardText = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[boardScene].title);
+  // The board: in a transition (boardFrom ≠ boardTo) it is DRIVEN by boardProgress, flipping from the
+  // `from` title to the `to` title — so the flaps turn with the scroll and FREEZE when scrolling stops.
+  // Settled (from == to) it just shows that scene's title (timer-roll on a normal text change).
+  const inTransition = boardFrom !== boardTo;
+  const fromTitle = stripEmoji(CHOOSER_CARDS[boardFrom].title);
+  const toTitle = stripEmoji(CHOOSER_CARDS[boardTo].title);
+  const settledText = mode === 'door' ? 'WELCOME' : toTitle;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
   const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (
@@ -658,7 +683,9 @@ function StudioFacade({
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={boardText}
+                    text={inTransition ? toTitle : settledText}
+                    fromText={inTransition ? fromTitle : undefined}
+                    progress={inTransition ? boardProgress : undefined}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
@@ -670,10 +697,7 @@ function StudioFacade({
                 current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
                 over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
                 masks the change. */}
-            <div
-              className={styles.studioArch}
-              style={flashStyle}
-              data-flash={timerFlash ? (flash >= 0.5 ? 'on' : 'off') : undefined}>
+            <div className={styles.studioArch} style={flashStyle}>
               {/* the carved DOOR (shown when mode === 'door') */}
               <img
                 className={clsx(
@@ -733,63 +757,12 @@ function StudioFacade({
 }
 
 function ChooserStudio() {
-  const [active, setActive] = useState(0);
-  // `mode` = what the CENTRE arch shows: 'door' (board says WELCOME) or 'scene' (board says the
-  // destination). The cycle alternates door → scene(active) → door → scene(active+1) → …
-  const [mode, setMode] = useState<'door' | 'scene'>('door');
-  const [flashing, setFlashing] = useState(false);
+  // The TIMER (non-parallax) hero: the SAME progress-driven model as the scroll hero, but driven by a
+  // rAF clock instead of scroll (useTimerScene). So the flash + door + board behave identically; only
+  // the DRIVER differs. Paused on hover/focus.
   const [paused, setPaused] = useState(false);
-  const timers = useRef<number[]>([]);
-
-  // ONE transition: flash the centre arch white; at the flash peak, swap door↔scene (and advance to
-  // the next project when leaving a scene); then recede. delta picks direction when stepping scenes.
-  const step = useCallback((delta: number) => {
-    timers.current.forEach((t) => window.clearTimeout(t));
-    timers.current = [];
-    setFlashing(true);
-    // at the flash peak: do the swap (the bright moment masks the change)
-    timers.current.push(
-      window.setTimeout(() => {
-        setMode((m) => {
-          if (m === 'door') return 'scene'; // door → reveal the current project scene
-          // leaving a scene → advance to the next project, back to the door
-          setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
-          return 'door';
-        });
-      }, STUDIO_FLASH_MS),
-    );
-    // recede the flash a beat after the swap
-    timers.current.push(
-      window.setTimeout(() => setFlashing(false), STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS),
-    );
-  }, []);
-
-  // Auto-cycle (paused on hover/focus); re-arms when mode/active changes so a manual nav resets it.
-  useEffect(() => {
-    if (paused) return undefined;
-    const tick = window.setInterval(() => step(1), STUDIO_INTERVAL_MS);
-    return () => window.clearInterval(tick);
-  }, [paused, active, mode, step]);
-
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
-
-  // ←/→ hop to prev/next, same GLOBAL window listener as the flash gate (works whenever the hero is
-  // on screen, not only when focused). Ignored while typing in an input.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null;
-      if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        step(1);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        step(-1);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [step]);
+  const scene = useTimerScene(CHOOSER_CARDS.length, paused);
+  const {active} = scene;
 
   // DEV-ONLY: apply hero-tuning URL params on localhost (the Hero Tuner panel drives this root). No-op
   // off localhost, so production renders the baked CSS-var defaults.
@@ -815,18 +788,8 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE STUDIO FACADE: defined once in StudioFacade. The TIMER hero passes a discrete state (flash
-          0/1) and flags timer mode so the flash uses a CSS transition (it has no scroll to scrub). */}
-      <StudioFacade
-        active={active}
-        shown={active}
-        mode={mode}
-        flash={flashing ? 1 : 0}
-        boardProgress={1}
-        boardFrom={active}
-        boardTo={active}
-        timerFlash
-      />
+      {/* THE STUDIO FACADE: defined once, driven here by the TIME driver (identical shape to scroll). */}
+      <StudioFacade {...scene} />
     </Link>
   );
 }
@@ -1068,15 +1031,15 @@ function HeroChooser() {
   if (anim === 'test' || anim === 'flash') return <ChooserFlash />;
   if (anim === 'variant_d' || anim === 'boutique') return <ChooserBoutique />;
   if (anim === 'variant_c' || anim === 'studio') {
-    // The studio HOUSE: the scroll experiment decides the scroll-model. With no scroll signal
-    // (`control`/`static`) we default to PIN; an explicit override still wins.
-    const scroll = scrollVariant === 'control' || scrollVariant === 'static'
-      ? DEFAULT_SCROLL_MODEL
-      : scrollVariant;
+    // The studio HOUSE: the scroll experiment decides the scroll-model. NO scroll signal (`control`)
+    // → the PIN default. An explicit `static` → the TIME-driven (self-running) timer hero; pin/inplace/
+    // horizontal → the SCROLL-driven parallax. (Both go through the SAME progress model, just a
+    // different driver.)
+    const scroll = scrollVariant === 'control' ? DEFAULT_SCROLL_MODEL : scrollVariant;
     if (scroll === 'pin') return <ParallaxStudio model="pin" />;
     if (scroll === 'inplace') return <ParallaxStudio model="inplace" />;
     if (scroll === 'horizontal') return <ParallaxStudio model="horizontal" />;
-    return <ChooserStudio />;
+    return <ChooserStudio />; // `static` → the rAF-driven timer hero
   }
   return <ChooserStrip />;
 }
