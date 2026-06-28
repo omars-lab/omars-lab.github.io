@@ -1,0 +1,126 @@
+---
+slug: design-lebanese-house-hero
+sidebar_position: 18
+title: 'The House Hero: a Lebanese home you scroll through'
+sidebar_label: 'House hero'
+kind: design-story
+description: >-
+  How the departure-board hero became a traditional Lebanese central-hall home,
+  and the pivot to a scroll-driven parallax journey through the scenes.
+authors:
+  - oeid
+tags:
+  - design-engineering
+  - animation
+  - frontend
+date: 2026-06-28
+draft: false
+---
+
+The [Vestaboard hero](/designs/design-vestaboard-flash-hero) is a component: an arched portal, a
+camera flash, and a split-flap board that names the destination. This post is about the **house I
+built around it**, a traditional Lebanese central-hall home whose carved central door is the portal,
+with the board hanging above it. It is also where the hero stopped being a timed animation and became
+a **scroll-driven journey**: you scroll, and the door transforms into each part of my world in turn.
+
+<!-- truncate -->
+
+## 1. Influence: the traditional Lebanese central-hall home
+
+The facade is influenced by **traditional Lebanese architecture**, specifically the central-hall (or
+"central-hall house") form that defines so many Mount Lebanon and Beirut homes: a roughly **square,
+symmetrical body** under a **pitched triangular roof of terracotta tile**, with a **triple-arch
+opening** at its heart (the classic `triple-arcade` window, a taller central arch flanked by two
+shorter ones). Wrought-iron railings run across the base of the arches; the openings are framed in
+pale stone against an ochre or warm wall.
+
+I kept the silhouette honest to that vernacular and let the palette and detailing do the rest:
+
+- a **teal square body** under a **terracotta triangular roof** (the proportion is the reference's
+  roof-to-body ratio: the roof's height is about half the body's),
+- the **triple arch**, a taller carved **central door** between two shorter **zellij windows**,
+- **gold outlines** tracing the square and the triangle (they share the eave line, so the roof's base
+  and the body's top read as one continuous gold edge), with a single gold **hip line** running from
+  the roof's apex down to a point a fifth of the way in from the bottom-right corner,
+- **gold balcony railings** in front of the windows only (a door has no railing),
+
+so the hero reads as a specific PLACE drawn from a real architectural tradition, not a generic
+storefront. The earlier stagings (a train station, then a Moroccan creative studio) were steps on the
+way to this one; the central-hall home is the version that stuck because the triple arch already
+gives you the "central door you travel through, flanked by windows" composition for free.
+
+## 2. The staging: board over a carved central door
+
+The house reuses the Vestaboard + camera flash wholesale; the staging is what is new:
+
+- **The board HANGS over the door.** The split-flap board is suspended above the central door on a
+  mount bar with short chains, a grounding drop shadow, so it reads as a real hanging sign on the
+  wall below the roof's cornice rather than a label pasted on.
+- **The central door is the portal.** The carved door occupies the tall central arch. It is the one
+  opening that transforms: it shows the door itself (board says `WELCOME`) or a project SCENE (board
+  says the destination). The two flanking windows are static zellij decoration, so the eye knows where
+  to look.
+- **The flash is bound to the door's arch.** The same `arch-inner.png` luminance mask from the
+  Vestaboard post clips the white bloom to the central arch exactly, so the camera flash fills the
+  doorway and nothing else.
+
+## 3. How it's wired (A/B/C/D)
+
+The presentation is a PostHog feature-flag experiment, `homepage-hero-anim`. All arms show the SAME
+destinations and copy, only the staging differs, so a difference in chooser-card clicks is
+attributable to the presentation:
+
+- `control` = **scroll**, the seamless scrolling film strip,
+- `test` = **flash**, the bare departure-board portal (the Vestaboard post's hero),
+- `variant_c` = **studio**, which became this Lebanese central-hall **house**,
+- `variant_d` = **boutique**, a lit storefront with three glowing arches.
+
+A `hero card clicked` event (with the variant + destination) is the conversion; exposure is the flag
+read. The design and hypothesis live in the experiment post `/initiatives/homepage-hero-anim`.
+
+## 4. The parallax pivot: scroll DECIDES the journey
+
+Once the house facade settled, the hero stopped cycling on a **timer** and became **scroll-driven**.
+As you scroll the page, the central door transforms into each scene in turn, the board reflips to
+that scene's title, and **scrolling itself decides which scenes you traverse** (scroll down to go
+deeper into my world, scroll up to come back). The white flash stays, but it is now **triggered by
+scroll position** crossing each scene's threshold, not by a clock. The feel shifts from "a sign that
+changes on its own" to "a journey you drive with the wheel."
+
+Three decisions defined the pivot:
+
+- **All three scroll models ship, as A/B/C experiment arms.** Rather than guess which scroll feel
+  lands best, the pivot builds three and lets a flag pick:
+  - **pin** (scroll-jack): the hero sticks full-screen inside a tall spacer; each scroll step advances
+    one scene; once all seven are traversed the hero releases and the rest of the page scrolls
+    normally. The strongest "travel through a sequence" feel.
+  - **inplace**: the hero stays in normal document flow; the door morphs based on how far the hero has
+    scrolled through the viewport. No scroll hijack, gentler, but the effect only spans the hero's own
+    height.
+  - **horizontal**: vertical scroll maps to a horizontal pan across the seven scenes inside a pinned
+    hero (a horizontal-scroll gallery); the door shows the current scene in the pan.
+  These are a SEPARATE experiment from the animation A/B in section 3, registered under their own flag
+  key so the scroll-model question can be answered independently of the flash-vs-scroll question.
+- **Keep the white flash, scroll-triggered.** The per-scene transition is still the camera flash bound
+  to the door's arch, so the pivot reuses the existing door-to-scene cross-fade and masked bloom
+  layers wholesale; only the TRIGGER moves from a timer to a scroll-progress threshold.
+- **The matching top navbar item highlights.** The seven scenes map one-to-one to existing top-navbar
+  destinations (`/craft`, `/journey`, `/thoughts`, `/mindset`, `/initiatives`, `/questions`,
+  `/designs`), so as the door shows a scene its navbar item lights up. The homepage route is `/`, so
+  Docusaurus marks nothing active by default, which means the hero can own that highlight cleanly
+  without fighting the router. It reverts when the hero leaves the viewport.
+
+The reusable core is a `useScrollScene` engine (scroll progress maps to `{active, mode, flashing}`),
+fed by three thin wrappers that each own only their scroll mechanics; the facade itself is one
+presentational component all arms (and the original timer hero) render. Guardrails the pivot must
+hold: it must never permanently trap the wheel (pin and horizontal RELEASE after the last scene),
+`prefers-reduced-motion` drops the flash and sets the scene instantly, and the flashing arch keeps its
+`isolation: isolate` so the hi-DPI compositing seam from the Vestaboard post cannot return.
+
+## 5. What carried over, what's house-specific
+
+The **board, the flash, and the arch mask** are the reusable spine, documented in the
+[Vestaboard hero](/designs/design-vestaboard-flash-hero) post. House-specific are the **central-hall
+facade** (the teal body, terracotta roof, gold outlines, zellij windows, hanging sign), the **A/B/C/D
+staging**, and the **scroll-driven parallax**. The split keeps each post about one thing: the
+component you could lift into another project, and the place I built with it.
