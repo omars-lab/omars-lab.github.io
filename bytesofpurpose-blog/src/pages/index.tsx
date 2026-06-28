@@ -437,6 +437,26 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// Mobile breakpoint for the hero (matches the ≤600px studio media query in index.module.css). On
+// mobile the house goes DOOR-ONLY (side windows hidden in CSS) with a NARROWER board, and the
+// scroll-jacking models (pin/horizontal) fall back to in-flow behaviour (no 100vh pin). Reactive so
+// a rotate/resize re-renders. SSR-safe (false until mounted).
+const HERO_MOBILE_QUERY = '(max-width: 600px)';
+const STUDIO_BOARD_COLS_MOBILE = 9; // door-only board: far fewer columns so it fits a phone
+
+function useIsMobile(): boolean {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia) return undefined;
+    const mq = window.matchMedia(HERO_MOBILE_QUERY);
+    const update = () => setMobile(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return mobile;
+}
+
 // TEST/QA seam: `?hero-scene=N` forces the parallax engine to scene N (bypassing scroll), so e2e tests
 // (and manual QA) can land on a SPECIFIC scene deterministically without computing scroll offsets.
 // Localhost-only (same gate as the ab- overrides) so production ignores it. Registered in the URL-param
@@ -562,6 +582,10 @@ function useScrollProgress(
    flashing}, so the visual house is defined ONCE. The clickable <Link> + hover/keyboard behaviour and
    the data-hero-root / gateRef belong to the wrappers (they differ per scroll-model). */
 function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
+  // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
+  // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
+  const isMobile = useIsMobile();
+  const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
   return (
     <div className={styles.studioFacade}>
       {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
@@ -591,7 +615,7 @@ function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
                 <div className={styles.studioSign}>
                   <SplitFlap
                     text={mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[active].title)}
-                    columns={STUDIO_BOARD_COLS}
+                    columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
                   />
@@ -804,11 +828,20 @@ function useNavbarSceneHighlight(
 type ScrollModel = 'pin' | 'inplace' | 'horizontal';
 const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (spacer = count * this)
 
-function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
+function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JSX.Element {
   const count = CHOOSER_CARDS.length;
   const progressRef = useRef(0);
   const spacerRef = useRef<HTMLDivElement | null>(null);
   const gateRef = useRef<HTMLAnchorElement | null>(null);
+
+  // The pin/horizontal scroll-jack works on mobile too (the user wants the pin transition on phones).
+  // The mobile FIT is handled in CSS: the house goes door-only + a taller body + a smaller door, and
+  // the hero header shrinks, so the pinned hero fits the viewport. The HORIZONTAL pan backdrop is the
+  // one thing that reads poorly on a narrow screen, so on mobile horizontal degrades to pin (same
+  // scroll-jack, no side pan). Desktop keeps the requested model.
+  const isMobile = useIsMobile();
+  const model: ScrollModel =
+    isMobile && requestedModel === 'horizontal' ? 'pin' : requestedModel;
 
   // Per-model progress geometry. Pin/horizontal: progress = how far we've scrolled INTO the tall
   // spacer (0 when its top hits the viewport top, 1 when its bottom is one viewport from the top).
@@ -849,7 +882,8 @@ function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
     <Link
       ref={gateRef}
       data-hero-root
-      data-scroll-model={model}
+      data-scroll-model={requestedModel}
+      data-effective-model={model}
       data-active-scene={active}
       data-active-dest={CHOOSER_CARDS[active].to}
       className={clsx(styles.studioGate, pinned && styles.parallaxSticky)}
@@ -857,7 +891,7 @@ function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
       aria-label={stripEmoji(CHOOSER_CARDS[active].title)}
       onClick={() =>
         posthog.capture('hero card clicked', {
-          hero_variant: `parallax-${model}`,
+          hero_variant: `parallax-${requestedModel}`, // the assigned variant, not the mobile fallback
           destination: CHOOSER_CARDS[active].to,
         })
       }>
@@ -952,6 +986,14 @@ function useResolvedVariant(exp: Experiment): string | null {
   return variant;
 }
 
+// The DEFAULT homepage hero when no experiment flag / override gives a signal (a bare visit to `/`):
+// the scroll-driven Lebanese HOUSE in the PIN model. So `localhost:3000/` shows the same thing as
+// `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pin`. The experiment overrides still win
+// when present, so we can A/B other arms; `control` (the no-signal value) just maps to this default
+// instead of the old scrolling strip.
+const DEFAULT_HERO = 'studio'; // anim default → the house
+const DEFAULT_SCROLL_MODEL: ScrollModel = 'pin'; // scroll default → pin (scroll-jack)
+
 function HeroChooser() {
   // Two composed experiments: `anim` picks WHICH hero (scroll strip / flash gate / studio house /
   // boutique); `scroll` picks the scroll-MODEL, but only matters for the studio house (the parallax
@@ -960,15 +1002,21 @@ function HeroChooser() {
   const scrollVariant = useResolvedVariant(EXPERIMENTS['homepage-hero-scroll']);
   if (animVariant === null || scrollVariant === null) return <ChooserSkeleton />;
 
+  // `control` = no flag/override signal → fall to the DEFAULTS (the pin house), not the old strip.
+  const anim = animVariant === 'control' ? DEFAULT_HERO : animVariant;
+
   // 4-way A/B/C/D on the anim experiment.
-  if (animVariant === 'test' || animVariant === 'flash') return <ChooserFlash />;
-  if (animVariant === 'variant_d' || animVariant === 'boutique') return <ChooserBoutique />;
-  if (animVariant === 'variant_c' || animVariant === 'studio') {
-    // The studio HOUSE: the scroll experiment now decides timer-vs-parallax. control/static keeps the
-    // original non-jacking timer hero (the safe default); pin/inplace/horizontal are scroll-driven.
-    if (scrollVariant === 'pin') return <ParallaxStudio model="pin" />;
-    if (scrollVariant === 'inplace') return <ParallaxStudio model="inplace" />;
-    if (scrollVariant === 'horizontal') return <ParallaxStudio model="horizontal" />;
+  if (anim === 'test' || anim === 'flash') return <ChooserFlash />;
+  if (anim === 'variant_d' || anim === 'boutique') return <ChooserBoutique />;
+  if (anim === 'variant_c' || anim === 'studio') {
+    // The studio HOUSE: the scroll experiment decides the scroll-model. With no scroll signal
+    // (`control`/`static`) we default to PIN; an explicit override still wins.
+    const scroll = scrollVariant === 'control' || scrollVariant === 'static'
+      ? DEFAULT_SCROLL_MODEL
+      : scrollVariant;
+    if (scroll === 'pin') return <ParallaxStudio model="pin" />;
+    if (scroll === 'inplace') return <ParallaxStudio model="inplace" />;
+    if (scroll === 'horizontal') return <ParallaxStudio model="horizontal" />;
     return <ChooserStudio />;
   }
   return <ChooserStrip />;

@@ -29,6 +29,10 @@
   height: 1.18em;
   line-height: 1.18em;
   border-radius: 0.1em;
+  /* CLIP the tile: a glyph mid-flip during RAPID char changes (fast scroll) could otherwise spill
+     beyond the tile and stretch out of the board. Clipping to the tile keeps every flap within bounds. */
+  overflow: hidden;
+  flex: 0 0 auto; /* never let a flexed row stretch a tile wider/taller than its em box */
   /* Perspective on the CELL (the leaves' parent) so their rotateX reads as a real 3D flap turning,
      not a flat squash. */
   perspective: 140px;
