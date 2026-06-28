@@ -110,12 +110,31 @@ Three decisions defined the pivot:
   Docusaurus marks nothing active by default, which means the hero can own that highlight cleanly
   without fighting the router. It reverts when the hero leaves the viewport.
 
-The reusable core is a `useScrollScene` engine (scroll progress maps to `{active, mode, flashing}`),
-fed by three thin wrappers that each own only their scroll mechanics; the facade itself is one
-presentational component all arms (and the original timer hero) render. Guardrails the pivot must
-hold: it must never permanently trap the wheel (pin and horizontal RELEASE after the last scene),
-`prefers-reduced-motion` drops the flash and sets the scene instantly, and the flashing arch keeps its
-`isolation: isolate` so the hi-DPI compositing seam from the Vestaboard post cannot return.
+Guardrails the pivot must hold: it must never permanently trap the wheel (pin and horizontal RELEASE
+after the last scene), `prefers-reduced-motion` drops the flash and sets the scene instantly, and the
+flashing arch keeps its `isolation: isolate` so the hi-DPI compositing seam from the Vestaboard post
+cannot return.
+
+### One progress model, two drivers (scroll OR self-running)
+
+The question that shaped the architecture was: *how do all these pieces, the flash bloom, the door to
+scene swap, the split-flap board, change on SCROLL or on a self-running ANIMATION, without
+special-casing each?* The answer is one idea applied everywhere: **every animatable piece is a pure
+function of a single normalized progress `p` in `[0,1]`** across all the scenes (`deriveSceneState`).
+That progress is supplied by one of two interchangeable **drivers**, and no component knows which it
+has:
+
+- the **scroll driver** maps `p` from scroll position, so the whole thing is fully SCRUBBABLE: scroll
+  forward and the flash blooms and the board flips; scroll back and they reverse; STOP scrolling and
+  everything FREEZES at that exact frame (you can hang on the flash mid-bloom, the board halts
+  mid-flip);
+- the **time driver** ramps the same `p` on a `requestAnimationFrame` clock, so the non-scroll arm
+  self-runs (hold a scene, cross to the next, loop), reusing the identical visuals.
+
+Concretely the split-flap board grew a **driven mode**: given a `progress` plus the text it is flipping
+FROM, each flap freezes at that progress instead of running its own timer, so scroll position turns the
+flaps and stopping stops them. The flash is always one continuous opacity variable. Because the model
+is one pure function, the same house animates on a wheel or on a clock with no forked code.
 
 ## 5. What carried over, what's house-specific
 
