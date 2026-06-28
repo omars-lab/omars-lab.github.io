@@ -737,13 +737,27 @@ function ChooserStudio() {
 // ── Navbar-item highlight: light the top-navbar link matching the active scene ───────────────────
 // As the door shows /craft, the 'Craft' navbar item gets an active style; /journey → 'Journey', etc.
 // The homepage route is '/', so Docusaurus marks NOTHING active by default — we own this highlight
-// cleanly. We add a class to the matching navbar <a> (whose href ends with the card's `to`) and revert
-// on change / unmount. SSR-safe (effect only). `enabled` lets a wrapper turn it off.
-function useNavbarSceneHighlight(active: number, enabled: boolean): void {
+// cleanly. We add a class to the matching navbar <a> (whose path ends with the card's `to`), revert
+// on change / unmount, AND only while the hero is ON-SCREEN (so the highlight clears once you scroll
+// past the hero). SSR-safe (effect only). `heroRef` is the hero gate we watch for visibility.
+function useNavbarSceneHighlight(
+  active: number,
+  heroRef: React.MutableRefObject<HTMLElement | null>,
+): void {
+  // track whether the hero is in the viewport (so the highlight only applies while it's visible)
+  const [visible, setVisible] = useState(true);
   useEffect(() => {
-    if (!enabled || typeof document === 'undefined') return undefined;
+    const el = heroRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {threshold: 0});
+    io.observe(el);
+    return () => io.disconnect();
+  }, [heroRef]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
     const to = CHOOSER_CARDS[active]?.to;
-    if (!to) return undefined;
+    if (!to || !visible) return undefined;
     // match a top-navbar link whose pathname ends with the destination (ignore query/hash + baseUrl)
     const links = Array.from(
       document.querySelectorAll<HTMLAnchorElement>('.navbar__item.navbar__link, a.navbar__link'),
@@ -758,7 +772,7 @@ function useNavbarSceneHighlight(active: number, enabled: boolean): void {
     if (!match) return undefined;
     match.classList.add(styles.navbarSceneActive);
     return () => match.classList.remove(styles.navbarSceneActive);
-  }, [active, enabled]);
+  }, [active, visible]);
 }
 
 // ── The scroll-driven parallax hero (3 scroll-models share this one component) ────────────────────
@@ -804,7 +818,7 @@ function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
   const tick = useScrollProgress(compute, progressRef);
   const {active, mode, flashing} = useScrollScene(progressRef, count, tick);
 
-  useNavbarSceneHighlight(active, true);
+  useNavbarSceneHighlight(active, gateRef);
 
   // DEV-ONLY hero-tuning params (localhost), same as the timer studio.
   useEffect(() => {
