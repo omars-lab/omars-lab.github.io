@@ -729,16 +729,18 @@
   height: 100%;
   object-fit: contain;
 }
-/* The side WINDOWS (left window + right scene) are RAISED off the floor a bit (tunable --win-raise);
-   a window sits higher on the wall than a door. The centre door reaches the floor. */
+/* The side WINDOWS (left + right) are RAISED off the floor a bit (tunable --win-raise) and a touch
+   SMALLER than the door (tunable --win-scale); a window sits higher on the wall than a door, and the
+   middle arch reads as the dominant one. The centre door reaches the floor. */
 .studioRow > .studioArch,
 .studioDoorway {
-  transform: translateY(calc(-1 * var(--win-raise, 6%)));
+  transform: translateY(calc(-1 * var(--win-raise, 6%))) scale(var(--win-scale, 0.9));
+  transform-origin: bottom center;
 }
 /* The centre DOOR rises above the side windows (Lebanese central-hall arcade), but sits LOWER (toward
    the floor) than them — it overrides the window-raise. --door-drop tunes how far it drops. */
 .studioCenter .studioArch {
-  transform: translateY(var(--door-drop, 8%)) scale(1.12);
+  transform: translateY(var(--door-drop, 12%)) scale(1.12);
   transform-origin: bottom center;
   isolation: isolate; /* contain the flash bloom's compositing (the hi-DPI seam lesson) */
 }

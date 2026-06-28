@@ -85,7 +85,9 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['studio'], group: 'House', min: 360, max: 900, step: 5, unit: 'px'},
   {key: 'winRaise', label: 'Window raise', kind: 'slider', cssVar: 'win-raise', default: '6%',
    variants: ['studio'], group: 'House', min: 0, max: 30, step: 0.5, unit: '%'},
-  {key: 'doorDrop', label: 'Door drop', kind: 'slider', cssVar: 'door-drop', default: '8%',
+  {key: 'winScale', label: 'Window size', kind: 'slider', cssVar: 'win-scale', default: '0.9',
+   variants: ['studio'], group: 'House', min: 0.7, max: 1.1, step: 0.01},
+  {key: 'doorDrop', label: 'Door drop', kind: 'slider', cssVar: 'door-drop', default: '12%',
    variants: ['studio'], group: 'House', min: 0, max: 25, step: 0.5, unit: '%'},
   // the hip line's FOOT: x-position where the gold line meets the eave (apex is fixed at 50%). Default
   // 80% = 1/5 in from the bottom-RIGHT corner.
