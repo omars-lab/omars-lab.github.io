@@ -409,30 +409,59 @@ function ChooserBoutique() {
    line; the studio is the scene art's OWN arched doorway (the only arch) that you peek inside. On a
    project change the inside CROSS-FADES to the next. No CSS facade/wall, no second arch.
    prefers-reduced-motion users get the cross-fade with the sign sway held still. */
-const STUDIO_INTERVAL_MS = 12000; // time one project is shown before the inside cross-fades to the next
+const STUDIO_INTERVAL_MS = 4500; // time one state (door OR a scene) is shown before the next flash
 // The studio board is wide (≈3× the arch) and packed with filler tiles so the grid FILLS the case
 // (no bezel gap). 3 ROWS of BIGGER tiles (a blank row + 1-2 title rows; not 5 rows of small ones).
 // More columns = wider board; .studioSign font-size + --flap-gap set the tile size + pacing.
 const STUDIO_BOARD_COLS = 22; // wide board, big-ish tiles → ~3× the arch width
 const STUDIO_BOARD_ROWS = 3; // 3 rows of bigger letters (not 5 rows of small)
+// The door↔scene WHITE FLASH: the centre arch flashes white (a long camera-exposure bloom); at the
+// flash PEAK the centre swaps door↔scene and the board flips; then the flash recedes. The flash
+// duration is MATCHED to the board roll (FLASH_SETTLE_MS) so the new scene + the settled board ARRIVE
+// TOGETHER (the spec: "we should arrive to next scene and board should finish at the same time").
+const STUDIO_FLASH_MS = FLASH_SETTLE_MS; // bloom-to-peak == board roll
+const STUDIO_FLASH_HOLD_MS = 260; // hold at peak white before receding
 
 function ChooserStudio() {
   const [active, setActive] = useState(0);
+  // `mode` = what the CENTRE arch shows: 'door' (board says WELCOME) or 'scene' (board says the
+  // destination). The cycle alternates door → scene(active) → door → scene(active+1) → …
+  const [mode, setMode] = useState<'door' | 'scene'>('door');
+  const [flashing, setFlashing] = useState(false);
   const [paused, setPaused] = useState(false);
+  const timers = useRef<number[]>([]);
 
-  // ONE project change: advance `active`; the peek-inside cross-fades to the new project (CSS), and
-  // the sign flips. No door machinery (a CSS-3D door read as fake, so it was dropped).
+  // ONE transition: flash the centre arch white; at the flash peak, swap door↔scene (and advance to
+  // the next project when leaving a scene); then recede. delta picks direction when stepping scenes.
   const step = useCallback((delta: number) => {
-    setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
+    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current = [];
+    setFlashing(true);
+    // at the flash peak: do the swap (the bright moment masks the change)
+    timers.current.push(
+      window.setTimeout(() => {
+        setMode((m) => {
+          if (m === 'door') return 'scene'; // door → reveal the current project scene
+          // leaving a scene → advance to the next project, back to the door
+          setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
+          return 'door';
+        });
+      }, STUDIO_FLASH_MS),
+    );
+    // recede the flash a beat after the swap
+    timers.current.push(
+      window.setTimeout(() => setFlashing(false), STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS),
+    );
   }, []);
 
-  // Auto-rotate (paused on hover/focus); re-arms when `active` changes so a manual arrow nav resets
-  // the countdown instead of double-firing.
+  // Auto-cycle (paused on hover/focus); re-arms when mode/active changes so a manual nav resets it.
   useEffect(() => {
     if (paused) return undefined;
     const tick = window.setInterval(() => step(1), STUDIO_INTERVAL_MS);
     return () => window.clearInterval(tick);
-  }, [paused, active, step]);
+  }, [paused, active, mode, step]);
+
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
   // ←/→ hop to prev/next, same GLOBAL window listener as the flash gate (works whenever the hero is
   // on screen, not only when focused). Ignored while typing in an input.
@@ -508,7 +537,7 @@ function ChooserStudio() {
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={stripEmoji(CHOOSER_CARDS[active].title)}
+                    text={mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[active].title)}
                     columns={STUDIO_BOARD_COLS}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
@@ -516,9 +545,18 @@ function ChooserStudio() {
                 </div>
               </div>
             </div>
-            <div className={styles.studioArch}>
+            {/* The centre arch is the DOORWAY you peek through: the carved DOOR (mode 'door') OR the
+                current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
+                over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
+                masks the change. */}
+            <div className={styles.studioArch} data-flash={flashing ? 'on' : undefined}>
+              {/* the carved DOOR (shown when mode === 'door') */}
               <img
-                className={styles.studioArchImg}
+                className={clsx(
+                  styles.studioArchImg,
+                  styles.studioDoorLayer,
+                  mode === 'door' && styles.studioLayerOn,
+                )}
                 src={useBaseUrl('/img/cards/door.png')}
                 alt=""
                 aria-hidden="true"
@@ -526,6 +564,27 @@ function ChooserStudio() {
                 width={400}
                 height={400}
               />
+              {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior */}
+              <div
+                className={clsx(styles.studioDoorScene, mode === 'scene' && styles.studioLayerOn)}
+                aria-hidden="true">
+                {CHOOSER_CARDS.map((card, i) => (
+                  <img
+                    key={card.to}
+                    className={clsx(
+                      styles.studioPeekImg,
+                      i === active && styles.studioPeekImgActive,
+                    )}
+                    src={useBaseUrl(card.img)}
+                    alt=""
+                    loading="lazy"
+                    width={400}
+                    height={400}
+                  />
+                ))}
+              </div>
+              {/* the white flash bloom, masked to the arch */}
+              <span className={styles.studioFlash} aria-hidden="true" />
             </div>
           </div>
 

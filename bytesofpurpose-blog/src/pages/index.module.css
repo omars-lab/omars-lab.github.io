@@ -626,7 +626,7 @@
    above is a triangle = half this body's height. The board + the three arches live INSIDE the body. */
 .studioBody {
   position: relative;
-  aspect-ratio: 1 / 1; /* the body is square */
+  aspect-ratio: 2 / 1; /* HALF-height: a wide rectangle (the square's height cut in half) */
   display: flex;
   flex-direction: column;
   justify-content: flex-end; /* arches sit at the bottom; the board hangs in the upper space */
@@ -655,10 +655,10 @@
    midpoint down to ~1/5 in from the top-right edge (the one visible roof seam). No tile texture/gradient. */
 .studioRoof {
   position: relative;
-  /* the roof TRIANGLE is HALF the (square) body's height. Body is square so body height = width;
-     half-height = half-width → aspect-ratio 2:1 (the roof spans the full width). */
+  /* the roof TRIANGLE height is HALVED too (was aspect 2:1 → now 4:1, half the height for the same
+     full width). It stays proportional to the now-shorter body. */
   width: 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 4 / 1;
   margin: 0 0 -1px; /* sit flush on the body below (the eave overlaps the square's top border) */
   /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
@@ -726,6 +726,74 @@
 .studioCenter .studioArch {
   transform: translateY(var(--door-drop, 8%)) scale(1.12);
   transform-origin: bottom center;
+  isolation: isolate; /* contain the flash bloom's compositing (the hi-DPI seam lesson) */
+}
+
+/* ── The centre DOORWAY: door ↔ scene cross-fade + white flash ─────────────────────────────────
+   The carved DOOR and the project SCENE are stacked layers that cross-fade; the WHITE FLASH blooms
+   over the swap (masked to the arch). Only ONE of door/scene is opaque at a time (.studioLayerOn). */
+.studioDoorLayer,
+.studioDoorScene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.studioLayerOn {
+  opacity: 1;
+}
+/* the SCENE container is clipped to the arch interior (white-interior mask), like the side peek. */
+.studioDoorScene {
+  overflow: hidden;
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+/* THE WHITE FLASH: a semi-transparent white bloom masked to the arch (NOT a white-out: peak alpha
+   below opaque so the door/scene reads through). Off by default; data-flash="on" blooms it. The bloom
+   ramp == the board roll, so the new scene + the settled board arrive together. NO mix-blend/filter
+   (the retina-seam lesson); the parent arch is isolated. */
+.studioFlash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background: radial-gradient(
+    ellipse 82% 80% at 50% 46%,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.8) 30%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: opacity 0.7s ease-in; /* recede gently when turned off */
+}
+.studioArch[data-flash='on'] .studioFlash {
+  opacity: 1;
+  /* the bloom ramps up over ~the board roll so peak white lands as the flaps settle */
+  transition: opacity 0.72s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studioFlash {
+    opacity: 0 !important; /* no strobe; the door/scene just cross-fades */
+  }
 }
 /* GOLD balcony RAILING in front of each WINDOW only (not the door): a short balustrade at the base of
    the window arch that extends a bit on either side. A row of gold balusters between a gold top +
