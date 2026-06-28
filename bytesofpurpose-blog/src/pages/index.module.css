@@ -858,7 +858,10 @@
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  opacity: 0;
+  /* opacity is CONTINUOUS, driven by the scroll engine via --flash-o (0..1). NO transition, so the
+     bloom scrubs EXACTLY with scroll position: scroll = brighten/dim, STOP = it holds (hang on the
+     flash). The timer hero (ChooserStudio) animates --flash-o with a CSS transition instead. */
+  opacity: var(--flash-o, 0);
   -webkit-mask-image: url(/img/cards/arch-mask-white.png);
   mask-image: url(/img/cards/arch-mask-white.png);
   -webkit-mask-mode: luminance;
@@ -881,12 +884,16 @@
     rgba(255, 255, 255, 0.8) 92%,
     rgba(255, 255, 255, 0.35) 100%
   );
-  transition: opacity 0.7s ease-in; /* recede gently when turned off */
 }
+/* The TIMER hero (ChooserStudio) toggles data-flash to animate the same bloom with a CSS transition
+   (it has no scroll to scrub it); the parallax hero leaves data-flash unset and drives --flash-o. */
 .studioArch[data-flash='on'] .studioFlash {
-  opacity: 1;
-  /* the bloom ramps up over ~the board roll so peak white lands as the flaps settle */
+  --flash-o: 1;
   transition: opacity 0.72s ease-out;
+}
+.studioArch[data-flash='off'] .studioFlash {
+  --flash-o: 0;
+  transition: opacity 0.7s ease-in;
 }
 @media (prefers-reduced-motion: reduce) {
   .studioFlash {
@@ -1065,6 +1072,22 @@
    and show just the central door + board, centred and a touch larger, so the interactive part (the
    door you travel through + the board that names it) is fully visible above the fold. */
 @media screen and (max-width: 600px) {
+  /* On mobile the pinned viewport (100vh) is much taller than the house, so the centred house left big
+     empty gaps above + below. Make the house FILL the pinned viewport: anchor it near the top (just
+     under the shrunk header) and let the gate grow, so there's no dead space. */
+  .parallaxStick {
+    align-items: flex-start;
+    height: 100svh; /* small-viewport unit: excludes the mobile browser chrome, so no phantom gap */
+  }
+  .parallaxSticky {
+    justify-content: flex-start;
+    width: 100%;
+  }
+  /* the house gate grows to fill the available height on mobile (the body aspect-ratio still shapes it,
+     so it scales UP to occupy the viewport instead of sitting small + centred) */
+  .studioGate {
+    max-width: min(96vw, 420px); /* wider on mobile so the house is large */
+  }
   /* On mobile the house is DOOR-ONLY (side windows hidden). The body is taller than the desktop
      landscape box, but not too tall: a portrait that holds a BIG door + a WIDE board with the wall
      filling the rest, no big empty gaps. (Height reduced a third from the earlier 1/1.6.) */

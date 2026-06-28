@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import clsx from 'clsx';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
@@ -470,18 +470,36 @@ function forcedScene(count: number): number | null {
   return n;
 }
 
-type SceneState = {active: number; mode: 'door' | 'scene'; flashing: boolean};
+type SceneState = {
+  active: number; // the scene currently CENTERED (the one the gate links to / commits)
+  shown: number; // the scene the DOOR currently shows (swaps to `active` at the flash peak)
+  mode: 'door' | 'scene';
+  flash: number; // CONTINUOUS flash opacity [0,1], driven by scroll position (0 = no flash)
+  boardProgress: number; // CONTINUOUS board flip-progress [0,1] for the transition in flight
+  boardFrom: number; // the scene whose title the board is flipping FROM
+  boardTo: number; // the scene whose title the board is flipping TO
+};
+
+// The fraction of each scene's scroll-slice spent in the TRANSITION zone (the rest is "settled on this
+// scene"). 0.5 ⇒ the back half of every slice is the crossing to the next scene. Larger = longer, more
+// gradual flashes you can scrub through slowly; smaller = the scene holds longer then a quicker cross.
+const TRANSITION_FRACTION = 0.5;
 
 /**
- * Derive the scene state from a scroll `progress` in [0,1] across `count` scenes.
+ * Derive the hero's visual state CONTINUOUSLY from a scroll `progress` in [0,1] across `count` scenes.
  *
- * The [0,1] range is divided into `count` equal bands; band i ⇒ scene i. Crossing from one band to
- * the next plays a FLASH (scroll-triggered, not timed): we briefly set `flashing`, and at the flash
- * peak swap the door↔scene + advance `active`, mirroring the original timed transition. Reduced-motion
- * users skip the flash and snap straight to the new scene.
+ * Everything is a pure function of scroll position, so the effect is fully SCRUBBABLE: scroll forward
+ * and the flash blooms + the board flips; scroll back and they reverse; STOP scrolling and the whole
+ * thing FREEZES at that exact state (you can hang on the flash mid-bloom). No timers drive the visuals.
  *
- * Returns the current {active, mode, flashing}. `onSettleRef` is an escape hatch the wrappers use to
- * react to the settled scene (e.g. navbar highlight) without re-rendering the engine.
+ * Model: each scene owns a slice of width 1/count. The FRONT (1 - TRANSITION_FRACTION) of a slice is
+ * "settled on scene i" (flash 0, board shows scene i's title). The BACK TRANSITION_FRACTION is the
+ * crossing to scene i+1: a phase t in [0,1] ramps across it; the flash opacity peaks at t=0.5 (a
+ * smooth hump), the DOOR swaps scene i→i+1 at t=0.5 (hidden by the bright peak), and the board flips
+ * from scene i's title to scene i+1's title with progress = t.
+ *
+ * `active` is the scene the gate commits to (it advances at the crossing's midpoint). Reduced-motion
+ * collapses the flash (no bloom) and snaps the board.
  */
 function useScrollScene(
   progressRef: React.MutableRefObject<number>,
@@ -489,52 +507,62 @@ function useScrollScene(
   // a monotonically-increasing tick the wrapper bumps on every scroll frame, so the hook recomputes
   scrollTick: number,
 ): SceneState {
-  const [state, setState] = useState<SceneState>({active: 0, mode: 'door', flashing: false});
-  const bandRef = useRef(0); // the last band (scene index) we settled on
-  const timers = useRef<number[]>([]);
   const reduce = prefersReducedMotion();
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
 
-  useEffect(() => {
-    // TEST seam: when a scene is forced, snap to it (no scroll, no flash) so e2e is deterministic.
+  return useMemo<SceneState>(() => {
+    // TEST seam: a forced scene pins everything (no transition) for deterministic e2e.
     if (forced != null) {
-      bandRef.current = forced;
-      setState({active: forced, mode: 'scene', flashing: false});
-      return;
+      return {
+        active: forced,
+        shown: forced,
+        mode: 'scene',
+        flash: 0,
+        boardProgress: 1,
+        boardFrom: forced,
+        boardTo: forced,
+      };
     }
-    const p = Math.min(0.99999, Math.max(0, progressRef.current));
-    const band = Math.min(count - 1, Math.floor(p * count));
-    if (band === bandRef.current) {
-      // within the same scene's band: nothing to transition. Already showing that scene.
-      return;
-    }
-    bandRef.current = band;
 
-    // The scene follows scroll IMMEDIATELY: snap active + show the scene now, so continuous scrolling
-    // keeps advancing scenes (the earlier flash-peak-gated swap got cancelled by the next band-cross
-    // before its timer fired, so the scene never moved while you kept scrolling — the "we don't hold
-    // on the house" / scene-stuck bug). The FLASH is now a purely decorative bloom layered ON TOP of
-    // the already-changed scene, so cancelling it never blocks the scene change.
-    if (reduce) {
-      setState({active: band, mode: 'scene', flashing: false});
-      return;
+    const p = Math.min(0.999999, Math.max(0, progressRef.current));
+    const slice = 1 / count;
+    const i = Math.min(count - 1, Math.floor(p / slice)); // the scene whose slice we're in
+    const within = (p - i * slice) / slice; // 0..1 position within this scene's slice
+    const next = Math.min(count - 1, i + 1);
+
+    const settledFrac = 1 - TRANSITION_FRACTION;
+    if (within < settledFrac || i === next) {
+      // SETTLED on scene i (front of the slice, or the last scene with nowhere to cross to).
+      return {
+        active: i,
+        shown: i,
+        mode: 'scene',
+        flash: 0,
+        boardProgress: 1,
+        boardFrom: i,
+        boardTo: i,
+      };
     }
-    setState({active: band, mode: 'scene', flashing: true});
-    // recede the flash shortly after; clearing/replacing this timer on the next cross is harmless now
-    // (the scene already changed). A fresh bloom fires on each crossing.
-    timers.current.forEach((t) => window.clearTimeout(t));
-    timers.current = [
-      window.setTimeout(
-        () => setState((s) => ({...s, flashing: false})),
-        STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS,
-      ),
-    ];
+
+    // In the TRANSITION zone i → next. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
+    const t = (within - settledFrac) / TRANSITION_FRACTION;
+    // flash is a smooth hump peaking at t=0.5 (sin gives a soft 0→1→0); reduced-motion kills it.
+    const flash = reduce ? 0 : Math.sin(Math.PI * t);
+    // the door shows scene i until the bright peak, then scene next (the swap hides under the flash).
+    const shown = t < 0.5 ? i : next;
+    // `active` (the committed scene) flips at the midpoint too, so the gate points where you're heading.
+    const active = t < 0.5 ? i : next;
+    return {
+      active,
+      shown,
+      mode: 'scene',
+      flash,
+      boardProgress: reduce ? (t < 0.5 ? 0 : 1) : t, // board flips with the scroll; stop = it halts
+      boardFrom: i,
+      boardTo: next,
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollTick, count, reduce, forced]);
-
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
-
-  return state;
 }
 
 /**
@@ -581,11 +609,27 @@ function useScrollProgress(
    ChooserStudio and the scroll-driven parallax wrappers render this with their own {active, mode,
    flashing}, so the visual house is defined ONCE. The clickable <Link> + hover/keyboard behaviour and
    the data-hero-root / gateRef belong to the wrappers (they differ per scroll-model). */
-function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
+function StudioFacade({
+  shown,
+  mode,
+  flash,
+  boardProgress,
+  boardFrom,
+  boardTo,
+  timerFlash = false,
+}: SceneState & {timerFlash?: boolean}): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
+  // The board TEXT: the destination title (or WELCOME in the timer's door mode). When a scroll
+  // transition is in flight (boardProgress < 1), the board is mid-flip between the from/to titles;
+  // because the SplitFlap flips on a TEXT change, we set the text to the target once we're past the
+  // halfway point, so the flip direction tracks the scroll (forward past 0.5 → the next title).
+  const boardScene = boardProgress >= 0.5 ? boardTo : boardFrom;
+  const boardText = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[boardScene].title);
+  // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
+  const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (
     <div className={styles.studioFacade}>
       {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
@@ -614,7 +658,7 @@ function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[active].title)}
+                    text={boardText}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
@@ -626,7 +670,10 @@ function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
                 current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
                 over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
                 masks the change. */}
-            <div className={styles.studioArch} data-flash={flashing ? 'on' : undefined}>
+            <div
+              className={styles.studioArch}
+              style={flashStyle}
+              data-flash={timerFlash ? (flash >= 0.5 ? 'on' : 'off') : undefined}>
               {/* the carved DOOR (shown when mode === 'door') */}
               <img
                 className={clsx(
@@ -641,14 +688,16 @@ function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
                 width={400}
                 height={400}
               />
-              {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior */}
+              {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior.
+                  We show `shown` (the scene the door currently displays; it swaps to the next scene at
+                  the flash peak during a scroll transition), not necessarily `active`. */}
               <div
                 className={clsx(styles.studioDoorScene, mode === 'scene' && styles.studioLayerOn)}
                 aria-hidden="true">
                 {CHOOSER_CARDS.map((card, i) => (
                   <img
                     key={card.to}
-                    className={clsx(styles.studioPeekImg, i === active && styles.studioPeekImgActive)}
+                    className={clsx(styles.studioPeekImg, i === shown && styles.studioPeekImgActive)}
                     src={useBaseUrl(card.img)}
                     alt=""
                     loading="lazy"
@@ -657,7 +706,7 @@ function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
                   />
                 ))}
               </div>
-              {/* the white flash bloom, masked to the arch */}
+              {/* the white flash bloom, masked to the arch; opacity is the CONTINUOUS --flash-o var */}
               <span className={styles.studioFlash} aria-hidden="true" />
             </div>
           </div>
@@ -766,9 +815,18 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE STUDIO FACADE: a traditional Lebanese central-hall HOME, defined once in StudioFacade and
-          driven here by the timer state. */}
-      <StudioFacade active={active} mode={mode} flashing={flashing} />
+      {/* THE STUDIO FACADE: defined once in StudioFacade. The TIMER hero passes a discrete state (flash
+          0/1) and flags timer mode so the flash uses a CSS transition (it has no scroll to scrub). */}
+      <StudioFacade
+        active={active}
+        shown={active}
+        mode={mode}
+        flash={flashing ? 1 : 0}
+        boardProgress={1}
+        boardFrom={active}
+        boardTo={active}
+        timerFlash
+      />
     </Link>
   );
 }
@@ -864,7 +922,8 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   }, [model]);
 
   const tick = useScrollProgress(compute, progressRef);
-  const {active, mode, flashing} = useScrollScene(progressRef, count, tick);
+  const scene = useScrollScene(progressRef, count, tick);
+  const {active} = scene;
 
   useNavbarSceneHighlight(active, gateRef);
 
@@ -918,7 +977,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
           </div>
         </div>
       )}
-      <StudioFacade active={active} mode={mode} flashing={flashing} />
+      <StudioFacade {...scene} />
     </Link>
   );
 
