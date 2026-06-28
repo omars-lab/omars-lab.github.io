@@ -11,7 +11,7 @@ import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
 import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
-import {EXPERIMENTS, resolveVariant} from '../experiments';
+import {EXPERIMENTS, resolveVariant, type Experiment} from '../experiments';
 import {applyHeroParams} from '../lib/hero-tuning';
 
 /* The hero chooser cards (folded in from the old /welcome page). To ADD a card, append an
@@ -734,6 +734,150 @@ function ChooserStudio() {
   );
 }
 
+// ── Navbar-item highlight: light the top-navbar link matching the active scene ───────────────────
+// As the door shows /craft, the 'Craft' navbar item gets an active style; /journey → 'Journey', etc.
+// The homepage route is '/', so Docusaurus marks NOTHING active by default — we own this highlight
+// cleanly. We add a class to the matching navbar <a> (whose href ends with the card's `to`) and revert
+// on change / unmount. SSR-safe (effect only). `enabled` lets a wrapper turn it off.
+function useNavbarSceneHighlight(active: number, enabled: boolean): void {
+  useEffect(() => {
+    if (!enabled || typeof document === 'undefined') return undefined;
+    const to = CHOOSER_CARDS[active]?.to;
+    if (!to) return undefined;
+    // match a top-navbar link whose pathname ends with the destination (ignore query/hash + baseUrl)
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('.navbar__item.navbar__link, a.navbar__link'),
+    );
+    const match = links.find((a) => {
+      try {
+        return new URL(a.href, window.location.origin).pathname.replace(/\/$/, '').endsWith(to);
+      } catch {
+        return false;
+      }
+    });
+    if (!match) return undefined;
+    match.classList.add(styles.navbarSceneActive);
+    return () => match.classList.remove(styles.navbarSceneActive);
+  }, [active, enabled]);
+}
+
+// ── The scroll-driven parallax hero (3 scroll-models share this one component) ────────────────────
+// `model` selects how vertical scroll maps to scene progress:
+//   'pin'        — the hero sticks full-screen inside a TALL spacer; scrolling the spacer advances the
+//                  scenes one-by-one, then the hero releases and the page scrolls on (scroll-jack).
+//   'inplace'    — the hero lives in normal flow; progress = how far the hero has travelled THROUGH the
+//                  viewport (no hijack; the effect spans the hero's own height).
+//   'horizontal' — like 'pin', but the scenes pan HORIZONTALLY across a pinned track; the door shows
+//                  the current scene in the pan.
+// All three feed the shared useScrollScene engine; only the geometry (`compute`) + the wrapper layout
+// differ. Pin/horizontal RELEASE after the last scene (the tall spacer simply ends), so the wheel is
+// never trapped; the listener is passive. prefers-reduced-motion is handled inside the engine.
+type ScrollModel = 'pin' | 'inplace' | 'horizontal';
+const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (spacer = count * this)
+
+function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
+  const count = CHOOSER_CARDS.length;
+  const progressRef = useRef(0);
+  const spacerRef = useRef<HTMLDivElement | null>(null);
+  const gateRef = useRef<HTMLAnchorElement | null>(null);
+
+  // Per-model progress geometry. Pin/horizontal: progress = how far we've scrolled INTO the tall
+  // spacer (0 when its top hits the viewport top, 1 when its bottom is one viewport from the top).
+  // Inplace: progress = how far the hero has moved up through the viewport.
+  const compute = useCallback(() => {
+    const el = spacerRef.current;
+    if (!el) return 0;
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    if (model === 'inplace') {
+      // 0 when the hero's top is at the viewport bottom, 1 when its bottom reaches the viewport top
+      const total = rect.height + vh;
+      const travelled = vh - rect.top;
+      return Math.min(1, Math.max(0, travelled / total));
+    }
+    // pin / horizontal: the spacer is tall; we map its scroll-through to [0,1]
+    const scrollable = rect.height - vh; // total scroll distance while pinned
+    if (scrollable <= 0) return 0;
+    return Math.min(1, Math.max(0, -rect.top / scrollable));
+  }, [model]);
+
+  const tick = useScrollProgress(compute, progressRef);
+  const {active, mode, flashing} = useScrollScene(progressRef, count, tick);
+
+  useNavbarSceneHighlight(active, true);
+
+  // DEV-ONLY hero-tuning params (localhost), same as the timer studio.
+  useEffect(() => {
+    applyHeroParams(gateRef.current);
+  }, []);
+
+  const pinned = model === 'pin' || model === 'horizontal';
+  // The horizontal pan offset: slide the scene track so the active scene is centred (cosmetic depth
+  // layer BEHIND the facade; the door still carries the actual door↔scene flash).
+  const panPct = model === 'horizontal' ? -(active * (100 / count)) : 0;
+
+  const gate = (
+    <Link
+      ref={gateRef}
+      data-hero-root
+      data-scroll-model={model}
+      className={clsx(styles.studioGate, pinned && styles.parallaxSticky)}
+      to={CHOOSER_CARDS[active].to}
+      aria-label={stripEmoji(CHOOSER_CARDS[active].title)}
+      onClick={() =>
+        posthog.capture('hero card clicked', {
+          hero_variant: `parallax-${model}`,
+          destination: CHOOSER_CARDS[active].to,
+        })
+      }>
+      {model === 'horizontal' && (
+        // a horizontal-pan depth strip behind the facade: the 7 scenes in a row, panned by `active`
+        <div className={styles.parallaxPanLayer} aria-hidden="true">
+          <div
+            className={styles.parallaxPanTrack}
+            style={{
+              width: `${count * 100}%`,
+              transform: `translateX(${panPct}%)`,
+            }}>
+            {CHOOSER_CARDS.map((card) => (
+              <img
+                key={card.to}
+                className={styles.parallaxPanImg}
+                src={useBaseUrl(card.img)}
+                alt=""
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      <StudioFacade active={active} mode={mode} flashing={flashing} />
+    </Link>
+  );
+
+  if (model === 'inplace') {
+    // normal-flow: the hero IS the scroll element; no tall spacer, no pinning.
+    return (
+      <div ref={spacerRef} className={styles.parallaxInplace}>
+        {gate}
+      </div>
+    );
+  }
+
+  // pin / horizontal: a TALL spacer (count * SCENE_VH viewport-heights) holds a sticky hero. Scrolling
+  // the spacer drives the scenes; when the spacer ends the hero releases and the page scrolls on.
+  return (
+    <div
+      ref={spacerRef}
+      className={styles.parallaxSpacer}
+      style={{height: `${Math.round(count * SCENE_VH * 100)}vh`}}>
+      <div className={styles.parallaxStick}>{gate}</div>
+    </div>
+  );
+}
+
 /* A neutral, fixed-size SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS
    fallback). It reserves the hero's height so there is NO layout jump when the real hero swaps in,
    and it doesn't commit to either arm, so a `test` user never sees the strip flash up first. */
@@ -755,9 +899,10 @@ function ChooserSkeleton() {
    slow), default to control, so the hero never gets stuck on the skeleton. */
 const RESOLVE_TIMEOUT_MS = 600;
 
-function HeroChooser() {
-  const exp = EXPERIMENTS['homepage-hero-anim'];
-  const [variant, setVariant] = useState<string | null>(null); // null = not resolved yet
+// Resolve an experiment's active variant id, with the same no-strand fallback the hero used: null
+// while unresolved, then the variant, then 'control' if PostHog is slow/absent. SSR-safe.
+function useResolvedVariant(exp: Experiment): string | null {
+  const [variant, setVariant] = useState<string | null>(null);
   useEffect(() => {
     let settled = false;
     const set = (v: string) => {
@@ -765,7 +910,6 @@ function HeroChooser() {
       setVariant(v);
     };
     const unsub = resolveVariant(exp, set);
-    // Don't let a missing/slow PostHog strand us on the skeleton: fall back to control.
     const t = window.setTimeout(() => {
       if (!settled) setVariant('control');
     }, RESOLVE_TIMEOUT_MS);
@@ -774,12 +918,28 @@ function HeroChooser() {
       if (typeof unsub === 'function') unsub();
     };
   }, [exp]);
-  if (variant === null) return <ChooserSkeleton />;
-  // 4-way A/B/C/D: test/flash → the camera-flash gate, variant_c/studio → the Moroccan creative-studio
-  // scene, variant_d/boutique → the lit boutique storefront, else (control/scroll + fallback) → strip.
-  if (variant === 'test' || variant === 'flash') return <ChooserFlash />;
-  if (variant === 'variant_c' || variant === 'studio') return <ChooserStudio />;
-  if (variant === 'variant_d' || variant === 'boutique') return <ChooserBoutique />;
+  return variant;
+}
+
+function HeroChooser() {
+  // Two composed experiments: `anim` picks WHICH hero (scroll strip / flash gate / studio house /
+  // boutique); `scroll` picks the scroll-MODEL, but only matters for the studio house (the parallax
+  // pivot). Both must resolve before we render (else the skeleton holds, reserving height).
+  const animVariant = useResolvedVariant(EXPERIMENTS['homepage-hero-anim']);
+  const scrollVariant = useResolvedVariant(EXPERIMENTS['homepage-hero-scroll']);
+  if (animVariant === null || scrollVariant === null) return <ChooserSkeleton />;
+
+  // 4-way A/B/C/D on the anim experiment.
+  if (animVariant === 'test' || animVariant === 'flash') return <ChooserFlash />;
+  if (animVariant === 'variant_d' || animVariant === 'boutique') return <ChooserBoutique />;
+  if (animVariant === 'variant_c' || animVariant === 'studio') {
+    // The studio HOUSE: the scroll experiment now decides timer-vs-parallax. control/static keeps the
+    // original non-jacking timer hero (the safe default); pin/inplace/horizontal are scroll-driven.
+    if (scrollVariant === 'pin') return <ParallaxStudio model="pin" />;
+    if (scrollVariant === 'inplace') return <ParallaxStudio model="inplace" />;
+    if (scrollVariant === 'horizontal') return <ParallaxStudio model="horizontal" />;
+    return <ChooserStudio />;
+  }
   return <ChooserStrip />;
 }
 

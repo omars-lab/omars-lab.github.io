@@ -614,6 +614,83 @@
   color: inherit;
 }
 
+/* ── Parallax scroll-models (the scroll-driven hero wrappers) ──────────────────────────────────────
+   pin / horizontal: a TALL spacer holds a STICKY hero (position: sticky), so scrolling the spacer
+   drives the scenes while the hero stays put, then the hero releases at the spacer's end and the page
+   scrolls on (no permanent scroll-jack). inplace: the hero is in NORMAL flow (no spacer/pin), the door
+   morphs as it scrolls past. The shared engine handles the flash + reduced-motion. */
+.parallaxSpacer {
+  position: relative;
+  width: 100%;
+  /* height is set inline (count * SCENE_VH * 100vh); the spacer is the scroll runway. */
+}
+.parallaxStick {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* the pinned viewport: the hero is centred full-screen while scenes advance */
+  overflow: hidden;
+}
+/* the gate inside a pinned model fills the sticky viewport height so the facade is vertically centred */
+.parallaxSticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* inplace: plain flow, the hero just sits in the page; the engine reads its scroll-through. */
+.parallaxInplace {
+  position: relative;
+  width: 100%;
+}
+
+/* horizontal model: a depth strip BEHIND the facade showing the 7 scenes in a row, panned by `active`
+   (the door still carries the real door↔scene flash; this is the parallax backdrop). It is clipped to
+   the gate and sits behind the facade. */
+.parallaxPanLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  opacity: 0.18; /* a subtle backdrop, not competing with the facade */
+  z-index: 0;
+  pointer-events: none;
+  isolation: isolate; /* contain any compositing (the hi-DPI seam lesson) */
+}
+.parallaxPanTrack {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* eased pan between scenes */
+  will-change: transform;
+}
+.parallaxPanImg {
+  flex: 1 0 auto;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The active-scene NAVBAR highlight: as the door shows /craft, the 'Craft' top-navbar item lights up.
+   We add this class to the matching navbar <a>; it reverts when the scene changes / the hero leaves.
+   Uses the theme's primary so it reads as "you are heading here" without faking Docusaurus's own
+   active style. */
+:global(.navbar__link).navbarSceneActive,
+.navbarSceneActive {
+  color: var(--ifm-color-primary) !important;
+  font-weight: 700;
+}
+.navbarSceneActive::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0.25rem;
+  height: 2px;
+  background: var(--ifm-color-primary);
+  border-radius: 2px;
+}
+
 /* The facade = a vertical stack: the TEAL roof on top, the SQUARE terracotta body below it. */
 .studioFacade {
   position: relative;

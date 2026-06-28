@@ -56,6 +56,27 @@ export const EXPERIMENTS = {
       variant_d: 'boutique',
     },
   },
+
+  // Homepage hero SCROLL-MODEL test: the hero became scroll-driven (the door transforms into each
+  // scene as you scroll, scrolling decides which scenes you traverse). This experiment picks HOW
+  // scroll maps to the journey. All arms render the SAME Lebanese-house facade + the same scenes;
+  // only the scroll mechanic differs, so a difference in chooser-card clicks is attributable to it:
+  //   control    = static — the original TIMER-driven house (no scroll-jacking), the safe default.
+  //   pin        = the hero pins full-screen and each scroll step advances one scene, then releases.
+  //   inplace    = the hero stays in normal flow; the door morphs as the hero scrolls past.
+  //   horizontal = vertical scroll pans the 7 scenes horizontally inside a pinned hero.
+  // Separate from homepage-hero-anim so the scroll-model question is answered independently of the
+  // flash-vs-scroll-strip question. The payload is the variant id (the homepage reads it to pick the
+  // scroll wrapper). Default (control) keeps the non-jacking timer hero so nothing regresses.
+  'homepage-hero-scroll': {
+    key: 'homepage-hero-scroll',
+    variants: {
+      control: 'static',
+      pin: 'pin',
+      inplace: 'inplace',
+      horizontal: 'horizontal',
+    },
+  },
 } satisfies Record<string, Experiment>;
 
 export type ExperimentKey = keyof typeof EXPERIMENTS;
