@@ -62,7 +62,7 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
     return undefined;
   }, [spinning, char, seed]);
 
-  return <Cell char={display} settleMs={420} />;
+  return <Cell char={display} settleMs={500} />;
 }
 
 /** Center `text` within `columns`, padding both sides with spaces so the row is always full. */
@@ -141,9 +141,10 @@ function Cell({
       }
     }
 
-    // Per-step duration = total settle time / number of steps, so all cells ARRIVE TOGETHER. Clamp
-    // so a long roll doesn't blur into nothing and a 1-step flip isn't sluggish.
-    const perStep = Math.min(150, Math.max(34, Math.round(settleMs / seq.length)));
+    // Per-step duration = total settle time / number of steps, so all cells ARRIVE TOGETHER. Clamp so
+    // a 1-step flip isn't sluggish; the low floor (20ms) lets a long roll still finish within settleMs
+    // (a ~24-step roll at 20ms ≈ 480ms), so settleMs is a real cap on the TOTAL settle time.
+    const perStep = Math.min(150, Math.max(20, Math.round(settleMs / seq.length)));
     setStepMs(perStep);
 
     const run = (k: number) => {

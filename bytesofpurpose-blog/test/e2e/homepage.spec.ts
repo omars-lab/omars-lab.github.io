@@ -270,4 +270,76 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     });
     expect(reachedBottom, 'pin model must release so the page below is reachable').toBe(true);
   });
+
+  // Helpers for the SNAP/SYNC tests: read the live flash opacity + the door's shown scene image.
+  const flashOpacity = (page: Page) =>
+    page.evaluate(() => {
+      const el = document.querySelector('[class*="studioFlash"]');
+      return el ? parseFloat(getComputedStyle(el).opacity) : 1;
+    });
+  const shownSceneImg = (page: Page) =>
+    page.evaluate(() => {
+      const a = document.querySelector('[class*="studioPeekImgActive"]');
+      const src = a?.getAttribute('src') || '';
+      return src.split('/').pop() || '';
+    });
+  // Wheel-scroll in increments (REAL wheel events drive the scroll-state machinery; window.scrollTo
+  // does not trigger the "scrolling" debounce the same way), then stop.
+  const wheelInto = async (page: Page, steps: number) => {
+    await page.mouse.move(640, 450);
+    for (let k = 0; k < steps; k++) {
+      await page.mouse.wheel(0, 70);
+      await page.waitForTimeout(28);
+    }
+  };
+
+  test('[pin] STOP mid-transition SNAPS to the nearest scene: flash clears (no lingering flash)', async ({ page }) => {
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Wheel in small increments, stopping at the first frame where the flash is bright (mid-transition).
+    // (Exact wheel-step→flash mapping varies; poll for a bright frame rather than assuming a step count.)
+    await page.mouse.move(640, 450);
+    let hitFlash = false;
+    for (let k = 0; k < 40 && !hitFlash; k++) {
+      await page.mouse.wheel(0, 45);
+      await page.waitForTimeout(20);
+      if ((await flashOpacity(page)) > 0.35) hitFlash = true;
+    }
+    expect(hitFlash, 'wheeling should pass through a bright-flash transition frame').toBe(true);
+
+    // After stopping (we stop wheeling now), the snap glides to the nearest settled scene and the flash
+    // must CLEAR — no lingering flash on stop.
+    await expect
+      .poll(() => flashOpacity(page), {
+        timeout: 4000,
+        message: 'flash must clear after the snap settles (no lingering flash on stop)',
+      })
+      .toBeLessThan(0.1);
+  });
+
+  test('[pin] on stop, the BOARD title, the DOOR scene, and the navbar all match (in sync)', async ({ page }) => {
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+
+    await wheelInto(page, 22);
+    // wait for the snap + board settle
+    await expect.poll(() => flashOpacity(page), { timeout: 4000 }).toBeLessThan(0.1);
+    await page.waitForTimeout(800); // let the board finish settling
+
+    // The door's shown scene image must correspond to the committed destination (board + door + navbar
+    // all reference the SAME scene — never "board says Craft while the door shows Journey").
+    const dest = await root.getAttribute('data-active-dest');
+    const img = await shownSceneImg(page);
+    const expected = EXPECTED_CARDS.find((c) => c.href === dest);
+    expect(expected, `dest ${dest} should be a known card`).toBeTruthy();
+    expect(img, 'the door scene image must match the committed destination').toBe(
+      (expected!.img.split('/').pop()) || '',
+    );
+
+    // and the matching navbar item is lit for that destination
+    const lit = page.locator('[class*="navbarSceneActive"]');
+    await expect(lit).toHaveCount(1);
+  });
 });

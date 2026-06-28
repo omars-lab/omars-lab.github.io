@@ -678,10 +678,14 @@ function StudioFacade({
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
-  // The board's TARGET text is where we're heading (the destination title, or WELCOME at the door).
-  // While `spinning` (the user is scrolling) the flaps churn random letters; when scrolling stops the
-  // board SETTLES to this target. That reads as "the board is working, then it lands".
-  const boardTarget = boardToText;
+  // BOARD ↔ SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
+  // (`shown`), or WELCOME in door mode — so the board can never settle to a title the door hasn't
+  // reached. And the board keeps CHURNING while mid-transition (flash still bright), not only while
+  // the wheel moves: it only SETTLES once the scene is truly settled (flash ≈ 0). So you never rest on
+  // "DISCOVER MY CRAFT" while the door + flash are mid-crossing to another scene.
+  const midTransition = flash > 0.12;
+  const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
+  const boardSpinning = spinning || midTransition;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
   const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (
@@ -713,7 +717,7 @@ function StudioFacade({
                 <div className={styles.studioSign}>
                   <SplitFlap
                     text={boardTarget}
-                    spinning={spinning}
+                    spinning={boardSpinning}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
@@ -917,6 +921,41 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   const {active} = scene;
 
   useNavbarSceneHighlight(active, gateRef);
+
+  // SNAP-TO-CLOSEST-SCENE: when scrolling STOPS mid-transition, glide to the nearest stop's settled
+  // centre so the door + flash + board all land on the SAME scene (no resting mid-crossing with the
+  // flash lingering). Inplace has no spacer runway to snap within, so it's skipped. Reduced-motion +
+  // a forced scene (?hero-scene) also skip. The snap itself fires scroll events, so the board keeps
+  // churning during the glide and settles once it lands.
+  const snapping = useRef(false);
+  useEffect(() => {
+    // run on the STOP edge (scrolling just became false). Pinned runways only.
+    if (scrolling || model === 'inplace') return undefined;
+    if (prefersReducedMotion() || forcedScene(count) != null) return undefined;
+    const el = spacerRef.current;
+    if (!el || snapping.current) return undefined;
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    const scrollable = rect.height - vh;
+    if (scrollable <= 0) return undefined;
+    const stops = count + 1;
+    const p = Math.min(0.999999, Math.max(0, progressRef.current));
+    // only snap if we're actually mid-transition (in a slice's back TRANSITION_FRACTION); if already
+    // settled, leave it.
+    const within = (p * stops) % 1;
+    if (within <= 1 - TRANSITION_FRACTION) return undefined; // already settled in this slice
+    const stop = Math.min(stops - 1, Math.max(0, Math.round(p * stops - 0.5)));
+    const targetP = (stop + (1 - TRANSITION_FRACTION) / 2) / stops; // centre of that stop's settled zone
+    const spacerTopPage = rect.top + window.scrollY; // page-coords of progress 0
+    const targetY = Math.round(spacerTopPage + targetP * scrollable);
+    snapping.current = true;
+    window.scrollTo({top: targetY, behavior: 'smooth'});
+    const done = window.setTimeout(() => {
+      snapping.current = false;
+    }, 700);
+    return () => window.clearTimeout(done);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrolling, model, count]);
 
   // DEV-ONLY hero-tuning params (localhost), same as the timer studio.
   useEffect(() => {
