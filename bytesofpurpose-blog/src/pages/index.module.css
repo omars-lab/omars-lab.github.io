@@ -617,7 +617,7 @@
 /* The terracotta wall. Wall colour is tunable (--wall); a soft top-light gives it depth. */
 .studioFacade {
   position: relative;
-  padding: 0 1.4rem 1.6rem;
+  padding: 0 1.4rem 0.5rem; /* little space below the arches: they sit near the wall's lower edge */
   border-radius: 12px 12px 6px 6px;
   overflow: hidden;
   background:
@@ -650,9 +650,9 @@
   grid-template-columns: 1fr 1fr 1fr; /* window · door · scene, ALL the same size */
   align-items: end; /* the three arches sit on the same baseline */
   gap: 0.8rem;
-  /* generous room at the TOP for the wide board to HANG above the centre door (board height + the
+  /* room at the TOP for the wide board to HANG above the centre door (board height + the shorter
      bracket/chains gap), and little space at the BOTTOM so the arches sit near the wall's lower edge. */
-  padding: 6rem 0 0.4rem;
+  padding: 5rem 0 0.2rem;
 }
 
 /* A plain arched opening (the static window + door): the cleaned PNG already carries the arch, so
@@ -691,12 +691,13 @@
   position: absolute;
   left: 50%;
   /* sit ABOVE the door but pulled DOWN into the wall gap, so there's terracotta + the bracket/chains
-     visible above the board. */
+     visible above the board (and BELOW the cornice, not overlapping it). */
   bottom: calc(100% + 0.5rem);
   z-index: 3;
   display: flex;
   justify-content: center;
-  padding-top: 2.2rem; /* the visible gap where the mount bar + chains hang */
+  padding-top: 1.4rem; /* the visible gap where the mount bar + chains hang (kept short so the bar
+                          sits on the terracotta wall, not up in the cornice band) */
   transform: translate(calc(-50% + var(--sign-x, 0px)), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
   transform-origin: bottom center;
 }
@@ -714,17 +715,17 @@
 }
 .studioSignSwing {
   position: relative;
-  transform-origin: 50% -2.2rem; /* pivot at the mount bar, so it sways like a hung sign */
+  transform-origin: 50% -1.4rem; /* pivot at the mount bar, so it sways like a hung sign */
   animation: studioSway 6s ease-in-out infinite alternate;
 }
 .studioSignSwing::before,
 .studioSignSwing::after {
-  /* two chains spanning the gap from the mount bar down to the board's top corners */
+  /* two short chains spanning the gap from the mount bar down to the board's top corners */
   content: '';
   position: absolute;
-  top: -2.2rem;
+  top: -1.4rem;
   width: 2px;
-  height: 2.2rem;
+  height: 1.4rem;
   background: linear-gradient(180deg, #d9a441 0%, #a87a23 100%);
 }
 .studioSignSwing::before { left: 14%; }
