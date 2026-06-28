@@ -21,12 +21,13 @@ import { test, expect, Page } from '@playwright/test';
 
 // The destinations the strip must surface, in order. Keep in lockstep with CHOOSER_CARDS in
 // src/pages/index.tsx (this test is the guard that they don't silently drift).
+// Order MATCHES the top-navbar order (Craft, Journey, Initiatives, Thoughts, Mindset, Questions, Designs).
 const EXPECTED_CARDS: Array<{ href: string; img: string }> = [
   { href: '/craft', img: '/img/cards/craft.png' },
   { href: '/journey', img: '/img/cards/self.png' },
+  { href: '/initiatives', img: '/img/cards/initiatives.png' },
   { href: '/thoughts', img: '/img/cards/thinking.png' },
   { href: '/mindset', img: '/img/cards/mindset.png' },
-  { href: '/initiatives', img: '/img/cards/initiatives.png' },
   { href: '/questions', img: '/img/cards/questions.png' },
   { href: '/designs', img: '/img/cards/designs.png' },
 ];
@@ -211,9 +212,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
   const SCENE_NAV: Array<{ dest: string; nav: RegExp }> = [
     { dest: '/craft', nav: /Craft/ },
     { dest: '/journey', nav: /Journey/ },
+    { dest: '/initiatives', nav: /Initiatives/ },
     { dest: '/thoughts', nav: /Thoughts/ },
     { dest: '/mindset', nav: /Mindset/ },
-    { dest: '/initiatives', nav: /Initiatives/ },
     { dest: '/questions', nav: /Questions/ },
     { dest: '/designs', nav: /Designs/ },
   ];

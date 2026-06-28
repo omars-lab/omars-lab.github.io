@@ -44,6 +44,13 @@ const CHOOSER_CARDS: ReadonlyArray<{
     body: "Who I'm becoming.",
   },
   {
+    to: '/initiatives',
+    img: '/img/cards/initiatives.png',
+    alt: 'Omar conducting an orchestra from the podium',
+    title: "📝 Explore the Things I've Done",
+    body: 'The dated things I actually did.',
+  },
+  {
     to: '/thoughts',
     img: '/img/cards/thinking.png',
     alt: 'Omar in thought, hand to his chin',
@@ -56,13 +63,6 @@ const CHOOSER_CARDS: ReadonlyArray<{
     alt: 'Omar in a sculptor apron, chiseling a brain out of stone',
     title: '🧠 Explore My Mindset',
     body: 'See how I carve my thoughts.',
-  },
-  {
-    to: '/initiatives',
-    img: '/img/cards/initiatives.png',
-    alt: 'Omar conducting an orchestra from the podium',
-    title: "📝 Explore the Things I've Done",
-    body: 'The dated things I actually did.',
   },
   {
     to: '/questions',
@@ -476,8 +476,8 @@ type SceneState = {
   mode: 'door' | 'scene';
   flash: number; // CONTINUOUS flash opacity [0,1], driven by scroll position (0 = no flash)
   boardProgress: number; // CONTINUOUS board flip-progress [0,1] for the transition in flight
-  boardFrom: number; // the scene whose title the board is flipping FROM
-  boardTo: number; // the scene whose title the board is flipping TO
+  boardFromText: string; // the board text flipping FROM (e.g. 'WELCOME' or a scene title)
+  boardToText: string; // the board text flipping TO
 };
 
 // The fraction of each scene's slice spent in the TRANSITION zone (the rest is "settled on this
@@ -496,29 +496,53 @@ const TRANSITION_FRACTION = 0.5;
 /** PURE: map a single progress p∈[0,1] (across `count` scenes) to the full visual SceneState. */
 function deriveSceneState(p: number, count: number, reduce: boolean): SceneState {
   const clamped = Math.min(0.999999, Math.max(0, p));
-  const slice = 1 / count;
-  const i = Math.min(count - 1, Math.floor(clamped / slice)); // the scene whose slice we're in
-  const within = (clamped - i * slice) / slice; // 0..1 position within this scene's slice
-  const next = Math.min(count - 1, i + 1);
+  // The journey has count+1 STOPS: stop 0 is the DOOR (board = WELCOME), then stops 1..count are the
+  // scenes. So at rest before any scroll you see the carved door saying WELCOME; the first crossing is
+  // door → scene 0, then scene 0 → scene 1, etc. We map progress across (count+1) equal slices.
+  const stops = count + 1;
+  const slice = 1 / stops;
+  const s = Math.min(stops - 1, Math.floor(clamped / slice)); // current stop (0 = door)
+  const within = (clamped - s * slice) / slice; // 0..1 within this stop's slice
+  const nextStop = Math.min(stops - 1, s + 1);
+
+  // a stop's CONTENT: stop 0 = the door (scene index 0 shown behind, but mode 'door'); stop k≥1 = scene k-1
+  const sceneOf = (stop: number) => Math.max(0, stop - 1);
+  const isDoor = (stop: number) => stop === 0;
+  // the BOARD text for a stop: WELCOME at the door, else that scene's title.
+  const boardTextOf = (stop: number) =>
+    isDoor(stop) ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[sceneOf(stop)].title);
 
   const settledFrac = 1 - TRANSITION_FRACTION;
-  if (within < settledFrac || i === next) {
-    // SETTLED on scene i (front of the slice, or the last scene with nowhere to cross to).
-    return {active: i, shown: i, mode: 'scene', flash: 0, boardProgress: 1, boardFrom: i, boardTo: i};
+  if (within < settledFrac || s === nextStop) {
+    // SETTLED on this stop.
+    const sc = sceneOf(s);
+    const txt = boardTextOf(s);
+    return {
+      active: sc,
+      shown: sc,
+      mode: isDoor(s) ? 'door' : 'scene',
+      flash: 0,
+      boardProgress: 1,
+      boardFromText: txt,
+      boardToText: txt,
+    };
   }
-  // TRANSITION zone i → next. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
+  // TRANSITION zone stop s → nextStop. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
   const t = (within - settledFrac) / TRANSITION_FRACTION;
   const flash = reduce ? 0 : Math.sin(Math.PI * t); // smooth 0→1→0 hump, peak at t=0.5
-  const shown = t < 0.5 ? i : next; // door swaps at the bright peak (the swap hides under the flash)
-  const active = t < 0.5 ? i : next; // the gate commits at the midpoint too
+  const fromDoor = isDoor(s);
+  const toScene = sceneOf(nextStop);
+  const fromScene = sceneOf(s);
+  // mode/shown swap at the bright peak (the swap hides under the flash)
+  const past = t >= 0.5;
   return {
-    active,
-    shown,
-    mode: 'scene',
+    active: past ? toScene : fromScene,
+    shown: past ? toScene : fromScene,
+    mode: !past && fromDoor ? 'door' : 'scene', // leaving the door: door until the peak, then the scene
     flash,
-    boardProgress: reduce ? (t < 0.5 ? 0 : 1) : t, // board flips with progress; stop = it halts
-    boardFrom: i,
-    boardTo: next,
+    boardProgress: reduce ? (past ? 1 : 0) : t,
+    boardFromText: boardTextOf(s),
+    boardToText: boardTextOf(nextStop),
   };
 }
 
@@ -536,7 +560,7 @@ function useScrollScene(
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
   return useMemo<SceneState>(() => {
     if (forced != null) {
-      return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFrom: forced, boardTo: forced};
+      return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFromText: stripEmoji(CHOOSER_CARDS[forced].title), boardToText: stripEmoji(CHOOSER_CARDS[forced].title)};
     }
     return deriveSceneState(progressRef.current, count, reduce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -639,20 +663,17 @@ function StudioFacade({
   mode,
   flash,
   boardProgress,
-  boardFrom,
-  boardTo,
+  boardFromText,
+  boardToText,
 }: SceneState): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
-  // The board: in a transition (boardFrom ≠ boardTo) it is DRIVEN by boardProgress, flipping from the
-  // `from` title to the `to` title — so the flaps turn with the scroll and FREEZE when scrolling stops.
-  // Settled (from == to) it just shows that scene's title (timer-roll on a normal text change).
-  const inTransition = boardFrom !== boardTo;
-  const fromTitle = stripEmoji(CHOOSER_CARDS[boardFrom].title);
-  const toTitle = stripEmoji(CHOOSER_CARDS[boardTo].title);
-  const settledText = mode === 'door' ? 'WELCOME' : toTitle;
+  // The board: in a transition (the from/to text differ) it is DRIVEN by boardProgress, flipping the
+  // flaps from `boardFromText` to `boardToText` (e.g. WELCOME → DISCOVER MY CRAFT) — so the flaps turn
+  // with the scroll and FREEZE when scrolling stops. Settled (from == to) it just shows that text.
+  const inTransition = boardFromText !== boardToText;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
   const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (
@@ -683,8 +704,8 @@ function StudioFacade({
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={inTransition ? toTitle : settledText}
-                    fromText={inTransition ? fromTitle : undefined}
+                    text={boardToText}
+                    fromText={inTransition ? boardFromText : undefined}
                     progress={inTransition ? boardProgress : undefined}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}

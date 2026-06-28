@@ -36,38 +36,65 @@ export interface SplitFlapProps {
   fromText?: string;
 }
 
-// A DRIVEN cell: shows the flip from `from`→`to` frozen at an external `progress` (0..1). At p<0.5 the
-// top leaf (old glyph) folds down (rotateX 0→-90); at p≥0.5 the bottom leaf (new glyph) folds up
-// (rotateX 90→0). No timers — the parent's progress fully determines the frame, so it freezes on stop.
+// A DRIVEN cell: the flip from `from`→`to` FROZEN at an external `progress` (0..1), modelling a real
+// split-flap exactly (no doubled/ghosted glyphs — that was the bug). No timers, so it freezes on stop.
+//   - the TOP static half always shows the NEW glyph (revealed as the old top leaf folds away);
+//   - the BOTTOM static half always shows the OLD glyph (until the new bottom leaf covers it);
+//   - p<0.5: ONE leaf, the OLD top, folds DOWN (rotateX 0→-90) over the new top;
+//   - p≥0.5: ONE leaf, the NEW bottom, folds UP (rotateX 90→0) over the old bottom.
 function DrivenCell({from, to, progress}: {from: string; to: string; progress: number}) {
   const p = Math.min(1, Math.max(0, progress));
-  const flipping = from !== to && p > 0 && p < 1;
-  // settled glyph at the ends; mid-flip we split the rotation across the two leaves at the p=0.5 hinge
-  const settled = p < 0.5 ? from : to;
-  const topAngle = p < 0.5 ? -90 * (p / 0.5) : -90; // old top leaf folding down through the first half
-  const botAngle = p < 0.5 ? 90 : 90 * (1 - (p - 0.5) / 0.5); // new bottom leaf rising in the second half
+  if (from === to || p <= 0) {
+    // settled (or not started): just the glyph, no leaves.
+    const g = p <= 0 ? from : to;
+    return (
+      <span className={styles.cell} aria-hidden="true">
+        <span className={clsx(styles.leaf, styles.leafTop)}>
+          <span className={styles.glyph}>{g}</span>
+        </span>
+        <span className={clsx(styles.leaf, styles.leafBottom)}>
+          <span className={styles.glyph}>{g}</span>
+        </span>
+      </span>
+    );
+  }
+  if (p >= 1) {
+    return (
+      <span className={styles.cell} aria-hidden="true">
+        <span className={clsx(styles.leaf, styles.leafTop)}>
+          <span className={styles.glyph}>{to}</span>
+        </span>
+        <span className={clsx(styles.leaf, styles.leafBottom)}>
+          <span className={styles.glyph}>{to}</span>
+        </span>
+      </span>
+    );
+  }
+  const firstHalf = p < 0.5;
   return (
     <span className={styles.cell} aria-hidden="true">
-      {/* static halves show the settled glyph at rest; during a flip the leaves below cover them */}
+      {/* TOP static = the NEW glyph (uncovered once the old top leaf folds past) */}
       <span className={clsx(styles.leaf, styles.leafTop)}>
-        <span className={styles.glyph}>{p < 0.5 ? from : to}</span>
+        <span className={styles.glyph}>{to}</span>
       </span>
+      {/* BOTTOM static = the OLD glyph (until the new bottom leaf covers it) */}
       <span className={clsx(styles.leaf, styles.leafBottom)}>
-        <span className={styles.glyph}>{settled}</span>
+        <span className={styles.glyph}>{from}</span>
       </span>
-      {flipping && (
-        <>
-          <span
-            className={clsx(styles.leaf, styles.leafTop)}
-            style={{transform: `rotateX(${topAngle}deg)`, transition: 'none'}}>
-            <span className={styles.glyph}>{from}</span>
-          </span>
-          <span
-            className={clsx(styles.leaf, styles.leafBottom)}
-            style={{transform: `rotateX(${botAngle}deg)`, transition: 'none'}}>
-            <span className={styles.glyph}>{to}</span>
-          </span>
-        </>
+      {firstHalf ? (
+        // OLD top leaf folding DOWN over the new top: 0deg → -90deg across p 0..0.5
+        <span
+          className={clsx(styles.leaf, styles.leafTop)}
+          style={{transform: `rotateX(${-90 * (p / 0.5)}deg)`, transition: 'none'}}>
+          <span className={styles.glyph}>{from}</span>
+        </span>
+      ) : (
+        // NEW bottom leaf folding UP over the old bottom: 90deg → 0deg across p 0.5..1
+        <span
+          className={clsx(styles.leaf, styles.leafBottom)}
+          style={{transform: `rotateX(${90 * (1 - (p - 0.5) / 0.5)}deg)`, transition: 'none'}}>
+          <span className={styles.glyph}>{to}</span>
+        </span>
       )}
     </span>
   );
