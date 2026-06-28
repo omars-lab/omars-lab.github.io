@@ -28,76 +28,41 @@ export interface SplitFlapProps {
    * board's size never changes between messages. Requires `columns`. */
   rows?: number;
   className?: string;
-  /** DRIVEN mode: when set, the flip is controlled EXTERNALLY by `progress` (0..1) flipping from
-   * `fromText` to `text`, instead of self-running on timers. Stop changing `progress` (e.g. stop
-   * scrolling) and the board FREEZES mid-flip. Requires `fromText`. Used by the scroll-driven hero. */
-  progress?: number;
-  /** The text the board is flipping FROM in driven mode (the settled previous message). */
-  fromText?: string;
+  /** SPINNING mode: while true, every cell continuously CHURNS through random glyphs (like a
+   * departure board mid-update). When it flips to false, the cells SETTLE to `text` (roll to rest on
+   * the final letters). Used by the scroll-driven hero: spinning = the user is scrolling; settle =
+   * they stopped. (When undefined, the board behaves normally: it rolls on a `text` change.) */
+  spinning?: boolean;
 }
 
-// A DRIVEN cell: the flip from `from`→`to` FROZEN at an external `progress` (0..1), modelling a real
-// split-flap exactly (no doubled/ghosted glyphs — that was the bug). No timers, so it freezes on stop.
-//   - the TOP static half always shows the NEW glyph (revealed as the old top leaf folds away);
-//   - the BOTTOM static half always shows the OLD glyph (until the new bottom leaf covers it);
-//   - p<0.5: ONE leaf, the OLD top, folds DOWN (rotateX 0→-90) over the new top;
-//   - p≥0.5: ONE leaf, the NEW bottom, folds UP (rotateX 90→0) over the old bottom.
-function DrivenCell({from, to, progress}: {from: string; to: string; progress: number}) {
-  const p = Math.min(1, Math.max(0, progress));
-  if (from === to || p <= 0) {
-    // settled (or not started): just the glyph, no leaves.
-    const g = p <= 0 ? from : to;
-    return (
-      <span className={styles.cell} aria-hidden="true">
-        <span className={clsx(styles.leaf, styles.leafTop)}>
-          <span className={styles.glyph}>{g}</span>
-        </span>
-        <span className={clsx(styles.leaf, styles.leafBottom)}>
-          <span className={styles.glyph}>{g}</span>
-        </span>
-      </span>
-    );
-  }
-  if (p >= 1) {
-    return (
-      <span className={styles.cell} aria-hidden="true">
-        <span className={clsx(styles.leaf, styles.leafTop)}>
-          <span className={styles.glyph}>{to}</span>
-        </span>
-        <span className={clsx(styles.leaf, styles.leafBottom)}>
-          <span className={styles.glyph}>{to}</span>
-        </span>
-      </span>
-    );
-  }
-  const firstHalf = p < 0.5;
-  return (
-    <span className={styles.cell} aria-hidden="true">
-      {/* TOP static = the NEW glyph (uncovered once the old top leaf folds past) */}
-      <span className={clsx(styles.leaf, styles.leafTop)}>
-        <span className={styles.glyph}>{to}</span>
-      </span>
-      {/* BOTTOM static = the OLD glyph (until the new bottom leaf covers it) */}
-      <span className={clsx(styles.leaf, styles.leafBottom)}>
-        <span className={styles.glyph}>{from}</span>
-      </span>
-      {firstHalf ? (
-        // OLD top leaf folding DOWN over the new top: 0deg → -90deg across p 0..0.5
-        <span
-          className={clsx(styles.leaf, styles.leafTop)}
-          style={{transform: `rotateX(${-90 * (p / 0.5)}deg)`, transition: 'none'}}>
-          <span className={styles.glyph}>{from}</span>
-        </span>
-      ) : (
-        // NEW bottom leaf folding UP over the old bottom: 90deg → 0deg across p 0.5..1
-        <span
-          className={clsx(styles.leaf, styles.leafBottom)}
-          style={{transform: `rotateX(${90 * (1 - (p - 0.5) / 0.5)}deg)`, transition: 'none'}}>
-          <span className={styles.glyph}>{to}</span>
-        </span>
-      )}
-    </span>
-  );
+// A SPINNING cell: while `spinning`, it CHURNS through random deck glyphs on its own fast timer (each
+// cell at a slightly different rate so the board looks alive); when `spinning` turns false it SETTLES,
+// rolling to its target `char` and resting. It delegates the actual fold animation to <Cell> by
+// driving Cell's `char`: a stream of random glyphs while spinning, the real target when settled.
+const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
+
+function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; seed: number}) {
+  const [display, setDisplay] = useState(char);
+  const idxRef = useRef(seed % SPIN_LETTERS.length);
+
+  useEffect(() => {
+    if (spinning && char !== ' ') {
+      // churn: advance to the next "random" letter on a fast interval (deterministic per-cell stride
+      // by seed, so no Math.random and every cell churns at its own pace).
+      const stride = 1 + (seed % 5);
+      const periodMs = 60 + (seed % 7) * 12; // 60..132ms per flip, varied per cell
+      const id = window.setInterval(() => {
+        idxRef.current = (idxRef.current + stride) % SPIN_LETTERS.length;
+        setDisplay(SPIN_LETTERS[idxRef.current]);
+      }, periodMs);
+      return () => window.clearInterval(id);
+    }
+    // SETTLE: stop churning and land on the target character.
+    setDisplay(char);
+    return undefined;
+  }, [spinning, char, seed]);
+
+  return <Cell char={display} settleMs={420} />;
 }
 
 /** Center `text` within `columns`, padding both sides with spaces so the row is always full. */
@@ -245,10 +210,9 @@ export default function SplitFlap({
   columns,
   rows: fixedRows,
   className,
-  progress,
-  fromText,
+  spinning,
 }: SplitFlapProps): React.JSX.Element {
-  // Build the centered/padded GRID for a message (same layout for both the timer + driven paths).
+  // Build the centered/padded GRID for a message.
   const toGrid = (s: string): string[] => {
     const upper = s.toUpperCase();
     let g = columns ? wrapToGrid(upper, columns) : [upper];
@@ -264,17 +228,17 @@ export default function SplitFlap({
 
   const grid = toGrid(text);
 
-  // DRIVEN mode: the flip is controlled by `progress` (0..1) from `fromText` → `text`. Each cell is a
-  // DrivenCell frozen at that progress, so stopping the progress (e.g. stop scrolling) freezes the
-  // board mid-flip. (No timers.)
-  if (progress != null && fromText != null) {
-    const fromGrid = toGrid(fromText);
+  // SPINNING mode: while `spinning` the board CHURNS random letters; when it stops it SETTLES to `text`.
+  // (Used by the scroll-driven hero: spinning = scrolling, settle = stopped.) A stable per-cell seed
+  // keeps each cell's churn pace consistent across renders.
+  if (spinning != null) {
+    let seed = 0;
     return (
       <span className={clsx(styles.board, className)} role="text" aria-label={text}>
         {grid.map((row, r) => (
           <span key={r} className={styles.row}>
             {Array.from(row).map((c, i) => (
-              <DrivenCell key={i} from={fromGrid[r]?.[i] ?? ' '} to={c} progress={progress} />
+              <SpinningCell key={i} char={c} spinning={spinning} seed={(seed = seed + 7 + i * 3)} />
             ))}
           </span>
         ))}

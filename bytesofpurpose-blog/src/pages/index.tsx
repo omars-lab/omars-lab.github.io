@@ -623,12 +623,18 @@ function useTimerScene(count: number, paused: boolean): SceneState {
 function useScrollProgress(
   compute: () => number,
   progressRef: React.MutableRefObject<number>,
-): number {
+): {tick: number; scrolling: boolean} {
   const [tick, setTick] = useState(0);
+  const [scrolling, setScrolling] = useState(false);
   useEffect(() => {
     let raf = 0;
     let pending = false;
+    let idle = 0; // timer that flips `scrolling` back to false after a short pause
     const onScroll = () => {
+      // mark scrolling true on each scroll event; reset the idle timer that settles it back to false
+      setScrolling(true);
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => setScrolling(false), 140); // ~140ms of no scroll = "stopped"
       if (pending) return;
       pending = true;
       raf = window.requestAnimationFrame(() => {
@@ -641,16 +647,19 @@ function useScrollProgress(
       });
     };
     onScroll(); // initialise on mount
+    window.clearTimeout(idle);
+    idle = window.setTimeout(() => setScrolling(false), 140);
     window.addEventListener('scroll', onScroll, {passive: true});
     window.addEventListener('resize', onScroll, {passive: true});
     return () => {
       window.cancelAnimationFrame(raf);
+      window.clearTimeout(idle);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return tick;
+  return {tick, scrolling};
 }
 
 /* The presentational FACADE: the Lebanese central-hall home (roof + square body + three arches + the
@@ -662,18 +671,17 @@ function StudioFacade({
   shown,
   mode,
   flash,
-  boardProgress,
-  boardFromText,
   boardToText,
-}: SceneState): React.JSX.Element {
+  spinning = false,
+}: SceneState & {spinning?: boolean}): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
-  // The board: in a transition (the from/to text differ) it is DRIVEN by boardProgress, flipping the
-  // flaps from `boardFromText` to `boardToText` (e.g. WELCOME → DISCOVER MY CRAFT) — so the flaps turn
-  // with the scroll and FREEZE when scrolling stops. Settled (from == to) it just shows that text.
-  const inTransition = boardFromText !== boardToText;
+  // The board's TARGET text is where we're heading (the destination title, or WELCOME at the door).
+  // While `spinning` (the user is scrolling) the flaps churn random letters; when scrolling stops the
+  // board SETTLES to this target. That reads as "the board is working, then it lands".
+  const boardTarget = boardToText;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
   const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (
@@ -704,9 +712,8 @@ function StudioFacade({
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={boardToText}
-                    fromText={inTransition ? boardFromText : undefined}
-                    progress={inTransition ? boardProgress : undefined}
+                    text={boardTarget}
+                    spinning={spinning}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
@@ -905,7 +912,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     return Math.min(1, Math.max(0, -rect.top / scrollable));
   }, [model]);
 
-  const tick = useScrollProgress(compute, progressRef);
+  const {tick, scrolling} = useScrollProgress(compute, progressRef);
   const scene = useScrollScene(progressRef, count, tick);
   const {active} = scene;
 
@@ -961,7 +968,8 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
           </div>
         </div>
       )}
-      <StudioFacade {...scene} />
+      {/* spinning = the user is scrolling → the board churns; on stop it settles to the title. */}
+      <StudioFacade {...scene} spinning={scrolling} />
     </Link>
   );
 
