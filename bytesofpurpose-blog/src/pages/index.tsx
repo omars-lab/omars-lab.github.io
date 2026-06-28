@@ -485,36 +485,30 @@ function useScrollScene(
     const p = Math.min(0.99999, Math.max(0, progressRef.current));
     const band = Math.min(count - 1, Math.floor(p * count));
     if (band === bandRef.current) {
-      // within the same scene's band: nothing to transition. Ensure we're showing that scene.
+      // within the same scene's band: nothing to transition. Already showing that scene.
       return;
     }
-    const prevBand = bandRef.current;
     bandRef.current = band;
 
-    // clear any in-flight flash timers (a fast scroll can cross several bands)
-    timers.current.forEach((t) => window.clearTimeout(t));
-    timers.current = [];
-
+    // The scene follows scroll IMMEDIATELY: snap active + show the scene now, so continuous scrolling
+    // keeps advancing scenes (the earlier flash-peak-gated swap got cancelled by the next band-cross
+    // before its timer fired, so the scene never moved while you kept scrolling — the "we don't hold
+    // on the house" / scene-stuck bug). The FLASH is now a purely decorative bloom layered ON TOP of
+    // the already-changed scene, so cancelling it never blocks the scene change.
     if (reduce) {
-      // no flash: snap to the new scene immediately, board names the destination
       setState({active: band, mode: 'scene', flashing: false});
       return;
     }
-
-    // FLASH the crossing: bloom now; at the peak swap to the new scene + flip the board; then recede.
-    setState((s) => ({...s, flashing: true}));
-    timers.current.push(
-      window.setTimeout(() => {
-        setState({active: band, mode: 'scene', flashing: true});
-      }, STUDIO_FLASH_MS),
-    );
-    timers.current.push(
+    setState({active: band, mode: 'scene', flashing: true});
+    // recede the flash shortly after; clearing/replacing this timer on the next cross is harmless now
+    // (the scene already changed). A fresh bloom fires on each crossing.
+    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current = [
       window.setTimeout(
         () => setState((s) => ({...s, flashing: false})),
         STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS,
       ),
-    );
-    void prevBand; // (direction is available via band - prevBand if a wrapper wants it later)
+    ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollTick, count, reduce, forced]);
 
