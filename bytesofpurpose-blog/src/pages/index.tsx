@@ -11,8 +11,9 @@ import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
 import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
-import {EXPERIMENTS, resolveVariant, type Experiment} from '../experiments';
+import {EXPERIMENTS, resolveVariant, isLocalhost, type Experiment} from '../experiments';
 import {applyHeroParams} from '../lib/hero-tuning';
+import {HERO_SCENE_PARAM} from '../lib/url-params';
 
 /* The hero chooser cards (folded in from the old /welcome page). To ADD a card, append an
    entry here and drop its arched PNG in static/img/cards/, and the film strip + the seamless loop
@@ -436,6 +437,19 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// TEST/QA seam: `?hero-scene=N` forces the parallax engine to scene N (bypassing scroll), so e2e tests
+// (and manual QA) can land on a SPECIFIC scene deterministically without computing scroll offsets.
+// Localhost-only (same gate as the ab- overrides) so production ignores it. Registered in the URL-param
+// registry (src/lib/url-params.ts) as `hero-scene`, scope: localhost — keep that entry in sync.
+function forcedScene(count: number): number | null {
+  if (!isLocalhost()) return null;
+  const raw = new URLSearchParams(window.location.search).get(HERO_SCENE_PARAM);
+  if (raw == null) return null;
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n < 0 || n >= count) return null;
+  return n;
+}
+
 type SceneState = {active: number; mode: 'door' | 'scene'; flashing: boolean};
 
 /**
@@ -459,8 +473,15 @@ function useScrollScene(
   const bandRef = useRef(0); // the last band (scene index) we settled on
   const timers = useRef<number[]>([]);
   const reduce = prefersReducedMotion();
+  const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
 
   useEffect(() => {
+    // TEST seam: when a scene is forced, snap to it (no scroll, no flash) so e2e is deterministic.
+    if (forced != null) {
+      bandRef.current = forced;
+      setState({active: forced, mode: 'scene', flashing: false});
+      return;
+    }
     const p = Math.min(0.99999, Math.max(0, progressRef.current));
     const band = Math.min(count - 1, Math.floor(p * count));
     if (band === bandRef.current) {
@@ -495,7 +516,7 @@ function useScrollScene(
     );
     void prevBand; // (direction is available via band - prevBand if a wrapper wants it later)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollTick, count, reduce]);
+  }, [scrollTick, count, reduce, forced]);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
@@ -835,6 +856,8 @@ function ParallaxStudio({model}: {model: ScrollModel}): React.JSX.Element {
       ref={gateRef}
       data-hero-root
       data-scroll-model={model}
+      data-active-scene={active}
+      data-active-dest={CHOOSER_CARDS[active].to}
       className={clsx(styles.studioGate, pinned && styles.parallaxSticky)}
       to={CHOOSER_CARDS[active].to}
       aria-label={stripEmoji(CHOOSER_CARDS[active].title)}

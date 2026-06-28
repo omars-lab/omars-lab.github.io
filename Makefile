@@ -446,6 +446,9 @@ test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn sta
 validate-hero-anchors: ## Check the maintain-homepage-hero skill is in lockstep with the code (named symbols still exist)
 	( cd ${SITEROOT} && node scripts/validate-hero-anchors.js )
 
+validate-url-params: ## Check every query param read in src/ is registered in the URL-param registry (src/lib/url-params.ts)
+	( cd ${SITEROOT} && node scripts/validate-url-params.js )
+
 test-visual: ## Visual-regression: screenshot the hero (both A/B variants) across DPR 1+2, viewports, light+dark vs committed baselines
 	# Catches retina-only / animation-frame artifacts (a compositing seam, a flash white-out, overflow)
 	# that the functional DPR=1 specs are blind to. Compares against committed baselines.

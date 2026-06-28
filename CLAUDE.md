@@ -67,6 +67,23 @@ When you add a new generator, add its output to `generate-assets`, gitignore the
 and add the path to the hook + this list in the SAME change. The build system is showcased
 in a `/designs` post; owning skills: `deploy-site`, `serve-locally`.
 
+## ⚠️ Operating convention: every URL query param goes in the registry
+
+Every `?param` the site reads is declared ONCE in the **URL-param registry**
+`bytesofpurpose-blog/src/lib/url-params.ts` (`URL_PARAMS`): each entry carries the key (or
+`prefix: true` for `ab-`/`ht-`), owner, purpose, **scope** (`production` vs `localhost`-only),
+optional allowed-value enum, and an example. Readers import the exported key CONSTANTS
+(`HERO_SCENE_PARAM`, etc.) instead of hard-coding literals. **When you add a new param read
+anywhere in `src/`, add its registry entry in the SAME change** — this is fail-closed: the
+PostToolUse `Write|Edit` hook `.claude/hooks/validate-url-params-hook.sh` runs
+`scripts/validate-url-params.js` (greps `src/` for `searchParams.get('x')` / `.startsWith('x-')`)
+and **warns** on any unregistered key; the blocking gate is `make validate-url-params` (exits 2).
+A `localhost`-scope param MUST be gated by `isLocalhost()` at its read site (production ignores it);
+the validator declares scope but can't enforce the gate, so honour it. Current params: `ab`/`ab-`
+(experiment overrides), `ht-` (Hero Tuner), `hero-scene` (parallax test seam), `im`/`internal`
+(ingress attribution). If a read is NOT a url param (e.g. an HTTP header), add it to `IGNORE_KEYS`
+in the validator.
+
 ## ⚠️ Operating convention: every new interactive component gets a visual + mobile pass
 
 A component that **renders content or takes input** (a board, a modal, a card, a chart, a

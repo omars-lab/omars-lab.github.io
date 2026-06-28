@@ -193,6 +193,80 @@ test.describe('Homepage hero A/B: camera-flash variant', () => {
   });
 });
 
-// NOTE: variants C (studio) and D (boutique) are still being designed; their e2e assertions land with
-// the 4-arm test update (task #119) once their markup settles. The earlier train-station variant was
-// replaced by studio/boutique, so its tests + baselines were removed.
+// NOTE: variant D (boutique) full assertions land with the 4-arm test update (task #119) once its
+// markup settles. The earlier train-station variant was replaced by studio/boutique, so its tests +
+// baselines were removed. Variant C (the studio HOUSE) + its scroll-driven parallax are covered below.
+
+/*
+ * The SCROLL-DRIVEN PARALLAX hero (variant C house + the homepage-hero-scroll experiment). As you
+ * scroll, the central door transforms into each scene, the board reflips, and the matching top-navbar
+ * item highlights. This is hard to assert against raw scroll geometry, so the engine exposes a TEST
+ * SEAM: `?hero-scene=N` forces a SPECIFIC scene (localhost-only, registered in src/lib/url-params.ts),
+ * and the hero root carries `data-active-scene` / `data-active-dest`. We use the seam for deterministic
+ * per-scene assertions, PLUS one real-scroll test that the active scene actually advances on scroll.
+ */
+test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
+  const SCROLL_MODELS = ['pin', 'inplace', 'horizontal'] as const;
+  // scene index → its destination + the navbar label that should light up (matches CHOOSER_CARDS)
+  const SCENE_NAV: Array<{ dest: string; nav: RegExp }> = [
+    { dest: '/craft', nav: /Craft/ },
+    { dest: '/journey', nav: /Journey/ },
+    { dest: '/thoughts', nav: /Thoughts/ },
+    { dest: '/mindset', nav: /Mindset/ },
+    { dest: '/initiatives', nav: /Initiatives/ },
+    { dest: '/questions', nav: /Questions/ },
+    { dest: '/designs', nav: /Designs/ },
+  ];
+
+  const heroUrl = (model: string, scene?: number) =>
+    `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=${model}` +
+    (scene == null ? '' : `&hero-scene=${scene}`);
+
+  for (const model of SCROLL_MODELS) {
+    test(`[${model}] renders the house hero (one click-through gate)`, async ({ page }) => {
+      await page.goto(heroUrl(model), { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
+      const gate = page.locator(`a[data-hero-root][data-scroll-model="${model}"]`);
+      await expect(gate).toHaveCount(1);
+      // the whole house is ONE link
+      await expect(gate).toHaveAttribute('href', /\/(craft|journey|thoughts|mindset|initiatives|questions|designs)/);
+    });
+
+    test(`[${model}] ?hero-scene=N forces the scene → door dest + navbar highlight match`, async ({ page }) => {
+      // Check a few representative scenes deterministically (no scrolling needed).
+      for (const i of [0, 2, 5, 6]) {
+        await page.goto(heroUrl(model, i), { waitUntil: 'domcontentloaded' });
+        await page.waitForLoadState('networkidle');
+        const root = page.locator('[data-hero-root]');
+        await expect(root, `scene ${i} active`).toHaveAttribute('data-active-scene', String(i));
+        await expect(root, `scene ${i} destination`).toHaveAttribute('data-active-dest', SCENE_NAV[i].dest);
+        // the matching top-navbar item is lit (we own the highlight; homepage route is '/')
+        const lit = page.locator('[class*="navbarSceneActive"]');
+        await expect(lit, `navbar lit for scene ${i}`).toHaveCount(1);
+        await expect(lit).toHaveText(SCENE_NAV[i].nav);
+      }
+    });
+  }
+
+  test('[pin] real scroll ADVANCES the active scene, then RELEASES (page reachable below)', async ({ page }) => {
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+    const sceneAt = () => root.getAttribute('data-active-scene');
+    const start = await sceneAt();
+
+    // scroll a few scene-bands deep; the active scene must change (scroll DECIDES the scene)
+    await page.evaluate(() => window.scrollTo(0, window.innerHeight * 2.4));
+    await expect
+      .poll(sceneAt, { timeout: 4000, message: 'scrolling should advance the active scene' })
+      .not.toBe(start);
+
+    // RELEASE: scrolling to the very bottom must reach the page content below the hero (no scroll trap)
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const reachedBottom = await page.evaluate(() => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return Math.abs(window.scrollY - max) < 4;
+    });
+    expect(reachedBottom, 'pin model must release so the page below is reachable').toBe(true);
+  });
+});
