@@ -630,11 +630,8 @@ function useScrollProgress(
     let raf = 0;
     let pending = false;
     let idle = 0; // timer that flips `scrolling` back to false after a short pause
-    const onScroll = () => {
-      // mark scrolling true on each scroll event; reset the idle timer that settles it back to false
-      setScrolling(true);
-      window.clearTimeout(idle);
-      idle = window.setTimeout(() => setScrolling(false), 140); // ~140ms of no scroll = "stopped"
+    // recompute the progress fraction (without touching the `scrolling` flag — used by the mount init).
+    const recompute = () => {
       if (pending) return;
       pending = true;
       raf = window.requestAnimationFrame(() => {
@@ -646,9 +643,15 @@ function useScrollProgress(
         }
       });
     };
-    onScroll(); // initialise on mount
-    window.clearTimeout(idle);
-    idle = window.setTimeout(() => setScrolling(false), 140);
+    const onScroll = () => {
+      // a REAL scroll event: mark scrolling true + reset the idle timer that settles it back to false.
+      // (NOT called on mount, so the board starts at rest showing WELCOME rather than churning.)
+      setScrolling(true);
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => setScrolling(false), 140); // ~140ms of no scroll = "stopped"
+      recompute();
+    };
+    recompute(); // initialise progress on mount WITHOUT flagging "scrolling"
     window.addEventListener('scroll', onScroll, {passive: true});
     window.addEventListener('resize', onScroll, {passive: true});
     return () => {
@@ -963,6 +966,17 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   }, []);
 
   const pinned = model === 'pin' || model === 'horizontal';
+
+  // PIN FROM THE FIRST SCROLL: the hero header (eyebrow/title/subtitle) normally sits ABOVE the hero in
+  // flow, so scrolling pushes those away first and the house DRIFTS up before the sticky engages. For
+  // the pinned models we mark the closest `.heroBanner` so its CSS pulls the sticky up (negative top
+  // margin = the header's own height) — the house then holds from scroll 0 and only releases at the end.
+  useEffect(() => {
+    if (!pinned || typeof document === 'undefined') return undefined;
+    const banner = gateRef.current?.closest('header');
+    banner?.setAttribute('data-parallax-pinned', '');
+    return () => banner?.removeAttribute('data-parallax-pinned');
+  }, [pinned]);
   // The horizontal pan offset: slide the scene track so the active scene is centred (cosmetic depth
   // layer BEHIND the facade; the door still carries the actual door↔scene flash).
   const panPct = model === 'horizontal' ? -(active * (100 / count)) : 0;
