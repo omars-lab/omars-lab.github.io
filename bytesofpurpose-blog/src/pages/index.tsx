@@ -422,6 +422,228 @@ const STUDIO_BOARD_ROWS = 3; // 3 rows of bigger letters (not 5 rows of small)
 const STUDIO_FLASH_MS = FLASH_SETTLE_MS; // bloom-to-peak == board roll
 const STUDIO_FLASH_HOLD_MS = 260; // hold at peak white before receding
 
+// ── The scroll-progress engine (shared by all 3 parallax scroll-models) ─────────────────────────
+// Maps a SCROLL progress value in [0,1] to which of the `count` scenes the centre door shows, and
+// fires the camera FLASH (+ flips the board door↔scene) when scroll crosses a scene boundary. This
+// replaces the timer-driven step() in the original ChooserStudio: scrolling now DECIDES the scene.
+//
+// `progress` is produced differently per variant (window scroll within a tall pinned spacer, or how
+// far the hero has moved through the viewport, or a horizontal-pan fraction), but the mapping from
+// progress → {active, mode, flashing} is identical, so it lives here once.
+
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+type SceneState = {active: number; mode: 'door' | 'scene'; flashing: boolean};
+
+/**
+ * Derive the scene state from a scroll `progress` in [0,1] across `count` scenes.
+ *
+ * The [0,1] range is divided into `count` equal bands; band i ⇒ scene i. Crossing from one band to
+ * the next plays a FLASH (scroll-triggered, not timed): we briefly set `flashing`, and at the flash
+ * peak swap the door↔scene + advance `active`, mirroring the original timed transition. Reduced-motion
+ * users skip the flash and snap straight to the new scene.
+ *
+ * Returns the current {active, mode, flashing}. `onSettleRef` is an escape hatch the wrappers use to
+ * react to the settled scene (e.g. navbar highlight) without re-rendering the engine.
+ */
+function useScrollScene(
+  progressRef: React.MutableRefObject<number>,
+  count: number,
+  // a monotonically-increasing tick the wrapper bumps on every scroll frame, so the hook recomputes
+  scrollTick: number,
+): SceneState {
+  const [state, setState] = useState<SceneState>({active: 0, mode: 'door', flashing: false});
+  const bandRef = useRef(0); // the last band (scene index) we settled on
+  const timers = useRef<number[]>([]);
+  const reduce = prefersReducedMotion();
+
+  useEffect(() => {
+    const p = Math.min(0.99999, Math.max(0, progressRef.current));
+    const band = Math.min(count - 1, Math.floor(p * count));
+    if (band === bandRef.current) {
+      // within the same scene's band: nothing to transition. Ensure we're showing that scene.
+      return;
+    }
+    const prevBand = bandRef.current;
+    bandRef.current = band;
+
+    // clear any in-flight flash timers (a fast scroll can cross several bands)
+    timers.current.forEach((t) => window.clearTimeout(t));
+    timers.current = [];
+
+    if (reduce) {
+      // no flash: snap to the new scene immediately, board names the destination
+      setState({active: band, mode: 'scene', flashing: false});
+      return;
+    }
+
+    // FLASH the crossing: bloom now; at the peak swap to the new scene + flip the board; then recede.
+    setState((s) => ({...s, flashing: true}));
+    timers.current.push(
+      window.setTimeout(() => {
+        setState({active: band, mode: 'scene', flashing: true});
+      }, STUDIO_FLASH_MS),
+    );
+    timers.current.push(
+      window.setTimeout(
+        () => setState((s) => ({...s, flashing: false})),
+        STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS,
+      ),
+    );
+    void prevBand; // (direction is available via band - prevBand if a wrapper wants it later)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollTick, count, reduce]);
+
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+
+  return state;
+}
+
+/**
+ * A rAF-throttled scroll listener that writes a [0,1] progress into `progressRef` and bumps a tick
+ * so `useScrollScene` recomputes. `compute` turns the current scroll geometry into the fraction; each
+ * variant supplies its own (window-scroll-within-spacer, element-through-viewport, horizontal-pan).
+ * SSR-safe (no-op until mounted) and passive (never blocks scrolling, so the page is never trapped).
+ */
+function useScrollProgress(
+  compute: () => number,
+  progressRef: React.MutableRefObject<number>,
+): number {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    let pending = false;
+    const onScroll = () => {
+      if (pending) return;
+      pending = true;
+      raf = window.requestAnimationFrame(() => {
+        pending = false;
+        const next = compute();
+        if (next !== progressRef.current) {
+          progressRef.current = next;
+          setTick((t) => (t + 1) % 1_000_000);
+        }
+      });
+    };
+    onScroll(); // initialise on mount
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll, {passive: true});
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return tick;
+}
+
+/* The presentational FACADE: the Lebanese central-hall home (roof + square body + three arches + the
+   hanging Vestaboard + the centre door↔scene flash), driven purely by props. Both the original timer
+   ChooserStudio and the scroll-driven parallax wrappers render this with their own {active, mode,
+   flashing}, so the visual house is defined ONCE. The clickable <Link> + hover/keyboard behaviour and
+   the data-hero-root / gateRef belong to the wrappers (they differ per scroll-model). */
+function StudioFacade({active, mode, flashing}: SceneState): React.JSX.Element {
+  return (
+    <div className={styles.studioFacade}>
+      {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
+      <div className={styles.studioRoof} aria-hidden="true" />
+
+      {/* The SQUARE terracotta house body: holds the board + the three arches. */}
+      <div className={styles.studioBody}>
+        <div className={styles.studioRow}>
+          {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
+          <div className={styles.studioArch}>
+            <img
+              className={styles.studioArchImg}
+              src={useBaseUrl('/img/cards/window.png')}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={400}
+              height={400}
+            />
+            <span className={styles.studioWindowRail} aria-hidden="true" />
+          </div>
+
+          {/* CENTER: the carved DOOR, with the Vestaboard sign HANGING above it. */}
+          <div className={styles.studioCenter}>
+            <div className={styles.studioSignHanger}>
+              <div className={styles.studioSignSwing}>
+                <div className={styles.studioSign}>
+                  <SplitFlap
+                    text={mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[active].title)}
+                    columns={STUDIO_BOARD_COLS}
+                    rows={STUDIO_BOARD_ROWS}
+                    settleMs={FLASH_SETTLE_MS}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* The centre arch is the DOORWAY you peek through: the carved DOOR (mode 'door') OR the
+                current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
+                over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
+                masks the change. */}
+            <div className={styles.studioArch} data-flash={flashing ? 'on' : undefined}>
+              {/* the carved DOOR (shown when mode === 'door') */}
+              <img
+                className={clsx(
+                  styles.studioArchImg,
+                  styles.studioDoorLayer,
+                  mode === 'door' && styles.studioLayerOn,
+                )}
+                src={useBaseUrl('/img/cards/door.png')}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
+              {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior */}
+              <div
+                className={clsx(styles.studioDoorScene, mode === 'scene' && styles.studioLayerOn)}
+                aria-hidden="true">
+                {CHOOSER_CARDS.map((card, i) => (
+                  <img
+                    key={card.to}
+                    className={clsx(styles.studioPeekImg, i === active && styles.studioPeekImgActive)}
+                    src={useBaseUrl(card.img)}
+                    alt=""
+                    loading="lazy"
+                    width={400}
+                    height={400}
+                  />
+                ))}
+              </div>
+              {/* the white flash bloom, masked to the arch */}
+              <span className={styles.studioFlash} aria-hidden="true" />
+            </div>
+          </div>
+
+          {/* RIGHT: a second cleaned zellij WINDOW (static), mirroring the left window. The project
+              peek now lives ONLY in the centre door (the door↔scene flash), so both side arches are
+              decorative windows. */}
+          <div className={styles.studioArch}>
+            <img
+              className={styles.studioArchImg}
+              src={useBaseUrl('/img/cards/window.png')}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={400}
+              height={400}
+            />
+            <span className={styles.studioWindowRail} aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChooserStudio() {
   const [active, setActive] = useState(0);
   // `mode` = what the CENTRE arch shows: 'door' (board says WELCOME) or 'scene' (board says the
@@ -505,107 +727,9 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE STUDIO FACADE: a traditional Lebanese central-hall HOME (the triple-arch facade). A
-          pitched terracotta-tile ROOF caps the terracotta wall; THREE arched openings sit in a row
-          (a zellij WINDOW left, the carved DOOR center with the Vestaboard hanging above, the scene
-          peek right), each traced in a gold outline; a wrought-iron BALCONY RAILING runs across the
-          base of the arches. */}
-      <div className={styles.studioFacade}>
-        {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
-        <div className={styles.studioRoof} aria-hidden="true" />
-
-        {/* The SQUARE terracotta house body: holds the board + the three arches. */}
-        <div className={styles.studioBody}>
-          <div className={styles.studioRow}>
-          {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
-          <div className={styles.studioArch}>
-            <img
-              className={styles.studioArchImg}
-              src={useBaseUrl('/img/cards/window.png')}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              width={400}
-              height={400}
-            />
-            <span className={styles.studioWindowRail} aria-hidden="true" />
-          </div>
-
-          {/* CENTER: the carved DOOR, with the Vestaboard sign HANGING above it. */}
-          <div className={styles.studioCenter}>
-            <div className={styles.studioSignHanger}>
-              <div className={styles.studioSignSwing}>
-                <div className={styles.studioSign}>
-                  <SplitFlap
-                    text={mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[active].title)}
-                    columns={STUDIO_BOARD_COLS}
-                    rows={STUDIO_BOARD_ROWS}
-                    settleMs={FLASH_SETTLE_MS}
-                  />
-                </div>
-              </div>
-            </div>
-            {/* The centre arch is the DOORWAY you peek through: the carved DOOR (mode 'door') OR the
-                current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
-                over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
-                masks the change. */}
-            <div className={styles.studioArch} data-flash={flashing ? 'on' : undefined}>
-              {/* the carved DOOR (shown when mode === 'door') */}
-              <img
-                className={clsx(
-                  styles.studioArchImg,
-                  styles.studioDoorLayer,
-                  mode === 'door' && styles.studioLayerOn,
-                )}
-                src={useBaseUrl('/img/cards/door.png')}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                width={400}
-                height={400}
-              />
-              {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior */}
-              <div
-                className={clsx(styles.studioDoorScene, mode === 'scene' && styles.studioLayerOn)}
-                aria-hidden="true">
-                {CHOOSER_CARDS.map((card, i) => (
-                  <img
-                    key={card.to}
-                    className={clsx(
-                      styles.studioPeekImg,
-                      i === active && styles.studioPeekImgActive,
-                    )}
-                    src={useBaseUrl(card.img)}
-                    alt=""
-                    loading="lazy"
-                    width={400}
-                    height={400}
-                  />
-                ))}
-              </div>
-              {/* the white flash bloom, masked to the arch */}
-              <span className={styles.studioFlash} aria-hidden="true" />
-            </div>
-          </div>
-
-          {/* RIGHT: a second cleaned zellij WINDOW (static), mirroring the left window. The project
-              peek now lives ONLY in the centre door (the door↔scene flash), so both side arches are
-              decorative windows. */}
-          <div className={styles.studioArch}>
-            <img
-              className={styles.studioArchImg}
-              src={useBaseUrl('/img/cards/window.png')}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              width={400}
-              height={400}
-            />
-            <span className={styles.studioWindowRail} aria-hidden="true" />
-          </div>
-          </div>
-        </div>
-      </div>
+      {/* THE STUDIO FACADE: a traditional Lebanese central-hall HOME, defined once in StudioFacade and
+          driven here by the timer state. */}
+      <StudioFacade active={active} mode={mode} flashing={flashing} />
     </Link>
   );
 }
