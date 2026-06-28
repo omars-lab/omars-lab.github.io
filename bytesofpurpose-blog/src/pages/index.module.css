@@ -647,67 +647,104 @@
 .studioRow {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(150px, 0.85fr) 1.25fr; /* board · window */
-  align-items: start;
-  gap: 1.2rem;
-  padding-top: 1.6rem;
+  grid-template-columns: 1fr 1fr 1fr; /* window · door · scene, ALL the same size */
+  align-items: end; /* the three arches sit on the same baseline */
+  gap: 0.8rem;
+  /* generous room at the TOP for the wide board to HANG above the centre door (board height + the
+     bracket/chains gap), and little space at the BOTTOM so the arches sit near the wall's lower edge. */
+  padding: 6rem 0 0.4rem;
 }
 
-/* ── The HANGING board (left): suspended from a wall bracket with a gentle sway ──────────────────
-   Sign offset + scale are tunable (--sign-x/-y/-scale). */
-.studioSignHanger {
+/* A plain arched opening (the static window + door): the cleaned PNG already carries the arch, so
+   we just size it. All three arches share this so they're identical in size. */
+.studioArch {
   position: relative;
-  z-index: 2;
+  width: 100%;
+  aspect-ratio: 300 / 320;
+  align-self: end;
+  filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.22));
+}
+.studioArchImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The CENTER column: the carved door, SAME size as the side arches (it IS a .studioArch). The
+   Vestaboard sign is positioned ABSOLUTELY above it, so its WIDTH (≈3× the arch) does NOT stretch
+   this grid column (which would make the door bigger than the side windows). All three arches stay
+   the same size + bottom-aligned. */
+.studioCenter {
+  position: relative;
+  align-self: end;
+  min-width: 0; /* don't let the wide absolute board force this grid track wider */
+  z-index: 2; /* the door + sign read as the entrance, in front of the side windows */
+}
+
+/* ── The HANGING board: suspended above the centre door from a wall bracket, swaying gently ───────
+   ABSOLUTELY positioned over the door so its WIDTH (≈3× the arch) does NOT widen the centre grid
+   column. It hangs in the WALL GAP above the door: the bracket + chains show against the terracotta
+   above the board (a clear "hanging" read). Sign offset + scale are tunable (--sign-x/-y/-scale). */
+.studioSignHanger {
+  position: absolute;
+  left: 50%;
+  /* sit ABOVE the door but pulled DOWN into the wall gap, so there's terracotta + the bracket/chains
+     visible above the board. */
+  bottom: calc(100% + 0.5rem);
+  z-index: 3;
   display: flex;
   justify-content: center;
-  align-self: start;
-  padding-top: 1.5rem; /* room for the mount bar + chains */
-  transform: translate(var(--sign-x, 0px), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
-  transform-origin: top center;
+  padding-top: 2.2rem; /* the visible gap where the mount bar + chains hang */
+  transform: translate(calc(-50% + var(--sign-x, 0px)), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
+  transform-origin: bottom center;
 }
 .studioSignHanger::before {
-  /* the mount bar bolted to the wall, from which the chains hang */
+  /* the mount bar bolted to the wall, spanning the FULL board width (the board grew ~3× the arch). */
   content: '';
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%;
-  height: 5px;
+  left: 0;
+  right: 0; /* span the hanger's full width (= the board's width) */
+  height: 6px;
   border-radius: 3px;
   background: linear-gradient(180deg, #5a3a1f 0%, #3a2512 100%);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 .studioSignSwing {
   position: relative;
-  transform-origin: 50% -1.5rem; /* pivot at the mount, so it sways like a hung sign */
+  transform-origin: 50% -2.2rem; /* pivot at the mount bar, so it sways like a hung sign */
   animation: studioSway 6s ease-in-out infinite alternate;
 }
 .studioSignSwing::before,
 .studioSignSwing::after {
-  /* two chains from the mount bar to the board's top corners */
+  /* two chains spanning the gap from the mount bar down to the board's top corners */
   content: '';
   position: absolute;
-  top: -1.5rem;
+  top: -2.2rem;
   width: 2px;
-  height: 1.5rem;
+  height: 2.2rem;
   background: linear-gradient(180deg, #d9a441 0%, #a87a23 100%);
 }
-.studioSignSwing::before { left: 18%; }
-.studioSignSwing::after { right: 18%; }
+.studioSignSwing::before { left: 14%; }
+.studioSignSwing::after { right: 14%; }
 @keyframes studioSway {
   0% { transform: rotate(-0.6deg); }
   100% { transform: rotate(0.6deg); }
 }
 
-/* The sign housing: the dark Vestaboard case with a warm gold trim (a hand-painted studio shingle). */
+/* The sign housing: the dark Vestaboard case with a warm gold trim. The board is WIDE (~3× the arch,
+   30 columns) and the tiles FILL it (a tight bezel padding + bigger --flap-gap pacing), so it reads as
+   a full grid of flap tiles, not text floating in a bordered box. font-size sets the absolute size. */
 .studioSign {
+  --flap-gap: 0.18em; /* bigger pacing between the individual flap tiles */
   position: relative;
   display: inline-flex;
   justify-content: center;
-  font-size: 0.86rem;
-  padding: 0.5em 0.55em;
-  border-radius: 0.45em;
+  font-size: 0.8rem; /* BIGGER tiles (3 rows of bigger letters); 22 cols keeps it ~3× the arch */
+  padding: 0.35em 0.4em; /* tight bezel: the tiles fill the case to the edge */
+  border-radius: 0.4em;
   background: linear-gradient(180deg, #0e0e10 0%, #050506 100%);
   border: 2px solid #d9a441;
   box-shadow:
@@ -724,7 +761,7 @@
   z-index: 1;
   width: 100%;
   aspect-ratio: 300 / 320;
-  align-self: start;
+  align-self: end; /* bottom-align with the window + door arches */
   filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.25));
 }
 .studioDoorFixed {
@@ -741,6 +778,7 @@
   z-index: 2;
   overflow: hidden;
   isolation: isolate;
+  transform: var(--arch-flip, none);
   /* Tunable WHITE-interior arch mask (white = revealed under luminance; the Hero Tuner drives
      --arch-x/-y/-size/-flip; baked fallbacks here). */
   transform: var(--arch-flip, none);

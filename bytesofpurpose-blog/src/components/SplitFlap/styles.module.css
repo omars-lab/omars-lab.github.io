@@ -5,7 +5,8 @@
 .board {
   display: inline-flex;
   flex-direction: column;
-  gap: 0.12em; /* vertical gap between rows */
+  /* Tile pacing is tunable per caller via --flap-gap (the gap between tiles); default 0.12em. */
+  gap: var(--flap-gap, 0.12em); /* vertical gap between rows */
   /* perspective gives the leaves real depth as they rotate. */
   perspective: 360px;
   vertical-align: middle;
@@ -16,7 +17,7 @@
 
 .row {
   display: inline-flex;
-  gap: 0.12em; /* horizontal air between tiles, like the gaps on a real board */
+  gap: var(--flap-gap, 0.12em); /* horizontal air between tiles, like the gaps on a real board */
 }
 
 /* Each cell is a physical FLAP TILE: a dark recessed housing with a glyph, a center seam where the

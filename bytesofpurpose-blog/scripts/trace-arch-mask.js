@@ -26,8 +26,14 @@ const fs = require('fs');
 const {chromium} = require('playwright');
 
 const ROOT = path.join(__dirname, '..');
-const sceneArg = process.argv[2] || 'static/img/cards/craft.png';
-const outArg = process.argv[3] || 'static/img/cards/arch-inner.traced.png';
+const rawArgs = process.argv.slice(2);
+const positional = rawArgs.filter((a) => !a.startsWith('--'));
+const erodeFlag = rawArgs.indexOf('--erode');
+// --erode N: shrink the white interior N px inward to trim the art's light anti-alias fringe at the
+// arch edge (the "white line"). Default 0 (exact trace).
+const erode = erodeFlag >= 0 && rawArgs[erodeFlag + 1] ? Math.max(0, parseInt(rawArgs[erodeFlag + 1], 10) || 0) : 0;
+const sceneArg = positional[0] || 'static/img/cards/craft.png';
+const outArg = positional[1] || 'static/img/cards/arch-inner.traced.png';
 const scenePath = path.isAbsolute(sceneArg) ? sceneArg : path.join(ROOT, sceneArg);
 const outPath = path.isAbsolute(outArg) ? outArg : path.join(ROOT, outArg);
 
@@ -43,7 +49,7 @@ if (!fs.existsSync(scenePath)) {
   // Load the PNG as a data URL into a canvas, then trace the arch interior in-page.
   const dataUrl = `data:image/png;base64,${fs.readFileSync(scenePath).toString('base64')}`;
 
-  const result = await page.evaluate(async (src) => {
+  const result = await page.evaluate(async ({src, erode}) => {
     const img = new Image();
     await new Promise((res, rej) => {
       img.onload = res;
@@ -128,9 +134,44 @@ if (!fs.existsSync(scenePath)) {
     }
     // interior = NOT outside (so the dark arch stroke gets included in the white interior fill, which
     // is fine: the opening + its frame line read as the arch shape).
+    // ERODE the interior by `erode` px: DILATE `outside` inward, so the white interior shrinks just
+    // inside the arch line. This trims the thin LIGHT anti-alias FRINGE that the scene/window/door art
+    // carries between the dark arch stroke and the transparent corners (the "white line at the arch
+    // edge"). Two-pass (horizontal then vertical) chamfer-ish dilation by N.
+    let region = outside;
+    if (erode > 0) {
+      const dilate = (src) => {
+        const dst = new Uint8Array(src.length);
+        // horizontal
+        const tmp = new Uint8Array(src.length);
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            let on = false;
+            for (let dx = -erode; dx <= erode && !on; dx++) {
+              const xx = x + dx;
+              if (xx >= 0 && xx < W && src[y * W + xx]) on = true;
+            }
+            tmp[y * W + x] = on ? 1 : 0;
+          }
+        }
+        // vertical
+        for (let y = 0; y < H; y++) {
+          for (let x = 0; x < W; x++) {
+            let on = false;
+            for (let dy = -erode; dy <= erode && !on; dy++) {
+              const yy = y + dy;
+              if (yy >= 0 && yy < H && tmp[yy * W + x]) on = true;
+            }
+            dst[y * W + x] = on ? 1 : 0;
+          }
+        }
+        return dst;
+      };
+      region = dilate(outside);
+    }
     const mask = ctx.createImageData(W, H);
     for (let p = 0; p < W * H; p++) {
-      const v = outside[p] ? 0 : 255;
+      const v = region[p] ? 0 : 255;
       const i = p * 4;
       mask.data[i] = v;
       mask.data[i + 1] = v;
@@ -150,7 +191,7 @@ if (!fs.existsSync(scenePath)) {
       bbox: {minX, minY, maxX, maxY},
       maskPng,
     };
-  }, dataUrl);
+  }, {src: dataUrl, erode});
 
   await browser.close();
 

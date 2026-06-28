@@ -410,6 +410,11 @@ function ChooserBoutique() {
    project change the inside CROSS-FADES to the next. No CSS facade/wall, no second arch.
    prefers-reduced-motion users get the cross-fade with the sign sway held still. */
 const STUDIO_INTERVAL_MS = 12000; // time one project is shown before the inside cross-fades to the next
+// The studio board is wide (≈3× the arch) and packed with filler tiles so the grid FILLS the case
+// (no bezel gap). 3 ROWS of BIGGER tiles (a blank row + 1-2 title rows; not 5 rows of small ones).
+// More columns = wider board; .studioSign font-size + --flap-gap set the tile size + pacing.
+const STUDIO_BOARD_COLS = 22; // wide board, big-ish tiles → ~3× the arch width
+const STUDIO_BOARD_ROWS = 3; // 3 rows of bigger letters (not 5 rows of small)
 
 function ChooserStudio() {
   const [active, setActive] = useState(0);
@@ -471,32 +476,58 @@ function ChooserStudio() {
           destination: CHOOSER_CARDS[active].to,
         })
       }>
-      {/* THE STUDIO FACADE: a Moroccan riad wall. A zellij tile CORNICE runs across the top; the wall
-          is warm terracotta; the Vestaboard HANGS from a wall bracket on the LEFT; the arched WINDOW
-          on the RIGHT is the scene art's own arch, set into the wall, giving a peek at the project. */}
+      {/* THE STUDIO FACADE: a Moroccan riad wall with a zellij CORNICE across the top, and THREE
+          arched openings set into the warm terracotta wall: a zellij WINDOW on the LEFT, the carved
+          DOOR in the CENTER with the Vestaboard sign hanging ABOVE it, and the arched WINDOW (the
+          scene art's own arch, a peek at the current project) on the RIGHT. */}
       <div className={styles.studioFacade}>
         {/* The zellij mosaic cornice band across the top of the wall. */}
         <div className={styles.studioCornice} aria-hidden="true" />
 
         <div className={styles.studioRow}>
-          {/* LEFT: the Vestaboard HANGING from a wall bracket (a mount bar + two chains), swaying
-              gently. One persistent board (it flips, never re-mounts). */}
-          <div className={styles.studioSignHanger}>
-            <div className={styles.studioSignSwing}>
-              <div className={styles.studioSign}>
-                <SplitFlap
-                  text={stripEmoji(CHOOSER_CARDS[active].title)}
-                  columns={FLASH_BOARD_COLS}
-                  rows={FLASH_BOARD_ROWS}
-                  settleMs={FLASH_SETTLE_MS}
-                />
+          {/* LEFT: the cleaned zellij WINDOW (static), set into the wall like the others. */}
+          <div className={styles.studioArch}>
+            <img
+              className={styles.studioArchImg}
+              src={useBaseUrl('/img/cards/window.png')}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={400}
+              height={400}
+            />
+          </div>
+
+          {/* CENTER: the carved DOOR, with the Vestaboard sign HANGING above it. */}
+          <div className={styles.studioCenter}>
+            <div className={styles.studioSignHanger}>
+              <div className={styles.studioSignSwing}>
+                <div className={styles.studioSign}>
+                  <SplitFlap
+                    text={stripEmoji(CHOOSER_CARDS[active].title)}
+                    columns={STUDIO_BOARD_COLS}
+                    rows={STUDIO_BOARD_ROWS}
+                    settleMs={FLASH_SETTLE_MS}
+                  />
+                </div>
               </div>
+            </div>
+            <div className={styles.studioArch}>
+              <img
+                className={styles.studioArchImg}
+                src={useBaseUrl('/img/cards/door.png')}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                width={400}
+                height={400}
+              />
             </div>
           </div>
 
-          {/* RIGHT: the arched WINDOW set into the wall. The arch is the scene art's OWN: a fixed copy
-              holds it still, and the cross-fading peek is clipped to that same arch via the
-              white-interior mask. isolation:isolate contains any GPU layer so it can't seam on hi-DPI. */}
+          {/* RIGHT: the arched WINDOW that PEEKS at the current project. The arch is the scene art's
+              OWN: a fixed copy holds it still, and the cross-fading peek is clipped to that same arch
+              via the white-interior mask. isolation:isolate contains any GPU layer (no hi-DPI seam). */}
           <div className={styles.studioDoorway}>
             <img
               className={styles.studioDoorFixed}
