@@ -909,17 +909,19 @@
   mask-position: center;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  /* A BLINDING bloom that FILLS the whole arch: near-opaque white across almost the entire radius so
-     the scene is nearly washed out (as if a brilliant light is glowing inside the house), only
-     softening at the very edge so the arch outline still reads. The mask clips it to the arch shape,
-     so full-coverage radial = the entire arch glows bright. */
+  /* A BLINDING bloom that FILLS the whole arch: near-opaque white across most of the radius so the
+     scene is nearly washed out (as if a brilliant light glows inside the house). It must fade to FULLY
+     TRANSPARENT (alpha 0) BEFORE the arch boundary, so the mask's soft anti-aliased edge has no white
+     left to show — otherwise the flash leaks a thin WHITE OUTLINE around the arch top into the teal
+     (a real bug: the old `0.35` end-alpha traced the arch on scroll). The dark gap between the bloom's
+     fade and the arch edge keeps the arch outline reading without a white halo. */
   background: radial-gradient(
-    ellipse 120% 120% at 50% 46%,
+    ellipse 116% 116% at 50% 46%,
     rgba(255, 255, 255, 1) 0%,
     rgba(255, 255, 255, 1) 55%,
-    rgba(255, 255, 255, 0.95) 78%,
-    rgba(255, 255, 255, 0.8) 92%,
-    rgba(255, 255, 255, 0.35) 100%
+    rgba(255, 255, 255, 0.92) 74%,
+    rgba(255, 255, 255, 0.5) 86%,
+    rgba(255, 255, 255, 0) 96%
   );
 }
 /* The flash opacity is ALWAYS the continuous --flash-o (set by the shared progress model: scroll OR
@@ -1180,7 +1182,7 @@
     position: absolute;
     left: -6%;
     right: -6%; /* overhang the door sides a little */
-    bottom: calc(100% + 0.4rem); /* just ABOVE the arch top, in the gap under the hanging board */
+    bottom: calc(100% + 0.05rem); /* low in the gap, just ABOVE the arch top (moved down per request) */
     height: 18px;
     z-index: 5;
     background:
