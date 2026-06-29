@@ -142,6 +142,14 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     above the door (the side-window railings are hidden on mobile). It's `display:none` by default and
     shown only in the `≤600px` media query. The dev-only-surfaces e2e doesn't guard it (it's real
     content), so if you touch the mobile facade, re-check it still sits in the gap, not over the door.
+13. **The flash gradient must fade to alpha 0 BEFORE the arch boundary** (a THIRD white-line mechanism,
+    distinct from the GPU seam — this one is the bloom itself). `.studioFlash`'s radial gradient is
+    clipped by the arch mask; if its OUTER stop has any white left (the old `rgba(255,255,255,0.35)
+    100%`), the mask's soft anti-aliased edge LEAKS that white as a thin outline tracing the arch top
+    into the teal — visible the moment `--flash-o` ramps up on scroll ("a white line as soon as I
+    scroll"). Fix: end the gradient at `rgba(255,255,255,0) ~96%` so there's no white at the mask edge.
+    Diagnose by FORCING `.studioFlash{opacity:0.5}` and looking for an arch-tracing outline. Don't
+    raise the end-alpha back above 0.
 
 ## Verify any change
 
