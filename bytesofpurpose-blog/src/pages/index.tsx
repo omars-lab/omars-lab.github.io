@@ -1047,16 +1047,26 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   );
 }
 
-/* A neutral, fixed-size SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS
-   fallback). It reserves the hero's height so there is NO layout jump when the real hero swaps in,
-   and it doesn't commit to either arm, so a `test` user never sees the strip flash up first. */
+/* A neutral SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS fallback). It
+   doesn't commit to any arm. Because the DEFAULT hero is now the pinned parallax HOUSE (whose tall
+   spacer reserves `count * SCENE_VH * 100vh` of page height), the skeleton reserves that SAME spacer
+   height so the page scrollbar doesn't JUMP when the real hero swaps in, and shows a house-shaped
+   pulse pinned in the first viewport so the above-the-fold matches too. */
 function ChooserSkeleton() {
+  const count = CHOOSER_CARDS.length;
   return (
-    <div className={styles.heroSkeleton} aria-hidden="true">
-      <div className={styles.heroSkeletonCard}>
-        <div className={styles.heroSkeletonArch} />
-        <div className={styles.heroSkeletonLine} />
-        <div className={clsx(styles.heroSkeletonLine, styles.heroSkeletonLineShort)} />
+    <div
+      className={styles.heroSkeleton}
+      style={{height: `${Math.round(count * SCENE_VH * 100)}vh`}}
+      aria-hidden="true">
+      <div className={styles.heroSkeletonStick}>
+        <div className={styles.heroSkeletonHouse}>
+          <div className={styles.heroSkeletonRoof} />
+          <div className={styles.heroSkeletonBody}>
+            <div className={styles.heroSkeletonBoard} />
+            <div className={styles.heroSkeletonDoor} />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -66,48 +66,82 @@
 /* Hero loading SKELETON: a neutral, fixed-height placeholder shown until the A/B variant resolves
    (and as the SSR/no-JS fallback), so the hero never jumps and neither animation flashes up before
    the flag is read. It reserves the chooser's height (arch card) to avoid layout shift. */
+/* The skeleton reserves the DEFAULT (pin house) spacer height (set inline) so the page scrollbar
+   doesn't jump when the hero resolves; a HOUSE-shaped pulse sticks in the first viewport so the
+   above-the-fold matches the real pin house too. */
 .heroSkeleton {
-  display: flex;
-  justify-content: center;
-  min-height: 440px; /* ≈ a chooser card's height; keeps the hero stable while resolving */
+  position: relative;
+  width: 100%;
+  /* height set inline = count * SCENE_VH * 100vh (the pin spacer) */
 }
-.heroSkeletonCard {
-  width: 300px;
-  border-radius: 14px;
-  background: var(--ifm-card-background-color);
-  border: 1px solid var(--ifm-color-emphasis-200);
-  padding: 1.5rem;
+.heroSkeletonStick {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+.heroSkeletonHouse {
+  width: 100%;
+  max-width: var(--body-w, 720px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+/* roof: a triangular pulse (mirrors .studioRoof's clip-path) */
+.heroSkeletonRoof {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: var(--ifm-color-emphasis-200);
+  animation: heroSkeletonPulse 1.4s ease-in-out infinite;
+}
+/* body: the square wall holding a board + door placeholder */
+.heroSkeletonBody {
+  aspect-ratio: 2 / 1;
+  background: var(--ifm-color-emphasis-100);
+  border: 3px solid var(--ifm-color-emphasis-200);
+  border-radius: 4px 4px 6px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  padding-bottom: 0.5rem;
 }
-.heroSkeletonArch {
-  width: 220px;
-  height: 250px;
-  border-radius: 110px 110px 14px 14px;
-  background: var(--ifm-color-emphasis-200);
+.heroSkeletonBoard {
+  width: 60%;
+  height: 14%;
+  margin-top: 1.4rem;
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-300);
   animation: heroSkeletonPulse 1.4s ease-in-out infinite;
 }
-.heroSkeletonLine {
-  width: 70%;
-  height: 1.1rem;
-  border-radius: 6px;
+.heroSkeletonDoor {
+  width: 22%;
+  height: 55%;
+  border-radius: 60px 60px 4px 4px;
   background: var(--ifm-color-emphasis-200);
   animation: heroSkeletonPulse 1.4s ease-in-out infinite;
-}
-.heroSkeletonLineShort {
-  width: 45%;
 }
 @keyframes heroSkeletonPulse {
   0%, 100% { opacity: 0.55; }
   50% { opacity: 0.9; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .heroSkeletonArch,
-  .heroSkeletonLine {
+  .heroSkeletonRoof,
+  .heroSkeletonBoard,
+  .heroSkeletonDoor {
     animation: none;
   }
+}
+@media screen and (max-width: 600px) {
+  /* mobile: match the small-viewport pinned house */
+  .heroSkeletonStick { height: 100svh; }
+  .heroSkeletonHouse { max-width: min(96vw, 440px); height: 100%; justify-content: center; }
+  .heroSkeletonBody { aspect-ratio: 1 / 1.07; }
 }
 
 /* Film-strip chooser (Craft / Journey / Thoughts / Mindset, plus any cards added to
