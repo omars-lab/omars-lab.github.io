@@ -153,16 +153,18 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     scroll"). Fix: end the gradient at `rgba(255,255,255,0) ~96%` so there's no white at the mask edge.
     Diagnose by FORCING `.studioFlash{opacity:0.5}` and looking for an arch-tracing outline. Don't
     raise the end-alpha back above 0.
-14. **Never use the bare `transparent` KEYWORD in a gradient next to an opaque color — it's a FIREFOX
-    white fringe.** Both rails (`.studioBoardRail`, `.studioWindowRail`) draw balusters with gradients;
-    using `transparent` for the gaps (= `rgba(0,0,0,0)`, transparent BLACK) made FIREFOX interpolate
-    the opaque-gold→transparent-black boundary through grey, painting a faint WHITE hairline along the
-    rail's top + bottom edges (the "line under the rail" the user reported — present without scrolling,
-    moved WITH the rail, and INVISIBLE in Chrome, which is why it took several rounds). Fix: use the
-    fully-transparent version of the adjacent color, `rgba(217,164,65,0)` (transparent GOLD). **General
-    rule: when a stray line reproduces in ONE browser but not another, it's a gradient/`transparent`-
-    keyword rendering difference, not a GPU seam — confirm with `playwright`'s bundled `firefox`, not
-    just chromium.**
+14. **Rail edges are SOLID BORDERS, not gradient stops — a gradient edge ON a box edge is a FIREFOX
+    white fringe.** Both rails (`.studioBoardRail`, `.studioWindowRail`) had their top/bottom rails as
+    a vertical `linear-gradient` whose color-stop sat ON the box's top/bottom edge; FIREFOX antialiases
+    that stop against the edge into a faint WHITE hairline (the "line under the rail" — present without
+    scrolling, moved WITH the rail, INVISIBLE in Chrome, which is why it took several rounds). It is
+    NOT the `transparent` keyword (swapping it for `rgba(217,164,65,0)` did NOT fix it — red herring);
+    it's the gradient-edge AA. **Fix: SOLID `border-top`/`border-bottom` for the rails (crisp in
+    Firefox) + the gradient draws ONLY the balusters with `background-clip: content-box` so it never
+    touches the borders.** General rules: (a) a stray line that repros in ONE browser but not another
+    is a gradient/AA rendering difference, not a GPU seam — test `playwright`'s bundled `firefox`, not
+    just chromium; (b) BISECT (solid bg / no bg / gradient) before theorizing; (c) for a crisp edge in
+    Firefox use a solid border, not a gradient stop on the edge.
 
 ## Verify any change
 
