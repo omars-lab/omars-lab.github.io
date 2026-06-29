@@ -573,18 +573,62 @@ function useScrollScene(
  * back to 0 after the last scene. Paused while `paused` (hover/focus). Reduced-motion → no flash but
  * the scene still advances. Yields the identical SceneState shape as the scroll driver.
  */
+// PURE: the timer hero's SceneState at `elapsed` ms. The board shows the door (WELCOME) ONLY on the
+// first pass; then it loops the SCENE titles directly (scene i → i+1, wrapping count-1 → 0), never
+// returning to the door — so every looping transition is title→title (only changed cells flip), not
+// WELCOME↔title (which flips most of the board). Each step = a HOLD then a CROSS (flash) to the next.
+function timerScene(
+  elapsed: number,
+  count: number,
+  perStep: number,
+  settleMs: number,
+  crossMs: number,
+  reduce: boolean,
+): SceneState {
+  const welcomeMs = perStep; // the opening door (WELCOME) shows for one step, then crosses to scene 0
+  const titleOf = (i: number) => stripEmoji(CHOOSER_CARDS[((i % count) + count) % count].title);
+  const settled = (sc: number, txt: string, door: boolean): SceneState => ({
+    active: sc, shown: sc, mode: door ? 'door' : 'scene', flash: 0, boardProgress: 1,
+    boardFromText: door ? 'WELCOME' : txt, boardToText: door ? 'WELCOME' : txt,
+  });
+  // build a crossing SceneState from `fromIdx`(/door) to `toIdx`, at phase t in [0,1]
+  const crossing = (fromIdx: number, toIdx: number, fromDoor: boolean, t: number): SceneState => {
+    const past = t >= 0.5;
+    const flash = reduce ? 0 : Math.sin(Math.PI * t);
+    return {
+      active: past ? toIdx : fromIdx,
+      shown: past ? toIdx : fromIdx,
+      mode: !past && fromDoor ? 'door' : 'scene',
+      flash,
+      boardProgress: reduce ? (past ? 1 : 0) : t,
+      boardFromText: fromDoor ? 'WELCOME' : titleOf(fromIdx),
+      boardToText: titleOf(toIdx),
+    };
+  };
+
+  // OPENING: the door (WELCOME) hold + its crossing to scene 0.
+  if (elapsed < welcomeMs) {
+    if (elapsed < settleMs) return settled(0, '', true); // door, WELCOME held
+    const t = (elapsed - settleMs) / crossMs; // door → scene 0
+    return crossing(0, 0, true, Math.min(1, t));
+  }
+  // LOOP over scenes: t0 measured from the end of the opening; step = scene i, holding then crossing→i+1.
+  const t0 = elapsed - welcomeMs;
+  const loopMs = perStep * count;
+  const inLoop = ((t0 % loopMs) + loopMs) % loopMs;
+  const i = Math.floor(inLoop / perStep); // current scene 0..count-1
+  const inStep = inLoop - i * perStep;
+  if (inStep < settleMs) return settled(i, titleOf(i), false); // hold on scene i
+  const t = (inStep - settleMs) / crossMs; // scene i → i+1 (wraps to 0 after the last)
+  return crossing(i, i + 1, false, Math.min(1, t));
+}
+
 function useTimerScene(count: number, paused: boolean): SceneState {
   const reduce = prefersReducedMotion();
-  // The progress model has count+1 STOPS (stop 0 = the WELCOME door, then the `count` scenes) — see
-  // deriveSceneState. The timer MUST loop over the SAME number of stops, or the progress is mis-scaled
-  // and the loop jumps / skips the door (the glitch). One loop = `stops` slices, each a hold then a
-  // crossing to the next stop; after the last scene it wraps back to the door.
-  const stops = count + 1;
-  const SETTLE_MS = STUDIO_INTERVAL_MS; // hold on a stop
-  const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS; // the crossing to the next stop
-  const perStop = SETTLE_MS + CROSS_MS;
-  const loopMs = perStop * stops;
-  const [p, setP] = useState(0);
+  const SETTLE_MS = STUDIO_INTERVAL_MS; // hold on a step
+  const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS; // the crossing (flash) to the next step
+  const perStep = SETTLE_MS + CROSS_MS;
+  const [scene, setScene] = useState<SceneState>(() => timerScene(0, count, perStep, SETTLE_MS, CROSS_MS, reduce));
   // accumulated elapsed ms (persists across pause/resume); advanced each frame by the real delta.
   const elapsedRef = useRef(0);
   const lastRef = useRef<number | null>(null);
@@ -599,23 +643,15 @@ function useTimerScene(count: number, paused: boolean): SceneState {
       if (lastRef.current == null) lastRef.current = now;
       elapsedRef.current += now - lastRef.current;
       lastRef.current = now;
-      const totalMs = elapsedRef.current % loopMs;
-      const stopIdx = Math.floor(totalMs / perStop);
-      const inStop = totalMs - stopIdx * perStop;
-      // hold (progress pinned to the stop's settled zone) then ramp across the crossing to the next stop
-      const within =
-        inStop < SETTLE_MS
-          ? 0
-          : ((inStop - SETTLE_MS) / CROSS_MS) * TRANSITION_FRACTION + (1 - TRANSITION_FRACTION);
-      setP((stopIdx + within) / stops); // progress over STOPS (matches deriveSceneState)
+      setScene(timerScene(elapsedRef.current, count, perStep, SETTLE_MS, CROSS_MS, reduce));
       raf = window.requestAnimationFrame(tick);
     };
     raf = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paused, stops, loopMs, perStop, SETTLE_MS, CROSS_MS]);
+  }, [paused, count, perStep, SETTLE_MS, CROSS_MS, reduce]);
 
-  return deriveSceneState(p, count, reduce);
+  return scene;
 }
 
 /**
@@ -679,7 +715,7 @@ function StudioFacade({
   mode,
   flash,
   boardToText,
-  spinning = false,
+  spinning,
 }: SceneState & {spinning?: boolean}): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
@@ -687,12 +723,12 @@ function StudioFacade({
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
   // BOARD ↔ SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
   // (`shown`), or WELCOME in door mode — so the board can never settle to a title the door hasn't
-  // reached. And the board keeps CHURNING while mid-transition (flash still bright), not only while
-  // the wheel moves: it only SETTLES once the scene is truly settled (flash ≈ 0). So you never rest on
-  // "DISCOVER MY CRAFT" while the door + flash are mid-crossing to another scene.
-  const midTransition = flash > 0.12;
+  // reached. CHURN is SCROLL-ONLY (`spinning`): while the wheel moves the board churns random letters
+  // and settles on stop. The TIMER house (spinning=false) instead does the clean per-cell flap-roll on
+  // a text change — and because the grid alignment is stable (shared prefixes keep their slots), only
+  // the cells that actually CHANGE between titles flip, like a real departure board.
   const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
-  const boardSpinning = spinning || midTransition;
+  const boardSpinning = spinning;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
   const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
   return (

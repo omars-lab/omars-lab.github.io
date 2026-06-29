@@ -78,17 +78,23 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
   );
 }
 
-/** Center `text` within `columns`, padding both sides with spaces so the row is always full. */
-function centerInColumns(text: string, columns: number): string {
+/** Pad `text` to `columns` with a SPECIFIC left offset, so callers can give every row the SAME offset
+ * (stable per-cell slots across messages → only changed cells flip). Right-fills to full width. */
+function padInColumns(text: string, columns: number, left: number): string {
   const t = text.length > columns ? text.slice(0, columns) : text;
-  const total = columns - t.length;
-  const left = Math.floor(total / 2);
-  return ' '.repeat(left) + t + ' '.repeat(total - left);
+  const lp = Math.max(0, Math.min(columns - t.length, left));
+  return ' '.repeat(lp) + t + ' '.repeat(columns - t.length - lp);
 }
 
-/** Word-wrap `text` into lines of at most `columns` chars (like a real board), then center+pad each
- * line so every row is exactly `columns` wide (blank filler tiles fill the rest). A word longer than
- * a row is hard-split. Returns the grid as an array of equal-length strings. */
+/** A FIXED left indent every message starts at, so a shared prefix (DISCOVER MY ... / EXPLORE THE
+ * ...) lands in the SAME slots no matter how long each message is. This is what makes only the
+ * CHANGED cells flip across a transition (a real departure board left-justifies at a fixed margin;
+ * it does NOT re-center per message, which would shift every cell when the line length changes). */
+const BOARD_LEFT_INDENT = 1;
+
+/** Word-wrap `text` into lines of at most `columns` chars (like a real board), then LEFT-justify each
+ * line at the fixed board indent and pad so every row is exactly `columns` wide (blank filler tiles
+ * fill the rest). A word longer than a row is hard-split. Returns the grid as equal-length strings. */
 function wrapToGrid(text: string, columns: number): string[] {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
@@ -112,7 +118,12 @@ function wrapToGrid(text: string, columns: number): string[] {
   }
   if (line) lines.push(line);
   if (lines.length === 0) lines.push('');
-  return lines.map((l) => centerInColumns(l, columns));
+  // STABLE ALIGNMENT: left-justify EVERY message at the SAME fixed indent (NOT centered per message).
+  // Centering shifts with the message's length, so "DISCOVER MY CRAFT" and "DISCOVER MY JOURNEY" would
+  // land their shared "DISCOVER MY " prefix in DIFFERENT slots (off by the length delta), making the
+  // whole board flip. A fixed indent keeps shared-prefix cells in the SAME slots across a transition,
+  // so only the cells that genuinely CHANGE flip, like a real departure board.
+  return lines.map((l) => padInColumns(l, columns, BOARD_LEFT_INDENT));
 }
 
 // The flap DECK: the ordered set of glyphs on a physical split-flap drum. A cell rolls THROUGH this
