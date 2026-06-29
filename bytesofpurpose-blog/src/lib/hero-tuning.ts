@@ -97,6 +97,15 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
    variants: ['studio'], group: 'House'},
   {key: 'wall', label: 'Body color', kind: 'color', cssVar: 'wall', default: '#3f7d72',
    variants: ['studio'], group: 'House'},
+  // the gold balcony RAILING in front of each window: how far it protrudes past the window sides, and
+  // how far it extends downward. (The user tuned these by eye; the knobs make it draggable.)
+  {key: 'railProtrude', label: 'Railing protrude', kind: 'slider', cssVar: 'rail-protrude',
+   default: '-3%', variants: ['studio'], group: 'House', min: -12, max: 8, step: 0.5, unit: '%'},
+  {key: 'railHeight', label: 'Railing height', kind: 'slider', cssVar: 'rail-height',
+   default: '30px', variants: ['studio'], group: 'House', min: 12, max: 60, step: 1, unit: 'px'},
+  // the GAP between the three arches (window · door · window): smaller = arches sit closer together.
+  {key: 'archGap', label: 'Arch gap', kind: 'slider', cssVar: 'arch-gap', default: '0.3rem',
+   variants: ['studio'], group: 'House', min: 0, max: 2, step: 0.05, unit: 'rem'},
   // sign-x/-y/-scale already exist in Layout and drive --sign-x/-y/-scale on the studio board.
 ];
 

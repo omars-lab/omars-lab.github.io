@@ -825,7 +825,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* window · door · scene, ALL the same size */
   align-items: end; /* the three arches sit on the same baseline */
-  gap: 0.3rem; /* small gaps: the arches sit close together */
+  gap: var(--arch-gap, 0.3rem); /* spacing between the three arches (Hero Tuner) */
   /* room at the TOP for the wide board to HANG above the centre door (board height + the shorter
      bracket/chains gap), and little space at the BOTTOM so the arches sit near the wall's lower edge. */
   padding: 5rem 0 0.2rem;
@@ -939,10 +939,10 @@
    bottom rail. Positioned absolutely at the window's base; wider than the arch so it overhangs a bit. */
 .studioWindowRail {
   position: absolute;
-  left: -3%;
-  right: -3%; /* protrude just a little on either side of the window */
+  left: var(--rail-protrude, -3%);
+  right: var(--rail-protrude, -3%); /* how far it protrudes past the window sides (Hero Tuner) */
   bottom: 2%;
-  height: 30px; /* extend further downward */
+  height: var(--rail-height, 30px); /* how far it extends downward (Hero Tuner) */
   z-index: 5;
   background:
     /* gold vertical balusters */
