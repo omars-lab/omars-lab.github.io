@@ -941,18 +941,15 @@
   bottom: 2%;
   height: var(--rail-height, 30px); /* how far it extends downward (Hero Tuner) */
   z-index: 5;
-  background:
-    /* gold vertical balusters — gaps are transparent-GOLD (not the bare `transparent` keyword =
-       transparent BLACK, which Firefox interpolates through grey into a white edge fringe; see
-       .studioBoardRail). */
-    repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px),
-    /* gold top + bottom rails */
-    linear-gradient(
-      180deg,
-      #d9a441 0 2.5px,
-      rgba(217, 164, 65, 0) 2.5px calc(100% - 2.5px),
-      #b8881f calc(100% - 2.5px) 100%
-    );
+  /* SOLID-BORDER top/bottom rails + a balusters-only gradient (see .studioBoardRail): a gradient
+     color-stop on the box's top/bottom edge gets antialiased into a faint light hairline in FIREFOX,
+     so the rails are solid borders (crisp) and the gradient (clipped to the content box) draws only
+     the vertical balusters. */
+  border-top: 2.5px solid #d9a441;
+  border-bottom: 2.5px solid #b8881f;
+  background: repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px);
+  background-clip: content-box;
+  box-sizing: border-box;
 }
 
 /* MOBILE-ONLY gold balcony railing, spanning the teal gap BELOW the hanging board and ABOVE the door.
@@ -1191,23 +1188,19 @@
     bottom: calc(100% + 0.05rem); /* low in the gap, just ABOVE the arch top (moved down per request) */
     height: 18px;
     z-index: 5;
-    /* The gold balustrade as gradients. CRUCIAL: use rgba(217,164,65,0) — fully-transparent GOLD — for
-       the gaps, NOT the bare `transparent` keyword. `transparent` = rgba(0,0,0,0) (transparent BLACK),
-       and FIREFOX interpolates the opaque-gold→transparent-black boundary through grey, painting a
-       faint WHITE/light hairline along the rail's top + bottom edges (a real bug: the under-rail line
-       the user saw was Firefox-only, invisible in Chrome). Transparent-gold keeps the interpolation
-       within the gold hue, so the edge stays clean in every browser. */
-    background:
-      repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px),
-      linear-gradient(
-        180deg,
-        #d9a441 0 2.5px,
-        rgba(217, 164, 65, 0) 2.5px calc(100% - 2.5px),
-        #b8881f calc(100% - 2.5px) 100%
-      );
-    /* NO `filter: drop-shadow` here either: the filter forces a GPU compositing layer whose
-       fractional-pixel edge can paint a hairline on hi-DPI (the seam family). The rail reads fine
-       without a shadow; if grounding is wanted later, use a non-filter box-shadow on a solid element. */
+    /* The TOP + BOTTOM rails are SOLID BORDERS (Firefox renders a solid border crisply with no edge
+       fringe), NOT gradient bands. A gradient color-stop sitting ON the box's top/bottom edge gets
+       antialiased against the edge in Firefox into a faint light hairline (the "white line under the
+       rail" — Firefox-only, invisible in Chrome, survived the transparent-keyword fix because the
+       fringe is the gradient-EDGE antialiasing itself, not the `transparent` color). With solid
+       borders the box edges are crisp; only the vertical BALUSTERS (which never touch the top/bottom
+       edge) use a repeating gradient, and its gaps are transparent-GOLD so they don't fringe either. */
+    border-top: 2.5px solid #d9a441;
+    border-bottom: 2.5px solid #b8881f;
+    background: repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px);
+    background-clip: content-box; /* keep the baluster gradient OFF the borders */
+    box-sizing: border-box;
+    /* NO `filter: drop-shadow` (GPU-layer hairline risk); grounding, if wanted, via a solid element. */
   }
 }
 
