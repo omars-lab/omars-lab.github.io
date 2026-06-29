@@ -1149,7 +1149,12 @@
     grid-template-columns: 1fr; /* single column: just the centre door */
     justify-items: center;
     gap: 0;
-    padding-top: 4.5rem; /* room for the hanging board above the door */
+    padding-top: 6rem; /* room for the hanging board ABOVE the door + a teal gap for the rail below it */
+  }
+  /* MOBILE: hang the board HIGHER so there's a real teal band between its bottom and the door arch
+     (room for the gold rail to sit in the gap, not on the scene). */
+  .studioCenter .studioSignHanger {
+    bottom: calc(100% + 2.1rem);
   }
   /* hide the two flanking WINDOWS (the direct-child arches); keep .studioCenter (door + board) */
   .studioRow > .studioArch {
@@ -1166,16 +1171,17 @@
   .studioCornice { margin-inline: -0.6rem; }
   /* a WIDER board on mobile (more columns set in TSX); smaller font so the extra columns fit the width */
   .studioSign { font-size: 0.62rem; }
-  /* SHOW the gold balcony railing in the gap below the board / above the door (side windows + their
-     railings are hidden on mobile). Sits just above the door arch, a touch wider than the door, the
-     same gold-baluster look as the window rails. */
+  /* SHOW the gold balcony railing in the gap BETWEEN the hanging board and the door ARCH (side windows
+     + their railings are hidden on mobile). Anchored to .studioCenter's TOP edge (= the arch top) via
+     `bottom: 100%` and pushed UP into the wall band, so it sits in the empty teal ABOVE the arch, NOT
+     across the scene. A touch wider than the door; same gold-baluster look as the window rails. */
   .studioBoardRail {
     display: block;
     position: absolute;
     left: -6%;
     right: -6%; /* overhang the door sides a little */
-    top: 3.1rem; /* in the wall band between the hanging board and the door arch */
-    height: 22px;
+    bottom: calc(100% + 0.4rem); /* just ABOVE the arch top, in the gap under the hanging board */
+    height: 18px;
     z-index: 5;
     background:
       repeating-linear-gradient(90deg, #d9a441 0 2px, transparent 2px 8px),
