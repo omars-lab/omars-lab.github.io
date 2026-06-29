@@ -123,6 +123,25 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
 9. **Variant C uses the variant KEY in the URL override**, `?ab-homepage-hero-anim=variant_c` (not
    `=train`). `urlOverride` matches the variant key, and `train` is the VALUE; `=train` silently falls
    through to control. The e2e + visual specs force `variant_c`.
+10. **A negative-margin OVERLAP between two same-context elements is ALSO a DPR-seam source** (another
+    `[[mix-blend-hidpi-seam]]` instance). `.studioRoof` overlaps `.studioBody`'s top edge with a
+    negative `margin-bottom` so the eave covers the body's lighter top gradient edge. At `-1px` the
+    overlap landed on a FRACTIONAL device pixel at DPR 2/3 (worse on mobile = higher DPR), leaving that
+    lighter edge peeking out as a faint full-width horizontal hairline across the teal ABOVE the arch,
+    ONLY while scrolling the parallax (when the facade is on a GPU layer). Fix: `-2px` (an overlap big
+    enough to always cover, regardless of the device grid). Diagnose by live-disabling each candidate
+    (`filter`/overflow/border/margin) one at a time and re-shooting MID-SCROLL at DPR 2 AND 3.
+11. **The board TITLES are CENTERED per-message; the board is WIDER than the longest title.**
+    `wrapToGrid` centers each line on its own width (so short titles like WELCOME sit dead-center),
+    and `STUDIO_BOARD_COLS` (24 desktop) / `STUDIO_BOARD_COLS_MOBILE` (22) are wider than the longest
+    title (19) so every title has blank flap tiles flanking it. (An earlier shared-width-stable scheme
+    kept shared-prefix cells from flipping but left short titles left-hugging; the user chose true
+    centering, accepting that CRAFT↔JOURNEY re-centers ~19 cells.) Don't re-narrow the board to the
+    title width or centering loses its margin.
+12. **`.studioBoardRail` is a MOBILE-ONLY gold railing** in the teal gap below the hanging board /
+    above the door (the side-window railings are hidden on mobile). It's `display:none` by default and
+    shown only in the `≤600px` media query. The dev-only-surfaces e2e doesn't guard it (it's real
+    content), so if you touch the mobile facade, re-check it still sits in the gap, not over the door.
 
 ## Verify any change
 
