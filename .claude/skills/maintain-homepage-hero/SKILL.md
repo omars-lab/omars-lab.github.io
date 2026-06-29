@@ -145,7 +145,7 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     **It must NOT use `filter: drop-shadow`** — the filter is a GPU layer whose fractional-pixel bottom
     edge paints a white hairline UNDER the rail on hi-DPI (the seam family again). The rail ships with
     no shadow; if you want grounding, use a non-filter `box-shadow` on a solid element.
-13. **The flash gradient must fade to alpha 0 BEFORE the arch boundary** (a THIRD white-line mechanism,
+13. **The flash gradient must fade to alpha 0 BEFORE the arch boundary** (a white-line mechanism
     distinct from the GPU seam — this one is the bloom itself). `.studioFlash`'s radial gradient is
     clipped by the arch mask; if its OUTER stop has any white left (the old `rgba(255,255,255,0.35)
     100%`), the mask's soft anti-aliased edge LEAKS that white as a thin outline tracing the arch top
@@ -153,6 +153,16 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     scroll"). Fix: end the gradient at `rgba(255,255,255,0) ~96%` so there's no white at the mask edge.
     Diagnose by FORCING `.studioFlash{opacity:0.5}` and looking for an arch-tracing outline. Don't
     raise the end-alpha back above 0.
+14. **Never use the bare `transparent` KEYWORD in a gradient next to an opaque color — it's a FIREFOX
+    white fringe.** Both rails (`.studioBoardRail`, `.studioWindowRail`) draw balusters with gradients;
+    using `transparent` for the gaps (= `rgba(0,0,0,0)`, transparent BLACK) made FIREFOX interpolate
+    the opaque-gold→transparent-black boundary through grey, painting a faint WHITE hairline along the
+    rail's top + bottom edges (the "line under the rail" the user reported — present without scrolling,
+    moved WITH the rail, and INVISIBLE in Chrome, which is why it took several rounds). Fix: use the
+    fully-transparent version of the adjacent color, `rgba(217,164,65,0)` (transparent GOLD). **General
+    rule: when a stray line reproduces in ONE browser but not another, it's a gradient/`transparent`-
+    keyword rendering difference, not a GPU seam — confirm with `playwright`'s bundled `firefox`, not
+    just chromium.**
 
 ## Verify any change
 
