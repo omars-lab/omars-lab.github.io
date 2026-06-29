@@ -17,31 +17,12 @@
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
 }
 
-/* PIN-FROM-FIRST-SCROLL (parallax pinned models): the eyebrow/title/subtitle normally sit ABOVE the
-   hero in flow, so scrolling pushes them away first and the house drifts up before the sticky engages.
-   When a pinned parallax hero is active we OVERLAY that title block (absolute, at the banner's top) so
-   it leaves the flow — the spacer + sticky then start at scroll 0 and the house holds from the first
-   scroll. The overlaid title scrolls away with the (tall) banner while the house stays pinned. */
+/* PIN-FROM-FIRST-SCROLL (parallax pinned models): the eyebrow/title/subtitle sit ABOVE the hero in
+   flow. We tighten the banner's top padding when a pinned parallax hero is active so the house reaches
+   its pinned position with minimal initial drift (the house-fills-viewport sizing does the rest). The
+   title stays in normal flow on the cream paper (good contrast) and scrolls away normally. */
 .heroBanner[data-parallax-pinned] {
-  padding-top: 0;
-}
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroEyebrow,
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroTitle,
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroSubtitle {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 5;
-  pointer-events: none;
-}
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroEyebrow {
-  top: 1.5rem;
-}
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroTitle {
-  top: 3rem;
-}
-.heroBanner[data-parallax-pinned] > :global(.container) > .heroSubtitle {
-  top: 8rem;
+  padding-top: 1rem;
 }
 
 /* Coral eyebrow — uppercase Geist, tracked out, like the portfolio's section labels. */
