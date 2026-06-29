@@ -136,6 +136,12 @@ FROM, each flap freezes at that progress instead of running its own timer, so sc
 flaps and stopping stops them. The flash is always one continuous opacity variable. Because the model
 is one pure function, the same house animates on a wheel or on a clock with no forked code.
 
+The two-drivers design also made the **default** trivial to choose, and to change. The homepage
+currently DEFAULTS to the **time driver** (the self-running animation house cycles on its own clock, in
+normal page flow), with the three scroll-driven models kept reachable for A/B testing via the override
+`?ab-homepage-hero-scroll=pin|inplace|horizontal`. Because both drivers feed the identical model,
+flipping the default between "animation" and "scroll" is a one-line routing change, not a rewrite.
+
 ## 5. What carried over, what's house-specific
 
 The **board, the flash, and the arch mask** are the reusable spine, documented in the

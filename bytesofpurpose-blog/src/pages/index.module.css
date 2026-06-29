@@ -66,22 +66,13 @@
 /* Hero loading SKELETON: a neutral, fixed-height placeholder shown until the A/B variant resolves
    (and as the SSR/no-JS fallback), so the hero never jumps and neither animation flashes up before
    the flag is read. It reserves the chooser's height (arch card) to avoid layout shift. */
-/* The skeleton reserves the DEFAULT (pin house) spacer height (set inline) so the page scrollbar
-   doesn't jump when the hero resolves; a HOUSE-shaped pulse sticks in the first viewport so the
-   above-the-fold matches the real pin house too. */
+/* The skeleton reserves the DEFAULT (animation/timer house) natural height in NORMAL flow, with a
+   HOUSE-shaped pulse, so the page doesn't jump when the real hero swaps in. */
 .heroSkeleton {
   position: relative;
   width: 100%;
-  /* height set inline = count * SCENE_VH * 100vh (the pin spacer) */
-}
-.heroSkeletonStick {
-  position: sticky;
-  top: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
 }
 .heroSkeletonHouse {
   width: 100%;

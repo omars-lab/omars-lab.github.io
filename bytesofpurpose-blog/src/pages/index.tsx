@@ -1067,24 +1067,18 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
 }
 
 /* A neutral SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS fallback). It
-   doesn't commit to any arm. Because the DEFAULT hero is now the pinned parallax HOUSE (whose tall
-   spacer reserves `count * SCENE_VH * 100vh` of page height), the skeleton reserves that SAME spacer
-   height so the page scrollbar doesn't JUMP when the real hero swaps in, and shows a house-shaped
-   pulse pinned in the first viewport so the above-the-fold matches too. */
+   doesn't commit to any arm. The DEFAULT hero is now the ANIMATION (timer) house in NORMAL flow (not
+   the pinned spacer), so the skeleton reserves that house's natural height with a house-shaped pulse.
+   No scrollbar jump when the real hero swaps in. (The parallax models, reached via override, manage
+   their own spacer height; this default skeleton matches the timer house.) */
 function ChooserSkeleton() {
-  const count = CHOOSER_CARDS.length;
   return (
-    <div
-      className={styles.heroSkeleton}
-      style={{height: `${Math.round(count * SCENE_VH * 100)}vh`}}
-      aria-hidden="true">
-      <div className={styles.heroSkeletonStick}>
-        <div className={styles.heroSkeletonHouse}>
-          <div className={styles.heroSkeletonRoof} />
-          <div className={styles.heroSkeletonBody}>
-            <div className={styles.heroSkeletonBoard} />
-            <div className={styles.heroSkeletonDoor} />
-          </div>
+    <div className={styles.heroSkeleton} aria-hidden="true">
+      <div className={styles.heroSkeletonHouse}>
+        <div className={styles.heroSkeletonRoof} />
+        <div className={styles.heroSkeletonBody}>
+          <div className={styles.heroSkeletonBoard} />
+          <div className={styles.heroSkeletonDoor} />
         </div>
       </div>
     </div>
@@ -1120,12 +1114,12 @@ function useResolvedVariant(exp: Experiment): string | null {
 }
 
 // The DEFAULT homepage hero when no experiment flag / override gives a signal (a bare visit to `/`):
-// the scroll-driven Lebanese HOUSE in the PIN model. So `localhost:3000/` shows the same thing as
-// `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pin`. The experiment overrides still win
-// when present, so we can A/B other arms; `control` (the no-signal value) just maps to this default
-// instead of the old scrolling strip.
+// the ANIMATION-driven Lebanese HOUSE — the self-running timer (ChooserStudio via useTimerScene), NOT
+// the scroll-driven parallax. So `localhost:3000/` cycles the house on its own clock (hold → flash →
+// next), no scroll-jacking. The parallax scroll-models stay reachable + A/B-able via the override
+// `?ab-homepage-hero-scroll=pin|inplace|horizontal`; the experiment overrides always win.
 const DEFAULT_HERO = 'studio'; // anim default → the house
-const DEFAULT_SCROLL_MODEL: ScrollModel = 'pin'; // scroll default → pin (scroll-jack)
+const DEFAULT_SCROLL_MODEL = 'static'; // scroll default → the self-running TIMER house (not parallax)
 
 function HeroChooser() {
   // Two composed experiments: `anim` picks WHICH hero (scroll strip / flash gate / studio house /
@@ -1146,15 +1140,14 @@ function HeroChooser() {
   if (anim === 'test' || anim === 'flash') return <ChooserFlash />;
   if (anim === 'variant_d' || anim === 'boutique') return <ChooserBoutique />;
   if (anim === 'variant_c' || anim === 'studio') {
-    // The studio HOUSE: the scroll experiment decides the scroll-model. NO scroll signal (`control`)
-    // → the PIN default. An explicit `static` → the TIME-driven (self-running) timer hero; pin/inplace/
-    // horizontal → the SCROLL-driven parallax. (Both go through the SAME progress model, just a
-    // different driver.)
+    // The studio HOUSE: the scroll experiment decides the DRIVER. NO scroll signal (`control`) → the
+    // DEFAULT (`static`) = the self-running TIMER house. An explicit pin/inplace/horizontal override
+    // → the SCROLL-driven parallax. (Both go through the SAME progress model, just a different driver.)
     const scroll = scrollVariant === 'control' ? DEFAULT_SCROLL_MODEL : scrollVariant;
     if (scroll === 'pin') return <ParallaxStudio model="pin" />;
     if (scroll === 'inplace') return <ParallaxStudio model="inplace" />;
     if (scroll === 'horizontal') return <ParallaxStudio model="horizontal" />;
-    return <ChooserStudio />; // `static` → the rAF-driven timer hero
+    return <ChooserStudio />; // `static` (the default) → the rAF-driven timer hero
   }
   return <ChooserStrip />;
 }

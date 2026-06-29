@@ -32,9 +32,10 @@ const EXPECTED_CARDS: Array<{ href: string; img: string }> = [
   { href: '/designs', img: '/img/cards/designs.png' },
 ];
 
-// The homepage DEFAULT hero is now the scroll-driven house (pin). The legacy scrolling FILM STRIP is
-// the `control` arm, reachable by explicitly forcing it via the URL override; the film-strip tests
-// below load it that way. (A bare `/` shows the house — covered by the parallax describe block.)
+// The homepage DEFAULT hero is the ANIMATION (self-running timer) house. The legacy scrolling FILM
+// STRIP is the `control` arm, reachable by explicitly forcing it via the URL override; the film-strip
+// tests below load it that way. (The scroll-driven parallax models are reachable via
+// ?ab-homepage-hero-scroll=pin|inplace|horizontal — covered by the parallax describe block.)
 async function loadStrip(page: Page) {
   const response = await page.goto('/?ab-homepage-hero-anim=control', {
     waitUntil: 'domcontentloaded',
@@ -227,6 +228,19 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
   const heroUrl = (model: string, scene?: number) =>
     `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=${model}` +
     (scene == null ? '' : `&hero-scene=${scene}`);
+
+  test('DEFAULT (bare /) is the ANIMATION timer house — the house, in normal flow, NOT a pinned spacer', async ({
+    page,
+  }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    // the house renders (variant_c facade) ...
+    await expect(page.locator('[class*="studioFacade"]')).toHaveCount(1);
+    // ... in NORMAL flow: the timer hero has NO tall parallax spacer (that's the pin/horizontal models)
+    await expect(page.locator('[class*="parallaxSpacer"]')).toHaveCount(0);
+    // and it is NOT the legacy film strip
+    await expect(page.locator('[class*="chooserTrack"]')).toHaveCount(0);
+  });
 
   for (const model of SCROLL_MODELS) {
     test(`[${model}] renders the house hero (one click-through gate)`, async ({ page }) => {
