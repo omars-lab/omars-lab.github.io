@@ -575,11 +575,15 @@ function useScrollScene(
  */
 function useTimerScene(count: number, paused: boolean): SceneState {
   const reduce = prefersReducedMotion();
-  // one full loop = count scenes; per scene = a hold (SETTLE) then a crossing (CROSS) to the next.
-  const SETTLE_MS = STUDIO_INTERVAL_MS;
-  const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS;
-  const perScene = SETTLE_MS + CROSS_MS;
-  const loopMs = perScene * count;
+  // The progress model has count+1 STOPS (stop 0 = the WELCOME door, then the `count` scenes) — see
+  // deriveSceneState. The timer MUST loop over the SAME number of stops, or the progress is mis-scaled
+  // and the loop jumps / skips the door (the glitch). One loop = `stops` slices, each a hold then a
+  // crossing to the next stop; after the last scene it wraps back to the door.
+  const stops = count + 1;
+  const SETTLE_MS = STUDIO_INTERVAL_MS; // hold on a stop
+  const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS; // the crossing to the next stop
+  const perStop = SETTLE_MS + CROSS_MS;
+  const loopMs = perStop * stops;
   const [p, setP] = useState(0);
   // accumulated elapsed ms (persists across pause/resume); advanced each frame by the real delta.
   const elapsedRef = useRef(0);
@@ -596,20 +600,20 @@ function useTimerScene(count: number, paused: boolean): SceneState {
       elapsedRef.current += now - lastRef.current;
       lastRef.current = now;
       const totalMs = elapsedRef.current % loopMs;
-      const sceneIdx = Math.floor(totalMs / perScene);
-      const inScene = totalMs - sceneIdx * perScene;
-      // hold (progress pinned to scene start) then ramp across the transition zone of the slice
+      const stopIdx = Math.floor(totalMs / perStop);
+      const inStop = totalMs - stopIdx * perStop;
+      // hold (progress pinned to the stop's settled zone) then ramp across the crossing to the next stop
       const within =
-        inScene < SETTLE_MS
+        inStop < SETTLE_MS
           ? 0
-          : ((inScene - SETTLE_MS) / CROSS_MS) * TRANSITION_FRACTION + (1 - TRANSITION_FRACTION);
-      setP((sceneIdx + within) / count);
+          : ((inStop - SETTLE_MS) / CROSS_MS) * TRANSITION_FRACTION + (1 - TRANSITION_FRACTION);
+      setP((stopIdx + within) / stops); // progress over STOPS (matches deriveSceneState)
       raf = window.requestAnimationFrame(tick);
     };
     raf = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paused, count, loopMs, perScene, SETTLE_MS, CROSS_MS]);
+  }, [paused, stops, loopMs, perStop, SETTLE_MS, CROSS_MS]);
 
   return deriveSceneState(p, count, reduce);
 }
