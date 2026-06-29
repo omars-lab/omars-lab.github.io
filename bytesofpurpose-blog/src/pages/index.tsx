@@ -597,13 +597,18 @@ function timerScene(
     active: sc, shown: sc, mode: door ? 'door' : 'scene', flash: 0, boardProgress: 1,
     boardFromText: door ? 'WELCOME' : txt, boardToText: door ? 'WELCOME' : txt,
   });
+  // WRAP an index into 0..count-1. The crossing from the LAST scene targets `count` (out of bounds);
+  // `active`/`shown` index CHOOSER_CARDS directly, so an unwrapped `count` makes CHOOSER_CARDS[count]
+  // undefined and crashes on `.to`/`.title`. Wrap every index that indexes the cards.
+  const wrap = (i: number) => ((i % count) + count) % count;
   // build a crossing SceneState from `fromIdx`(/door) to `toIdx`, at phase t in [0,1]
   const crossing = (fromIdx: number, toIdx: number, fromDoor: boolean, t: number): SceneState => {
     const past = t >= 0.5;
     const flash = reduce ? 0 : Math.sin(Math.PI * t);
+    const idx = wrap(past ? toIdx : fromIdx); // never out of bounds (last→0 wraps)
     return {
-      active: past ? toIdx : fromIdx,
-      shown: past ? toIdx : fromIdx,
+      active: idx,
+      shown: idx,
       mode: !past && fromDoor ? 'door' : 'scene',
       flash,
       boardProgress: reduce ? (past ? 1 : 0) : t,
