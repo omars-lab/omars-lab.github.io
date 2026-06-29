@@ -770,7 +770,11 @@
      full width). It stays proportional to the now-shorter body. */
   width: 100%;
   aspect-ratio: 4 / 1;
-  margin: 0 0 -1px; /* sit flush on the body below (the eave overlaps the square's top border) */
+  /* Overlap the body's top edge by -2px (not -1px): the body's top has a lighter gradient edge, and a
+     1px overlap lands on a fractional device pixel at DPR 2/3, leaving that lighter edge peeking out as
+     a faint horizontal hairline across the teal (worse on mobile = higher DPR). -2px always covers it.
+     (The hi-DPI seam family — see the maintain-homepage-hero skill.) */
+  margin: 0 0 -2px;
   /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
   /* ROOF is PLAIN SOLID terracotta (swapped with the body; tunable --roof). The single GOLD hip line
@@ -941,6 +945,14 @@
     /* gold top + bottom rails */
     linear-gradient(180deg, #d9a441 0 2.5px, transparent 2.5px calc(100% - 2.5px), #b8881f calc(100% - 2.5px) 100%);
   filter: drop-shadow(0 1px 2px rgba(60, 40, 10, 0.4));
+}
+
+/* MOBILE-ONLY gold balcony railing, spanning the teal gap BELOW the hanging board and ABOVE the door.
+   On mobile the side windows (with their railings) are hidden, so this returns the Lebanese gold
+   detailing and fills the empty wall band. Hidden on desktop (shown in the ≤600px query). Reuses the
+   window-rail gold baluster look. Positioned absolutely within .studioCenter, just under the board. */
+.studioBoardRail {
+  display: none;
 }
 
 /* The CENTER column: the carved door, SAME size as the side arches (it IS a .studioArch). The
@@ -1153,7 +1165,23 @@
   .studioFacade { padding-inline: 0.6rem; }
   .studioCornice { margin-inline: -0.6rem; }
   /* a WIDER board on mobile (more columns set in TSX); smaller font so the extra columns fit the width */
-  .studioSign { font-size: 0.66rem; }
+  .studioSign { font-size: 0.62rem; }
+  /* SHOW the gold balcony railing in the gap below the board / above the door (side windows + their
+     railings are hidden on mobile). Sits just above the door arch, a touch wider than the door, the
+     same gold-baluster look as the window rails. */
+  .studioBoardRail {
+    display: block;
+    position: absolute;
+    left: -6%;
+    right: -6%; /* overhang the door sides a little */
+    top: 3.1rem; /* in the wall band between the hanging board and the door arch */
+    height: 22px;
+    z-index: 5;
+    background:
+      repeating-linear-gradient(90deg, #d9a441 0 2px, transparent 2px 8px),
+      linear-gradient(180deg, #d9a441 0 2.5px, transparent 2.5px calc(100% - 2.5px), #b8881f calc(100% - 2.5px) 100%);
+    filter: drop-shadow(0 1px 2px rgba(60, 40, 10, 0.4));
+  }
 }
 
 /* Cards sit on the cream paper now (not a translucent layer over a gradient), so

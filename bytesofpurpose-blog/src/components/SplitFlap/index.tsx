@@ -86,16 +86,9 @@ function padInColumns(text: string, columns: number, left: number): string {
   return ' '.repeat(lp) + t + ' '.repeat(columns - t.length - lp);
 }
 
-/** A FIXED left indent every message starts at, so a shared prefix (DISCOVER MY ... / EXPLORE THE
- * ...) lands in the SAME slots no matter how long each message is. This is what makes only the
- * CHANGED cells flip across a transition (a real departure board left-justifies at a fixed margin;
- * it does NOT re-center per message, which would shift every cell when the line length changes). */
-const BOARD_LEFT_INDENT = 1;
-
-/** Word-wrap `text` into lines of at most `columns` chars (like a real board), then LEFT-justify each
- * line at the fixed board indent and pad so every row is exactly `columns` wide (blank filler tiles
- * fill the rest). A word longer than a row is hard-split. Returns the grid as equal-length strings. */
-function wrapToGrid(text: string, columns: number): string[] {
+/** Word-wrap `text` into lines of at most `columns` chars (like a real board). A word longer than a
+ * row is hard-split. Returns the raw (unpadded) lines. */
+function wrapLines(text: string, columns: number): string[] {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let line = '';
@@ -118,12 +111,20 @@ function wrapToGrid(text: string, columns: number): string[] {
   }
   if (line) lines.push(line);
   if (lines.length === 0) lines.push('');
-  // STABLE ALIGNMENT: left-justify EVERY message at the SAME fixed indent (NOT centered per message).
-  // Centering shifts with the message's length, so "DISCOVER MY CRAFT" and "DISCOVER MY JOURNEY" would
-  // land their shared "DISCOVER MY " prefix in DIFFERENT slots (off by the length delta), making the
-  // whole board flip. A fixed indent keeps shared-prefix cells in the SAME slots across a transition,
-  // so only the cells that genuinely CHANGE flip, like a real departure board.
-  return lines.map((l) => padInColumns(l, columns, BOARD_LEFT_INDENT));
+  return lines;
+}
+
+/** Word-wrap `text` into lines of at most `columns` chars (like a real board), then CENTER each line
+ * within the board and pad so every row is exactly `columns` wide (blank filler tiles fill the rest).
+ * Returns the grid as equal-length strings. Every message is centered on its OWN width, so short
+ * titles (WELCOME) sit dead-center and long ones fill more of the row — a board WIDER than the longest
+ * title leaves blank flap tiles flanking each centered title. */
+function wrapToGrid(text: string, columns: number): string[] {
+  const lines = wrapLines(text, columns);
+  return lines.map((l) => {
+    const left = Math.floor((columns - l.length) / 2);
+    return padInColumns(l, columns, left);
+  });
 }
 
 // The flap DECK: the ordered set of glyphs on a physical split-flap drum. A cell rolls THROUGH this

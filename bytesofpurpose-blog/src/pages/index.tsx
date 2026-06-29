@@ -414,7 +414,10 @@ const STUDIO_INTERVAL_MS = 4500; // time one state (door OR a scene) is shown be
 // The studio board is wide (≈3× the arch) and packed with filler tiles so the grid FILLS the case
 // (no bezel gap). 3 ROWS of BIGGER tiles (a blank row + 1-2 title rows; not 5 rows of small ones).
 // More columns = wider board; .studioSign font-size + --flap-gap set the tile size + pacing.
-const STUDIO_BOARD_COLS = 22; // wide board, big-ish tiles → ~3× the arch width
+// A board WIDER than the longest title ("DISCOVER MY JOURNEY" = 19): each title is CENTERED on the
+// board, so a short title (WELCOME) sits dead-center and the rest fill more of the row, with blank
+// flap tiles flanking the centered title (a real departure board's empty flaps).
+const STUDIO_BOARD_COLS = 24;
 const STUDIO_BOARD_ROWS = 3; // 3 rows of bigger letters (not 5 rows of small)
 // The door↔scene WHITE FLASH: the centre arch flashes white (a long camera-exposure bloom); at the
 // flash PEAK the centre swaps door↔scene and the board flips; then the flash recedes. The flash
@@ -442,7 +445,10 @@ function prefersReducedMotion(): boolean {
 // scroll-jacking models (pin/horizontal) fall back to in-flow behaviour (no 100vh pin). Reactive so
 // a rotate/resize re-renders. SSR-safe (false until mounted).
 const HERO_MOBILE_QUERY = '(max-width: 600px)';
-const STUDIO_BOARD_COLS_MOBILE = 14; // door-only board: wider board on mobile (smaller tiles fit it)
+// door-only board, but WIDE: wider than the longest title (19) so the title fits on ONE line AND has
+// blank flap tiles either side (centered, not left-hugging). The shared-width centering (boardWidth)
+// keeps each title centered within the same content block.
+const STUDIO_BOARD_COLS_MOBILE = 22;
 
 function useIsMobile(): boolean {
   const [mobile, setMobile] = useState(false);
@@ -724,9 +730,9 @@ function StudioFacade({
   // BOARD ↔ SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
   // (`shown`), or WELCOME in door mode — so the board can never settle to a title the door hasn't
   // reached. CHURN is SCROLL-ONLY (`spinning`): while the wheel moves the board churns random letters
-  // and settles on stop. The TIMER house (spinning=false) instead does the clean per-cell flap-roll on
-  // a text change — and because the grid alignment is stable (shared prefixes keep their slots), only
-  // the cells that actually CHANGE between titles flip, like a real departure board.
+  // and settles on stop. The TIMER house (spinning=undefined) instead does the clean per-cell flap-roll
+  // on a text change. Each title is CENTERED on the (wider-than-the-title) board, so short titles sit
+  // dead-center with blank flap tiles either side.
   const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
   const boardSpinning = spinning;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
@@ -768,6 +774,10 @@ function StudioFacade({
                 </div>
               </div>
             </div>
+            {/* MOBILE-ONLY gold balcony railing in the teal gap between the hanging board and the door
+                (the side-window railings are hidden on mobile, so this brings the Lebanese gold
+                detailing back). Hidden on desktop via CSS. */}
+            <span className={styles.studioBoardRail} aria-hidden="true" />
             {/* The centre arch is the DOORWAY you peek through: the carved DOOR (mode 'door') OR the
                 current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
                 over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
