@@ -927,36 +927,55 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
 
   // SNAP-TO-CLOSEST-SCENE: when scrolling STOPS mid-transition, glide to the nearest stop's settled
   // centre so the door + flash + board all land on the SAME scene (no resting mid-crossing with the
-  // flash lingering). Inplace has no spacer runway to snap within, so it's skipped. Reduced-motion +
-  // a forced scene (?hero-scene) also skip. The snap itself fires scroll events, so the board keeps
-  // churning during the glide and settles once it lands.
-  const snapping = useRef(false);
+  // flash lingering). Inplace has no spacer runway, so it's skipped; reduced-motion + ?hero-scene skip.
+  //
+  // Driven by a rAF EASE (not window.scrollTo({behavior:'smooth'}) + a guard, which raced with its own
+  // scroll events and intermittently failed to fire on deeper stops). The ease writes scrollTop each
+  // frame toward the target; a GENUINE new user scroll (a delta we didn't write) cancels it. So it
+  // ALWAYS lands on a settled scene and the flash clears, every stop.
+  // The snap is a SELF-CONTAINED imperative rAF loop (kicked off by the effect, but NOT tied to React
+  // cleanup — that raced with the loop's own scroll writes). `snapActive` guards re-entry; the loop
+  // aborts only on a genuine NEW user scroll (a delta it didn't write).
+  const snapActive = useRef(false);
   useEffect(() => {
-    // run on the STOP edge (scrolling just became false). Pinned runways only.
-    if (scrolling || model === 'inplace') return undefined;
-    if (prefersReducedMotion() || forcedScene(count) != null) return undefined;
+    if (scrolling || model === 'inplace' || snapActive.current) return; // act only on a real STOP
+    if (prefersReducedMotion() || forcedScene(count) != null) return;
     const el = spacerRef.current;
-    if (!el || snapping.current) return undefined;
+    if (!el) return;
     const rect = el.getBoundingClientRect();
     const vh = window.innerHeight || 1;
     const scrollable = rect.height - vh;
-    if (scrollable <= 0) return undefined;
+    if (scrollable <= 0) return;
     const stops = count + 1;
     const p = Math.min(0.999999, Math.max(0, progressRef.current));
-    // only snap if we're actually mid-transition (in a slice's back TRANSITION_FRACTION); if already
-    // settled, leave it.
     const within = (p * stops) % 1;
-    if (within <= 1 - TRANSITION_FRACTION) return undefined; // already settled in this slice
+    if (within <= 1 - TRANSITION_FRACTION) return; // already settled in this slice → no snap
+
     const stop = Math.min(stops - 1, Math.max(0, Math.round(p * stops - 0.5)));
     const targetP = (stop + (1 - TRANSITION_FRACTION) / 2) / stops; // centre of that stop's settled zone
     const spacerTopPage = rect.top + window.scrollY; // page-coords of progress 0
     const targetY = Math.round(spacerTopPage + targetP * scrollable);
-    snapping.current = true;
-    window.scrollTo({top: targetY, behavior: 'smooth'});
-    const done = window.setTimeout(() => {
-      snapping.current = false;
-    }, 700);
-    return () => window.clearTimeout(done);
+
+    snapActive.current = true;
+    let last = window.scrollY; // the position we last WROTE; a bigger mismatch = a NEW user scroll
+    const step = () => {
+      if (!snapActive.current) return;
+      if (Math.abs(window.scrollY - last) > 3) {
+        snapActive.current = false; // the user grabbed the wheel mid-snap → abort, leave it to them
+        return;
+      }
+      const cur = window.scrollY;
+      if (Math.abs(targetY - cur) < 1) {
+        window.scrollTo(0, targetY); // land exactly
+        snapActive.current = false;
+        return;
+      }
+      window.scrollTo(0, cur + (targetY - cur) * 0.2); // ease 20% toward target per frame
+      last = window.scrollY;
+      window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+    // no cleanup: the loop self-manages via snapActive (React cleanup would cancel our own writes)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrolling, model, count]);
 

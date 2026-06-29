@@ -36,9 +36,13 @@ export interface SplitFlapProps {
 }
 
 // A SPINNING cell: while `spinning`, it CHURNS through random deck glyphs on its own fast timer (each
-// cell at a slightly different rate so the board looks alive); when `spinning` turns false it SETTLES,
-// rolling to its target `char` and resting. It delegates the actual fold animation to <Cell> by
-// driving Cell's `char`: a stream of random glyphs while spinning, the real target when settled.
+// cell at a slightly different rate so the board looks alive); when `spinning` turns false it SETTLES
+// to its target `char`. It delegates the fold animation to <Cell> by driving Cell's `char`.
+//
+// Stray-letter fix: a cell whose target is BLANK (' ') must NEVER show a leftover letter after settle.
+// While spinning we ALWAYS churn (even blank-target cells, so the whole board churns uniformly); on
+// settle we land on `char` — and a SETTLE TO BLANK snaps directly (no deck-roll that could strand on a
+// letter). The settle also keys a remount so the underlying Cell can't be left mid-roll from churn.
 const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
 
 function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; seed: number}) {
@@ -46,9 +50,8 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
   const idxRef = useRef(seed % SPIN_LETTERS.length);
 
   useEffect(() => {
-    if (spinning && char !== ' ') {
-      // churn: advance to the next "random" letter on a fast interval (deterministic per-cell stride
-      // by seed, so no Math.random and every cell churns at its own pace).
+    if (spinning) {
+      // churn EVERY cell (blank-target ones too) so the board churns uniformly and no cell is stuck.
       const stride = 1 + (seed % 5);
       const periodMs = 60 + (seed % 7) * 12; // 60..132ms per flip, varied per cell
       const id = window.setInterval(() => {
@@ -57,12 +60,22 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
       }, periodMs);
       return () => window.clearInterval(id);
     }
-    // SETTLE: stop churning and land on the target character.
+    // SETTLE: land on the target character.
     setDisplay(char);
     return undefined;
   }, [spinning, char, seed]);
 
-  return <Cell char={display} settleMs={500} />;
+  // A BLANK target snaps directly (no roll) so it can never strand on a letter; a letter target rolls.
+  // Keying the Cell on whether it's settled-blank forces a fresh Cell (clears any mid-roll) when we
+  // settle to blank, so a churning random letter can't be left behind in a padding cell.
+  const settledBlank = !spinning && char === ' ';
+  return (
+    <Cell
+      key={settledBlank ? 'blank' : 'glyph'}
+      char={settledBlank ? ' ' : display}
+      settleMs={500}
+    />
+  );
 }
 
 /** Center `text` within `columns`, padding both sides with spaces so the row is always full. */
