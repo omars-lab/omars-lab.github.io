@@ -32,8 +32,13 @@ const EXPECTED_CARDS: Array<{ href: string; img: string }> = [
   { href: '/designs', img: '/img/cards/designs.png' },
 ];
 
-async function loadHome(page: Page) {
-  const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
+// The homepage DEFAULT hero is now the scroll-driven house (pin). The legacy scrolling FILM STRIP is
+// the `control` arm, reachable by explicitly forcing it via the URL override; the film-strip tests
+// below load it that way. (A bare `/` shows the house — covered by the parallax describe block.)
+async function loadStrip(page: Page) {
+  const response = await page.goto('/?ab-homepage-hero-anim=control', {
+    waitUntil: 'domcontentloaded',
+  });
   if (!response || response.status() !== 200) {
     throw new Error(`Homepage failed to load. Status: ${response?.status()}`);
   }
@@ -53,7 +58,7 @@ function realCardLinks(page: Page) {
 
 test.describe('Homepage film-strip chooser', () => {
   test('renders the strip with every destination card (correct route + image)', async ({ page }) => {
-    await loadHome(page);
+    await loadStrip(page);
 
     const realCards = realCardLinks(page);
     await expect(realCards).toHaveCount(EXPECTED_CARDS.length);
@@ -73,7 +78,7 @@ test.describe('Homepage film-strip chooser', () => {
   test('duplicates the set for the seamless loop, but hides the copy from a11y + keyboard', async ({
     page,
   }) => {
-    await loadHome(page);
+    await loadStrip(page);
 
     // The track renders the list twice: total card links = 2 × the destinations.
     await expect(allCardLinks(page)).toHaveCount(EXPECTED_CARDS.length * 2);
@@ -90,7 +95,7 @@ test.describe('Homepage film-strip chooser', () => {
   test('auto-scrolls, and pauses on hover (a moving card becomes a stable target)', async ({
     page,
   }) => {
-    await loadHome(page);
+    await loadStrip(page);
     const track = page.locator('[class*="chooserTrack"]').first();
     await expect(track).toBeVisible();
 
@@ -114,7 +119,7 @@ test.describe('Homepage film-strip chooser', () => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
     try {
-      await loadHome(page);
+      await loadStrip(page);
       const viewport = page.locator('[class*="chooserViewport"]').first();
       const track = page.locator('[class*="chooserTrack"]').first();
 

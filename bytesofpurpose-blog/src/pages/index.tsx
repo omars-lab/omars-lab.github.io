@@ -11,7 +11,7 @@ import HomepageFeatures from '../components/HomepageFeatures';
 import LatestPosts from '../components/LatestPosts';
 import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
-import {EXPERIMENTS, resolveVariant, isLocalhost, type Experiment} from '../experiments';
+import {EXPERIMENTS, resolveVariant, isLocalhost, urlOverride, type Experiment} from '../experiments';
 import {applyHeroParams} from '../lib/hero-tuning';
 import {HERO_SCENE_PARAM} from '../lib/url-params';
 
@@ -1106,7 +1106,11 @@ function HeroChooser() {
   const scrollVariant = useResolvedVariant(EXPERIMENTS['homepage-hero-scroll']);
   if (animVariant === null || scrollVariant === null) return <ChooserSkeleton />;
 
-  // `control` = no flag/override signal → fall to the DEFAULTS (the pin house), not the old strip.
+  // `control` with NO explicit URL force = the no-signal default → the pin house (not the old strip).
+  // But an EXPLICIT `?ab-homepage-hero-anim=control` still renders the legacy scrolling strip (so it
+  // stays reachable + testable). So: forced control → strip; unforced control → house default.
+  const forcedAnim = urlOverride(EXPERIMENTS['homepage-hero-anim']);
+  if (forcedAnim === 'control') return <ChooserStrip />;
   const anim = animVariant === 'control' ? DEFAULT_HERO : animVariant;
 
   // 4-way A/B/C/D on the anim experiment.
