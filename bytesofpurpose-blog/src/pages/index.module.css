@@ -942,11 +942,17 @@
   height: var(--rail-height, 30px); /* how far it extends downward (Hero Tuner) */
   z-index: 5;
   background:
-    /* gold vertical balusters */
-    repeating-linear-gradient(90deg, #d9a441 0 2px, transparent 2px 8px),
+    /* gold vertical balusters — gaps are transparent-GOLD (not the bare `transparent` keyword =
+       transparent BLACK, which Firefox interpolates through grey into a white edge fringe; see
+       .studioBoardRail). */
+    repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px),
     /* gold top + bottom rails */
-    linear-gradient(180deg, #d9a441 0 2.5px, transparent 2.5px calc(100% - 2.5px), #b8881f calc(100% - 2.5px) 100%);
-  filter: drop-shadow(0 1px 2px rgba(60, 40, 10, 0.4));
+    linear-gradient(
+      180deg,
+      #d9a441 0 2.5px,
+      rgba(217, 164, 65, 0) 2.5px calc(100% - 2.5px),
+      #b8881f calc(100% - 2.5px) 100%
+    );
 }
 
 /* MOBILE-ONLY gold balcony railing, spanning the teal gap BELOW the hanging board and ABOVE the door.
@@ -1185,13 +1191,23 @@
     bottom: calc(100% + 0.05rem); /* low in the gap, just ABOVE the arch top (moved down per request) */
     height: 18px;
     z-index: 5;
+    /* The gold balustrade as gradients. CRUCIAL: use rgba(217,164,65,0) — fully-transparent GOLD — for
+       the gaps, NOT the bare `transparent` keyword. `transparent` = rgba(0,0,0,0) (transparent BLACK),
+       and FIREFOX interpolates the opaque-gold→transparent-black boundary through grey, painting a
+       faint WHITE/light hairline along the rail's top + bottom edges (a real bug: the under-rail line
+       the user saw was Firefox-only, invisible in Chrome). Transparent-gold keeps the interpolation
+       within the gold hue, so the edge stays clean in every browser. */
     background:
-      repeating-linear-gradient(90deg, #d9a441 0 2px, transparent 2px 8px),
-      linear-gradient(180deg, #d9a441 0 2.5px, transparent 2.5px calc(100% - 2.5px), #b8881f calc(100% - 2.5px) 100%);
-    /* NO `filter: drop-shadow` here: the filter forces a GPU compositing layer whose fractional-pixel
-       bottom edge paints a faint WHITE hairline under the rail on hi-DPI (the seam family). The rail
-       reads fine without a shadow; if grounding is wanted later, use a non-filter box-shadow on a
-       solid-background element, not a filter on this transparent-gap baluster. */
+      repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px),
+      linear-gradient(
+        180deg,
+        #d9a441 0 2.5px,
+        rgba(217, 164, 65, 0) 2.5px calc(100% - 2.5px),
+        #b8881f calc(100% - 2.5px) 100%
+      );
+    /* NO `filter: drop-shadow` here either: the filter forces a GPU compositing layer whose
+       fractional-pixel edge can paint a hairline on hi-DPI (the seam family). The rail reads fine
+       without a shadow; if grounding is wanted later, use a non-filter box-shadow on a solid element. */
   }
 }
 
