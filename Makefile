@@ -449,6 +449,9 @@ validate-hero-anchors: ## Check the maintain-homepage-hero skill is in lockstep 
 validate-url-params: ## Check every query param read in src/ is registered in the URL-param registry (src/lib/url-params.ts)
 	( cd ${SITEROOT} && node scripts/validate-url-params.js )
 
+validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
+	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )
+
 test-visual: ## Visual-regression: screenshot the hero (both A/B variants) across DPR 1+2, viewports, light+dark vs committed baselines
 	# Catches retina-only / animation-frame artifacts (a compositing seam, a flash white-out, overflow)
 	# that the functional DPR=1 specs are blind to. Compares against committed baselines.

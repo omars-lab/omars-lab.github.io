@@ -118,6 +118,9 @@ the raw + the tool). The raw inputs live OUTSIDE the repo (scratch dir); the fit
 
 The hero recurringly broke on non-canonical assets (a re-imported `initiatives.png` shipped with a
 1020-px fringe and a 0,0..873,1023 bbox → the white-line bug). This workflow + the canonical contract
-make a clean import deterministic. The missing guard — a `validate-arch-assets.js` that fails CI on any
-card PNG that violates the canonical arch — is tracked separately; until it lands, the `--proof` step
-is the manual gate.
+make a clean import deterministic. **The guard is in place**: `scripts/validate-arch-assets.js`
+(`make validate-arch-assets`) measures every card PNG against the canonical arch and ERRORS (exit 2) on
+a fringe or wrong dims — proven to bite on a planted full-opaque PNG. The warn-tier PostToolUse hook
+`.claude/hooks/validate-arch-assets-hook.sh` (registered in `.claude/settings.json`) runs it after a
+write to any `static/img/cards/*.png` and surfaces violations without blocking. So a fringe can't ship
+silently; `--proof` is still the eyeball check while iterating.
