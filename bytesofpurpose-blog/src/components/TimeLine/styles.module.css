@@ -67,8 +67,10 @@
   padding: 12px 20px;
   background: var(--ifm-background-color);
   position: relative;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--ifm-global-radius);
+  /* Brand elevation: a content card rests on the quiet step + a hairline, not a heavier ad-hoc
+     shadow (the brand earns deeper shadow on hover, and this card is non-interactive). */
+  box-shadow: var(--ifm-global-shadow-lw);
   border: 1px solid var(--ifm-color-emphasis-200);
   width: 100%;
   max-width: none;
