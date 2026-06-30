@@ -45,6 +45,14 @@ const BOARD_CONFIG: Record<BoardId, BoardConfig> = {
       {id: 'shipped', label: 'Shipped', emoji: '🚀'},
     ],
   },
+  research: {
+    title: 'Research board',
+    columns: [
+      {id: 'backlog', label: 'Backlog', emoji: '🗒️'},
+      {id: 'researching', label: 'Researching', emoji: '🔬'},
+      {id: 'learned', label: 'Learned', emoji: '🎓'},
+    ],
+  },
 };
 
 // Kind → emoji, for the badge on each card. Source of truth is scripts/lib/blog-kinds.json;
@@ -56,6 +64,7 @@ const KIND_EMOJI: Record<string, string> = {
   reflection: '💭',
   'design-story': '📐',
   'system-design': '🏗️',
+  research: '🔬',
 };
 
 const PRIORITY_LABEL: Record<string, string> = {

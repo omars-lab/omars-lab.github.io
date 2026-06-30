@@ -3,7 +3,7 @@
 // blog-post frontmatter; the component renders it. Keep this in sync with the generator's
 // BOARDS definition (column ids, kind→board mapping).
 
-export type BoardId = 'experiments' | 'ideas';
+export type BoardId = 'experiments' | 'ideas' | 'research';
 
 /** One card = one blog post, slotted into a column by its `stage`. */
 export interface KanbanCard {
