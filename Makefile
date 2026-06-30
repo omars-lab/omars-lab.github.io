@@ -443,6 +443,25 @@ test-e2e: ## Run the dev-server E2E project (docs/graph specs) against `yarn sta
 	# guarantees the dev server regenerates the dev manifest (drafts kept in dev).
 	( cd ${SITEROOT} && yarn docusaurus clear && yarn playwright test --project=dev )
 
+validate-hero-anchors: ## Check the maintain-homepage-hero skill is in lockstep with the code (named symbols still exist)
+	( cd ${SITEROOT} && node scripts/validate-hero-anchors.js )
+
+validate-url-params: ## Check every query param read in src/ is registered in the URL-param registry (src/lib/url-params.ts)
+	( cd ${SITEROOT} && node scripts/validate-url-params.js )
+
+validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
+	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )
+
+test-visual: ## Visual-regression: screenshot the hero (both A/B variants) across DPR 1+2, viewports, light+dark vs committed baselines
+	# Catches retina-only / animation-frame artifacts (a compositing seam, a flash white-out, overflow)
+	# that the functional DPR=1 specs are blind to. Compares against committed baselines.
+	# Baselines are Chromium-rendered and OS-tagged (-darwin / -linux): if they're missing for this OS,
+	# or after an INTENTIONAL visual change, regenerate with `make test-visual-update`.
+	( cd ${SITEROOT} && yarn playwright test --project=visual )
+
+test-visual-update: ## (Re)generate the visual-regression baselines (after an intentional hero/visual change)
+	( cd ${SITEROOT} && yarn playwright test --project=visual --update-snapshots )
+
 test-premium-e2e: ## Build (encrypted) + serve :4173, run the premium hard-gate e2e (V3 + round-trip), tear down
 	# Premium gating MUST be verified against an ENCRYPTED production build: the encrypt
 	# happens at MDX-compile only when STATICRYPT_PASSPHRASE is set, and the spec stubs

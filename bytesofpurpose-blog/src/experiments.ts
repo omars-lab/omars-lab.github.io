@@ -32,6 +32,51 @@ export const EXPERIMENTS = {
       test: 'Buy me a coffee ☕',
     },
   },
+
+  // Homepage hero ANIMATION test: does the way the chooser cards animate change how often a
+  // visitor clicks into a section? An A/B/C test, three presentations of the SAME cards + copy:
+  //   control   = scroll — the seamless scrolling film strip.
+  //   test      = flash  — the camera-flash rotator (one card at a time, a white flash blooms from
+  //                        the arch and the scene switches to the next).
+  //   variant_c = studio — the Moroccan-influenced creative-studio scene: a freestanding studio SIGN
+  //                        on a post next to the studio, whose arched doorway (the scene art's own
+  //                        arch) you peek inside; on a change the inside cross-fades to the next.
+  //   variant_d = boutique — the lit boutique storefront (Aston-Martin-inspired): THREE arched
+  //                          openings (lit window, central door, lit window) glowing warmly, with
+  //                          the Vestaboard SIGN hanging above the door; the door shows the current
+  //                          project and the side windows preview the prev/next; all cross-fade.
+  // All four reuse the same scenes + Vestaboard; only the PRESENTATION differs. The payload is the
+  // variant id (the homepage reads it to pick which hero component to render).
+  'homepage-hero-anim': {
+    key: 'homepage-hero-anim',
+    variants: {
+      control: 'scroll',
+      test: 'flash',
+      variant_c: 'studio',
+      variant_d: 'boutique',
+    },
+  },
+
+  // Homepage hero SCROLL-MODEL test: the hero became scroll-driven (the door transforms into each
+  // scene as you scroll, scrolling decides which scenes you traverse). This experiment picks HOW
+  // scroll maps to the journey. All arms render the SAME Lebanese-house facade + the same scenes;
+  // only the scroll mechanic differs, so a difference in chooser-card clicks is attributable to it:
+  //   control    = static — the original TIMER-driven house (no scroll-jacking), the safe default.
+  //   pin        = the hero pins full-screen and each scroll step advances one scene, then releases.
+  //   inplace    = the hero stays in normal flow; the door morphs as the hero scrolls past.
+  //   horizontal = vertical scroll pans the 7 scenes horizontally inside a pinned hero.
+  // Separate from homepage-hero-anim so the scroll-model question is answered independently of the
+  // flash-vs-scroll-strip question. The payload is the variant id (the homepage reads it to pick the
+  // scroll wrapper). Default (control) keeps the non-jacking timer hero so nothing regresses.
+  'homepage-hero-scroll': {
+    key: 'homepage-hero-scroll',
+    variants: {
+      control: 'static',
+      pin: 'pin',
+      inplace: 'inplace',
+      horizontal: 'horizontal',
+    },
+  },
 } satisfies Record<string, Experiment>;
 
 export type ExperimentKey = keyof typeof EXPERIMENTS;

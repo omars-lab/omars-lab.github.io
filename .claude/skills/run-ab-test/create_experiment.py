@@ -35,13 +35,19 @@ import urllib.request
 
 API_HOST = "https://us.posthog.com"
 
-# --- The experiment definition. Mirror of src/experiments.ts['support-button-copy']. ---
-FLAG_KEY = "support-button-copy"
-EXPERIMENT_NAME = "Support button copy"
-CONVERSION_EVENT = "support button clicked"
+# --- The experiment definition. Mirror of src/experiments.ts['homepage-hero-scroll']. ---
+# The scroll-MODEL test for the homepage hero (the Lebanese-house parallax): which scroll mechanic
+# drives more chooser-card clicks. control = the static (timer) house; pin/inplace/horizontal = the
+# three scroll-driven parallax models. 4-way even split (25% each). Conversion = the existing
+# 'hero card clicked' event captured by the hero gate (tagged with hero_variant + destination).
+FLAG_KEY = "homepage-hero-scroll"
+EXPERIMENT_NAME = "Homepage hero scroll-model"
+CONVERSION_EVENT = "hero card clicked"
 VARIANTS = [
-    {"key": "control", "name": "Buy me a coffee ☕", "rollout_percentage": 50},
-    {"key": "test", "name": "Support the dev \U0001f49c", "rollout_percentage": 50},
+    {"key": "control", "name": "static (timer house)", "rollout_percentage": 25},
+    {"key": "pin", "name": "pin (scroll-jack)", "rollout_percentage": 25},
+    {"key": "inplace", "name": "inplace (in-flow morph)", "rollout_percentage": 25},
+    {"key": "horizontal", "name": "horizontal (pan)", "rollout_percentage": 25},
 ]
 
 
@@ -200,8 +206,10 @@ def main():
     payload = {
         "name": EXPERIMENT_NAME,
         "feature_flag_key": FLAG_KEY,
-        "description": "A/B: which Support-button copy drives more clicks. "
-                       "Injection point: src/components/SupportButton.",
+        "description": "A/B/C/D: which homepage-hero scroll-model (static / pin / inplace / "
+                       "horizontal) drives more chooser-card clicks. Injection point: the hero "
+                       "gate in src/pages/index.tsx (resolveVariant on homepage-hero-scroll); "
+                       "conversion = 'hero card clicked'.",
         "parameters": {
             "feature_flag_variants": [
                 {"key": v["key"], "rollout_percentage": v["rollout_percentage"]} for v in VARIANTS

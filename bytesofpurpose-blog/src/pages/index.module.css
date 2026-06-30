@@ -8,14 +8,21 @@
  */
 
 .heroBanner {
-  padding: 5rem 0 4rem;
+  padding: 2.5rem 0 3rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
-  /* Inherit the page's cream paper; a hairline rule top + bottom frames the band. */
+  /* Inherit the page's cream paper; a hairline rule frames the bottom of the band. */
   background: var(--ifm-background-color);
   color: var(--ifm-font-color-base);
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+/* PIN-FROM-FIRST-SCROLL (parallax pinned models): the eyebrow/title/subtitle sit ABOVE the hero in
+   flow. We tighten the banner's top padding when a pinned parallax hero is active so the house reaches
+   its pinned position with minimal initial drift (the house-fills-viewport sizing does the rest). The
+   title stays in normal flow on the cream paper (good contrast) and scrolls away normally. */
+.heroBanner[data-parallax-pinned] {
+  padding-top: 1rem;
 }
 
 /* Coral eyebrow — uppercase Geist, tracked out, like the portfolio's section labels. */
@@ -45,7 +52,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   color: var(--ifm-color-content-secondary);
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .buttons {
@@ -54,6 +61,78 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* Hero loading SKELETON: a neutral, fixed-height placeholder shown until the A/B variant resolves
+   (and as the SSR/no-JS fallback), so the hero never jumps and neither animation flashes up before
+   the flag is read. It reserves the chooser's height (arch card) to avoid layout shift. */
+/* The skeleton reserves the DEFAULT (animation/timer house) natural height in NORMAL flow, with a
+   HOUSE-shaped pulse, so the page doesn't jump when the real hero swaps in. */
+.heroSkeleton {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.heroSkeletonHouse {
+  width: 100%;
+  max-width: var(--body-w, 720px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+/* roof: a triangular pulse (mirrors .studioRoof's clip-path) */
+.heroSkeletonRoof {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: var(--ifm-color-emphasis-200);
+  animation: heroSkeletonPulse 1.4s ease-in-out infinite;
+}
+/* body: the square wall holding a board + door placeholder */
+.heroSkeletonBody {
+  aspect-ratio: 2 / 1;
+  background: var(--ifm-color-emphasis-100);
+  border: 3px solid var(--ifm-color-emphasis-200);
+  border-radius: 4px 4px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  padding-bottom: 0.5rem;
+}
+.heroSkeletonBoard {
+  width: 60%;
+  height: 14%;
+  margin-top: 1.4rem;
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-300);
+  animation: heroSkeletonPulse 1.4s ease-in-out infinite;
+}
+.heroSkeletonDoor {
+  width: 22%;
+  height: 55%;
+  border-radius: 60px 60px 4px 4px;
+  background: var(--ifm-color-emphasis-200);
+  animation: heroSkeletonPulse 1.4s ease-in-out infinite;
+}
+@keyframes heroSkeletonPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroSkeletonRoof,
+  .heroSkeletonBoard,
+  .heroSkeletonDoor {
+    animation: none;
+  }
+}
+@media screen and (max-width: 600px) {
+  /* mobile: match the small-viewport pinned house */
+  .heroSkeletonStick { height: 100svh; }
+  .heroSkeletonHouse { max-width: min(96vw, 440px); height: 100%; justify-content: center; }
+  .heroSkeletonBody { aspect-ratio: 1 / 1.07; }
 }
 
 /* Film-strip chooser (Craft / Journey / Thoughts / Mindset, plus any cards added to
@@ -150,6 +229,981 @@
   }
 }
 
+/* ── Camera-flash hero (A/B test variant): "DEPARTURES" ───────────────────────────────────────
+   A single grand PORTAL: an arched window whose scene cross-fades behind a flash of light, with a
+   split-flap DEPARTURE BOARD directly beneath naming where this gate goes. No card chrome and no
+   spotlight, the portal + board carry the hero as ONE centered object directly on the paper.
+
+   The whole thing is ONE <Link> (the gate is the click target). Layout is a clean centered column:
+   arch box → board. Deterministic flow, no absolute drift. --portal-w is the shared width axis: the
+   arch box AND the board derive their width from it, so they line up as one column. */
+.flashGate {
+  --portal-w: 340px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem; /* the one deliberate rhythm unit between the portal and its board */
+  width: var(--portal-w);
+  margin: 0 auto;
+  padding: 0.5rem 0 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+.flashGate:hover,
+.flashGate:focus-visible {
+  text-decoration: none;
+  color: inherit;
+}
+.flashGate:hover .flashArchImgActive {
+  transform: scale(1.012);
+}
+
+/* THE PORTAL: a fixed box (shared width axis); the arch images cross-fade inside it; the flash light
+   sits on top, masked to the arch. The aspect ratio matches the square card PNGs (the arch sits in
+   the upper portion). */
+.flashArchBox {
+  position: relative;
+  z-index: 1;
+  width: var(--portal-w);
+  aspect-ratio: 300 / 340;
+  /* `isolation: isolate` gives this box its OWN stacking context so the flash overlay's
+     animation/compositing can't seam into the hero (the "line that comes and goes" during the
+     flash), WITHOUT clipping the arch image's drop-shadow the way `contain:paint`/`overflow:hidden`
+     would. */
+  isolation: isolate;
+}
+.flashArchImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  /* A non-filter shadow: drop-shadow is a `filter`, which forces a GPU compositing layer whose edge
+     can seam on hi-DPI. We don't strictly need a shadow on the arch (it already has a drawn frame),
+     so it's dropped to keep the arch on the normal paint path. */
+  transition: opacity 0.4s ease, transform 0.25s ease;
+}
+.flashArchImgActive {
+  opacity: 1;
+}
+
+/* The flash = LIGHT INSIDE THE ARCH. flashArchWrap is MASKED to the EXACT arch interior using the
+   arch-inner.png luminance mask (the same arch silhouette baked into every card illustration), so the
+   light is clipped to the precise arch shape, edge-exact. The wrap is sized + positioned IDENTICALLY
+   to the arch images (inset:0 over the .flashArchBox, contain/center) so the mask lines up pixel-for-
+   pixel with the drawn arch frame. */
+.flashArchWrap {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url(/img/cards/arch-inner.png);
+  mask-image: url(/img/cards/arch-inner.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.flashArch {
+  position: absolute;
+  inset: 0;
+  /* A flash of LIGHT OVER the scene, not a white-out. A SEMI-TRANSPARENT white radial (peak well
+     below opaque) layered through several stops, so even at peak the figure, frame, and depth read
+     through. NOTE: deliberately NO mix-blend-mode and NO filter:blur here — both force a GPU
+     compositing layer whose fractional-pixel edge paints a faint seam in the hero on hi-DPI screens.
+     Plain semi-transparent white over the scene gives the same look with no seam. */
+  background: radial-gradient(
+    ellipse 82% 80% at 50% 44%,
+    rgba(255, 255, 255, 0.86) 0%,
+    rgba(255, 255, 255, 0.76) 26%,
+    rgba(255, 255, 255, 0.46) 54%,
+    rgba(255, 255, 255, 0.18) 78%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0;
+  /* Start as a tighter point so it BLOOMS outward to fill the arch. */
+  transform: scale(0.5);
+  transform-origin: 50% 44%;
+  pointer-events: none;
+}
+
+/* The bloom: ramp UP with a visible build (not an instant blink) and scale out to fill the arch, so
+   the flash actually reads. The recover (class removed) fades back gently. */
+.flashArch.flashOn {
+  opacity: 1;
+  transform: scale(1.5);
+  transition: opacity 3s ease-out, transform 4.2s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.flashArch:not(.flashOn) {
+  transition: opacity 4s ease-in, transform 4s ease-in;
+}
+
+/* Reduced motion: no blooming flash. The slides still cross-fade (a calm switch), but the arch
+   light is dialed out so it's not a strobe. */
+@media (prefers-reduced-motion: reduce) {
+  .flashArch,
+  .flashArch.flashOn {
+    opacity: 0;
+    transition: none;
+  }
+}
+
+/* THE DEPARTURE BOARD: a dark physical Vestaboard case the flap tiles are mounted in, sitting in the
+   centered column directly beneath the portal (in flow, so it never drifts and is always centered on
+   the arch's axis). Its width is tied to the portal's width axis (--portal-w) so the board + arch
+   read as ONE column. The font-size scales the flap tiles to fill that width. Dark frame, inner
+   recess + drop shadow so it reads as one real unit. */
+.flashBoard {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: center;
+  /* The board's width comes from its TILE COUNT (more blank filler columns = wider board), NOT from
+     stretching the housing. The tile size + this fixed housing padding stay constant, so the bezel
+     border is the same thickness regardless of how wide the grid is. */
+  font-size: 0.9rem;
+  padding: 0.55em 0.6em;
+  border-radius: 0.5em;
+  background: linear-gradient(180deg, #0e0e10 0%, #050506 100%);
+  border: 1px solid #000;
+  box-shadow:
+    inset 0 0.08em 0.12em rgba(255, 255, 255, 0.06),
+    inset 0 -0.06em 0.12em rgba(0, 0, 0, 0.7),
+    0 0.5em 1.4em rgba(20, 20, 22, 0.28);
+}
+
+/* ── Boutique-storefront hero (A/B/C/D variant D): three lit arches + a sign over the door ────────
+   An upscale stone storefront (Aston-Martin-inspired): a tall central arched DOOR flanked by two
+   smaller lit arched WINDOWS, the Vestaboard SIGN hanging ABOVE the door. Each arch GLOWS warmly from
+   within (a lit boutique at dusk). The door shows the current project; the side windows preview the
+   prev/next. Arches are the scene art's OWN (clipped to the arch interior via arch-inner.png), so no
+   extra arch is drawn. Palette: warm stone #e7e1d6 / #d8d0c2, brass #c9a24b, warm glow #ffce8a. */
+.boutiqueGate {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  text-decoration: none;
+  color: inherit;
+}
+.boutiqueGate:hover,
+.boutiqueGate:focus-visible {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* The storefront facade: a refined stone wall with a subtle top-light and a hairline cornice. */
+.boutiqueFront {
+  position: relative;
+  padding: 0.4rem 1.4rem 0;
+  border-radius: 12px 12px 0 0;
+  /* Stone wall colour is tunable (--stone); the gradient lightens above + darkens below it. */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--stone, #e3ddd0) 80%, #fff) 0%,
+    var(--stone, #e3ddd0) 60%,
+    color-mix(in srgb, var(--stone, #e3ddd0) 85%, #000) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 14px 30px rgba(60, 50, 35, 0.16);
+}
+
+/* The hanging STORE SIGN above the central door: brass-trimmed, with two short drop rods to the wall. */
+.boutiqueSignWrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.6rem 0 0.7rem;
+  z-index: 3;
+  /* Sign offset + scale are tunable (--sign-x/-y/-scale). */
+  transform: translate(var(--sign-x, 0px), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
+}
+.boutiqueSign {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 0.82rem;
+  padding: 0.45em 0.55em;
+  border-radius: 0.4em;
+  background: linear-gradient(180deg, #0e0e10 0%, #050506 100%);
+  border: 2px solid #c9a24b;
+  box-shadow:
+    inset 0 0.08em 0.12em rgba(255, 255, 255, 0.06),
+    inset 0 -0.06em 0.12em rgba(0, 0, 0, 0.7),
+    0 0.5em 1.1em rgba(40, 30, 12, 0.3);
+}
+.boutiqueSignWrap::before,
+.boutiqueSignWrap::after {
+  /* two short brass drop rods from the wall to the sign's top corners */
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 0.6rem;
+  background: linear-gradient(180deg, #d9b65f, #a8842f);
+}
+.boutiqueSignWrap::before { left: calc(50% - 56px); }
+.boutiqueSignWrap::after { right: calc(50% - 56px); }
+
+/* The three arches in a row: window · DOOR · window. The door column is wider + taller. */
+.boutiqueArches {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr 1fr;
+  align-items: end;
+  gap: 0.9rem;
+  padding-bottom: 0;
+}
+
+/* One lit arched opening. The scene shows through, clipped to the arch interior; a warm glow sits on
+   top. Side windows are a touch dimmer + smaller; the door is the bright, full-size centre. */
+.boutiqueArch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 300 / 320;
+  align-self: end;
+  filter: drop-shadow(0 6px 12px rgba(60, 50, 35, 0.18));
+}
+.boutiqueDoor {
+  /* the door stands taller than the side windows. Door scale is tunable (--door-scale). */
+  margin-bottom: 0;
+  transform: scale(calc(1.06 * var(--door-scale, 1)));
+  transform-origin: bottom center;
+  z-index: 2;
+}
+/* The masked "peek" layer that clips a scene to the arched opening. Mask position/size/flip are
+   TUNABLE via CSS vars (the Hero Tuner panel drives --arch-x/-y/-size/-flip; with no panel the baked
+   fallbacks hold). Because every scene PNG places the arch identically, one set of arch params fits
+   all openings. */
+.boutiquePeek {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  transform: var(--arch-flip, none);
+  /* WHITE-interior arch mask (traced from a scene PNG): white = REVEALED under mask-mode:luminance, so
+     the scene shows THROUGH the arch opening. (The older arch-inner.png is black-interior = HIDES the
+     interior, which left these arches empty.) See scripts/trace-arch-mask.js + the masks design post. */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: var(--arch-size, contain);
+  mask-size: var(--arch-size, contain);
+  -webkit-mask-position: var(--arch-x, center) var(--arch-y, center);
+  mask-position: var(--arch-x, center) var(--arch-y, center);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  background: #15110c; /* a dark interior behind the scene, so the glow reads as light from within */
+}
+.boutiquePeekImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.boutiquePeekImgActive {
+  opacity: 1;
+}
+/* Side windows read as displays you glance at: slightly dimmer + warmer than the door. */
+.boutiqueArch:not(.boutiqueDoor) .boutiquePeek {
+  filter: brightness(0.92) saturate(1.05);
+}
+
+/* THE WARM GLOW spilling from inside each arch: an amber radial masked to the arch interior, so the
+   opening looks lit from within (boutique at dusk). A gentle breathing animation makes the light feel
+   alive (the door glows a touch stronger). */
+.boutiqueGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Same WHITE-interior arch mask as the peek, so the glow stays clipped to the SAME opening. */
+  transform: var(--arch-flip, none);
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: var(--arch-size, contain);
+  mask-size: var(--arch-size, contain);
+  -webkit-mask-position: var(--arch-x, center) var(--arch-y, center);
+  mask-position: var(--arch-x, center) var(--arch-y, center);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  /* The warm glow color + strength are tunable (--glow, --glow-strength). */
+  background: radial-gradient(
+    80% 70% at 50% 78%,
+    color-mix(in srgb, var(--glow, #ffce8a) calc(var(--glow-strength, 0.55) * 100%), transparent) 0%,
+    color-mix(in srgb, var(--glow, #ffce8a) calc(var(--glow-strength, 0.55) * 50%), transparent) 38%,
+    transparent 72%
+  );
+  mix-blend-mode: normal; /* deliberately NOT a blend mode (the retina-seam lesson) */
+  animation: boutiqueBreathe 5s ease-in-out infinite alternate;
+}
+.boutiqueDoor .boutiqueGlow {
+  background: radial-gradient(
+    82% 74% at 50% 76%,
+    rgba(255, 214, 150, 0.7) 0%,
+    rgba(255, 200, 124, 0.36) 40%,
+    rgba(255, 200, 124, 0) 74%
+  );
+}
+@keyframes boutiqueBreathe {
+  0% { opacity: 0.82; }
+  100% { opacity: 1; }
+}
+
+/* The stone BASE / sill the storefront sits on: a darker stone course grounding the facade. */
+.boutiqueBase {
+  height: 18px;
+  margin: 0 -1.4rem;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, #cfc6b6 0%, #b8ad99 100%);
+  border-top: 1px solid rgba(120, 105, 80, 0.4);
+  box-shadow: inset 0 2px 4px rgba(120, 105, 80, 0.25);
+}
+
+/* Reduced motion: no breathing glow (hold it steady). */
+@media (prefers-reduced-motion: reduce) {
+  .boutiqueGlow { animation: none; opacity: 0.92; }
+}
+
+/* Dark theme: deepen the stone so the warm glow pops against a dusk-blue facade. */
+[data-theme='dark'] .boutiqueFront {
+  background: linear-gradient(180deg, #3a3a42 0%, #2c2c33 60%, #232329 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 14px 30px rgba(0, 0, 0, 0.4);
+}
+[data-theme='dark'] .boutiqueBase {
+  background: linear-gradient(180deg, #2e2e35 0%, #232329 100%);
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile: keep all three arches (the storefront's signature), just tighten the gaps. */
+@media screen and (max-width: 600px) {
+  .boutiqueArches {
+    gap: 0.4rem;
+    grid-template-columns: 1fr 1.3fr 1fr;
+  }
+  .boutiqueFront { padding-inline: 0.8rem; }
+  .boutiqueBase { margin-inline: -0.8rem; }
+  .boutiqueSign { font-size: 0.7rem; }
+}
+
+/* ── Hero Tuner: arch-mask OVERLAY (dev-only) ──────────────────────────────────────────────────
+   When the Hero Tuner toggles `data-hero-mask-overlay` on the hero root, draw the SAME tunable arch
+   mask as a bright tinted shape over each opening, so you can SEE the mask vs the scene's drawn arch
+   and pin --arch-x/-y/-size to line them up. Pure dev affordance: only active under the attribute,
+   which only the localhost-gated panel sets. */
+[data-hero-mask-overlay] .boutiqueArch::after,
+[data-hero-mask-overlay] .studioDoorway::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  background: rgba(255, 0, 128, 0.45);
+  transform: var(--arch-flip, none);
+  /* White-interior mask so the pink overlay fills the arch OPENING (where the scene shows), making it
+     obvious how the mask sits vs the drawn arch as you nudge --arch-x/-y/-size. */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: var(--arch-size, contain);
+  mask-size: var(--arch-size, contain);
+  -webkit-mask-position: var(--arch-x, center) var(--arch-y, center);
+  mask-position: var(--arch-x, center) var(--arch-y, center);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* ── Creative-studio hero (A/B/C/D variant C): a Moroccan terracotta FACADE ───────────────────────
+   A warm terracotta wall with a zellij tile CORNICE across the top; the Vestaboard HANGS from a wall
+   bracket on the LEFT; the arched WINDOW on the RIGHT (the scene art's own arch) is set into the wall
+   for a peek at the project. Reference: a riad wall, board hung top-left, arched window to the right.
+   Palette: terracotta wall #c66b3d, zellij blue #1f5673 + gold #d9a441. */
+.studioGate {
+  display: block;
+  width: 100%;
+  max-width: var(--body-w, 720px); /* tunable house WIDTH (Hero Tuner) */
+  margin: 0 auto;
+  text-decoration: none;
+  color: inherit;
+}
+.studioGate:hover,
+.studioGate:focus-visible {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Parallax scroll-models (the scroll-driven hero wrappers) ──────────────────────────────────────
+   pin / horizontal: a TALL spacer holds a STICKY hero (position: sticky), so scrolling the spacer
+   drives the scenes while the hero stays put, then the hero releases at the spacer's end and the page
+   scrolls on (no permanent scroll-jack). inplace: the hero is in NORMAL flow (no spacer/pin), the door
+   morphs as it scrolls past. The shared engine handles the flash + reduced-motion. */
+.parallaxSpacer {
+  position: relative;
+  width: 100%;
+  /* height is set inline (count * SCENE_VH * 100vh); the spacer is the scroll runway. */
+}
+.parallaxStick {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* the pinned viewport: the hero is centred full-screen while scenes advance */
+  overflow: hidden;
+}
+/* the gate inside a pinned model fills the sticky viewport height so the facade is vertically centred */
+.parallaxSticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* inplace: plain flow, the hero just sits in the page; the engine reads its scroll-through. */
+.parallaxInplace {
+  position: relative;
+  width: 100%;
+}
+
+/* horizontal model: a depth strip BEHIND the facade showing the 7 scenes in a row, panned by `active`
+   (the door still carries the real door↔scene flash; this is the parallax backdrop). It is clipped to
+   the gate and sits behind the facade. */
+.parallaxPanLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  opacity: 0.18; /* a subtle backdrop, not competing with the facade */
+  z-index: 0;
+  pointer-events: none;
+  isolation: isolate; /* contain any compositing (the hi-DPI seam lesson) */
+}
+.parallaxPanTrack {
+  display: flex;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* eased pan between scenes */
+  will-change: transform;
+}
+.parallaxPanImg {
+  flex: 1 0 auto;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The active-scene NAVBAR highlight: as the door shows /craft, the 'Craft' top-navbar item lights up.
+   We add this class to the matching navbar <a>; it reverts when the scene changes / the hero leaves.
+   Uses the theme's primary so it reads as "you are heading here" without faking Docusaurus's own
+   active style. */
+:global(.navbar__link).navbarSceneActive,
+.navbarSceneActive {
+  color: var(--ifm-color-primary) !important;
+  font-weight: 700;
+}
+.navbarSceneActive::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0.25rem;
+  height: 2px;
+  background: var(--ifm-color-primary);
+  border-radius: 2px;
+}
+
+/* The facade = a vertical stack: the TEAL roof on top, the SQUARE terracotta body below it. */
+.studioFacade {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* The SQUARE house BODY (terracotta wall, gold outline). aspect-ratio:1 keeps it square; the roof
+   above is a triangle = half this body's height. The board + the three arches live INSIDE the body. */
+.studioBody {
+  position: relative;
+  aspect-ratio: 2 / 1; /* HALF-height: a wide rectangle (the square's height cut in half) */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* arches sit at the bottom; the board hangs in the upper space */
+  padding: 0 0.7rem 0.5rem; /* small side padding so the outer arches sit NEAR the square's edges */
+  overflow: hidden;
+  /* BODY is TEAL (swapped with the roof). Tunable via --wall. */
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.16) 0%, rgba(217, 164, 65, 0) 55%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--wall, #3f7d72) 88%, #fff) 0%,
+      var(--wall, #3f7d72) 60%,
+      color-mix(in srgb, var(--wall, #3f7d72) 90%, #000) 100%);
+  background-color: var(--wall, #3f7d72);
+  /* GOLD rounded outline around the square body (sides + bottom; the TOP edge is the shared eave line
+     with the triangle roof, so they overlap as one gold line). */
+  border: 3px solid #d9a441;
+  border-radius: 4px 4px 6px 6px;
+  box-shadow: 0 14px 30px rgba(80, 40, 20, 0.18);
+}
+
+/* The pitched terracotta-tile ROOF capping the facade (the signature of a Lebanese central-hall home).
+   A TRIANGULAR gable (front-on hip roof): rises from the full width at the eave to a short ridge at
+   the top, terracotta tile with rib highlights. Height ≈ 1/2 the body's arches, matching the
+   reference's roof:body proportion. The clip-path makes the triangle; the eave overhangs the wall. */
+/* A PLAIN SOLID terracotta roof: a flat-topped triangle (hip roof, full width at the eave, short ridge
+   at the top) in one solid darker-terracotta colour, with a SINGLE diagonal hip line from the ridge
+   midpoint down to ~1/5 in from the top-right edge (the one visible roof seam). No tile texture/gradient. */
+.studioRoof {
+  position: relative;
+  /* the roof TRIANGLE height is HALVED too (was aspect 2:1 → now 4:1, half the height for the same
+     full width). It stays proportional to the now-shorter body. */
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  /* Overlap the body's top edge by -2px (not -1px): the body's top has a lighter gradient edge, and a
+     1px overlap lands on a fractional device pixel at DPR 2/3, leaving that lighter edge peeking out as
+     a faint horizontal hairline across the teal (worse on mobile = higher DPR). -2px always covers it.
+     (The hi-DPI seam family — see the maintain-homepage-hero skill.) */
+  margin: 0 0 -2px;
+  /* a TRUE TRIANGLE: apex at the top centre, full width at the eave (not a trapezoid). */
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  /* ROOF is PLAIN SOLID terracotta (swapped with the body; tunable --roof). The single GOLD hip line
+     is drawn as a thin clipped band in ::before (apex to 1/5-from-the-bottom-right-corner). */
+  background: var(--roof, #c66b3d);
+  filter: drop-shadow(0 4px 5px rgba(60, 28, 12, 0.4));
+}
+/* The single GOLD hip line: a thin gold band running from the triangle's TIP (apex, 50% 0) down to a
+   point 1/5 in from the bottom-RIGHT corner (so x = 80%, y = 100%; tunable via --roof-line). Drawn as
+   a narrow quadrilateral clip-path so it is a true straight segment between those two points (a
+   linear-gradient can only band perpendicular to its axis, which can't connect apex→corner cleanly). */
+.studioRoof::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #d9a441;
+  /* a ~2-unit-wide band; the apex pair straddles 50%, the foot pair straddles --roof-line (default 80%)
+     1/5 in from the right corner. left/right edges of the band offset slightly so it has thickness. */
+  clip-path: polygon(
+    49.6% 0, 50.4% 0,
+    calc(var(--roof-line, 80%) + 0.4%) 100%, calc(var(--roof-line, 80%) - 0.4%) 100%);
+}
+/* The GOLD outline along the triangle's two SLOPES, drawn as a thin gold line UNDER each sloped edge
+   via two linear-gradient lines inside the (clipped) roof, so they ride exactly on the triangle's
+   sides. The base edge is the shared eave (the square's gold top border), so they overlap as one. */
+.studioRoof::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  /* a thin gold stroke hugging the left + right slopes (drawn just inside the clip edge) */
+  background:
+    linear-gradient(to bottom left, #d9a441 0 2px, transparent 2px) top right / 50% 100% no-repeat,
+    linear-gradient(to bottom right, #d9a441 0 2px, transparent 2px) top left / 50% 100% no-repeat;
+}
+
+/* The wall row: the three arches in a tight row that nearly FILLS the square width (the outer arches
+   sit NEAR the square's side edges; small gaps bring the door + windows close together). */
+.studioRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* window · door · scene, ALL the same size */
+  align-items: end; /* the three arches sit on the same baseline */
+  gap: var(--arch-gap, 0.3rem); /* spacing between the three arches (Hero Tuner) */
+  /* room at the TOP for the wide board to HANG above the centre door (board height + the shorter
+     bracket/chains gap), and little space at the BOTTOM so the arches sit near the wall's lower edge. */
+  padding: 5rem 0 0.2rem;
+}
+
+/* A plain arched opening (the static window + door): the cleaned PNG already carries the arch, so
+   we just size it. The side windows share this; the centre door is a touch TALLER (the classic
+   central-hall arcade where the middle arch rises above the flanking pair). */
+.studioArch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 300 / 320;
+  align-self: end;
+  filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.22));
+}
+.studioArchImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* The side WINDOWS (left + right) are RAISED off the floor a bit (tunable --win-raise) and a touch
+   SMALLER than the door (tunable --win-scale); a window sits higher on the wall than a door, and the
+   middle arch reads as the dominant one. The centre door reaches the floor. */
+.studioRow > .studioArch,
+.studioDoorway {
+  transform: translateY(calc(-1 * var(--win-raise, 6%))) scale(var(--win-scale, 0.9));
+  transform-origin: bottom center;
+}
+/* The centre DOOR rises above the side windows (Lebanese central-hall arcade), but sits LOWER (toward
+   the floor) than them — it overrides the window-raise. --door-drop tunes how far it drops. */
+.studioCenter .studioArch {
+  transform: translateY(var(--door-drop, 12%)) scale(1.12);
+  transform-origin: bottom center;
+  isolation: isolate; /* contain the flash bloom's compositing (the hi-DPI seam lesson) */
+}
+
+/* ── The centre DOORWAY: door ↔ scene cross-fade + white flash ─────────────────────────────────
+   The carved DOOR and the project SCENE are stacked layers that cross-fade; the WHITE FLASH blooms
+   over the swap (masked to the arch). Only ONE of door/scene is opaque at a time (.studioLayerOn). */
+.studioDoorLayer,
+.studioDoorScene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.studioLayerOn {
+  opacity: 1;
+}
+/* the SCENE container is clipped to the arch interior (white-interior mask), like the side peek. */
+.studioDoorScene {
+  overflow: hidden;
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+/* THE WHITE FLASH: a semi-transparent white bloom masked to the arch (NOT a white-out: peak alpha
+   below opaque so the door/scene reads through). Off by default; data-flash="on" blooms it. The bloom
+   ramp == the board roll, so the new scene + the settled board arrive together. NO mix-blend/filter
+   (the retina-seam lesson); the parent arch is isolated. */
+.studioFlash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* opacity is CONTINUOUS, driven by the scroll engine via --flash-o (0..1). NO transition, so the
+     bloom scrubs EXACTLY with scroll position: scroll = brighten/dim, STOP = it holds (hang on the
+     flash). The timer hero (ChooserStudio) animates --flash-o with a CSS transition instead. */
+  opacity: var(--flash-o, 0);
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  /* A BLINDING bloom that FILLS the whole arch: near-opaque white across most of the radius so the
+     scene is nearly washed out (as if a brilliant light glows inside the house). It must fade to FULLY
+     TRANSPARENT (alpha 0) BEFORE the arch boundary, so the mask's soft anti-aliased edge has no white
+     left to show — otherwise the flash leaks a thin WHITE OUTLINE around the arch top into the teal
+     (a real bug: the old `0.35` end-alpha traced the arch on scroll). The dark gap between the bloom's
+     fade and the arch edge keeps the arch outline reading without a white halo. */
+  background: radial-gradient(
+    ellipse 116% 116% at 50% 46%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 55%,
+    rgba(255, 255, 255, 0.92) 74%,
+    rgba(255, 255, 255, 0.5) 86%,
+    rgba(255, 255, 255, 0) 96%
+  );
+}
+/* The flash opacity is ALWAYS the continuous --flash-o (set by the shared progress model: scroll OR
+   the timer's rAF clock both produce a smooth 0→1→0 ramp), so no per-mode data-flash rules are needed. */
+@media (prefers-reduced-motion: reduce) {
+  .studioFlash {
+    opacity: 0 !important; /* no strobe; the door/scene just cross-fades */
+  }
+}
+/* GOLD balcony RAILING in front of each WINDOW only (not the door): a short balustrade at the base of
+   the window arch that extends a bit on either side. A row of gold balusters between a gold top +
+   bottom rail. Positioned absolutely at the window's base; wider than the arch so it overhangs a bit. */
+.studioWindowRail {
+  position: absolute;
+  left: var(--rail-protrude, -3%);
+  right: var(--rail-protrude, -3%); /* how far it protrudes past the window sides (Hero Tuner) */
+  bottom: 2%;
+  height: var(--rail-height, 30px); /* how far it extends downward (Hero Tuner) */
+  z-index: 5;
+  /* SOLID-BORDER top/bottom rails + a balusters-only gradient (see .studioBoardRail): a gradient
+     color-stop on the box's top/bottom edge gets antialiased into a faint light hairline in FIREFOX,
+     so the rails are solid borders (crisp) and the gradient (clipped to the content box) draws only
+     the vertical balusters. */
+  border-top: 2.5px solid #d9a441;
+  border-bottom: 2.5px solid #b8881f;
+  background: repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px);
+  background-clip: content-box;
+  box-sizing: border-box;
+}
+
+/* MOBILE-ONLY gold balcony railing, spanning the teal gap BELOW the hanging board and ABOVE the door.
+   On mobile the side windows (with their railings) are hidden, so this returns the Lebanese gold
+   detailing and fills the empty wall band. Hidden on desktop (shown in the ≤600px query). Reuses the
+   window-rail gold baluster look. Positioned absolutely within .studioCenter, just under the board. */
+.studioBoardRail {
+  display: none;
+}
+
+/* The CENTER column: the carved door, SAME size as the side arches (it IS a .studioArch). The
+   Vestaboard sign is positioned ABSOLUTELY above it, so its WIDTH (≈3× the arch) does NOT stretch
+   this grid column (which would make the door bigger than the side windows). All three arches stay
+   the same size + bottom-aligned. */
+.studioCenter {
+  position: relative;
+  align-self: end;
+  min-width: 0; /* don't let the wide absolute board force this grid track wider */
+  z-index: 2; /* the door + sign read as the entrance, in front of the side windows */
+}
+
+/* ── The HANGING board: suspended above the centre door from a wall bracket, swaying gently ───────
+   ABSOLUTELY positioned over the door so its WIDTH (≈3× the arch) does NOT widen the centre grid
+   column. It hangs in the WALL GAP above the door: the bracket + chains show against the terracotta
+   above the board (a clear "hanging" read). Sign offset + scale are tunable (--sign-x/-y/-scale). */
+.studioSignHanger {
+  position: absolute;
+  left: 50%;
+  /* sit ABOVE the door but pulled DOWN into the wall gap, so there's terracotta + the bracket/chains
+     visible above the board (and BELOW the cornice, not overlapping it). */
+  bottom: calc(100% + 0.5rem);
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  padding-top: 1.4rem; /* the visible gap where the mount bar + chains hang (kept short so the bar
+                          sits on the terracotta wall, not up in the cornice band) */
+  transform: translate(calc(-50% + var(--sign-x, 0px)), var(--sign-y, 0px)) scale(var(--sign-scale, 1));
+  transform-origin: bottom center;
+}
+.studioSignHanger::before {
+  /* the mount bar bolted to the wall, spanning the FULL board width (the board grew ~3× the arch). */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0; /* span the hanger's full width (= the board's width) */
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #5a3a1f 0%, #3a2512 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.studioSignSwing {
+  position: relative;
+  transform-origin: 50% -1.4rem; /* pivot at the mount bar, so it sways like a hung sign */
+  animation: studioSway 6s ease-in-out infinite alternate;
+}
+.studioSignSwing::before,
+.studioSignSwing::after {
+  /* two short chains spanning the gap from the mount bar down to the board's top corners */
+  content: '';
+  position: absolute;
+  top: -1.4rem;
+  width: 2px;
+  height: 1.4rem;
+  background: linear-gradient(180deg, #d9a441 0%, #a87a23 100%);
+}
+.studioSignSwing::before { left: 14%; }
+.studioSignSwing::after { right: 14%; }
+@keyframes studioSway {
+  0% { transform: rotate(-0.6deg); }
+  100% { transform: rotate(0.6deg); }
+}
+
+/* The sign housing: the dark Vestaboard case with a warm gold trim. The board is WIDE (~3× the arch,
+   30 columns) and the tiles FILL it (a tight bezel padding + bigger --flap-gap pacing), so it reads as
+   a full grid of flap tiles, not text floating in a bordered box. font-size sets the absolute size. */
+.studioSign {
+  --flap-gap: 0.18em; /* bigger pacing between the individual flap tiles */
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 0.8rem; /* BIGGER tiles (3 rows of bigger letters); 22 cols keeps it ~3× the arch */
+  padding: 0.35em 0.4em; /* tight bezel: the tiles fill the case to the edge */
+  border-radius: 0.4em;
+  background: linear-gradient(180deg, #0e0e10 0%, #050506 100%);
+  border: 2px solid #d9a441;
+  box-shadow:
+    inset 0 0.08em 0.12em rgba(255, 255, 255, 0.06),
+    inset 0 -0.06em 0.12em rgba(0, 0, 0, 0.7),
+    0 0.6em 1.4em rgba(40, 20, 10, 0.32);
+}
+
+/* ── The arched WINDOW (right): the scene art's own arch, set into the wall ──────────────────────
+   A fixed copy of the active scene holds the arch still; the cross-fading peek is clipped to that
+   same arch via the white-interior mask. */
+.studioDoorway {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 300 / 320;
+  align-self: end; /* bottom-align with the window + door arches */
+  filter: drop-shadow(0 8px 16px rgba(60, 30, 15, 0.25));
+}
+.studioDoorFixed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+.studioPeek {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  isolation: isolate;
+  transform: var(--arch-flip, none);
+  /* Tunable WHITE-interior arch mask (white = revealed under luminance; the Hero Tuner drives
+     --arch-x/-y/-size/-flip; baked fallbacks here). */
+  transform: var(--arch-flip, none);
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: var(--arch-size, contain);
+  mask-size: var(--arch-size, contain);
+  -webkit-mask-position: var(--arch-x, center) var(--arch-y, center);
+  mask-position: var(--arch-x, center) var(--arch-y, center);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.studioPeekImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.studioPeekImgActive {
+  opacity: 1;
+}
+
+/* Reduced motion: no sway. The peek still cross-fades (a calm switch). */
+@media (prefers-reduced-motion: reduce) {
+  .studioSignSwing { animation: none; }
+}
+
+/* Dark theme: deepen the terracotta so the wall reads as warmly-lit at dusk. */
+[data-theme='dark'] .studioFacade {
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.2) 0%, rgba(217, 164, 65, 0) 55%),
+    linear-gradient(180deg, #6e3a1f 0%, #4a2613 100%);
+  background-color: #4a2613;
+}
+
+/* Mobile: keep the board + window side-by-side; give the window a touch more width, shrink the sign. */
+/* MOBILE (≤600px): the 3-arch row + the wide board overflow a phone, so only the left window showed
+   and the door + board were clipped off-screen. On mobile we go DOOR-ONLY: hide the two side windows
+   and show just the central door + board, centred and a touch larger, so the interactive part (the
+   door you travel through + the board that names it) is fully visible above the fold. */
+@media screen and (max-width: 600px) {
+  /* On mobile the pinned viewport was much taller than the house, leaving big empty gaps. Make the
+     house FILL the pinned viewport: the sticky is the small-viewport height, the gate + facade STRETCH
+     to fill it (the body grows to take the leftover height instead of a fixed aspect box), so there's
+     no dead space above or below. */
+  .parallaxStick {
+    align-items: stretch;
+    height: 100svh; /* small-viewport unit: excludes the mobile browser chrome, so no phantom gap */
+  }
+  .parallaxSticky {
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  .studioGate {
+    max-width: min(96vw, 440px); /* wide on mobile so the house is large */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* the facade fills the gate height; the roof keeps its shape, the BODY grows to take the rest so the
+     house occupies the whole viewport (no empty wall gaps top/bottom). */
+  .studioFacade {
+    height: 100%;
+    justify-content: center;
+  }
+  /* On mobile the house is DOOR-ONLY (side windows hidden). The body GROWS to fill the leftover height
+     (flex), instead of a fixed aspect box, so the house fills the pinned viewport. */
+  .studioBody {
+    aspect-ratio: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .studioRow {
+    grid-template-columns: 1fr; /* single column: just the centre door */
+    justify-items: center;
+    gap: 0;
+    padding-top: 6rem; /* room for the hanging board ABOVE the door + a teal gap for the rail below it */
+  }
+  /* MOBILE: hang the board HIGHER so there's a real teal band between its bottom and the door arch
+     (room for the gold rail to sit in the gap, not on the scene). */
+  .studioCenter .studioSignHanger {
+    bottom: calc(100% + 2.1rem);
+  }
+  /* hide the two flanking WINDOWS (the direct-child arches); keep .studioCenter (door + board) */
+  .studioRow > .studioArch {
+    display: none;
+  }
+  /* a BIGGER door, centred, filling more of the narrower wall */
+  .studioCenter {
+    width: min(74vw, 260px);
+  }
+  .studioCenter .studioArch {
+    transform: translateY(var(--door-drop, 8%)) scale(1.08);
+  }
+  .studioFacade { padding-inline: 0.6rem; }
+  .studioCornice { margin-inline: -0.6rem; }
+  /* a WIDER board on mobile (more columns set in TSX); smaller font so the extra columns fit the width */
+  .studioSign { font-size: 0.62rem; }
+  /* SHOW the gold balcony railing in the gap BETWEEN the hanging board and the door ARCH (side windows
+     + their railings are hidden on mobile). Anchored to .studioCenter's TOP edge (= the arch top) via
+     `bottom: 100%` and pushed UP into the wall band, so it sits in the empty teal ABOVE the arch, NOT
+     across the scene. A touch wider than the door; same gold-baluster look as the window rails. */
+  .studioBoardRail {
+    display: block;
+    position: absolute;
+    left: -6%;
+    right: -6%; /* overhang the door sides a little */
+    bottom: calc(100% + 0.05rem); /* low in the gap, just ABOVE the arch top (moved down per request) */
+    height: 18px;
+    z-index: 5;
+    /* The TOP + BOTTOM rails are SOLID BORDERS (Firefox renders a solid border crisply with no edge
+       fringe), NOT gradient bands. A gradient color-stop sitting ON the box's top/bottom edge gets
+       antialiased against the edge in Firefox into a faint light hairline (the "white line under the
+       rail" — Firefox-only, invisible in Chrome, survived the transparent-keyword fix because the
+       fringe is the gradient-EDGE antialiasing itself, not the `transparent` color). With solid
+       borders the box edges are crisp; only the vertical BALUSTERS (which never touch the top/bottom
+       edge) use a repeating gradient, and its gaps are transparent-GOLD so they don't fringe either. */
+    border-top: 2.5px solid #d9a441;
+    border-bottom: 2.5px solid #b8881f;
+    background: repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px);
+    background-clip: content-box; /* keep the baluster gradient OFF the borders */
+    box-sizing: border-box;
+    /* NO `filter: drop-shadow` (GPU-layer hairline risk); grounding, if wanted, via a solid element. */
+  }
+}
+
 /* Cards sit on the cream paper now (not a translucent layer over a gradient), so
    they read as raised tiles: surface bg, hairline border, coral accent on hover.
    In the film strip the width is FIXED (not flex-grow) so the marquee math stays exact and the
@@ -231,5 +1285,25 @@
 
   .heroSubtitle {
     font-size: 1.25rem;
+  }
+}
+
+/* MOBILE: shrink the hero header so the PINNED parallax house fits the viewport (the pinned hero is
+   100vh; a big title would push the house below the fold). Tighter title/subtitle + less padding give
+   the house room above the fold. */
+@media screen and (max-width: 600px) {
+  .heroBanner {
+    padding: 1.5rem 1rem 1rem;
+  }
+  .heroTitle {
+    font-size: 2rem;
+  }
+  .heroSubtitle {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+  }
+  .heroEyebrow {
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
   }
 }

@@ -1,0 +1,144 @@
+/* SplitFlap: a Vestaboard-style split-flap row. Each cell is a 1ch-ish box split horizontally at
+   the middle; the top + bottom leaves are the two static halves, and during a flip a folding-down
+   top leaf (old char) + a folding-up bottom leaf (new char) animate the mechanical swap. */
+
+.board {
+  display: inline-flex;
+  flex-direction: column;
+  /* Tile pacing is tunable per caller via --flap-gap (the gap between tiles); default 0.12em. */
+  gap: var(--flap-gap, 0.12em); /* vertical gap between rows */
+  /* perspective gives the leaves real depth as they rotate. */
+  perspective: 360px;
+  vertical-align: middle;
+  /* A split-flap face is monospaced + light-on-dark; override the heading font for the board feel. */
+  font-family: var(--ifm-font-family-monospace, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-weight: 600;
+}
+
+.row {
+  display: inline-flex;
+  gap: var(--flap-gap, 0.12em); /* horizontal air between tiles, like the gaps on a real board */
+}
+
+/* Each cell is a physical FLAP TILE: a dark recessed housing with a glyph, a center seam where the
+   top + bottom leaves meet, and a soft bevel so it reads as a real board element, not spaced text. */
+.cell {
+  position: relative;
+  display: inline-block;
+  width: 0.78em;
+  height: 1.18em;
+  line-height: 1.18em;
+  border-radius: 0.1em;
+  /* CLIP the tile: a glyph mid-flip during RAPID char changes (fast scroll) could otherwise spill
+     beyond the tile and stretch out of the board. Clipping to the tile keeps every flap within bounds. */
+  overflow: hidden;
+  flex: 0 0 auto; /* never let a flexed row stretch a tile wider/taller than its em box */
+  /* Perspective on the CELL (the leaves' parent) so their rotateX reads as a real 3D flap turning,
+     not a flat squash. */
+  perspective: 140px;
+  /* The tile housing: near-black with a subtle top-to-bottom sheen. */
+  background: linear-gradient(180deg, #2b2b2e 0%, #202023 49%, #161618 51%, #1d1d20 100%);
+  color: #f4f1ea; /* warm off-white glyph, like the printed flaps */
+  box-shadow:
+    inset 0 0.04em 0.02em rgba(255, 255, 255, 0.08),
+    inset 0 -0.04em 0.04em rgba(0, 0, 0, 0.5),
+    0 0.03em 0.06em rgba(0, 0, 0, 0.28);
+}
+/* The center SEAM: the hairline gap between the two leaves, the signature split-flap line. */
+.cell::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0.06em;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0.04em 0.03em rgba(0, 0, 0, 0.4);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.leaf {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%; /* each leaf is exactly half the cell */
+  overflow: hidden;
+  backface-visibility: hidden;
+  /* OPAQUE dark face (matches the tile) so a folding leaf never shows the tile/glyph behind it
+     through a gap, which is what produced the white hairlines. Solid color, no transparency. */
+  background-color: #1e1e21;
+}
+
+/* The static top + bottom halves. Each clips the SAME full-height glyph to its half. The leaves
+   overlap the seam line by a hair (calc + 1px) so there is never a sub-pixel transparent gap at
+   the hinge (the source of the white line). */
+.leafTop {
+  top: 0;
+  height: calc(50% + 0.5px);
+  transform-origin: bottom center;
+}
+.leafBottom {
+  bottom: 0;
+  height: calc(50% + 0.5px);
+  transform-origin: top center;
+}
+
+/* The glyph is the FULL cell height (1em line). The top leaf shows its top half (glyph at top:0);
+   the bottom leaf shows its bottom half (glyph pulled up so the lower half lands in the lower leaf). */
+.glyph {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.18em; /* = cell height, so each leaf shows exactly half the glyph */
+  line-height: 1.18em;
+  text-align: center;
+  color: #f4f1ea;
+}
+.leafTop .glyph {
+  top: 0;
+}
+.leafBottom .glyph {
+  bottom: 0; /* anchor to the bottom so the glyph's lower half shows in the bottom leaf */
+}
+
+/* The MOVING leaves during a flip. The OLD char's top half folds DOWN to the hinge in the first
+   half of the step; the NEW char's bottom half folds UP from the hinge in the second half. Each is
+   an opaque dark leaf so no light bleeds through. */
+.foldDown {
+  z-index: 2;
+  animation: flapFoldDown calc(var(--flip-ms) / 2) cubic-bezier(0.4, 0, 1, 0.5) forwards;
+}
+.foldUp {
+  z-index: 2;
+  animation: flapFoldUp calc(var(--flip-ms) / 2) cubic-bezier(0, 0.5, 0.6, 1) forwards;
+  animation-delay: calc(var(--flip-ms) / 2);
+  transform: rotateX(90deg);
+}
+
+@keyframes flapFoldDown {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+@keyframes flapFoldUp {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+/* Reduced motion: no mechanical flip. Hide the moving leaves; the static faces just swap (an
+   instant/cross-fade change), so the text still updates without any spinning. */
+@media (prefers-reduced-motion: reduce) {
+  .foldDown,
+  .foldUp {
+    display: none;
+  }
+}

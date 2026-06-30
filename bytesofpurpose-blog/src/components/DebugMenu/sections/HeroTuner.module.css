@@ -1,0 +1,110 @@
+/* Hero Tuner section styles (dev-only DebugMenu). Compact controls so the panel stays usable. */
+.tuner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+}
+
+.variantRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.variant,
+.variantActive {
+  flex: 1 1 auto;
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-surface-color);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+.variantActive {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0;
+  color: var(--ifm-color-content-secondary);
+  font-style: italic;
+}
+
+.group {
+  margin: 0;
+  padding: 0.4rem 0.5rem 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.legend {
+  padding: 0 0.3rem;
+  font-weight: 600;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ifm-color-content-secondary);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.controlLabel {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.controlLabel em {
+  font-style: normal;
+  color: var(--ifm-color-primary);
+  font-variant-numeric: tabular-nums;
+}
+.control input[type='range'] {
+  width: 100%;
+}
+
+.overlayToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+}
+.copy,
+.resetBtn {
+  flex: 1 1 auto;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-surface-color);
+  color: inherit;
+  cursor: pointer;
+}
+.copy {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+.readout {
+  display: block;
+  padding: 0.3rem 0.4rem;
+  border-radius: 0.3rem;
+  background: var(--ifm-color-emphasis-100);
+  font-size: 0.72rem;
+  word-break: break-all;
+  color: var(--ifm-color-content-secondary);
+}
