@@ -47,14 +47,14 @@ const CHOOSER_CARDS: ReadonlyArray<{
     to: '/initiatives',
     img: '/img/cards/initiatives.png',
     alt: 'Omar conducting an orchestra from the podium',
-    title: "📝 Explore the Things I've Done",
+    title: '📝 Explore My Initiatives',
     body: 'The dated things I actually did.',
   },
   {
     to: '/thoughts',
     img: '/img/cards/thinking.png',
     alt: 'Omar in thought, hand to his chin',
-    title: '💭 Explore My Ideas',
+    title: '💭 Explore My Thoughts',
     body: "Ideas I've had but not acted on yet.",
   },
   {
