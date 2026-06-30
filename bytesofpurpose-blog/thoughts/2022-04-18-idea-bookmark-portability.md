@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 Switching browsers always strands my bookmarks. The export/import is doable through the UI, but

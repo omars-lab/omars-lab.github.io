@@ -2,7 +2,7 @@
 slug: idea-portable-scripts
 title: 'Should I Make My Scripts Portable Across Machines?'
 sidebar_label: 'Portable scripts?'
-description: 'Package my own reusable scripts so a brew install brings them along on any machine, and keep work tasks continuously backed up on a schedule so nothing local-only is ever lost.'
+description: 'Package my reusable scripts so a brew install brings them to any machine, and keep work tasks backed up on a schedule so nothing local-only is ever lost.'
 authors: [oeid]
 tags: [ideas, scripting, automation, backup, tooling]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 My useful helpers live on one machine. Every new laptop means re-collecting them by hand, and

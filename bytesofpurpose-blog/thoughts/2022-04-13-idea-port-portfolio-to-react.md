@@ -2,7 +2,7 @@
 slug: idea-port-portfolio-to-react
 title: 'Should I Port My Portfolio to React?'
 sidebar_label: 'Portfolio to React?'
-description: 'A captured idea, since actioned: port my portfolio site over to React. Tracked here as a shipped idea on the board so the backlog reflects what actually got done.'
+description: 'A captured idea, since actioned: port my portfolio site to React. Tracked as a shipped idea on the board so the backlog reflects what actually got done.'
 authors: [oeid]
 tags: [ideas, react, frontend, portfolio, web]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: shipped
 priority: low
-draft: true
+draft: false
 ---
 
 A backlog line that I went on to act on: porting my portfolio over to React. It is here as a

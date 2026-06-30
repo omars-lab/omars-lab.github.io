@@ -2,7 +2,7 @@
 slug: idea-stale-notes-detector
 title: 'Should I Build a Stale-Notes & Bad-Link Detector?'
 sidebar_label: 'Notes health check?'
-description: 'A regular health check over my personal book: surface stale areas by recent-edit count and catch broken links before they rot, both built on a working multi-directory find prune.'
+description: 'A regular health check over my personal book: surface stale areas by recent-edit count and catch broken links before they rot, on a multi-directory find prune.'
 authors: [oeid]
 tags: [ideas, scripting, automation, notes, knowledge-base]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 My personal book grows faster than I curate it. I want it to tell me where it is rotting
