@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 There is metadata on Instagram posts I would like to work with programmatically, and no clean

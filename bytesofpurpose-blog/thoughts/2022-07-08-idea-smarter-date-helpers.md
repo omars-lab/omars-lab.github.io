@@ -2,7 +2,7 @@
 slug: idea-smarter-date-helpers
 title: 'Should I Build Smarter Date-Tag Helpers?'
 sidebar_label: 'Date helpers?'
-description: 'Upgrade the date-tag tooling: a non-recursive "today" substituter, a "next workday" mode, a "next weekend" tag, and a cron that auto-stamps new ideas with their capture date.'
+description: 'Upgrade the date-tag tooling: a non-recursive "today" substituter, "next workday" and "next weekend" tags, and a cron that auto-stamps ideas with capture dates.'
 authors: [oeid]
 tags: [ideas, scripting, automation, dates, tooling]
 date: 2022-07-08
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 My auto-expanding date tags (`>2022-01-12` and friends) work, but the substituter is naive. A

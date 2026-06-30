@@ -2,7 +2,7 @@
 slug: idea-ambient-metric-displays
 title: 'Should I Build Ambient Personal-Metric Displays?'
 sidebar_label: 'Metric displays?'
-description: 'Surface a personal metric where I will actually glance at it: a LaMetric motivator app on the desk display and a NotePlan menu-bar app showing the day''s metrics at a glance.'
+description: 'Surface a personal metric where I will actually glance at it: a LaMetric motivator on the desk display and a NotePlan menu-bar app showing the day''s metrics.'
 authors: [oeid]
 tags: [ideas, app, lametric, noteplan, self-quantifying]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 A metric I have to open an app to see is a metric I forget. I want the numbers I care about to

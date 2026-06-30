@@ -2,7 +2,7 @@
 slug: idea-other-work-streams
 title: 'Should I Auto-Surface My Other Work Streams?'
 sidebar_label: 'Work streams?'
-description: 'Auto-generate an "other work streams" file from every note carrying a "today" tag, so the threads I am actively working stay visible in one place instead of scattered across notes.'
+description: 'Auto-generate an "other work streams" file from every note carrying a "today" tag, so my active threads stay visible in one place instead of scattered.'
 authors: [oeid]
 tags: [ideas, scripting, automation, notes, productivity]
 date: 2022-04-27
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 My active work is scattered across whatever notes I happened to be in. I want a single view of

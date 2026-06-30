@@ -2,7 +2,7 @@
 slug: idea-alias-finder
 title: 'Should I Build an Alias Finder for My Commands?'
 sidebar_label: 'Alias finder?'
-description: 'A tool that scans all my commands and proposes sensible two-letter acronym aliases, so the helpers I reach for most get short names without me inventing them by hand.'
+description: 'A tool that scans all my commands and proposes sensible two-letter acronym aliases, so the helpers I reach for most get short names without me inventing them.'
 authors: [oeid]
 tags: [ideas, scripting, automation, shell, tooling]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 I have more commands than I have short names for. Inventing aliases by hand is haphazard, so the

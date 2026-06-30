@@ -2,7 +2,7 @@
 slug: idea-fast-cross-linking
 title: 'Should I Make Cross-Linking Between My Notes Faster?'
 sidebar_label: 'Cross-linking?'
-description: 'Lower the friction of linking notes together: variable-driven glue links wired into iA Writer, a copy-all-locations helper feeding pbcopy, and auto-inserted VS Code headers in NotePlan files.'
+description: 'Lower the friction of linking notes: variable-driven glue links in iA Writer, a copy-all-locations helper feeding pbcopy, and auto VS Code headers in NotePlan.'
 authors: [oeid]
 tags: [ideas, scripting, automation, notes, knowledge-base]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 The thing that stops me cross-linking notes is friction: hunting for the right path, copying it,

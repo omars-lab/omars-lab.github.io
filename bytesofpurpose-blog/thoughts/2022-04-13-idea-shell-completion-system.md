@@ -2,7 +2,7 @@
 slug: idea-shell-completion-system
 title: 'Should I Build a Self-Describing Shell-Completion System?'
 sidebar_label: 'Shell completion?'
-description: 'One generic completion mechanism every command opts into: run it with --options and it returns its own flags, generated straight from the command''s own bash case statement.'
+description: 'One generic completion mechanism every command opts into: run it with --options and it returns its own flags, generated from its own bash case statement.'
 authors: [oeid]
 tags: [ideas, scripting, automation, shell, tooling]
 date: 2022-04-13
@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 One completion mechanism, shared by every command I write, instead of hand-maintaining a

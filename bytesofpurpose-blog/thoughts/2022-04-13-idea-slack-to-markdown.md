@@ -10,7 +10,7 @@ kind: idea
 board: ideas
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 Good discussions happen in Slack threads, and I want to keep them in my notes. Pasting a thread
