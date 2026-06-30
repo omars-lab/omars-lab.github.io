@@ -34,8 +34,8 @@ export default function VotePage() {
         </p>
         <p className={styles.signalNote}>
           <em>
-            Votes are signal-only for now; clicking 👍 records your interest
-            (no live tally is shown yet).
+            Votes are signal-only for now; clicking the vote button records
+            your interest (no live tally is shown yet).
           </em>
         </p>
 

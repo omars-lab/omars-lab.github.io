@@ -1246,8 +1246,8 @@
   max-width: 220px;
   height: auto;
   border-radius: 110px 110px 14px 14px;
-  filter: drop-shadow(0 6px 16px rgba(26, 26, 26, 0.18));
-  transition: transform 0.2s ease;
+  filter: var(--shadow-arch);
+  transition: transform var(--duration-slow) ease;
 }
 
 .chooserCard:hover .chooserCardImage {
