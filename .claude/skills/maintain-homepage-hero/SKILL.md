@@ -165,6 +165,20 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     is a gradient/AA rendering difference, not a GPU seam — test `playwright`'s bundled `firefox`, not
     just chromium; (b) BISECT (solid bg / no bg / gradient) before theorizing; (c) for a crisp edge in
     Firefox use a solid border, not a gradient stop on the edge.
+15. **KNOWN-UNSOLVED: a faint Firefox-only line at the door-arch LAYER-STACK top, under vigorous
+    scroll.** Distinct from #14 (that was the rail's own edge). The centre door arch is a STACK of ~10
+    GPU-composited layers (door `<img>`, 8 scene `<img>`s, the flash) — most clipped by `mask-image`
+    (a layer-promoter), inside a box that's `transform: scale()`-ed AND `filter: drop-shadow`-ed (two
+    more promoters). They all share a box-TOP up in the teal (the box is taller than the dome), and
+    FIREFOX antialiases that shared layer-stack top edge into a faint ~1px line that resurfaces under
+    vigorous scrolling. Removing ONE promoter (transform→width, filter→inner img, isolation, clip-path)
+    REDUCES it but never kills it — another layer keeps an edge at the same y. **Do NOT repeat the
+    per-property whack-a-mole** — it's exhausted (see the `firefox-arch-seam-investigation` memory for
+    everything tried). The only thing likely to FULLY fix it is collapsing the door+scene+flash stack
+    into ONE pre-composited layer (one layer can't seam against itself) — a real restructure, deferred.
+    The PNG coords are NOT the cause (`validate-arch-assets.js` confirms all scenes conform). It's
+    faint, Firefox-only, vigorous-scroll-only; on the default animation house a normal visitor rarely
+    triggers it.
 
 ## Verify any change
 
