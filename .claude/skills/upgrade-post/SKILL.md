@@ -325,15 +325,26 @@ series shares. Drop it in with no props:
   in the SAME change so the narrative doesn't drift from the icons. The component doc-comment
   and this skill both point at that post as the canonical legend.
 
-### Quote + QuoteSet (the quotes-that-moved-me kit)
+### Quote kit (the quotes-that-moved-me kit): EditorialQuote + PosterQuote + QuoteSet
 
 WHAT: the quote analog of the question kit, but a DELIBERATELY DIFFERENT CX. A question is
 something you ACT on (a clickable card with scheduling badges + a modal); a quote is something
-you RECEIVE and savor. So `<Quote>` is an **editorial pull-quote**: the quote text is the hero
-(large display type, a green left-border, generous space), the attribution is quiet beneath it,
-and "why it moved me" REVEALS on demand rather than competing with the quote. No badges, no
-priority sort, no modal. WHEN: a `quote-set` post (the `💬` kind in `blog-kinds.json`) or the
-`/mindset` page — anywhere you present curated quotes. HOW:
+you RECEIVE and savor. The kit has TWO renderers:
+
+- **`<EditorialQuote>`** (also exported as the back-compat alias **`<Quote>`**) is an editorial
+  pull-quote: the quote text is the hero (large display type, a green left-border, generous
+  space), the attribution is quiet beneath it, and "why it moved me" REVEALS on demand. No
+  badges, no priority sort, no modal.
+- **`<PosterQuote>`** is a general TYPOGRAPHIC-POSTER construct: a stack of `<Beat>`s, each a
+  small quiet line paired with a giant display line. Mix and match small + big lines freely (a
+  cascade, a manifesto, a lone punchy line). NOT tied to any one quote.
+
+Both renderers take an optional **`video`** prop: a quiet "watch" external link (new tab) to a
+related video that talks through the quote. (Use the `find-quote-video` skill to find AND verify
+the right link before pasting it.)
+
+WHEN: a `quote-set` post (the `💬` kind in `blog-kinds.json`) or the `/mindset` page — anywhere
+you present curated quotes. HOW:
 
 ```mdx
 ## On the work itself
@@ -342,30 +353,45 @@ priority sort, no modal. WHEN: a `quote-set` post (the `💬` kind in `blog-kind
 
 <QuoteSet>
 
-<Quote source="Will Durant" cite="often attributed to Aristotle"
+<EditorialQuote source="Will Durant" cite="often attributed to Aristotle"
+  video="https://www.youtube.com/watch?v=VIDEO_ID"
   reflection="It reframed mastery as something I build in the small reps rather than chase in a breakthrough.">
-We are what we repeatedly do. Excellence, then, is not an act, but a habit.
-</Quote>
+We are what we <Focus>repeatedly do</Focus>. Excellence, then, is not an act, but a <Focus>habit</Focus>.
+</EditorialQuote>
+
+<PosterQuote source="Lao Tzu" cite="attribution disputed">
+<Beat lead="Watch your" big="THOUGHTS" />
+<Beat lead="they become your" big="WORDS" />
+<Beat lead="it becomes your" big="DESTINY" />
+</PosterQuote>
 
 </QuoteSet>
 ```
 
-- **`<Quote>` props:** the quote text is the children (write it plain, NO surrounding `"` —
-  the component renders the typographic quotation marks). `source` = attribution (quiet, with a
-  leading em-dash supplied by CSS). `cite` (optional) = the work/origin (rendered italic after
-  the source). `reflection` (optional) = why it moved me, hidden behind a "why it moved me ›"
-  toggle (a quiet reveal, not a modal). A quote with no `reflection` just shows the pull-quote.
+- **`<EditorialQuote>` props:** the quote text is the children (write it plain, NO surrounding
+  `"` — the component renders the typographic quotation marks). `source` = attribution (quiet,
+  with a leading em-dash supplied by CSS). `cite` (optional) = the work/origin (italic after the
+  source). `reflection` (optional) = why it moved me, behind a "why it moved me ›" toggle.
+  `video` (optional) = the watch link. `<Focus>` marks the powerful word(s) — a mint highlight
+  sweeps in under them on hover (reduced-motion safe).
+- **`<PosterQuote>` props:** `source`/`cite`/`video` like above; children are `<Beat>`s.
+  **`<Beat>` props:** `big` (the giant line) and/or `lead` (the small line); either is optional
+  so you can stack big-only, small-only, or paired beats. `leadBelow` puts the small line under
+  the big one (a caption). The giant words carry the same mint highlight sweep on hover. There
+  are NO connector marks between beats — it is a general stack, not a forced chain.
 - **`<QuoteSet>`** wraps the quotes in a theme and lays them out as a VERTICAL READING FLOW
   (room to breathe), not a grid. Optional `theme` prop renders a small eyebrow label when the
-  set is not already under an H2. No sort — quotes render in authored order (received, not
-  ranked). One `<QuoteSet>` per H2 section; blank lines around the tags so MDX parses blocks.
-- The `quote-set` kind's outline (validate-post-outline) wants themed H2 sections + `<Quote>`
-  cards + a `description`. The `/mindset` page is the front door that surfaces the quote-set
-  posts; quote sets are NOT a `/thoughts` thought-kind (they live with Mindset, not Thoughts).
-- Both are in `@omars-lab/blog-ui` and registered in `MDXComponents.tsx` — no import in `.mdx`.
-  Reflects on demand with `prefers-reduced-motion` respected (the chevron transition is gated).
-  The file must be `.mdx`. After changing the kit, rebuild the package (`yarn build` in
-  `packages/blog-ui`) + reinstall the `file:` dep so the blog picks up the new `dist/`.
+  set is not already under an H2. No sort — quotes render in authored order. One `<QuoteSet>`
+  per H2 section; blank lines around the tags so MDX parses blocks.
+- The `quote-set` kind's outline (validate-post-outline) wants themed H2 sections + quote
+  components (an `<EditorialQuote>`/`<Quote>` or a `<PosterQuote>`) + a `description`. The
+  `/mindset` page is the front door; quote sets live with Mindset, not Thoughts.
+- **Attribute honestly.** Before setting `source=`/`cite=`, run `verify-quote-attribution` if the
+  name is a magnet (Aristotle / Einstein / Gandhi / Lao Tzu / Buddha / Twain on a punchy line) —
+  many circulated quotes are misattributed. Use `find-quote-video` to fill (and verify) `video=`.
+- All are in `@omars-lab/blog-ui` and registered in `MDXComponents.tsx` — no import in `.mdx`.
+  The file must be `.mdx`. After changing the kit, rebuild + relink the package — see the
+  `modify-blog-ui-component` skill (it owns the rebuild loop + the stale-dist gotcha).
 
 ### react-icons in blog-ui (bundling gotcha)
 
