@@ -3,8 +3,6 @@
  * https://codepen.io/merkund/pen/EGpOEr
 **/
 
-@import url("https://fonts.googleapis.com/css?family=Raleway:500");
-
 .FancyButton {
   -webkit-appearance: none;
   background: -webkit-gradient(to right, #a2ccb6 0%, #fceeb5 50%, #ee786e 100%);
@@ -15,7 +13,7 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   color: #fff;
   cursor: pointer;
-  font: 1.5em Raleway, sans-serif;
+  font: 1.5em var(--font-sans-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 5rem;

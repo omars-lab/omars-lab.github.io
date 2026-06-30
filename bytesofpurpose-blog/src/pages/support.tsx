@@ -98,8 +98,8 @@ export default function SupportPage(): React.JSX.Element {
             <h1>Support my work</h1>
             <p>
               Hi, I'm Omar. I write here about software, problem-solving, and
-              building things in the open, and I run almost entirely on coffee
-              ☕. If anything here helped you, here are a few ways to say thanks.
+              building things in the open, and I run almost entirely on coffee.
+              If anything here helped you, here are a few ways to say thanks.
               No pressure, every one of them genuinely means a lot.
             </p>
           </div>
