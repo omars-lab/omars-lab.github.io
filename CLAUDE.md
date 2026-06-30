@@ -84,6 +84,25 @@ the validator declares scope but can't enforce the gate, so honour it. Current p
 (ingress attribution). If a read is NOT a url param (e.g. an HTTP header), add it to `IGNORE_KEYS`
 in the validator.
 
+## ⚠️ Operating convention: reach for a design-system token, not a hardcoded value
+
+The brand's values have NAMES (the design-system token layer in
+`bytesofpurpose-blog/src/css/custom.css`: `--lift-card/-subtle`, the two-step shadows
+`--ifm-global-shadow-lw/-md` + `--shadow-arch`, `--radius-sm/-md/-lg`, `--duration-*`/`--ease-*`,
+`--space-*`, the `--text-*` scale, `--brand-green`/`--ifm-color-primary`, the Fraunces/Geist/Geist
+Mono families, `--tea-ink`). **When you'd type one of those literals in CSS, use the token instead**
+— values match, so it's non-breaking, and `custom.css` stays the single source of truth. This is
+warn-tier fail-closed: the PostToolUse `Write|Edit` hook `.claude/hooks/validate-ds-tokens-hook.sh`
+runs `scripts/validate-ds-tokens.js` (file-scoped) on a CSS edit and **warns** when a literal has a
+canonical token; the blocking gate is `make validate-ds-tokens` (exits 2). The validator is
+deliberately CONSERVATIVE (false positives kill a guard) — it flags only context-unambiguous literals
+(the exact hover-lift transforms, the quiet/ad-hoc card shadows, the arch drop-shadow, brand-green
+hexes, a **pastel used as `color:`** — a DISCIPLINE violation since pastels are accent fills only — and
+off-brand font families); bare `8px`/`0.2s`/`1rem` are left to judgment + the skill. When you add a
+new token worth guarding, add a rule to the `RULES` manifest in the SAME change. The owning skill is
+**`implement-with-design-system`** (the literal→token map + the discipline rules + the repo-reality
+gotchas); this convention is the enforcement.
+
 ## ⚠️ Operating convention: every board tag gets a tooltip gloss in the registry
 
 Each theme **tag** that appears on an Ideas/Experimentation board card (the chips on the card +

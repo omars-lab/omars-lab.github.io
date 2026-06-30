@@ -11,7 +11,7 @@
   position: absolute;
   top: calc(100% + 0.4rem);
   left: 50%;
-  transform: translateX(-50%) translateY(-4px);
+  transform: translateX(-50%) var(--lift-card);
   z-index: var(--ifm-z-index-fixed, 200);
 
   width: max-content;

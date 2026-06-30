@@ -58,6 +58,11 @@
           },
           {
             "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-ds-tokens-hook.sh\"",
+            "timeout": 15
+          },
+          {
+            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-url-params-hook.sh\"",
             "timeout": 20
           },

@@ -449,6 +449,12 @@ validate-hero-anchors: ## Check the maintain-homepage-hero skill is in lockstep 
 validate-url-params: ## Check every query param read in src/ is registered in the URL-param registry (src/lib/url-params.ts)
 	( cd ${SITEROOT} && node scripts/validate-url-params.js )
 
+validate-ds-tokens: ## Check authored CSS doesn't hardcode values that have a design-system token (lifts/shadows/brand-green/fonts/pastel-as-text)
+	@# Exit 2 if a CSS literal has a canonical token (a re-drift). The warn-tier hook
+	@# .claude/hooks/validate-ds-tokens-hook.sh runs this file-scoped on a CSS edit. See the
+	@# implement-with-design-system skill for the literal->token map.
+	( cd ${SITEROOT} && node scripts/validate-ds-tokens.js )
+
 validate-idea-tags: ## Check every board (ideas/experiments) tag has a tooltip gloss in the tag registry (src/lib/idea-tags.ts)
 	@# Exit 2 if a board-post tag has no entry in IDEA_TAG_GLOSS (its chip tooltip would teach
 	@# nothing). Orphan glosses (no post uses the tag) are warn-only. The warn-tier hook
