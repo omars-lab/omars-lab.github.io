@@ -145,3 +145,112 @@
     transition: none;
   }
 }
+
+/* ── "watch" video link — a quiet external link beneath a quote ──────── */
+
+/* A small, calm affordance for the motivational video that talks through the quote. It is a
+   plain external link (new tab), not an embed. Sized to a comfortable tap target. */
+.videoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  /* min-height + padding lift it to a comfortable >=44px tap target on touch */
+  min-height: 44px;
+  padding: 0.55rem 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+.videoLink:hover {
+  text-decoration: underline;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   PosterQuote — a quote rendered as a cascading typographic poster (the
+   "watch your thoughts -> ... -> destiny" family). Lives in this module so
+   it shares the same theme tokens + the Focus highlight recipe as the
+   editorial quote above (one source of truth for the quote kit's look).
+   ───────────────────────────────────────────────────────────────────── */
+
+.poster {
+  margin: 2.5rem 0;
+  padding: 0;
+  text-align: center; /* reads as a poster; avoids a ragged left edge on narrow screens */
+}
+
+/* One beat: a small quiet line paired with a giant display line, stacked. No connector marks
+   between beats — PosterQuote is a general small-line/big-line stack, not a forced chain. */
+.beat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding-bottom: 0.7rem;
+}
+
+.beatLead {
+  font-size: clamp(0.85rem, 0.78rem + 0.35vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ifm-color-content-secondary, var(--ifm-color-emphasis-600));
+}
+
+/* The giant keyword — the hero of each rung. Scales with the viewport (clamp) so a long word
+   shrinks rather than overflowing on a phone; overflow-wrap is a second guard against a single
+   very long keyword pushing the page wide. */
+.beatBig {
+  font-size: clamp(2rem, 1.4rem + 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--ifm-heading-color);
+  overflow-wrap: anywhere;
+  /* Reuse Focus's mint highlight recipe: a gradient behind the word, clipped to 0 width and
+     anchored left, that the parent .poster:hover sweeps to full width left-to-right. */
+  background-image: linear-gradient(var(--tea-mint, #adfff5), var(--tea-mint, #adfff5));
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 0% 0.18em;
+  transition: background-size 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.poster:hover .beatBig {
+  background-size: 100% 0.18em;
+}
+
+/* Stagger the sweep down the rungs so the eye is led top to bottom. */
+.poster:hover .beat:nth-of-type(2) .beatBig {
+  transition-delay: 0.1s;
+}
+.poster:hover .beat:nth-of-type(3) .beatBig {
+  transition-delay: 0.2s;
+}
+.poster:hover .beat:nth-of-type(4) .beatBig {
+  transition-delay: 0.3s;
+}
+.poster:hover .beat:nth-of-type(n + 5) .beatBig {
+  transition-delay: 0.4s;
+}
+
+/* The poster's attribution sits centered beneath the cascade. */
+.poster .attribution {
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+.poster .videoLink {
+  justify-content: center;
+}
+
+/* Reduced-motion: no sweep — show the highlight statically so the emphasis still reads. */
+@media (prefers-reduced-motion: reduce) {
+  .beatBig {
+    background-size: 100% 0.18em;
+    transition: none;
+  }
+}

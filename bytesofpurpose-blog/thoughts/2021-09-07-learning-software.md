@@ -10,61 +10,62 @@ kind: research
 board: research
 stage: backlog
 priority: low
-draft: true
+draft: false
 ---
 
 A research thought: **what should I learn about software** to level up on best practices,
-architecture, and scaling? These are the questions and resources I am gathering before I dig in.
+architecture, and scaling? These are the questions I am gathering, and the resources I want to
+work through, before I dig in.
 
 <!-- truncate -->
 
-## What general concepts can I learn about software?
+## Best practices
 
-# Best Practices
-- [x] Print SDE thingy ... @done(2021-09-07T15:52:51-05:00)
+* What does it take to start a software practice?
+* What are the general best practices worth internalizing early?
 
-# Goals 
-# Starting Software Practice
-- What does it take to start a software practice?
-- [ ] Take notes on this: 
-	- [ ] [aboutamazon.com: 2020 Letter To Shareholders](https://www.aboutamazon.com/news/company-news/2020-letter-to-shareholders)
+## Agile and craftsmanship
 
-# Learning Plan
-* I #need to learn more about software development
-	* I #need to read more coding books
-	* I need to learn more about agile
-		* manifesto.sofrwarecraftsmanship.org
-		* agilemanifesto.org/principles
-	* I need to learn more about architectural diagrams
-		* [ ] [modeling-languages.com: List Uml Books](https://modeling-languages.com/list-uml-books/)
-		* [ ] I need to learn about each of the different architectural diagrams and when to use each ...
-			* [ ] [modernanalyst.com: Introduction To Context Diagrams](https://www.modernanalyst.com/Resources/Articles/tabid/115/ID/1355/Introduction-to-Context-Diagrams.aspx)
-		* [ ] Is there anything we can learn from building architects?
-			* [ ] [archisoup.com: Architectural Diagrams](https://www.archisoup.com/studio-guide/architectural-diagrams)
-		* [ ] What arch diagrams do other expect?
-			* [ ] [researchgate.net: Penetration Testing Architecture Fig4 254036014](https://www.researchgate.net/figure/Penetration-testing-architecture_fig4_254036014)
-		* [ ] Which diagrams capture timing flow? ...
-		* [ ] Which diagrams capture category / data type flow / transformations ...
-			* [ ] Which diagrams capture queries ...
-			* [ ] Which diagrams capture errors ... hard errors / soft errors ...
-		* [ ] Different diagrams capture different levels of connectivity ...
-		* [ ] Which diagrams discuss data dependencies / data flow ...
-		* [ ] Which diagrams discuss tool usage / customer experience 
-		* [ ] Which diagrams capture cost structure / cost flow ... 
-			* [ ] How does this project result in money in the bank ... 
-			* [ ] How does the business benefit from this arch ...
-		* [ ] Which diagrams capture network flow / connectivity ... 
-		* [ ] Can't fit all these dimensions on a single diagram ...
+* What can I learn from the agile and craftsmanship movements?
+* Sources to read:
+  * [Manifesto for Software Craftsmanship](https://manifesto.softwarecraftsmanship.org/)
+  * [Principles behind the Agile Manifesto](https://agilemanifesto.org/principles.html)
 
----------
+## Architectural diagrams
 
-## Reading Blog Posts
-- Are there general practices I can learn from blog posts?
+The biggest open area for me. I want to learn the different kinds of architecture diagrams and
+when to reach for each.
 
-- [Medium: @OmarElgabry](https://medium.com/@OmarElgabry)
-- [Medium: The Whacking Game Ee3af79c6e13](https://medium.com/textnowengineering/the-whacking-game-ee3af79c6e13)
-- Learn from this dudes blog: [david-peter.de](https://david-peter.de/)
-    - [GitHub: Sharkdp](https://github.com/sharkdp?tab=repositories)
+* What are the different architecture diagrams, and when do I use each?
+* Is there anything I can learn from building architects (the people who design buildings)?
+* What diagrams do others expect to see?
+* Which diagram captures each of these dimensions, and can any single diagram hold them all?
+  * Timing and flow
+  * Category, data types, and transformations
+  * Queries
+  * Errors (hard errors vs. soft errors)
+  * Levels of connectivity
+  * Data dependencies and data flow
+  * Tool usage and customer experience
+  * Network flow and connectivity
+  * Cost structure and cost flow: how does this project put money in the bank, and how does the
+    business benefit from the architecture?
 
-- [ ] [YouTube: Watch](https://www.youtube.com/watch?v=UAKPoAn2cB0)
+Sources to read:
+
+* [List of UML books](https://modeling-languages.com/list-uml-books/)
+* [Introduction to Context Diagrams](https://www.modernanalyst.com/Resources/Articles/tabid/115/ID/1355/Introduction-to-Context-Diagrams.aspx)
+* [Architectural diagrams (archisoup)](https://www.archisoup.com/studio-guide/architectural-diagrams)
+* [Penetration testing architecture (ResearchGate)](https://www.researchgate.net/figure/Penetration-testing-architecture_fig4_254036014)
+
+## Learning from others
+
+* What general practices can I learn from blog posts and other engineers?
+* Books: I want to read more coding books (titles to be picked).
+* References worth following:
+  * [Amazon's 2020 Letter to Shareholders](https://www.aboutamazon.com/news/company-news/2020-letter-to-shareholders)
+  * [Omar Elgabry on Medium](https://medium.com/@OmarElgabry)
+  * ["The Whacking Game" (TextNow Engineering)](https://medium.com/textnowengineering/the-whacking-game-ee3af79c6e13)
+  * [David Peter's blog](https://david-peter.de/) and his [GitHub (sharkdp)](https://github.com/sharkdp?tab=repositories)
+  * [A talk worth watching](https://www.youtube.com/watch?v=UAKPoAn2cB0)
 

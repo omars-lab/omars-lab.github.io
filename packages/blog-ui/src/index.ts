@@ -49,14 +49,25 @@ export type {QuestionSectionProps} from './components/QuestionSection';
 
 // Quote kit — the analog of the question kit, but for quotes that moved me. A quote is RECEIVED
 // and savored (an editorial pull-quote with a reveal-on-demand reflection), not actioned like a
-// question, so the CX is deliberately different (no badges/modal/priority sort).
-export {default as Quote} from './components/Quote';
-export type {QuoteProps} from './components/Quote';
+// question, so the CX is deliberately different (no badges/modal/priority sort). The kit has two
+// renderers: <EditorialQuote> (a single-line pull-quote) and <PosterQuote> (a cascading
+// typographic poster, the "watch your thoughts -> ... -> destiny" family).
+export {default as EditorialQuote} from './components/Quote/EditorialQuote';
+export type {EditorialQuoteProps} from './components/Quote/EditorialQuote';
 
-// <Focus> marks the powerful word(s) inside a <Quote>; a highlight sweeps in under them when the
-// quote is hovered (reduced-motion safe). Only meaningful inside a <Quote>.
+// Back-compat alias: <Quote> was the original name for the editorial pull-quote; keep it working
+// (it resolves to the same default export, so existing posts need no change).
+export {default as Quote} from './components/Quote/EditorialQuote';
+export type {QuoteProps} from './components/Quote/EditorialQuote';
+
+// <Focus> marks the powerful word(s) inside an <EditorialQuote>; a highlight sweeps in under them
+// when the quote is hovered (reduced-motion safe). Only meaningful inside a quote.
 export {default as Focus} from './components/Quote/Focus';
 export type {FocusProps} from './components/Quote/Focus';
+
+// <PosterQuote> renders a quote as a cascading poster; each rung is a <Beat lead=... big=.../>.
+export {default as PosterQuote, Beat} from './components/Quote/PosterQuote';
+export type {PosterQuoteProps, BeatProps} from './components/Quote/PosterQuote';
 
 export {default as QuoteSet} from './components/QuoteSet';
 export type {QuoteSetProps} from './components/QuoteSet';

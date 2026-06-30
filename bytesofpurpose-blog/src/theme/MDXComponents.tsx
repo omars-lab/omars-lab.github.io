@@ -28,6 +28,9 @@ import {
   QuestionSection,
   PowerLegend,
   Quote,
+  EditorialQuote,
+  PosterQuote,
+  Beat,
   QuoteSet,
   Focus,
 } from '@omars-lab/blog-ui';
@@ -92,13 +95,21 @@ export default {
   ThoughtKindLegend,
   // MindsetKindLegend: the same, for the curated MINDSET kinds (question-set/quote-set/principle).
   MindsetKindLegend,
-  // Quote kit — for "quotes that moved me" sets on /mindset. <Quote> is an editorial pull-quote
-  // (the quote is the hero; attribution quiet; the "why it moved me" reflection reveals on
-  // demand), and <QuoteSet> lays a themed set out as a vertical reading flow. Deliberately a
-  // different CX from <Question> (received/savored, not actioned).
+  // Quote kit — for "quotes that moved me" sets on /mindset. Two renderers: <EditorialQuote> is a
+  // single-line pull-quote (the quote is the hero; attribution quiet; the "why it moved me"
+  // reflection reveals on demand), and <PosterQuote> renders the cascading typographic poster
+  // (the "watch your thoughts -> ... -> destiny" family) from <Beat lead=... big=.../> rungs.
+  // <Quote> is the back-compat alias of <EditorialQuote> (existing posts keep working). Both
+  // carry an optional `video` prop (a quiet "watch" external link to a motivational video).
+  // <QuoteSet> lays a themed set out as a vertical reading flow. Deliberately a different CX from
+  // <Question> (received/savored, not actioned).
   Quote,
+  EditorialQuote,
+  PosterQuote,
+  // <Beat> is one rung of a <PosterQuote> cascade (a small lead line + a giant keyword).
+  Beat,
   QuoteSet,
-  // <Focus> marks the powerful word(s) in a <Quote>; a highlight sweeps in under them on hover.
+  // <Focus> marks the powerful word(s) in an <EditorialQuote>; a highlight sweeps in on hover.
   Focus,
   // UsedIn: the "used in" list on a showcase doc. The published posts that actually use this
   // component/technique, generated from the corpus by generate-component-usage.js (component-

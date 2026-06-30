@@ -93,12 +93,12 @@
     },
     "quote-set": {
       "emoji": "💬",
-      "description": "A themed set of quotes that moved me, with my reflection on why ('quotes that moved me', affirmations). A curated Mindset input I keep to shape my thinking; each quote is a <Quote> pull-quote inside a <QuoteSet>.",
+      "description": "A themed set of quotes that moved me, with my reflection on why ('quotes that moved me', affirmations). A curated Mindset input I keep to shape my thinking; each quote is a component inside a <QuoteSet>: an <EditorialQuote> pull-quote, or a <PosterQuote> cascade for the 'watch your thoughts ... destiny' poster style.",
       "mindset": true,
       "mindsetGloss": "Quotes that moved me, kept to shape my thinking",
       "outline": [
         {"id": "sections", "label": "themed H2 sections (quotes grouped by theme, not a flat list)"},
-        {"id": "quote-cards", "label": "one or more <Quote> pull-quotes inside a <QuoteSet> (each quote is a component, not a bare blockquote)"},
+        {"id": "quote-cards", "label": "one or more quote components inside a <QuoteSet> (<EditorialQuote>/<Quote> pull-quotes or a <PosterQuote> cascade; each quote is a component, not a bare blockquote)"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
