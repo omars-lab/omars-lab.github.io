@@ -46,6 +46,83 @@ The full type scale (`--text-display … --text-eyebrow`), weights (`--weight-*`
 (`--tracking-*`), and line-heights (`--leading-*`) are all defined too — prefer them over raw
 `rem`/number literals when the value is a scale step.
 
+## Token reference (the full catalog)
+
+Every token, by category, with its value + purpose — the complete inventory the table above draws
+from. Source of truth: `bytesofpurpose-blog/src/css/custom.css` (`:root` + the
+`html[data-theme='dark']` overrides). **Keep this in lockstep with that file** (the
+`validate-ds-tokens` guard checks usage, not this doc). Dark-mode values are noted where they differ.
+
+### Color — brand
+| Token | Light | Purpose / dark |
+|---|---|---|
+| `--ifm-color-primary` | `#3c7256` | the AA-safe green for TEXT/links. Dark: `#6fbf95` |
+| `--brand-green` | `#448061` | the hero "deep green" for large/decorative FILLS (not text) |
+| `--ifm-color-primary-dark/-darker/-darkest` | shades | hover/active steps (Infima shade math) |
+| `--ifm-color-primary-light/-lighter/-lightest` | shades | lighter steps (e.g. card hover border) |
+| `--ifm-color-primary-contrast-background` / `--accent-tint` | `rgba(68,128,97,.1)` | faint green wash behind icons/callouts |
+
+### Color — tea-party pastels (ACCENT FILLS ONLY — never text; see discipline rule 1)
+| Token | Value | Purpose |
+|---|---|---|
+| `--tea-pink` | `#ffc5d3` | pastel fill (chips/pills/the hero rule) |
+| `--tea-mint` | `#adfff5` | pastel fill (tag pills, `::selection`) |
+| `--tea-green` | `#d2ffc4` | pastel fill |
+| `--tea-ink` | `#2f5d47` | the ONLY text/ink allowed on a pastel fill. Dark: `#14241c` |
+
+### Color — surfaces & ink
+| Token | Light | Purpose / dark |
+|---|---|---|
+| `--ifm-background-color` / `--surface-page` | `#eef1ef` | the cool off-white "paper" page. Dark: `#1c1f1e` |
+| `--ifm-card-background-color` / `--surface-card` | `#f4f6f5` | raised card surface. Dark: `#242827` |
+| `--ifm-font-color-base` / `--text-body` | `#1a1d1b` | body ink. Dark: `#e7ebe9` |
+| `--ifm-heading-color` / `--text-heading` | `#14201a` | heading ink. Dark: `#f4f6f5` |
+| `--ifm-color-content-secondary` / `--text-secondary` | `#46504b` | secondary ink. Dark: `#a7b0ab` |
+| `--ifm-color-emphasis-200` | Infima `#ebedf0` (see gotcha) | the hairline border color |
+| `--bop-divider` | `rgba(26,26,26,.1)` | a divider line. Dark: `rgba(255,255,255,.12)` |
+
+### Color — premium gold (premium/locked surfaces ONLY — see discipline rule 3)
+`--premium-gold` `#9a7b1f` (AA text) · `--premium-gold-bright` `#d4af37` (sheen/icons) ·
+`--premium-gold-strong`, `--premium-gold-sheen-1/-2`, `--premium-gold-border`, `--premium-gold-wash`
+(a faint gradient). All lifted in dark mode for AA.
+
+### Spacing — soft 4px base (LAYOUT spacing only; NOT font-size)
+`--space-1` .25rem · `--space-2` .5rem · `--space-3` .75rem · `--space-4` 1rem · `--space-5` 1.5rem ·
+`--space-6` 2rem · `--space-7` 2.5rem · `--space-8` 3.5rem · `--space-9` 5rem
+
+### Radii
+`--radius-sm` .4rem (small controls/buttons) · `--radius-md` .5rem (=8px, default card corner) ·
+`--radius-lg` 14px (hero/chooser card) · `--radius-pill` 3em (pills/tags) · `--radius-full` 9999px
+(circles). Also `--ifm-global-radius` (.5rem) / `--ifm-button-border-radius` (.4rem).
+
+### Type — families & scale
+- Families: `--ifm-heading-font-family` / `--font-serif-display` = **Fraunces**;
+  `--ifm-font-family-base` / `--font-sans-body` = **Geist**; `--ifm-font-family-monospace` /
+  `--font-mono` = **Geist Mono**.
+- Heading scale (Fraunces): `--text-display` 4rem · `--text-h1` 2.75rem · `--text-h2` 2rem ·
+  `--text-h3` 1.5rem · `--text-h4` 1.3rem · `--text-h5` 1.1rem · `--text-h6` 1rem.
+- Body/UI scale (Geist): `--text-lead` 1.5rem (italic-serif subtitle) · `--text-body-lg` 1.125rem ·
+  `--text-body-md` 1rem · `--text-body-sm` .95rem · `--text-caption` .85rem · `--text-eyebrow` .8rem.
+- Weights: `--weight-regular` 400 · `--weight-medium` 500 · `--weight-semibold` 600 · `--weight-bold` 700.
+- Tracking: `--tracking-tight` -.01em (large display) · `--tracking-heading` -.005em (headings) ·
+  `--tracking-normal` 0 · `--tracking-eyebrow` .18em (the editorial eyebrow ONLY — rule 7).
+- Line-height: `--leading-display` 1.05 · `--leading-heading` 1.25 · `--leading-body` 1.7 ·
+  `--leading-tight` 1.45.
+
+### Borders
+`--border-hairline` `1px solid var(--ifm-color-emphasis-200)` (the standard card/divider hairline) ·
+`--border-accent` `2px solid var(--ifm-color-primary)` (e.g. the green table header rule).
+
+### Elevation (quiet two-step; shadow on HOVER not rest — rule 5)
+`--ifm-global-shadow-lw` / `--shadow-sm` = `0 1px 3px rgba(20,32,26,.08)` (faint resting step) ·
+`--ifm-global-shadow-md` / `--shadow-md` = `0 6px 20px rgba(20,32,26,.1)` (medium hover step;
+heavier in dark) · `--shadow-arch` = `drop-shadow(0 6px 16px rgba(26,26,26,.18))` (arch illustration).
+
+### Motion (short & eased; always reduced-motion-guarded — rule 6)
+`--ease-standard` `ease` · `--ease-out` `cubic-bezier(0.2,0.7,0.3,1)` · `--duration-fast` .12s ·
+`--duration-base` .18s · `--duration-slow` .2s · `--lift-card` `translateY(-4px)` (card hover lift) ·
+`--lift-subtle` `translateY(-2px)` (list/article hover lift).
+
 ## The DISCIPLINE rules (what an audit checks — get them right up front)
 
 1. **Pastels are ACCENT FILLS ONLY, never text.** `--tea-pink / --tea-mint / --tea-green`
