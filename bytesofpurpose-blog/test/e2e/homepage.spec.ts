@@ -362,3 +362,66 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     await expect(lit).toHaveCount(1);
   });
 });
+
+/*
+ * REDUCED-MOTION: the AUTO-cycling heroes must NOT self-advance under prefers-reduced-motion.
+ * The brand rule is "all motion respects prefers-reduced-motion, no exceptions." The flash + studio
+ * heroes used to keep auto-rotating under reduce (only the flash bloom was suppressed) — a P0. The fix
+ * gates each auto-advance (setInterval / rAF clock) on the preference so the scene PINS, while the
+ * arrow keys still let a reduced-motion user step through by choice (motion off ≠ navigation off).
+ */
+test.describe('Homepage hero: reduced-motion does not auto-advance', () => {
+  // These assert the USER-FACING symptom: under reduced motion the auto-cycling heroes must hold their
+  // scene instead of self-advancing. The windows are deliberately longer than one auto-step (studio
+  // advances at ~10s, flash at ~12s on the buggy build — verified empirically), so the test actually
+  // DISCRIMINATES: pre-fix the active destination rotates off scene 0; post-fix it stays put. The fix
+  // gates each auto-advance (setInterval / rAF clock) on prefers-reduced-motion; arrows still navigate.
+
+  test('studio timer house: active scene HOLDS on /craft (rAF clock gated)', async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    try {
+      await page.goto('/?ab-homepage-hero-anim=variant_c', { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
+      // The bare timer house (ChooserStudio) is ONE gate whose href is CHOOSER_CARDS[active].to; scene
+      // 0 → /craft. On the buggy build it rotates to /journey by ~10s even under reduce; the fix pins it.
+      const gate = page.locator('[data-hero-root]');
+      await expect(gate, 'the timer house starts on scene 0 (/craft)').toHaveAttribute('href', '/craft');
+      await page.waitForTimeout(11000); // past the ~10s point where the buggy build advances
+      await expect(
+        gate,
+        'reduced-motion: the timer house must NOT auto-advance (gate stays /craft)',
+      ).toHaveAttribute('href', '/craft');
+    } finally {
+      await context.close();
+    }
+  });
+
+  test('flash variant: active scene HOLDS (no auto-rotate), but arrows still navigate', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    try {
+      await page.goto('/?ab-homepage-hero-anim=test', { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
+      const activeSrc = () =>
+        page.locator('[class*="flashArchImgActive"]').getAttribute('src');
+      const first = await activeSrc();
+      expect(first, 'an active arch scene should be showing').toBeTruthy();
+
+      // Wait past the auto-rotate interval (FLASH_INTERVAL_MS = 12s). Pre-fix the scene rotates here;
+      // the fix holds it. (13s keeps a margin over the 12s interval.)
+      await page.waitForTimeout(13000);
+      expect(await activeSrc(), 'reduced-motion: the flash hero must NOT auto-rotate').toBe(first);
+
+      // Navigation by CHOICE still works (only the auto-motion is off).
+      await page.keyboard.press('ArrowRight');
+      await expect
+        .poll(activeSrc, { timeout: 4000, message: 'arrows still navigate under reduced-motion' })
+        .not.toBe(first);
+    } finally {
+      await context.close();
+    }
+  });
+});

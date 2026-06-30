@@ -184,6 +184,7 @@ function ChooserFlash() {
   const [active, setActive] = useState(0);
   const [flashing, setFlashing] = useState(false);
   const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
   const stepTimers = useRef<number[]>([]);
 
   // ONE scene change: advance by `delta` (the auto-rotate uses +1; the arrows ±1), with the flash +
@@ -200,12 +201,14 @@ function ChooserFlash() {
   }, []);
 
   // Auto-rotate (paused on hover/focus). It re-arms whenever `active` changes, so a manual arrow nav
-  // (which changes `active`) resets the countdown instead of double-firing right after.
+  // (which changes `active`) resets the countdown instead of double-firing right after. Under
+  // prefers-reduced-motion we never arm the interval, so the hero holds on its first card (the arrows
+  // still let a reduced-motion user step through scenes by choice).
   useEffect(() => {
-    if (paused) return undefined;
+    if (paused || reduce) return undefined;
     const tick = window.setInterval(() => step(1), FLASH_INTERVAL_MS);
     return () => window.clearInterval(tick);
-  }, [paused, active, step]);
+  }, [paused, reduce, active, step]);
 
   useEffect(
     () => () => stepTimers.current.forEach((t) => window.clearTimeout(t)),
@@ -297,16 +300,19 @@ const BOUTIQUE_INTERVAL_MS = 12000; // time one project is shown before the stor
 function ChooserBoutique() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
 
   const step = useCallback((delta: number) => {
     setActive((i) => (i + delta + CHOOSER_CARDS.length) % CHOOSER_CARDS.length);
   }, []);
 
+  // Auto-cycle the storefront scenes — but never under prefers-reduced-motion (the gate holds on the
+  // first scene; the arrow keys still let a reduced-motion user step through by choice).
   useEffect(() => {
-    if (paused) return undefined;
+    if (paused || reduce) return undefined;
     const tick = window.setInterval(() => step(1), BOUTIQUE_INTERVAL_MS);
     return () => window.clearInterval(tick);
-  }, [paused, active, step]);
+  }, [paused, reduce, active, step]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -461,6 +467,24 @@ function useIsMobile(): boolean {
     return () => mq.removeEventListener('change', update);
   }, []);
   return mobile;
+}
+
+// Reactive companion to the one-shot prefersReducedMotion() read: returns the current
+// reduced-motion preference AND re-renders when the OS setting is toggled at runtime, so the
+// auto-advancing chooser heroes can STOP cycling the moment the user asks for no motion. SSR-safe
+// (false until mounted). The auto-rotate effects gate on this so the timer/interval never arms
+// under reduce — the scene pins to its first card instead of cross-fading forever.
+function useReducedMotion(): boolean {
+  const [reduce, setReduce] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia) return undefined;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduce(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return reduce;
 }
 
 // TEST/QA seam: `?hero-scene=N` forces the parallax engine to scene N (bypassing scroll), so e2e tests
@@ -635,7 +659,7 @@ function timerScene(
 }
 
 function useTimerScene(count: number, paused: boolean): SceneState {
-  const reduce = prefersReducedMotion();
+  const reduce = useReducedMotion();
   const SETTLE_MS = STUDIO_INTERVAL_MS; // hold on a step
   const CROSS_MS = STUDIO_FLASH_MS + STUDIO_FLASH_HOLD_MS; // the crossing (flash) to the next step
   const perStep = SETTLE_MS + CROSS_MS;
@@ -645,7 +669,10 @@ function useTimerScene(count: number, paused: boolean): SceneState {
   const lastRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (paused) {
+    // prefers-reduced-motion: never start the rAF clock. The scene stays pinned (settled, no flash,
+    // no cross-fade) on whatever step it is on — on first mount that is scene 0. This is the P0 fix:
+    // previously `reduce` only zeroed the flash while the clock kept advancing the scene forever.
+    if (paused || reduce) {
       lastRef.current = null; // so the next resume starts a fresh delta (no jump)
       return undefined;
     }
@@ -660,7 +687,7 @@ function useTimerScene(count: number, paused: boolean): SceneState {
     raf = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paused, count, perStep, SETTLE_MS, CROSS_MS, reduce]);
+  }, [paused, reduce, count, perStep, SETTLE_MS, CROSS_MS]);
 
   return scene;
 }
