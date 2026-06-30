@@ -25,6 +25,68 @@
   );
 }
 
+/* ── Tag filter bar ────────────────────────────────────────────────────────
+   Above the columns: an "All" chip plus one chip per theme tag (with a count).
+   Clicking a chip narrows the board to that theme; the active chip is filled. */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px; /* touch tap target (audit-mobile-experience rubric) */
+  padding: 0.4rem 0.85rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ifm-color-emphasis-800);
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.filterChip:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.filterChip:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.filterChipActive,
+.filterChipActive:hover {
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-contrast-foreground, #fff);
+}
+
+.filterCount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.clearFilter {
+  font: inherit;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 /* Columns: a horizontal track. On mobile it scrolls (snap per column); on wide screens
    the columns share the row. min-width keeps each column readable rather than crushed. */
 .columns {
@@ -168,6 +230,24 @@
   font-size: 0.76rem;
   font-weight: 600;
   padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: var(--tea-mint, var(--ifm-color-emphasis-200));
+  color: var(--tea-ink, var(--ifm-color-emphasis-900));
+}
+
+/* Theme tag chips ON a card (mint, smaller siblings of the filter-bar chips). */
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
   border-radius: 999px;
   background: var(--tea-mint, var(--ifm-color-emphasis-200));
   color: var(--tea-ink, var(--ifm-color-emphasis-900));

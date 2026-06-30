@@ -1,8 +1,8 @@
 ---
 slug: idea-track-script-usage
-title: 'Idea: Track Which of My Scripts I Actually Use'
-kind: reflection
-sidebar_label: 'Idea: Script usage'
+title: 'Should I Track Which of My Scripts I Actually Use?'
+kind: idea
+sidebar_label: 'Script usage?'
 description: 'A board-ready idea: instrument my shell functions to log how often each is used, so I can confidently retire the dead ones, and turn the instrumentation into a reusable technique.'
 authors: [oeid]
 tags: [ideas, scripting, automation, self-quantifying]

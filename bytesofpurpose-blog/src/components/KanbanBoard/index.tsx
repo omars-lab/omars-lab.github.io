@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
+import {Tooltip} from '@omars-lab/blog-ui';
 import kanbanData from './kanban-data.json';
+import {ideaTagTooltip} from '../../lib/idea-tags';
 import type {BoardConfig, BoardId, KanbanCard, KanbanCardDetail, KanbanData} from './types';
 import styles from './KanbanBoard.module.css';
 
@@ -134,6 +136,18 @@ function Card({card, columnLabel}: CardProps): React.JSX.Element {
         {card.title}
       </span>
       {card.summary && <span className={styles.cardSummary}>{card.summary}</span>}
+      {card.tags && card.tags.length > 0 && (
+        <span className={styles.cardTags}>
+          {card.tags.map((tag) => (
+            // On the card the chip is inside the card <button>, so it can't host a focusable
+            // Tooltip (no interactive-in-button); a native title gives the same explanation on
+            // hover. The rich custom tooltip lives on the filter-bar chips below.
+            <span key={tag} className={styles.tagChip} title={ideaTagTooltip(tag)}>
+              {tag}
+            </span>
+          ))}
+        </span>
+      )}
       <span className={styles.cardMeta}>
         {card.class && (
           <span className={styles.classBadge}>
@@ -164,11 +178,31 @@ export interface KanbanBoardProps {
 
 export default function KanbanBoard({board, title}: KanbanBoardProps): React.JSX.Element {
   const config = BOARD_CONFIG[board];
-  const cards = (DATA[board] || []) as KanbanCard[];
+  const allCards = (DATA[board] || []) as KanbanCard[];
+
+  // Active tag filter (null = show all). Clicking a tag in the bar narrows the board to the
+  // cards carrying that theme; clicking it again (or "All") clears the filter.
+  const [activeTag, setActiveTag] = useState<string | null>(null);
 
   if (!config) {
     return <p className={styles.empty}>Unknown board: {board}</p>;
   }
+
+  // The distinct theme tags across the board, with how many cards carry each — drives the
+  // filter bar. Sorted by frequency (most common first), then alphabetically for stability.
+  const tagCounts = new Map<string, number>();
+  for (const card of allCards) {
+    for (const tag of card.tags || []) tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  }
+  const tags = [...tagCounts.entries()].sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
+  );
+
+  // Apply the active tag filter (if any) before grouping into columns.
+  const cards =
+    activeTag == null
+      ? allCards
+      : allCards.filter((c) => (c.tags || []).includes(activeTag));
 
   // Group cards by their resolved column id.
   const byColumn: Record<string, KanbanCard[]> = {};
@@ -194,10 +228,46 @@ export default function KanbanBoard({board, title}: KanbanBoardProps): React.JSX
     if (track.scrollWidth <= track.clientWidth) return;
     const left = target.offsetLeft - track.offsetLeft;
     track.scrollTo({left, behavior: 'auto'});
-  }, [firstPopulatedColId]);
+  }, [firstPopulatedColId, activeTag]);
 
   return (
     <section className={styles.board} aria-label={title || config.title}>
+      {tags.length > 0 && (
+        <div className={styles.filterBar} role="group" aria-label="Filter by tag">
+          <button
+            type="button"
+            className={clsx(styles.filterChip, activeTag == null && styles.filterChipActive)}
+            aria-pressed={activeTag == null}
+            onClick={() => setActiveTag(null)}>
+            All <span className={styles.filterCount}>{allCards.length}</span>
+          </button>
+          {tags.map(([tag, count]) => {
+            const isActive = activeTag === tag;
+            return (
+              // Each filter chip gets a custom hover/focus/tap tooltip explaining the tag (a
+              // terse slug like "sge" / "automa" means little on its own). The Tooltip wraps
+              // the button (span > button — valid; the chip is the only interactive child).
+              <Tooltip
+                key={tag}
+                content={
+                  <>
+                    <b>{tag}</b>
+                    <br />
+                    {ideaTagTooltip(tag)}
+                  </>
+                }>
+                <button
+                  type="button"
+                  className={clsx(styles.filterChip, isActive && styles.filterChipActive)}
+                  aria-pressed={isActive}
+                  onClick={() => setActiveTag(isActive ? null : tag)}>
+                  {tag} <span className={styles.filterCount}>{count}</span>
+                </button>
+              </Tooltip>
+            );
+          })}
+        </div>
+      )}
       <div className={styles.columns} role="list" ref={trackRef}>
         {config.columns.map((col) => {
           const colCards = byColumn[col.id] || [];
@@ -229,9 +299,17 @@ export default function KanbanBoard({board, title}: KanbanBoardProps): React.JSX
           );
         })}
       </div>
-      {total === 0 && (
+      {total === 0 && activeTag == null && (
         <p className={styles.empty}>
           No posts on this board yet. Cards are generated from post frontmatter.
+        </p>
+      )}
+      {total === 0 && activeTag != null && (
+        <p className={styles.empty}>
+          No cards tagged “{activeTag}”.{' '}
+          <button type="button" className={styles.clearFilter} onClick={() => setActiveTag(null)}>
+            Clear filter
+          </button>
         </p>
       )}
     </section>

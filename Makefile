@@ -449,6 +449,12 @@ validate-hero-anchors: ## Check the maintain-homepage-hero skill is in lockstep 
 validate-url-params: ## Check every query param read in src/ is registered in the URL-param registry (src/lib/url-params.ts)
 	( cd ${SITEROOT} && node scripts/validate-url-params.js )
 
+validate-idea-tags: ## Check every board (ideas/experiments) tag has a tooltip gloss in the tag registry (src/lib/idea-tags.ts)
+	@# Exit 2 if a board-post tag has no entry in IDEA_TAG_GLOSS (its chip tooltip would teach
+	@# nothing). Orphan glosses (no post uses the tag) are warn-only. The warn-tier hook
+	@# .claude/hooks/validate-idea-tags-hook.sh runs this on a board-post / registry edit.
+	( cd ${SITEROOT} && node scripts/validate-idea-tags.js )
+
 validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
 	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )
 

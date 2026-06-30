@@ -1,10 +1,10 @@
 ---
 slug: my-first-ios-app
-title: '💡 Should I Build My First iOS App?'
-sidebar_label: '💡 iOS app?'
+title: 'Should I Build My First iOS App?'
+sidebar_label: 'iOS app?'
 description: 'A thought I am weighing: should I build my first iOS app, a calendar/dashboard I have wanted to make?'
 authors: [oeid]
-tags: [ios, swift, mobile, app-development, calendar, idea]
+tags: [ios, swift, mobile, app-development, calendar, first-time, idea]
 date: 2025-01-01T10:00
 kind: idea
 class: first-time
