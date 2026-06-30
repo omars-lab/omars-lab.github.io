@@ -1,10 +1,10 @@
 ---
 slug: my-first-mac-menubar-app
-title: '💡 Should I Build a Mac Menu-Bar App?'
-sidebar_label: '💡 Menu-bar app?'
+title: 'Should I Build a Mac Menu-Bar App?'
+sidebar_label: 'Menu-bar app?'
 description: 'A thought I am weighing: should I build my first macOS menu-bar app to show my NotePlan task counts at a glance?'
 authors: [oeid]
-tags: [macos, menu-bar, app, noteplan, swift, idea]
+tags: [macos, menu-bar, app, noteplan, swift, first-time, idea]
 date: 2025-01-01T10:00
 kind: idea
 class: first-time

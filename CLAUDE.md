@@ -84,6 +84,21 @@ the validator declares scope but can't enforce the gate, so honour it. Current p
 (ingress attribution). If a read is NOT a url param (e.g. an HTTP header), add it to `IGNORE_KEYS`
 in the validator.
 
+## ⚠️ Operating convention: every board tag gets a tooltip gloss in the registry
+
+Each theme **tag** that appears on an Ideas/Experimentation board card (the chips on the card +
+the filter bar in `KanbanBoard`) has a hover/focus/tap **tooltip** explaining what the tag means, so
+a terse slug (`sge`, `automa`) teaches the reader. Those one-line definitions live ONCE in the
+**tag-gloss registry** `bytesofpurpose-blog/src/lib/idea-tags.ts` (`IDEA_TAG_GLOSS`: tag slug → one
+sentence; `ideaTagTooltip()` is the gloss-or-graceful-fallback accessor the component calls). **When
+you put a new theme tag on a `board:`-carrying post, add its gloss in the SAME change** — this is
+fail-closed: the PostToolUse `Write|Edit` hook `.claude/hooks/validate-idea-tags-hook.sh` runs
+`scripts/validate-idea-tags.js` (collects the theme tags off every board post — `tags:` minus the
+always-on noise `idea`/`ideas`/`thoughts`, kept in lockstep with `generate-kanban-data.js`'s
+`themeTags()`) and **warns** on a tag with no gloss; the blocking gate is `make validate-idea-tags`
+(exits 2). Orphan glosses (a definition for a tag no board post uses) are warn-only. Owning skills:
+`groom-initiatives`, `maintain-showcase`.
+
 ## ⚠️ Operating convention: every new interactive component gets a visual + mobile pass
 
 A component that **renders content or takes input** (a board, a modal, a card, a chart, a

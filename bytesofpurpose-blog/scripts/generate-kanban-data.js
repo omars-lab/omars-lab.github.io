@@ -134,6 +134,24 @@ function isoDate(value) {
   return m ? m[0] : s;
 }
 
+// Tags that describe a card's THEME drive the board's tag chips + filter. The post's raw
+// `tags:` carry some structural noise that is true of EVERY card on the board (every Ideas
+// card is an "idea"), so it would make a useless, always-on chip — drop those. What remains
+// is the meaningful theme (scripting, automation, notes, backup, app, …).
+const TAG_NOISE = new Set(['idea', 'ideas', 'thoughts', 'thought']);
+function themeTags(value) {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const t of value) {
+    const tag = (t == null ? '' : t.toString()).trim().toLowerCase();
+    if (!tag || TAG_NOISE.has(tag) || seen.has(tag)) continue;
+    seen.add(tag);
+    out.push(tag);
+  }
+  return out;
+}
+
 function listPosts(dir) {
   if (!fs.existsSync(dir)) return [];
   return fs
@@ -181,6 +199,9 @@ function build() {
           // A class groups a SUBSET of a board's cards by what kind of thing they are (e.g. the
           // "first-time / new things" ideas) without being a card itself. Rendered as a badge.
           class: fm.class ? fm.class.toString() : '',
+          // THEME tags (the post's `tags:` minus the always-on noise) drive the board's tag
+          // chips + filter bar — see themeTags() above and the KanbanBoard component.
+          tags: themeTags(fm.tags),
           date: isoDate(fm.date),
         });
       }

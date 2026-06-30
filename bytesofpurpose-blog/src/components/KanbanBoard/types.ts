@@ -21,6 +21,8 @@ export interface KanbanCard {
   kind: string;
   /** Optional classification grouping a subset of a board's cards (e.g. 'first-time'). Badge. */
   class?: string;
+  /** Theme tags (post `tags:` minus always-on noise) — drive the card chips + board filter. */
+  tags?: string[];
   /** YYYY-MM-DD (may be empty). */
   date: string;
 }

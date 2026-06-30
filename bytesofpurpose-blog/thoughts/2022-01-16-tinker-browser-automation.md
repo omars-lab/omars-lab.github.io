@@ -1,10 +1,10 @@
 ---
 slug: tinker-browser-automation
-title: '💡 Should I Tinker with Browser Automation?'
-sidebar_label: '💡 Browser automation?'
+title: 'Should I Tinker with Browser Automation?'
+sidebar_label: 'Browser automation?'
 description: 'A thought I am weighing: should I tinker with browser-automation tools like Automa to script repetitive workflows?'
 authors: [oeid]
-tags: [browser-automation, automa, chrome-extension, automation, idea]
+tags: [browser-automation, automa, chrome-extension, automation, first-time, idea]
 date: 2022-01-16T10:00
 kind: idea
 class: first-time

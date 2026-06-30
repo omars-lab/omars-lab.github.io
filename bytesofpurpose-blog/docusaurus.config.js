@@ -619,12 +619,18 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // Thoughts & Ideas split (2026-06): the UNACTIONED idea posts moved OUT of the durable
             // /craft/product-management/ideas docs folder into the NEW /thoughts blog instance (and
             // idea-track-script-usage moved /initiatives → /thoughts). The /craft ideas page is now
-            // just the durable Ideas board; the idea POSTS live in /thoughts. Repoint the old
-            // hello-worlds redirect to its new /thoughts home, and add the new moves. (Only the
-            // PUBLISHED targets get a redirect — a redirect to a draft target fails the prod build;
-            // the 5 still-draft idea posts get their redirects when they are un-drafted.)
-            {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
-            {from: "/craft/product-management/ideas/hello-worlds", to: "/thoughts/hello-worlds"},
+            // just the durable Ideas board; the idea POSTS live in /thoughts. (Only the PUBLISHED
+            // targets get a redirect — a redirect to a draft target fails the prod build; the
+            // still-draft idea posts get their redirects when they are un-drafted.)
+            //
+            // Hello Worlds (2026-06): the "first-time" CLASSIFICATION was a /thoughts post, but it is
+            // durable knowledge ABOUT the board (what the 🌱 first-time class means), so its explainer
+            // folded INTO the Ideas board README and the standalone post was removed. The board IS the
+            // list of first-time cards now. All old hello-worlds URLs (the two legacy /craft doc URLs
+            // AND the /thoughts post URL) point straight at the board — repointed to avoid a chain.
+            {from: "/docs/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas"},
+            {from: "/craft/product-management/ideas/hello-worlds", to: "/craft/product-management/ideas"},
+            {from: "/thoughts/hello-worlds", to: "/craft/product-management/ideas"},
             // The 4 "first-time" idea posts (my-first-* / tinker-*) were un-drafted (#59) so each is
             // its own card on the Ideas board; now that they're published, their old /craft ideas
             // doc URLs 301 to their /thoughts home.
@@ -638,6 +644,15 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/product-management/ideas/tinker-browser-automation", to: "/thoughts/tinker-browser-automation"},
             {from: "/initiatives/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
             {from: "/blog/idea-track-script-usage", to: "/thoughts/idea-track-script-usage"},
+            // "Software & Tooling Ideas" (2026-06): the combined themed-backlog post was SPLIT into
+            // one concrete-idea post per distinct idea (shell-completion, date helpers, stale-notes
+            // detector, cross-linking, work streams, portable scripts, alias finder, bookmark
+            // portability, Slack→markdown, Instagram scraper, ambient metric displays, port-to-React)
+            // — every backlog line folded into exactly one new /thoughts post, themes became tags.
+            // The board IS the index now, so the old combined URL points at the published Ideas
+            // board. (The 12 split-out posts are still draft; each gets its own {from,to} redirect
+            // when it is un-drafted — a redirect to a draft target fails the prod build.)
+            {from: "/thoughts/software-and-tooling-ideas", to: "/craft/product-management/ideas"},
             // "What I Ask Myself" (the question-set LEGEND post: the icon system + the practice)
             // moved from the /initiatives blog into the Legend docs INSTANCE, where it belongs as
             // the map for the question-set series. It left /initiatives, so createRedirects no
@@ -854,7 +869,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/development/roadmaps/blog-roadmap", to: "/craft/product-management/roadmaps/1-blog-roadmap"},
             {from: "/docs/development/roadmaps/portfolio-roadmap", to: "/craft/product-management/roadmaps/2-portfolio-roadmap"},
             {from: "/docs/development/terminology", to: "/handbook/terminology/building-software"},
-            {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/thoughts/hello-worlds"},
+            {from: "/docs/development/tinkering/my-firsts/hello-worlds", to: "/craft/product-management/ideas"},
             {from: "/docs/development/tinkering/tinkering", to: "/craft/product-management/tinkering"},
             {from: "/docs/entrepreneurship", to: "/craft/entrepreneurship"},
             {from: "/docs/faith", to: "/journey/faith"},
