@@ -1,5 +1,7 @@
 ---
 slug: design-blog
+sidebar_label: Blog Design
+kind: frontend-design
 sidebar_position: 2
 title: Blog Design
 draft: true

@@ -121,6 +121,41 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "frontend-design": {
+      "emoji": "🎨",
+      "description": "A FRONTEND/experience design (a /designs post): UI, interaction, components, visual systems — heroes, the sidebar, mockup-driven surfaces. Structurally a client/render concern (layout, motion, state, a11y), distinct from a service architecture.",
+      "outline": [
+        {"id": "mockup", "label": "a UX mockup or visual (a <Mockup>/<Gif> in the body, or a `mockups:` frontmatter sidecar link)"},
+        {"id": "decisions", "label": "a Decisions section (a heading like \"Key Decisions\" / \"Decisions\" / \"Trade-offs\")"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "backend-design": {
+      "emoji": "⚙️",
+      "description": "A BACKEND/systems design (a /designs post): services, pipelines, data, infra, deploy — the server-side architecture. Structurally a service/data concern (components, flows, storage, failure modes), distinct from a UI design.",
+      "outline": [
+        {"id": "architecture", "label": "an architecture view (a diagram, a <DiagramWithFootnotes>, or a components/flow breakdown)"},
+        {"id": "decisions", "label": "a Decisions section (a heading like \"Key Decisions\" / \"Decisions\" / \"Trade-offs\")"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "agent-design": {
+      "emoji": "🤖",
+      "description": "An AI/AGENT design (a /designs post): an autonomous or LLM-driven system — the agent loop, tools, prompts, guardrails. Structurally an agent concern (capabilities, control flow, evaluation), distinct from a plain backend service.",
+      "outline": [
+        {"id": "agent-loop", "label": "the agent's loop/capabilities (the control flow, tools, or responsibilities it has)"},
+        {"id": "decisions", "label": "a Decisions section (a heading like \"Key Decisions\" / \"Decisions\" / \"Trade-offs\")"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "tooling-cli-design": {
+      "emoji": "🛠️",
+      "description": "A TOOLING/CLI/script design (a /designs post): a CLI, generator, build step, or dev tool — often a small drawing/checking/build recipe. Structurally a tool concern (inputs, the transform, the output it produces), distinct from a running service or a UI.",
+      "outline": [
+        {"id": "tool-io", "label": "the tool's inputs->output (what it consumes, the transform/recipe, and what it produces)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "tutorial": {
       "emoji": "🧪",
       "description": "A hands-on, learn-by-doing walkthrough ('A Hands-On Way to', 'Teaching X', 'Running X Locally').",
