@@ -1248,7 +1248,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               ],
             },
           ],
-          copyright: `Copyright © ${new Date().getFullYear()} BytesOfPurpose, Inc. Built with Docusaurus.`,
+          copyright: `Where faith meets craft. · Copyright © ${new Date().getFullYear()} BytesOfPurpose, Inc. Built with Docusaurus.`,
         },
         prism: {
           theme: lightTheme,
