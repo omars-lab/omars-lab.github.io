@@ -67,8 +67,13 @@ function outlineExpectations(kind) {
 
 // Sidebar-label length budget. The kind emoji is added automatically, so these bound the
 // TEXT only. ~3 words / ~32 chars keeps a Posts-sidebar entry to a single tidy line.
+// /designs entries get a LOOSER budget (5 content words / 44 chars): a design needs room to
+// name BOTH the artifact and signal its kind (e.g. "Self-Healing Storefront Backend"), and the
+// designs sidebar is a reference index, not a dense post stream.
 const MAX_LABEL_WORDS = 3;
 const MAX_LABEL_CHARS = 32;
+const MAX_LABEL_WORDS_DESIGNS = 5;
+const MAX_LABEL_CHARS_DESIGNS = 44;
 
 // Drop a leading emoji (+ trailing space) so the length check measures the words a human
 // reads, not the auto-prepended kind glyph.
@@ -127,6 +132,19 @@ const CHECKS = {
   mockup: (fm, body) => Boolean(fm.mockups) || /<Mockup[\s>]/.test(body),
   decisions: (fm, body) =>
     /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body),
+  // backend-design: an architecture view (a diagram component, a mermaid fence, or a flow/components heading)
+  architecture: (fm, body) =>
+    /<DiagramWithFootnotes[\s>]/.test(body) ||
+    /```mermaid/.test(body) ||
+    /^#{1,4}\s+.*\b(architecture|components?|data ?flow|flow|pipeline|system)\b/im.test(body),
+  // agent-design: the agent's loop / capabilities / tools
+  'agent-loop': (fm, body) =>
+    /^#{1,4}\s+.*\b(agent|loop|tools?|capabilit|control ?flow|prompts?|guardrails?|responsibilit)\b/im.test(body) ||
+    /\*\*(tools?|capabilit|the loop)\b/im.test(body),
+  // tooling-cli-design: the tool's inputs -> output (the transform / recipe it runs)
+  'tool-io': (fm, body) =>
+    /^#{1,4}\s+.*\b(input|output|usage|how it works|the recipe|the transform|cli|command|pipeline)\b/im.test(body) ||
+    /```(bash|sh|console|shell|js|ts|python|json)?\n/.test(body),
   // design-story
   'links-to-design': (fm, body) =>
     /\]\(\/designs\/[^)\s]+\)/.test(body) || /\/designs\b/.test(body),
@@ -282,14 +300,18 @@ function checkFile(file) {
       (usingLabel ? fm.sidebar_label : fm.title || '').toString().trim(),
     );
     const words = contentWordCount(labelText); // particles (the/of/and/is…) don't count
-    if (labelText && (words > MAX_LABEL_WORDS || labelText.length > MAX_LABEL_CHARS)) {
+    // /designs gets the looser budget (a design names both the artifact + its kind).
+    const isDesigns = /\/designs\//.test(file);
+    const maxWords = isDesigns ? MAX_LABEL_WORDS_DESIGNS : MAX_LABEL_WORDS;
+    const maxChars = isDesigns ? MAX_LABEL_CHARS_DESIGNS : MAX_LABEL_CHARS;
+    if (labelText && (words > maxWords || labelText.length > maxChars)) {
       findings.push({
         file: path.relative(ROOT, file),
         kind,
         id: 'long-sidebar-label',
         detail: usingLabel
-          ? `sidebar_label "${labelText}" is long (${words} content words / ${labelText.length} chars). Aim for <= ${MAX_LABEL_WORDS} content words.`
-          : `no \`sidebar_label:\` and the title is long (${words} content words / ${labelText.length} chars) for the sidebar. Add a short \`sidebar_label:\` (<= ${MAX_LABEL_WORDS} content words); the full title stays on the page.`,
+          ? `sidebar_label "${labelText}" is long (${words} content words / ${labelText.length} chars). Aim for <= ${maxWords} content words.`
+          : `no \`sidebar_label:\` and the title is long (${words} content words / ${labelText.length} chars) for the sidebar. Add a short \`sidebar_label:\` (<= ${maxWords} content words); the full title stays on the page.`,
       });
     }
   }
