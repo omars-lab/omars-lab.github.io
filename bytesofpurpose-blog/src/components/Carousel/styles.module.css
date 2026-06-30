@@ -59,7 +59,7 @@
 
 .cardLink:hover {
   border-color: var(--ifm-color-primary);
-  transform: translateY(-2px);
+  transform: var(--lift-subtle);
   box-shadow: var(--ifm-global-shadow-lw);
   text-decoration: none;
   color: inherit;

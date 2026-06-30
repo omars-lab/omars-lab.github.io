@@ -58,7 +58,7 @@
 }
 
 .channelCard:hover {
-  transform: translateY(-4px);
+  transform: var(--lift-card);
   box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
   border-color: var(--ifm-color-primary-lighter);
   text-decoration: none;

@@ -85,6 +85,100 @@
     rgba(212, 175, 55, 0.1),
     rgba(184, 134, 11, 0.05)
   );
+
+  /* ========================================================================
+     Named design-system token layer (reconciled from the "Bytes of Purpose
+     Design System" on claude.ai/design). The raw VALUES already matched what
+     the repo shipped inline; this block gives them the DS's documented names so
+     repo CSS speaks the same vocabulary. Aliases reuse existing Infima tokens
+     rather than duplicating values, so there is a single source of truth.
+     ======================================================================== */
+
+  /* Semantic color aliases */
+  --bop-divider: rgba(26, 26, 26, 0.1);
+  --text-body: var(--ifm-font-color-base);
+  --text-heading: var(--ifm-heading-color);
+  --text-secondary: var(--ifm-color-content-secondary);
+  --text-link: var(--ifm-color-primary);
+  --surface-page: var(--ifm-background-color);
+  --surface-card: var(--ifm-card-background-color);
+  --accent-tint: var(--ifm-color-primary-contrast-background);
+
+  /* Spacing scale (soft 4px base) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --space-8: 3.5rem;
+  --space-9: 5rem;
+
+  /* Radii (--ifm-global-radius / --ifm-button-border-radius defined above) */
+  --radius-sm: 0.4rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 14px; /* hero / card corner */
+  --radius-pill: 3em;
+  --radius-full: 9999px;
+
+  /* Type families (alias the Infima families set above) */
+  --font-serif-display: var(--ifm-heading-font-family);
+  --font-sans-body: var(--ifm-font-family-base);
+  --font-mono: var(--ifm-font-family-monospace);
+
+  /* Display / heading scale (Fraunces) */
+  --text-display: 4rem;
+  --text-h1: 2.75rem;
+  --text-h2: 2rem;
+  --text-h3: 1.5rem;
+  --text-h4: 1.3rem;
+  --text-h5: 1.1rem;
+  --text-h6: 1rem;
+
+  /* Body / UI scale (Geist) */
+  --text-lead: 1.5rem;
+  --text-body-lg: 1.125rem;
+  --text-body-md: 1rem;
+  --text-body-sm: 0.95rem;
+  --text-caption: 0.85rem;
+  --text-eyebrow: 0.8rem;
+
+  /* Weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Tracking */
+  --tracking-tight: -0.01em;
+  --tracking-heading: -0.005em;
+  --tracking-normal: 0;
+  --tracking-eyebrow: 0.18em;
+
+  /* Line heights */
+  --leading-display: 1.05;
+  --leading-heading: 1.25;
+  --leading-body: 1.7;
+  --leading-tight: 1.45;
+
+  /* Borders (hairline tracks the repo's existing emphasis-200 color) */
+  --border-hairline: 1px solid var(--ifm-color-emphasis-200);
+  --border-accent: 2px solid var(--ifm-color-primary);
+
+  /* Elevation — ALIAS the Infima shadows above, do not duplicate */
+  --shadow-sm: var(--ifm-global-shadow-lw);
+  --shadow-md: var(--ifm-global-shadow-md);
+  --shadow-arch: drop-shadow(0 6px 16px rgba(26, 26, 26, 0.18));
+
+  /* Motion */
+  --ease-standard: ease;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --duration-fast: 0.12s;
+  --duration-base: 0.18s;
+  --duration-slow: 0.2s;
+  --lift-card: translateY(-4px); /* hero/feature card hover */
+  --lift-subtle: translateY(-2px); /* list/article hover */
 }
 
 /* Dark mode: lift the primary so links/buttons keep AA contrast on dark
@@ -135,6 +229,12 @@ html[data-theme='dark'] {
     rgba(212, 175, 55, 0.14),
     rgba(184, 134, 11, 0.06)
   );
+
+  /* Named DS token layer — dark overrides. Only tokens whose value differs in
+     dark are listed; the rest inherit through var() indirection. (--shadow-md
+     re-aliases the dark Infima shadow set above at this block's top.) */
+  --bop-divider: rgba(255, 255, 255, 0.12);
+  --shadow-md: var(--ifm-global-shadow-md);
 }
 
 /* Headings use Fraunces (the editorial display serif). Apply it explicitly so it
@@ -167,7 +267,8 @@ h6 {
   font-size: 0.9rem;
   line-height: 1.2;
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color var(--duration-slow) ease,
+    transform var(--duration-slow) ease;
 }
 
 .navbar-coffee:hover {
@@ -303,12 +404,13 @@ html:not([data-theme='dark']) .token.literal-property.property {
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: var(--ifm-global-radius);
   background: var(--ifm-card-background-color);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow var(--duration-slow) ease,
+    transform var(--duration-slow) ease;
 }
 
 .blog-list-page article:hover {
   box-shadow: var(--ifm-global-shadow-md);
-  transform: translateY(-2px);
+  transform: var(--lift-subtle);
 }
 
 .blog-list-page article header h2 {
