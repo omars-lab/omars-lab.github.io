@@ -167,7 +167,7 @@
   background: var(--ifm-card-background-color, var(--ifm-background-color));
   border: 1px solid var(--ifm-color-emphasis-200);
   border-left: 4px solid var(--ifm-color-primary);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   font: inherit;
   color: inherit;
