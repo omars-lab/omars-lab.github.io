@@ -21,6 +21,37 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-07-01] Homepage UX fixes + a browser-based deploy verifier
+<!-- meta: type=feature category=development priority=high component=Site -->
+A batch of homepage and navbar fixes surfaced by looking at the live site, each shipped with a test and a proper deploy verification. The navbar now stays on one line and folds its rightmost items into a "More" dropdown (priority+ overflow) instead of collapsing to the mobile hamburger; the mobile drawer lists items one per line (a stray inline-flex wrapper from the hover-summary swizzle was breaking it); the hamburger glyph is vertically centered. The house hero stopped popping in (its above-the-fold arches load eagerly) and stopped rendering an EMPTY centre door on production (a prod-only CSS equal-specificity race left both door and scene at opacity 0; fixed by scoping the "on" rule to two classes, across all four layer pairs). The selected navbar item now has a clear brand-green underline accent instead of faint text. Zero broken links across the whole build. Closed the loop with a new `verify-prod-deployment` skill: a browser check that WAITS for the CDN to serve the exact bundle you built (Pages/Cloudflare hold the old build 1 to 3 min), confirms the deployed change actually renders, and watches every page it loads for real console errors and failed requests (filtering the known-benign Cloudflare Access probe noise).
+
+- Reconcile stale links to the current IA so the production build reports zero broken links and anchors
+- Eager-load the above-the-fold house-hero images so the arches do not pop in after paint
+- Navbar priority+ overflow: stay single-line and fold the rightmost items into a "More" dropdown, keeping the mobile hamburger for phones
+- Fix the mobile hamburger drawer to list items one per line (skip the desktop hover-popup wrapper on mobile)
+- Vertically center the mobile hamburger toggle within its touch target
+- Fix the empty studio-house centre door on production: a two-class specificity fix on the door/scene/peek/flash opacity layers
+- Un-clip the navbar hover-summary popups (an overflow:hidden added for the fold was swallowing them) and add a regression test
+- Give the active navbar item a clear brand-green underline accent (was only faint green text)
+- Add Jest + Playwright coverage: the pure overflow-fit function, the navbar breakpoints, the mobile drawer stacking, the hover popup, and the hero eager-load
+- Regenerate the visual-regression baselines for the navbar + hero changes
+- Author the `verify-prod-deployment` skill: propagation wait, deployed-change confirmation, and per-page regression watch
+
+## [2026-06-30] Reconcile the design system into the repo, then make adherence self-sustaining
+<!-- meta: type=feature category=development priority=high component=Site -->
+Took the "Bytes of Purpose Design System" (reverse-engineered from this repo on claude.ai/design) and reconciled it back INTO the repo, then built the machinery so the brand stays consistent without manual audits. Adopted the named token vocabulary in `custom.css` (spacing, radii, lifts, durations, easing, shadows, type scale, semantic aliases), aliasing rather than duplicating the existing Infima tokens, and migrated the high-value hardcoded call-sites to reference them. Ran five aspect audits (color discipline, type, motion, arch/elevation, voice) and fixed what they found: an off-brand typeface on the live vote button, a hero arch-shadow literal, mid-sentence emoji, card elevation and radii off the two-step system, and a hero accessibility defect where the auto-cycling variants kept advancing under prefers-reduced-motion. Then made it durable: an `implement-with-design-system` skill (the token catalog + discipline rules), a `validate-ds-tokens` guard (a warn hook + blocking gate that flags a hardcoded value with a canonical token), kind-signaling sidebar labels for the Designs blog, and a round-trip of the findings back to the design project.
+
+- Add the design-system named-token layer to custom.css (aliased, not duplicated) and migrate the high-confidence call-sites
+- Audit + fix color discipline, typography, motion, arch/elevation, and brand voice across the site
+- Fix the P0 accessibility bug: hero variants must not auto-cycle under prefers-reduced-motion (add a reactive useReducedMotion hook + tests)
+- Converge card elevation and radii on the brand two-step shadow + radius tokens
+- Remove the off-brand Raleway/Nunito typefaces (the live VoteButton + the storybook-init scaffolding)
+- Consistent chooser-card titles + surface the "Where faith meets craft" signature in the footer
+- Author the `implement-with-design-system` skill (literal-to-token map, discipline rules, token catalog) + a REQUIRED Step 0 to pull the latest design system first
+- Add the `validate-ds-tokens` guard: a warn-tier hook + blocking gate catching hardcoded values that have a token
+- Kind-signaling sidebar labels for the Designs blog (frontend/backend/agent/tooling-cli design kinds)
+- Push the reconciliation findings back to the claude.ai/design project
+
 ## [2026-06-26] The Components reference, the Handbook rename, and redirect-chain safety
 <!-- meta: type=feature category=development priority=high component=Site -->
 Turned the embed-component docs into a real Components reference and hardened the redirect tooling around it. The embed-* docs moved into a `kind: showcase` 🎛️ Components section, each showcase gained an auto-generated "Used in" list (a `usage_pattern` scans the corpus, so the list can never go stale), and Playwright proves each one renders. Then renamed the whole section from Legend to Handbook (the handbook for navigating the blog), moving every `/legend/*` URL to `/handbook/*` with the redirects, structure checks, and cross-links kept in lockstep. Two redirect build-breaks along the way (a raw `<Gif>` in a changelog summary, a stale redirect to a moved-away slug) became permanent guards: the validator now catches chains a to b to c and suggests collapsing to a to c. Finished by surfacing the Changelog from the Handbook sidebar and writing the `manage-changelog` skill.
