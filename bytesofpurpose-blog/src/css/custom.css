@@ -620,6 +620,11 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   .navbar [class*='toggle'] button {
     min-width: 44px;
     min-height: 44px;
+    /* Center the glyph within the 44px hit area — without this the min-height leaves the icon
+       top-aligned, so the hamburger sat high vs the logo + Sign-in pill in the navbar row. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   /* The custom auth control (sign-in pill / avatar) — give the tappable element room. */
   .navbarAuthItem a,
