@@ -31,7 +31,7 @@ post's frontmatter, so the board can never drift from the posts it indexes. Clic
 This page is the **durable** half: the board that indexes the research and the framework for how I
 run an investigation. The research **posts themselves** are temporal, so they live on the
 [Thoughts](/thoughts) blog (each a card above), exactly the same split the
-[Experiments](/product-management/experiments) and [Ideas](/product-management/ideas) boards use.
+[Experiments](/craft/product-management/experiments) and [Ideas](/craft/product-management/ideas) boards use.
 A research that concludes in a lasting lesson distills up into the relevant Craft topic; one that
 leads to building something graduates into an Initiative.
 

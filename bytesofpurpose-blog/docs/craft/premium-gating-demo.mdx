@@ -5,6 +5,10 @@ description: A live demo of premium content. The rest of this page unlocks when 
 premium: true
 premium_teaser: This is premium content. Sign in with LinkedIn to read the rest.
 draft: false
+# The only heading ("The gated body") lives inside the premium body, which is encrypted
+# away at build. So the auto-TOC's link to #the-gated-body resolves to a heading that
+# isn't in the shipped HTML (a broken anchor). Hide the TOC: there's nothing ungated to list.
+hide_table_of_contents: true
 ---
 
 ## The gated body
