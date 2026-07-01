@@ -397,7 +397,8 @@ via the root `Makefile`. Secrets in the gitignored root `.env`.
 | Serve locally | `serve-locally` | run the blog on your machine: `make start` (:3000, drafts visible) vs `make serve` (built site, no drafts); the stale-route-table 404 gotcha (restart fixes it) + curl-false-200 |
 | Publish | `publish-site` | triage draft-readiness → un-draft approved → deploy; wraps `deploy-site` |
 | Deploy | `deploy-site` | secret-scan → build (PostHog env) → gh-pages → verify |
-| Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks |
+| Verify live | `validate-deployment` | post-deploy 200/Access/PostHog-beacon checks (curl smoke) |
+| Verify live (browser) | `verify-prod-deployment` | the BROWSER layer on top of validate-deployment: catches RENDER bugs curl is blind to (a 200 page with a blank component, e.g. the studio-house door once shipped at opacity 0). WAITS for the CDN to propagate the exact bundle you built (polls the live `styles.<hash>.css` until it matches `build/` + serves 200 — Pages/CF serve the OLD build 1-3 min post-deploy), then confirms the deployed change renders, then watches console errors + failed requests on every page it loads (filtering KNOWN-BENIGN noise: the CF Access `/api/me` CORS probe, `dmn_chk` cookie, Infima vendor-CSS warnings). `node scripts/verify-prod-deployment.mjs` from the blog dir, AFTER `make deploy` + validate-deployment |
 | Regression / E2E | `bytesofpurpose-blog/test/e2e/README.md` (no skill) | Playwright **3-project model** (dev :3000 / prod-build :4173 / posthog-prod test-mode :4173); axe a11y + SEO gates; dev-only-surfaces **absence** test (DebugMenu/draft badges must not ship). `make test-regression`. Build-only transforms (rehype, draft exclusion) need the prod build, not `yarn start`. |
 
 ## Repo-wide gotchas (details live in the linked skill)
