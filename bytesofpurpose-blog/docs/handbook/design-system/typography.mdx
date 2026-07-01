@@ -1,0 +1,146 @@
+---
+slug: /design-system/typography
+title: '🔤 Typography'
+sidebar_label: '🔤 Typography'
+description: 'The type system: Fraunces display serif over Geist body with Geist Mono for code, plus the type scale, weights, tracking, and a 1.7 reading line-height.'
+kind: showcase
+draft: false
+sidebar_position: 3
+---
+
+import Head from '@docusaurus/Head';
+
+<Head>
+  {/* Load the nine alternative display faces for the comparison grid below (this page only). */}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:opsz@6..72&family=Spectral&family=Instrument+Serif&family=Space+Grotesk&family=DM+Serif+Display&family=Libre+Caslon+Display&family=Bitter&family=Source+Serif+4&family=Lora&display=swap"
+  />
+</Head>
+
+# Typography
+
+Headings are **Fraunces**, an old-style display serif with an optical-size axis; it reads best
+around weight 600 and wants only the faintest negative tracking. Body and UI are **Geist** at 16px
+and a generous **1.7 line-height** for long-form comfort. Code is **Geist Mono**. Each specimen
+below renders in the real face, with the tokens that produced it shown underneath.
+
+## Display serif · Fraunces
+
+The editorial voice. Large headlines take a hair of negative tracking; the subtitle is an italic
+serif aside.
+
+<TypeSpecimen family="--font-serif-display" size="--text-display" weight="--weight-semibold" tracking="--tracking-tight" leading="--leading-display" sample="Purposeful code" />
+
+<TypeSpecimen family="--font-serif-display" size="--text-h1" weight="--weight-semibold" tracking="--tracking-heading" leading="--leading-heading" sample="Where faith meets craft" />
+
+<TypeSpecimen family="--font-serif-display" size="--text-lead" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-tight" italic sample="Purposeful code, one byte at a time." />
+
+### Choosing the display serif
+
+Fraunces is characterful and warm, but it was one of several editorial directions. Here is the same
+headline across ten faces, from the current pick to a techier grotesque. The chosen one is ringed.
+
+<OptionGrid columns={230}>
+  <OptionTile name="Fraunces" chosen note="Wonky old-style serif. Warm, crafted, a little wry; leans personal and editorial.">
+    <span style={{fontFamily: "'Fraunces', Georgia, serif", fontSize: '1.7rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Newsreader" note="Literary, quiet, screen-tuned. Reads like a thoughtful magazine; less quirk than Fraunces.">
+    <span style={{fontFamily: "'Newsreader', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Spectral" note="Calm, considered, even color. Disciplined and engineer-serious; great for long-form.">
+    <span style={{fontFamily: "'Spectral', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Instrument Serif" note="High-contrast, elegant, single weight. Modern and distinctive, a 'now' editorial look.">
+    <span style={{fontFamily: "'Instrument Serif', Georgia, serif", fontSize: '1.9rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Space Grotesk" note="A techy grotesque, not a serif. Pushes the brand toward engineering and tooling over editorial.">
+    <span style={{fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="DM Serif Display" note="High-contrast Didone. Bold, confident, magazine-masthead; strong personality at large sizes.">
+    <span style={{fontFamily: "'DM Serif Display', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Libre Caslon Display" note="Classic American book serif. Timeless, trustworthy, literary; heritage without stuffiness.">
+    <span style={{fontFamily: "'Libre Caslon Display', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Bitter" note="Slab serif, screen-first. Sturdy and developer-friendly; pairs naturally with mono code.">
+    <span style={{fontFamily: "'Bitter', Georgia, serif", fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Source Serif 4" note="Adobe's clean workhorse serif. Neutral, professional; pairs with Geist almost invisibly.">
+    <span style={{fontFamily: "'Source Serif 4', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Lora" note="Calligraphic, brushed contrast. Warm and approachable; close to Fraunces but calmer.">
+    <span style={{fontFamily: "'Lora', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+</OptionGrid>
+
+<DecisionNote choice="Fraunces">
+  Fraunces won because its wonky, old-style warmth matches the brand's first-person, faith-meets-craft
+  voice better than the calmer or techier alternatives. Newsreader and Source Serif read too neutral,
+  Space Grotesk and Bitter lean too engineering, and the Didones (DM Serif, Instrument) feel more
+  fashion-masthead than personal. Fraunces is crafted and a little wry, which is exactly the register
+  we want, and its optical-size axis lets one family cover the display headline and the italic serif
+  subtitle. It is wired through the type tokens as `--font-serif-display`.
+</DecisionNote>
+
+## Body sans · Geist
+
+The workhorse for UI and long-form prose. Set at 16px with a 1.7 line-height for comfortable
+reading.
+
+<TypeSpecimen family="--font-sans-body" size="--text-body-md" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-body" sizeLabel="16px / 1.7" sample="Real-world engineering artifacts. Examples include sequence diagrams, roadmaps, code snippets, and automations. Short, concrete, verb-first." />
+
+## Eyebrow and mono
+
+The eyebrow label is uppercase Geist, tracked out to `0.18em`, in the primary green. The middot
+`·` is the brand's connective separator. Code is Geist Mono.
+
+<TypeSpecimen family="--font-sans-body" size="--text-eyebrow" weight="--weight-semibold" tracking="--tracking-eyebrow" leading="--leading-tight" sample="ENGINEERING · FAITH · CRAFT" />
+
+<TypeSpecimen family="--font-mono" size="--text-body-md" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-body" sample="const purpose = 'one byte at a time';" />
+
+:::note The eyebrow tracking is editorial-only
+`--tracking-eyebrow` (`0.18em`) is for the hero and section eyebrow labels. Badges, pills, tags,
+and chips keep their own tighter micro-tracking; do not normalize those to `0.18em`, it looks broken
+on a small chip.
+:::
+
+## The type scale
+
+Headings (Fraunces) and body (Geist) each walk a fixed scale. Reach for a scale step, not a raw
+`rem`.
+
+<TokenTable rows={[
+  {token: '--text-display', value: '4rem', purpose: 'The hero display headline (Fraunces).'},
+  {token: '--text-h1', value: '2.75rem', purpose: 'Page title.'},
+  {token: '--text-h2', value: '2rem', purpose: 'Section heading.'},
+  {token: '--text-h3', value: '1.5rem', purpose: 'Sub-section heading.'},
+  {token: '--text-h4', value: '1.3rem', purpose: 'Minor heading.'},
+  {token: '--text-lead', value: '1.5rem', purpose: 'Italic-serif subtitle / lead.'},
+  {token: '--text-body-lg', value: '1.125rem', purpose: 'Emphasised body.'},
+  {token: '--text-body-md', value: '1rem', purpose: 'Default body / UI text.'},
+  {token: '--text-body-sm', value: '0.95rem', purpose: 'Small body.'},
+  {token: '--text-caption', value: '0.85rem', purpose: 'Captions and metadata.'},
+  {token: '--text-eyebrow', value: '0.8rem', purpose: 'The tracked-out eyebrow label.'},
+]} />
+
+## Weights, tracking, and line-height
+
+<TokenTable rows={[
+  {token: '--weight-regular', value: '400', purpose: 'Body text.'},
+  {token: '--weight-medium', value: '500', purpose: 'Slight emphasis.'},
+  {token: '--weight-semibold', value: '600', purpose: 'Headings (Fraunces reads best here).'},
+  {token: '--weight-bold', value: '700', purpose: 'Strong emphasis.'},
+  {token: '--tracking-tight', value: '-0.01em', purpose: 'Large display headlines.'},
+  {token: '--tracking-heading', value: '-0.005em', purpose: 'Headings.'},
+  {token: '--tracking-normal', value: '0', purpose: 'Body and UI.'},
+  {token: '--tracking-eyebrow', value: '0.18em', purpose: 'The editorial eyebrow label only.'},
+  {token: '--leading-display', value: '1.05', purpose: 'Display headline line-height.'},
+  {token: '--leading-heading', value: '1.25', purpose: 'Heading line-height.'},
+  {token: '--leading-body', value: '1.7', purpose: 'Long-form body line-height.'},
+  {token: '--leading-tight', value: '1.45', purpose: 'Tight UI line-height.'},
+]} />
+
+<UsedIn slug="/design-system/typography" />

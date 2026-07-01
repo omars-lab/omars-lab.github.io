@@ -1,0 +1,78 @@
+---
+slug: /design-system/buttons
+title: '🔘 Buttons'
+sidebar_label: '🔘 Buttons'
+description: 'The action controls: primary, secondary, ghost, and premium button variants across three sizes, with icon slots and the brand quiet-hover motion, rendered live.'
+kind: showcase
+draft: false
+sidebar_position: 7
+---
+
+# Buttons
+
+Buttons are the brand's action controls: any click, submit, or call-to-action. They are rendered
+here **live from the site's real button classes and tokens**, so what you see is what ships (toggle
+light and dark in the navbar to confirm). Hover darkens or lifts them, respecting the brand's quiet
+motion.
+
+## Variants
+
+Four variants, each for a different weight of action.
+
+<ButtonRow>
+  <DemoButton variant="primary">Read the blog</DemoButton>
+  <DemoButton variant="secondary">Browse docs</DemoButton>
+  <DemoButton variant="ghost">Read more</DemoButton>
+  <DemoButton variant="premium" iconLeft="★">Unlock premium</DemoButton>
+</ButtonRow>
+
+- **Primary** · filled forest-green with white ink (auto-swapped to dark ink in dark mode for AA).
+  The main action on a surface.
+- **Secondary** · a green outline. A secondary action next to a primary one.
+- **Ghost** · text-only with a tinted hover. The quietest action, for inline or repeated links.
+- **Premium** · a gold wash for locked or premium calls-to-action.
+
+:::note On the premium variant
+The repo ships the green primary, secondary, and ghost buttons as Infima classes. It has the
+`--premium-gold*` palette (used on the premium gate and lock badges) but no ready-made premium
+*button* class, so the premium button above is composed from those real gold tokens. It matches
+the brand; it just is not yet a standing button class.
+:::
+
+## Sizes
+
+Three sizes: `sm`, `md` (default), and `lg`.
+
+<ButtonRow>
+  <DemoButton variant="primary" size="sm">Small</DemoButton>
+  <DemoButton variant="primary" size="md">Medium</DemoButton>
+  <DemoButton variant="primary" size="lg">Large</DemoButton>
+</ButtonRow>
+
+## Icon slots
+
+A button can carry a leading or trailing glyph. The brand uses simple text glyphs (`→`, `★`) rather
+than an icon font.
+
+<ButtonRow>
+  <DemoButton variant="ghost" iconRight="→">Read more</DemoButton>
+  <DemoButton variant="primary" iconLeft="☕">Buy me a coffee</DemoButton>
+  <DemoButton variant="premium" iconLeft="★">Premium</DemoButton>
+</ButtonRow>
+
+## States and motion
+
+Hover darkens the fill (primary) or tints the surface (secondary, ghost), with a small
+`--lift-subtle` translate. There is no special press scale. All of it respects
+`prefers-reduced-motion` (the lift holds still when reduced-motion is on). The radius is
+`--radius-sm` (`--ifm-button-border-radius`, `0.4rem`) on every button.
+
+<TokenTable rows={[
+  {token: '--ifm-button-border-radius', value: '0.4rem', purpose: 'The button corner radius.'},
+  {token: '--lift-subtle', value: 'translateY(-2px)', purpose: 'The hover lift on a button.'},
+  {token: '--duration-base', value: '0.18s', purpose: 'The hover transition duration.'},
+  {token: '--ifm-color-primary', value: '#3c7256', purpose: 'The primary fill and the secondary outline (AA-safe green).', swatch: '--ifm-color-primary'},
+  {token: '--premium-gold-wash', value: 'linear-gradient(...)', purpose: 'The premium button fill.', swatch: '--premium-gold-wash'},
+]} />
+
+<UsedIn slug="/design-system/buttons" />

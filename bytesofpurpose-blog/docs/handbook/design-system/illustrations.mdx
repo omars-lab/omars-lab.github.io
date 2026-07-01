@@ -1,0 +1,43 @@
+---
+slug: /design-system/illustrations
+title: '🖼️ Arch Illustrations'
+sidebar_label: '🖼️ Arch Illustrations'
+description: 'The hand-drawn warm-cartoon illustration set: cozy brown-and-green scenes clipped into the cathedral-arch silhouette that frames the site.'
+kind: showcase
+draft: false
+sidebar_position: 6
+---
+
+# Arch Illustrations
+
+Imagery is the hand-drawn **warm cartoon** set: cozy brown-and-green scenes (a coder at a desk with
+coffee, prayer, sculpting a brain) clipped into a **cathedral-arch silhouette**. Warm, narrative,
+personal, never stock photography and never gradient abstraction.
+
+## The cathedral-arch silhouette
+
+Every scene is clipped to the same arch: `border-radius: 110px 110px 14px 14px`, with an outlined
+edge and a soft drop-shadow (`--shadow-arch`). The arch is the brand's signature frame; it echoes
+the faith-meets-craft theme and matches the homepage chooser cards.
+
+<TokenTable rows={[
+  {token: 'border-radius', value: '110px 110px 14px 14px', purpose: 'The cathedral-arch corner: tall round top, gently squared base.'},
+  {token: '--shadow-arch', value: 'drop-shadow(0 6px 16px rgba(26,26,26,.18))', purpose: 'The soft shadow that lifts the arch off the page.'},
+]} />
+
+## The scene set
+
+Each scene names a part of the site. They are the same illustrations used on the homepage chooser
+and the section cards.
+
+<ArchIllustrations />
+
+## Adding a new scene
+
+A raw image has to be fitted to the **canonical arch** (1024², a fixed bounding box, transparent
+outside, zero fringe) before it drops in cleanly. The repo's `import-arched-image` workflow detects,
+scales, shifts, and clips a raw image to that arch and writes a new file, so a new scene matches the
+set exactly. Never crop in place; a white-line artifact at the arch edge is a canonical-arch
+violation, so re-fit rather than tweak CSS.
+
+<UsedIn slug="/design-system/illustrations" />

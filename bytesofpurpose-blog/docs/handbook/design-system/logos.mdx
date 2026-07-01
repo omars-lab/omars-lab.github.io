@@ -1,0 +1,164 @@
+---
+slug: /design-system/logos
+title: '✦ Logos and Iconography'
+sidebar_label: '✦ Logos and Iconography'
+description: 'The brand marks and icon language: the two shipping logos, the full logo exploration with the chosen direction, the feature icons, and the glyph conventions.'
+kind: showcase
+draft: false
+sidebar_position: 5
+---
+
+# Logos and Iconography
+
+The brand favors **simple, theme-aware marks** and **text glyphs** over a heavy icon font. Two
+monochrome logos ship today; below them is the full exploration that led there, with the chosen
+directions highlighted.
+
+## Brand marks (shipping)
+
+Two theme-aware monochrome marks that inherit their color from the surrounding text. Toggle the
+navbar theme to see them adapt.
+
+<BrandMarks />
+
+- The **lightbulb `</>`** mark is the primary logo: a bulb with a code glyph and radiating rays.
+- The **binary-pyramid** mark is the secondary or favicon mark: columns of 1 and 0 digits radiating
+  from a central pillar. It is generated from a config in the source repo; the SVG is the artifact.
+
+## The logo exploration
+
+Three ideas keep recurring: the **lightbulb** (purpose, the lit idea), **binary** (a byte is 8
+bits), and **code brackets** `</>`. The same DNA was pushed in many directions. Each is shown live;
+the chosen directions are ringed.
+
+### Core directions
+
+<OptionGrid columns={210}>
+  <OptionTile name="Filament Bulb" note="The idea, lit. Friendly and recognizable; the existing mark, tinted brand-green.">
+    <img src="/img/logo.svg" alt="" style={{height: 48}} />
+  </OptionTile>
+  <OptionTile name="Binary Pyramid" note="Structure from bits: the most distinctive, ownable mark. Geometric, quiet.">
+    <img src="/img/logo-binary.svg" alt="" style={{height: 56}} />
+  </OptionTile>
+  <OptionTile name="Bracket Monogram" note="A 'b' inside a code tag. Compact, engineer-native, reads at favicon size.">
+    <span style={{fontFamily: 'var(--font-mono)', fontSize: '2.4rem', color: 'var(--ifm-color-primary)'}}>&lt;<b style={{fontFamily: 'var(--font-serif-display)', color: 'var(--text-heading)'}}>b</b>/&gt;</span>
+  </OptionTile>
+  <OptionTile name="App-Icon Monogram" note="Serif 'BoP' on a green rounded square. Scales to a tile, avatar, or PWA icon.">
+    <span style={{width: 64, height: 64, borderRadius: 15, background: 'var(--ifm-color-primary)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', fontFamily: 'var(--font-serif-display)', fontWeight: 600, fontSize: '1.7rem', color: '#fff'}}>BoP</span>
+  </OptionTile>
+  <OptionTile name="The Byte" note="8 cells make one byte, two lit. A literal, abstract mark that animates well.">
+    <span style={{display: 'grid', gridTemplateColumns: 'repeat(4, 13px)', gridAutoRows: '13px', gap: 4}}>
+      {[0,1,0,0,0,1,0,0].map((on,i) => <i key={i} style={{background: on ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)', borderRadius: 3}} />)}
+    </span>
+  </OptionTile>
+  <OptionTile name="Typographic Wordmark" note="No mark: Fraunces stacked over the tri-color pastel rule. Pure, editorial, flexible.">
+    <span style={{fontFamily: 'var(--font-serif-display)', fontWeight: 600, fontSize: '1.2rem', lineHeight: 1.02, color: 'var(--text-heading)', textAlign: 'center', letterSpacing: '-0.01em'}}>BYTES<br/>OF&nbsp;PURPOSE<span style={{display: 'block', width: 32, height: 3, margin: '7px auto 0', borderRadius: 3, background: 'linear-gradient(90deg, var(--tea-pink), var(--tea-mint), var(--tea-green))'}} /></span>
+  </OptionTile>
+</OptionGrid>
+
+### Green arch × Vestaboard (the chosen direction)
+
+The one that won: the green cathedral arch as the housing for the brand's real Vestaboard
+split-flap, the faith frame around a mechanically rolling bit.
+
+<OptionGrid columns={210}>
+  <OptionTile name="Arch + Flap Tile" chosen note="The green cathedral arch IS the housing for a Vestaboard flap that rolls B → 0 → 1 → blank. The brand's actual split-flap, set into the faith frame.">
+    <span style={{width: 60, height: 70, background: 'var(--ifm-color-primary)', borderRadius: '30px 30px 6px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)'}}>
+      <span style={{fontFamily: 'var(--font-mono)', fontWeight: 600, fontSize: '2rem', color: '#f4f1ea'}}>B</span>
+    </span>
+  </OptionTile>
+  <OptionTile name="Arch + Flap (outline)" note="Same pairing as a hairline arch over a tinted interior; the dark flap pops. Lighter weight for favicons and dark surfaces.">
+    <span style={{width: 60, height: 70, border: '2.5px solid var(--ifm-color-primary)', borderRadius: '30px 30px 6px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--accent-tint)'}}>
+      <span style={{fontFamily: 'var(--font-mono)', fontWeight: 600, fontSize: '1.9rem', color: 'var(--text-heading)'}}>0</span>
+    </span>
+  </OptionTile>
+  <OptionTile name="Arched Flap Sign · BoP" note="'BoP' on a three-tile flap board hung under a green arch crown: the homepage departure-board sign, distilled into a mark.">
+    <span style={{display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
+      <span style={{width: 70, height: 18, background: 'var(--ifm-color-primary)', borderRadius: '28px 28px 0 0'}} />
+      <span style={{display: 'flex', gap: 4, padding: '5px 6px', borderRadius: 6, background: '#14130f'}}>
+        {['B','O','P'].map(c => <span key={c} style={{fontFamily: 'var(--font-mono)', fontWeight: 600, fontSize: '1.3rem', color: '#f4f1ea'}}>{c}</span>)}
+      </span>
+    </span>
+  </OptionTile>
+</OptionGrid>
+
+<DecisionNote choice="Green arch × Vestaboard">
+  This direction won because it fuses the two strongest brand motifs into one living mark: the
+  cathedral-arch silhouette (faith, and the same frame as the arch illustrations) becomes the
+  physical housing for the Vestaboard split-flap that already runs on the homepage hero. It is
+  ownable, it animates natively (the flap rolls B → 0 → 1 → blank, spelling the "byte"), and it ties
+  the logo directly to the site's signature device. The `✦` marks the two lead candidates within it.
+</DecisionNote>
+
+### More directions considered
+
+Other explorations, kept for the record. None became the primary mark, but several remain useful as
+favicons, avatars, or motion accents.
+
+<OptionGrid columns={200}>
+  <OptionTile name="Cathedral Arch" note="A serif 'B' under a solid green arch: ties the mark to the arch-illustration frame. Faith-meets-craft, made structural.">
+    <span style={{width: 50, height: 60, background: 'var(--ifm-color-primary)', borderRadius: '25px 25px 5px 5px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-serif-display)', fontWeight: 600, fontSize: '1.6rem', color: '#fff'}}>B</span>
+  </OptionTile>
+  <OptionTile name="Arch of Bits" note="The doorway filled with a quiet column of binary: structure built from bytes, literally stacked.">
+    <span style={{width: 54, height: 62, border: '2px solid var(--ifm-color-primary)', borderBottom: 'none', borderRadius: '27px 27px 0 0', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, overflow: 'hidden'}}>
+      {['1011','0110','1001','0101'].map((r,i) => <span key={i} style={{fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--ifm-color-primary)', lineHeight: 1.05, opacity: i % 2 ? 0.32 : 1}}>{r}</span>)}
+    </span>
+  </OptionTile>
+  <OptionTile name="Bracket Arch" note="Curly braces form the doorway around a serif 'b': code structure as architecture.">
+    <span style={{fontFamily: 'var(--font-mono)', fontSize: '3rem', color: 'var(--ifm-color-primary)', display: 'inline-flex', alignItems: 'center', lineHeight: 1}}>{'{'}<span style={{fontFamily: 'var(--font-serif-display)', fontWeight: 600, fontSize: '1.8rem', color: 'var(--text-heading)', margin: '0 -2px'}}>b</span>{'}'}</span>
+  </OptionTile>
+  <OptionTile name="Bulb in Arch" note="The lit idea framed by the faith arch: combines the two strongest motifs into one seal.">
+    <span style={{width: 56, height: 64, background: 'var(--accent-tint)', border: '2px solid var(--ifm-color-primary)', borderRadius: '28px 28px 6px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
+      <img src="/img/logo.svg" alt="" style={{height: 30}} />
+    </span>
+  </OptionTile>
+  <OptionTile name="Enclosed Bulb Badge" note="The bulb ringed in a green circle: a self-contained seal or stamp that works as an avatar.">
+    <span style={{width: 60, height: 60, borderRadius: '50%', border: '2px solid var(--ifm-color-primary)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center'}}>
+      <img src="/img/logo.svg" alt="" style={{height: 30}} />
+    </span>
+  </OptionTile>
+  <OptionTile name="Dot-Matrix B" note="A 'B' drawn from pixels and bits. Reads as data made legible; playful, very ownable.">
+    <span style={{display: 'grid', gridTemplateColumns: 'repeat(5, 8px)', gridAutoRows: '8px', gap: 3}}>
+      {[1,1,1,0,0, 1,0,1,0,0, 1,1,1,0,0, 1,0,1,0,0, 1,1,1,0,0].map((on,i) => <i key={i} style={{background: on ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-200)', borderRadius: 2}} />)}
+    </span>
+  </OptionTile>
+  <OptionTile name="Terminal Cursor" note="Lowercase mono 'bop' with a blinking caret. Pure engineer energy; animates natively.">
+    <span style={{fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 500, color: 'var(--text-heading)'}}>bop<span style={{color: 'var(--ifm-color-primary)', fontWeight: 700}}>_</span></span>
+  </OptionTile>
+  <OptionTile name="The Semicolon" note="Code's quiet period of intention: a pause with purpose. Minimal, witty, scales tiny.">
+    <span style={{fontFamily: 'var(--font-serif-display)', fontSize: '3.2rem', fontWeight: 600, color: 'var(--ifm-color-primary)', lineHeight: 1}}>;</span>
+  </OptionTile>
+  <OptionTile name="Terminal Window" note="A tiny terminal with a blinking prompt: the most literal 'engineer's blog' mark.">
+    <span style={{width: 92, borderRadius: 8, overflow: 'hidden', border: 'var(--border-hairline)', boxShadow: 'var(--shadow-sm)'}}>
+      <span style={{display: 'flex', height: 16, background: 'var(--ifm-color-primary)', alignItems: 'center', gap: 4, padding: '0 6px'}}>
+        {[0,1,2].map(i => <i key={i} style={{width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.55)'}} />)}
+      </span>
+      <span style={{display: 'block', background: 'var(--surface-card)', padding: '10px 8px', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-heading)'}}>bop_</span>
+    </span>
+  </OptionTile>
+</OptionGrid>
+
+## Feature icons
+
+A small set of line-style SVGs used on the homepage feature cards, tinted brand-green. They are the
+only bundled icon set; when a UI needs a broader library, substitute **Lucide** (a thin, rounded
+line style that matches these) and flag the substitution.
+
+<FeatureIcons />
+
+## Glyphs and emoji
+
+The brand reaches for **text glyphs** as icons before an icon font:
+
+- **`→`** on a "Read more" link.
+- **`★`** on premium surfaces.
+- **`☕`** the "Buy Me a Coffee?" cup in the navbar.
+- **`·`** the middot, the brand's connective separator in eyebrows, metadata, and footers.
+
+**Emoji** appear only as the single leading glyph on a navigation card or a section header, never
+mid-sentence and never as decorative clutter. On this blog, the leading emoji on a post title also
+encodes the **kind** of post; the full legend lives in the [Handbook](/handbook).
+
+The hand-drawn **[arch illustrations](/design-system/illustrations)** have their own page.
+
+<UsedIn slug="/design-system/logos" />

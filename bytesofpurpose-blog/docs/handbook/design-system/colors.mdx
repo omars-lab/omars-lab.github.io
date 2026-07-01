@@ -1,0 +1,94 @@
+---
+slug: /design-system/colors
+title: '🎨 Colors'
+sidebar_label: '🎨 Colors'
+description: 'The color palette: a forest-green primary scale, tea-party pastel accent fills, a premium gold family, and cool off-white surfaces with near-black ink.'
+kind: showcase
+draft: false
+sidebar_position: 2
+---
+
+# Colors
+
+A deep **forest green** carries almost all the weight. Surfaces are a cool, muted off-white
+"paper", deliberately not warm cream and not stark white. Ink is a near-black with a cool-gray
+secondary. The **tea-party pastels** are sparing accent fills, and a **premium gold** family marks
+locked or premium surfaces. Every swatch below is filled from the live token, so it is exactly
+what ships (toggle light and dark in the navbar to see the palette shift).
+
+## Brand green
+
+The hero color. `--ifm-color-primary` (`#3C7256`) is the AA-safe green for **text and links**;
+`--brand-green` (`#448061`) is the deeper "hero" green for large or decorative **fills**, where
+text-contrast rules do not apply. The dark and light steps come from Infima's shade math.
+
+<ColorRow>
+  <ColorSwatch token="--ifm-color-primary-darkest" name="Darkest" hex="#2A4F3C" />
+  <ColorSwatch token="--ifm-color-primary-darker" name="Darker" hex="#335F48" />
+  <ColorSwatch token="--ifm-color-primary" name="Primary · text" hex="#3C7256" note="AA-safe green for text and links." />
+  <ColorSwatch token="--brand-green" name="Brand green" hex="#448061" note="Deep hero green for large or decorative fills." />
+  <ColorSwatch token="--ifm-color-primary-lighter" name="Lighter" hex="#4A8A69" />
+  <ColorSwatch token="--ifm-color-primary-lightest" name="Lightest" hex="#5A9C7C" />
+</ColorRow>
+
+The faint green wash behind icons and callouts is a single low-alpha tint:
+
+<ColorRow>
+  <ColorSwatch token="--accent-tint" name="Accent tint" hex="rgba(68,128,97,.1)" note="Faint green wash behind icons and callout surfaces." />
+</ColorRow>
+
+## Tea-party pastels
+
+:::caution Accent fills only, never text
+The pastels are **backgrounds** for chips, pills, and tag fills. Never set a text `color` to a
+pastel. The only ink allowed to ride on a pastel fill is **`--tea-ink`** (a deep green that meets
+AA on all three).
+:::
+
+<ColorRow>
+  <ColorSwatch token="--tea-pink" name="Tea pink" hex="#FFC5D3" />
+  <ColorSwatch token="--tea-mint" name="Tea mint" hex="#ADFFF5" />
+  <ColorSwatch token="--tea-green" name="Tea green" hex="#D2FFC4" />
+  <ColorSwatch token="--tea-ink" name="Tea ink" hex="#2F5D47" ink note="The only text color allowed on a pastel fill." />
+</ColorRow>
+
+## Premium gold
+
+The `--premium-gold` family is reserved for **premium and locked surfaces**: the premium gate, lock
+badges, premium sidebar links, and the insider-tip callout. It appears nowhere else.
+
+<ColorRow>
+  <ColorSwatch token="--premium-gold" name="Gold · text" hex="#9A7B1F" note="AA-safe gold for text on light." />
+  <ColorSwatch token="--premium-gold-strong" name="Gold strong" hex="#7A5F12" />
+  <ColorSwatch token="--premium-gold-bright" name="Gold bright" hex="#D4AF37" note="Metallic sheen for icons." />
+  <ColorSwatch token="--premium-gold-wash" name="Gold wash" hex="linear-gradient" note="Faint gradient behind premium cards." />
+</ColorRow>
+
+## Surfaces and ink
+
+The page is a cool off-white "paper"; raised cards sit one step lighter. Ink is a near-black body
+with a cool-gray secondary. The ink swatches below render the color **as text on paper**, which is
+how they are actually used.
+
+<ColorRow>
+  <ColorSwatch token="--surface-page" name="Page" hex="#EEF1EF" note="The off-white paper background." />
+  <ColorSwatch token="--surface-card" name="Card" hex="#F4F6F5" note="Raised card surface." />
+  <ColorSwatch token="--text-body" name="Body ink" hex="#1A1D1B" ink />
+  <ColorSwatch token="--text-heading" name="Heading ink" hex="#14201A" ink />
+  <ColorSwatch token="--text-secondary" name="Secondary ink" hex="#46504B" ink />
+</ColorRow>
+
+### Hairlines and dividers
+
+Cards and dividers use a single 1px hairline. A repo-reality note: the design system *intends* the
+hairline as `#DDE2DF`, but the site has not overridden Infima's default, so hairlines currently
+render **`#EBEDF0`** (a cooler, lighter gray). Adopting `#DDE2DF` everywhere is a deliberate pending
+decision, because it shifts every bordered surface. Use the token, not a raw hex.
+
+<TokenTable rows={[
+  {token: '--ifm-color-emphasis-200', value: '#ebedf0', purpose: 'The hairline border color (ships #ebedf0; #dde2df is the intended refinement).', swatch: '--ifm-color-emphasis-200'},
+  {token: '--border-hairline', value: '1px solid var(--ifm-color-emphasis-200)', purpose: 'The standard card and divider hairline.'},
+  {token: '--bop-divider', value: 'rgba(26,26,26,.1)', purpose: 'A subtle divider line.'},
+]} />
+
+<UsedIn slug="/design-system/colors" />

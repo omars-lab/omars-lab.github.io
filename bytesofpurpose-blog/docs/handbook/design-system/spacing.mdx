@@ -1,0 +1,67 @@
+---
+slug: /design-system/spacing
+title: '📐 Spacing and Elevation'
+sidebar_label: '📐 Spacing and Elevation'
+description: 'The layout system: a soft 4px spacing scale, gentle corner radii, a quiet two-step shadow that cards earn on hover, and short eased reduced-motion-safe motion.'
+kind: showcase
+draft: false
+sidebar_position: 4
+---
+
+# Spacing and Elevation
+
+Layout leans on a **soft 4px-based scale** with generous whitespace. Corners are gentle, shadows
+are quiet, and motion is short and eased. The specimens below are sized directly by the tokens, so
+the proportions are the real thing.
+
+## Spacing scale
+
+Nine steps, `--space-1` through `--space-9`. Each bar's width IS the token, so you can see the
+proportion each step buys. Use these for **layout spacing** (margins, padding, gaps), not for font
+sizes.
+
+<SpacingScale />
+
+## Radii
+
+Corners are soft. Use `--radius-md` on genuine cards, `--radius-lg` on hero and chooser cards, and
+`--radius-pill` / `--radius-full` for pills and circles.
+
+<RadiusSwatches />
+
+## Elevation
+
+A quiet **two-step** shadow system, cool-ink tinted. A card rests on the faint `--shadow-sm` and
+earns the medium `--shadow-md` plus a gentle lift **on hover**, not at rest. Hover the card to see
+it (the lift holds still under reduced-motion).
+
+<ElevationDemo />
+
+<TokenTable rows={[
+  {token: '--shadow-sm', value: '0 1px 3px rgba(20,32,26,.08)', purpose: 'The faint resting step (aliases --ifm-global-shadow-lw).'},
+  {token: '--shadow-md', value: '0 6px 20px rgba(20,32,26,.1)', purpose: 'The medium hover step (aliases --ifm-global-shadow-md).'},
+  {token: '--shadow-arch', value: 'drop-shadow(0 6px 16px rgba(26,26,26,.18))', purpose: 'The soft shadow under an arch illustration.'},
+  {token: '--lift-card', value: 'translateY(-4px)', purpose: 'The hero / feature card hover lift.'},
+  {token: '--lift-subtle', value: 'translateY(-2px)', purpose: 'The lighter list / article hover lift.'},
+]} />
+
+:::note The shadow tokens are aliases
+`--shadow-sm` / `--shadow-md` equal the site's existing Infima tokens (`--ifm-global-shadow-lw` /
+`--ifm-global-shadow-md`). They are one source of truth with a friendlier name, not a second,
+independent shadow scale.
+:::
+
+## Motion
+
+Transitions are short and eased. Everything that moves **respects `prefers-reduced-motion`**, with
+no exceptions; the hover-lift demo above holds its scene when reduced-motion is on.
+
+<TokenTable rows={[
+  {token: '--duration-fast', value: '0.12s', purpose: 'Quick state change.'},
+  {token: '--duration-base', value: '0.18s', purpose: 'Standard transition.'},
+  {token: '--duration-slow', value: '0.2s', purpose: 'The hover lift and shadow.'},
+  {token: '--ease-standard', value: 'ease', purpose: 'The default easing.'},
+  {token: '--ease-out', value: 'cubic-bezier(0.2,0.7,0.3,1)', purpose: 'A softer decelerating ease.'},
+]} />
+
+<UsedIn slug="/design-system/spacing" />

@@ -1,0 +1,556 @@
+/**
+ * DesignSystem specimen kit — layout only. Every value here is an existing design-system
+ * token from src/css/custom.css (spacing/radius/border/surface/type). The kit renders live
+ * specimens by reading `var(--token)` off the theme, so the docs can never drift from what ships
+ * and light/dark are automatic. No brand colors are invented here.
+ */
+
+/* ---- Color swatches ------------------------------------------------------- */
+.colorRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+}
+
+.swatch {
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+
+.swatchChip {
+  height: 72px;
+  width: 100%;
+  /* A faint checker under the chip reveals transparency for alpha tokens (tints/washes). */
+  background-image: linear-gradient(45deg, var(--ifm-color-emphasis-200) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--ifm-color-emphasis-200) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--ifm-color-emphasis-200) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--ifm-color-emphasis-200) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.swatchChipFill {
+  height: 100%;
+  width: 100%;
+}
+
+.swatchMeta {
+  padding: var(--space-2) var(--space-3);
+  border-top: var(--border-hairline);
+}
+
+.swatchName {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-heading);
+  line-height: var(--leading-tight);
+}
+
+.swatchHex {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.swatchToken {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-link);
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.swatchNote {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+  line-height: var(--leading-tight);
+}
+
+/* Ink swatch: show the ink color AS text on paper, not as a fill, so it reads honestly. */
+.inkChip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-page);
+  font-family: var(--font-serif-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+}
+
+/* ---- Type specimens ------------------------------------------------------- */
+.typeSpecimen {
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-4) 0;
+}
+
+.typeSample {
+  color: var(--text-heading);
+  line-height: var(--leading-heading);
+  margin: 0;
+  /* size/family/weight/tracking are applied inline from props via tokens */
+}
+
+.typeCaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: var(--border-hairline);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+}
+
+.typeCaption b {
+  color: var(--text-link);
+  font-weight: var(--weight-regular);
+}
+
+/* ---- Shared token table --------------------------------------------------- */
+.tokenTable {
+  width: 100%;
+  margin: var(--space-5) 0;
+}
+
+.tokenTable code {
+  white-space: nowrap;
+}
+
+.swatchInline {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: var(--radius-sm);
+  border: var(--border-hairline);
+  vertical-align: -0.2em;
+  margin-right: var(--space-2);
+}
+
+/* ---- Spacing scale -------------------------------------------------------- */
+.spacingScale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-5) 0;
+}
+
+.spacingRow {
+  display: grid;
+  grid-template-columns: 5.5rem 5rem 1fr;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.spacingToken {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-link);
+}
+
+.spacingValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+}
+
+.spacingBar {
+  height: var(--space-4);
+  background: var(--ifm-color-primary);
+  border-radius: var(--radius-sm);
+  min-width: 2px;
+}
+
+/* ---- Radii + elevation ---------------------------------------------------- */
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0;
+}
+
+.tile {
+  background: var(--surface-card);
+  border: var(--border-hairline);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tileSample {
+  width: 88px;
+  height: 88px;
+  background: var(--accent-tint);
+  border: var(--border-hairline);
+}
+
+.tileLabel {
+  text-align: center;
+}
+
+.tileToken {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-link);
+}
+
+.tileValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Elevation demo: cards rest quiet, earn shadow + lift on hover (discipline rule 5). */
+.liftCard {
+  background: var(--surface-card);
+  border: var(--border-hairline);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-standard);
+}
+
+.liftCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: var(--lift-card);
+}
+
+/* Reduced motion: hold the card still (discipline rule 6 — self-guarded, no global reset). */
+@media (prefers-reduced-motion: reduce) {
+  .liftCard {
+    transition: none;
+  }
+  .liftCard:hover {
+    transform: none;
+  }
+}
+
+.liftHint {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+/* ---- Logos + icons -------------------------------------------------------- */
+.markGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0;
+}
+
+.markTile {
+  background: var(--surface-card);
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markStage {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.markStage img {
+  max-height: 64px;
+  max-width: 100%;
+}
+
+/* Icon feature tiles tint the SVG mark brand-green via CSS mask, matching the homepage. */
+.iconMark {
+  width: 40px;
+  height: 40px;
+  background-color: var(--ifm-color-primary);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.markLabel {
+  font-family: var(--font-serif-display);
+  font-size: var(--text-body-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-heading);
+  margin-top: var(--space-3);
+  text-align: center;
+}
+
+.markNote {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-align: center;
+  line-height: var(--leading-tight);
+}
+
+/* Arch illustration frame — the cathedral-arch silhouette (discipline rule 8). */
+.archFrame {
+  border-radius: 110px 110px var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+  border: var(--border-hairline);
+  filter: var(--shadow-arch);
+  background: var(--surface-card);
+  aspect-ratio: 3 / 4;
+  max-width: 168px;
+}
+
+.archFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---- Options grid (show every direction, highlight the chosen one) -------- */
+.optionGrid {
+  --ds-option-min: 200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--ds-option-min), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-5) 0;
+}
+
+.optionTile {
+  position: relative;
+  background: var(--surface-card);
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The chosen direction: a green ring + the ✦ badge, so it stands out at a glance. */
+.optionChosen {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 1px var(--ifm-color-primary);
+}
+
+.chosenBadge {
+  position: absolute;
+  top: calc(-1 * var(--space-2));
+  right: var(--space-3);
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: var(--ifm-color-primary);
+  border-radius: var(--radius-pill);
+  padding: 2px var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.optionStage {
+  min-height: 92px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.optionName {
+  font-family: var(--font-serif-display);
+  font-size: var(--text-body-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text-heading);
+  margin-top: var(--space-3);
+  text-align: center;
+}
+
+.optionNote {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-align: center;
+  line-height: var(--leading-tight);
+}
+
+/* ---- Decision note (what we chose + why) ---------------------------------- */
+.decisionNote {
+  border: var(--border-hairline);
+  border-left: var(--border-accent);
+  border-radius: var(--radius-md);
+  background: var(--accent-tint);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-5) 0;
+}
+
+.decisionHead {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-body-md);
+  color: var(--text-heading);
+}
+
+.decisionMark {
+  color: var(--ifm-color-primary);
+  font-weight: var(--weight-bold);
+}
+
+.decisionBody {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-body-sm);
+  color: var(--text-body);
+  line-height: var(--leading-body);
+  margin-top: var(--space-2);
+}
+
+/* ---- Button specimens (rendered from the repo's real Infima classes) ------ */
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+/* A premium (gold) CTA composed from the real --premium-gold* tokens, since the repo
+   has the gold palette but no ready-made premium button class. */
+.premiumButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans-body);
+  font-weight: var(--weight-semibold);
+  color: var(--premium-gold-strong);
+  background: var(--premium-gold-wash);
+  border: 1px solid var(--premium-gold-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  transition: transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.premiumButton:hover {
+  box-shadow: var(--shadow-sm);
+  transform: var(--lift-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premiumButton {
+    transition: none;
+  }
+  .premiumButton:hover {
+    transform: none;
+  }
+}
+
+/* ---- Tag / Badge / Callout specimens -------------------------------------- */
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+/* A pastel tag pill — the ONLY correct use of a pastel (fill), with --tea-ink on top. */
+.tagPink {
+  background: var(--tea-pink);
+}
+.tagMint {
+  background: var(--tea-mint);
+}
+.tagGreen {
+  background: var(--tea-green);
+}
+
+.tagPill {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: var(--tea-ink);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+}
+
+/* A small status badge (green accent tint + primary ink). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+  color: var(--ifm-color-primary);
+  background: var(--accent-tint);
+  border: 1px solid var(--ifm-color-primary-lighter);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+}
+
+.badgeGold {
+  color: var(--premium-gold-strong);
+  background: var(--premium-gold-wash);
+  border-color: var(--premium-gold-border);
+}
+
+/* A callout: green-tinted wash, primary left rule (the brand's admonition shape). */
+.callout {
+  border: var(--border-hairline);
+  border-left: var(--border-accent);
+  border-radius: var(--radius-md);
+  background: var(--accent-tint);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-4) 0;
+}
+
+.calloutGold {
+  background: var(--premium-gold-wash);
+  border-left-color: var(--premium-gold);
+}
+
+.calloutTitle {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}
+
+.calloutGold .calloutTitle {
+  color: var(--premium-gold-strong);
+}
+
+.calloutBody {
+  font-family: var(--font-sans-body);
+  font-size: var(--text-body-sm);
+  color: var(--text-body);
+  line-height: var(--leading-body);
+  margin-top: var(--space-1);
+}

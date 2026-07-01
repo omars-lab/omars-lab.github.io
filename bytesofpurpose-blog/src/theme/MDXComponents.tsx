@@ -15,6 +15,29 @@ import KanbanBoard from '@site/src/components/KanbanBoard';
 import TaskList from '@site/src/components/TaskList';
 import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
 import UsedIn from '@site/src/components/UsedIn';
+// Design-system specimen kit: renders the /handbook/design-system pages by reading the repo's
+// OWN live tokens from src/css/custom.css (theme-aware, drift-proof).
+import {
+  ColorSwatch,
+  ColorRow,
+  TypeSpecimen,
+  SpacingScale,
+  RadiusSwatches,
+  ElevationDemo,
+  TokenTable,
+  BrandMarks,
+  FeatureIcons,
+  ArchIllustrations,
+  OptionGrid,
+  OptionTile,
+  DecisionNote,
+  ButtonRow,
+  ChipRow,
+  DemoButton,
+  DemoTag,
+  DemoBadge,
+  DemoCallout,
+} from '@site/src/components/DesignSystem';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
@@ -116,4 +139,31 @@ export default {
   // usage.json) so it can't go stale. Drop <UsedIn slug="/components/structural/card"/> on a
   // showcase; pass the showcase's own slug. Detection is the showcase's `usage_pattern` frontmatter.
   UsedIn,
+  // Design-system reference specimens (the /handbook/design-system/* pages). Every specimen
+  // renders LIVE from a var(--token) read off the theme, so the docs stay in lockstep with
+  // src/css/custom.css and are automatically correct in light and dark.
+  ColorSwatch,
+  ColorRow,
+  TypeSpecimen,
+  SpacingScale,
+  RadiusSwatches,
+  ElevationDemo,
+  TokenTable,
+  BrandMarks,
+  FeatureIcons,
+  ArchIllustrations,
+  // OptionGrid/OptionTile render every explored direction with the CHOSEN one highlighted
+  // (green ring + ✦ badge); DecisionNote records WHY we chose it. The "show all options,
+  // highlight our decision" pattern used on the Logos and Typography pages.
+  OptionGrid,
+  OptionTile,
+  DecisionNote,
+  // Live control specimens rendered from the repo's real Infima button classes + tokens
+  // (Buttons + Core Components pages): buttons, pastel tags, badges, callouts.
+  ButtonRow,
+  ChipRow,
+  DemoButton,
+  DemoTag,
+  DemoBadge,
+  DemoCallout,
 };
