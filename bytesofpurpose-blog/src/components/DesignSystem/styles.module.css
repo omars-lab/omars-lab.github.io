@@ -583,9 +583,11 @@
 }
 
 /* Navbar variant: a compact arch that fits the header line (tight padding + smaller corner) so the
-   mark aligns with the wordmark and never overflows the navbar height. */
+   mark aligns with the wordmark and never overflows the navbar height. Top padding gives the domed
+   top breathing room above the letter card; a slightly larger bottom keeps the tile nudged UP from
+   the arch base (not sitting on the floor). */
 .archFlapNavbar {
-  padding: 3px 5px 4px;
+  padding: 7px 6px 5px;
   border-radius: 16px 16px 4px 4px;
 }
 
