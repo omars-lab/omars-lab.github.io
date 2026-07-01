@@ -10,20 +10,27 @@ sidebar_position: 5
 
 # Logos and Iconography
 
-The brand favors **simple, theme-aware marks** and **text glyphs** over a heavy icon font. Two
-monochrome logos ship today; below them is the full exploration that led there, with the chosen
-directions highlighted.
+The brand favors **simple, theme-aware marks** and **text glyphs** over a heavy icon font. The
+adopted logo is the **green arch × Vestaboard flap**; below it is the full exploration that led
+there, with the chosen direction highlighted.
 
-## Brand marks (shipping)
+## The logo (shipping)
 
-Two theme-aware monochrome marks that inherit their color from the surrounding text. Toggle the
-navbar theme to see them adapt.
+The site's mark is the green cathedral arch housing a real Vestaboard split-flap that rolls
+**B → 0 → 1 → blank** (the byte, lit inside the faith frame). It is what you see in the navbar, and
+it is the same component demonstrated here:
+
+<OptionGrid columns={210}>
+  <OptionTile name="Arch + Flap Tile" chosen note="The adopted logo: the green cathedral arch housing the real Vestaboard split-flap, rolling B → 0 → 1 → blank.">
+    <SplitFlapMark cadence="continuous" />
+  </OptionTile>
+</OptionGrid>
+
+The **binary-pyramid** mark remains the **favicon / secondary** mark (columns of 1 and 0 digits
+radiating from a central pillar), and the **lightbulb `</>`** mark (a bulb with a code glyph) is
+kept as an alternate. Both are theme-aware and inherit their color from the surrounding text:
 
 <BrandMarks />
-
-- The **lightbulb `</>`** mark is the primary logo: a bulb with a code glyph and radiating rays.
-- The **binary-pyramid** mark is the secondary or favicon mark: columns of 1 and 0 digits radiating
-  from a central pillar. It is generated from a config in the source repo; the SVG is the artifact.
 
 ## The logo exploration
 
@@ -62,11 +69,11 @@ The one that won: the green cathedral arch as the housing for the brand's real V
 split-flap, the faith frame around a mechanically rolling bit.
 
 <OptionGrid columns={210}>
-  <OptionTile name="Arch + Flap Tile" chosen note="The green cathedral arch IS the housing for a Vestaboard flap that rolls B → 0 → 1 → blank. The brand's actual split-flap, set into the faith frame.">
-    <SplitFlapMark />
+  <OptionTile name="Arch + Flap Tile" chosen note="The green cathedral arch IS the housing for a Vestaboard flap that rolls B → 0 → 1 → blank. The brand's actual split-flap, set into the faith frame. Now the site's logo.">
+    <SplitFlapMark cadence="continuous" />
   </OptionTile>
   <OptionTile name="Arch + Flap (outline)" note="Same pairing as a hairline arch over a tinted interior; the dark flap pops. Lighter weight for favicons and dark surfaces.">
-    <SplitFlapMark outline />
+    <SplitFlapMark outline cadence="continuous" />
   </OptionTile>
   <OptionTile name="Arch + Bit Cursor" note="A mono cursor inside the arch flashing 1 → 0 → empty. The byte, lit inside the faith frame, and it is alive.">
     <BitCursor />
@@ -82,11 +89,13 @@ split-flap, the faith frame around a mechanically rolling bit.
 </OptionGrid>
 
 <DecisionNote choice="Green arch × Vestaboard">
-  This direction won because it fuses the two strongest brand motifs into one living mark: the
-  cathedral-arch silhouette (faith, and the same frame as the arch illustrations) becomes the
-  physical housing for the Vestaboard split-flap that already runs on the homepage hero. It is
-  ownable, it animates natively (the flap rolls B → 0 → 1 → blank, spelling the "byte"), and it ties
-  the logo directly to the site's signature device. The `✦` marks the two lead candidates within it.
+  This is now the site's adopted logo (look at the navbar). It won because it fuses the two strongest
+  brand motifs into one living mark: the cathedral-arch silhouette (faith, and the same frame as the
+  arch illustrations) becomes the physical housing for the Vestaboard split-flap that already runs on
+  the homepage hero. It is ownable, it animates natively (the flap rolls B → 0 → 1 → blank, spelling
+  the "byte"), and it ties the logo directly to the site's signature device. In the navbar it rests
+  on "B" and rolls a quiet burst occasionally (or on hover); here it rolls continuously. Both honor
+  reduced motion (the flap cross-fades instead of spinning).
 </DecisionNote>
 
 ### More directions considered
@@ -158,6 +167,6 @@ The brand reaches for **text glyphs** as icons before an icon font:
 mid-sentence and never as decorative clutter. On this blog, the leading emoji on a post title also
 encodes the **kind** of post; the full legend lives in the [Handbook](/handbook).
 
-The hand-drawn **[arch illustrations](/design-system/illustrations)** have their own page.
+The hand-drawn **[arch illustrations](/handbook/design-system/illustrations)** have their own page.
 
 <UsedIn slug="/design-system/logos" />

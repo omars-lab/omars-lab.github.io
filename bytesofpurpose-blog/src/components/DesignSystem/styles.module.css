@@ -555,82 +555,9 @@
   margin-top: var(--space-1);
 }
 
-/* ---- Animated logo marks (faithful to the design project's live mockups) --- */
+/* ---- Animated logo marks (built on the REAL <SplitFlap> Vestaboard component) --- */
 
-/* A single physical Vestaboard flap tile: dark recessed housing, warm off-white mono glyph,
-   a center seam, and a top leaf that folds down each beat. The glyph cycling (B → 0 → 1 → blank)
-   is driven in JS so it is reliable; the fold is pure CSS. */
-.flap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 0.74em;
-  height: 1.12em;
-  font-family: var(--font-mono);
-  font-weight: var(--weight-semibold);
-  line-height: 1;
-  border-radius: 0.1em;
-  overflow: hidden;
-  color: #f4f1ea;
-  background: linear-gradient(180deg, #2b2b2e 0%, #202023 49%, #161618 51%, #1d1d20 100%);
-  box-shadow: inset 0 0.04em 0.02em rgba(255, 255, 255, 0.08),
-    inset 0 -0.04em 0.04em rgba(0, 0, 0, 0.5), 0 0.03em 0.06em rgba(0, 0, 0, 0.28);
-}
-
-.flap::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 0.055em;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.55);
-  box-shadow: 0 0.04em 0.03em rgba(0, 0, 0, 0.4);
-  z-index: 4;
-  pointer-events: none;
-}
-
-.flapGlyph {
-  position: relative;
-  z-index: 5;
-}
-
-/* The folding top leaf sweeps down each beat as a translucent shadow (glyph stays legible above). */
-.flapFold {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 50%;
-  z-index: 3;
-  transform-origin: bottom center;
-  backface-visibility: hidden;
-  background: linear-gradient(180deg, rgba(8, 8, 9, 0.85), rgba(8, 8, 9, 0.15));
-  animation: flapfold 1.4s ease-in infinite;
-}
-
-@keyframes flapfold {
-  0% {
-    transform: rotateX(0deg);
-  }
-  26% {
-    transform: rotateX(-90deg);
-  }
-  99.9% {
-    transform: rotateX(-90deg);
-  }
-  100% {
-    transform: rotateX(0deg);
-  }
-}
-
-.flapSolo {
-  font-size: 40px;
-}
-
-/* A blinking terminal caret. */
+/* A blinking terminal caret (Terminal Cursor / Terminal Window marks). */
 .caret {
   color: var(--ifm-color-primary);
   font-weight: var(--weight-bold);
@@ -643,36 +570,64 @@
   }
 }
 
-/* The green arch housing for the flap (solid + outline variants). */
+/* The green cathedral-arch housing for the flap (solid + outline variants). The real <SplitFlap>
+   tile (its own dark housing + center seam + 3D fold) sits inside; the arch is the faith frame. */
 .archFlap {
-  width: 60px;
-  height: 70px;
+  padding: 8px 10px 10px;
   background: var(--ifm-color-primary);
   border-radius: 30px 30px 6px 6px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-sm);
 }
 
 .archFlapOutline {
-  width: 60px;
-  height: 70px;
+  padding: 8px 10px 10px;
   border: 2.5px solid var(--ifm-color-primary);
   border-radius: 30px 30px 6px 6px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--accent-tint);
 }
 
-/* Reduced motion: hold the fold and the caret still (discipline rule 6). The JS glyph cycling
-   also stops via useReducedMotion in the component; this pins the CSS pieces. */
+/* A resting (non-animated) flap tile for the SSR / reduced-motion navbar fallback: the same dark
+   housing + seam as a real <SplitFlap> cell, showing a settled "B". em-sized (scale via font-size). */
+.staticFlap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.78em;
+  height: 1.18em;
+  line-height: 1.18em;
+  border-radius: 0.1em;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  color: #f4f1ea;
+  background: linear-gradient(180deg, #2b2b2e 0%, #202023 49%, #161618 51%, #1d1d20 100%);
+  box-shadow: inset 0 0.04em 0.02em rgba(255, 255, 255, 0.08),
+    inset 0 -0.04em 0.04em rgba(0, 0, 0, 0.5), 0 0.03em 0.06em rgba(0, 0, 0, 0.28);
+}
+
+.staticFlap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0.055em;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Reduced motion: hold the caret still (discipline rule 6). The SplitFlap has its own reduced-motion
+   cross-fade, and the JS glyph cycling stops via useReducedMotion in the component. */
 @media (prefers-reduced-motion: reduce) {
-  .flapFold {
-    animation: none;
-    transform: rotateX(0deg);
-  }
   .caret {
     animation: none;
   }
