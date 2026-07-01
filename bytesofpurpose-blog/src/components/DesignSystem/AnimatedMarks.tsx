@@ -70,18 +70,18 @@ export interface SplitFlapMarkProps {
 }
 
 /**
- * The site logo: the green arch as the flap's housing, the REAL split-flap doing a DIRECT flip
- * B → 0 → P → 1 → (loop), one flip every 15 seconds. `outline` renders the hairline-arch variant;
- * `compact` renders the tight navbar arch.
+ * The site logo: the green arch as the flap's housing, the REAL split-flap that ROLLS THROUGH the
+ * deck (like a Vestaboard, letters flipping by) to reach each target, cycling B → 0 → P → 1 → (loop),
+ * one roll every 15 seconds. `outline` renders the hairline-arch variant; `compact` the tight navbar arch.
  */
 export function SplitFlapMark({
   outline = false,
   size = '40px',
   compact = false,
 }: SplitFlapMarkProps): React.JSX.Element {
-  // One flip every 15s, cycling B → 0 → P → 1. `direct` makes each change a SINGLE fold straight to
-  // the target (no rolling through the deck), so the mark rests on the glyph the rest of the beat.
-  // The flip is auto-timed only; hovering does nothing (no per-hover flip).
+  // One roll every 15s, cycling B → 0 → P → 1. NO `direct`: the flap rolls THROUGH the deck (the
+  // letters-flipping-by Vestaboard effect). settleMs caps the whole roll at ~1.6s so it lands and
+  // then rests on the glyph until the next beat. Auto-timed only; hovering does nothing.
   const [glyph] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 15000});
   const archClass = `${outline ? styles.archFlapOutline : styles.archFlap} ${
     compact ? styles.archFlapNavbar : ''
@@ -90,10 +90,10 @@ export function SplitFlapMark({
     <span
       className={archClass}
       role="img"
-      aria-label="Arch housing a Vestaboard flap flipping B, 0, P, 1">
+      aria-label="Arch housing a Vestaboard flap rolling through letters to B, 0, P, 1">
       {/* SplitFlap tiles are em-sized, so font-size on this wrapper scales the flap. */}
       <span style={{fontSize: size, display: 'inline-flex'}}>
-        <SplitFlap text={glyph} settleMs={520} direct />
+        <SplitFlap text={glyph} settleMs={1600} />
       </span>
     </span>
   );
