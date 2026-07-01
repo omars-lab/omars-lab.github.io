@@ -253,6 +253,29 @@ h6 {
 }
 
 /* ==========================================================================
+   Active navbar item: the SELECTED destination gets the brand-green text PLUS a
+   2px green underline accent (the --border-accent language, matching the hero's
+   scene-active highlight). Docusaurus' route-active state ships with almost no
+   visual weight (faint color only), so the current section was hard to spot.
+   Scoped to the top navbar (not the mobile drawer, which shows its own active row).
+   ========================================================================== */
+.navbar__link--active {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+  position: relative;
+}
+.navbar__link--active::after {
+  content: '';
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: -0.15rem;
+  height: 2px;
+  background: var(--ifm-color-primary);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
    Navbar "Buy Me a Coffee?" button (replaces the old alt-less <img> link)
    ========================================================================== */
 .navbar-coffee {
