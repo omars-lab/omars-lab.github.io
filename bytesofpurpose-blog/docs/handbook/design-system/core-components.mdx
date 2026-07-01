@@ -1,0 +1,63 @@
+---
+slug: /design-system/core-components
+title: '🧩 Core Components'
+sidebar_label: '🧩 Core Components'
+description: 'The brand core UI set: tags, badges, and callouts rendered live from the design tokens, plus a pointer to the card and button showcases.'
+kind: showcase
+draft: false
+sidebar_position: 8
+---
+
+# Core Components
+
+The design system's core set is **Button, Tag, Badge, Card, and Callout**. Buttons have their own
+[Buttons page](/design-system/buttons) and the Card is demonstrated in the
+[Components reference](/handbook/components/structural/card); this page covers the small chips and
+the callout, rendered **live from the brand tokens**.
+
+## Tags
+
+A **tag** is a pastel pill: a small category chip. It is the one correct use of a pastel, a **fill**
+with `--tea-ink` (deep green) on top. Never set a text color to a pastel.
+
+<ChipRow>
+  <DemoTag color="mint">docusaurus</DemoTag>
+  <DemoTag color="pink">react</DemoTag>
+  <DemoTag color="green">design-system</DemoTag>
+</ChipRow>
+
+## Badges
+
+A **badge** is a small status marker: tighter than a tag, with its own micro-tracking. The default
+badge is green; the gold badge marks premium.
+
+<ChipRow>
+  <DemoBadge>Showcase</DemoBadge>
+  <DemoBadge>New</DemoBadge>
+  <DemoBadge gold>★ Premium</DemoBadge>
+</ChipRow>
+
+## Callouts
+
+A **callout** is the brand's admonition: a green-tinted wash with a primary-green left rule. The
+gold callout is reserved for premium or insider tips.
+
+<DemoCallout title="Note">
+  A callout draws the eye to a short aside without shouting. It uses the accent tint and the green
+  left rule, matching the site's admonition style.
+</DemoCallout>
+
+<DemoCallout title="Premium tip" gold>
+  The gold callout is reserved for premium and insider tips, the same gold family as the premium
+  gate and the lock badges. It appears nowhere else.
+</DemoCallout>
+
+:::note These are design references
+These chips and callouts are rendered from the real design tokens to show the brand's intended
+shapes. Some map to shipping components (the `<Card>` in the Components reference, the site's
+admonitions); others, like the standalone Tag and Badge, are token-accurate references rather than a
+single importable component. The [claude.ai design project](https://claude.ai/design) carries the
+prototype React versions of the full core set.
+:::
+
+<UsedIn slug="/design-system/core-components" />

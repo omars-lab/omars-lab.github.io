@@ -9,3 +9,12 @@ export {default as SpacingScale} from './SpacingScale';
 export {RadiusSwatches, ElevationDemo} from './RadiusElevationDemo';
 export {default as TokenTable} from './TokenTable';
 export {BrandMarks, FeatureIcons, ArchIllustrations} from './BrandMarks';
+export {OptionGrid, OptionTile, DecisionNote} from './OptionGrid';
+export {
+  ButtonRow,
+  ChipRow,
+  DemoButton,
+  DemoTag,
+  DemoBadge,
+  DemoCallout,
+} from './Controls';

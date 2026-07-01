@@ -8,6 +8,18 @@ draft: false
 sidebar_position: 3
 ---
 
+import Head from '@docusaurus/Head';
+
+<Head>
+  {/* Load the nine alternative display faces for the comparison grid below (this page only). */}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:opsz@6..72&family=Spectral&family=Instrument+Serif&family=Space+Grotesk&family=DM+Serif+Display&family=Libre+Caslon+Display&family=Bitter&family=Source+Serif+4&family=Lora&display=swap"
+  />
+</Head>
+
 # Typography
 
 Headings are **Fraunces**, an old-style display serif with an optical-size axis; it reads best
@@ -25,6 +37,53 @@ serif aside.
 <TypeSpecimen family="--font-serif-display" size="--text-h1" weight="--weight-semibold" tracking="--tracking-heading" leading="--leading-heading" sample="Where faith meets craft" />
 
 <TypeSpecimen family="--font-serif-display" size="--text-lead" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-tight" italic sample="Purposeful code, one byte at a time." />
+
+### Choosing the display serif
+
+Fraunces is characterful and warm, but it was one of several editorial directions. Here is the same
+headline across ten faces, from the current pick to a techier grotesque. The chosen one is ringed.
+
+<OptionGrid columns={230}>
+  <OptionTile name="Fraunces" chosen note="Wonky old-style serif. Warm, crafted, a little wry; leans personal and editorial.">
+    <span style={{fontFamily: "'Fraunces', Georgia, serif", fontSize: '1.7rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Newsreader" note="Literary, quiet, screen-tuned. Reads like a thoughtful magazine; less quirk than Fraunces.">
+    <span style={{fontFamily: "'Newsreader', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Spectral" note="Calm, considered, even color. Disciplined and engineer-serious; great for long-form.">
+    <span style={{fontFamily: "'Spectral', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Instrument Serif" note="High-contrast, elegant, single weight. Modern and distinctive, a 'now' editorial look.">
+    <span style={{fontFamily: "'Instrument Serif', Georgia, serif", fontSize: '1.9rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Space Grotesk" note="A techy grotesque, not a serif. Pushes the brand toward engineering and tooling over editorial.">
+    <span style={{fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="DM Serif Display" note="High-contrast Didone. Bold, confident, magazine-masthead; strong personality at large sizes.">
+    <span style={{fontFamily: "'DM Serif Display', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Libre Caslon Display" note="Classic American book serif. Timeless, trustworthy, literary; heritage without stuffiness.">
+    <span style={{fontFamily: "'Libre Caslon Display', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Bitter" note="Slab serif, screen-first. Sturdy and developer-friendly; pairs naturally with mono code.">
+    <span style={{fontFamily: "'Bitter', Georgia, serif", fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Source Serif 4" note="Adobe's clean workhorse serif. Neutral, professional; pairs with Geist almost invisibly.">
+    <span style={{fontFamily: "'Source Serif 4', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+  <OptionTile name="Lora" note="Calligraphic, brushed contrast. Warm and approachable; close to Fraunces but calmer.">
+    <span style={{fontFamily: "'Lora', Georgia, serif", fontSize: '1.7rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
+  </OptionTile>
+</OptionGrid>
+
+<DecisionNote choice="Fraunces">
+  Fraunces won because its wonky, old-style warmth matches the brand's first-person, faith-meets-craft
+  voice better than the calmer or techier alternatives. Newsreader and Source Serif read too neutral,
+  Space Grotesk and Bitter lean too engineering, and the Didones (DM Serif, Instrument) feel more
+  fashion-masthead than personal. Fraunces is crafted and a little wry, which is exactly the register
+  we want, and its optical-size axis lets one family cover the display headline and the italic serif
+  subtitle. It is wired through the type tokens as `--font-serif-display`.
+</DecisionNote>
 
 ## Body sans · Geist
 

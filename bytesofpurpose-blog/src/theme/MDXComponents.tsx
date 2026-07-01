@@ -28,6 +28,15 @@ import {
   BrandMarks,
   FeatureIcons,
   ArchIllustrations,
+  OptionGrid,
+  OptionTile,
+  DecisionNote,
+  ButtonRow,
+  ChipRow,
+  DemoButton,
+  DemoTag,
+  DemoBadge,
+  DemoCallout,
 } from '@site/src/components/DesignSystem';
 // Reusable design-post components now live in the published @omars-lab/blog-ui package
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
@@ -143,4 +152,18 @@ export default {
   BrandMarks,
   FeatureIcons,
   ArchIllustrations,
+  // OptionGrid/OptionTile render every explored direction with the CHOSEN one highlighted
+  // (green ring + ✦ badge); DecisionNote records WHY we chose it. The "show all options,
+  // highlight our decision" pattern used on the Logos and Typography pages.
+  OptionGrid,
+  OptionTile,
+  DecisionNote,
+  // Live control specimens rendered from the repo's real Infima button classes + tokens
+  // (Buttons + Core Components pages): buttons, pastel tags, badges, callouts.
+  ButtonRow,
+  ChipRow,
+  DemoButton,
+  DemoTag,
+  DemoBadge,
+  DemoCallout,
 };

@@ -93,6 +93,9 @@ const ILLUSTRATIONS: Array<{src: string; label: string}> = [
   {src: '/img/cards/questions.png', label: 'Questions'},
   {src: '/img/cards/initiatives.png', label: 'Initiatives'},
   {src: '/img/cards/designs.png', label: 'Designs'},
+  {src: '/img/cards/thinking.png', label: 'Thinking'},
+  {src: '/img/cards/door.png', label: 'Door'},
+  {src: '/img/cards/window.png', label: 'Window'},
 ];
 
 export function ArchIllustrations(): React.JSX.Element {
