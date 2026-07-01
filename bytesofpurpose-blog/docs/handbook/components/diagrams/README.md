@@ -43,11 +43,11 @@ Blogging diagram embedding emphasizes visual presentation, while documentation t
 
 ## Key Documents
 
-- [Figma Diagrams](/craft/blogging/embed-diagrams/diagrams-figma) - Embedding Figma designs and prototypes
-- [Flow Charts](/craft/blogging/embed-diagrams/diagrams-flow-charts) - Creating and embedding flow charts
-- [Google Drawing](/craft/blogging/embed-diagrams/diagrams-google-drawing) - Using Google Drawings for diagrams
-- [Kanban Customization](/craft/blogging/embed-diagrams/diagrams-kanban-customization) - Customizing and embedding Kanban boards
-- [Mermaid Diagrams](/craft/blogging/embed-diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
-<!-- - [MindNode](/craft/blogging/embed-diagrams/diagrams-mindnode) - Mind mapping with MindNode -->
-- [PlantUML Sequence Diagrams](/craft/blogging/embed-diagrams/diagrams-puml-sequence) - Creating sequence diagrams with PlantUML
+- [Figma Diagrams](/handbook/components/diagrams/diagrams-figma) - Embedding Figma designs and prototypes
+- [Flow Charts](/handbook/components/diagrams/diagrams-flow-charts) - Creating and embedding flow charts
+- [Google Drawing](/handbook/components/diagrams/diagrams-google-drawing) - Using Google Drawings for diagrams
+- [Kanban Customization](/handbook/components/diagrams/diagrams-kanban-customization) - Customizing and embedding Kanban boards
+- [Mermaid Diagrams](/handbook/components/diagrams/diagrams-mermaid) - Mermaid diagram integration and syntax
+<!-- - [MindNode](/handbook/components/diagrams/diagrams-mindnode) - Mind mapping with MindNode -->
+- [PlantUML Sequence Diagrams](/handbook/components/diagrams/diagrams-puml-sequence) - Creating sequence diagrams with PlantUML
 

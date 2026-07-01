@@ -32,7 +32,7 @@ Code embedding techniques are **methods for adding code to content**:
 
 ## Key Documents
 
-- [Code Cells](/craft/blogging/embed-code/code-cells) - Creating and embedding interactive code cells
-- [Code Gists](/craft/blogging/embed-code/code-gists) - GitHub Gist integration and embedding
-- [Jupyter Notebooks](/craft/blogging/embed-code/code-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
+- [Code Cells](/handbook/components/code/code-cells) - Creating and embedding interactive code cells
+- [Code Gists](/handbook/components/code/code-gists) - GitHub Gist integration and embedding
+- [Jupyter Notebooks](/handbook/components/code/code-jupyter-notebooks) - Embedding Jupyter notebooks in blog posts
 
