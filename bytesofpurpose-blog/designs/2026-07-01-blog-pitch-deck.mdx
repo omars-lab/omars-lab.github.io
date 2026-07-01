@@ -1,0 +1,122 @@
+---
+slug: blog-pitch-deck
+sidebar_position: 1
+title: The Blog, Pitched as a Deck
+sidebar_label: Pitch Deck
+kind: frontend-design
+description: >-
+  A seven-slide pitch deck for this blog, built as a reveal.js deck embedded in
+  the post and themed entirely from the site's own design-system tokens. The
+  write-up covers the SlideDeck component: how reveal.js is lazy-loaded in the
+  browser only, and how the deck reads as the same brand as the page around it.
+authors:
+  - oeid
+tags:
+  - frontend-design
+  - design-system
+  - docusaurus
+image: /img/social-card.png
+draft: true
+---
+
+I built a pitch deck for this blog inside a design system, then brought it home as a real,
+navigable deck living inside this post. It is not a screenshot and not an embedded slide
+service: it is [reveal.js](https://revealjs.com) driving on-brand slides, styled from the exact
+same tokens as the prose you are reading. Use the arrow keys, press <kbd>Esc</kbd> for the slide
+grid, or <kbd>F</kbd> for fullscreen.
+
+<!-- truncate -->
+
+<SlideDeck>
+
+  <Slide bg="deep" notes="Open with the thesis. This is my developer blog, Bytes of Purpose. The one-liner sums up the whole ethos: intentional, small, consistent.">
+    <SlideEyebrow>Engineering · Faith · Craft</SlideEyebrow>
+    <SlideTitle size="xl">Bytes of Purpose</SlideTitle>
+    <SlideLede>Purposeful code, one byte at a time.</SlideLede>
+  </Slide>
+
+  <Slide notes="This isn't a marketing blog. It's an engineer thinking out loud, the work and the why sitting in the same place. That honesty is the draw.">
+    <SlideEyebrow>The premise</SlideEyebrow>
+    <SlideTitle>Where faith meets craft.</SlideTitle>
+    <SlideLede>
+      Most engineering blogs sell you something. This one is an engineer thinking out loud, the
+      work and the <em>why</em> behind it, kept in the same place.
+    </SlideLede>
+  </Slide>
+
+  <Slide align="start" notes="Three recurring threads. Engineering craft, the faith and mindset behind the work, and the design decisions that hold it together.">
+    <SlideEyebrow>Three threads</SlideEyebrow>
+    <SlideTitle>What I write about</SlideTitle>
+    <PillarGrid
+      items={[
+        {img: '/img/cards/craft.png', title: 'Engineering', body: 'How real systems get built, broken, and fixed, from someone shipping them.'},
+        {img: '/img/cards/self.png', title: 'Faith', body: 'The mindset and questions behind the work; purpose, not just process.'},
+        {img: '/img/cards/mindset.png', title: 'Craft', body: 'Shaping raw ideas into durable designs; the decisions others skip.'},
+      ]}
+    />
+  </Slide>
+
+  <Slide align="start" notes="Three formats. Reference docs you return to, blog posts on lessons learned, and design write-ups of real architecture. Something for whatever you came for.">
+    <SlideEyebrow>Three formats</SlideEyebrow>
+    <SlideTitle>What you'll actually find</SlideTitle>
+    <FormatList
+      items={[
+        {icon: '/img/artifacts.svg', title: 'Docs', kicker: 'Reference you return to', body: 'Durable, structured knowledge: the notes worth keeping and coming back to.'},
+        {icon: '/img/posts.svg', title: 'Blog Posts', kicker: 'Experiences & lessons', body: 'What actually happened on real projects: the wins, the missteps, the lessons.'},
+        {icon: '/img/engine.svg', title: 'Designs', kicker: 'Architecture, under the hood', body: 'How things are actually put together: the architecture behind the decisions.'},
+      ]}
+    />
+  </Slide>
+
+  <Slide bg="deep" notes="The differentiator. Every post ships the real artifact, not an abstract think-piece. This is what engineers and hiring managers actually want to see.">
+    <SlideEyebrow>Underneath the hood</SlideEyebrow>
+    <SlideTitle>Every post ships the real thing.</SlideTitle>
+    <SlideLede>
+      Not abstractions about engineering: the actual artifacts I build and use every day:
+    </SlideLede>
+    <Pastels items={['Sequence diagrams', 'Roadmaps', 'Code snippets', 'Automations', 'Design docs']} />
+  </Slide>
+
+  <Slide align="start" notes="A real engineer, not a content mill. Omar Eid, shipping systems by day, writing about the craft and the why behind it.">
+    <SlideEyebrow>Who's behind it</SlideEyebrow>
+    <SlideTitle>Omar Eid</SlideTitle>
+    <SlideLede>
+      A software engineer who ships real systems, then writes down how and why. No content mill,
+      no recycled listicles. Just the craft, documented honestly.
+    </SlideLede>
+    <Pastels items={['github.com/omars-lab', 'linkedin.com/in/oeid']} />
+  </Slide>
+
+  <Slide bg="deep" notes="The ask: visit and subscribe. One link. Come for one post, stay for the way it's written.">
+    <SlideEyebrow>Start reading</SlideEyebrow>
+    <SlideTitle size="xl">Come for one post. Stay for the craft.</SlideTitle>
+    <SlideLede>Purposeful code, one byte at a time.</SlideLede>
+    <Pastels items={['blog.bytesofpurpose.com']} />
+  </Slide>
+
+</SlideDeck>
+
+## Key decisions
+
+The deck above is a `<SlideDeck>` component wrapping seven `<Slide>` children. Nothing about it is
+a special one-off: `<SlideDeck>` is a reusable primitive registered globally, so any post can embed
+a deck the same way. Three decisions carry the whole thing, and each was a genuine trade-off.
+
+**reveal.js loads in the browser, on this page only.** Docusaurus server-renders every page, and
+reveal.js touches `window` the moment it is imported, so a top-level import would break the build.
+The component wraps everything in `<BrowserOnly>` and `import()`s reveal.js, its notes plugin, and
+its base CSS lazily inside a `useEffect`. The rest of the site never downloads a byte of it.
+
+**No reveal.js theme ships: our tokens are the theme.** reveal.js comes with a dozen themes; the
+deck loads none of them. Instead the component's CSS module restyles the reveal surface from the
+site's own design-system tokens: Fraunces for display type, Geist for body, the tea pastels as
+accent fills, deep green for the full-bleed cover and CTA slides. So the deck is the same brand as
+the prose around it, and it flips correctly in dark mode for free, because the tokens do.
+
+**It stays a deck, not a slideshow gimmick.** reveal.js gives real presentation affordances:
+keyboard navigation, an overview grid on <kbd>Esc</kbd>, a speaker-notes view on <kbd>S</kbd> (every
+slide above carries `notes`), and PDF export by appending `?print-pdf` to the URL. Reduced-motion
+visitors get instant slide changes instead of the slide transition.
+
+If you want to build one, the `author-slide-deck` skill walks through the component API, the
+token-mapping rules, and the MDX gotchas, using this very post as the worked example.

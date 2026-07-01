@@ -128,8 +128,10 @@ const CHECKS = {
   // tutorial
   'steps-or-artifact': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) || /```/.test(body) || /<(Walkthrough|Gif)[\s>]/.test(body),
-  // system-design
-  mockup: (fm, body) => Boolean(fm.mockups) || /<Mockup[\s>]/.test(body),
+  // system-design / frontend-design: a UX mockup or an embedded live visual. A
+  // <SlideDeck> IS the visual (a live, navigable reveal.js deck), so it counts.
+  mockup: (fm, body) =>
+    Boolean(fm.mockups) || /<(Mockup|SlideDeck)[\s>]/.test(body),
   decisions: (fm, body) =>
     /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body),
   // backend-design: an architecture view (a diagram component, a mermaid fence, or a flow/components heading)
