@@ -44,6 +44,30 @@ test.describe('Navbar priority+ overflow', () => {
     expect(h).toBeLessThan(60);
   });
 
+  test('WIDE: hovering an inline item shows its summary popup (not clipped by the overflow row)', async ({
+    page,
+  }) => {
+    // Regression guard: the overflow row must NOT clip the per-item hover-summary popups (they drop
+    // BELOW the navbar via position:absolute). An earlier `overflow:hidden` on the row swallowed them.
+    await page.setViewportSize({width: 1600, height: 800});
+    await page.goto('/', {waitUntil: 'domcontentloaded'});
+    await page.waitForLoadState('networkidle');
+
+    const craft = page.locator('.navbar__inner a.navbar__link', {hasText: 'Craft'}).first();
+    await craft.hover();
+    const popup = page.locator('.navbar__inner [class*="summaryPopup"]').first();
+    // It becomes visible AND is not zero-height-clipped (its box extends below the navbar).
+    await expect(popup).toBeVisible({timeout: 4000});
+    const box = await popup.boundingBox();
+    expect(box, 'popup should have a rendered box').toBeTruthy();
+    expect(box!.height).toBeGreaterThan(10);
+    // Its top edge sits BELOW the navbar (it dropped down, not clipped to the row).
+    const navBottom = await page
+      .locator('.navbar__inner')
+      .evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(box!.y).toBeGreaterThanOrEqual(navBottom - 8);
+  });
+
   test('MEDIUM (1100px): folds the rightmost into "More", keeps leftmost inline, single line', async ({
     page,
   }) => {
