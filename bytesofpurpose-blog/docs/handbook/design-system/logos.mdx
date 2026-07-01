@@ -63,14 +63,13 @@ split-flap, the faith frame around a mechanically rolling bit.
 
 <OptionGrid columns={210}>
   <OptionTile name="Arch + Flap Tile" chosen note="The green cathedral arch IS the housing for a Vestaboard flap that rolls B → 0 → 1 → blank. The brand's actual split-flap, set into the faith frame.">
-    <span style={{width: 60, height: 70, background: 'var(--ifm-color-primary)', borderRadius: '30px 30px 6px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)'}}>
-      <span style={{fontFamily: 'var(--font-mono)', fontWeight: 600, fontSize: '2rem', color: '#f4f1ea'}}>B</span>
-    </span>
+    <SplitFlapMark />
   </OptionTile>
   <OptionTile name="Arch + Flap (outline)" note="Same pairing as a hairline arch over a tinted interior; the dark flap pops. Lighter weight for favicons and dark surfaces.">
-    <span style={{width: 60, height: 70, border: '2.5px solid var(--ifm-color-primary)', borderRadius: '30px 30px 6px 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--accent-tint)'}}>
-      <span style={{fontFamily: 'var(--font-mono)', fontWeight: 600, fontSize: '1.9rem', color: 'var(--text-heading)'}}>0</span>
-    </span>
+    <SplitFlapMark outline />
+  </OptionTile>
+  <OptionTile name="Arch + Bit Cursor" note="A mono cursor inside the arch flashing 1 → 0 → empty. The byte, lit inside the faith frame, and it is alive.">
+    <BitCursor />
   </OptionTile>
   <OptionTile name="Arched Flap Sign · BoP" note="'BoP' on a three-tile flap board hung under a green arch crown: the homepage departure-board sign, distilled into a mark.">
     <span style={{display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
@@ -123,7 +122,7 @@ favicons, avatars, or motion accents.
     </span>
   </OptionTile>
   <OptionTile name="Terminal Cursor" note="Lowercase mono 'bop' with a blinking caret. Pure engineer energy; animates natively.">
-    <span style={{fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 500, color: 'var(--text-heading)'}}>bop<span style={{color: 'var(--ifm-color-primary)', fontWeight: 700}}>_</span></span>
+    <span style={{fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 500, color: 'var(--text-heading)'}}>bop<BlinkCaret /></span>
   </OptionTile>
   <OptionTile name="The Semicolon" note="Code's quiet period of intention: a pause with purpose. Minimal, witty, scales tiny.">
     <span style={{fontFamily: 'var(--font-serif-display)', fontSize: '3.2rem', fontWeight: 600, color: 'var(--ifm-color-primary)', lineHeight: 1}}>;</span>
@@ -133,7 +132,7 @@ favicons, avatars, or motion accents.
       <span style={{display: 'flex', height: 16, background: 'var(--ifm-color-primary)', alignItems: 'center', gap: 4, padding: '0 6px'}}>
         {[0,1,2].map(i => <i key={i} style={{width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.55)'}} />)}
       </span>
-      <span style={{display: 'block', background: 'var(--surface-card)', padding: '10px 8px', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-heading)'}}>bop_</span>
+      <span style={{display: 'block', background: 'var(--surface-card)', padding: '10px 8px', fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-heading)'}}>bop<BlinkCaret /></span>
     </span>
   </OptionTile>
 </OptionGrid>
