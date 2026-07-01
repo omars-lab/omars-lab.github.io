@@ -29,96 +29,64 @@ export function useReducedMotion(): boolean {
 }
 
 /**
- * Drive a glyph through `frames`. `cadence`:
- *  - 'continuous' — cycle every `intervalMs` (the design-system page).
- *  - 'occasional' — rest on the first frame, then run ONE full cycle every `restMs`, so a mark seen
- *    on every page (the navbar) is alive but not perpetually moving.
- * Both pause on reduced motion (hold the first frame).
+ * Advance a glyph through `frames`, ONE flip every `intervalMs` (default 5s), looping forever.
+ * Pauses on reduced motion (holds the first frame). Also returns a `kick` that advances one flip
+ * immediately (used on hover).
  */
 function useGlyphCycle(
   frames: string[],
-  {intervalMs = 1400, cadence = 'continuous', restMs = 7000}: {intervalMs?: number; cadence?: 'continuous' | 'occasional'; restMs?: number} = {},
+  {intervalMs = 5000}: {intervalMs?: number} = {},
 ): [string, () => void] {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
 
   useEffect(() => {
     if (reduce) return undefined;
-    if (cadence === 'continuous') {
-      const id = setInterval(() => setI((n) => (n + 1) % frames.length), intervalMs);
-      return () => clearInterval(id);
-    }
-    // occasional: run a burst of `frames.length` steps, then rest until the next beat.
-    let step = 0;
-    let inner: ReturnType<typeof setInterval> | null = null;
-    const runBurst = () => {
-      step = 0;
-      inner = setInterval(() => {
-        step += 1;
-        setI((n) => (n + 1) % frames.length);
-        if (step >= frames.length && inner) {
-          clearInterval(inner);
-          inner = null;
-        }
-      }, intervalMs);
-    };
-    const outer = setInterval(runBurst, restMs);
-    return () => {
-      clearInterval(outer);
-      if (inner) clearInterval(inner);
-    };
-  }, [reduce, intervalMs, cadence, restMs, frames.length]);
+    const id = setInterval(() => setI((n) => (n + 1) % frames.length), intervalMs);
+    return () => clearInterval(id);
+  }, [reduce, intervalMs, frames.length]);
 
-  // A manual trigger (used on hover): roll one full cycle now.
+  // Advance one flip now (hover).
   const kick = () => {
     if (reduce) return;
-    let step = 0;
-    const id = setInterval(() => {
-      step += 1;
-      setI((n) => (n + 1) % frames.length);
-      if (step >= frames.length) clearInterval(id);
-    }, intervalMs);
+    setI((n) => (n + 1) % frames.length);
   };
 
   return [frames[reduce ? 0 : i], kick];
 }
 
-const BYTE_FRAMES = ['B', '0', '1', ' '];
+// The logo's flap sequence: B -> 0 -> P -> 1 -> (loop). "BoP" + the bits of a byte.
+const BYTE_FRAMES = ['B', '0', 'P', '1'];
 
 export interface SplitFlapMarkProps {
   /** hairline-arch variant (vs the solid green arch). */
   outline?: boolean;
-  /** 'continuous' rolls forever; 'occasional' rests on B and rolls a burst every ~7s / on hover. */
+  /** kept for API compatibility; the flap now flips every 5s in all placements. */
   cadence?: 'continuous' | 'occasional';
   /** flap tile size (CSS font-size on the board). Default sized for a specimen tile. */
   size?: string;
 }
 
 /**
- * The chosen mark / site logo: the green arch as the flap's housing, the REAL split-flap rolling
- * B → 0 → 1 → blank. `outline` renders the hairline-arch variant; `cadence` tunes how often it rolls.
+ * The site logo: the green arch as the flap's housing, the REAL split-flap rolling
+ * B → 0 → P → 1 → (loop), one flip every 5 seconds. `outline` renders the hairline-arch variant.
  */
 export function SplitFlapMark({
   outline = false,
-  cadence = 'continuous',
   size = '40px',
 }: SplitFlapMarkProps): React.JSX.Element {
-  // Continuous: keep rolling (a lively specimen). Occasional (navbar): hold "B" for a long rest,
-  // then a crisp 4-flip burst. `settleMs` (the deck-roll time per change) is kept BELOW the interval
-  // so each flip fully settles before the next, and the mark visibly RESTS on B between bursts.
-  const [glyph, kick] = useGlyphCycle(
-    BYTE_FRAMES,
-    cadence === 'occasional'
-      ? {cadence, intervalMs: 900, restMs: 9000}
-      : {cadence, intervalMs: 1600},
-  );
-  const settleMs = cadence === 'occasional' ? 650 : 1200;
+  // One flip every 5s, cycling B → 0 → P → 1. settleMs (the deck-roll time per change) stays well
+  // below the 5s interval so each flip fully settles and the glyph rests before the next flip.
+  const [glyph, kick] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 5000});
+  // The flap rolls through the deck to reach the next glyph; keep the whole roll ~1.5s so it
+  // completes well within the 5s beat and the mark RESTS on B/0/P/1 for the remaining ~3.5s.
+  const settleMs = 1500;
   return (
     <span
       className={outline ? styles.archFlapOutline : styles.archFlap}
       role="img"
-      aria-label="Arch housing a Vestaboard flap rolling B, 0, 1, blank"
-      onMouseEnter={cadence === 'occasional' ? kick : undefined}>
+      aria-label="Arch housing a Vestaboard flap rolling B, 0, P, 1"
+      onMouseEnter={kick}>
       {/* SplitFlap tiles are em-sized, so font-size on this wrapper scales the flap. */}
       <span style={{fontSize: size, display: 'inline-flex'}}>
         <SplitFlap text={glyph} settleMs={settleMs} />
