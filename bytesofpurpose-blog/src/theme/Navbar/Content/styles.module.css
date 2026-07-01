@@ -26,7 +26,11 @@
   align-items: center;
   flex-wrap: nowrap; /* never wrap to a 2nd line; fold into More instead */
   min-width: 0;
-  overflow: hidden; /* clip rather than push the right group while JS folds */
+  /* NO `overflow: hidden` here. It clips BOTH axes, and the per-item hover-summary popups drop BELOW
+     the navbar (position:absolute; top:100%), so hiding overflow swallowed them (a regression). The
+     JS measure-and-fold already keeps the row within its budget, so clipping was only defensive;
+     dropping it lets the popups escape. If a pre-JS flash of a too-wide row is ever an issue, clip on
+     a PARENT that doesn't contain the popups, not here. */
 }
 
 /* The off-screen measurement copy of the FULL item list. It renders every item at

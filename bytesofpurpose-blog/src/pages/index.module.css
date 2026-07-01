@@ -285,7 +285,7 @@
      so it's dropped to keep the arch on the normal paint path. */
   transition: opacity 0.4s ease, transform 0.25s ease;
 }
-.flashArchImgActive {
+.flashArchImg.flashArchImgActive {
   opacity: 1;
 }
 
@@ -512,7 +512,7 @@
   opacity: 0;
   transition: opacity 0.6s ease;
 }
-.boutiquePeekImgActive {
+.boutiquePeekImg.boutiquePeekImgActive {
   opacity: 1;
 }
 /* Side windows read as displays you glance at: slightly dimmer + warmer than the door. */
@@ -869,7 +869,13 @@
   opacity: 0;
   transition: opacity 0.45s ease;
 }
-.studioLayerOn {
+/* The "on" layer must WIN over the base `opacity: 0` above. Both are single-class selectors (equal
+   specificity), so in the DEV CSS the later `.studioLayerOn` wins, but the PRODUCTION CSS-Modules
+   bundle can concatenate the base rule AFTER this one, flipping the cascade so the door/scene stay
+   invisible (a live bug: the centre arch rendered as empty wall). Bump specificity by scoping to the
+   layer classes so `.studioLayerOn` wins no matter the source order. */
+.studioDoorLayer.studioLayerOn,
+.studioDoorScene.studioLayerOn {
   opacity: 1;
 }
 /* the SCENE container is clipped to the arch interior (white-interior mask), like the side peek. */
@@ -1091,7 +1097,9 @@
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-.studioPeekImgActive {
+/* Two-class so it wins over `.studioPeekImg { opacity: 0 }` regardless of prod CSS order (same
+   cascade race as .studioLayerOn above). */
+.studioPeekImg.studioPeekImgActive {
   opacity: 1;
 }
 
