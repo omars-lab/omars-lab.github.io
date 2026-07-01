@@ -81,7 +81,8 @@ export function SplitFlapMark({
 }: SplitFlapMarkProps): React.JSX.Element {
   // One flip every 15s, cycling B → 0 → P → 1. `direct` makes each change a SINGLE fold straight to
   // the target (no rolling through the deck), so the mark rests on the glyph the rest of the beat.
-  const [glyph, kick] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 15000});
+  // The flip is auto-timed only; hovering does nothing (no per-hover flip).
+  const [glyph] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 15000});
   const archClass = `${outline ? styles.archFlapOutline : styles.archFlap} ${
     compact ? styles.archFlapNavbar : ''
   }`;
@@ -89,8 +90,7 @@ export function SplitFlapMark({
     <span
       className={archClass}
       role="img"
-      aria-label="Arch housing a Vestaboard flap flipping B, 0, P, 1"
-      onMouseEnter={kick}>
+      aria-label="Arch housing a Vestaboard flap flipping B, 0, P, 1">
       {/* SplitFlap tiles are em-sized, so font-size on this wrapper scales the flap. */}
       <span style={{fontSize: size, display: 'inline-flex'}}>
         <SplitFlap text={glyph} settleMs={520} direct />
@@ -135,7 +135,7 @@ export function BlinkCaret(): React.JSX.Element {
  * motion fallback for the navbar logo, so the header never looks broken before hydration. Sized to
  * the navbar via the `size` font-size.
  */
-export function ArchStatic({size = '16px'}: {size?: string}): React.JSX.Element {
+export function ArchStatic({size = '14px'}: {size?: string}): React.JSX.Element {
   return (
     <span
       className={`${styles.archFlap} ${styles.archFlapNavbar}`}
@@ -152,7 +152,7 @@ export function ArchStatic({size = '16px'}: {size?: string}): React.JSX.Element 
  * on hover); the design-system page uses it 'continuous'. Navbar-sized by default.
  */
 export function ArchFlapLogo({
-  size = '16px',
+  size = '14px',
   cadence = 'occasional',
 }: {
   size?: string;
