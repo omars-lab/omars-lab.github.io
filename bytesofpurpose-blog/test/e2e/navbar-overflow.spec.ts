@@ -91,5 +91,41 @@ test.describe('Navbar priority+ overflow', () => {
     // ...and the priority+ overflow apparatus does NOT add a "More" trigger (the inline items are
     // display:none here; the mobile sidebar holds the nav instead).
     await expect(moreTrigger(page)).toHaveCount(0);
+
+    // REGRESSION GUARD: the desktop inline items must be HIDDEN at mobile width (Infima's
+    // `.navbar__item{display:none}`). The overflow wrapper uses `display: contents` on mobile so it
+    // doesn't keep laying its (would-be-hidden) children out in a flex row across the top of the
+    // page. Assert none of the top-bar inline links are actually visible.
+    const inlineVisible = await page
+      .locator('.navbar__inner .navbar__link:visible')
+      .allTextContents();
+    expect(inlineVisible.filter((t) => t.trim() && !t.startsWith('More'))).toHaveLength(0);
+  });
+
+  test('MOBILE (390px): the opened hamburger drawer lists items VERTICALLY (one per line)', async ({
+    page,
+  }) => {
+    await page.setViewportSize({width: 390, height: 800});
+    await page.goto('/', {waitUntil: 'domcontentloaded'});
+    await page.waitForLoadState('networkidle');
+
+    // Open the drawer.
+    await page.locator('.navbar__toggle').click();
+    const drawer = page.locator('.navbar-sidebar');
+    await expect(drawer).toBeVisible();
+
+    // The drawer renders the nav as a vertical menu list (one item per line), NOT a wrapped
+    // horizontal row. Assert the list items stack: each successive item sits BELOW the previous.
+    const links = drawer.locator('.menu__list .menu__link, .menu__list a');
+    const count = await links.count();
+    expect(count).toBeGreaterThanOrEqual(5);
+    const boxes = [];
+    for (let i = 0; i < Math.min(count, 6); i++) {
+      boxes.push(await links.nth(i).boundingBox());
+    }
+    // Each item's top is strictly greater than the previous item's top (stacked vertically).
+    for (let i = 1; i < boxes.length; i++) {
+      expect(boxes[i]!.y).toBeGreaterThan(boxes[i - 1]!.y);
+    }
   });
 });
