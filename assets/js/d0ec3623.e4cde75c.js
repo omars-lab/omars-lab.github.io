@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkbytesofpurpose_blog=globalThis.webpackChunkbytesofpurpose_blog||[]).push([[91649],{81390:s=>{s.exports=JSON.parse('{"blogBasePath":"/mindset","blogTitle":"Omar\'s Mindset","authorsListPath":"/mindset/authors"}')}}]);

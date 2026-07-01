@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkbytesofpurpose_blog=globalThis.webpackChunkbytesofpurpose_blog||[]).push([[28833],{36603:s=>{s.exports=JSON.parse('{"name":"docusaurus-plugin-content-blog","id":"mindset"}')}}]);

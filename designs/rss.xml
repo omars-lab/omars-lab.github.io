@@ -4,10 +4,280 @@
         <title>Bytes of Purpose Blog</title>
         <link>https://blog.bytesofpurpose.com/designs</link>
         <description>Bytes of Purpose Blog</description>
-        <lastBuildDate>Tue, 23 Jun 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 28 Jun 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[The House Hero: a Lebanese home you scroll through]]></title>
+            <link>https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero</link>
+            <guid>https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero</guid>
+            <pubDate>Sun, 28 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[How the departure-board hero became a traditional Lebanese central-hall home, and the pivot to a scroll-driven parallax journey through the scenes.]]></description>
+            <content:encoded><![CDATA[<p>The <a class="" href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero">Vestaboard hero</a> is a component: an arched portal, a
+camera flash, and a split-flap board that names the destination. This post is about the <strong>house I
+built around it</strong>, a traditional Lebanese central-hall home whose carved central door is the portal,
+with the board hanging above it. It is also where the hero stopped being a timed animation and became
+a <strong>scroll-driven journey</strong>: you scroll, and the door transforms into each part of my world in turn.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-influence-the-traditional-lebanese-central-hall-home">1. Influence: the traditional Lebanese central-hall home<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#1-influence-the-traditional-lebanese-central-hall-home" class="hash-link" aria-label="Direct link to 1. Influence: the traditional Lebanese central-hall home" title="Direct link to 1. Influence: the traditional Lebanese central-hall home" translate="no">​</a></h2>
+<p>The facade is influenced by <strong>traditional Lebanese architecture</strong>, specifically the central-hall (or
+"central-hall house") form that defines so many Mount Lebanon and Beirut homes: a roughly <strong>square,
+symmetrical body</strong> under a <strong>pitched triangular roof of terracotta tile</strong>, with a <strong>triple-arch
+opening</strong> at its heart (the classic <code>triple-arcade</code> window, a taller central arch flanked by two
+shorter ones). Wrought-iron railings run across the base of the arches; the openings are framed in
+pale stone against an ochre or warm wall.</p>
+<p>I kept the silhouette honest to that vernacular and let the palette and detailing do the rest:</p>
+<ul>
+<li class="">a <strong>teal square body</strong> under a <strong>terracotta triangular roof</strong> (the proportion is the reference's
+roof-to-body ratio: the roof's height is about half the body's),</li>
+<li class="">the <strong>triple arch</strong>, a taller carved <strong>central door</strong> between two shorter <strong>zellij windows</strong>,</li>
+<li class=""><strong>gold outlines</strong> tracing the square and the triangle (they share the eave line, so the roof's base
+and the body's top read as one continuous gold edge), with a single gold <strong>hip line</strong> running from
+the roof's apex down to a point a fifth of the way in from the bottom-right corner,</li>
+<li class=""><strong>gold balcony railings</strong> in front of the windows only (a door has no railing),</li>
+</ul>
+<p>so the hero reads as a specific PLACE drawn from a real architectural tradition, not a generic
+storefront. The earlier stagings (a train station, then a Moroccan creative studio) were steps on the
+way to this one; the central-hall home is the version that stuck because the triple arch already
+gives you the "central door you travel through, flanked by windows" composition for free.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-the-staging-board-over-a-carved-central-door">2. The staging: board over a carved central door<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#2-the-staging-board-over-a-carved-central-door" class="hash-link" aria-label="Direct link to 2. The staging: board over a carved central door" title="Direct link to 2. The staging: board over a carved central door" translate="no">​</a></h2>
+<p>The house reuses the Vestaboard + camera flash wholesale; the staging is what is new:</p>
+<ul>
+<li class=""><strong>The board HANGS over the door.</strong> The split-flap board is suspended above the central door on a
+mount bar with short chains, a grounding drop shadow, so it reads as a real hanging sign on the
+wall below the roof's cornice rather than a label pasted on.</li>
+<li class=""><strong>The central door is the portal.</strong> The carved door occupies the tall central arch. It is the one
+opening that transforms: it shows the door itself (board says <code>WELCOME</code>) or a project SCENE (board
+says the destination). The two flanking windows are static zellij decoration, so the eye knows where
+to look.</li>
+<li class=""><strong>The flash is bound to the door's arch.</strong> The same <code>arch-inner.png</code> luminance mask from the
+Vestaboard post clips the white bloom to the central arch exactly, so the camera flash fills the
+doorway and nothing else.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-how-its-wired-abcd">3. How it's wired (A/B/C/D)<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#3-how-its-wired-abcd" class="hash-link" aria-label="Direct link to 3. How it's wired (A/B/C/D)" title="Direct link to 3. How it's wired (A/B/C/D)" translate="no">​</a></h2>
+<p>The presentation is a PostHog feature-flag experiment, <code>homepage-hero-anim</code>. All arms show the SAME
+destinations and copy, only the staging differs, so a difference in chooser-card clicks is
+attributable to the presentation:</p>
+<ul>
+<li class=""><code>control</code> = <strong>scroll</strong>, the seamless scrolling film strip,</li>
+<li class=""><code>test</code> = <strong>flash</strong>, the bare departure-board portal (the Vestaboard post's hero),</li>
+<li class=""><code>variant_c</code> = <strong>studio</strong>, which became this Lebanese central-hall <strong>house</strong>,</li>
+<li class=""><code>variant_d</code> = <strong>boutique</strong>, a lit storefront with three glowing arches.</li>
+</ul>
+<p>A <code>hero card clicked</code> event (with the variant + destination) is the conversion; exposure is the flag
+read. The design and hypothesis live in the experiment post <code>/initiatives/homepage-hero-anim</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-the-parallax-pivot-scroll-decides-the-journey">4. The parallax pivot: scroll DECIDES the journey<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#4-the-parallax-pivot-scroll-decides-the-journey" class="hash-link" aria-label="Direct link to 4. The parallax pivot: scroll DECIDES the journey" title="Direct link to 4. The parallax pivot: scroll DECIDES the journey" translate="no">​</a></h2>
+<p>Once the house facade settled, the hero stopped cycling on a <strong>timer</strong> and became <strong>scroll-driven</strong>.
+As you scroll the page, the central door transforms into each scene in turn, the board reflips to
+that scene's title, and <strong>scrolling itself decides which scenes you traverse</strong> (scroll down to go
+deeper into my world, scroll up to come back). The white flash stays, but it is now <strong>triggered by
+scroll position</strong> crossing each scene's threshold, not by a clock. The feel shifts from "a sign that
+changes on its own" to "a journey you drive with the wheel."</p>
+<p>Three decisions defined the pivot:</p>
+<ul>
+<li class=""><strong>All three scroll models ship, as A/B/C experiment arms.</strong> Rather than guess which scroll feel
+lands best, the pivot builds three and lets a flag pick:<!-- -->
+<ul>
+<li class=""><strong>pin</strong> (scroll-jack): the hero sticks full-screen inside a tall spacer; each scroll step advances
+one scene; once all seven are traversed the hero releases and the rest of the page scrolls
+normally. The strongest "travel through a sequence" feel.</li>
+<li class=""><strong>inplace</strong>: the hero stays in normal document flow; the door morphs based on how far the hero has
+scrolled through the viewport. No scroll hijack, gentler, but the effect only spans the hero's own
+height.</li>
+<li class=""><strong>horizontal</strong>: vertical scroll maps to a horizontal pan across the seven scenes inside a pinned
+hero (a horizontal-scroll gallery); the door shows the current scene in the pan.
+These are a SEPARATE experiment from the animation A/B in section 3, registered under their own flag
+key so the scroll-model question can be answered independently of the flash-vs-scroll question.</li>
+</ul>
+</li>
+<li class=""><strong>Keep the white flash, scroll-triggered.</strong> The per-scene transition is still the camera flash bound
+to the door's arch, so the pivot reuses the existing door-to-scene cross-fade and masked bloom
+layers wholesale; only the TRIGGER moves from a timer to a scroll-progress threshold.</li>
+<li class=""><strong>The matching top navbar item highlights.</strong> The seven scenes map one-to-one to existing top-navbar
+destinations (<code>/craft</code>, <code>/journey</code>, <code>/thoughts</code>, <code>/mindset</code>, <code>/initiatives</code>, <code>/questions</code>,
+<code>/designs</code>), so as the door shows a scene its navbar item lights up. The homepage route is <code>/</code>, so
+Docusaurus marks nothing active by default, which means the hero can own that highlight cleanly
+without fighting the router. It reverts when the hero leaves the viewport.</li>
+</ul>
+<p>Guardrails the pivot must hold: it must never permanently trap the wheel (pin and horizontal RELEASE
+after the last scene), <code>prefers-reduced-motion</code> drops the flash and sets the scene instantly, and the
+flashing arch keeps its <code>isolation: isolate</code> so the hi-DPI compositing seam from the Vestaboard post
+cannot return.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="one-progress-model-two-drivers-scroll-or-self-running">One progress model, two drivers (scroll OR self-running)<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#one-progress-model-two-drivers-scroll-or-self-running" class="hash-link" aria-label="Direct link to One progress model, two drivers (scroll OR self-running)" title="Direct link to One progress model, two drivers (scroll OR self-running)" translate="no">​</a></h3>
+<p>The question that shaped the architecture was: <em>how do all these pieces, the flash bloom, the door to
+scene swap, the split-flap board, change on SCROLL or on a self-running ANIMATION, without
+special-casing each?</em> The answer is one idea applied everywhere: <strong>every animatable piece is a pure
+function of a single normalized progress <code>p</code> in <code>[0,1]</code></strong> across all the scenes (<code>deriveSceneState</code>).
+That progress is supplied by one of two interchangeable <strong>drivers</strong>, and no component knows which it
+has:</p>
+<ul>
+<li class="">the <strong>scroll driver</strong> maps <code>p</code> from scroll position, so the whole thing is fully SCRUBBABLE: scroll
+forward and the flash blooms and the board flips; scroll back and they reverse; STOP scrolling and
+everything FREEZES at that exact frame (you can hang on the flash mid-bloom, the board halts
+mid-flip);</li>
+<li class="">the <strong>time driver</strong> ramps the same <code>p</code> on a <code>requestAnimationFrame</code> clock, so the non-scroll arm
+self-runs (hold a scene, cross to the next, loop), reusing the identical visuals.</li>
+</ul>
+<p>Concretely the split-flap board grew a <strong>driven mode</strong>: given a <code>progress</code> plus the text it is flipping
+FROM, each flap freezes at that progress instead of running its own timer, so scroll position turns the
+flaps and stopping stops them. The flash is always one continuous opacity variable. Because the model
+is one pure function, the same house animates on a wheel or on a clock with no forked code.</p>
+<p>The two-drivers design also made the <strong>default</strong> trivial to choose, and to change. The homepage
+currently DEFAULTS to the <strong>time driver</strong> (the self-running animation house cycles on its own clock, in
+normal page flow), with the three scroll-driven models kept reachable for A/B testing via the override
+<code>?ab-homepage-hero-scroll=pin|inplace|horizontal</code>. Because both drivers feed the identical model,
+flipping the default between "animation" and "scroll" is a one-line routing change, not a rewrite.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-what-carried-over-whats-house-specific">5. What carried over, what's house-specific<a href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero#5-what-carried-over-whats-house-specific" class="hash-link" aria-label="Direct link to 5. What carried over, what's house-specific" title="Direct link to 5. What carried over, what's house-specific" translate="no">​</a></h2>
+<p>The <strong>board, the flash, and the arch mask</strong> are the reusable spine, documented in the
+<a class="" href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero">Vestaboard hero</a> post. House-specific are the <strong>central-hall
+facade</strong> (the teal body, terracotta roof, gold outlines, zellij windows, hanging sign), the <strong>A/B/C/D
+staging</strong>, and the <strong>scroll-driven parallax</strong>. The split keeps each post about one thing: the
+component you could lift into another project, and the place I built with it.</p>]]></content:encoded>
+            <category>design-engineering</category>
+            <category>animation</category>
+            <category>frontend</category>
+        </item>
+        <item>
+            <title><![CDATA[The Departure-Board Hero: a Vestaboard split-flap + camera flash]]></title>
+            <link>https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero</link>
+            <guid>https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero</guid>
+            <pubDate>Fri, 26 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[The story behind the homepage camera-flash hero: an arched portal whose scene cross-fades behind a flash of light, captioned by a Vestaboard split-flap board that rolls through the alphabet to name the destination. The mechanics, the design iterations, and the subtle bugs (a hi-DPI compositing seam, a white-out flash) it took to get there.]]></description>
+            <content:encoded><![CDATA[<p>The homepage hero asks one question: <strong>which door into my world do you want?</strong> The answer became a
+<strong>departures board</strong>. An arched window (a portal you travel through) shows a scene; a flash of light
+fills the arch; the scene changes; and a split-flap <strong>Vestaboard</strong> beneath it rolls through the
+alphabet to name where this gate goes. It is the A/B "test" arm of the hero experiment (the control
+is a calmer scrolling card strip).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="1-the-concept">1. The concept<a href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero#1-the-concept" class="hash-link" aria-label="Direct link to 1. The concept" title="Direct link to 1. The concept" translate="no">​</a></h2>
+<p>The pairing carries the whole idea: an <strong>arched portrait window</strong> says "a curated destination," and a
+mechanical <strong>split-flap board</strong> says "departures, now boarding." Together they read as <em>a place you
+travel to</em>, not a list of links. The hero is ONE click target (the whole gate is a <code>&lt;Link&gt;</code>); the
+flash + board just animate which destination it points at.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="2-the-split-flap-board-the-splitflap-component">2. The split-flap board (the SplitFlap component)<a href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero#2-the-split-flap-board-the-splitflap-component" class="hash-link" aria-label="Direct link to 2. The split-flap board (the SplitFlap component)" title="Direct link to 2. The split-flap board (the SplitFlap component)" translate="no">​</a></h2>
+<p>A real Vestaboard is a grid of character flaps. Each flap is on a drum and <strong>rolls THROUGH the
+alphabet</strong> to reach its letter, so changing a word looks like a cascade of spinning flaps settling
+into place. The component reproduces that:</p>
+<ul>
+<li class=""><strong>A character deck.</strong> <code>DECK = ' A..Z0..9 punctuation'</code>. To go from <code>D</code> to <code>G</code>, the cell flips
+<code>D → E → F → G</code>, one flap per step, not a single direct swap. That intermediate roll is the
+signature of a departure board.</li>
+<li class=""><strong>Synchronized arrival.</strong> A cell with more steps to travel flips FASTER per step, so every cell in
+the message lands on its target at the SAME moment. Per-step duration is <code>settleMs / stepCount</code>,
+clamped, so the board settles cleanly instead of finishing raggedly.</li>
+<li class=""><strong>A fixed grid with filler.</strong> The title word-wraps into a fixed <code>columns × rows</code> grid, centered,
+with the empty cells rendered as <strong>blank dark flap tiles</strong> (a real board is always full). The grid
+never changes size between messages, so the board's footprint is constant; only the flaps move.</li>
+<li class=""><strong>The housing.</strong> The tiles sit in a dark physical <strong>bezel</strong> with an inner recess + drop shadow, so
+it reads as one real unit rather than loose letters. Widening the board adds more filler COLUMNS,
+never stretches the bezel (the border stays the same thickness).</li>
+<li class=""><strong>The flap geometry.</strong> Each tile splits at the middle; a folding-down top leaf (old glyph) and a
+folding-up bottom leaf (new glyph) animate the turn in 3D (<code>perspective</code> on the cell, <code>rotateX</code> on
+the leaves). The leaves are <strong>solid opaque</strong> dark faces, which matters (see the bugs below).</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="3-the-camera-flash-bound-to-the-arch">3. The camera flash, bound to the arch<a href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero#3-the-camera-flash-bound-to-the-arch" class="hash-link" aria-label="Direct link to 3. The camera flash, bound to the arch" title="Direct link to 3. The camera flash, bound to the arch" translate="no">​</a></h2>
+<p>When the scene changes, a white light <strong>blooms inside the arch and fills it</strong>, masking the swap, like
+a photo being taken and the subject changing. Two details made it work:</p>
+<ul>
+<li class=""><strong>Bound to the EXACT arch.</strong> The light overlay is masked with <code>arch-inner.png</code> (the precise arch
+silhouette, interior filled black, used as a luminance <code>mask-image</code>). So the light is clipped to the
+real arched window, edge-exact, on every card, including the base lip. A <code>border-radius</code>
+approximation never lined up with the drawn frame; the mask does.</li>
+<li class=""><strong>Light OVER the scene, not a white-out.</strong> The bloom is a <strong>semi-transparent</strong> white radial (peak
+alpha well below 1.0, layered stops). Even at the brightest moment you still see the figure, the
+frame, the depth. The first attempts went fully opaque white and the scene vanished into a flat
+void; pulling the peak alpha down fixed it.</li>
+</ul>
+<p>The flip starts a beat before the flash, and the flash peak straddles the swap, so the brightest
+instant hides the mechanical change. <code>←</code>/<code>→</code> arrow keys (a global listener) hop to the previous/next
+destination, each playing the full flash + roll.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="4-the-bugs-worth-remembering">4. The bugs worth remembering<a href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero#4-the-bugs-worth-remembering" class="hash-link" aria-label="Direct link to 4. The bugs worth remembering" title="Direct link to 4. The bugs worth remembering" translate="no">​</a></h2>
+<p>Two subtle ones, both about <strong>GPU compositing layers</strong>:</p>
+<ul>
+<li class=""><strong>The white split-flap hairlines.</strong> Mid-flip, faint white lines appeared between the flap halves.
+Cause: the leaves had transparent gaps, so the bright tile behind showed through the hinge. Fix:
+make every leaf a <strong>solid opaque</strong> dark face. No gap, no bleed.</li>
+<li class=""><strong>The "line that comes and goes."</strong> A faint vertical line appeared in the hero, to the LEFT of the
+portal, ONLY on a hi-DPI (retina) screen, and ONLY while the flash animated. No DOM element had a
+border there. Cause: the flash overlay's <code>mix-blend-mode</code> / <code>filter</code> / <code>transform</code> animation forces
+it onto its own GPU compositing layer, whose fractional-pixel edge paints a seam that can render
+OUTSIDE the element, and the hero's <code>overflow: hidden</code> turned that into a hard line. Fix: contain
+the animation with <code>contain: paint</code> on the portal box (and drop the unnecessary blend/filter), so
+the layer can't seam into the hero. The tell: it vanished at <code>devicePixelRatio = 1</code>.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5-what-id-reuse">5. What I'd reuse<a href="https://blog.bytesofpurpose.com/designs/design-vestaboard-flash-hero#5-what-id-reuse" class="hash-link" aria-label="Direct link to 5. What I'd reuse" title="Direct link to 5. What I'd reuse" translate="no">​</a></h2>
+<p>The <code>SplitFlap</code> component (<code>src/components/SplitFlap</code>) is the reusable piece: a Vestaboard display
+that takes text, word-wraps into a fixed grid, and rolls through a character deck with synchronized
+arrival. The arch-mask flash and the gate composition are homepage-specific, but the "bind a light to
+an exact shape with a luminance PNG mask" trick generalizes to any shaped reveal.</p>
+<p>This post is about the <strong>board + flash as a component</strong>. How the homepage actually STAGES them, the
+Lebanese central-hall home it became, the A/B/C/D experiment arms, and the scroll-driven parallax
+pivot, is a separate story that builds on this one: see
+<a class="" href="https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero">The House hero</a>.</p>]]></content:encoded>
+            <category>design-engineering</category>
+            <category>animation</category>
+            <category>frontend</category>
+        </item>
+        <item>
+            <title><![CDATA[The Build System Behind This Blog]]></title>
+            <link>https://blog.bytesofpurpose.com/designs/design-build-system</link>
+            <guid>https://blog.bytesofpurpose.com/designs/design-build-system</guid>
+            <pubDate>Thu, 25 Jun 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[How this Docusaurus site builds itself from content: the folder layout, the one generate-assets step that turns frontmatter into data, what each generator produces and who consumes it, and the fail-closed rule that you never hand-edit generated output.]]></description>
+            <content:encoded><![CDATA[<p>This site looks like a pile of markdown, but a fair amount of it is generated. Boards,
+the changelog, the vote list, a logo's variants: none of those are hand-authored data
+files. They are built from the frontmatter of the content itself, on every build, by one
+step. This is how that works, and why it is set up to make the wrong move impossible
+rather than merely discouraged.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-folder-layout">The folder layout<a href="https://blog.bytesofpurpose.com/designs/design-build-system#the-folder-layout" class="hash-link" aria-label="Direct link to The folder layout" title="Direct link to The folder layout" translate="no">​</a></h2>
+<p>The content lives in a few top-level trees, split by the site's organizing idea
+(<a class="" href="https://blog.bytesofpurpose.com/handbook">durable vs temporal</a>):</p>
+<table><thead><tr><th>Folder</th><th>What it holds</th></tr></thead><tbody><tr><td><code>docs/craft/</code>, <code>docs/journey/</code></td><td>the two DURABLE docs instances (Craft, Journey): distilled learnings, frameworks, terminology</td></tr><tr><td><code>blog/</code></td><td>the TEMPORAL Initiatives blog: dated posts and experiments I have ACTED on</td></tr><tr><td><code>thoughts/</code></td><td>the TEMPORAL Thoughts &amp; Ideas blog: ideas I have HAD but not acted on yet</td></tr><tr><td><code>designs/</code></td><td>the Designs blog: full design write-ups like this one</td></tr><tr><td><code>src/components/</code>, <code>packages/blog-ui/</code></td><td>the React components (site-specific and the shared UI package)</td></tr><tr><td><code>plugins/</code></td><td>Docusaurus plugins (draft awareness, recent posts)</td></tr><tr><td><code>scripts/</code></td><td>the generators and validators</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-pipeline-one-step-turns-frontmatter-into-data">The pipeline: one step turns frontmatter into data<a href="https://blog.bytesofpurpose.com/designs/design-build-system#the-pipeline-one-step-turns-frontmatter-into-data" class="hash-link" aria-label="Direct link to The pipeline: one step turns frontmatter into data" title="Direct link to The pipeline: one step turns frontmatter into data" translate="no">​</a></h2>
+<p>Everything that is generated from content is produced by a single npm target,
+<code>generate-assets</code>, wired into both <code>prestart</code> and <code>prebuild</code>:</p>
+<div class="language-json codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-json codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token property" style="color:hsl(5, 74%, 59%)">"generate-assets"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> "npm run generate-changelog &amp;&amp; npm run generate-ideas</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">                  &amp;&amp; npm run generate-logo-variants &amp;&amp; npm run generate-kanban"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token property" style="color:hsl(5, 74%, 59%)">"prestart"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"npm run generate-assets"</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain"></span><span class="token property" style="color:hsl(5, 74%, 59%)">"prebuild"</span><span class="token operator" style="color:hsl(221, 87%, 60%)">:</span><span class="token plain"> </span><span class="token string" style="color:hsl(119, 34%, 47%)">"npm run generate-assets"</span><br></span></code></pre></div></div>
+<p>So <code>yarn start</code> and <code>yarn build</code> (and the <code>make</code> targets that wrap them) always regenerate
+first. A fresh clone needs nothing special: the data is rebuilt before the site is. There is
+also <code>make generate-assets</code> to regenerate on demand without a full build.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-each-generator-reads-and-who-consumes-it">What each generator reads, and who consumes it<a href="https://blog.bytesofpurpose.com/designs/design-build-system#what-each-generator-reads-and-who-consumes-it" class="hash-link" aria-label="Direct link to What each generator reads, and who consumes it" title="Direct link to What each generator reads, and who consumes it" translate="no">​</a></h2>
+<p>Every generator reads the frontmatter of some content and writes a data file that a
+component renders. The arrow is always the same shape: content frontmatter, to a data
+file, to a component.</p>
+<table><thead><tr><th>Generator</th><th>Reads</th><th>Writes</th><th>Consumed by</th></tr></thead><tbody><tr><td><code>generate-changelog-data.js</code></td><td>the changelog entries</td><td><code>src/components/Changelog/changelog-data.json</code></td><td>the Changelog timeline</td></tr><tr><td><code>generate-ideas-data.js</code></td><td>the <code>ideas/</code> posts</td><td><code>src/components/Vote/ideas-data.json</code></td><td>the Vote page</td></tr><tr><td><code>generate-kanban-data.js</code></td><td><code>kind</code>/<code>stage</code>/<code>priority</code> of the <code>blog/</code> (Initiatives) + <code>thoughts/</code> (Ideas) posts</td><td><code>src/components/KanbanBoard/kanban-data.json</code></td><td>the KanbanBoard (Experimentation + Ideas boards)</td></tr><tr><td><code>generate-logo-variants-data.js</code></td><td>the binary-pyramid logo source</td><td><code>designs/_binary-pyramid-variants.js</code></td><td>the logo preview</td></tr></tbody></table>
+<p>The kanban one is the clearest example of the pattern. A card on the
+<a class="" href="https://blog.bytesofpurpose.com/craft/product-management/experiments">Experimentation board</a> is not authored anywhere; it is one
+experiment post, slotted into a column by its <code>stage</code> frontmatter. To move a card across the
+board, I change one line of frontmatter on the post and rebuild. The board can never drift
+from the posts it indexes, because it is derived from them.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-fail-closed-rule-never-hand-edit-generated-output">The fail-closed rule: never hand-edit generated output<a href="https://blog.bytesofpurpose.com/designs/design-build-system#the-fail-closed-rule-never-hand-edit-generated-output" class="hash-link" aria-label="Direct link to The fail-closed rule: never hand-edit generated output" title="Direct link to The fail-closed rule: never hand-edit generated output" translate="no">​</a></h2>
+<p>Here is the part that matters more than the mechanism. Every one of those output files is
+<strong>gitignored and overwritten on the next build</strong>. If you opened one and edited it by hand,
+your change would vanish the next time anyone ran the build, silently. So the rule is: edit
+the generator or the frontmatter source, never the generated file.</p>
+<p>That rule is not left to memory. A <code>PreToolUse</code> hook
+(<code>.claude/hooks/block-generated-edits.sh</code>) refuses any edit to a generated output or a
+build-derived directory (<code>build/</code>, <code>.docusaurus/</code>, <code>static/storybook/</code>, and the data files
+above), and tells you which source to edit instead. The safe path is the only path; the
+unsafe one is blocked, not just frowned upon.</p>
+<p>There is one deliberate exception the hook respects. <code>designs/_rosette-zeros-variants.js</code>
+looks generated (it has the same shape as the gitignored logo-variants file) but it is
+committed SOURCE: it is the raw output of a private CLI that is not present at build time, so
+it cannot be regenerated here. The hook exempts it by name. Secrets like <code>.env</code> are out of
+scope too: they are gitignored for a different reason and editing them locally is legitimate.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="why-build-it-this-way">Why build it this way<a href="https://blog.bytesofpurpose.com/designs/design-build-system#why-build-it-this-way" class="hash-link" aria-label="Direct link to Why build it this way" title="Direct link to Why build it this way" translate="no">​</a></h2>
+<p>The alternative, committing the generated data and trusting everyone to regenerate it, fails
+quietly. A stale <code>kanban-data.json</code> in git looks authoritative and is wrong. By generating on
+every build, gitignoring the output, and blocking hand-edits, the data is always a pure
+function of the content, and there is no way to end up with a committed file that disagrees
+with the posts it was built from. The board, the changelog, and the vote list are guaranteed
+to match reality, because reality (the frontmatter) is the only place they come from.</p>
+<p>When I add a new generator, the checklist is small and enforced: add it to <code>generate-assets</code>,
+gitignore its output, and add the path to the block-generated-edits hook. Same change, every
+time.</p>]]></content:encoded>
+            <category>system-design</category>
+            <category>build</category>
+            <category>docusaurus</category>
+        </item>
         <item>
             <title><![CDATA[Building a Pages Deploy That Consumes a Private Package]]></title>
             <link>https://blog.bytesofpurpose.com/designs/design-actions-pages-deploy</link>
