@@ -61,26 +61,33 @@ const BYTE_FRAMES = ['B', '0', 'P', '1'];
 export interface SplitFlapMarkProps {
   /** hairline-arch variant (vs the solid green arch). */
   outline?: boolean;
-  /** kept for API compatibility; the flap now flips every 5s in all placements. */
+  /** kept for API compatibility; the flap now flips every 15s in all placements. */
   cadence?: 'continuous' | 'occasional';
   /** flap tile size (CSS font-size on the board). Default sized for a specimen tile. */
   size?: string;
+  /** compact navbar arch (tight padding + smaller corner) so the mark fits the header line. */
+  compact?: boolean;
 }
 
 /**
  * The site logo: the green arch as the flap's housing, the REAL split-flap doing a DIRECT flip
- * B → 0 → P → 1 → (loop), one flip every 15 seconds. `outline` renders the hairline-arch variant.
+ * B → 0 → P → 1 → (loop), one flip every 15 seconds. `outline` renders the hairline-arch variant;
+ * `compact` renders the tight navbar arch.
  */
 export function SplitFlapMark({
   outline = false,
   size = '40px',
+  compact = false,
 }: SplitFlapMarkProps): React.JSX.Element {
   // One flip every 15s, cycling B → 0 → P → 1. `direct` makes each change a SINGLE fold straight to
   // the target (no rolling through the deck), so the mark rests on the glyph the rest of the beat.
   const [glyph, kick] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 15000});
+  const archClass = `${outline ? styles.archFlapOutline : styles.archFlap} ${
+    compact ? styles.archFlapNavbar : ''
+  }`;
   return (
     <span
-      className={outline ? styles.archFlapOutline : styles.archFlap}
+      className={archClass}
       role="img"
       aria-label="Arch housing a Vestaboard flap flipping B, 0, P, 1"
       onMouseEnter={kick}>
@@ -128,9 +135,12 @@ export function BlinkCaret(): React.JSX.Element {
  * motion fallback for the navbar logo, so the header never looks broken before hydration. Sized to
  * the navbar via the `size` font-size.
  */
-export function ArchStatic({size = '22px'}: {size?: string}): React.JSX.Element {
+export function ArchStatic({size = '16px'}: {size?: string}): React.JSX.Element {
   return (
-    <span className={styles.archFlap} aria-hidden="true" style={{fontSize: size}}>
+    <span
+      className={`${styles.archFlap} ${styles.archFlapNavbar}`}
+      aria-hidden="true"
+      style={{fontSize: size}}>
       <span className={styles.staticFlap}>B</span>
     </span>
   );
@@ -142,11 +152,11 @@ export function ArchStatic({size = '22px'}: {size?: string}): React.JSX.Element 
  * on hover); the design-system page uses it 'continuous'. Navbar-sized by default.
  */
 export function ArchFlapLogo({
-  size = '22px',
+  size = '16px',
   cadence = 'occasional',
 }: {
   size?: string;
   cadence?: 'continuous' | 'occasional';
 }): React.JSX.Element {
-  return <SplitFlapMark cadence={cadence} size={size} />;
+  return <SplitFlapMark cadence={cadence} size={size} compact />;
 }

@@ -582,6 +582,13 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Navbar variant: a compact arch that fits the header line (tight padding + smaller corner) so the
+   mark aligns with the wordmark and never overflows the navbar height. */
+.archFlapNavbar {
+  padding: 3px 5px 4px;
+  border-radius: 16px 16px 4px 4px;
+}
+
 .archFlapOutline {
   padding: 8px 10px 10px;
   border: 2.5px solid var(--ifm-color-primary);
