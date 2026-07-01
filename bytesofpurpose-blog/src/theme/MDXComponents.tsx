@@ -58,6 +58,18 @@ import {
   Focus,
 } from '@omars-lab/blog-ui';
 import '@omars-lab/blog-ui/style.css';
+// SlideDeck: a reveal.js-backed slide deck embedded in a post, themed from THIS repo's
+// design-system tokens (Fraunces/Geist, tea pastels, deep green). reveal.js is lazy-loaded
+// in the browser only (SSR-safe via BrowserOnly). See src/components/SlideDeck.
+import SlideDeck, {
+  Slide,
+  SlideEyebrow,
+  SlideTitle,
+  SlideLede,
+  Pastels,
+  PillarGrid,
+  FormatList,
+} from '@site/src/components/SlideDeck';
 
 export default {
   // Reusing the default mapping
@@ -166,4 +178,15 @@ export default {
   DemoTag,
   DemoBadge,
   DemoCallout,
+  // SlideDeck: reveal.js slide deck embedded in a post. <SlideDeck> wraps <Slide> children;
+  // <SlideEyebrow>/<SlideTitle>/<SlideLede>/<Pastels> are on-brand slide primitives. reveal.js
+  // is lazy-loaded browser-only and themed from the repo's own tokens (no reveal theme shipped).
+  SlideDeck,
+  Slide,
+  SlideEyebrow,
+  SlideTitle,
+  SlideLede,
+  Pastels,
+  PillarGrid,
+  FormatList,
 };

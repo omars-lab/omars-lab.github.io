@@ -1,0 +1,295 @@
+/**
+ * SlideDeck theme — restyles the reveal.js surface from THIS repo's design-system
+ * tokens (src/css/custom.css), so a deck reads as the same brand as the post around
+ * it, in both light and dark mode. No reveal.js bundled theme is loaded; this IS the
+ * theme. Values reference tokens (Fraunces/Geist, tea pastels, deep green, radii,
+ * spacing) rather than hardcoding the hexes the source deck used.
+ */
+
+/* The framed embed: a rounded, hairlined card the deck lives inside, matching the
+   site's card treatment (surface + hairline + gentle radius, shadow on hover-only
+   is not applicable to a static frame, so a quiet resting shadow is used). */
+.deckFrame {
+  margin: var(--space-6) 0;
+}
+
+.reveal {
+  /* 16:9 by default; reveal scales its fixed canvas into this box. */
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: 1px solid var(--ifm-toc-border-color, #ebedf0);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-page);
+  box-shadow: var(--ifm-global-shadow-lw);
+}
+
+/* reveal sets font on .reveal; pin ours so nothing leaks Infima's stack. */
+.reveal :global(.reveal),
+.reveal {
+  font-family: var(--font-sans-body);
+  color: var(--text-body);
+}
+
+.deckFallback {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: 1px solid var(--ifm-toc-border-color, #ebedf0);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+}
+
+.hint {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  text-align: center;
+}
+.hint kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-tint);
+  color: var(--ifm-color-primary);
+}
+
+/* ── Slide surfaces ─────────────────────────────────────────────────────────── */
+.slide {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 6% 7%;
+  text-align: left;
+}
+.align_center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.align_start {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.bg_paper {
+  background: var(--surface-page);
+  color: var(--text-body);
+}
+.bg_card {
+  background: var(--surface-card);
+  color: var(--text-body);
+}
+/* Full-bleed deep green — cover, CTA, section breaks. On the dark slide, ink flips
+   to the light paper token and the eyebrow uses mint for contrast. */
+.bg_deep {
+  background: var(--ifm-color-primary-darkest);
+  color: var(--surface-page);
+}
+
+/* ── Editorial primitives ───────────────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-sans-body);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+  margin-bottom: var(--space-5);
+}
+/* On the deep-green slide the eyebrow is paper ink, not a pastel: pastels are
+   accent FILLS only (they ride --tea-ink), never a text color. Paper-on-green is a
+   strong editorial kicker and passes AA. */
+.bg_deep .eyebrow {
+  color: var(--surface-page);
+  opacity: 0.92;
+}
+
+.title {
+  font-family: var(--font-serif-display);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--text-heading);
+  margin: 0;
+}
+.bg_deep .title {
+  color: var(--surface-page);
+}
+.title_md {
+  font-size: 3.6rem;
+}
+.title_xl {
+  font-size: 5.2rem;
+}
+
+.lede {
+  font-size: 1.7rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: var(--space-6) 0 0;
+  max-width: 40ch;
+}
+/* MDX wraps the lede's text in its own <p>; make that inner paragraph inherit
+   the lede's type instead of picking up default prose margins/size. */
+.lede :global(p) {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+.lede :global(p) + :global(p) {
+  margin-top: var(--space-4);
+}
+.bg_deep .lede {
+  color: var(--surface-page);
+  opacity: 0.88;
+}
+
+/* Emphasis inside a lede reads in heading ink, not italic-secondary. */
+.lede :global(em) {
+  font-style: italic;
+  color: var(--text-heading);
+}
+.bg_deep .lede :global(em) {
+  color: var(--surface-page);
+}
+
+/* ── Pastel accent pills (fills only; --tea-ink is the ONLY ink on them) ─────── */
+.pastels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+.pastel {
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 0.5em 1.1em;
+  border-radius: 999px;
+  color: var(--tea-ink);
+  white-space: nowrap;
+}
+.pastel_pink {
+  background: var(--tea-pink);
+}
+.pastel_mint {
+  background: var(--tea-mint);
+}
+.pastel_green {
+  background: var(--tea-green);
+}
+
+/* ── Pillar grid (slide 3) ──────────────────────────────────────────────────── */
+.pillarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+.pillar {
+  margin: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--ifm-toc-border-color, #ebedf0);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.pillarArt {
+  background: var(--accent-tint);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-5) var(--space-5) 0;
+  min-height: 34%;
+}
+.pillarArt img {
+  width: 62%;
+  height: auto;
+}
+.pillar figcaption {
+  padding: var(--space-5) var(--space-5) var(--space-5);
+}
+.pillarTitle {
+  font-family: var(--font-serif-display);
+  font-weight: 600;
+  font-size: 1.9rem;
+  color: var(--text-heading);
+  margin: 0 0 var(--space-2);
+}
+.pillarBody {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Format list (slide 4) ──────────────────────────────────────────────────── */
+.formatList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.formatRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  background: var(--surface-card);
+  border: 1px solid var(--ifm-toc-border-color, #ebedf0);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+}
+.formatIcon {
+  flex: 0 0 5rem;
+  width: 5rem;
+  height: 5rem;
+  border-radius: var(--radius-md);
+  background: var(--accent-tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.formatIcon img {
+  width: 55%;
+  height: auto;
+}
+.formatLabel {
+  flex: 0 0 15rem;
+}
+.formatKicker {
+  font-size: 1.25rem;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+  margin-top: var(--space-1);
+}
+.formatBody {
+  flex: 1;
+  font-size: 1.45rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Reveal chrome recolored to brand ───────────────────────────────────────── */
+.reveal :global(.controls) {
+  color: var(--ifm-color-primary);
+}
+.reveal :global(.progress) {
+  color: var(--ifm-color-primary);
+  height: 4px;
+}
+.reveal :global(.slide-number) {
+  background: var(--accent-tint);
+  color: var(--ifm-color-primary);
+  font-family: var(--font-mono);
+}
+
+/* Reduced motion: reveal's transition:'none' handles slide motion; also quiet any
+   fragment/overview easing so nothing animates for these users. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal :global(.slides section),
+  .reveal :global(.slides) {
+    transition: none !important;
+  }
+}
