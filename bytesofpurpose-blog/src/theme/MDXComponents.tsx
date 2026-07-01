@@ -31,6 +31,9 @@ import {
   OptionGrid,
   OptionTile,
   DecisionNote,
+  SplitFlapMark,
+  BitCursor,
+  BlinkCaret,
   ButtonRow,
   ChipRow,
   DemoButton,
@@ -158,6 +161,11 @@ export default {
   OptionGrid,
   OptionTile,
   DecisionNote,
+  // Animated logo marks (faithful to the design project's live mockups): the chosen split-flap
+  // rolling B→0→1→blank, the arch bit cursor, the blinking caret. All reduced-motion guarded.
+  SplitFlapMark,
+  BitCursor,
+  BlinkCaret,
   // Live control specimens rendered from the repo's real Infima button classes + tokens
   // (Buttons + Core Components pages): buttons, pastel tags, badges, callouts.
   ButtonRow,

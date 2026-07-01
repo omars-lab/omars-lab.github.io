@@ -10,6 +10,7 @@ export {RadiusSwatches, ElevationDemo} from './RadiusElevationDemo';
 export {default as TokenTable} from './TokenTable';
 export {BrandMarks, FeatureIcons, ArchIllustrations} from './BrandMarks';
 export {OptionGrid, OptionTile, DecisionNote} from './OptionGrid';
+export {SplitFlapMark, BitCursor, BlinkCaret} from './AnimatedMarks';
 export {
   ButtonRow,
   ChipRow,
