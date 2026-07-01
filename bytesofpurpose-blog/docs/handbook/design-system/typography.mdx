@@ -2,7 +2,7 @@
 slug: /design-system/typography
 title: '🔤 Typography'
 sidebar_label: '🔤 Typography'
-description: 'The type system: Fraunces display serif over Geist body with Geist Mono for code, plus the type scale, weights, tracking, and a 1.7 reading line-height.'
+description: 'The type system: Space Grotesk display over Geist body with Geist Mono for code, plus the type scale, weights, tracking, and a 1.7 reading line-height.'
 kind: showcase
 draft: false
 sidebar_position: 3
@@ -22,29 +22,28 @@ import Head from '@docusaurus/Head';
 
 # Typography
 
-Headings are **Fraunces**, an old-style display serif with an optical-size axis; it reads best
-around weight 600 and wants only the faintest negative tracking. Body and UI are **Geist** at 16px
-and a generous **1.7 line-height** for long-form comfort. Code is **Geist Mono**. Each specimen
-below renders in the real face, with the tokens that produced it shown underneath.
+Headings are **Space Grotesk**, a techy geometric grotesque that leans the brand toward its
+engineering identity; it takes a slightly tight negative tracking at display sizes. Body and UI are
+**Geist** at 16px and a generous **1.7 line-height** for long-form comfort. Code is **Geist Mono**.
+Each specimen below renders in the real face, with the tokens that produced it shown underneath.
 
-## Display serif · Fraunces
+## Display · Space Grotesk
 
-The editorial voice. Large headlines take a hair of negative tracking; the subtitle is an italic
-serif aside.
+The headline voice. Large headlines take a hair of negative tracking for a crisp, engineered feel.
 
 <TypeSpecimen family="--font-serif-display" size="--text-display" weight="--weight-semibold" tracking="--tracking-tight" leading="--leading-display" sample="Purposeful code" />
 
 <TypeSpecimen family="--font-serif-display" size="--text-h1" weight="--weight-semibold" tracking="--tracking-heading" leading="--leading-heading" sample="Where faith meets craft" />
 
-<TypeSpecimen family="--font-serif-display" size="--text-lead" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-tight" italic sample="Purposeful code, one byte at a time." />
+<TypeSpecimen family="--font-serif-display" size="--text-lead" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-tight" sample="Purposeful code, one byte at a time." />
 
-### Choosing the display serif
+### Choosing the display face
 
-Fraunces is characterful and warm, but it was one of several editorial directions. Here is the same
-headline across ten faces, from the current pick to a techier grotesque. The chosen one is ringed.
+Here is the same headline across ten faces we compared, from editorial serifs to a techy grotesque.
+The chosen one is ringed.
 
 <OptionGrid columns={230}>
-  <OptionTile name="Fraunces" chosen note="Wonky old-style serif. Warm, crafted, a little wry; leans personal and editorial.">
+  <OptionTile name="Fraunces" note="Wonky old-style serif. Warm, crafted, a little wry; leans personal and editorial. The previous pick.">
     <span style={{fontFamily: "'Fraunces', Georgia, serif", fontSize: '1.7rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
   </OptionTile>
   <OptionTile name="Newsreader" note="Literary, quiet, screen-tuned. Reads like a thoughtful magazine; less quirk than Fraunces.">
@@ -56,7 +55,7 @@ headline across ten faces, from the current pick to a techier grotesque. The cho
   <OptionTile name="Instrument Serif" note="High-contrast, elegant, single weight. Modern and distinctive, a 'now' editorial look.">
     <span style={{fontFamily: "'Instrument Serif', Georgia, serif", fontSize: '1.9rem', color: 'var(--text-heading)'}}>Where faith meets craft</span>
   </OptionTile>
-  <OptionTile name="Space Grotesk" note="A techy grotesque, not a serif. Pushes the brand toward engineering and tooling over editorial.">
+  <OptionTile name="Space Grotesk" chosen note="A techy geometric grotesque. Leans into the engineering identity and pairs cleanly with Geist. The adopted display face.">
     <span style={{fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-heading)'}}>Where faith meets craft</span>
   </OptionTile>
   <OptionTile name="DM Serif Display" note="High-contrast Didone. Bold, confident, magazine-masthead; strong personality at large sizes.">
@@ -76,13 +75,15 @@ headline across ten faces, from the current pick to a techier grotesque. The cho
   </OptionTile>
 </OptionGrid>
 
-<DecisionNote choice="Fraunces">
-  Fraunces won because its wonky, old-style warmth matches the brand's first-person, faith-meets-craft
-  voice better than the calmer or techier alternatives. Newsreader and Source Serif read too neutral,
-  Space Grotesk and Bitter lean too engineering, and the Didones (DM Serif, Instrument) feel more
-  fashion-masthead than personal. Fraunces is crafted and a little wry, which is exactly the register
-  we want, and its optical-size axis lets one family cover the display headline and the italic serif
-  subtitle. It is wired through the type tokens as `--font-serif-display`.
+<DecisionNote choice="Space Grotesk">
+  Space Grotesk is now the display face. It leans the brand into its engineering identity: a
+  geometric grotesque reads as tooling and craft, and it pairs cleanly with Geist body (both are
+  modern sans faces, so the display and body feel of one family). The editorial serifs (Fraunces,
+  the previous pick, plus Newsreader, Spectral, Lora) are warmer but read more personal-blog than
+  engineering; the Didones (DM Serif, Instrument) feel fashion-masthead. Space Grotesk keeps the
+  headlines crisp and a little technical, which is the register we want. It is wired through the type
+  tokens as `--font-serif-display` (the token name is kept for continuity even though the face is no
+  longer a serif).
 </DecisionNote>
 
 ## Body sans · Geist
