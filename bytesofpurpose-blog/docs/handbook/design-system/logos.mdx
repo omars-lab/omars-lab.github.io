@@ -1,0 +1,60 @@
+---
+slug: /design-system/logos
+title: '✦ Logos and Iconography'
+sidebar_label: '✦ Logos and Iconography'
+description: 'The brand marks and icon language: the lightbulb and binary-pyramid marks, the feature icons, the glyph and emoji conventions, and the arch illustrations.'
+kind: showcase
+draft: false
+sidebar_position: 5
+---
+
+# Logos and Iconography
+
+The brand favors **simple, theme-aware marks** and **text glyphs** over a heavy icon font. Two
+monochrome logos, a small set of line-style feature icons, a handful of purposeful glyphs, and the
+hand-drawn arch illustrations carry the visual identity.
+
+## Brand marks
+
+Two theme-aware monochrome marks that inherit their color from the surrounding text. Toggle the
+navbar theme to see them adapt.
+
+<BrandMarks />
+
+- The **lightbulb `</>`** mark is the primary logo: a bulb with a code glyph and radiating rays.
+- The **binary-pyramid** mark is the secondary or favicon mark: columns of 1 and 0 digits radiating
+  from a central pillar. It is generated from a config in the source repo; the SVG is the artifact.
+
+## Feature icons
+
+A small set of line-style SVGs used on the homepage feature cards, tinted brand-green. They are the
+only bundled icon set; when a UI needs a broader library, substitute **Lucide** (a thin, rounded
+line style that matches these) and flag the substitution.
+
+<FeatureIcons />
+
+## Glyphs and emoji
+
+The brand reaches for **text glyphs** as icons before an icon font:
+
+- **`→`** on a "Read more" link.
+- **`★`** on premium surfaces.
+- **`☕`** the "Buy Me a Coffee?" cup in the navbar.
+- **`·`** the middot, the brand's connective separator in eyebrows, metadata, and footers.
+
+**Emoji** appear only as the single leading glyph on a navigation card or a section header, never
+mid-sentence and never as decorative clutter. On this blog, the leading emoji on a post title also
+encodes the **kind** of post; the full legend lives in the [Handbook](/handbook).
+
+## Arch illustrations
+
+Imagery is the hand-drawn **warm cartoon** set: cozy brown-and-green scenes clipped into a
+**cathedral-arch silhouette** (`border-radius: 110px 110px 14px 14px`) with an outlined edge and a
+soft drop-shadow. Warm, narrative, personal, never stock photography and never gradient abstraction.
+
+<ArchIllustrations />
+
+To prepare a new scene so it abides by the canonical arch and drops in cleanly, see the
+`import-arched-image` workflow in the repo.
+
+<UsedIn slug="/design-system/logos" />

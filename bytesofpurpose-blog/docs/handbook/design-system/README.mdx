@@ -1,0 +1,39 @@
+---
+slug: /design-system
+title: '🎨 Design System'
+sidebar_label: '🎨 Design System'
+description: 'The design-system reference: the brand colors, type, spacing, elevation, logos, and icons, each shown live from the tokens the site ships.'
+kind: showcase
+draft: false
+sidebar_position: 1
+---
+
+# Design System
+
+This is the **design-system reference** for the blog: the brand foundations rendered live, so
+you can see the exact colors, type, spacing, and marks the site is built from. It is the reader
+facing companion to the [Bytes of Purpose Design System](https://claude.ai/design) I keep on
+claude.ai/design, the place where I make brand decisions.
+
+Every specimen on these pages reads the **live theme tokens** (the CSS custom properties in the
+site's stylesheet), not a hardcoded copy. So each swatch, type sample, and spacing bar shows what
+the site genuinely ships, and it renders correctly whether you are in **light or dark** mode
+(toggle the theme in the navbar to watch the greens and golds shift).
+
+The foundations are split into four pages:
+
+- **🎨 [Colors](/design-system/colors):** the forest-green primary scale, the tea-party pastels
+  (accent fills only), the premium gold, and the surfaces and ink.
+- **🔤 [Typography](/design-system/typography):** Fraunces for display, Geist for body, Geist Mono
+  for code, plus the type scale, weights, tracking, and line-heights.
+- **📐 [Spacing and Elevation](/design-system/spacing):** the soft 4px spacing scale, the corner
+  radii, the quiet two-step shadow system, and the motion tokens.
+- **✦ [Logos and Iconography](/design-system/logos):** the two brand marks, the feature icons, the
+  glyph and emoji conventions, and the cathedral-arch illustration set.
+
+## One source of truth
+
+The values live in one place, the site's stylesheet (`src/css/custom.css`), and everything else
+speaks its vocabulary. When you build on this brand, reach for a **named token** (`--brand-green`,
+`--space-4`, `--radius-md`) rather than typing a raw value, so the whole site keeps sharing one
+source of truth. These pages exist to teach that vocabulary.

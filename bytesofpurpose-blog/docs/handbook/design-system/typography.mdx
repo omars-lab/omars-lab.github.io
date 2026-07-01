@@ -1,0 +1,87 @@
+---
+slug: /design-system/typography
+title: '🔤 Typography'
+sidebar_label: '🔤 Typography'
+description: 'The type system: Fraunces display serif over Geist body with Geist Mono for code, plus the type scale, weights, tracking, and a 1.7 reading line-height.'
+kind: showcase
+draft: false
+sidebar_position: 3
+---
+
+# Typography
+
+Headings are **Fraunces**, an old-style display serif with an optical-size axis; it reads best
+around weight 600 and wants only the faintest negative tracking. Body and UI are **Geist** at 16px
+and a generous **1.7 line-height** for long-form comfort. Code is **Geist Mono**. Each specimen
+below renders in the real face, with the tokens that produced it shown underneath.
+
+## Display serif · Fraunces
+
+The editorial voice. Large headlines take a hair of negative tracking; the subtitle is an italic
+serif aside.
+
+<TypeSpecimen family="--font-serif-display" size="--text-display" weight="--weight-semibold" tracking="--tracking-tight" leading="--leading-display" sample="Purposeful code" />
+
+<TypeSpecimen family="--font-serif-display" size="--text-h1" weight="--weight-semibold" tracking="--tracking-heading" leading="--leading-heading" sample="Where faith meets craft" />
+
+<TypeSpecimen family="--font-serif-display" size="--text-lead" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-tight" italic sample="Purposeful code, one byte at a time." />
+
+## Body sans · Geist
+
+The workhorse for UI and long-form prose. Set at 16px with a 1.7 line-height for comfortable
+reading.
+
+<TypeSpecimen family="--font-sans-body" size="--text-body-md" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-body" sizeLabel="16px / 1.7" sample="Real-world engineering artifacts. Examples include sequence diagrams, roadmaps, code snippets, and automations. Short, concrete, verb-first." />
+
+## Eyebrow and mono
+
+The eyebrow label is uppercase Geist, tracked out to `0.18em`, in the primary green. The middot
+`·` is the brand's connective separator. Code is Geist Mono.
+
+<TypeSpecimen family="--font-sans-body" size="--text-eyebrow" weight="--weight-semibold" tracking="--tracking-eyebrow" leading="--leading-tight" sample="ENGINEERING · FAITH · CRAFT" />
+
+<TypeSpecimen family="--font-mono" size="--text-body-md" weight="--weight-regular" tracking="--tracking-normal" leading="--leading-body" sample="const purpose = 'one byte at a time';" />
+
+:::note The eyebrow tracking is editorial-only
+`--tracking-eyebrow` (`0.18em`) is for the hero and section eyebrow labels. Badges, pills, tags,
+and chips keep their own tighter micro-tracking; do not normalize those to `0.18em`, it looks broken
+on a small chip.
+:::
+
+## The type scale
+
+Headings (Fraunces) and body (Geist) each walk a fixed scale. Reach for a scale step, not a raw
+`rem`.
+
+<TokenTable rows={[
+  {token: '--text-display', value: '4rem', purpose: 'The hero display headline (Fraunces).'},
+  {token: '--text-h1', value: '2.75rem', purpose: 'Page title.'},
+  {token: '--text-h2', value: '2rem', purpose: 'Section heading.'},
+  {token: '--text-h3', value: '1.5rem', purpose: 'Sub-section heading.'},
+  {token: '--text-h4', value: '1.3rem', purpose: 'Minor heading.'},
+  {token: '--text-lead', value: '1.5rem', purpose: 'Italic-serif subtitle / lead.'},
+  {token: '--text-body-lg', value: '1.125rem', purpose: 'Emphasised body.'},
+  {token: '--text-body-md', value: '1rem', purpose: 'Default body / UI text.'},
+  {token: '--text-body-sm', value: '0.95rem', purpose: 'Small body.'},
+  {token: '--text-caption', value: '0.85rem', purpose: 'Captions and metadata.'},
+  {token: '--text-eyebrow', value: '0.8rem', purpose: 'The tracked-out eyebrow label.'},
+]} />
+
+## Weights, tracking, and line-height
+
+<TokenTable rows={[
+  {token: '--weight-regular', value: '400', purpose: 'Body text.'},
+  {token: '--weight-medium', value: '500', purpose: 'Slight emphasis.'},
+  {token: '--weight-semibold', value: '600', purpose: 'Headings (Fraunces reads best here).'},
+  {token: '--weight-bold', value: '700', purpose: 'Strong emphasis.'},
+  {token: '--tracking-tight', value: '-0.01em', purpose: 'Large display headlines.'},
+  {token: '--tracking-heading', value: '-0.005em', purpose: 'Headings.'},
+  {token: '--tracking-normal', value: '0', purpose: 'Body and UI.'},
+  {token: '--tracking-eyebrow', value: '0.18em', purpose: 'The editorial eyebrow label only.'},
+  {token: '--leading-display', value: '1.05', purpose: 'Display headline line-height.'},
+  {token: '--leading-heading', value: '1.25', purpose: 'Heading line-height.'},
+  {token: '--leading-body', value: '1.7', purpose: 'Long-form body line-height.'},
+  {token: '--leading-tight', value: '1.45', purpose: 'Tight UI line-height.'},
+]} />
+
+<UsedIn slug="/design-system/typography" />
