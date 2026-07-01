@@ -29,13 +29,13 @@ export function useReducedMotion(): boolean {
 }
 
 /**
- * Advance a glyph through `frames`, ONE flip every `intervalMs` (default 5s), looping forever.
+ * Advance a glyph through `frames`, ONE flip every `intervalMs` (default 15s), looping forever.
  * Pauses on reduced motion (holds the first frame). Also returns a `kick` that advances one flip
  * immediately (used on hover).
  */
 function useGlyphCycle(
   frames: string[],
-  {intervalMs = 5000}: {intervalMs?: number} = {},
+  {intervalMs = 15000}: {intervalMs?: number} = {},
 ): [string, () => void] {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
@@ -68,28 +68,25 @@ export interface SplitFlapMarkProps {
 }
 
 /**
- * The site logo: the green arch as the flap's housing, the REAL split-flap rolling
- * B → 0 → P → 1 → (loop), one flip every 5 seconds. `outline` renders the hairline-arch variant.
+ * The site logo: the green arch as the flap's housing, the REAL split-flap doing a DIRECT flip
+ * B → 0 → P → 1 → (loop), one flip every 15 seconds. `outline` renders the hairline-arch variant.
  */
 export function SplitFlapMark({
   outline = false,
   size = '40px',
 }: SplitFlapMarkProps): React.JSX.Element {
-  // One flip every 5s, cycling B → 0 → P → 1. settleMs (the deck-roll time per change) stays well
-  // below the 5s interval so each flip fully settles and the glyph rests before the next flip.
-  const [glyph, kick] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 5000});
-  // The flap rolls through the deck to reach the next glyph; keep the whole roll ~1.5s so it
-  // completes well within the 5s beat and the mark RESTS on B/0/P/1 for the remaining ~3.5s.
-  const settleMs = 1500;
+  // One flip every 15s, cycling B → 0 → P → 1. `direct` makes each change a SINGLE fold straight to
+  // the target (no rolling through the deck), so the mark rests on the glyph the rest of the beat.
+  const [glyph, kick] = useGlyphCycle(BYTE_FRAMES, {intervalMs: 15000});
   return (
     <span
       className={outline ? styles.archFlapOutline : styles.archFlap}
       role="img"
-      aria-label="Arch housing a Vestaboard flap rolling B, 0, P, 1"
+      aria-label="Arch housing a Vestaboard flap flipping B, 0, P, 1"
       onMouseEnter={kick}>
       {/* SplitFlap tiles are em-sized, so font-size on this wrapper scales the flap. */}
       <span style={{fontSize: size, display: 'inline-flex'}}>
-        <SplitFlap text={glyph} settleMs={settleMs} />
+        <SplitFlap text={glyph} settleMs={520} direct />
       </span>
     </span>
   );
