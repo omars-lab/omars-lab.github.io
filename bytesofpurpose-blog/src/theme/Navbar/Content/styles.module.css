@@ -51,4 +51,13 @@
   .moreDropdown {
     display: none;
   }
+  /* CRITICAL: at mobile width the overflow wrapper must become transparent to layout so its
+     children behave as if they were DIRECT children of .navbar__items again. Infima's mobile rule
+     hides items with `.navbar__item { display: none }`, but our flex `.overflowRow` is a wrapper;
+     its own `display: flex` would otherwise keep laying the (still-visible) items out in a row.
+     `display: contents` removes the wrapper box entirely so Infima's per-item hide applies and the
+     desktop items disappear on mobile (the hamburger sidebar's own menu__list shows them instead). */
+  .overflowRow {
+    display: contents;
+  }
 }

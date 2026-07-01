@@ -3,7 +3,7 @@ import ComponentTypes from '@theme/NavbarItem/ComponentTypes';
 import styles from './navbarSummary.module.css';
 
 // One-line summary per navbar item, keyed by its `label`. The source of truth for the hover
-// popups — keep in sync with the navbar items in docusaurus.config.js. An item with no entry
+// popups; keep in sync with the navbar items in docusaurus.config.js. An item with no entry
 // here renders normally (no popup).
 // Keyed by the navbar item's EXACT label (the lookup is SUMMARIES[label]). Every navbar item now
 // leads with a consistent emoji, so each key includes that emoji prefix (matching the label in
@@ -54,8 +54,11 @@ export default function NavbarItem({type, ...props}: {type?: string} & Record<st
   const summary = summaryName ? SUMMARIES[summaryName] : undefined;
 
   // Only desktop, left-positioned primary items get the popup (skip dropdowns + right-side
-  // utility controls, where a popover would be awkward).
-  if (!summary || componentType === 'dropdown' || props.position === 'right') {
+  // utility controls, where a popover would be awkward). Also skip the MOBILE drawer: the popup is
+  // a pointer-device affordance (CSS-suppressed on mobile), but the wrapper span is `inline-flex`,
+  // which would break the drawer's vertical `menu__list` (items would flow 2-per-row). On mobile,
+  // render the bare item so each sits on its own line.
+  if (!summary || props.mobile || componentType === 'dropdown' || props.position === 'right') {
     return item;
   }
 
