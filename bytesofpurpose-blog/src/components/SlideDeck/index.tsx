@@ -229,12 +229,24 @@ function SlideDeckImpl({children, width = 1280, height = 720}: SlideDeckProps): 
 
   return (
     <div className={styles.deckFrame}>
-      <div className={clsx('reveal', styles.reveal)} ref={deckRef} tabIndex={-1}>
+      {/* tabIndex=0 makes the deck keyboard-focusable AND focusable-on-click, and
+          onMouseDown focuses it so the very first click (not just a Tab) arms the
+          arrow keys. Paired with reveal's keyboardCondition:'focused', arrows drive
+          the deck only while it holds focus and never hijack page scroll for a reader
+          skimming past it. role/aria-label name it for assistive tech. */}
+      <div
+        className={clsx('reveal', styles.reveal)}
+        ref={deckRef}
+        tabIndex={0}
+        role="group"
+        aria-label="Slide deck. Use arrow keys to navigate, Escape for the slide grid."
+        onMouseDown={() => deckRef.current?.focus()}
+      >
         <div className="slides">{children}</div>
       </div>
       <p className={styles.hint}>
-        Use ← / → to move, <kbd>F</kbd> for fullscreen, <kbd>S</kbd> for speaker notes, <kbd>Esc</kbd>{' '}
-        for the slide grid.
+        Click the deck, then use ← / → to move, <kbd>F</kbd> for fullscreen, <kbd>S</kbd> for speaker
+        notes, <kbd>Esc</kbd> for the slide grid.
       </p>
     </div>
   );
