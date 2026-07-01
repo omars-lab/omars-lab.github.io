@@ -784,7 +784,8 @@ function StudioFacade({
               src={useBaseUrl('/img/cards/window.png')}
               alt=""
               aria-hidden="true"
-              loading="lazy"
+              loading="eager"
+              decoding="async"
               width={400}
               height={400}
             />
@@ -825,7 +826,9 @@ function StudioFacade({
                 src={useBaseUrl('/img/cards/door.png')}
                 alt=""
                 aria-hidden="true"
-                loading="lazy"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 width={400}
                 height={400}
               />
@@ -841,7 +844,11 @@ function StudioFacade({
                     className={clsx(styles.studioPeekImg, i === shown && styles.studioPeekImgActive)}
                     src={useBaseUrl(card.img)}
                     alt=""
-                    loading="lazy"
+                    // The FIRST scene is above-the-fold on load (the door opens onto it); eager-load it
+                    // so the arch isn't briefly empty. The other 6 scenes stay lazy (only the active one
+                    // is ever visible, swapped via opacity).
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
                     width={400}
                     height={400}
                   />
@@ -861,7 +868,8 @@ function StudioFacade({
               src={useBaseUrl('/img/cards/window.png')}
               alt=""
               aria-hidden="true"
-              loading="lazy"
+              loading="eager"
+              decoding="async"
               width={400}
               height={400}
             />
