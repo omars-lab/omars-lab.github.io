@@ -33,6 +33,9 @@ export interface SplitFlapProps {
    * the final letters). Used by the scroll-driven hero: spinning = the user is scrolling; settle =
    * they stopped. (When undefined, the board behaves normally: it rolls on a `text` change.) */
   spinning?: boolean;
+  /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
+   * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
+  direct?: boolean;
 }
 
 // A SPINNING cell: while `spinning`, it CHURNS through random deck glyphs on its own fast timer (each
@@ -139,9 +142,12 @@ const DECK_INDEX = new Map(Array.from(DECK).map((c, i) => [c, i]));
 function Cell({
   char,
   settleMs,
+  direct = false,
 }: {
   char: string;
   settleMs: number;
+  /** When true, flip STRAIGHT to the target in one fold (no rolling through the deck). */
+  direct?: boolean;
 }) {
   const [shown, setShown] = useState(char); // the settled glyph currently displayed
   const [next, setNext] = useState(char); // the glyph this step is flipping TO
@@ -157,7 +163,8 @@ function Cell({
     const from = DECK_INDEX.get(shown);
     const to = DECK_INDEX.get(char);
     let seq: string[];
-    if (from === undefined || to === undefined) {
+    if (direct || from === undefined || to === undefined) {
+      // Single DIRECT flip: fold once from the old glyph straight to the new one.
       seq = [char];
     } else {
       seq = [];
@@ -237,6 +244,7 @@ export default function SplitFlap({
   rows: fixedRows,
   className,
   spinning,
+  direct = false,
 }: SplitFlapProps): React.JSX.Element {
   // Build the centered/padded GRID for a message.
   const toGrid = (s: string): string[] => {
@@ -278,7 +286,7 @@ export default function SplitFlap({
       {grid.map((row, r) => (
         <span key={r} className={styles.row}>
           {Array.from(row).map((c, i) => (
-            <Cell key={i} char={c} settleMs={settleMs} />
+            <Cell key={i} char={c} settleMs={settleMs} direct={direct} />
           ))}
         </span>
       ))}
