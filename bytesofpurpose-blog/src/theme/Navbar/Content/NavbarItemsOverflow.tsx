@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ErrorCauseBoundary} from '@docusaurus/theme-common';
 import NavbarItem from '@theme/NavbarItem';
+import {computeVisibleCount} from './overflowFit';
 import styles from './styles.module.css';
 
 // Priority+ navbar: keep the left items on ONE line, and when they don't all fit, fold the
@@ -15,34 +16,9 @@ import styles from './styles.module.css';
 
 type Item = {label?: string; [k: string]: unknown};
 
-/**
- * Pure priority+ fit: given each item's measured width, the available row width, and the width to
- * reserve for the "More" trigger, return how many LEADING items stay inline. Exported so it can be
- * unit-tested without a DOM.
- *
- * - Everything fits (sum <= available) → all items inline (no More trigger, so no reserve needed).
- * - Otherwise greedily fit leading items within (available - reserve); the rest overflow.
- * - Always keep at least 1 item inline (never a lonely "More" on a wide-ish bar).
- */
-export function computeVisibleCount(
-  widths: number[],
-  available: number,
-  reserve: number,
-): number {
-  const total = widths.reduce((a, b) => a + b, 0);
-  if (total <= available) return widths.length;
-  let used = 0;
-  let count = 0;
-  for (let i = 0; i < widths.length; i++) {
-    if (used + widths[i] <= available - reserve) {
-      used += widths[i];
-      count++;
-    } else {
-      break;
-    }
-  }
-  return Math.max(1, count);
-}
+// The pure greedy fit (computeVisibleCount) lives in ./overflowFit so it can be unit-tested without
+// loading React / the Docusaurus theme. Re-export for anything importing it from here historically.
+export {computeVisibleCount} from './overflowFit';
 
 // One item wrapped in the upstream error boundary (a bad item can't crash the whole nav).
 function SafeItem({item, isDropdownItem}: {item: Item; isDropdownItem?: boolean}) {
