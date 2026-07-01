@@ -44,12 +44,13 @@
   --ifm-heading-color: #14201a;
   --ifm-color-content-secondary: #46504b;
 
-  /* Typography — Fraunces (headings) + Geist (body), loaded via headTags in
-     docusaurus.config.js. Fraunces is an old-style serif; it reads best around
-     600 weight and wants looser tracking than the old Inter setup. */
+  /* Typography — Space Grotesk (display/headings) + Geist (body), loaded via headTags
+     in docusaurus.config.js. Space Grotesk is a techy geometric grotesque; it leans the
+     brand toward the engineering identity and pairs cleanly with Geist body. */
   --ifm-font-family-base: 'Geist', system-ui, -apple-system, 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
-  --ifm-heading-font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ifm-heading-font-family: 'Space Grotesk', system-ui, -apple-system, 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
   --ifm-heading-font-weight: 600;
   --ifm-font-size-base: 16px;
   --ifm-line-height-base: 1.7;
@@ -127,7 +128,7 @@
   --font-sans-body: var(--ifm-font-family-base);
   --font-mono: var(--ifm-font-family-monospace);
 
-  /* Display / heading scale (Fraunces) */
+  /* Display / heading scale (Space Grotesk) */
   --text-display: 4rem;
   --text-h1: 2.75rem;
   --text-h2: 2rem;
@@ -237,10 +238,10 @@ html[data-theme='dark'] {
   --shadow-md: var(--ifm-global-shadow-md);
 }
 
-/* Headings use Fraunces (the editorial display serif). Apply it explicitly so it
-   wins regardless of Infima's --ifm-heading-font-family wiring. A serif wants only
-   the faintest negative tracking — the old −0.02em (tuned for Inter) over-tightens
-   Fraunces, so relax it. The optical-size axis lets large headings open up. */
+/* Headings use Space Grotesk (the techy display grotesque). Apply it explicitly so it
+   wins regardless of Infima's --ifm-heading-font-family wiring. A geometric grotesque
+   takes a slightly tighter negative tracking at display sizes for a crisp, engineered
+   feel (no optical-size axis, so no font-optical-sizing). */
 h1,
 h2,
 h3,
@@ -248,8 +249,7 @@ h4,
 h5,
 h6 {
   font-family: var(--ifm-heading-font-family);
-  letter-spacing: -0.005em;
-  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
 }
 
 /* ==========================================================================
