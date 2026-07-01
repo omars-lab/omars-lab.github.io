@@ -22,6 +22,14 @@
   overflow: hidden;
   background: var(--surface-page);
   box-shadow: var(--ifm-global-shadow-lw);
+  outline: none;
+}
+/* The deck is keyboard-focusable (tabIndex=0); show a brand focus ring when it holds
+   focus so the reader knows the arrow keys are armed. :focus-visible keeps it off for
+   plain mouse clicks. */
+.reveal:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
 }
 
 /* reveal sets font on .reveal; pin ours so nothing leaks Infima's stack. */
