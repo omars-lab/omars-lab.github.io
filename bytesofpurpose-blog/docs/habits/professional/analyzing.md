@@ -1,5 +1,5 @@
 ---
-slug: /productivity/analyzing
+slug: /professional/analyzing
 title: '🔍 Analysis Techniques'
 description: 'Methods for analyzing data, metrics, and popularity to gain insights and make data-driven decisions.'
 authors: [oeid]
