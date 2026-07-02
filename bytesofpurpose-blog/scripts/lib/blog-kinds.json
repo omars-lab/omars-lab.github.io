@@ -185,6 +185,14 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "reading-list": {
+      "emoji": "🔖",
+      "description": "A curated, annotated list of external resources on a topic (a reading list / link library / 'Resources for X'): grouped links, each with a one-line note on why it is worth your time. The distilled version of a bookmarks pile.",
+      "outline": [
+        {"id": "curated-links", "label": "a grouped list of external links, each with a short annotation (why it is worth reading) — not a bare URL dump"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "showcase": {
       "emoji": "🎛️",
       "description": "A showcase of one structural ABILITY of the blog: an embeddable component or technique (a card, a diagram, a code embed), demonstrated live, with a 'used in' index of the posts that leverage it. Lives in /legend/components (the site's component reference).",
