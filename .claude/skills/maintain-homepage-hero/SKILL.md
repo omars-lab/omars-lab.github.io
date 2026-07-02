@@ -179,6 +179,18 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     The PNG coords are NOT the cause (`validate-arch-assets.js` confirms all scenes conform). It's
     faint, Firefox-only, vigorous-scroll-only; on the default animation house a normal visitor rarely
     triggers it.
+16. **A filled `.studioFacade` background BLEEDS THROUGH the clipped roof triangle's corners.** The
+    `StudioFacade` is `.studioFacade` (container) → `.studioRoof` (a `<div>` clipped to a triangle via
+    `clip-path: polygon(50% 0,100% 100%,0 100%)`) + `.studioBody` (the teal wall). The roof+body FULLY
+    cover the facade (roofH + bodyH ≈ facadeH, body is full-width), so the facade needs NO background of
+    its own — and it must NOT have one, because the roof's transparent triangle CORNERS reveal whatever
+    the facade paints as a RECTANGULAR slab around the triangle ("fill around the triangle / it doesn't
+    look like a triangle"). Light mode leaves `.studioFacade` transparent (clean triangle on the page);
+    a dark-mode `[data-theme='dark'] .studioFacade { background: … }` (added to "tint the dusk wall")
+    re-introduces the slab — WRONG, the teal `.studioBody` already paints the wall in BOTH themes. Fix:
+    keep `.studioFacade` transparent in every theme; tint the WALL on `.studioBody`, never the container.
+    Diagnose by probing `elementsFromPoint` at a roof CORNER (outside the triangle) — if it hits
+    `.studioFacade` with a non-transparent bg, that's the bleed.
 
 ## Verify any change
 

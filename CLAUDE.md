@@ -120,18 +120,22 @@ always-on noise `idea`/`ideas`/`thoughts`, kept in lockstep with `generate-kanba
 
 ## ⚠️ Operating convention: every durable HUB is defined by a (kind, area) in the hub registry
 
-A **hub** is a durable `/craft` index page (`kind: hub` 🗂️) that catalogs the temporal
-`/initiatives` posts of ONE activity kind, grouped by AREA, via a generated `<Catalog>`. The
-frontmatter model: every hub-eligible `/initiatives` post carries `kind:` (the activity —
-`project` 🔨 / `tinkering` 🔧 / `research` 🔬) and `area:` (the domain — `backend`/`frontend`/
-`script`/`plugin`). A hub = "posts of kind X grouped by area"; moving a post between areas is a
-one-field `area:` edit and it re-sorts automatically, so a hub can NEVER drift from the posts it
-indexes. The hubs live under `/craft/software-development/{projects,tinkering,research}`; a
-research post ALSO cards on the existing Research board (the hub is the by-area view, the board the
-by-progress view). The SINGLE REGISTRY of hubs is the **`HUBS` manifest** in
-`bytesofpurpose-blog/scripts/generate-hubs-data.js` (`kind → {out, file, areas}`); the generic
-`<Catalog kind="…"/>` (`src/components/Catalog`) renders one hub from its generated JSON (a
-generated asset — gitignored, wired into `generate-assets`, blocked by the block-generated-edits
+A **hub** is a durable `/craft` index page (`kind: hub` 🗂️) that catalogs posts/docs of ONE kind,
+grouped by AREA, via a generated `<Catalog>`. TWO flavors: **INITIATIVES-sourced** hubs catalog the
+temporal `/initiatives` posts of an ACTIVITY (`project` 🔨 / `tinkering` 🔧 / `research` 🔬) and link
+to the blog; **CRAFT-sourced** hubs catalog durable `/craft` DOCS that STAY in Craft (`pattern` 🧱 =
+how tools compose / `technique` 🔩 = a self-contained how-to) and link in-Craft — a hub declares this
+by setting `source` (a docs dir, scanned recursively) + `base` (its `/craft` URL) in its manifest
+entry. Both use `area:` (the domain — `backend`/`frontend`/`script`/`plugin`) to GROUP; craft cards
+sort A–Z (no date), and `<Catalog>` renders each card's tags as chips. A hub = "entries of kind X
+grouped by area"; moving one between areas is a one-field `area:` edit and it re-sorts automatically,
+so a hub can NEVER drift from what it indexes. The hubs live under
+`/craft/software-development/{projects,tinkering,research,patterns,techniques}`; a research post ALSO
+cards on the existing Research board (the hub is the by-area view, the board the by-progress view).
+The SINGLE REGISTRY of hubs is the **`HUBS` manifest** in
+`bytesofpurpose-blog/scripts/generate-hubs-data.js` (`kind → {out, file, areas, source?, base?}`);
+the generic `<Catalog kind="…"/>` (`src/components/Catalog`) renders one hub from its generated JSON
+(a generated asset — gitignored, wired into `generate-assets`, blocked by the block-generated-edits
 hook). **When you add a hub, add a `HUBS` entry AND a `kind: hub` doc that renders
 `<Catalog kind="…"/>` in the SAME change; when you put a post on a hub, give it the `kind:` + a
 valid `area:`** — this is fail-closed: the PostToolUse `Write|Edit` hook

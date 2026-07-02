@@ -81,8 +81,11 @@ for (const file of listFiles(DOCS_DIR)) {
   hubKindsRendered.add(kind);
 }
 
-// ── 2. Every hub-kind POST: has a valid `area`. ─────────────────────────────────────────────
-for (const file of listFiles(BLOG_DIR)) {
+// ── 2. Every hub-kind POST/DOC: has a valid `area`. ─────────────────────────────────────────
+// Initiatives-sourced hubs (project/tinkering/research) live in blog/; craft-sourced hubs
+// (pattern/technique) live in docs/. Scan both so a hub-kind entry missing/mis-declaring
+// `area:` is caught wherever it lives.
+for (const file of [...listFiles(BLOG_DIR), ...listFiles(DOCS_DIR)]) {
   const r = read(file);
   if (!r) continue;
   const kind = r.fm.kind;
@@ -91,7 +94,7 @@ for (const file of listFiles(BLOG_DIR)) {
   const rel = path.relative(ROOT, file);
   if (!r.fm.area) {
     errors.push(
-      `${rel}: kind: ${kind} post has no \`area:\` — it will not appear on the ${kind} hub. Add area: ${hub.areas.filter((a) => a !== 'other').join('|')}.`,
+      `${rel}: kind: ${kind} entry has no \`area:\` — it will not appear on the ${kind} hub. Add area: ${hub.areas.filter((a) => a !== 'other').join('|')}.`,
     );
   } else if (!hub.areas.includes(r.fm.area)) {
     errors.push(

@@ -16,7 +16,7 @@ workspace together.
 The dated logs for these live on the [Initiatives](/initiatives) blog and are indexed by
 area on the durable hubs:
 
-- **[Projects hub](/software-development/projects)**: the plugins I have built (see the
+- **[Projects hub](/craft/software-development/projects)**: the plugins I have built (see the
   **Plugins** section).
-- **[Tinkering hub](/software-development/tinkering)**: the plugin experiments and first
+- **[Tinkering hub](/craft/software-development/tinkering)**: the plugin experiments and first
   attempts (see the **Plugins** section).
