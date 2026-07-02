@@ -861,11 +861,15 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/software-development/scripting/projects/terminal-links", to: "/initiatives/terminal-links"},
             {from: "/docs/craft/software-development/terminology", to: "/handbook/terminology/building-software"},
             {from: "/docs/craft/software-development/terminology/terminology-portfolio", to: "/handbook/terminology/building-software/architecture"},
-            {from: "/docs/craft/software-development/workspace/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks/setup-machine"},
+            // The setup-machine command dump folded into the Bookmarks page as its
+            // "Machine Setup" section (one task-grouped cheatsheet). Old setup-machine URLs
+            // 301 to the bookmarks page (chain collapsed for the /docs/* redirects too).
+            {from: "/docs/craft/software-development/workspace/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks"},
+            {from: "/craft/software-development/workspace/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks"},
             {from: "/docs/craft/software-development/workspace/setup/running-ha-on-mac-mini", to: "/initiatives/running-ha-on-mac-mini"},
             {from: "/docs/craft/software-development/workspace/tips", to: "/craft/software-development/workspace/tips"},
             {from: "/docs/craft/software-development/workspace/tools", to: "/craft/software-development/workspace/tools"},
-            {from: "/docs/craftsmanship/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks/setup-machine"},
+            {from: "/docs/craftsmanship/bookmarks/setup-machine", to: "/craft/software-development/workspace/bookmarks"},
             {from: "/docs/craftsmanship/processes/my-personal-execution-process", to: "/craft/productivity/processes/process-execution"},
             {from: "/docs/craftsmanship/processes/technical-interview-process-complete-guide", to: "/craft/productivity/processes/process-interview"},
             {from: "/docs/craftsmanship/tips/tips", to: "/craft/software-development/workspace/tips"},

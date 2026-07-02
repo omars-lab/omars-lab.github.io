@@ -1,8 +1,68 @@
 ---
 slug: /software-development/workspace/bookmarks
-title: '🧰 Bookmarks'
-description: 'A curated collection of useful developer bookmarks, tools, references, and resources I return to often.'
+title: '🔖 Bookmarks'
+description: 'The commands and steps I bookmark and return to, grouped by task: setting up a new machine, and more to come.'
 authors: [oeid]
-tags: [bookmarks]
-draft: true
+tags: [bookmarks, commands, setup, machine, brew, jq, nvm, conda]
+draft: false
 ---
+
+# Bookmarks
+
+The commands and steps I reach for again and again, grouped by what they help me do.
+This is a living cheatsheet: each section is one task I keep coming back to, so I do not
+have to rediscover the incantation every time.
+
+## Machine Setup
+
+The commands I run to bring a fresh development machine up to my baseline, roughly in order.
+
+### Core tooling
+
+```bash
+# Homebrew (the package manager everything else installs through)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# The tools I want on every machine
+brew install sshuttle   # transparent proxy over SSH
+brew install jq         # JSON on the command line
+pip install --upgrade pip
+```
+
+### Clone all my repos at once
+
+I keep a per-machine backup of `repo.txt` manifests; this clones every repository listed
+across them into my workspace in one pass:
+
+```bash
+cd /Users/oeid/Workspace/git/environment/backup/C02Q60LHG8WP/repos/
+cat */repo.txt | sort | uniq | xargs -n 1 bash -c 'cd /Users/oeid/Workspace/git && git clone -v ${0}'
+```
+
+### Runtimes & environments
+
+```bash
+# Node version manager
+brew install nvm
+
+# Conda (Python environments)
+brew install --cask miniconda
+```
+
+### Shell plugins to wire up
+
+Oh My Zsh plugins worth enabling once the shell is in place:
+
+- `vi-mode`
+- `zsh-interactive-cd`
+- `zsh-navigation-tools`
+
+```bash
+ls ~/.oh-my-zsh/plugins/   # see what is already available
+```
+
+<!--
+More bookmark sections go here as they accumulate: Git config, SSH keys,
+editor setup, common one-liners. Keep each as its own H2 so this stays a
+scannable, task-grouped cheatsheet.
+-->
