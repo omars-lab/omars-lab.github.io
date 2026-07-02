@@ -22,6 +22,11 @@ technique", "this belongs under Z", "move it up/down a level", "these aren't <to
 re-home you already did now 404s / trips the redirect gate. If the user hasn't decided the target yet
 ("where should this go?"), run **`organize-post`** FIRST — this skill assumes the destination is known.
 
+**Splitting a theme out into its OWN ROOT resource** (a new top-level `/craft`-style instance like
+`/knowledge` or `/habits`) is a level UP from this skill: use **`manage-docs-instances`** for the
+instance registration (the plugin block + navbar + sidebar + the parallel validator lists), then this
+skill for each doc's cross-instance move. If the target is an EXISTING instance, stay here.
+
 ## The move loop (do these in order, every time)
 
 ### 1. `git mv` the file(s) to the new path
