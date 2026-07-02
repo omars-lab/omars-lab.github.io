@@ -7,13 +7,20 @@
  *
  * Mirrors generate-kanban-data.js's BOARDS manifest: the HUBS object below is the SINGLE
  * REGISTRY of hubs. To add a hub, add an entry here (kind + output component + area
- * vocabulary) — no new generator code. Scans blog/ once; a post is catalogued into a hub
- * when its `kind:` matches a hub AND it carries an `area:`.
+ * vocabulary) — no new generator code. A post/doc is catalogued into a hub when its `kind:`
+ * matches a hub AND it carries an `area:`.
+ *
+ * TWO HUB FLAVORS (a hub declares which by whether it sets `source`/`base`):
+ *   • INITIATIVES-sourced (the default) — scans blog/ (one level), links to /initiatives/<slug>.
+ *     project 🔨 / tinkering 🔧 / research 🔬 are these (temporal build/learning logs).
+ *   • CRAFT-sourced (sets `source:` a docs/ dir + `base:` a /craft URL) — scans that dir
+ *     RECURSIVELY, links to the doc's own absolute /craft slug. pattern 🧱 / technique 🔩 are
+ *     these: DURABLE /craft docs that stay in Craft (not dated logs), indexed flatly by area.
  *
  * The frontmatter model (see the manage-hubs skill + the CLAUDE.md "durable hubs"
- * convention): every hub-eligible /initiatives post carries
- *   kind:  project 🔨 | tinkering 🔧 | research 🔬   (the activity — the hub discriminator)
- *   area:  backend | frontend | script | plugin        (the domain — how the hub groups)
+ * convention): every hub-eligible post/doc carries
+ *   kind:  project | tinkering | research | pattern | technique   (the hub discriminator)
+ *   area:  backend | frontend | script | plugin                    (the domain — how it groups)
  * A hub = "posts of kind X, grouped by area". Moving a post between areas = editing `area:`;
  * it re-sorts here automatically, so the hub can never drift from the posts it indexes.
  *
@@ -22,7 +29,8 @@
  *   src/components/<Out>/<name>-data.json   (one per hub, per HUBS[].out)
  *
  * SHAPE per file: { "<area>": [ {slug, title, description, permalink, date, draft, tags} ] }
- *   A post whose `area:` is not in the hub's AREAS lands under "other".
+ *   A post whose `area:` is not in the hub's AREAS lands under "other". Craft-sourced hubs
+ *   have no `date:` — those cards sort alphabetically by title and omit the date line.
  *
  * DRAFTS: unlike the kanban board (which drops drafts because a card links to a prod URL),
  * a hub is a /craft doc that renders in BOTH dev and prod. We KEEP draft entries but MARK
@@ -38,27 +46,50 @@ const ROOT = path.join(__dirname, '..');
 const BLOG_DIR = path.join(ROOT, 'blog');
 const BLOG_BASE = '/initiatives';
 
-// THE HUB REGISTRY. kind = the activity kind that belongs to this hub (the discriminator);
-// out = the component dir under src/components/ that consumes the JSON; file = the JSON
-// name; areas = the ordered area vocabulary (a post's `area:` outside this list -> "other").
+const AREAS = ['frontend', 'backend', 'script', 'plugin', 'other'];
+
+// THE HUB REGISTRY. kind = the activity/doc kind that belongs to this hub (the discriminator);
+// out = the component dir under src/components/ that consumes the JSON; file = the JSON name;
+// areas = the ordered area vocabulary (a post's `area:` outside this list -> "other").
+//
+// A hub is CRAFT-SOURCED when it declares `source` (a docs-relative dir, scanned RECURSIVELY)
+// + `base` (its /craft URL prefix, used to detect the hub's own README); its cards link to each
+// doc's absolute /craft `slug:`. Without `source`/`base` a hub is INITIATIVES-sourced: it scans
+// blog/ (one level) and links to /initiatives/<slug>.
 const HUBS = {
   project: {
     kind: 'project',
     out: 'ProjectsCatalog',
     file: 'projects-data.json',
-    areas: ['frontend', 'backend', 'script', 'plugin', 'other'],
+    areas: AREAS,
   },
   tinkering: {
     kind: 'tinkering',
     out: 'TinkeringCatalog',
     file: 'tinkering-data.json',
-    areas: ['frontend', 'backend', 'script', 'plugin', 'other'],
+    areas: AREAS,
   },
   research: {
     kind: 'research',
     out: 'ResearchCatalog',
     file: 'research-data.json',
-    areas: ['frontend', 'backend', 'script', 'plugin', 'other'],
+    areas: AREAS,
+  },
+  pattern: {
+    kind: 'pattern',
+    out: 'PatternsCatalog',
+    file: 'patterns-data.json',
+    areas: AREAS,
+    source: 'docs/craft/software-development/patterns',
+    base: '/craft/software-development/patterns',
+  },
+  technique: {
+    kind: 'technique',
+    out: 'TechniquesCatalog',
+    file: 'techniques-data.json',
+    areas: AREAS,
+    source: 'docs/craft/software-development/techniques',
+    base: '/craft/software-development/techniques',
   },
 };
 
@@ -67,12 +98,25 @@ const NOISE_TAGS = new Set([
   'development', 'project', 'projects', 'tinkering', 'experiments', 'learning',
 ]);
 
-function listPosts(dir) {
+// List markdown files in `dir`. `recursive` walks sub-folders (for craft-sourced hubs, whose
+// docs may nest, e.g. a series sub-folder); otherwise one level (the flat blog/ dir). Returns
+// paths relative to `dir`. Skips `_`-prefixed files/dirs.
+function listPosts(dir, recursive = false) {
   if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir, {withFileTypes: true})
-    .filter((e) => e.isFile() && /\.mdx?$/.test(e.name) && !e.name.startsWith('_'))
-    .map((e) => e.name);
+  const out = [];
+  for (const e of fs.readdirSync(dir, {withFileTypes: true})) {
+    if (e.name.startsWith('_')) continue;
+    if (e.isDirectory()) {
+      if (recursive) {
+        for (const sub of listPosts(path.join(dir, e.name), true)) {
+          out.push(path.join(e.name, sub));
+        }
+      }
+      continue;
+    }
+    if (e.isFile() && /\.mdx?$/.test(e.name)) out.push(e.name);
+  }
+  return out;
 }
 
 function isoDate(d) {
@@ -92,46 +136,62 @@ function themeTags(tags) {
 // kind -> hubId, for O(1) lookup while scanning.
 const KIND_TO_HUB = Object.fromEntries(Object.entries(HUBS).map(([id, h]) => [h.kind, id]));
 
-function build() {
-  // hubId -> { area -> [] }
-  const out = Object.fromEntries(
-    Object.entries(HUBS).map(([id, h]) => [id, Object.fromEntries(h.areas.map((a) => [a, []]))]),
-  );
+// Scan ONE hub's source dir and bucket its posts/docs by area. A craft-sourced hub (has
+// `source`+`base`) scans that docs dir RECURSIVELY, links to each doc's own absolute /craft
+// `slug:`, and skips the hub's own README (the kind: hub landing is not a card). An
+// initiatives-sourced hub scans blog/ (one level) and links to /initiatives/<slug>.
+function collect(hub) {
+  const craft = Boolean(hub.source);
+  const dir = craft ? path.join(ROOT, hub.source) : BLOG_DIR;
+  // A craft doc's `slug:` is INSTANCE-RELATIVE (e.g. /software-development/patterns/x), but its
+  // published URL carries the instance prefix (/craft/...). That prefix is the first segment of
+  // the hub's `base` (/craft/software-development/patterns -> "craft"). Prepend it to each slug.
+  const instancePrefix = craft ? `/${hub.base.replace(/^\//, '').split('/')[0]}` : '';
+  const byArea = Object.fromEntries(hub.areas.map((a) => [a, []]));
 
-  for (const name of listPosts(BLOG_DIR)) {
+  for (const name of listPosts(dir, craft)) {
     let fm;
     try {
-      fm = matter(fs.readFileSync(path.join(BLOG_DIR, name), 'utf-8')).data || {};
+      fm = matter(fs.readFileSync(path.join(dir, name), 'utf-8')).data || {};
     } catch {
       continue; // unparseable frontmatter — other validators flag it
     }
-    const hubId = fm.kind && KIND_TO_HUB[fm.kind];
-    if (!hubId) continue; // not a hub-kind post
+    if (fm.kind !== hub.kind) continue; // not this hub's kind (e.g. the kind: hub landing)
     if (!fm.area) continue; // hub-kind but no area declared -> not catalogued (validate-hubs warns)
 
-    const hub = HUBS[hubId];
     const area = hub.areas.includes(fm.area) ? fm.area : 'other';
-    const fileSlug = name.replace(/\.(md|mdx)$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+    const fileSlug = path
+      .basename(name)
+      .replace(/\.(md|mdx)$/, '')
+      .replace(/^\d{4}-\d{2}-\d{2}-/, '');
     const slug = (fm.slug || fileSlug).toString().replace(/^\//, '');
+    // Craft docs: prepend the instance prefix to the instance-relative slug. Initiatives posts
+    // get the /initiatives base prepended.
+    const permalink = craft ? `${instancePrefix}/${slug}` : `${BLOG_BASE}/${slug}`;
 
-    out[hubId][area].push({
+    byArea[area].push({
       slug,
       title: (fm.title || fileSlug).toString().replace(/^['"]|['"]$/g, ''),
       description: (fm.description || fm.summary || '').toString(),
-      permalink: `${BLOG_BASE}/${slug}`,
+      permalink,
       date: isoDate(fm.date),
       draft: fm.draft === true,
       tags: themeTags(fm.tags),
     });
   }
 
-  // Newest first within each area (matches the changelog/ideas/kanban convention).
-  for (const areas of Object.values(out)) {
-    for (const list of Object.values(areas)) {
-      list.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-    }
+  // Initiatives cards sort newest-first by date; craft docs have no date -> sort by title.
+  for (const list of Object.values(byArea)) {
+    list.sort((a, b) =>
+      craft ? a.title.localeCompare(b.title) : (b.date || '').localeCompare(a.date || ''),
+    );
   }
-  return out;
+  return byArea;
+}
+
+function build() {
+  // hubId -> { area -> [] }
+  return Object.fromEntries(Object.entries(HUBS).map(([id, hub]) => [id, collect(hub)]));
 }
 
 // Only WRITE the JSON when run directly (`node scripts/generate-hubs-data.js`). When another

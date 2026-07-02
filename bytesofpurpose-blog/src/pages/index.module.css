@@ -1108,13 +1108,11 @@
   .studioSignSwing { animation: none; }
 }
 
-/* Dark theme: deepen the terracotta so the wall reads as warmly-lit at dusk. */
-[data-theme='dark'] .studioFacade {
-  background:
-    radial-gradient(120% 70% at 50% 0%, rgba(217, 164, 65, 0.2) 0%, rgba(217, 164, 65, 0) 55%),
-    linear-gradient(180deg, #6e3a1f 0%, #4a2613 100%);
-  background-color: #4a2613;
-}
+/* Dark theme: the facade CONTAINER background must stay TRANSPARENT. The roof is clipped to a
+   triangle; a filled facade background bleeds THROUGH the triangle's transparent corners as a
+   rectangular slab around the roof (a real dark-mode bug — the light theme leaves it transparent,
+   which is why the triangle reads clean there). The teal `.studioBody` paints the wall in BOTH
+   themes, so the facade needs no fill of its own. Keep it unset (transparent) in dark mode too. */
 
 /* Mobile: keep the board + window side-by-side; give the window a touch more width, shrink the sign. */
 /* MOBILE (≤600px): the 3-arch row + the wide board overflow a phone, so only the left window showed

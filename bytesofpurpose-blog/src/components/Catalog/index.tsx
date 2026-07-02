@@ -5,19 +5,24 @@ import styles from './Catalog.module.css';
 import projectsData from '@site/src/components/ProjectsCatalog/projects-data.json';
 import tinkeringData from '@site/src/components/TinkeringCatalog/tinkering-data.json';
 import researchData from '@site/src/components/ResearchCatalog/research-data.json';
+import patternsData from '@site/src/components/PatternsCatalog/patterns-data.json';
+import techniquesData from '@site/src/components/TechniquesCatalog/techniques-data.json';
 
 /**
  * Catalog — the generic durable HUB index. Renders one hub's data (grouped by area) as
  * area sections of cards. Which hub is chosen by the `kind` prop:
- *   <Catalog kind="project" />   -> Projects hub   (project logs)
- *   <Catalog kind="tinkering" /> -> Tinkering hub  (tinkering logs)
- *   <Catalog kind="research" />  -> Research hub    (learning/research logs)
+ *   <Catalog kind="project" />   -> Projects hub    (project logs, /initiatives)
+ *   <Catalog kind="tinkering" /> -> Tinkering hub   (tinkering logs, /initiatives)
+ *   <Catalog kind="research" />  -> Research hub     (learning/research logs, /initiatives)
+ *   <Catalog kind="pattern" />   -> Patterns hub     (durable /craft architecture docs)
+ *   <Catalog kind="technique" /> -> Techniques hub   (durable /craft how-to docs)
  *
- * The data is generated per hub by scripts/generate-hubs-data.js (from /initiatives posts
- * carrying that `kind:` + an `area:`), so a hub can never drift from the posts it indexes.
+ * The data is generated per hub by scripts/generate-hubs-data.js (from posts/docs carrying
+ * that `kind:` + an `area:`), so a hub can never drift from the entries it indexes. Cards
+ * show the entry's theme tags as chips.
  *
- * PUBLISHED posts link to their /initiatives page; DRAFT posts render muted with an "in
- * progress" badge and NO link (a link to a draft 404s in the prod build).
+ * PUBLISHED entries link to their page; DRAFT entries render muted with an "in progress"
+ * badge and NO link (a link to a draft 404s in the prod build).
  */
 
 interface Entry {
@@ -36,6 +41,8 @@ const DATA: Record<string, HubData> = {
   project: projectsData as HubData,
   tinkering: tinkeringData as HubData,
   research: researchData as HubData,
+  pattern: patternsData as HubData,
+  technique: techniquesData as HubData,
 };
 
 // Reader-facing labels + order for the areas (shared across hubs). Keys must match the
@@ -53,6 +60,15 @@ function EntryCard({entry}: {entry: Entry}): React.JSX.Element {
     <>
       <span className={styles.cardTitle}>{entry.title}</span>
       {entry.description && <span className={styles.cardDesc}>{entry.description}</span>}
+      {entry.tags.length > 0 && (
+        <span className={styles.tags}>
+          {entry.tags.map((tag) => (
+            <span key={tag} className={styles.tagChip}>
+              {tag}
+            </span>
+          ))}
+        </span>
+      )}
       <span className={styles.cardMeta}>
         {entry.draft && <span className={styles.draftBadge}>in progress</span>}
         {entry.date && <span className={styles.date}>{entry.date}</span>}

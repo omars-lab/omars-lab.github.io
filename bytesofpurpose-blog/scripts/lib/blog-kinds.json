@@ -211,10 +211,26 @@
     },
     "hub": {
       "emoji": "🗂️",
-      "description": "A durable /craft HUB: an index page that catalogs temporal /initiatives posts of one activity kind (project/tinkering/research), grouped by AREA, via a generated <Catalog> component. The durable half of the durable-vs-temporal split (a /craft DOC, not a blog post). See the manage-hubs skill.",
+      "description": "A durable /craft HUB: an index page that catalogs posts/docs of one kind (project/tinkering/research from /initiatives, or pattern/technique from /craft), grouped by AREA, via a generated <Catalog> component. The durable half of the durable-vs-temporal split (a /craft DOC, not a blog post). See the manage-hubs skill.",
       "docKind": true,
       "outline": [
         {"id": "catalog", "label": "renders a <Catalog> (the generated hub index — a <Catalog kind=\"…\"/> component tag in the body)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "pattern": {
+      "emoji": "🧱",
+      "description": "A durable /craft ARCHITECTURAL PATTERN: how tools or pieces COMPOSE into a working whole ('X + Y + Z', tool composition, a build pipeline). A return-to /craft DOC indexed by AREA on the Patterns hub via its `area:` frontmatter — not a dated log. See the manage-hubs skill.",
+      "docKind": true,
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "technique": {
+      "emoji": "🔩",
+      "description": "A durable /craft TECHNIQUE: a self-contained how-to method for doing one thing (CI/CD, managing secrets, a security practice). A return-to /craft DOC indexed by AREA on the Techniques hub via its `area:` frontmatter — not a dated log. See the manage-hubs skill.",
+      "docKind": true,
+      "outline": [
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },

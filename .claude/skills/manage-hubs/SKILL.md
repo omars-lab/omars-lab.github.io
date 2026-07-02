@@ -12,16 +12,27 @@ Research are hubs. This skill owns the hub system so it stays drift-free.
 
 ## The model: a hub = (kind, area)
 
-Every hub-eligible `/initiatives` post carries two frontmatter fields:
+Every hub-eligible post/doc carries two frontmatter fields:
 
-- **`kind:`** — the ACTIVITY, and the hub discriminator. `project` 🔨 (a dated build log),
-  `tinkering` 🔧 (exploratory dabbling), `research` 🔬 (learning / to-learn). Source of truth:
-  `bytesofpurpose-blog/scripts/lib/blog-kinds.json`.
+- **`kind:`** — the ACTIVITY/doc type, and the hub discriminator. Source of truth:
+  `bytesofpurpose-blog/scripts/lib/blog-kinds.json`. Two flavors:
+  - **INITIATIVES-sourced** (temporal build/learning logs on the blog): `project` 🔨 (a dated build
+    log), `tinkering` 🔧 (exploratory dabbling), `research` 🔬 (learning / to-learn).
+  - **CRAFT-sourced** (durable `/craft` docs that STAY in Craft, not dated logs): `pattern` 🧱 (how
+    tools COMPOSE — an architecture) and `technique` 🔩 (a self-contained how-to method).
 - **`area:`** — the DOMAIN, and how the hub GROUPS. `backend` / `frontend` / `script` / `plugin`
   (anything else lands under `other`). ONE unified field across all hubs (not per-hub `*_area`).
 
-A hub renders "posts of kind X, grouped by area". Moving a post between areas is a one-field
-`area:` edit; it re-sorts on the hub automatically. So the hub can never drift from its posts.
+A hub renders "posts/docs of kind X, grouped by area". Moving one between areas is a one-field
+`area:` edit; it re-sorts on the hub automatically. So the hub can never drift from its entries.
+
+**Two flavors, one engine.** A hub is CRAFT-sourced when its `HUBS` entry declares `source` (a
+docs-relative dir, scanned RECURSIVELY) + `base` (its `/craft` URL prefix); its cards link to each
+doc's own absolute `/craft` slug (the generator prepends the instance segment, e.g. `/craft`, to the
+instance-relative slug). Without `source`/`base` a hub is INITIATIVES-sourced: it scans `blog/` (one
+level) and links to `/initiatives/<slug>`. Craft docs have no `date:`, so their cards sort
+ALPHABETICALLY by title (initiatives cards sort newest-first). The hub PAGE is a `kind: hub` doc in
+BOTH flavors.
 
 The hub PAGE itself is a `/craft` doc with `kind: hub` 🗂️ that renders `<Catalog kind="…"/>`. It
 gets its 🗂️ sidebar emoji from the kind (the `draft-docs` plugin's docs kind-emoji wiring), so its
@@ -33,39 +44,57 @@ The **`HUBS` manifest** in `bytesofpurpose-blog/scripts/generate-hubs-data.js` i
 hubs. Each entry: `{ kind, out, file, areas }` (the activity kind, the `src/components/<out>` dir
 that holds the generated JSON, the JSON filename, and the ordered area vocabulary).
 
+A CRAFT-sourced entry additionally carries `source` (the docs dir it scans, recursively) + `base`
+(its `/craft` URL prefix).
+
 Current hubs:
 
-| Hub | `kind` | Page | Grouped by |
-|---|---|---|---|
-| Projects | `project` 🔨 | `/craft/software-development/projects` | area |
-| Tinkering | `tinkering` 🔧 | `/craft/software-development/tinkering` | area |
-| Research | `research` 🔬 | `/craft/software-development/research` | area (also cards on the [Research board](/craft/product-management/research) by stage) |
+| Hub | `kind` | Source | Page | Grouped by |
+|---|---|---|---|---|
+| Projects | `project` 🔨 | `blog/` | `/craft/software-development/projects` | area |
+| Tinkering | `tinkering` 🔧 | `blog/` | `/craft/software-development/tinkering` | area |
+| Research | `research` 🔬 | `blog/` | `/craft/software-development/research` | area (also cards on the [Research board](/craft/product-management/research) by stage) |
+| Patterns | `pattern` 🧱 | `docs/craft/.../patterns` | `/craft/software-development/patterns` | area (durable /craft docs; sorted A–Z) |
+| Techniques | `technique` 🔩 | `docs/craft/.../techniques` | `/craft/software-development/techniques` | area (durable /craft docs; sorted A–Z) |
 
 ## The machinery
 
-- **Generator** `scripts/generate-hubs-data.js` — scans `blog/` once, buckets each hub-kind post
-  into `HUBS[kind].out/<file>` by its `area`. A generated asset: gitignored, wired into
-  `npm run generate-assets`, and blocked by `.claude/hooks/block-generated-edits.sh`. Requiring the
-  module (for the manifest) does NOT regenerate — the write is guarded by `require.main === module`.
+- **Generator** `scripts/generate-hubs-data.js` — for each hub, scans its source (an initiatives hub
+  scans `blog/` one level; a craft hub scans its `source` dir RECURSIVELY, skipping `_`-prefixed
+  files AND the hub's own `README`), buckets each hub-kind entry into `HUBS[kind].out/<file>` by its
+  `area`. Craft permalinks prepend the instance segment to the doc's slug; craft cards sort A–Z (no
+  date). A generated asset: gitignored, wired into `npm run generate-assets`, and blocked by
+  `.claude/hooks/block-generated-edits.sh`. Requiring the module (for the manifest) does NOT
+  regenerate — the write is guarded by `require.main === module`.
 - **Component** `src/components/Catalog` — the generic `<Catalog kind="…"/>`. Imports each hub's
-  JSON, groups by `AREA_META`, links published posts and renders drafts muted ("in progress", no
-  link — a link to a draft 404s in prod). Registered in `src/theme/MDXComponents.tsx`.
+  JSON, groups by `AREA_META`, renders each card's title/description + its theme **tags as chips**
+  (mint pastel fill + `--tea-ink`), links published entries and renders drafts muted ("in progress",
+  no link — a link to a draft 404s in prod). Registered in `src/theme/MDXComponents.tsx`.
 - **Validator** `scripts/validate-hubs.js` (`make validate-hubs`) — ERRORS when a `kind: hub` doc
-  renders no `<Catalog>` / an unregistered kind, or a hub-kind post has a missing/invalid `area:`.
-  Orphan hub kinds (registered, unrendered) warn. The warn-tier PostToolUse hook
+  renders no `<Catalog>` / an unregistered kind, or a hub-kind entry has a missing/invalid `area:`.
+  It scans BOTH `blog/` (initiatives hubs) and `docs/` (craft hubs) for hub-kind entries needing an
+  `area`. Orphan hub kinds (registered, unrendered) warn. The warn-tier PostToolUse hook
   `.claude/hooks/validate-hubs-hook.sh` runs it on a `/craft` doc or `blog/` post edit.
 
 ## Add a NEW hub
 
-1. Add an entry to the `HUBS` manifest in `generate-hubs-data.js` (`kind`, `out`, `file`, `areas`).
-2. If the activity `kind` is new, add it to `scripts/lib/blog-kinds.json` (emoji + outline) — and a
-   `catalog`/`description` outline for `kind: hub` is already enforced on docs.
-3. Add the generated JSON path to `.gitignore` and the `block-generated-edits.sh` case.
+1. Add an entry to the `HUBS` manifest in `generate-hubs-data.js` (`kind`, `out`, `file`, `areas`;
+   for a CRAFT-sourced hub also `source` = the docs dir it scans + `base` = its `/craft` URL prefix).
+2. If the `kind` is new, add it to `scripts/lib/blog-kinds.json` (emoji + outline; a craft-source doc
+   kind is `docKind: true`) — and a `catalog`/`description` outline for `kind: hub` is already enforced.
+3. Add the generated JSON path to `.gitignore` and the `block-generated-edits.sh` case (+ import it in
+   `src/components/Catalog/index.tsx` and register the `kind` in its `DATA` map).
 4. Create the hub doc `docs/craft/.../<hub>/README.md` (`kind: hub`, absolute `slug:`,
    `_category_.json`, a `description:`, and `<Catalog kind="…"/>` in the body). No leading title
    emoji (the kind supplies 🗂️).
 5. `make generate-assets` (writes the new JSON so the `<Catalog>` import resolves), then
    `make validate-hubs` + build + a visual + mobile pass on the new hub.
+
+For a CRAFT hub, its entry docs are durable `/craft` docs (NOT moved to `blog/`): give each `kind:`
+(pattern/technique) + `area:` + tags, and put it FLAT under the hub's `source` dir. A doc MOVED into
+a craft hub from another `/craft` path needs a `{from,to}` redirect (published docs only), and any
+EXISTING redirect whose `to:` pointed at the old path must be repointed to the new one (collapse the
+chain — `validate-redirects` catches it).
 
 ## Put a POST on a hub (or re-home one)
 
@@ -100,11 +129,14 @@ add the redirect when the post is published. Then `make generate-assets` + `make
 | Editing the hub's `*-data.json` is blocked | it's a GENERATED asset (gitignored, hook-blocked) | edit the POSTS' `kind`/`area` frontmatter (or the `HUBS` manifest) and `make generate-assets`; never hand-edit the JSON. |
 | Requiring `generate-hubs-data.js` regenerated the JSON as a side effect | the write must be guarded | the write is already wrapped in `require.main === module`; importers get only `{HUBS, build}`. Keep that guard if you edit the generator. |
 | A `git mv` into `blog/` mangled an emoji title | a `gray-matter` reserialize escaped the emoji (`\U0001F528`) | reshape the frontmatter with SURGICAL line edits (rewrite only the changed keys), never a full parse-and-reserialize. |
-| A published post moved to a hub 404s at its old `/craft` URL | the move needs a redirect (only PUBLISHED posts) | add a `{from: old /craft slug, to: /initiatives/<slug>}` redirect; drafts need none (no public URL, and the redirect gate rejects a draft target). |
+| A published post moved to a hub 404s at its old `/craft` URL | the move needs a redirect (only PUBLISHED posts) | add a `{from: old /craft slug, to: <new URL>}` redirect; drafts need none (no public URL, and the redirect gate rejects a draft target). |
+| A craft-hub card links to a URL missing the `/craft` prefix (404) | the permalink didn't prepend the instance segment to the instance-relative `slug:` | the generator derives the prefix from the hub's `base` (first path segment); ensure the craft hub declares `base:` `/craft/…` and the doc's `slug:` is the instance-relative absolute slug. |
+| A craft-hub card is missing though the doc has `kind:`+`area:` | the doc is the hub's own `README` (skipped), or sits outside the hub's `source` dir | put the doc FLAT under `source`; the `README` is the `kind: hub` landing, not a card. |
 
 ## Files this skill owns
 
-`scripts/generate-hubs-data.js` (registry + generator), `src/components/Catalog` (component),
-`scripts/validate-hubs.js` + `.claude/hooks/validate-hubs-hook.sh` + `make validate-hubs` (the
-gate), the `hub`/`project`/`tinkering` kinds in `scripts/lib/blog-kinds.json`, and the hub docs
-under `docs/craft/software-development/{projects,tinkering,research}`.
+`scripts/generate-hubs-data.js` (registry + generator), `src/components/Catalog` (component +
+tag chips), `scripts/validate-hubs.js` + `.claude/hooks/validate-hubs-hook.sh` + `make validate-hubs`
+(the gate), the `hub`/`project`/`tinkering`/`research`/`pattern`/`technique` kinds in
+`scripts/lib/blog-kinds.json`, and the hub docs under
+`docs/craft/software-development/{projects,tinkering,research,patterns,techniques}`.
