@@ -102,6 +102,29 @@ function migratedUrlsFromBlock(block) {
   return urls;
 }
 
+/** A stable idempotency key for a moved NON-LINK content blob (whitespace-collapsed). */
+function contentKey(content) {
+  return String(content).replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/** Extract the moved NON-LINK content already recorded (code-span source cells) for idempotency. */
+function migratedContentFromBlock(block) {
+  if (!block) return new Set();
+  const keys = new Set();
+  for (const line of block.split('\n')) {
+    const cells = line.split('|').map((c) => c.trim());
+    if (cells.length < 5) continue;
+    // A non-link source cell is a code span: `…content…` (no markdown link).
+    const cm = cells[1] && cells[1].match(/^`(.+)`$/);
+    if (cm && !/\]\(/.test(cells[1])) {
+      // Undo the newline placeholder + backtick escaping we render with.
+      const restored = cm[1].replace(/ ⏎ /g, ' ').replace(/ˋ/g, '`');
+      keys.add(contentKey(restored));
+    }
+  }
+  return keys;
+}
+
 // ---------------------------------------------------------------------------
 // --inventory
 // ---------------------------------------------------------------------------
@@ -207,29 +230,74 @@ function cell(value) {
 }
 
 /**
- * Render a single table row. A record is { link, url, blogUrl, kind, date }.
- *  - link/url describe the SOURCE (either a label + url, or just a section name).
- *  - blogUrl is the destination on the blog.
+ * Derive a Docusaurus heading anchor from a section heading's TEXT — the slug it
+ * generates for `## Some Heading` (lower-case, spaces→hyphens, punctuation
+ * dropped). So `section: "LLM architecture"` → `#llm-architecture`, letting a
+ * migration row deep-link to the exact section the content landed in.
+ */
+function anchorSlug(heading) {
+  return String(heading)
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // drop punctuation (keep word chars, spaces, hyphens)
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** The destination cell value: blogUrl, deep-linked to #section-anchor when a section is given. */
+function destination(rec) {
+  if (!rec.blogUrl) return '';
+  if (rec.section && !rec.blogUrl.includes('#')) {
+    return `${rec.blogUrl}#${anchorSlug(rec.section)}`;
+  }
+  return rec.blogUrl;
+}
+
+/**
+ * Render the SOURCE cell (the first column) of a migration row.
+ *  - A LINK migration → `[text](url)` (or a bare `<url>`).
+ *  - A NON-LINK migration (a tip, a note, a structured block — no `url`) → the
+ *    moved content itself as an inline code span, so the note records WHAT was
+ *    moved, not just that something was. Newlines in the content become ` ⏎ ` so
+ *    it stays one table cell; the code span keeps it visually distinct.
+ */
+function sourceCell(rec) {
+  if (rec.url && rec.link) return `[${cell(rec.link)}](${rec.url})`;
+  if (rec.url) return `<${rec.url}>`;
+  if (rec.content) {
+    const oneLine = String(rec.content).replace(/\r?\n/g, ' ⏎ ').replace(/`/g, 'ˋ').trim();
+    return '`' + cell(oneLine) + '`';
+  }
+  return cell(rec.link || rec.section || '(section)');
+}
+
+/**
+ * Render a single table row. A record is { link, url, content, blogUrl, section, kind, date }.
+ *  - link/url describe a LINK source; `content` is a NON-LINK source (rendered as
+ *    a code span in the source cell instead of a link).
+ *  - blogUrl is the destination doc; `section` (optional) is the destination
+ *    doc's HEADING, rendered as a `#anchor` deep link so the row points at the
+ *    exact section the content became.
  */
 function renderRow(rec) {
-  const label =
-    rec.url && rec.link
-      ? `[${cell(rec.link)}](${rec.url})`
-      : rec.url
-        ? `<${rec.url}>`
-        : cell(rec.link || rec.section || '(section)');
-  return `| ${label} | ${cell(rec.blogUrl)} | ${cell(rec.kind)} | ${cell(rec.date)} |`;
+  return `| ${sourceCell(rec)} | ${cell(destination(rec))} | ${cell(rec.kind)} | ${cell(rec.date)} |`;
 }
 
 function appendMigration(file, records) {
   const original = readFileUtf8(file);
   const { body, block } = splitAtMarker(original);
 
-  // Idempotency: skip records whose source url OR blogUrl is already recorded.
+  // Idempotency: the SOURCE url is the primary key — a link migrated once is not
+  // migrated again (even if it now points at a different section). Fall back to the
+  // full rendered destination (blogUrl#anchor) for section-only rows that have no
+  // source url.
   const existing = migratedUrlsFromBlock(block);
+  const existingContent = migratedContentFromBlock(block);
   const fresh = records.filter((r) => {
     if (r.url && existing.has(r.url)) return false;
-    if (r.blogUrl && existing.has(r.blogUrl)) return false;
+    if (!r.url && r.content && existingContent.has(contentKey(r.content))) return false;
+    if (!r.url && !r.content && existing.has(destination(r))) return false;
     return true;
   });
 
@@ -240,25 +308,44 @@ function appendMigration(file, records) {
   if (block === null) {
     // Create the block. The body is preserved byte-exact; the block owns its
     // leading `\n\n` separator so verify sees the body unchanged.
-    const newBlock =
-      '\n\n' +
-      SENTINEL +
-      '\n' +
-      MARKER +
-      '\n\n' +
-      TABLE_HEADER +
-      '\n' +
-      TABLE_DIVIDER +
-      '\n' +
-      fresh.map(renderRow).join('\n') +
-      '\n';
-    return { changed: true, added: fresh.length, content: body + newBlock };
+    return { changed: true, added: fresh.length, content: body + buildBlock(fresh) };
   }
 
   // Extend the existing block: append rows after the last table row.
   const trimmed = block.replace(/\s+$/, '');
   const newBlock = trimmed + '\n' + fresh.map(renderRow).join('\n') + '\n';
   return { changed: true, added: fresh.length, content: body + newBlock };
+}
+
+/** Build the full managed block (separator + sentinel + table) from a record list. */
+function buildBlock(records) {
+  return (
+    '\n\n' +
+    SENTINEL +
+    '\n' +
+    MARKER +
+    '\n\n' +
+    TABLE_HEADER +
+    '\n' +
+    TABLE_DIVIDER +
+    '\n' +
+    records.map(renderRow).join('\n') +
+    '\n'
+  );
+}
+
+/**
+ * REBUILD the entire managed table from a fresh record list. Unlike append (which
+ * only adds), this REPLACES every row below the sentinel — use it to REPOINT rows
+ * when destinations change (e.g. a link now fans out to a different doc/section).
+ * Still fully non-destructive: only the block below the sentinel is rewritten; the
+ * user's body above it is preserved byte-for-byte (assertNonDestructive proves it).
+ */
+function rebuildMigration(file, records) {
+  const original = readFileUtf8(file);
+  const { body } = splitAtMarker(original);
+  const content = body + buildBlock(records);
+  return { changed: true, added: records.length, content };
 }
 
 /**
@@ -420,8 +507,10 @@ function main() {
   }
 
   const appendFile = getFlag(argv, '--append-migration');
-  if (appendFile) {
-    const abs = path.resolve(appendFile);
+  const rebuildFile = getFlag(argv, '--rebuild-migration');
+  if (appendFile || rebuildFile) {
+    const isRebuild = Boolean(rebuildFile);
+    const abs = path.resolve(appendFile || rebuildFile);
     const recordsArg = getFlag(argv, '--records');
     const recordsFile = getFlag(argv, '--records-file');
     let records;
@@ -430,16 +519,18 @@ function main() {
     } else if (recordsArg) {
       records = JSON.parse(recordsArg);
     } else {
-      console.error('--append-migration requires --records <json> or --records-file <path>');
+      console.error(
+        `${isRebuild ? '--rebuild-migration' : '--append-migration'} requires --records <json> or --records-file <path>`
+      );
       process.exit(2);
     }
     if (!Array.isArray(records)) records = [records];
-    const result = appendMigration(abs, records);
+    const result = isRebuild ? rebuildMigration(abs, records) : appendMigration(abs, records);
     const dryRun = argv.includes('--dry-run');
     if (dryRun) {
       process.stdout.write(result.content);
       console.error(
-        `\n[dry-run] would ${result.changed ? `add ${result.added} row(s)` : 'make NO change'}.`
+        `\n[dry-run] would ${isRebuild ? `rebuild the table with ${result.added} row(s)` : result.changed ? `add ${result.added} row(s)` : 'make NO change'}.`
       );
       return;
     }
@@ -447,7 +538,9 @@ function main() {
       // Fail-closed: never write unless the original body is preserved byte-exact.
       assertNonDestructive(readFileUtf8(abs), result.content);
       fs.writeFileSync(abs, result.content);
-      console.error(`Appended ${result.added} migration row(s) to ${path.basename(abs)}.`);
+      console.error(
+        `${isRebuild ? 'Rebuilt' : 'Appended'} ${result.added} migration row(s) ${isRebuild ? 'in' : 'to'} ${path.basename(abs)}.`
+      );
     } else {
       console.error('No new rows to append (all records already migrated).');
     }
@@ -522,6 +615,7 @@ function main() {
       '  node import-noteplan.js --inventory <file>',
       '  node import-noteplan.js --append-migration <file> --records <json> [--dry-run]',
       '  node import-noteplan.js --append-migration <file> --records-file <path> [--dry-run]',
+      '  node import-noteplan.js --rebuild-migration <file> --records-file <path> [--dry-run]',
       '  node import-noteplan.js --verify <file> --baseline <pre-migration-copy>',
       '  node import-noteplan.js --snapshot <folder> --out <manifest.json>',
       '  node import-noteplan.js --audit <folder> --baseline <manifest.json>',
@@ -541,6 +635,12 @@ module.exports = {
   snapshot,
   audit,
   tallyFile,
+  rebuildMigration,
+  anchorSlug,
+  destination,
+  sourceCell,
+  renderRow,
+  contentKey,
   MARKER,
   SENTINEL,
 };

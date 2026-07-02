@@ -193,6 +193,14 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "tips": {
+      "emoji": "📌",
+      "description": "A collection of practical tips / rules of thumb on a topic ('Tips for X', 'X Tips and Tricks'): short, actionable pointers grouped by theme, each standing on its own. The distilled operating wisdom.",
+      "outline": [
+        {"id": "tip-sections", "label": "tips grouped into H2/H3 sections, each a short actionable pointer (a list or a titled block) — not one long essay"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "showcase": {
       "emoji": "🎛️",
       "description": "A showcase of one structural ABILITY of the blog: an embeddable component or technique (a card, a diagram, a code embed), demonstrated live, with a 'used in' index of the posts that leverage it. Lives in /legend/components (the site's component reference).",

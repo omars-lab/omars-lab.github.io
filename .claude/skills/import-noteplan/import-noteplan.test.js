@@ -88,12 +88,14 @@ test('idempotent: re-append same record adds nothing', () => {
   assert.strictEqual(second.changed, false, 'no change on re-run');
   assert.strictEqual(second.added, 0);
 });
-test('dedup by blogUrl too', () => {
+test('two DIFFERENT source links to the same doc both migrate (source url is the key)', () => {
   const { p } = tmp(SAMPLE);
   const first = M.appendMigration(p, [{ link: 'A', url: 'https://a', blogUrl: 'https://blog.x/same', kind: 'k', date: 'd' }]);
   fs.writeFileSync(p, first.content);
+  // A different source link landing on the same doc is NOT a dup — two articles
+  // can share a section. Dedup is by SOURCE url, not destination.
   const second = M.appendMigration(p, [{ link: 'B', url: 'https://b', blogUrl: 'https://blog.x/same', kind: 'k', date: 'd' }]);
-  assert.strictEqual(second.added, 0, 'same blogUrl is a dup');
+  assert.strictEqual(second.added, 1, 'distinct source url → fresh, even to the same doc');
 });
 
 console.log('verify');
@@ -122,6 +124,81 @@ test('assertNonDestructive throws when body would change', () => {
       `orig=${JSON.stringify(orig)} should preserve body`
     );
   }
+});
+
+console.log('section anchors (deep-link destinations)');
+test('anchorSlug matches Docusaurus heading slugs', () => {
+  assert.strictEqual(M.anchorSlug('LLM architecture'), 'llm-architecture');
+  assert.strictEqual(M.anchorSlug('AWS and cloud AI: Amazon Q'), 'aws-and-cloud-ai-amazon-q');
+  assert.strictEqual(M.anchorSlug('Good watches'), 'good-watches');
+});
+test('destination deep-links to #section when given', () => {
+  assert.strictEqual(
+    M.destination({ blogUrl: 'https://b/x', section: 'LLM architecture' }),
+    'https://b/x#llm-architecture'
+  );
+  // no section → plain doc url
+  assert.strictEqual(M.destination({ blogUrl: 'https://b/x' }), 'https://b/x');
+  // already-anchored blogUrl is left as-is
+  assert.strictEqual(
+    M.destination({ blogUrl: 'https://b/x#already', section: 'Ignore' }),
+    'https://b/x#already'
+  );
+});
+test('renderRow puts the deep link in the destination cell', () => {
+  const row = M.renderRow({ link: 'Raschka', url: 'https://u', blogUrl: 'https://b/rl', section: 'LLM architecture', kind: 'reading-list', date: 'd' });
+  assert.ok(row.includes('https://b/rl#llm-architecture'), row);
+});
+test('fan-out: same file, different docs, source-url dedup holds', () => {
+  const { p } = tmp(SAMPLE);
+  // First link → reading list; second → good-watches. Both fresh.
+  const r1 = M.appendMigration(p, [{ link: 'A Talk', url: 'https://youtu.be/abc', blogUrl: 'https://b/watches', section: 'Talks', kind: 'reading-list', date: 'd' }]);
+  fs.writeFileSync(p, r1.content);
+  const r2 = M.appendMigration(p, [{ link: 'Repo', url: 'https://github.com/o/r', blogUrl: 'https://b/reading', section: 'Tools', kind: 'reading-list', date: 'd' }]);
+  fs.writeFileSync(p, r2.content);
+  assert.strictEqual(r2.added, 1, 'a different source link to a different doc is fresh');
+  // Re-adding the first source url (even to a new doc) is a dup — migrated once.
+  const r3 = M.appendMigration(p, [{ link: 'A Talk', url: 'https://youtu.be/abc', blogUrl: 'https://b/OTHER', kind: 'reading-list', date: 'd' }]);
+  assert.strictEqual(r3.added, 0, 'source url already migrated → skipped');
+});
+
+console.log('non-link content migrations (code-span cells)');
+test('a non-link record renders content as a code span, not a link', () => {
+  const row = M.renderRow({ content: '# Claude.md\n* Mental models\n* Tenets', blogUrl: 'https://b/tips', section: 'What belongs in a CLAUDE.md', kind: 'tips', date: 'd' });
+  assert.ok(/\|\s*`[^|]*Mental models[^|]*`\s*\|/.test(row), 'source cell is a code span: ' + row);
+  assert.ok(!/\]\(/.test(row.split('|')[1]), 'no markdown link in the source cell');
+  assert.ok(row.includes('https://b/tips#what-belongs-in-a-claudemd'), 'deep link destination: ' + row);
+});
+test('non-link content dedups by content key', () => {
+  const { p } = tmp(SAMPLE);
+  const rec = [{ content: 'a tip about caching', blogUrl: 'https://b/tips', kind: 'tips', date: 'd' }];
+  const first = M.appendMigration(p, rec);
+  fs.writeFileSync(p, first.content);
+  const second = M.appendMigration(p, [{ content: 'A TIP about   caching', blogUrl: 'https://b/tips', kind: 'tips', date: 'd' }]);
+  assert.strictEqual(second.added, 0, 'same content (whitespace/case-insensitive) is a dup');
+});
+test('non-link content preserves the non-destructive prefix', () => {
+  const { p } = tmp(SAMPLE);
+  const before = fs.readFileSync(p);
+  const res = M.appendMigration(p, [{ content: '# Claude.md tip', blogUrl: 'https://b/tips', kind: 'tips', date: 'd' }]);
+  assert.ok(Buffer.from(res.content, 'utf8').subarray(0, before.length).equals(before));
+});
+
+console.log('rebuild (repoint the whole table, non-destructive)');
+test('rebuild replaces all rows but preserves the body prefix', () => {
+  const { p } = tmp(SAMPLE);
+  const before = fs.readFileSync(p);
+  // seed with a row pointing at doc A
+  const seeded = M.appendMigration(p, [{ link: 'A Talk', url: 'https://youtu.be/abc', blogUrl: 'https://b/reading', kind: 'reading-list', date: 'd' }]);
+  fs.writeFileSync(p, seeded.content);
+  // rebuild: same link now points at doc B (watches) with a section anchor
+  const rebuilt = M.rebuildMigration(p, [{ link: 'A Talk', url: 'https://youtu.be/abc', blogUrl: 'https://b/watches', section: 'Talks', kind: 'reading-list', date: 'd' }]);
+  assert.ok(Buffer.from(rebuilt.content, 'utf8').subarray(0, before.length).equals(before), 'body prefix preserved');
+  assert.ok(rebuilt.content.includes('https://b/watches#talks'), 'repointed to new dest');
+  assert.ok(!rebuilt.content.includes('https://b/reading'), 'old dest is gone (replaced, not appended)');
+  // exactly one data row
+  const rows = rebuilt.content.split('\n').filter((l) => l.startsWith('|') && l.includes(']('));
+  assert.strictEqual(rows.length, 1, 'table fully rebuilt, not accumulated');
 });
 
 console.log('snapshot / audit (corpus no-drop)');
