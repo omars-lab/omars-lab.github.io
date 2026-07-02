@@ -35,6 +35,7 @@ const DOCS_INSTANCES = [
   {dir: 'docs/craft', base: '/craft'},
   {dir: 'docs/journey', base: '/journey'},
   {dir: 'docs/handbook', base: '/handbook'},
+  {dir: 'docs/knowledge', base: '/knowledge'},
 ];
 const BLOG_INSTANCES = [
   {dir: 'blog', base: '/initiatives'},
@@ -74,8 +75,9 @@ function permalinkFor(file, data, base, isBlog) {
     const fileSlug = path.basename(file).replace(/\.(md|mdx)$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '');
     return `${base}/${(data.slug || fileSlug).toString().replace(/^\//, '')}`;
   }
-  // docs path-derived
-  const instDir = base === '/craft' ? 'docs/craft' : base === '/journey' ? 'docs/journey' : 'docs/handbook';
+  // docs path-derived: look the base up in DOCS_INSTANCES (so a NEW instance can't be silently
+  // misrouted to docs/handbook, the old ternary's fallthrough bug).
+  const instDir = (DOCS_INSTANCES.find((i) => i.base === base) || {}).dir;
   const rel = path.relative(path.join(ROOT, instDir), file).replace(/\.mdx?$/, '');
   const segs = rel.split(path.sep).filter((s) => !/^README$|^index$/i.test(s));
   return [base, ...segs].filter(Boolean).join('/');
