@@ -86,6 +86,22 @@ add the redirect when the post is published. Then `make generate-assets` + `make
 - **`plugin` area, `plugins` topic.** A plugin build log is `area: plugin` on a hub; the `/craft`
   `plugins` topic keeps a landing README that points at the plugin-area entries on the hubs.
 
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| A post you moved isn't on its hub | the post has no `area:` (or an `area:` outside the hub's list, so it fell into `other`) | add a valid `area:` (`backend`/`frontend`/`script`/`plugin`); `make validate-hubs` names the exact file. |
+| `make validate-hubs` errors "renders no `<Catalog>`" | a `kind: hub` doc whose body has no `<Catalog kind="…"/>` | add the `<Catalog kind="…"/>` tag (a hub page's whole job is to render one). |
+| `make validate-hubs` errors "names a kind with no HUBS entry" | `<Catalog kind="X"/>` where `X` isn't in the `HUBS` manifest | add the hub to `HUBS` in `generate-hubs-data.js`, or fix the kind in the tag. |
+| Build fails: cannot resolve `./…-data.json` in `Catalog` | the hub's generated JSON was never written (fresh checkout, no `generate-assets` run) | `make generate-assets` (the generator always writes every hub's JSON, empty if no posts). |
+| A draft research post is on the hub but NOT the Research board | by design: a hub keeps drafts (shown muted, unlinked); the kanban board drops them (a card links to a prod URL) | none — it cards on the board once the post is `draft: false`. |
+| The hub doc's sidebar entry shows no 🗂️ emoji | the doc's `title:`/`sidebar_label:` already starts with an emoji (the plugin won't double-prefix), or the doc lacks `kind: hub` | remove the hand-typed leading emoji from the title (the kind supplies 🗂️), and confirm `kind: hub`. |
+| `validate-docs-structure` warns the hub title lacks a leading emoji | stale checkout without the docs-kind exemption, or the doc has no known `kind:` | ensure `kind: hub` is set; the structure validator exempts a kind-carrying doc (its emoji is prepended at runtime). |
+| Editing the hub's `*-data.json` is blocked | it's a GENERATED asset (gitignored, hook-blocked) | edit the POSTS' `kind`/`area` frontmatter (or the `HUBS` manifest) and `make generate-assets`; never hand-edit the JSON. |
+| Requiring `generate-hubs-data.js` regenerated the JSON as a side effect | the write must be guarded | the write is already wrapped in `require.main === module`; importers get only `{HUBS, build}`. Keep that guard if you edit the generator. |
+| A `git mv` into `blog/` mangled an emoji title | a `gray-matter` reserialize escaped the emoji (`\U0001F528`) | reshape the frontmatter with SURGICAL line edits (rewrite only the changed keys), never a full parse-and-reserialize. |
+| A published post moved to a hub 404s at its old `/craft` URL | the move needs a redirect (only PUBLISHED posts) | add a `{from: old /craft slug, to: /initiatives/<slug>}` redirect; drafts need none (no public URL, and the redirect gate rejects a draft target). |
+
 ## Files this skill owns
 
 `scripts/generate-hubs-data.js` (registry + generator), `src/components/Catalog` (component),
