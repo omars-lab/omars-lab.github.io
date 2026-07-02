@@ -25,6 +25,8 @@ posts worth the time. A living list.
 - [Discovering and installing Claude Code plugins from marketplaces](https://code.claude.com/docs/en/discover-plugins)
 - [Connecting Claude Code to external tools via Model Context Protocol](https://code.claude.com/docs/en/mcp)
 
+- [How Anthropic teams use Claude Code for debugging, codebase navigation, and automation](https://claude.com/blog/how-anthropic-teams-use-claude-code) - Real internal workflows from the team that builds it.
+
 ## Agent development and frameworks
 
 - [Don't Build Agents, Build Skills Instead (YouTube, 2025-12-08)](https://youtu.be/CEvIs9y1uog) - Argues that Skills are the solution for packaging procedural knowledge that agents can dynamically load. Covers minimal form factor for portable, composable expertise and network effects of skill-based agents.
@@ -44,6 +46,9 @@ posts worth the time. A living list.
 - [Kiro CLI: agent configuration file reference for custom agents](https://kiro.dev/docs/cli/custom-agents/configuration-reference/)
 - [Prompt Caching Deep Dive](https://sankalp.bearblog.dev/how-prompt-caching-works/) - Technical explanation of how prompt caching works in LLM systems
 - [Awesome Security Hardening](https://github.com/decalage2/awesome-security-hardening) - Curated list of security hardening resources and best practices
+
+- [Evaluating AGENTS.md: whether repo-level context files help coding agents](https://arxiv.org/html/2602.11988v1) - A study on whether the context files we all write actually move the needle.
+- [Monitoring Azure OpenAI abuse via compromised API keys and model poisoning](https://redcanary.com/blog/threat-detection/azure-openai-abuse/) - The security side of running LLMs in production.
 
 ## Productivity and workflows
 
@@ -104,6 +109,38 @@ posts worth the time. A living list.
 - [Amazon Q Demos in 6 minutes (YouTube, 2024-04-10)](https://www.youtube.com/watch?v=-6AH74XD5M4) - Quick tour covering Q Business (chat, file interaction, data source connections) and Q Developer tools (code optimization, documentation for migration/modernization).
 - [Best Practices for GenAI Applications on AWS - Model Selection (Part 1) (YouTube, 2023-11-10)](https://www.youtube.com/watch?v=WEKTpzvJiec) - Best practice approach for arriving at the right model for a given GenAI use case. Part of multi-part series on building robust GenAI applications.
 
+## LLM architecture and agent reliability
+
+The reads that reshaped how I think about the field, kept as cards with the line that stuck and my note on why.
+
+<QuoteSet>
+
+<EditorialQuote source="Sebastian Raschka" reflection="His companion article covers 10 architectures released in January and February 2026 alone. The takeaway most people miss: performance correlates more with dataset quality and training recipes than architecture design. The field is converging on similar transformer variants. The differentiation is in the data.">
+Every major LLM architecture visualized side by side, with fact sheets.
+</EditorialQuote>
+
+[LLM Architecture Gallery with visual fact sheets](https://lnkd.in/gCNdCaEC)
+
+<EditorialQuote reflection="Agents operate in dynamic environments, take multi-step actions, and fail in ways that text generation benchmarks cannot capture. If you are building agents and still evaluating them like chatbots, start here.">
+The clearest explanation I have read of why traditional LLM benchmarks break down when you evaluate agents.
+</EditorialQuote>
+
+[A Hitchhiker's Guide to Agent Evaluation (ICLR 2026): why LLM benchmarks break for multi-step agents](https://lnkd.in/g6ecwQZw)
+
+<EditorialQuote source="Simon Willison" reflection="Not theory. Patterns from daily use of Claude Code and OpenAI Codex. His blog (simonwillison.net) is one of the most information-dense practitioner resources in the field.">
+Coding practices for building software with coding agents.
+</EditorialQuote>
+
+[Agentic Engineering Patterns from daily Claude Code and Codex use](https://lnkd.in/gMTP_7vG)
+
+<EditorialQuote source="Towards a Science of AI Agent Reliability" reflection="Borrowed from safety-critical engineering. Related benchmark research shows GPT-4o agents achieve 60% success on a single run but just 25% across eight consecutive runs. Reliability degrades with repetition.">
+Twelve metrics across four dimensions: consistency, robustness, predictability, safety.
+</EditorialQuote>
+
+[12 metrics across consistency, robustness, predictability, safety](https://lnkd.in/gzXSN3uB)
+
+</QuoteSet>
+
 ## GenAI tools and apps
 
 - [Supabase pricing: free plan and pay-as-you-go tiers](https://supabase.com/pricing)
@@ -122,5 +159,6 @@ posts worth the time. A living list.
 
 - [MAS-Orchestra: improving multi-agent reasoning via holistic orchestration and benchmarks](https://arxiv.org/abs/2601.14652)
 - [madewithclaude/awesome-claude-artifacts: curated list of Claude Artifacts examples](https://github.com/madewithclaude/awesome-claude-artifacts)
+- [Reddit: Claude subscriptions are up to 36x cheaper than API alternatives](https://www.reddit.com/r/ClaudeAI/comments/1qpcj8q/claude_subscriptions_are_up_to_36x_cheaper_than/) - A cost comparison worth knowing before you pick a plan.
 - [Reddit: Noteplan MCP Announcement](https://www.reddit.com/r/noteplanapp/comments/1r3q6k5/use_claude_desktopcode_to_work_with_noteplan/)
 - [Claude Plugin INstall Instructions](https://code.claude.com/docs/en/plugins-reference#plugin-update)

@@ -136,6 +136,9 @@ const CHECKS = {
   // reference in another kind can't satisfy it.
   'curated-links': (fm, body) =>
     (body.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g) || []).length >= 3,
+  // tips: actionable pointers grouped into H2/H3 sections (a list or titled blocks), not one
+  // long essay. Require at least one H2 plus a list item.
+  'tip-sections': (fm, body) => hasH2(body) && /^\s*[-*]\s+\S/m.test(body),
   // system-design / frontend-design: a UX mockup or an embedded live visual. A
   // <SlideDeck> IS the visual (a live, navigable reveal.js deck), so it counts.
   mockup: (fm, body) =>

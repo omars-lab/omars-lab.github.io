@@ -1,0 +1,32 @@
+---
+slug: /generative-ai/good-watches
+title: '🔖 GenAI Good Watches'
+sidebar_label: '🔖 Good watches'
+kind: reading-list
+description: "Talks and long-form videos on generative AI worth the watch: Claude Code internals, agent patterns, AI engineering, and building at scale, with a note on each."
+authors: [oeid]
+tags: [generative-ai, genai, talks, videos, reading-list]
+draft: true
+---
+
+Talks and long-form videos on generative AI worth the watch, pulled out of my notes with the
+author, length, and a line on what each one covers so you can pick by your mood and the time you have.
+
+## Talks worth watching
+
+- [How Claude Code Works](https://youtu.be/RFKCzGlAU6Q) (Jared Zoneraich, PromptLayer, 1 hour) - Deep dive into Claude Code's architecture, arguing its success stems from a simplified "Master Loop" paired with capable models rather than complex frameworks. Covers internal tools (Bash, FileEdit, Grep), Todo planning, sandboxing, and system prompts.
+- [No Vibes Allowed: Solving Hard Problems in Complex Codebases](https://youtu.be/rmvDxxNubIg) (Dex Horthy, HumanLayer, 20 minutes) - Context engineering techniques for getting AI coding tools to handle 300k LOC Rust codebases effectively. Introduces "frequent intentional compaction" approach for managing context throughout development.
+- [Don't Build Agents, Build Skills Instead](https://youtu.be/CEvIs9y1uog) (Barry Zhang & Mahesh Murag, Anthropic, 16 minutes) - Argues that Skills are the solution for packaging procedural knowledge that agents can dynamically load. Covers minimal form factor for portable, composable expertise and network effects of skill-based agents.
+- [Identity for AI Agents](https://youtu.be/VSdV-AdSlis) (Patrick Riley & Carlos Galan, Auth0, 1 hour) - Implementing secure identity and access management for AI agents with Okta and Auth0
+- [OpenAI + Temporal: Building Durable, Production Ready Agents](https://youtu.be/k8cnVCMYmNc) (Cornelia Davis, Temporal, 1 hour) - Using Temporal's durable execution framework with OpenAI Agents SDK to handle flakey networks, rate limits, and long-running operations. OpenAI uses Temporal for production services like image gen and Codex.
+- [Your MCP Server is Bad (and you should feel bad)](https://youtu.be/96G7FLab8xc) (Jeremiah Lowin, Prefect, 54 minutes) - Framework for building agent-native MCP servers using FastMCP. Covers the three pillars of agent-native product design: Discovery, Iteration, and Context. Critiques REST wrapper approaches.
+- [Automating Large Scale Refactors with Parallel Agents](https://youtu.be/rcsliSIy_YU) (Robert Brennan, OpenHands, 1 hour) - Patterns for orchestrating large-scale code changes with swarms of agents and human-in-the-loop. Includes concrete example of migrating entire codebase from one React state management library to another.
+- [Building Intelligent Research Agents with Manus](https://youtu.be/xz0-brt56L8) (Ivan Leo, Manus AI (now Meta Superintelligence), 1 hour) - Introduction to Manus 1.5 and Manus API as a "general action engine" for executing workflows. Workshop on building bespoke research agents that connect to private data sources.
+- [DSPy: The End of Prompt Engineering](https://youtu.be/-cKUW6n8hBU) (Kevin Madura, AlixPartners, 1 hour) - Programming with LLMs using DSPy instead of manual prompt engineering. Covers Signatures, Modules, Adapters, and Optimizers (like MIPRO) for robust enterprise AI applications.
+- [Spec-Driven Development: Agentic Coding at FAANG Scale and Quality](https://youtu.be/HY_JyxAZsiE) (Al Harris, Amazon Kiro, 1 hour) - How the Kiro team uses Spec-Driven Development for reproducible and reliable delivery with AI coding tools at Amazon scale.
+- [How METR Measures Long Tasks and Experienced Dev Productivity](https://youtu.be/k1t2xyWMUdY) (Joel Becker, METR, 1 hour) - Reconciles lab vs field evidence on AI capabilities. Explores why impressive benchmark performance doesn't always translate to real-world developer productivity impact.
+- [Why 2026 Is the Year to Build a Second Brain (And Why You NEED One)](https://www.youtube.com/watch?v=0TpON5T-Sw4) (Nate B Jones, 30 minutes) - Building AI second brain systems with Slack, Notion, Zapier, and Claude/ChatGPT. Covers active vs passive systems, AI loops for classification and routing, and 8 building blocks for second brain systems.
+- [Dispatch from the Future: Building an AI-native Company](https://www.youtube.com/watch?v=MGzymaYBiss) (Dan Shipper, Every) - Insights on building companies with AI at the core
+- [How BlackRock Builds Custom Knowledge Apps at Scale](https://youtu.be/08mH36_NVos) (Vaibhav Page & Infant Vasanth, BlackRock, 18 minutes) - Modular, Kubernetes-native AI framework for scaling Knowledge Apps across enterprise. Covers document extraction, investment signals, and maintaining compliance in regulated industry.
+- [Amazon Q Demos in 6 minutes](https://www.youtube.com/watch?v=-6AH74XD5M4) (My experiences on the IT "Battlefield", 6 minutes) - Quick tour covering Q Business (chat, file interaction, data source connections) and Q Developer tools (code optimization, documentation for migration/modernization).
+- [Best Practices for GenAI Applications on AWS - Model Selection (Part 1)](https://www.youtube.com/watch?v=WEKTpzvJiec) (Amazon Web Services, 11 minutes) - Best practice approach for arriving at the right model for a given GenAI use case. Part of multi-part series on building robust GenAI applications.
