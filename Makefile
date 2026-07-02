@@ -83,6 +83,9 @@ typecheck: ## Type-check the site with tsc (swizzled theme + components + pages)
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
 	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
 
+validate-noteplan-links: ## Verify every noteplan:// link resolves to a real note (local-only; CI syntax-only)
+	( cd ${SITEROOT} && node scripts/validate-noteplan-links.js )
+
 validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA + path + line range exist & are pushed)
 	( cd ${SITEROOT} && node scripts/validate-footnotes.js $(DIRS) )
 

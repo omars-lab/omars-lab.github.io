@@ -9,6 +9,7 @@ import CardImage from '@site/src/components/Card/CardImage';
 import Timeline from '@site/src/components/TimeLine';
 import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
+import NotePlanButton from '@site/src/components/NotePlanButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
@@ -87,6 +88,7 @@ export default {
   Timeline,
   TimelineItem,
   BookmarkletButton,
+  NotePlanButton,
   // Premium gating: <PremiumGate> is injected by the rehype-premium-encrypt plugin in
   // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
   PremiumGate,

@@ -19,7 +19,7 @@ area: script
 - [ ] I need to setup the proper shortcuts on my phone
 	- [x] Setup shortcuts automation to append to a todo file! @done(2021-08-29 10:56 PM)
 		* [x] Use xcallback to append to noteplan! @done(2021-08-29 10:22 AM)
-		- noteplan://x-callback-url/addText?noteTitle=iPhone&openNote=no&text=*%20Hello%20World&mode=append
+		- `noteplan://x-callback-url/addText?noteTitle=iPhone&openNote=no&text=*%20Hello%20World&mode=append`
 	- [ ] There are iOS shortcuts ssh ... use it
 	- [x] Look into: [noteplan.co: X Callback Url%20Scheme](https://noteplan.co/faq/General/X-Callback-Url%20Scheme/) >2021-08-29 @done(2021-08-29 12:07 AM)
 
