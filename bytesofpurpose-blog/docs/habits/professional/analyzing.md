@@ -1,6 +1,7 @@
 ---
-slug: /productivity/analyzing
-title: '🔍 Analysis Techniques'
+slug: /professional/analyzing
+title: '🔍 Analyzing'
+sidebar_label: '🔍 Analyzing'
 description: 'Methods for analyzing data, metrics, and popularity to gain insights and make data-driven decisions.'
 authors: [oeid]
 tags: [analysis, techniques, metrics, data-analysis, popularity]

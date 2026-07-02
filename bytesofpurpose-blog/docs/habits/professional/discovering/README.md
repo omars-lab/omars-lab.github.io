@@ -1,6 +1,7 @@
 ---
-slug: /productivity/discovering
-title: '🔍 Discovery Techniques'
+slug: /professional/discovering
+title: '🔍 Discovering'
+sidebar_label: '🔍 Discovering'
 description: 'Methods for discovering content, tools, and resources to stay informed and find the right solutions for your needs.'
 authors: [oeid]
 tags: [discovery, techniques, content-discovery, tool-discovery, research]
@@ -31,5 +32,5 @@ Discovery techniques are **methods for finding information and resources**:
 
 ## Key Documents
 
-<!-- - [Discovering Content](/craft/productivity/discovering/discovering-content) - Methods for finding and discovering relevant content -->
+<!-- - [Discovering Content](/habits/professional/discovering/discovering-content) - Methods for finding and discovering relevant content -->
 
