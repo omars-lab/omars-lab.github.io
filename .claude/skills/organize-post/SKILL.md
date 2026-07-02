@@ -110,8 +110,9 @@ linking UP to the durable one. Split along that seam.
    "titled like a finished thing" smell hides.
 7. **Hand off.** An under-specified piece → `mature-content` (the interview that firms it up). A
    board-ready idea/experiment → `groom-initiatives` (to card it). The MDX/frontmatter mechanics →
-   `author-blog-post`. A re-home of an existing published post → pair the move with a `{from,to}`
-   redirect (the validate-redirects gate guards it).
+   `author-blog-post`. **A re-home or SPLIT of an existing doc → `reorganize-content`** (the
+   execution recipe: `git mv` + slug rewrite + REPOINT/collapse redirect chains + fold-not-delete +
+   validate). This skill decides the target; that one moves it without breaking a URL.
 
 ## The output shape
 
