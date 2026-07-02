@@ -292,6 +292,23 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
         },
       ],
+      // 🔄 Habits — its OWN docs instance (served at /habits): "how I habitually operate". The
+      // habits-* docs pulled up out of the topics across BOTH craft (productivity/blogging/
+      // entrepreneurship) AND journey (personal-growth/faith), grouped professional / personal /
+      // spiritual. A first-class durable root alongside Craft/Journey. id == routeBasePath.
+      [
+        '@docusaurus/plugin-content-docs',
+        {
+          id: 'habits',
+          path: 'docs/habits',
+          routeBasePath: 'habits',
+          sidebarPath: require.resolve('./sidebars-habits.js'),
+          remarkPlugins: [remarkTaskList],
+          rehypePlugins: [rehypeTaskListLabels, rehypePremiumEncrypt],
+          editUrl:
+            'https://github.com/omars-lab/omars-lab.github.io/edit/master/bytesofpurpose-blog/',
+        },
+      ],
       // 💡 Thoughts & Ideas — its OWN blog instance (served at /thoughts): the UNACTIONED
       // half of the temporal split. /initiatives holds ideas I have ACTED ON (they
       // materialized into something dated and real); /thoughts holds ideas I have HAD but
@@ -845,7 +862,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/craft/productivity/automating", to: "/craft/productivity/automating"},
             {from: "/docs/craft/productivity/automating/leveraging-shortcuts", to: "/initiatives/leveraging-shortcuts"},
             {from: "/docs/craft/productivity/discovering", to: "/craft/productivity/discovering"},
-            {from: "/docs/craft/productivity/habits-automating", to: "/craft/productivity/habits-automating"},
+            {from: "/docs/craft/productivity/habits-automating", to: "/habits/professional/automating"},
             {from: "/docs/craft/productivity/organizing", to: "/craft/productivity/organizing"},
             {from: "/docs/craft/productivity/processes/process-execution", to: "/craft/productivity/processes/process-execution"},
             {from: "/docs/craft/productivity/processes/process-interview", to: "/craft/interview-prep/process-interview"},
@@ -868,6 +885,12 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/craft/software-development/workspace/tips", to: "/craft/software-development/tips"},
             {from: "/craft/software-development/workspace/bookmarks", to: "/craft/software-development/bookmarks"},
             {from: "/docs/craft/software-development", to: "/craft/software-development"},
+            // Habits instance (2026-07): the habits-* docs moved out of the craft topics
+            // (productivity/blogging/entrepreneurship) AND journey (personal-growth/faith) into the
+            // new /habits root, grouped professional/personal/spiritual. Only the 2 PUBLISHED habits
+            // need a redirect (the rest are draft: true = no public URL).
+            {from: "/craft/productivity/habits-automating", to: "/habits/professional/automating"},
+            {from: "/journey/personal-growth/habits-ideation", to: "/habits/personal/ideation"},
             // Knowledge instance (2026-07): the mental-models docs moved out of the craft topics
             // (generative-ai/companies/interview-prep) into the new /knowledge root, regrouped by
             // theme (ai/career/algorithms/interviewing). Old public /craft/*/mental-models/* URLs
@@ -968,8 +991,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/generative-ai/mental-models/ai-framework-landscape", to: "/knowledge/ai/2025-11-10-ai-framework-landscape"},
             {from: "/docs/generative-ai/mental-models/learning-about-genai", to: "/knowledge/ai/2025-10-04-learning-about-genai"},
             {from: "/docs/generative-ai/mental-models/understanding-fundamentals-of-genai-systems", to: "/knowledge/ai/2025-07-30-understanding-the-fundamentals-of-genai"},
-            {from: "/docs/habits/habits-automating", to: "/craft/productivity/habits-automating"},
-            {from: "/docs/habits/habits-ideation", to: "/journey/personal-growth/habits-ideation"},
+            {from: "/docs/habits/habits-automating", to: "/habits/professional/automating"},
+            {from: "/docs/habits/habits-ideation", to: "/habits/personal/ideation"},
             {from: "/docs/interview-prep", to: "/craft/interview-prep"},
             {from: "/docs/interview-prep/mental-models", to: "/knowledge/algorithms"},
             {from: "/docs/interview-prep/mental-models/data-structures-and-algorithms/understanding-dynamic-programming", to: "/knowledge/algorithms/understanding-dynamic-programming"},
@@ -1023,7 +1046,7 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/self", to: "/journey"},
             {from: "/docs/self/faith", to: "/journey/faith"},
             {from: "/docs/self/personal-growth", to: "/journey/personal-growth"},
-            {from: "/docs/self/personal-growth/habits-ideation", to: "/journey/personal-growth/habits-ideation"},
+            {from: "/docs/self/personal-growth/habits-ideation", to: "/habits/personal/ideation"},
             {from: "/docs/self/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
             {from: "/docs/self/personal-growth/prompts/personal-life-content-organizer", to: "/journey/personal-growth/prompts/personal-life-content-organizer"},
             {from: "/docs/skills/preparing-for-interviews/interview-preparation-guide", to: "/craft/interview-prep/preparing"},
@@ -1182,6 +1205,13 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
               // know / how I understand things". Served at /knowledge; shows ONLY its own themes.
               label: '🧠 Knowledge',
               type: 'docSidebar', sidebarId: 'knowledgeSidebar', docsPluginId: 'knowledge',
+              position: 'left',
+            },
+            {
+              // 'Habits' (the durable habits docs instance, id 'habits') — "how I habitually
+              // operate". Served at /habits; shows ONLY its own groups (professional/personal/spiritual).
+              label: '🔄 Habits',
+              type: 'docSidebar', sidebarId: 'habitsSidebar', docsPluginId: 'habits',
               position: 'left',
             },
             {
