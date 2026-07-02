@@ -41,6 +41,7 @@ const SCAN = [
   {dir: 'designs', base: '/designs'},
   {dir: 'docs/craft', base: '/craft'},
   {dir: 'docs/journey', base: '/journey'},
+  {dir: 'docs/knowledge', base: '/knowledge'},
 ];
 
 // A task in one of these path fragments is tracked work even without a tag.
