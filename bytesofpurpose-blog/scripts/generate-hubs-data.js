@@ -134,15 +134,20 @@ function build() {
   return out;
 }
 
-const data = build();
-for (const [hubId, hub] of Object.entries(HUBS)) {
-  const outputFile = path.join(ROOT, 'src', 'components', hub.out, hub.file);
-  const outDir = path.dirname(outputFile);
-  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, {recursive: true});
-  fs.writeFileSync(outputFile, JSON.stringify(data[hubId], null, 2), 'utf-8');
-  const counts = hub.areas.map((a) => `${a}:${data[hubId][a].length}`).join(' ');
-  console.log(`Generated ${hubId} hub data (${counts}) -> ${outputFile}`);
+// Only WRITE the JSON when run directly (`node scripts/generate-hubs-data.js`). When another
+// script REQUIRES this module (e.g. validate-hubs.js, to share the HUBS registry), importing it
+// must NOT regenerate files as a side effect.
+if (require.main === module) {
+  const data = build();
+  for (const [hubId, hub] of Object.entries(HUBS)) {
+    const outputFile = path.join(ROOT, 'src', 'components', hub.out, hub.file);
+    const outDir = path.dirname(outputFile);
+    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, {recursive: true});
+    fs.writeFileSync(outputFile, JSON.stringify(data[hubId], null, 2), 'utf-8');
+    const counts = hub.areas.map((a) => `${a}:${data[hubId][a].length}`).join(' ');
+    console.log(`Generated ${hubId} hub data (${counts}) -> ${outputFile}`);
+  }
 }
 
-// Export the registry so validate-hubs.js can share it (single source of truth).
-module.exports = {HUBS};
+// Export the registry + builder so validate-hubs.js can share them (single source of truth).
+module.exports = {HUBS, build};
