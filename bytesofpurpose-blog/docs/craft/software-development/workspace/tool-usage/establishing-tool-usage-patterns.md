@@ -1,5 +1,5 @@
 ---
-slug: /productivity/tool-usage/establishing-tool-usage-patterns
+slug: /software-development/workspace/tool-usage/establishing-tool-usage-patterns
 title: '🧰 Establishing Tool Usage Patterns'
 description: 'A collection of techniques for using various tools effectively.'
 authors: [oeid]
