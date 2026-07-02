@@ -101,13 +101,13 @@ import KanbanExample from '@site/static/img/kanban-example.svg';
 - **Flexibility**: 100% customizable workflows and styling
 
 **Related Blog Post:**
-- [Kanban Board Customization](/craft/productivity/prompts/kanban-board-customization) - Detailed guide on using the system
+- [Kanban Board Customization](/journey/productivity/prompts/kanban-board-customization) - Detailed guide on using the system
 
 **Status:** Component system successfully created and documented. The SVG kanban board system is production-ready and being used in documentation for visual project management.
 
 ## Related Links
 
-- [Kanban Board Customization Blog Post](/craft/productivity/prompts/kanban-board-customization)
+- [Kanban Board Customization Blog Post](/journey/productivity/prompts/kanban-board-customization)
 - [Kanban Customization Documentation](/handbook/components/diagrams/diagrams-kanban-customization)
 - [Customization Prompt](https://github.com/omars-lab/omars-lab.github.io/blob/master/prompts/draw/customize-kanban-board.md)
 - [Base SVG Template](/img/kanban-structure.svg)
