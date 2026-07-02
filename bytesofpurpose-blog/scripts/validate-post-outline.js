@@ -119,6 +119,9 @@ const CHECKS = {
   demonstrates: (fm, body) =>
     /<[A-Za-z]\w+[\s/>]/.test(body) || /```/.test(body) || /<iframe[\s>]/i.test(body) ||
     /!\[[^\]]*\]\(/.test(body) || /^\s*[-*]\s+\[/m.test(body),
+  // hub: renders the generated hub index — a <Catalog kind="…"/> component (or a legacy
+  // per-hub wrapper like <ProjectsCatalog/>/<TinkeringCatalog/>/<ResearchCatalog/>).
+  catalog: (fm, body) => /<(Catalog|\w*Catalog)[\s/>]/.test(body),
   // framework
   'framework-laid-out': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) ||

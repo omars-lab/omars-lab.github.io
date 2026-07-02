@@ -91,6 +91,20 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
+    "project": {
+      "emoji": "🔨",
+      "description": "A dated build LOG of something I made: what I set out to build, what I did, what I learned. The acted-on end of the idea-to-ship lifecycle (an /initiatives post). Indexed by AREA on the Projects hub via its `area:` frontmatter.",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "tinkering": {
+      "emoji": "🔧",
+      "description": "A dated TINKERING log: exploratory dabbling with a tool, language, or technique ('Tinkering with X') — hands-on experiments, not a finished build (an /initiatives post). Indexed by AREA on the Tinkering hub via its `area:` frontmatter.",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
     "quote-set": {
       "emoji": "💬",
       "description": "A themed set of quotes that moved me, with my reflection on why ('quotes that moved me', affirmations). A curated Mindset input I keep to shape my thinking; each quote is a component inside a <QuoteSet>: an <EditorialQuote> pull-quote, or a <PosterQuote> cascade for the 'watch your thoughts ... destiny' poster style.",
@@ -176,6 +190,15 @@
       "description": "A showcase of one structural ABILITY of the blog: an embeddable component or technique (a card, a diagram, a code embed), demonstrated live, with a 'used in' index of the posts that leverage it. Lives in /legend/components (the site's component reference).",
       "outline": [
         {"id": "demonstrates", "label": "a live demonstration of the technique (the component rendered in the body, or a code/usage example showing how to embed it)"},
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "hub": {
+      "emoji": "🗂️",
+      "description": "A durable /craft HUB: an index page that catalogs temporal /initiatives posts of one activity kind (project/tinkering/research), grouped by AREA, via a generated <Catalog> component. The durable half of the durable-vs-temporal split (a /craft DOC, not a blog post). See the manage-hubs skill.",
+      "docKind": true,
+      "outline": [
+        {"id": "catalog", "label": "renders a <Catalog> (the generated hub index — a <Catalog kind=\"…\"/> component tag in the body)"},
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },

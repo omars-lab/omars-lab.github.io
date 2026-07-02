@@ -7,8 +7,8 @@ authors: [oeid]
 tags: [lametric, motivation, quotes, aws, lambda, dynamodb, oauth, cognito, development]
 date: 2021-11-06T10:00
 draft: true
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # Priorities

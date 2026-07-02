@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [concepts, graph, visualization, plantuml, mind-maps, relationships, development]
 date: 2025-01-01T10:00
 draft: true
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 

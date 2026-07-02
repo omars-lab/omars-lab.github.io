@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [email, automation, filtering, yahoo-mail, tampermonkey, organization, productivity]
 date: 2025-01-01T10:00
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # a8n: Email Automation

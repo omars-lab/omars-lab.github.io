@@ -6,8 +6,8 @@ authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png
 date: 2025-01-13T10:00
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # JQ Command Examples

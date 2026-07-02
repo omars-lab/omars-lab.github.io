@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [tagging, automation, notes, hashtags, noteplan, ingestion, development]
 date: 2022-04-04T10:00
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Priorities

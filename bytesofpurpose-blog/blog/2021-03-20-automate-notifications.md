@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [notifications, automation, monitoring, alerts, cron, development]
 date: 2021-03-20T10:00
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Priorities

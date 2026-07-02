@@ -96,6 +96,18 @@ const matter = require('gray-matter');
 // overrides + root topics). Shared with the detection hook and the /suggest-emoji skill.
 const { resolveFolderEmoji, isStandardFolder } = require('./lib/emoji-map.js');
 
+// Blog/doc kind -> emoji, from the taxonomy source of truth. A doc that carries a known
+// `kind:` (e.g. `kind: hub`) gets its emoji PREPENDED at runtime by the draft-docs plugin's
+// docs kind-emoji wiring, so such a doc's plain (emoji-less) title is INTENTIONAL and must
+// not be flagged by the emoji-prefix-doc check below.
+let KIND_EMOJI = {};
+try {
+  const {kinds} = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'blog-kinds.json'), 'utf8'));
+  for (const [k, v] of Object.entries(kinds)) if (v.emoji) KIND_EMOJI[k] = v.emoji;
+} catch {
+  KIND_EMOJI = {};
+}
+
 const ROOT = path.join(__dirname, '..');
 const DOCS = path.join(ROOT, 'docs');
 const WELCOME = 'docs/welcome';
@@ -346,6 +358,9 @@ function checkSidebarLabel(file, data) {
       'doc has neither `title:` nor `sidebar_label:` — its sidebar entry falls back to the raw filename; add a `title:` (or `sidebar_label:`)');
     return;
   }
+  // A doc with a known `kind:` gets its kind emoji prepended at runtime (draft-docs plugin),
+  // so an emoji-less title is intentional — exempt it (mirrors how blog posts work).
+  if (data.kind && KIND_EMOJI[data.kind]) return;
   if (!startsWithEmoji(label)) {
     // Suggest the emoji this doc's FOLDER resolves to (kind-map / learned override / root).
     // null → the folder is non-standard: point the author at /suggest-emoji instead of

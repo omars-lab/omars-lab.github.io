@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [terminal, calendar, x-callback]
 draft: false
 date: 2021-09-16T10:00
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Calendar with x-callbacks

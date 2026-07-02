@@ -7,8 +7,8 @@ authors: [oeid]
 tags: [home-assistant, mac-mini, docker, portainer, automation, zwave, hue-lights, flask-api, workspace]
 date: 2022-01-16T12:03
 draft: false
-kind: reflection
-project_area: backend
+kind: project
+area: backend
 ---
 
 # Running Home Assistant on Mac Mini

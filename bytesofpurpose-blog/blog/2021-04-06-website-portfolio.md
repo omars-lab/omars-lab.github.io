@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [portfolio, website, react, aws, deployment, ci-cd, development]
 date: 2021-04-06T10:00
 draft: false
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # My Portfolio
