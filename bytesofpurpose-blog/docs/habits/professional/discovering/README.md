@@ -1,6 +1,7 @@
 ---
 slug: /professional/discovering
-title: '🔍 Discovery Techniques'
+title: '🔍 Discovering'
+sidebar_label: '🔍 Discovering'
 description: 'Methods for discovering content, tools, and resources to stay informed and find the right solutions for your needs.'
 authors: [oeid]
 tags: [discovery, techniques, content-discovery, tool-discovery, research]
