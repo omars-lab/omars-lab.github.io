@@ -131,6 +131,11 @@ const CHECKS = {
   // tutorial
   'steps-or-artifact': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) || /```/.test(body) || /<(Walkthrough|Gif)[\s>]/.test(body),
+  // reading-list: a curated link library — several external markdown links (not a bare-URL
+  // dump), typically grouped under H2/H3 sections. Require >= 3 markdown links so a stray
+  // reference in another kind can't satisfy it.
+  'curated-links': (fm, body) =>
+    (body.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g) || []).length >= 3,
   // system-design / frontend-design: a UX mockup or an embedded live visual. A
   // <SlideDeck> IS the visual (a live, navigable reveal.js deck), so it counts.
   mockup: (fm, body) =>
@@ -342,9 +347,9 @@ function checkFile(file) {
 // the same emoji as the MACHINE legend (blog-kinds.json). They drift when a kind is added to
 // one and not the other (e.g. design-story added to the JSON but not the page). We match on the
 // EMOJI column (stable; the page uses display names like "System design", not kebab keys).
-// (The Legend moved from a blog post → a standalone page → its OWN docs instance; the
-// kind→emoji table now lives in the instance README. This path follows it.)
-const LEGEND_POST = path.join(ROOT, 'docs', 'legend', 'README.mdx');
+// (The Legend moved from a blog post → a standalone page → its OWN docs instance → the
+// Handbook; the kind→emoji table now lives in docs/handbook/README.mdx. This path follows it.)
+const LEGEND_POST = path.join(ROOT, 'docs', 'handbook', 'README.mdx');
 function checkLegendDrift() {
   if (!fs.existsSync(LEGEND_POST)) return [];
   let body;

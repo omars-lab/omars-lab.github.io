@@ -1,0 +1,126 @@
+---
+slug: /generative-ai/reading-list
+title: '🔖 GenAI Reading List'
+sidebar_label: '🔖 Reading list'
+kind: reading-list
+description: "A curated, annotated generative-AI reading list: Claude Code and agents, AI engineering tools, the AWS Bedrock and Amazon Q stack, and the talks worth reading."
+authors: [oeid]
+tags: [generative-ai, genai, llm, agentic-ai, reading-list]
+draft: true
+---
+
+The links I keep coming back to in the generative-AI space, pulled out of my notes and
+annotated so each one earns its place. Grouped by theme: building with Claude Code and
+agents, the engineering tools around them, the AWS stack I work in, and the talks and
+posts worth the time. A living list.
+
+## Claude Code and AI coding tools
+
+- [Claude Code Swarm Orchestration](https://gist.github.com/kieranklaassen/4f2aba89594a4aea4ad64d753984b2ea) - Practical example of orchestrating multiple Claude Code agents
+- [25 Claude Code Tips from 11 Months of Intense Use (Reddit, 2025-12-26)](https://www.reddit.com/r/ClaudeAI/comments/1qgccgs/25_claude_code_tips_from_11_months_of_intense_use/) - Community-contributed tips and best practices for Claude Code
+- [ykdojo/claude-code-tips: 45 tips from basics to advanced Claude Code usage](https://github.com/ykdojo/claude-code-tips)
+- [How Claude Code Works (YouTube, 2025-12-26)](https://youtu.be/RFKCzGlAU6Q) - Deep dive into Claude Code's architecture, arguing its success stems from a simplified "Master Loop" paired with capable models rather than complex frameworks. Covers internal tools (Bash, FileEdit, Grep), Todo planning, sandboxing, and system prompts.
+- [No Vibes Allowed: Solving Hard Problems in Complex Codebases (YouTube, 2025-12-02)](https://youtu.be/rmvDxxNubIg) - Context engineering techniques for getting AI coding tools to handle 300k LOC Rust codebases effectively. Introduces "frequent intentional compaction" approach for managing context throughout development.
+- [Claude Code Documentation](https://code.claude.com/docs/en/plugins)
+- [Discovering and installing Claude Code plugins from marketplaces](https://code.claude.com/docs/en/discover-plugins)
+- [Connecting Claude Code to external tools via Model Context Protocol](https://code.claude.com/docs/en/mcp)
+
+## Agent development and frameworks
+
+- [Don't Build Agents, Build Skills Instead (YouTube, 2025-12-08)](https://youtu.be/CEvIs9y1uog) - Argues that Skills are the solution for packaging procedural knowledge that agents can dynamically load. Covers minimal form factor for portable, composable expertise and network effects of skill-based agents.
+- [Identity for AI Agents (YouTube, 2026-01-14)](https://youtu.be/VSdV-AdSlis) - Implementing secure identity and access management for AI agents with Okta and Auth0
+- [OpenAI + Temporal: Building Durable, Production Ready Agents (YouTube, 2026-01-12)](https://youtu.be/k8cnVCMYmNc) - Using Temporal's durable execution framework with OpenAI Agents SDK to handle flakey networks, rate limits, and long-running operations. OpenAI uses Temporal for production services like image gen and Codex.
+- [Your MCP Server is Bad (and you should feel bad) (YouTube, 2026-01-12)](https://youtu.be/96G7FLab8xc) - Framework for building agent-native MCP servers using FastMCP. Covers the three pillars of agent-native product design: Discovery, Iteration, and Context. Critiques REST wrapper approaches.
+- [Automating Large Scale Refactors with Parallel Agents (YouTube, 2026-01-08)](https://youtu.be/rcsliSIy_YU) - Patterns for orchestrating large-scale code changes with swarms of agents and human-in-the-loop. Includes concrete example of migrating entire codebase from one React state management library to another.
+- [Building Intelligent Research Agents with Manus (YouTube, 2025-12-30)](https://youtu.be/xz0-brt56L8) - Introduction to Manus 1.5 and Manus API as a "general action engine" for executing workflows. Workshop on building bespoke research agents that connect to private data sources.
+- [Agentic Patterns](https://x.com/hwchase17/status/1999559618016739348) - Longer running agents are starting to work - and we're starting to see new patterns for debugging and improving them
+- [Strands Agents - Evaluation SDK](https://strandsagents.com/latest/documentation/docs/user-guide/evals-sdk/eval-sop/) - User guide for evals-sdk and evaluation standard operating procedures
+
+## AI engineering and development tools
+
+- [DSPy: The End of Prompt Engineering (YouTube, 2026-01-08)](https://youtu.be/-cKUW6n8hBU) - Programming with LLMs using DSPy instead of manual prompt engineering. Covers Signatures, Modules, Adapters, and Optimizers (like MIPRO) for robust enterprise AI applications.
+- [Spec-Driven Development: Agentic Coding at FAANG Scale and Quality (YouTube, 2026-01-09)](https://youtu.be/HY_JyxAZsiE) - How the Kiro team uses Spec-Driven Development for reproducible and reliable delivery with AI coding tools at Amazon scale.
+- [Kiro CLI Documentation](https://kiro.dev/docs/cli/custom-agents/creating/)
+- [Kiro CLI: agent configuration file reference for custom agents](https://kiro.dev/docs/cli/custom-agents/configuration-reference/)
+- [Prompt Caching Deep Dive](https://sankalp.bearblog.dev/how-prompt-caching-works/) - Technical explanation of how prompt caching works in LLM systems
+- [Awesome Security Hardening](https://github.com/decalage2/awesome-security-hardening) - Curated list of security hardening resources and best practices
+
+## Productivity and workflows
+
+- [How METR Measures Long Tasks and Experienced Dev Productivity (YouTube, 2026-01-19)](https://youtu.be/k1t2xyWMUdY) - Reconciles lab vs field evidence on AI capabilities. Explores why impressive benchmark performance doesn't always translate to real-world developer productivity impact.
+- [Why 2026 Is the Year to Build a Second Brain (And Why You NEED One) (YouTube, 2026-01-09)](https://www.youtube.com/watch?v=0TpON5T-Sw4) - Building AI second brain systems with Slack, Notion, Zapier, and Claude/ChatGPT. Covers active vs passive systems, AI loops for classification and routing, and 8 building blocks for second brain systems.
+- [Personal Intelligence by Google Gemini](https://blog.google/innovation-and-ai/products/gemini-app/personal-intelligence/) - Similar to PO1 approach for personal AI
+- [Dispatch from the Future: Building an AI-native Company](https://www.youtube.com/watch?v=MGzymaYBiss) - Insights on building companies with AI at the core
+- [Simon Willison's LLM Blog](https://simonwillison.net/tags/llm/) - Comprehensive coverage of LLM developments and practical applications
+
+## Enterprise AI applications
+
+- [How BlackRock Builds Custom Knowledge Apps at Scale (YouTube, 2025-08-23)](https://youtu.be/08mH36_NVos) - Modular, Kubernetes-native AI framework for scaling Knowledge Apps across enterprise. Covers document extraction, investment signals, and maintaining compliance in regulated industry.
+- [Vibe Engineering Book](https://www.manning.com/books/vibe-engineering) - Recommended reading for GenAI development
+
+## AWS and cloud AI: documentation and guides
+
+- [GenAI on AWS - How to Choose](https://docs.aws.amazon.com/generative-ai-on-aws-how-to-choose/) - Guide for selecting appropriate GenAI services on AWS
+- [How Generative AI is Transforming Developer Workflows at Amazon](https://aws.amazon.com/blogs/devops/how-generative-ai-is-transforming-developer-workflows-at-amazon/) - Amazon's internal use of generative AI for developer productivity
+- [Amazon Q Business: Workflow Automation & 50+ Action Integrations](https://aws.amazon.com/blogs/aws/amazon-q-business-is-adding-new-workflow-automation-capability-and-50-action-integrations/) - New workflow automation capabilities in Amazon Q Business
+
+## AWS and cloud AI: machine learning blog
+
+- [AWS Machine Learning Blog](https://aws.amazon.com/blogs/machine-learning/) - Latest AWS ML/AI updates and use cases
+- [Build an AI-Powered Website Assistant with Amazon Bedrock](https://aws.amazon.com/blogs/machine-learning/build-an-ai-powered-website-assistant-with-amazon-bedrock/) - Tutorial for creating AI website assistants using Bedrock
+- [AI Agent-Driven Browser Automation for Enterprise Workflow Management](https://aws.amazon.com/blogs/machine-learning/ai-agent-driven-browser-automation-for-enterprise-workflow-management/) - Using AI agents for automated browser-based enterprise workflows
+- [Agentic QA Automation Using Amazon Bedrock AgentCore Browser and Amazon Nova Act](https://aws.amazon.com/blogs/machine-learning/agentic-qa-automation-using-amazon-bedrock-agentcore-browser-and-amazon-nova-act/) - QA automation with agentic approach using Bedrock and Nova
+- [Exploring the Zero Operator Access Design of Mantle](https://aws.amazon.com/blogs/machine-learning/exploring-the-zero-operator-access-design-of-mantle/) - Security architecture of AWS Mantle with zero operator access
+
+## AWS and cloud AI: Amazon Bedrock
+
+- [Amazon Bedrock User Guide](https://docs.aws.amazon.com/bedrock/latest/userguide/) - Comprehensive user guide for Amazon Bedrock
+- [Amazon Bedrock API Reference](https://docs.aws.amazon.com/bedrock/latest/APIReference/) - Complete API reference for Amazon Bedrock
+- [API Gateway WebSocket Quotas](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#apigateway-execution-service-websocket-limits-table) - Service quotas and limits for API Gateway WebSocket APIs
+- [Amazon Bedrock Custom Models](https://docs.aws.amazon.com/bedrock/latest/userguide/custom-models.html) - Guide for creating and using custom models in Bedrock
+- [Prompt Engineering on AWS](https://aws.amazon.com/what-is/prompt-engineering/) - Introduction to prompt engineering concepts and best practices
+- [Prompt engineering concepts and guidelines for Amazon Bedrock models](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html)
+- [RAGAS Integration with Amazon Bedrock](https://docs.ragas.io/en/stable/howtos/integrations/amazon_bedrock/) - Using RAGAS evaluation framework with Amazon Bedrock
+- [Tutorial: Single Turn Q&A with Bedrock](https://docs.hub.amazon.dev/bedrock/user-guide/tutorial-single-turn-qa-generate-service/#configure-an-aws-account-for-your-application) - Step-by-step guide for building Q&A applications with Bedrock
+
+## AWS and cloud AI: Amazon Q
+
+- [Amazon Q Business - Creating Apps](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/create-app.html) - Guide for creating Amazon Q Business applications
+- [Amazon Q Business - Supported Connectors](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/supported-connectors.html) - List of supported data source connectors for Amazon Q
+- [Amazon Q Business - Pricing](https://aws.amazon.com/q/business/pricing/) - Pricing details for Amazon Q Business
+- [Amazon Q Business - Managing User Groups](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/managing-users-groups.html) - User and group management for Amazon Q Business
+- [Amazon Q Business - Troubleshooting Data Sources](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/troubleshooting-data-sources.html) - Common issues and solutions for data source connections
+- [Amazon Q Business - Connector Best Practices](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/connector-best-practices.html) - Recommended practices for configuring connectors
+- [Amazon Q Business - Enhancements](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/enhancements.html) - Enhancement features for improving Q Business responses
+- [Amazon Q Business - Metadata Boosting](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/metadata-boosting.html) - Using metadata to improve search relevance
+- [Amazon Q Business - Key Concepts](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/concepts-terms.html) - Core concepts and terminology for Amazon Q Business
+- [Amazon Q Business - Subscription Tiers](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/tiers.html) - Available subscription tiers and index types
+- [Amazon Q Business - Service Quotas](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/quotas-regions.html) - Service limits and regional availability
+- [Amazon Q Business - API Reference](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/api-ref.html) - Complete API reference for Amazon Q Business
+- [Amazon Q Business - Security](https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/security.html) - Security best practices and features for Amazon Q
+
+## AWS and cloud AI: Amazon Q (talks)
+
+- [Amazon Q Demos in 6 minutes (YouTube, 2024-04-10)](https://www.youtube.com/watch?v=-6AH74XD5M4) - Quick tour covering Q Business (chat, file interaction, data source connections) and Q Developer tools (code optimization, documentation for migration/modernization).
+- [Best Practices for GenAI Applications on AWS - Model Selection (Part 1) (YouTube, 2023-11-10)](https://www.youtube.com/watch?v=WEKTpzvJiec) - Best practice approach for arriving at the right model for a given GenAI use case. Part of multi-part series on building robust GenAI applications.
+
+## GenAI tools and apps
+
+- [Supabase pricing: free plan and pay-as-you-go tiers](https://supabase.com/pricing)
+- [X/@AnthropicAI: Claude Code auto mode announcement](https://x.com/AnthropicAI/status/2036944806317088921)
+- [Claude Code auto mode: safer way to bypass permission prompts](https://www.anthropic.com/engineering/claude-code-auto-mode)
+- [Gemini Developer API pricing tiers and rate limits](https://ai.google.dev/gemini-api/docs/pricing#standard_1)
+
+## Learning and events
+
+- [Youtube Video on Lines](https://www.youtube.com/@LaurisB)
+- [AI Meetups in Austin](https://luma.com/AppliedAILive003?tk=6J15dg)
+- [Warp: The Agentic Development Environment](https://www.warp.dev/)
+- [TeamPCP supply chain attack: backdoored LiteLLM via compromised Trivy GitHub Action](https://snyk.io/articles/poisoned-security-scanner-backdooring-litellm/)
+
+## Ecosystem and odds and ends
+
+- [MAS-Orchestra: improving multi-agent reasoning via holistic orchestration and benchmarks](https://arxiv.org/abs/2601.14652)
+- [madewithclaude/awesome-claude-artifacts: curated list of Claude Artifacts examples](https://github.com/madewithclaude/awesome-claude-artifacts)
+- [Reddit: Noteplan MCP Announcement](https://www.reddit.com/r/noteplanapp/comments/1r3q6k5/use_claude_desktopcode_to_work_with_noteplan/)
+- [Claude Plugin INstall Instructions](https://code.claude.com/docs/en/plugins-reference#plugin-update)
