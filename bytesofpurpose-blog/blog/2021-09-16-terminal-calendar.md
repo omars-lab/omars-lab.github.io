@@ -1,10 +1,13 @@
 ---
-slug: /software-development/scripting/projects/terminal-calendar
+slug: terminal-calendar
 title: '🔨 Terminal Calendar'
 description: 'How to print a calendar in the terminal with x-callbacks.'
 authors: [oeid]
 tags: [terminal, calendar, x-callback]
 draft: false
+date: 2021-09-16T10:00
+kind: reflection
+project_area: script
 ---
 
 # Calendar with x-callbacks

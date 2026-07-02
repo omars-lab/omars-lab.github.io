@@ -1,11 +1,13 @@
 ---
-slug: /software-development/frontend-development/projects/website-portfolio
+slug: website-portfolio
 title: '🔨 My Portfolio'
 description: 'Developing a comprehensive portfolio website with React, AWS deployment, and automated CI/CD pipeline.'
 authors: [oeid]
 tags: [portfolio, website, react, aws, deployment, ci-cd, development]
 date: 2021-04-06T10:00
 draft: false
+kind: reflection
+project_area: frontend
 ---
 
 # My Portfolio
