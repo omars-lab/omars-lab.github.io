@@ -1,11 +1,13 @@
 ---
-slug: /software-development/frontend-development/projects/timeline-app
+slug: timeline-app
 title: '🔨 Develop a Timeline App'
 description: 'Building a timeline application to visualize thoughts, ideas, and historical influences.'
 authors: [oeid]
 tags: [timeline, react, visualization, history, thoughts, development]
 date: 2025-01-01T10:00
 draft: true
+kind: reflection
+project_area: frontend
 ---
 
 # Priortiies

@@ -1,10 +1,13 @@
 ---
 title: '🔨 Terminal Links'
 description: 'How to embed clickable hyperlinks in terminal output using ANSI escape sequences, with cross-shell examples.'
-slug: /software-development/scripting/projects/terminal-links
+slug: terminal-links
 authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png
+date: 2025-02-06T10:00
+kind: reflection
+project_area: script
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';

@@ -1,5 +1,5 @@
 ---
-slug: /software-development/workspace/setup/running-ha-on-mac-mini
+slug: running-ha-on-mac-mini
 title: '🧰 Running Home Assistant on Mac Mini'
 sidebar_label: '🧰 Home Assistant on Mac Mini'
 description: 'Experiment with installing and configuring Home Assistant container on Mac mini including Docker management, audio support, and automation setup'
@@ -7,6 +7,8 @@ authors: [oeid]
 tags: [home-assistant, mac-mini, docker, portainer, automation, zwave, hue-lights, flask-api, workspace]
 date: 2022-01-16T12:03
 draft: false
+kind: reflection
+project_area: backend
 ---
 
 # Running Home Assistant on Mac Mini

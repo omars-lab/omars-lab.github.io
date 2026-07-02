@@ -1,11 +1,13 @@
 ---
-slug: /software-development/frontend-development/projects/link-explorer
+slug: link-explorer
 title: '🔨 Link Explorer'
 description: 'Developing a tool to analyze and visualize links using Neo4j graph database and network analysis techniques.'
 authors: [oeid]
 tags: [links, neo4j, graph-database, network-analysis, visualization, development]
 date: 2023-07-11T10:00
 draft: true
+kind: reflection
+project_area: frontend
 ---
 
 # Priorities

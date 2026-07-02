@@ -1,11 +1,13 @@
 ---
-slug: /software-development/scripting/projects/automate-backups
+slug: automate-backups
 title: '🔨 Automate Backups'
 description: 'Automating backup processes for NotePlan and other data using rsync and git-like synchronization.'
 authors: [oeid]
 tags: [backups, automation, noteplan, rsync, synchronization, development]
 date: 2025-01-01T10:00
 draft: true
+kind: reflection
+project_area: script
 ---
 
 # Priorities

@@ -12,6 +12,7 @@ import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
+import ProjectsCatalog from '@site/src/components/ProjectsCatalog';
 import TaskList from '@site/src/components/TaskList';
 import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
 import UsedIn from '@site/src/components/UsedIn';
@@ -94,6 +95,10 @@ export default {
   // link to the post. <KanbanModalHost/> must be mounted in Root.tsx. Use as
   // <KanbanBoard board="experiments"/> or board="ideas".
   KanbanBoard,
+  // ProjectsCatalog: the durable Projects hub. Groups the /initiatives project logs by
+  // their project_area frontmatter (frontend/backend/script), generated from frontmatter
+  // (projects-data.json). Use as <ProjectsCatalog/> on /craft/software-development/projects.
+  ProjectsCatalog,
   // TaskList: wrap a markdown task list to render its capture tags (>due, @done(), ~Nx~,
   // #stamp/#tag) as styled chips instead of raw text. The markdown stays the source of truth.
   TaskList,

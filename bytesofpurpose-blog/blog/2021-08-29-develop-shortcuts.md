@@ -1,11 +1,13 @@
 ---
-slug: /software-development/scripting/projects/develop-shortcuts
+slug: develop-shortcuts
 title: '🔨 Develop Shortcuts'
 description: 'Developing iPhone and macOS shortcuts for automation, note-taking, and productivity workflows.'
 authors: [oeid]
 tags: [shortcuts, iphone, macos, automation, noteplan, productivity, development]
 date: 2021-08-29T10:00
 draft: true
+kind: reflection
+project_area: script
 ---
 
 # Priorities

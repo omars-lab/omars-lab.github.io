@@ -1,5 +1,5 @@
 ---
-slug: /software-development/frontend-development/projects/notebooks-with-leetcode-solutions
+slug: notebooks-with-leetcode-solutions
 title: '🔨 Notebooks with LeetCode Solutions'
 sidebar_label: '🔨 LeetCode Notebooks'
 description: 'Development of Jupyter notebooks for solving LeetCode problems with graph visualization and hosting solutions'
@@ -7,6 +7,8 @@ authors: [oeid]
 tags: [leetcode, jupyter-notebooks, graph-visualization, plotly, igraph, interviewing, notebooks, frontend-projects]
 date: 2025-01-31T10:00
 draft: true
+kind: reflection
+project_area: frontend
 ---
 
 # Project - Leetcode x Jupyter Notebooks

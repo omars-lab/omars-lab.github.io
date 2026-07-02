@@ -1,10 +1,13 @@
 ---
 title: '🔨 JQ Mechanics'
 description: 'Powerful jq commands for parsing and transforming JSON, the mechanics I reach for most when processing data on the CLI.'
-slug: /software-development/scripting/projects/parsing-json
+slug: parsing-json
 authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png
+date: 2025-01-13T10:00
+kind: reflection
+project_area: script
 ---
 
 # JQ Command Examples

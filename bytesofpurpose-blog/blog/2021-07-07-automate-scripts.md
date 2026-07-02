@@ -1,11 +1,13 @@
 ---
-slug: /software-development/scripting/projects/automate-scripts
+slug: automate-scripts
 title: '🔨 Automate Scripts'
 description: 'Roadmap for automating scripts including cron job setup and multi-laptop automation mechanics'
 authors: [oeid]
 tags: [automation, scripts, cron-jobs, productivity-scripts, roadmap, multi-laptop]
 date: 2021-07-06T23:20
 draft: true
+kind: reflection
+project_area: script
 ---
 
 # Cron Jobs

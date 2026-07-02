@@ -31,5 +31,5 @@ Automation techniques are **methods for automating tasks and workflows**:
 
 ## Key Documents
 
-- [Leveraging Shortcuts](/craft/productivity/automating/leveraging-shortcuts) - Creating and using automation shortcuts effectively
+- [Leveraging Shortcuts](/initiatives/leveraging-shortcuts) - Creating and using automation shortcuts effectively
 
