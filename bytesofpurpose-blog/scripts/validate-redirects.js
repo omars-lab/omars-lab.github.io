@@ -41,6 +41,7 @@ const DOCS_INSTANCES = [
   {dir: 'docs/journey', base: '/journey'},
   {dir: 'docs/handbook', base: '/handbook'},
   {dir: 'docs/knowledge', base: '/knowledge'},
+  {dir: 'docs/habits', base: '/habits'},
 ];
 const BLOG_INSTANCES = [
   {dir: 'blog', base: '/initiatives'},
