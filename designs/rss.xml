@@ -4,10 +4,45 @@
         <title>Bytes of Purpose Blog</title>
         <link>https://blog.bytesofpurpose.com/designs</link>
         <description>Bytes of Purpose Blog</description>
-        <lastBuildDate>Sun, 28 Jun 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 01 Jul 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[The Blog, Pitched as a Deck]]></title>
+            <link>https://blog.bytesofpurpose.com/designs/blog-pitch-deck</link>
+            <guid>https://blog.bytesofpurpose.com/designs/blog-pitch-deck</guid>
+            <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A seven-slide pitch deck for this blog, built as a live reveal.js deck embedded in the post and themed entirely from the site's own design-system tokens.]]></description>
+            <content:encoded><![CDATA[<p>I built a pitch deck for this blog inside a design system, then brought it home as a real,
+navigable deck living inside this post. It is not a screenshot and not an embedded slide
+service: it is <a href="https://revealjs.com/" target="_blank" rel="noopener noreferrer" class="">reveal.js</a> driving on-brand slides, styled from the exact
+same tokens as the prose you are reading. Use the arrow keys, press <kbd>Esc</kbd> for the slide
+grid, or <kbd>F</kbd> for fullscreen.</p>
+<div class="deckFallback_LnPk" aria-hidden="true"></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="key-decisions">Key decisions<a href="https://blog.bytesofpurpose.com/designs/blog-pitch-deck#key-decisions" class="hash-link" aria-label="Direct link to Key decisions" title="Direct link to Key decisions" translate="no">​</a></h2>
+<p>The deck above is a <code>&lt;SlideDeck&gt;</code> component wrapping seven <code>&lt;Slide&gt;</code> children. Nothing about it is
+a special one-off: <code>&lt;SlideDeck&gt;</code> is a reusable primitive registered globally, so any post can embed
+a deck the same way. Three decisions carry the whole thing, and each was a genuine trade-off.</p>
+<p><strong>reveal.js loads in the browser, on this page only.</strong> Docusaurus server-renders every page, and
+reveal.js touches <code>window</code> the moment it is imported, so a top-level import would break the build.
+The component wraps everything in <code>&lt;BrowserOnly&gt;</code> and <code>import()</code>s reveal.js, its notes plugin, and
+its base CSS lazily inside a <code>useEffect</code>. The rest of the site never downloads a byte of it.</p>
+<p><strong>No reveal.js theme ships: our tokens are the theme.</strong> reveal.js comes with a dozen themes; the
+deck loads none of them. Instead the component's CSS module restyles the reveal surface from the
+site's own design-system tokens: Fraunces for display type, Geist for body, the tea pastels as
+accent fills, deep green for the full-bleed cover and CTA slides. So the deck is the same brand as
+the prose around it, and it flips correctly in dark mode for free, because the tokens do.</p>
+<p><strong>It stays a deck, not a slideshow gimmick.</strong> reveal.js gives real presentation affordances:
+keyboard navigation, an overview grid on <kbd>Esc</kbd>, a speaker-notes view on <kbd>S</kbd> (every
+slide above carries <code>notes</code>), and PDF export by appending <code>?print-pdf</code> to the URL. Reduced-motion
+visitors get instant slide changes instead of the slide transition.</p>
+<p>If you want to build one, the <code>author-slide-deck</code> skill walks through the component API, the
+token-mapping rules, and the MDX gotchas, using this very post as the worked example.</p>]]></content:encoded>
+            <category>frontend-design</category>
+            <category>design-system</category>
+            <category>docusaurus</category>
+        </item>
         <item>
             <title><![CDATA[The House Hero: a Lebanese home you scroll through]]></title>
             <link>https://blog.bytesofpurpose.com/designs/design-lebanese-house-hero</link>
