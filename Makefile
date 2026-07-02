@@ -461,6 +461,14 @@ validate-idea-tags: ## Check every board (ideas/experiments) tag has a tooltip g
 	@# .claude/hooks/validate-idea-tags-hook.sh runs this on a board-post / registry edit.
 	( cd ${SITEROOT} && node scripts/validate-idea-tags.js )
 
+validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registered <Catalog>, every hub-kind post has a valid area
+	@# Exit 2 if a kind:hub doc renders no <Catalog> / an unregistered kind, or a hub-kind post
+	@# (project/tinkering/research) has a missing/invalid `area:` (it would vanish from its hub).
+	@# Orphan hub kinds (registered but no doc renders them) are warn-only. The warn-tier hook
+	@# .claude/hooks/validate-hubs-hook.sh runs this on a hub-doc / initiative-post edit. Registry:
+	@# the HUBS manifest in scripts/generate-hubs-data.js. Owning skill: manage-hubs.
+	( cd ${SITEROOT} && node scripts/validate-hubs.js )
+
 validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
 	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )
 
