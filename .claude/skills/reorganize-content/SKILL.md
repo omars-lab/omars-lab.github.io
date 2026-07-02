@@ -75,7 +75,9 @@ delete X. Un-draft the merge target if it was `draft: true` and should now publi
 After moving everything out of a topic folder, if it's left with ONLY a `_category_.json` (no docs,
 no landing README) it renders as an empty sidebar section — remove it (`git rm` the `_category_.json`
 + `rmdir`). But if the folder still holds OTHER docs, LEAVE it. Check with
-`find <folder> -type f` before removing.
+`find <folder> -type f` before removing. For anything beyond a bare empty shell (a leftover pointer
+README, a stub whose purpose moved), that's a **prune decision** — hand to `prune-content` (it
+classifies dead-weight and guards the "removing a file is a smell" call).
 
 ### 7. Regenerate + validate + build
 ```
