@@ -20,4 +20,8 @@ did), so it lives on Initiatives; this hub is durable (the return-to index of th
 so it lives here in Craft. Move a project between areas by editing its `area` frontmatter,
 and it re-sorts here automatically.
 
+The **Plugins** area below gathers the editor, browser, and workspace extensions I build:
+VSCode and Vim plugins, Chrome and Tampermonkey scripts, Homebrew taps, and the glue that
+ties my workspace together.
+
 <Catalog kind="project" />
