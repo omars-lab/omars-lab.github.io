@@ -1,0 +1,24 @@
+{
+  "__doc__": "SOURCE of truth for the Repos of Interest catalog (the /craft workspace/tools page). Hand-authored: one entry per repository worth returning to. The generator scripts/generate-repos-data.js reads THIS file, validates it, and emits the gitignored src/components/RepoCatalog/repos-data.json that <RepoCatalog> renders (grouped by tag). Edit HERE, then run 'make generate-assets' (or a build regenerates it). Each entry: name, url, blurb, tags[]. Tags are free-form but SHOULD come from the vocabulary below so the catalog groups cleanly.",
+  "__tags__": {
+    "tool": "A tool I use or would reach for: something that does a job.",
+    "relevant": "Relevant to my work / worth knowing about, not necessarily something I use.",
+    "genai": "Generative-AI / LLM tooling.",
+    "testing": "Testing, mocking, or quality tooling.",
+    "reference": "A reference implementation or example I return to."
+  },
+  "repos": [
+    {
+      "name": "nano-graphrag",
+      "url": "https://github.com/gusye1234/nano-graphrag",
+      "blurb": "A small, hackable implementation of GraphRAG: retrieval-augmented generation over a knowledge graph.",
+      "tags": ["genai", "relevant"]
+    },
+    {
+      "name": "keploy",
+      "url": "https://github.com/keploy/keploy",
+      "blurb": "A developer-centric API and integration testing tool that auto-generates tests and data-mocks faster than writing unit tests.",
+      "tags": ["tool", "testing"]
+    }
+  ]
+}

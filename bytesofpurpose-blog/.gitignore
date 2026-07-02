@@ -45,6 +45,7 @@ src/components/KanbanBoard/kanban-data.json
 src/components/Todos/todos-data.json
 src/components/UsedIn/component-usage.json
 src/components/ProjectsCatalog/projects-data.json
+src/components/RepoCatalog/repos-data.json
 
 # Generated logo-variant SVG data (build artifact; source: src/lib/binary-pyramid-logo.js)
 designs/_binary-pyramid-variants.js
