@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [automation, scripts, cron-jobs, productivity-scripts, roadmap, multi-laptop]
 date: 2021-07-06T23:20
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Cron Jobs

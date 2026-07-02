@@ -31,6 +31,7 @@ try {
  *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks    // string[] — draft doc pages
  *   useGlobalData()['draft-docs-plugin'].default.premiumPermalinks  // string[] — premium doc pages
  *   useGlobalData()['draft-docs-plugin'].default.blogSidebarLabels  // {permalink: shortLabel} — blog posts with sidebar_label
+ *   useGlobalData()['draft-docs-plugin'].default.docsKindEmoji      // {permalink: emoji} — docs with a `kind:` (e.g. kind: hub -> 🗂️)
  *
  * Only individual docs with `draft: true` are tracked — the swizzled sidebar
  * badges the LEAF link. (Category/folder badging was dropped: a fully-draft folder
@@ -80,6 +81,12 @@ module.exports = function draftDocsPlugin(context) {
       // the current tag on a /<route>/tags/<tag> page (its items carry no tag info).
       const blogPostTags = {};
 
+      // permalink -> the kind emoji for a DOC that carries a `kind:` (e.g. `kind: hub` -> 🗂️).
+      // Docs don't get a type emoji from Docusaurus; this mirrors the blog sidebar-label logic
+      // below so a docs kind is scannable the same way. The swizzled DocSidebarItem/Link reads
+      // this and prepends the emoji (only when the label doesn't already start with one).
+      const docsKindEmoji = {};
+
       const walk = (dir) => {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
           const full = path.join(dir, entry.name);
@@ -100,6 +107,19 @@ module.exports = function draftDocsPlugin(context) {
           }
           if (data.premium === true) {
             premiumPermalinks.add(toPermalink(full, docsDir, data));
+          }
+          // Docs kind emoji: only when the kind is known AND its short label (sidebar_label ||
+          // title) doesn't already start with an emoji (authors sometimes hand-type one).
+          const kindEmoji = data.kind && BLOG_KIND_EMOJI[data.kind];
+          if (kindEmoji) {
+            const shortText = (
+              (typeof data.sidebar_label === 'string' && data.sidebar_label.trim()) ||
+              (typeof data.title === 'string' && data.title.trim()) ||
+              ''
+            );
+            if (!startsWithEmoji(shortText)) {
+              docsKindEmoji[toPermalink(full, docsDir, data)] = kindEmoji;
+            }
           }
         }
       };
@@ -166,6 +186,7 @@ module.exports = function draftDocsPlugin(context) {
         blogSidebarLabels,
         blogPinnedPermalinks: [...blogPinnedPermalinks],
         blogPostTags,
+        docsKindEmoji,
       };
     },
 

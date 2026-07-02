@@ -7,8 +7,8 @@ authors: [oeid]
 tags: [leetcode, jupyter-notebooks, graph-visualization, plotly, igraph, interviewing, notebooks, frontend-projects]
 date: 2025-01-31T10:00
 draft: true
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # Project - Leetcode x Jupyter Notebooks

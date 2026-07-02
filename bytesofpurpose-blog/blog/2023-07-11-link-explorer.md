@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [links, neo4j, graph-database, network-analysis, visualization, development]
 date: 2023-07-11T10:00
 draft: true
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # Priorities

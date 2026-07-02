@@ -6,8 +6,8 @@ authors: [oeid]
 tags: []
 image: https://i.imgur.com/mErPwqL.png
 date: 2025-02-06T10:00
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';

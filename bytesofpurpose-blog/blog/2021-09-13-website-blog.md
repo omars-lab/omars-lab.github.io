@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [blog, docusaurus, automation, voting, content, development]
 date: 2021-09-13T10:00
 draft: false
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # My Blog

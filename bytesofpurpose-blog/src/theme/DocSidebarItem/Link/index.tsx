@@ -7,11 +7,20 @@ import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';
 import {useIsDraft, DraftBadge} from '../draftBadge';
 import {useIsPremium, LockBadge} from '../lockBadge';
+import {useDocKindEmoji} from '../kindEmoji';
 import styles from './styles.module.css';
 
 // Swizzled (forked) DocSidebarItem/Link: identical to the upstream component
-// except it appends a dev/localhost-only "draft" badge for draft docs. See
-// ../draftBadge (gated to localhost + non-prod; no-op in production).
+// except it (a) prepends a kind emoji for docs that carry a `kind:` (e.g. kind: hub
+// -> 🗂️, derived from blog-kinds.json via the draft-docs plugin — see ../kindEmoji),
+// and (b) appends a dev/localhost-only "draft" badge for draft docs. See ../draftBadge
+// (gated to localhost + non-prod; no-op in production).
+
+// True when a string already begins with an emoji, so we don't double-prefix a label
+// a human already emoji'd. Mirrors plugins/draft-docs' startsWithEmoji.
+function startsWithEmoji(s: string): boolean {
+  return /^\s*[\p{Extended_Pictographic}←-⇿⌀-➿️]/u.test(s);
+}
 function LinkLabel({label}: {label: string}) {
   return (
     <span title={label} className={styles.linkLabel}>
@@ -33,6 +42,10 @@ export default function DocSidebarItemLink({
   const isInternalLink = isInternalUrl(href);
   const isDraft = useIsDraft(href);
   const isPremium = useIsPremium(href);
+  // Prepend the doc's kind emoji (e.g. 🗂️ for kind: hub) unless the label already has one.
+  const kindEmoji = useDocKindEmoji(href);
+  const displayLabel =
+    kindEmoji && !startsWithEmoji(label) ? `${kindEmoji} ${label}` : label;
   return (
     <li
       className={clsx(
@@ -58,7 +71,7 @@ export default function DocSidebarItemLink({
           onClick: onItemClick ? () => onItemClick(item) : undefined,
         })}
         {...props}>
-        <LinkLabel label={label} />
+        <LinkLabel label={displayLabel} />
         {isDraft && <DraftBadge />}
         {isPremium && <LockBadge />}
         {!isInternalLink && <IconExternalLink />}

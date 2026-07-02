@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [shortcuts, iphone, macos, automation, noteplan, productivity, development]
 date: 2021-08-29T10:00
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Priorities

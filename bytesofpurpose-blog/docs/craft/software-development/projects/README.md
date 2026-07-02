@@ -1,7 +1,8 @@
 ---
 slug: /software-development/projects
-title: '🔨 Projects'
-description: 'An index of the software projects I have built, grouped by area (frontend, backend, scripting), each linking to its dated build log on the Initiatives blog.'
+title: 'Projects'
+kind: hub
+description: 'An index of the software projects I have built, grouped by area (frontend, backend, scripting, plugins), each linking to its build log on Initiatives.'
 authors: [oeid]
 tags: [projects, software-development, portfolio]
 draft: false
@@ -16,7 +17,7 @@ body of work at once.
 
 The line is the one the whole site runs on: a project *log* is temporal (a dated thing I
 did), so it lives on Initiatives; this hub is durable (the return-to index of that work),
-so it lives here in Craft. Move a project between areas by editing its `project_area`
-frontmatter, and it re-sorts here automatically.
+so it lives here in Craft. Move a project between areas by editing its `area` frontmatter,
+and it re-sorts here automatically.
 
-<ProjectsCatalog />
+<Catalog kind="project" />

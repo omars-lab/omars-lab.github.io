@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [timeline, react, visualization, history, thoughts, development]
 date: 2025-01-01T10:00
 draft: true
-kind: reflection
-project_area: frontend
+kind: project
+area: frontend
 ---
 
 # Priortiies

@@ -12,7 +12,7 @@ import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
-import ProjectsCatalog from '@site/src/components/ProjectsCatalog';
+import Catalog from '@site/src/components/Catalog';
 import RepoCatalog from '@site/src/components/RepoCatalog';
 import TaskList from '@site/src/components/TaskList';
 import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
@@ -96,10 +96,12 @@ export default {
   // link to the post. <KanbanModalHost/> must be mounted in Root.tsx. Use as
   // <KanbanBoard board="experiments"/> or board="ideas".
   KanbanBoard,
-  // ProjectsCatalog: the durable Projects hub. Groups the /initiatives project logs by
-  // their project_area frontmatter (frontend/backend/script), generated from frontmatter
-  // (projects-data.json). Use as <ProjectsCatalog/> on /craft/software-development/projects.
-  ProjectsCatalog,
+  // Catalog: the generic durable HUB index. Renders one hub's /initiatives posts grouped by
+  // `area:`, chosen by the `kind` prop — <Catalog kind="project"/> (Projects hub),
+  // kind="tinkering" (Tinkering hub), kind="research" (Research hub). Data is generated per
+  // hub by scripts/generate-hubs-data.js from posts carrying that kind + an area. See the
+  // manage-hubs skill.
+  Catalog,
   // RepoCatalog: the "Repos of Interest" reference catalog (workspace/tools). Groups
   // repositories by tag (tool/relevant/genai/...) from repos-data.json, generated from
   // the hand-authored src/data/repos-of-interest.json. Use as <RepoCatalog/> or filter

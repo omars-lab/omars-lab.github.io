@@ -6,8 +6,8 @@ authors: [oeid]
 tags: [text-expansion, shortcuts, automation, icloud, productivity, development]
 date: 2022-04-02T10:00
 draft: true
-kind: reflection
-project_area: script
+kind: project
+area: script
 ---
 
 # Priorities
