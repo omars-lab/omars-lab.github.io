@@ -9,8 +9,10 @@ import styles from './navbarSummary.module.css';
 // leads with a consistent emoji, so each key includes that emoji prefix (matching the label in
 // docusaurus.config.js). When you change a navbar label, change its key here in the same edit.
 const SUMMARIES: Record<string, string> = {
-  '💻 Craft': 'How I see the world: durable learnings, frameworks, and strategy. The lasting lessons.',
-  '🛣️ Journey': 'How I see myself: faith and personal growth. Durable, inward.',
+  '💻 Craft': 'How I see the world: durable learnings, frameworks, and strategy. The outward work, how I do it.',
+  '🛣️ Journey': 'What drives me forward: the inward awareness to catch my own motivations, faith, growth, and the pieces of the puzzle behind why I build.',
+  '🧠 Knowledge': 'Things I know and how I understand them: the durable mental models I reason with, grouped by theme (AI, career, algorithms, interviewing).',
+  '🔄 Habits': 'How I habitually operate: the routines and practices I return to, grouped professional, personal, and spiritual.',
   '📝 Initiatives': 'The temporal half: dated experiments, project logs, and posts. What I actually did.',
   '💭 Thoughts': 'Ideas that occurred to me but I have not acted on: things I might build, simulations, predictions, critiques. A thought graduates to an Initiative when I act on it, or to Mindset when I keep it to shape my thinking.',
   '🧠 Mindset': 'The inputs I deliberately keep to shape how I think: the quotes that moved me, the affirmations I return to, the principles I live by. Curated, not just occurred.',

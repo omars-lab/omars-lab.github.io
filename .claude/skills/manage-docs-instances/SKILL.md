@@ -1,6 +1,6 @@
 ---
 name: manage-docs-instances
-description: The recipe for ADDING, RENAMING, or SPLITTING a whole root DOCS INSTANCE (a top-level /craft-style resource like /knowledge or /habits), the level ABOVE reorganize-content's within-instance moves. Owns the 7-touchpoint registration checklist (the plugin-content-docs block + navbar item, the sidebars-<name>.js file, the docs/<name>/ dir, and the 4 parallel hand-maintained instance lists in the validators/generators — including the generate-component-usage ternary that silently misroutes a new instance) + the CROSS-INSTANCE content move (each doc is a reorganize-content move: git mv + instance-relative slug + redirect). Encodes the gotchas that bit building /knowledge + /habits (slug must be INSTANCE-RELATIVE not absolute-with-prefix, the stale dev-server route table after adding an instance, draft targets can't be redirected, pin the landing as 👋 Welcome) + how to gather the instance's visual identity (the navbar emoji/label + the arched /img/cards/<name>.png for the homepage chooser). Use when the user says "make X its own root / its own resource / split X out into /X / add a new docs section / rename the /Y route". Pairs with reorganize-content (the per-doc move), maintain-homepage-hero + import-arched-image (the chooser card art), review-reader-experience (the IA that justifies a split).
+description: The recipe for ADDING, RENAMING, or SPLITTING a whole root DOCS INSTANCE (a top-level /craft-style resource like /knowledge or /habits), the level ABOVE reorganize-content's within-instance moves. Owns the 8-touchpoint registration checklist (the plugin-content-docs block + navbar item, the sidebars-<name>.js file, the docs/<name>/ dir, and the 4 parallel hand-maintained instance lists in the validators/generators — including the generate-component-usage ternary that silently misroutes a new instance) + the CROSS-INSTANCE content move (each doc is a reorganize-content move: git mv + instance-relative slug + redirect). Encodes the gotchas that bit building /knowledge + /habits (slug must be INSTANCE-RELATIVE not absolute-with-prefix, the stale dev-server route table after adding an instance, draft targets can't be redirected, pin the landing as 👋 Welcome) + how to gather the instance's visual identity (the navbar emoji/label + its SUMMARIES hover-tooltip + the arched /img/cards/<name>.png for the homepage chooser). Use when the user says "make X its own root / its own resource / split X out into /X / add a new docs section / rename the /Y route". Pairs with reorganize-content (the per-doc move), maintain-homepage-hero + import-arched-image (the chooser card art), review-reader-experience (the IA that justifies a split).
 ---
 
 # Manage docs instances (add / rename / split a root resource)
@@ -16,7 +16,7 @@ a route, or splitting a theme out of an existing instance into its own root.
 docs section", "rename the /Y route". If the user just wants a doc moved to an existing home, that's
 `reorganize-content`.
 
-## The 7-touchpoint registration checklist (for a NEW instance, `id == routeBasePath`, no prior URL)
+## The 8-touchpoint registration checklist (for a NEW instance, `id == routeBasePath`, no prior URL)
 
 Miss one and it won't build or the validators fail. All verified building `/knowledge` + `/habits`.
 
@@ -41,14 +41,19 @@ config; keep them in lockstep):**
    base→dir resolution is a LOOKUP, not a ternary. (It used to be
    `base === '/craft' ? … : 'docs/handbook'`, which SILENTLY misroutes any new instance to handbook.
    It's now `DOCS_INSTANCES.find(i => i.base === base).dir` — keep it a lookup.)
+8. **`src/theme/NavbarItem/index.tsx` `SUMMARIES`** — the navbar HOVER-TOOLTIP map, keyed by the item's
+   EXACT label (incl. emoji). Add a one-line gloss for the new tab (matching its landing framing), or
+   the tab hovers with NO popup while every sibling has one. (Swizzled NavbarItem; e2e-covered by
+   `test/e2e/navbar-overflow.spec.ts`.) This is the OTHER half of the instance's identity alongside the
+   chooser card.
 
 **Conditional:**
-8. **`scripts/generate-todos-data.js`** `SCAN` — add the instance if its `- [ ]` tasks should board.
-9. **`createRedirects` (config) + `validate-redirects.js` `WILDCARD_REWRITES`** — ONLY when RENAMING a
-   route (a `/oldprefix/* -> /newprefix/*` backstop). A brand-new root needs NEITHER.
-10. **`src/pages/index.tsx` `CHOOSER_CARDS`** — a homepage chooser card (see "Visual identity"). If you
+9. **`scripts/generate-todos-data.js`** `SCAN` — add the instance if its `- [ ]` tasks should board.
+10. **`createRedirects` (config) + `validate-redirects.js` `WILDCARD_REWRITES`** — ONLY when RENAMING a
+    route (a `/oldprefix/* -> /newprefix/*` backstop). A brand-new root needs NEITHER.
+11. **`src/pages/index.tsx` `CHOOSER_CARDS`** — a homepage chooser card (see "Visual identity"). If you
     want it ENFORCED, add the route to `validate-docs-structure.js` `checkWelcomeDrift`.
-11. **`test/e2e/*`** — extend `craft-self-split.spec.ts` / `homepage.spec.ts` if you want e2e coverage.
+12. **`test/e2e/*`** — extend `craft-self-split.spec.ts` / `homepage.spec.ts` if you want e2e coverage.
 
 **No change needed (generic, first-path-segment-derived):** `plugins/draft-docs/index.js` (derives the
 instance from the first `docs/` segment), `scripts/lib/premium-docs.js`, `scripts/validate-links.js`, and
@@ -63,10 +68,14 @@ source section README, don't drop it; prune the emptied shells (`prune-content`)
 validate after each batch. See `reorganize-content` for the per-doc mechanics; this skill just adds the
 instance around them.
 
-## Visual identity (navbar + the chooser card)
+## Visual identity (navbar + the tooltip + the chooser card)
 
 - **Navbar:** pick a distinct **emoji + short label** (`🧠 Knowledge`, `🔄 Habits`). The label carries
   the emoji (unlike docs, a navbar item's emoji is hand-typed in the label).
+- **Hover tooltip (touchpoint #8, REQUIRED):** add the tab's one-line gloss to `SUMMARIES` in
+  `src/theme/NavbarItem/index.tsx`, keyed by the EXACT label. It's what a reader sees on hover to know
+  what the section IS ("What drives me forward…", "Things I know…"). Match the landing README's framing.
+  Without it the new tab is the only one with no popup.
 - **Homepage chooser card (`CHOOSER_CARDS`, deferred by default):** each root can have an **arched card
   image** at `static/img/cards/<name>.png`, shown on the homepage hero chooser (like `craft.png`,
   `self.png`). The art must ABIDE BY the canonical arch (1024², arched silhouette, transparent outside)
