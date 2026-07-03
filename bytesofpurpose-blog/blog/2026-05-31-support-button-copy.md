@@ -10,11 +10,11 @@ date: 2026-05-31
 draft: false
 stage: running
 priority: medium
+flag: support-button-copy
+owner: Omar
 ---
 
-> **Status:** `running` (re-scoped 2026-06-01 from a copy test to a presentation test; same flag key) · **Owner:** Omar · **Flag:** `support-button-copy` · **Created:** 2026-05-31
->
-> Lifecycle: `proposed` → `designed` → `draft` → **`running`** → `analyzing` → `concluded` → `rolled-out` / `abandoned`
+<ExperimentOverview note="re-scoped 2026-06-01 from a copy test to a presentation test; same flag key" />
 
 Does the **presentation** of the coffee CTA, a plain text link vs. a styled button,
 change how often readers click through to PayPal? Both arms show the **same** copy

@@ -55,14 +55,22 @@ Create one Claude task per item below (TaskCreate), substituting specifics:
 ## Steps
 
 1. Create `blog/<YYYY-MM-DD>-<flag-key>.md` with `kind: experiment-plan`, `stage: designed`
-   (or `proposed`), `priority`, and the blog frontmatter (`title`/`sidebar_label`/`description`/
-   `authors`/`tags`/`date`). It becomes a card on the Experimentation board.
-2. Fill every section: hypothesis, motivation, variants table, metric + why, **placement
+   (or `proposed`), `priority`, `flag:` (the flag key), `owner:`, and the blog frontmatter
+   (`title`/`sidebar_label`/`description`/`authors`/`tags`/`date`). It becomes a card on the
+   Experimentation board.
+2. **Lead the body with `<ExperimentOverview />`** (registered globally; `src/components/
+   ExperimentOverview`). It reads `stage`/`flag`/`owner`/`date` from the frontmatter and renders the
+   on-brand Status/Owner/Flag/Created badges + a lifecycle bar (proposed → designed → running →
+   analyzing → concluded → rolled-out/abandoned) with the current stage highlighted. Being
+   frontmatter-driven, it CANNOT drift from the board's `stage` (both read the same field). Do NOT
+   hand-type the old `> **Status:** … Lifecycle: …` blockquote; it drifts. Pass `note="…"` for a
+   re-scope note. The stage vocab + emoji mirror the KanbanBoard experiments columns.
+3. Fill every section: hypothesis, motivation, variants table, metric + why, **placement
    + why here / why not elsewhere**, targeting, sample size/duration, risks, rollback. (The
    outline matches the `experiment-plan` kind contract in `scripts/lib/blog-kinds.json`.)
-3. Publishing the post (`draft: false`) is what puts the card on the board — a draft post is
+4. Publishing the post (`draft: false`) is what puts the card on the board — a draft post is
    NOT carded (and would 404 in prod). Keep `draft: true` only while it's not ready to show.
-4. Hand off to **`run-ab-test`**: it adds the registry entry (`src/experiments.ts`) + the
+5. Hand off to **`run-ab-test`**: it adds the registry entry (`src/experiments.ts`) + the
    component injection point, then creates/validates/launches the PostHog experiment.
 
 ## Cross-links

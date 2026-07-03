@@ -10,11 +10,11 @@ date: 2026-06-26
 draft: false
 stage: designed
 priority: medium
+flag: homepage-hero-anim
+owner: Omar
 ---
 
-> **Status:** `designed` · **Owner:** Omar · **Flag:** `homepage-hero-anim` · **Created:** 2026-06-26
->
-> Lifecycle: `proposed` → **`designed`** → `running` → `analyzing` → `concluded` → `rolled-out` / `abandoned`
+<ExperimentOverview />
 
 Does the **way the homepage hero cards animate** change how often a visitor clicks into a
 section? All three arms show the **same** seven destination cards with the **same** copy and the
