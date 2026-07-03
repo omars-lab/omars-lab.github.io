@@ -901,6 +901,11 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             // self-reflection merged into the Reflecting habit (2026-07): /journey/self-reflection
             // is the same practice as /habits/personal/reflecting. Redirect the old published URL.
             {from: "/journey/self-reflection", to: "/habits/personal/reflecting"},
+            // my-contributions moved up + renamed, and personal-growth folded into /habits/personal
+            // (2026-07). Old public URLs redirect to the new homes.
+            {from: "/journey/personal-growth/my-contributions", to: "/journey/contributions-across-career"},
+            {from: "/journey/personal-growth", to: "/habits/personal"},
+            {from: "/journey/personal-growth/prompts/personal-life-content-organizer", to: "/habits/personal/prompts/personal-life-content-organizer"},
             // Journey reframe (2026-07): entrepreneurship + productivity moved from /craft to
             // /journey (journey = "what drives me forward"). Instance-relative slugs are unchanged;
             // only the base flips /craft -> /journey. Published old URLs redirect to the new home.
@@ -1036,8 +1041,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/mental-models/understanding-the-genai-domain/ai-framework-landscape", to: "/knowledge/ai/2025-11-10-ai-framework-landscape"},
             {from: "/docs/mental-models/understanding-the-genai-domain/learning-about-genai", to: "/knowledge/ai/2025-10-04-learning-about-genai"},
             {from: "/docs/mental-models/understanding-the-genai-domain/understanding-fundamentals-of-genai-systems", to: "/knowledge/ai/2025-07-30-understanding-the-fundamentals-of-genai"},
-            {from: "/docs/personal-growth", to: "/journey/personal-growth"},
-            {from: "/docs/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
+            {from: "/docs/personal-growth", to: "/habits/personal"},
+            {from: "/docs/personal-growth/my-contributions", to: "/journey/contributions-across-career"},
             {from: "/docs/product-management", to: "/craft/product-management"},
             {from: "/docs/productivity", to: "/journey/productivity"},
             {from: "/docs/productivity/terminology", to: "/handbook/terminology/getting-things-done"},
@@ -1056,16 +1061,16 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
             {from: "/docs/prompts/heal/docusaurus-maintenance-system", to: "/craft/blogging/prompts/docusaurus-maintenance-system"},
             {from: "/docs/prompts/meta/prompt-maturity-framework", to: "/craft/blogging/prompts/prompt-maturity-framework"},
             {from: "/docs/prompts/organize/daily-todo-carry-over", to: "/journey/productivity/prompts/daily-todo-carry-over"},
-            {from: "/docs/prompts/organize/personal-life-content-organizer", to: "/journey/personal-growth/prompts/personal-life-content-organizer"},
+            {from: "/docs/prompts/organize/personal-life-content-organizer", to: "/habits/personal/prompts/personal-life-content-organizer"},
             {from: "/docs/prompts/readme", to: "/craft/blogging/prompts"},
             {from: "/docs/prompts/refactor/role-refactoring-system", to: "/craft/blogging/prompts/role-refactoring-system"},
             {from: "/docs/scripting", to: "/craft/software-development/scripting"},
             {from: "/docs/self", to: "/journey"},
             {from: "/docs/self/faith", to: "/journey/faith"},
-            {from: "/docs/self/personal-growth", to: "/journey/personal-growth"},
+            {from: "/docs/self/personal-growth", to: "/habits/personal"},
             {from: "/docs/self/personal-growth/habits-ideation", to: "/habits/personal/ideation"},
-            {from: "/docs/self/personal-growth/my-contributions", to: "/journey/personal-growth/my-contributions"},
-            {from: "/docs/self/personal-growth/prompts/personal-life-content-organizer", to: "/journey/personal-growth/prompts/personal-life-content-organizer"},
+            {from: "/docs/self/personal-growth/my-contributions", to: "/journey/contributions-across-career"},
+            {from: "/docs/self/personal-growth/prompts/personal-life-content-organizer", to: "/habits/personal/prompts/personal-life-content-organizer"},
             {from: "/docs/skills/preparing-for-interviews/interview-preparation-guide", to: "/craft/interview-prep/preparing"},
             {from: "/docs/skills/preparing-for-interviews/personal-story-bank", to: "/craft/interview-prep/preparing/personal-story-bank"},
             {from: "/docs/skills/preparing-for-interviews/pre-meditating-responses-for-leadership-questions", to: "/craft/interview-prep/preparing/pre-meditating-responses-for-leadership-questions"},
