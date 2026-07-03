@@ -129,7 +129,11 @@ function migratedContentFromBlock(block) {
 // --inventory
 // ---------------------------------------------------------------------------
 
-const MD_LINK_RE = /\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g;
+// Markdown link. The LABEL may itself contain one level of nested `[...]`
+// (e.g. `[LangChain [v0.3] - YouTube](url)`), so match balanced inner brackets
+// rather than stopping at the first `]` — otherwise such links are silently
+// dropped from BOTH the inventory and the audit tally (a content-loss bug).
+const MD_LINK_RE = /\[((?:[^[\]]|\[[^[\]]*\])*)\]\((https?:\/\/[^)\s]+)\)/g;
 // A bare URL not immediately preceded by ']( ' (i.e. not the target of a md link).
 const BARE_URL_RE = /(?<!\]\()(?<!["'(])\bhttps?:\/\/[^\s)>\]]+/g;
 

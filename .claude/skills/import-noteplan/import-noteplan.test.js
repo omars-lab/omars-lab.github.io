@@ -58,6 +58,13 @@ test('finds 2 md links + 1 bare url', () => {
   assert.strictEqual(bare.length, 1, 'bare urls');
   assert.ok(inv.links.some((l) => l.url === 'https://example.com/bare'));
 });
+test('finds a link whose LABEL contains nested [brackets] (regression)', () => {
+  const { p } = tmp('# S\n- [LangChain [v0.3] - YouTube](https://youtu.be/abc123)\n');
+  const inv = M.inventory(p);
+  const hit = inv.links.find((l) => l.url === 'https://youtu.be/abc123');
+  assert.ok(hit, 'nested-bracket label link must not be dropped');
+  assert.ok(hit.text.includes('v0.3'));
+});
 test('captures section + task-state', () => {
   const { p } = tmp(SAMPLE);
   const inv = M.inventory(p);
