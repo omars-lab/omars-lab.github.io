@@ -1,0 +1,121 @@
+/* ExperimentOverview — the experiment post header: a badge row + a lifecycle progress bar.
+ * On-brand: a card surface + hairline, mint pastel for the CURRENT stage (with --tea-ink, the
+ * design-system tag-pill discipline), muted done stages, ghosted upcoming ones. */
+
+.overview {
+  margin: var(--space-5, 1.5rem) 0;
+  padding: var(--space-4, 1rem);
+  background: var(--ifm-background-surface-color, var(--ifm-color-emphasis-100));
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--radius-md, 0.5rem);
+}
+
+/* --- the badge row --- */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.badgeLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.badgeValue {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ifm-heading-color);
+}
+
+.flag {
+  font-size: 0.85rem;
+}
+
+.note {
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* --- the lifecycle bar --- */
+.lifecycle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-1, 0.25rem);
+  list-style: none;
+  margin: var(--space-3, 0.75rem) 0 0;
+  padding: 0;
+}
+
+/* each stage is a pill; a chevron between them is drawn with ::after */
+.lifecycle > li,
+.fork > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm, 0.4rem);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.stageEmoji {
+  font-size: 0.9rem;
+}
+
+/* done: past stages, muted but legible */
+.done {
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-200);
+}
+
+/* current: the highlighted stage — mint pastel FILL with --tea-ink (the tag-pill discipline) */
+.current {
+  color: var(--tea-ink);
+  background: var(--tea-mint);
+  font-weight: 700;
+}
+
+/* upcoming: future stages, ghosted */
+.upcoming {
+  color: var(--ifm-color-emphasis-500);
+  background: transparent;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+}
+
+/* the terminal fork (rolled-out / abandoned) sits together with a slash between */
+.fork {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 0.25rem);
+  padding: 0 !important;
+  background: transparent !important;
+}
+.fork::before {
+  content: '/';
+  color: var(--ifm-color-emphasis-400);
+  margin: 0 0.15rem;
+  align-self: center;
+}
+
+/* On narrow screens the labels can hide, keeping the emoji trail readable. */
+@media (max-width: 600px) {
+  .stageLabel {
+    display: none;
+  }
+  .badgeLabel {
+    display: none;
+  }
+}
