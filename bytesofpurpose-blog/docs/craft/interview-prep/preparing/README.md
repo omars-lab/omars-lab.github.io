@@ -39,7 +39,7 @@ Interview preparation is not just about memorizing answers, it's about developin
 Follow this systematic approach to maximize your interview success:
 
 ### Phase 1: Foundation (Start Here)
-- [ ] **Read [Interview Process](/knowledge/interviewing/understanding-the-interview-process)** - Learn the overall interview flow and what to expect
+- [ ] **Read [Interview Process](/craft/interview-prep/process-interview)** - Learn the overall interview flow and what to expect
 - [ ] **Study [SDE Skill Differences](/knowledge/career/understanding-differences-in-skills)** - Understand the differences between SDE levels and expectations
 - [ ] **Review [Leadership Principles](/knowledge/career/understanding-desireable-leadership-skills)** - Master the 10 core leadership principles and what interviewers look for
 - [ ] **Study [Technical Skills Evaluation](/knowledge/career/understanding-desireable-tech-skills)** - Learn the technical evaluation criteria
