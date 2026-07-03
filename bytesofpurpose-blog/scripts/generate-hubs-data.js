@@ -75,6 +75,12 @@ const HUBS = {
     file: 'research-data.json',
     areas: AREAS,
   },
+  prompt: {
+    kind: 'prompt',
+    out: 'PromptsCatalog',
+    file: 'prompts-data.json',
+    areas: AREAS,
+  },
   pattern: {
     kind: 'pattern',
     out: 'PatternsCatalog',

@@ -54,6 +54,7 @@ Current hubs:
 | Projects | `project` 🔨 | `blog/` | `/craft/software-development/projects` | area |
 | Tinkering | `tinkering` 🔧 | `blog/` | `/craft/software-development/tinkering` | area |
 | Research | `research` 🔬 | `blog/` | `/craft/software-development/research` | area (also cards on the [Research board](/craft/product-management/research) by stage) |
+| Prompts | `prompt` 💬 | `blog/` | `/craft/software-development/prompts` | area (reusable AI prompts I built, as dated /initiatives posts) |
 | Patterns | `pattern` 🧱 | `docs/craft/.../patterns` | `/craft/software-development/patterns` | area (durable /craft docs; sorted A–Z) |
 | Techniques | `technique` 🔩 | `docs/craft/.../techniques` | `/craft/software-development/techniques` | area (durable /craft docs; sorted A–Z) |
 

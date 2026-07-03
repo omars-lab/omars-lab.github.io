@@ -105,8 +105,15 @@
         {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
       ]
     },
-    "quote-set": {
+    "prompt": {
       "emoji": "💬",
+      "description": "A reusable AI PROMPT I built: what it does, the value it delivers, and a link to the prompt itself. A dated /initiatives post, indexed by AREA on the Prompts hub via its `area:` frontmatter.",
+      "outline": [
+        {"id": "description", "label": "a non-empty `description:` frontmatter (powers the social card + share text)"}
+      ]
+    },
+    "quote-set": {
+      "emoji": "🗣️",
       "description": "A themed set of quotes that moved me, with my reflection on why ('quotes that moved me', affirmations). A curated Mindset input I keep to shape my thinking; each quote is a component inside a <QuoteSet>: an <EditorialQuote> pull-quote, or a <PosterQuote> cascade for the 'watch your thoughts ... destiny' poster style.",
       "mindset": true,
       "mindsetGloss": "Quotes that moved me, kept to shape my thinking",

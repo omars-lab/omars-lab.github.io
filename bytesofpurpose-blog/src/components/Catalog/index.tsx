@@ -5,6 +5,7 @@ import styles from './Catalog.module.css';
 import projectsData from '@site/src/components/ProjectsCatalog/projects-data.json';
 import tinkeringData from '@site/src/components/TinkeringCatalog/tinkering-data.json';
 import researchData from '@site/src/components/ResearchCatalog/research-data.json';
+import promptsData from '@site/src/components/PromptsCatalog/prompts-data.json';
 import patternsData from '@site/src/components/PatternsCatalog/patterns-data.json';
 import techniquesData from '@site/src/components/TechniquesCatalog/techniques-data.json';
 
@@ -41,6 +42,7 @@ const DATA: Record<string, HubData> = {
   project: projectsData as HubData,
   tinkering: tinkeringData as HubData,
   research: researchData as HubData,
+  prompt: promptsData as HubData,
   pattern: patternsData as HubData,
   technique: techniquesData as HubData,
 };

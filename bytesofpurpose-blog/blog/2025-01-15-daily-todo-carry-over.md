@@ -1,10 +1,11 @@
 ---
-title: "💬 Daily Todo Carry Over"
+kind: prompt
+area: script
+title: 'Daily Todo Carry Over'
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "task-management"]
 description: "How I use AI to automatically carry over incomplete tasks from daily notes, organize meeting notes, and maintain clean productivity workflows"
-author: "Omar Eid"
-slug: /productivity/prompts/daily-todo-carry-over
+slug: /daily-todo-carry-over
 authors: [oeid]
 ---
 
