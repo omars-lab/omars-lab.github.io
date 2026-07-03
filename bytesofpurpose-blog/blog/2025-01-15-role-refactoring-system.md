@@ -1,10 +1,11 @@
 ---
-title: "💬 Role Refactoring System"
+kind: prompt
+area: script
+title: 'Role Refactoring System'
 date: 2025-01-15
 tags: ["ai", "prompts", "workflow", "automation", "productivity", "role-management", "organization", "personal-development"]
 description: 'An AI prompt system that refactors personal role definitions, separating generic frameworks from actionable personal items.'
-author: "Omar Eid"
-slug: /blogging/prompts/role-refactoring-system
+slug: /role-refactoring-system
 authors: [oeid]
 ---
 

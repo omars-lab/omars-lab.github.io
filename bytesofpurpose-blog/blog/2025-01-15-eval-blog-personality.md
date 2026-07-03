@@ -1,6 +1,8 @@
 ---
-slug: /blogging/prompts/evals/all-posts/evaluating-blog-personality
-title: "📏 Evaluating Blog Personality"
+kind: prompt
+area: script
+slug: /eval-blog-personality
+title: 'Evaluating Blog Personality'
 description: "Universal evaluation rubric for assessing writing personality, voice, and general writing techniques in blog posts"
 authors: [oeid]
 tags: [evaluation, general, personality, voice, writing-techniques, universal-rubric]
@@ -103,7 +105,7 @@ draft: false
 
 ## Combined Process
 
-This rubric should be used in combination with the [content quality evaluation](./evaluating-content-quality.md) and [general blog evaluation](./general-blog-evaluation.md) to ensure comprehensive assessment of both personality and content quality.
+This rubric should be used in combination with the [content quality evaluation](/initiatives/eval-content-quality) and [general blog evaluation](/initiatives/eval-general-blog) to ensure comprehensive assessment of both personality and content quality.
 
 ## Quality Threshold
 

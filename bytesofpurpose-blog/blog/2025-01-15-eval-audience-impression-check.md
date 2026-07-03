@@ -1,6 +1,8 @@
 ---
-slug: /blogging/prompts/evals/all-posts/audience-impression-check
-title: "📏 Audience Impression Check"
+kind: prompt
+area: script
+slug: /eval-audience-impression-check
+title: 'Audience Impression Check'
 description: "Universal evaluation rubric for simulating external audience perceptions and targeting specific professional audiences"
 authors: [oeid]
 tags: [evaluation, general, audience-perception, professional-targeting, external-audience, universal-rubric]
@@ -161,7 +163,7 @@ draft: false
 
 ## Combined Process
 
-This rubric should be used in combination with the [content quality evaluation](./evaluating-content-quality.md), [personality evaluation](./evaluating-blog-personality.md), and [general blog evaluation](./general-blog-evaluation.md) to ensure comprehensive assessment of both content quality and professional positioning.
+This rubric should be used in combination with the [content quality evaluation](/initiatives/eval-content-quality), [personality evaluation](/initiatives/eval-blog-personality), and [general blog evaluation](/initiatives/eval-general-blog) to ensure comprehensive assessment of both content quality and professional positioning.
 
 ## Quality Threshold
 

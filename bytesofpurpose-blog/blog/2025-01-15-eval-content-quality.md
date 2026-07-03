@@ -1,6 +1,8 @@
 ---
-slug: /blogging/prompts/evals/all-posts/evaluating-content-quality
-title: "📏 Evaluating Content Quality"
+kind: prompt
+area: script
+slug: /eval-content-quality
+title: 'Evaluating Content Quality'
 description: "Universal evaluation rubric for assessing wordiness, focus, truthfulness, and content grounding in blog posts"
 authors: [oeid]
 tags: [evaluation, general, content-quality, wordiness, focus, truthfulness, content-grounding, universal-rubric]
@@ -80,7 +82,7 @@ draft: false
 
 ## Combined Process
 
-This rubric should be used in combination with the [general blog evaluation criteria](./general-blog-evaluation.md) to ensure both content quality and professional impact are properly assessed.
+This rubric should be used in combination with the [general blog evaluation criteria](/initiatives/eval-general-blog) to ensure both content quality and professional impact are properly assessed.
 
 ## Quality Threshold
 

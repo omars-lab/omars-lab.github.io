@@ -1,7 +1,9 @@
 ---
-slug: /blogging/prompts/evals/specific-posts/evaluating-my-contributions
-title: "📏 Evaluating My Contributions Blog Post"
-sidebar_label: '📏 My Contributions'
+kind: prompt
+area: script
+slug: /eval-my-contributions
+title: 'Evaluating My Contributions Blog Post'
+sidebar_label: 'My Contributions'
 description: "Evaluation rubric for the 'My Contributions' blog post - focused on timeline structure, STAR summaries, and professional impact demonstration"
 authors: [oeid]
 tags: [rubric, my-contributions, timeline, star-summaries, professional-impact, evaluation]
@@ -67,7 +69,7 @@ draft: false
 
 ## Combined Process
 
-This rubric should be used in combination with the [general blog evaluation criteria](../all-posts/general-blog-evaluation.md) to ensure both content quality and professional impact are properly assessed.
+This rubric should be used in combination with the [general blog evaluation criteria](/initiatives/eval-general-blog) to ensure both content quality and professional impact are properly assessed.
 
 ## Quality Threshold
 
