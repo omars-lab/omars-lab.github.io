@@ -26,3 +26,4 @@ dedup an issue outside the normal flow, update its status here in the same step.
 All screenshots: `~/Library/CloudStorage/Dropbox/bytesofpurpose-audits/2026-06-03/`
 | 79 | open | _(set key)_ | [#79](https://github.com/omars-lab/omars-lab.github.io/issues/79) | _(set source)_ | _(set path)_ |
 | 111 | open | _(set key)_ | [#111](https://github.com/omars-lab/omars-lab.github.io/issues/111) | _(set source)_ | _(set path)_ |
+| 176 | open | prompt-hub-half-b-skills-and-submodule | [#176](https://github.com/omars-lab/omars-lab.github.io/issues/176) surface .claude/skills + the prompts submodule as prompt posts (Half B) | prompt-hub backlog 2026-07-03 | (no screenshot — backlog item) |
