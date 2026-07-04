@@ -21,6 +21,27 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-07-03] The big IA reorg: two new roots, a reframed Journey, a Prompts hub, and a clean deploy
+<!-- meta: type=feature category=development priority=high component=Site -->
+Reorganized the whole site around where content truly belongs, then shipped it. Stood up two new durable Docusaurus roots: `/knowledge` (the mental models, flattened by theme) and `/habits` (every habit, grouped professional, personal, and spiritual), each with a pinned Welcome landing. Reframed `/journey` from "how I see myself" into "what drives me forward, the pieces of the puzzle I am motivated by," and moved entrepreneurship and productivity into it (faith stays). Folded self-reflection and personal-growth into their real homes as habits, moved my-contributions up and renamed it contributions-across-career, and turned prompts into a real Prompts hub with a new `prompt` kind, relocating the initiative-flavored prompts to `/initiatives`. Made NotePlan links first-class `<NotePlanButton>` components with a local-only validator, gave experiment cards a frontmatter-driven `<ExperimentOverview>` header, flipped the quote-set emoji to a speaker, and added the missing navbar hover tooltips for the new roots. Built the reusable machinery behind all of it: `reorganize-content`, `prune-content`, `manage-docs-instances`, `transform-noteplan-links`, and a `discover-my-journey` delta skill plus Stop-hook that surfaces patterns about the author from recent writing. Deployed the merged work across ten PRs to production, encrypted premium content clean, and verified every new URL and redirect renders live in the browser.
+
+- PR A: /knowledge instance + mental-models move (flatten by theme)
+- PR B: /habits instance + all habits move (professional/personal)
+- PR C: manage-docs-instances skill + model-convention update
+- Document instance card-art/sketch sourcing in manage-docs-instances skill
+- Pin /knowledge landing as top Welcome in sidebar
+- Move more productivity 'X Techniques' folders to /habits as habits
+- Validate + transform NotePlan links into first-class buttons (+ transform-noteplan-links skill)
+- Better CX for experiment/card overview header blocks
+- Reconcile self-reflection + personal-growth remainder with /habits
+- Reframe /journey as 'why I build / motivation' + move entrepreneurship + productivity in
+- Add hover-over tooltips for new blog sources (knowledge, habits) + journey framing + update skill
+- Merge self-reflection into the reflecting habit
+- Build a 'discover-my-journey' skill + hook that surfaces insights about the author from their writing
+- Move my-contributions up + rename; then move personal-growth to habits
+- Turn prompts into a prompt hub (prompts + skills/commands + subagents) + move initiative-prompts to /initiatives
+- Deploy the IA reorg to production + verify live
+
 ## [2026-07-02] The durable-hub system: kinds, unified area, and three hubs
 <!-- meta: type=feature category=development priority=high component=Site -->
 Turned the ad-hoc Projects hub from the first batch into a real, enforced SYSTEM. A "hub" is now a durable `/craft` index page (a new `kind: hub`) that catalogs the dated `/initiatives` logs of one activity, grouped by area, via a generated `<Catalog>` component. Established that `/craft` docs can carry a `kind:` (they could not surface an emoji before; the `draft-docs` plugin now derives a docs kind emoji the same way it does for blog posts). Introduced two new activity kinds (project, tinkering) plus a single unified `area:` field (backend, frontend, script, plugin) so the model scales to many hubs without a field per hub. Generalized the one-off ProjectsCatalog into a manifest-driven generator plus a generic `<Catalog kind="...">` component, and migrated the existing project posts onto it. Moved 34 more dated logs (project, tinkering, research) out of `/craft` into `/initiatives`, retired the emptied folders, and stood up Tinkering and Research hubs (research logs also flow onto the existing Research board by stage, so the hub is the by-area view and the board the by-progress view). Made the whole thing self-sustaining: a `make validate-hubs` gate plus a warn hook that catch a hub rendering no catalog or a post missing its area, a CLAUDE.md operating convention, and a `manage-hubs` skill that owns the registry and the add-a-hub checklist.
