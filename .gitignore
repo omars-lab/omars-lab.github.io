@@ -22,6 +22,7 @@ __pycache__/
 *.pyc
 .claude/plans/routes-before.txt
 .claude/scheduled_tasks.lock
+.claude/skills/discover-my-journey/.last-run
 .audit-tmp/
 packages/*/dist/
 .claude/.scratch-screenshots/

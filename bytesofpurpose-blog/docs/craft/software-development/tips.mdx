@@ -35,3 +35,32 @@ in a repo), so the guidance is complete rather than ad hoc:
 ## On designing randomized control trials (RCTs)
 
 - When it comes to proper experiment design, it is important to identify the chain of causal change.
+
+## On naming a company or product
+
+- When you name something, consider how the sentence sounds when an employee says it out loud: "If this is something *X* wants to adopt", "*X* can study". The name should carry the weight you want.
+
+## On working with infosec and other teams
+
+- With infosec, the pattern is usually to cut a consultation ticket rather than expect self-serve answers.
+- Teams that already solved a hard problem (emailing, ads, books) are worth consulting before you build your own.
+
+## On running a team's process
+
+- Experienced devs should help cut work, organize it, and vet tickets so they are properly tagged and scoped, not just take the next item.
+- A script that detects poorly tagged or organized tickets pays for itself.
+- The hiring question is two questions, not one: should we hire, and if we do, how will they grow and be successful here?
+
+## On design review
+
+- Consolidate the criteria you evaluate a design against so reviews are consistent. Two that matter: what are the experience implications of this design, and what are the shared-data-model implications?
+
+## On Java concurrency
+
+- The default parallel-stream thread pool is shared and can deadlock. Almost never use it directly; supply your own pool.
+- On Java 21, prefer virtual-thread executors for producer/consumer and bulk work.
+- For huge DynamoDB scans, export to S3 and process the files asynchronously instead. That approach has hit 500k+ TPS.
+
+## On team retros
+
+- Run a retro every two weeks, and add a little gamification. One framing that works: a boat sailing the ocean, asking what the headwinds and tailwinds are.
