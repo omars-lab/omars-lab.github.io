@@ -120,7 +120,21 @@ A `<Walkthrough>` is hand-crafted, so on an `import-co-design` post it must live
 3. The importer injects `import Mockups … <Mockups/>` after the truncate marker and PRESERVES
    it across re-imports; it never regenerates the sidecar. (See `import-co-design`.)
 
-For a hand-authored post (not an import), put the `<Walkthrough>` directly in the post body.
+For a hand-authored `designs/` post (one NOT driven by `import-co-design`, e.g. a design
+written from a pasted plan), the **sidecar is still the better home** — it keeps the post body
+readable and matches how every other agentic design post is structured. The only difference is
+there is no importer to inject the wiring, so you do it by hand:
+
+1. Author `designs/_mockups/<name>.mdx` exactly as above (default-exported `Mockups()`,
+   `import {Mockup, Walkthrough} from '@omars-lab/blog-ui'` at the top).
+2. Add `mockups: ./_mockups/<name>.mdx` to the post frontmatter (metadata/provenance).
+3. Hand-add, right after the `<!-- truncate -->` marker in the post body:
+   `import Mockups from './_mockups/<name>.mdx';` then `<Mockups />`.
+
+Putting the `<Walkthrough>` inline in the post body also works, but only prefer it for a
+throwaway one-off; the sidecar is the default. (Worked hand-authored example:
+`designs/_mockups/fleetplane.mdx` — a marquee walkthrough plus four static `<Mockup>`s,
+wired into `designs/2026-07-04-fleetplane.mdx` this way.)
 
 ## Verify (always prove — client-rendered)
 
@@ -158,6 +172,14 @@ The e2e spec `test/e2e/co-design-imports.spec.ts` has a worked assertion (the
 
 ## Learnings log (newest first)
 
+- 2026-07-04 — Sidecar works for HAND-AUTHORED posts too. Building the Fleetplane design
+  (`designs/2026-07-04-fleetplane.mdx`) from a pasted implementation plan (no `import-co-design`
+  source), the `_mockups/<name>.mdx` sidecar + `mockups:` frontmatter + a hand-added
+  `import Mockups … <Mockups/>` after the truncate marker gave the same clean structure as the
+  imported posts, without inlining a big `<Walkthrough>` into the body. Corrected the old advice
+  ("put it directly in the post body") to make the sidecar the default and inlining the
+  exception. The marquee walkthrough animated the transcript-viewer flow (sanitize-on-device to
+  audited raw access); four static `<Mockup>`s covered the other Phase 4 surfaces.
 - 2026-06-23 — Created. The walkthrough is a two-scene crossfade engine (app `<Mockup>` +
   built-in Claude CLI). dragSelect/type animate progressively (not instant) so it reads like
   a real session. Grid-stacking the scenes in one cell was the fix for the Claude scene
