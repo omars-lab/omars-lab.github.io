@@ -1,0 +1,66 @@
+---
+slug: /software-development/aws-reading-list
+title: '🔖 AWS Reading List'
+sidebar_label: '🔖 AWS reference'
+kind: reading-list
+description: "An AWS reference reading list grouped by service: QuickSight, ELB and ALB, Lambda and SnapStart, DynamoDB streams, CDK, CloudFormation, and security."
+authors: [oeid]
+tags: [software-development, aws, cloud, reading-list]
+draft: true
+---
+
+The AWS docs, posts, and answers I keep coming back to, grouped by service, with a note where one
+earned it. A living list.
+
+## QuickSight
+
+- [Starting an analysis in Quick Sight](https://docs.aws.amazon.com/quicksight/latest/user/creating-an-analysis.html)
+- [To display 2 sets of data from same table with 2 different query conditions - Q&A - Amazon](https://community.amazonquicksight.com/t/to-display-2-sets-of-data-from-same-table-with-2-different-query-conditions/23138)
+- [Adding filter controls to analysis sheets](https://docs.aws.amazon.com/quicksight/latest/user/filter-controls.html)
+- [Using a control with a parameter in Amazon Quick](https://docs.aws.amazon.com/quicksight/latest/user/parameters-controls.html)
+
+## Load balancing (ELB/ALB)
+
+- [Target groups for your Application Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html)
+- [Reddit - Please wait for verification](https://www.reddit.com/r/aws/comments/9hruew/http_vs_https_target_group_for_app_load_balancer/)
+- [Create an HTTPS listener for your Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)
+- [amazon web services - Application Load Balancer (ELBv2) SSL pass through - Stack Overflow](https://stackoverflow.com/questions/42027582/application-load-balancer-elbv2-ssl-pass-through)
+- [Amazon's ALBs do not validate TLS certs from internal services (Kevin Burke)](https://kevin.burke.dev/kevin/amazons-albs-insecure-internal-traffic/)
+- [New: TLS termination for Network Load Balancers (AWS blog)](https://aws.amazon.com/blogs/aws/new-tls-termination-for-network-load-balancers/)
+
+## Networking and VPC
+
+- [RFC 9114: HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html)
+- [How Amazon VPC works](https://docs.aws.amazon.com/vpc/latest/userguide/how-it-works.html#vpc-ip-addressing)
+- [Google: terminate ssl alb nlb](https://www.google.com/search?client=firefox-b-1-e&q=terminate+ssl+alb+nlb)
+
+## Lambda
+
+- [Improving startup performance with Lambda SnapStart](https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html)
+- [Reducing Java cold starts on Lambda with SnapStart (AWS blog)](https://aws.amazon.com/blogs/compute/reducing-java-cold-starts-on-aws-lambda-functions-with-snapstart/)
+- [Customize at the edge with Lambda@Edge - Amazon CloudFront](https://docs.aws.amazon.com/lambda/latest/dg/lambda-edge.html)
+
+## DynamoDB streams
+
+- [Best practices using DynamoDB Streams with Lambda](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.BestPracticesWithDynamoDB.html) - A Lambda consumer for a DDB stream is not exactly-once; make your function idempotent to survive duplicate processing.
+- [DynamoDB Streams and AWS Lambda triggers](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.Lambda.html) - Keep the Lambda short-lived; for high-velocity streams, trigger an async step-function workflow rather than a long synchronous Lambda. The table and Lambda must be in the same account.
+
+## CDK
+
+- [@aws-cdk/aws-ecs-patterns module](https://docs.aws.amazon.com/cdk/api/v1/docs/aws-ecs-patterns-readme.html)
+- [AWS CDK: hotswap rollback control (release note)](https://aws.amazon.com/about-aws/whats-new/2021/10/aws-cdk-releases-hotswap-rollback-control/)
+- [@aws-cdk/region-info module](https://docs.aws.amazon.com/cdk/api/v1/docs/region-info-readme.html)
+
+## CloudFormation
+
+- [Using CloudFormation rollback triggers](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-rollback-triggers.html)
+
+## Security and IAM
+
+- [Create a Role with AWS CLI - Complete Guide | bobbyhadz](https://bobbyhadz.com/blog/aws-cli-create-role#create-an-iam-role-with-aws-cli)
+- [Using Route 53 private hosted zones for cross-account, multi-region architectures (AWS blog)](https://aws.amazon.com/blogs/architecture/using-route-53-private-hosted-zones-for-cross-account-multi-region-architectures/)
+- [Protect public clients for Amazon Cognito with a CloudFront proxy (AWS blog)](https://aws.amazon.com/blogs/security/protect-public-clients-for-amazon-cognito-by-using-an-amazon-cloudfront-proxy/) - Secrets cannot live in client-side code; a CloudFront proxy injects the secret server-side for requests meeting your criteria.
+
+## Route 53
+
+- [AWS Route 53: FAQs  -  limits per account](https://aws.amazon.com/route53/faqs/)
