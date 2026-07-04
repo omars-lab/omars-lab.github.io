@@ -1,0 +1,176 @@
+---
+# Mockup sidecar for design-fleetplane.
+# Hand-authored UX mockups + one animated walkthrough for the four Phase 4 surfaces
+# (transcript viewer, plugin hub, dashboard, deck studio). The post links this file via its
+# frontmatter `mockups:` field and renders <Mockups /> after the truncate marker.
+---
+
+import {Mockup, Walkthrough} from '@omars-lab/blog-ui';
+
+export default function Mockups() {
+  const ff = 'var(--ifm-font-family-base)';
+  const mono = 'var(--ifm-font-family-monospace)';
+  const hair = '1px solid var(--ifm-color-emphasis-200)';
+
+  // A typed redaction badge: shows the secret was scrubbed, never the value.
+  const badge = (label, id) => (
+    <span id={id} style={{display: 'inline-block', padding: '0.02rem 0.4rem', borderRadius: '5px', background: 'rgba(74,155,142,0.15)', color: '#2f7d6f', border: '1px solid rgba(74,155,142,0.4)', fontFamily: mono, fontSize: '0.68rem', fontWeight: 700}}>{label}</span>
+  );
+
+  // A KPI tile for the dashboard mock.
+  const tile = (label, value, sub) => (
+    <div style={{flex: '1 1 120px', border: hair, borderRadius: '9px', padding: '0.55rem 0.65rem', background: 'var(--ifm-background-surface-color)'}}>
+      <div style={{fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--ifm-color-emphasis-600)'}}>{label}</div>
+      <div style={{fontWeight: 800, fontSize: '1.05rem', color: 'var(--ifm-color-primary)'}}>{value}</div>
+      <div style={{fontSize: '0.66rem', color: 'var(--ifm-color-emphasis-600)'}}>{sub}</div>
+    </div>
+  );
+
+  // Adoption bar for the plugin hub.
+  const adopt = (name, pct) => (
+    <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.25rem 0', fontSize: '0.74rem'}}>
+      <div style={{flex: '0 0 118px', fontFamily: mono}}>{name}</div>
+      <div style={{flex: '1 1 auto', height: '8px', borderRadius: '999px', background: 'var(--ifm-color-emphasis-200)', overflow: 'hidden'}}>
+        <div style={{width: pct, height: '100%', background: 'var(--ifm-color-primary)'}} />
+      </div>
+      <div style={{flex: '0 0 34px', textAlign: 'right', fontWeight: 700}}>{pct}</div>
+    </div>
+  );
+
+  // ---- The transcript-viewer scene, driven by the Walkthrough ----
+  const viewerScene = (
+    <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/transcripts/s_9c2e" caption="Open a session: redactions are badges, the agent's log_issue call is inline, and raw access is a logged download.">
+      <div style={{fontFamily: ff, minHeight: '290px'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.55rem 0.85rem', borderBottom: hair, fontSize: '0.72rem'}}>
+          <strong style={{fontSize: '0.8rem'}}>session s_9c2e</strong>
+          <span style={{fontFamily: mono, color: 'var(--ifm-color-emphasis-700)'}}>eng_0f3a · repo#a1b2 · opus</span>
+          <button id="wt-raw" style={{marginLeft: 'auto', padding: '0.25rem 0.6rem', border: hair, borderRadius: '7px', background: 'var(--ifm-background-surface-color)', fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer'}}>raw JSONL</button>
+        </div>
+        <div style={{padding: '0.7rem 0.9rem', display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.76rem'}}>
+          <div style={{padding: '0.4rem 0.55rem', borderRadius: '8px', background: 'var(--ifm-color-emphasis-100)'}}>
+            <span style={{fontWeight: 700}}>user</span> · deploy the release and rotate the token
+          </div>
+          <div style={{padding: '0.4rem 0.55rem', borderRadius: '8px', border: hair}}>
+            <span style={{fontFamily: mono, fontWeight: 700, color: 'var(--ifm-color-primary)'}}>Bash</span> · git push · redacted secret {badge('[REDACTED:aws_key]', 'wt-redaction')}
+          </div>
+          <div id="wt-issue" style={{padding: '0.4rem 0.55rem', borderRadius: '8px', border: '1px solid rgba(224,160,0,0.5)', background: 'rgba(224,160,0,0.06)'}}>
+            <span style={{fontFamily: mono, fontWeight: 700, color: '#b07a00'}}>log_issue</span> · Sev-2 · exposed key in deploy script
+            <span style={{marginLeft: '0.4rem', padding: '0.02rem 0.4rem', borderRadius: '999px', background: '#e0a000', color: '#fff', fontSize: '0.6rem', fontWeight: 800}}>agent-found</span>
+          </div>
+        </div>
+      </div>
+    </Mockup>
+  );
+
+  return (
+    <>
+      <h2>What it looks like</h2>
+
+      <p>The four Phase 4 surfaces sit behind one login and one API. The transcript viewer is
+      the one worth watching in motion: it is where the sanitize-at-edge invariant becomes
+      something a reviewer can see. A session is sanitized on-device, uploaded clean, then
+      opened here, where every redaction is a typed badge and every raw download is audited.</p>
+
+      <Walkthrough
+        steps={[
+          {type: 'scene', to: 'claude', say: 'cc-sync sanitizes the session on-device and uploads only clean JSONL',
+            prompt: 'cc-sync --once',
+            tools: [
+              {verb: 'Read', target: '~/.claude/projects', note: 'tailing new bytes'},
+              {verb: 'Scrub', target: 'secrets', note: '3 redacted: aws_key, jwt, path'},
+              {verb: 'Upload', target: 'presigned PUT', note: 'clean/eng_0f3a/*'},
+              {target: 'uploaded', done: true},
+            ]},
+          {type: 'scene', to: 'app', say: 'You open the session in the transcript viewer', hold: 400},
+          {type: 'highlight', target: '#wt-redaction', say: 'secrets show as typed badges, never the value'},
+          {type: 'highlight', target: '#wt-issue', say: "the agent's log_issue call is shown inline"},
+          {type: 'click', target: '#wt-raw', say: 'toggling raw JSONL is a logged, presigned download'},
+          {type: 'scene', to: 'claude', say: 'every raw access writes an audit row',
+            prompt: 'continue',
+            intro: 'Presigned GET issued (5 min). Access recorded.',
+            tools: [
+              {verb: 'Audit', target: 'transcript_access', note: 'who viewed whose session'},
+              {target: 'logged', done: true},
+            ]},
+        ]}
+      >
+        {viewerScene}
+      </Walkthrough>
+
+      <h2>Plugin hub</h2>
+
+      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/plugins" caption="The marketplace landing: version, real adoption from skill_uses, and a one-copy install command.">
+        <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '240px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem'}}>
+            <div style={{fontWeight: 800, fontSize: '0.95rem'}}>org-core</div>
+            <span style={{fontFamily: mono, fontSize: '0.68rem', padding: '0.05rem 0.4rem', borderRadius: '999px', background: 'var(--ifm-color-emphasis-200)'}}>v1.4.0</span>
+            <span style={{marginLeft: 'auto', fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-700)'}}>skills, agents, hooks, MCP</span>
+          </div>
+          <div style={{fontFamily: mono, fontSize: '0.72rem', padding: '0.5rem 0.6rem', borderRadius: '8px', background: 'var(--ifm-color-emphasis-100)', marginBottom: '0.7rem', display: 'flex', alignItems: 'center'}}>
+            claude /plugin install org-core@org-fleet
+            <span style={{marginLeft: 'auto', padding: '0.1rem 0.5rem', borderRadius: '6px', background: 'var(--ifm-color-primary)', color: '#fff', fontSize: '0.66rem', fontWeight: 700}}>copy</span>
+          </div>
+          <div style={{fontSize: '0.66rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.3rem'}}>Adoption across the fleet</div>
+          {adopt('code-review', '92%')}
+          {adopt('release-notes', '74%')}
+          {adopt('fleet-setup', '68%')}
+          {adopt('security-scan', '41%')}
+        </div>
+      </Mockup>
+
+      <h2>Dashboard</h2>
+
+      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/dashboard" caption="Every panel reads a mart, not a fact table, and renders in under a second. Team-level by default.">
+        <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '260px'}}>
+          <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.7rem'}}>
+            {tile('Sessions', '3,412', 'last 30d')}
+            {tile('Tokens', '1.8B', 'across models')}
+            {tile('Spend', '$4,120', 'estimated')}
+            {tile('Bugs logged', '128', '31 confirmed')}
+            {tile('Active engineers', '87', 'of 94 enrolled')}
+            {tile('Cost / bug', '$133', 'per confirmed')}
+          </div>
+          <div style={{display: 'flex', gap: '0.7rem'}}>
+            <div style={{flex: '1 1 auto', border: hair, borderRadius: '9px', padding: '0.6rem 0.7rem'}}>
+              <div style={{fontSize: '0.66rem', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.35rem'}}>Tokens per day</div>
+              <div style={{display: 'flex', alignItems: 'flex-end', gap: '3px', height: '48px'}}>
+                {[40, 55, 48, 70, 62, 85, 78, 92, 74, 88].map((h, i) => (
+                  <div key={i} style={{flex: 1, height: h + '%', background: 'var(--ifm-color-primary)', opacity: 0.35 + i * 0.06, borderRadius: '2px 2px 0 0'}} />
+                ))}
+              </div>
+            </div>
+            <div style={{flex: '0 0 190px', border: hair, borderRadius: '9px', padding: '0.6rem 0.7rem'}}>
+              <div style={{fontSize: '0.66rem', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.35rem'}}>Fleet health</div>
+              <div style={{fontSize: '0.72rem', display: 'flex', flexDirection: 'column', gap: '0.3rem'}}>
+                <div>sanitizer <strong>v7</strong> · 98% on latest</div>
+                <div>upload lag p95 · <strong>6 min</strong></div>
+                <div style={{color: '#c0473a'}}>leak detector · <strong>0 sessions missing</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Mockup>
+
+      <h2>Deck studio</h2>
+
+      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/deck" caption="A date range drives a live slide from mart_deck_kpis. Notes are drafted by the Claude API and frozen. Nothing exports without approval.">
+        <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '250px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', fontSize: '0.74rem'}}>
+            <span style={{padding: '0.25rem 0.55rem', border: hair, borderRadius: '7px', fontFamily: mono}}>2026-01-01 to 2026-06-30</span>
+            <button style={{marginLeft: 'auto', padding: '0.3rem 0.7rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer'}}>Approve and export PPTX</button>
+          </div>
+          <div style={{aspectRatio: '16 / 9', border: hair, borderRadius: '10px', padding: '1rem 1.2rem', background: 'var(--ifm-background-surface-color)', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+            <div style={{fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--ifm-color-emphasis-600)'}}>Fleetplane · H1 2026</div>
+            <div style={{fontWeight: 800, fontSize: '1.15rem', margin: '0.2rem 0 0.6rem'}}>412 sites analyzed · 128 bugs found</div>
+            <div style={{display: 'flex', gap: '1.4rem', fontSize: '0.8rem'}}>
+              <div><div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-primary)'}}>1.8B</div>tokens</div>
+              <div><div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-primary)'}}>$4.1K</div>spend</div>
+              <div><div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-primary)'}}>31</div>confirmed</div>
+              <div><div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-primary)'}}>87</div>engineers</div>
+            </div>
+          </div>
+        </div>
+      </Mockup>
+    </>
+  );
+}
