@@ -106,6 +106,15 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
   // the GAP between the three arches (window · door · window): smaller = arches sit closer together.
   {key: 'archGap', label: 'Arch gap', kind: 'slider', cssVar: 'arch-gap', default: '0.3rem',
    variants: ['studio'], group: 'House', min: 0, max: 2, step: 0.05, unit: 'rem'},
+  // PINNED-parallax FOLD FIT: cap the house width so the whole house + WELCOME board frames in the first
+  // viewport at scroll 0. The sticky centres the house in a 100vh box that starts `offset` px down the
+  // viewport (navbar + the compact title block), so maxWidth = (100vh - 2*offset) / ratio.
+  //   pinHouseOffset = px from viewport top to the pinned spacer at scroll 0 (navbar + title block).
+  //   pinHouseRatio  = the facade's visual height / width (roof + 2:1 body ~= 0.75).
+  {key: 'pinHouseOffset', label: 'Pin house offset', kind: 'slider', cssVar: 'pin-house-offset',
+   default: '189px', variants: ['studio'], group: 'House', min: 100, max: 300, step: 1, unit: 'px'},
+  {key: 'pinHouseRatio', label: 'Pin house ratio', kind: 'slider', cssVar: 'pin-house-ratio',
+   default: '0.75', variants: ['studio'], group: 'House', min: 0.6, max: 1, step: 0.01},
   // sign-x/-y/-scale already exist in Layout and drive --sign-x/-y/-scale on the studio board.
 ];
 

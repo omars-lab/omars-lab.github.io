@@ -1,28 +1,39 @@
 ---
 name: maintain-homepage-hero
-description: The guide to SAFELY changing the homepage hero — the A/B/C-tested chooser with three variants (a scrolling card strip = control, a camera-flash "departures" gate = test, and a train-station gate where the board hangs and the scene slides like a train = variant_c). All share a Vestaboard split-flap board. Catalogs the key DECISIONS, the CODE ANCHORS (which symbol in which file owns each behavior), and the GOTCHAS that bite when you touch it (a retina compositing seam, a flash white-out, a board that fades on cross-fade, arrow keys that need a global listener). Use BEFORE editing src/pages/index.tsx, src/pages/index.module.css, or src/components/SplitFlap — it tells you what each piece is for and what NOT to break.
+description: The guide to SAFELY changing the homepage hero — the A/B-tested chooser (scrolling card strip = control, camera-flash "departures" gate = test/flash, Lebanese-house scene gate = variant_c/studio, lit boutique storefront = variant_d/boutique), plus the SECOND composed experiment that picks the studio house's DRIVER (self-running timer = static, or a scroll-driven parallax = pin/inplace/horizontal). All share a Vestaboard split-flap board. Catalogs the key DECISIONS, the CODE ANCHORS (which symbol in which file owns each behavior), how to change common things (incl. the pin-scroll experience — released guard, forward snap, board settle-per-scene, compact pinned header), and the GOTCHAS that bite (a retina compositing seam, a flash white-out, a board that fades on cross-fade, arrow keys that need a global listener, a snap that yanks the page back or rewinds). Use BEFORE editing src/pages/index.tsx, src/pages/index.module.css, src/lib/hero-tuning.ts, or src/components/SplitFlap — it tells you what each piece is for and what NOT to break.
 ---
 
 # Maintain the homepage hero
 
-The homepage hero is the **chooser**: it lets a visitor pick a door into the site. It is an **A/B/C
-experiment** (`homepage-hero-anim`, registered in `src/experiments.ts`):
+The homepage hero is the **chooser**: it lets a visitor pick a door into the site. It is driven by
+TWO composed experiments in `src/experiments.ts`:
+
+**`homepage-hero-anim`** picks WHICH hero:
 
 - **`control` = the scrolling strip** — all destination cards in a row, auto-scrolling (a marquee).
-- **`test` = the camera-flash "departures" gate** — an arched portal whose scene cross-fades behind
-  a flash of light, captioned by a split-flap **Vestaboard** that rolls through the alphabet to name
-  the destination.
-- **`variant_c` = the train-station gate** — the same portal + Vestaboard, re-staged as a station:
-  the board HANGS from a bracket (with a subtle idle sway) and the scene change is a TRAIN SLIDING
-  PAST (the active scene slides out with motion blur as the next slides in, NO flash). The slide
-  carries the transition. Phase 1 is the slide + the hang; the station DRESSING (iron frame, amber
-  glow, station clock) is a deferred backlog tracked in `.claude/plans/hashed-drifting-valiant.md`.
+- **`test`/`flash` = the camera-flash "departures" gate** (`ChooserFlash`) — an arched portal whose
+  scene cross-fades behind a flash of light, captioned by a split-flap **Vestaboard** that rolls
+  through the alphabet to name the destination. Auto-rotates on a timer; `←`/`→` also step it.
+- **`variant_c`/`studio` = the Lebanese central-hall HOUSE** (`ChooserStudio` / `ParallaxStudio` +
+  the shared `StudioFacade`) — a roof + terracotta body + three arches + a hanging Vestaboard, where
+  the centre DOOR opens onto each destination scene behind a masked white flash. This is the DEFAULT
+  hero. Its DRIVER is chosen by the second experiment (below).
+- **`variant_d`/`boutique` = the lit boutique storefront** (`ChooserBoutique`) — a 3-arch storefront,
+  timer-driven.
 
-The override URL uses the variant KEY: `?ab-homepage-hero-anim=control` / `=test` / `=variant_c`
-(NOT the value `scroll`/`flash`/`train`). All three arms show the SAME destinations + copy; only the
-PRESENTATION differs (that's what makes the A/B/C attributable). Changing the hero means touching
-subtle motion + compositing + a custom component, and several non-obvious things bite. This skill is
-the map.
+**`homepage-hero-scroll`** picks the studio house's DRIVER (only matters when anim resolves to
+`studio`): **`control`/`static`** = the self-running rAF TIMER house (the default), or a SCROLL-driven
+parallax — **`pin`** (the house pins full-screen in a tall runway; scrolling advances the scenes, then
+releases), **`inplace`** (normal flow; scenes advance as the house travels through the viewport), or
+**`horizontal`** (pin + a horizontal pan strip behind the facade; degrades to `pin` on mobile). All
+three parallax models and the timer share ONE progress model (`deriveSceneState`) fed by different
+drivers, so the visuals are identical regardless of driver. See the parallax how-to + gotchas below.
+
+The override URL uses the variant KEY: `?ab-homepage-hero-anim=control|test|variant_c|variant_d` and
+`?ab-homepage-hero-scroll=pin|inplace|horizontal` (NOT the values `scroll`/`flash`/`studio`). All arms
+show the SAME destinations + copy; only the PRESENTATION differs (that's what makes the A/B
+attributable). Changing the hero means touching subtle motion + compositing + a custom component, and
+several non-obvious things bite. This skill is the map.
 
 > **Design story** (the WHY + the bugs): `designs/2026-06-26-vestaboard-flash-hero.mdx`.
 > **Experiment** (hypothesis + metric): `/initiatives/homepage-hero-anim` (`blog/2026-06-26-homepage-hero-anim.md`).
@@ -36,14 +47,14 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 
 | Symbol | File | Owns |
 |---|---|---|
-| `EXPERIMENTS['homepage-hero-anim']` | `src/experiments.ts` | the flag key + variants (`control`=`scroll`, `test`=`flash`, `variant_c`=`train`) |
-| `HeroChooser` | `src/pages/index.tsx` | resolves the variant (URL override → PostHog flag → control fallback after `RESOLVE_TIMEOUT_MS`), picks strip vs flash gate vs train gate (a 3-way switch). Renders a skeleton until resolved (no flash-of-strip). |
+| `EXPERIMENTS['homepage-hero-anim']` | `src/experiments.ts` | the anim flag key + variants (`control`=`scroll` strip, `test`=`flash` gate, `variant_c`=`studio` house, `variant_d`=`boutique`) |
+| `HeroChooser` | `src/pages/index.tsx` | resolves BOTH experiments (URL override → PostHog flag → control fallback after `RESOLVE_TIMEOUT_MS`); picks strip / flash / studio / boutique, and for studio picks the DRIVER (timer vs pin/inplace/horizontal parallax). Renders a skeleton until resolved (no flash-of-strip). `DEFAULT_HERO='studio'`, `DEFAULT_SCROLL_MODEL='static'`. |
 | `ChooserStrip` | `src/pages/index.tsx` | the CONTROL marquee (renders `CHOOSER_CARDS` twice for a seamless loop) |
-| `ChooserFlash` | `src/pages/index.tsx` | the TEST gate: the portal + persistent board + the rotation/flash choreography |
-| `ChooserTrain` | `src/pages/index.tsx` | the VARIANT_C gate: the portal where scenes SLIDE (train) + the HANGING board. Tracks `prev` + `dir` so the leaving + entering scenes slide the right way. |
-| `TRAIN_SLIDE_MS` / `TRAIN_INTERVAL_MS` | `src/pages/index.tsx` | the train-slide duration / the beat between scene changes (variant C) |
+| `ChooserFlash` | `src/pages/index.tsx` | the TEST/flash gate: the portal + persistent board + the rotation/flash choreography (timer + arrow keys) |
+| `ChooserStudio` | `src/pages/index.tsx` | variant_c/studio, TIMER driver: the Lebanese house self-running on a rAF clock (`useTimerScene`); renders `StudioFacade`. The DEFAULT hero. |
+| `ChooserBoutique` | `src/pages/index.tsx` | variant_d/boutique: the lit 3-arch storefront gate (timer-driven) |
 | `CHOOSER_CARDS` | `src/pages/index.tsx` | the destinations array (to ADD a door: append an entry + drop its arched PNG in `static/img/cards/`) |
-| `step` (in `ChooserFlash`) | `src/pages/index.tsx` | ONE scene change (`delta` = ±1): advance `active`, fire the flash, hold, recede. Used by both auto-rotate and the arrows. |
+| `step` (in `ChooserFlash` / `ChooserBoutique`) | `src/pages/index.tsx` | ONE scene change (`delta` = ±1): advance `active`, fire the flash, hold, recede. Used by both auto-rotate and the arrows. (The studio house does NOT use `step` — it uses `deriveSceneState`.) |
 | `FLASH_INTERVAL_MS` / `FLASH_HOLD_MS` / `FLASH_LEAD_MS` | `src/pages/index.tsx` | the flash TIMING (how long a card shows / the light lingers / the lead before the flash) |
 | `FLASH_SETTLE_MS` | `src/pages/index.tsx` | the board's TOTAL roll time (passed to `SplitFlap` as `settleMs`) |
 | `FLASH_BOARD_COLS` / `FLASH_BOARD_ROWS` | `src/pages/index.tsx` | the board's fixed grid (widen the board by adding COLS, not stretching) |
@@ -51,10 +62,9 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `.flashArchBox` | `src/pages/index.module.css` | the portal box; `isolation: isolate` contains the flash's stacking context |
 | `.flashBoard` | `src/pages/index.module.css` | the Vestaboard housing (the dark bezel; width comes from tile count) |
 | `--portal-w` (on `.flashGate`) | `src/pages/index.module.css` | the SHARED width axis (arch box + the gate derive from it) |
-| `.trainGate` / `.trainArchBox` | `src/pages/index.module.css` | variant C gate + its portal (clips the slide via `overflow:hidden` + `isolation:isolate` to contain the blur layer) |
-| `.trainArchImgLeaving` + `trainEnterFromRight` keyframes | `src/pages/index.module.css` | the train-slide: active/leaving scenes + the slide-and-blur keyframes (blur peaks mid-travel, 0 at rest) |
-| `.trainHanger` / `.trainBoardSwing` + `trainSway` | `src/pages/index.module.css` | the bracket the board hangs from (mount bar + cables) + the idle sway |
-| `SplitFlap` default export | `src/components/SplitFlap/index.tsx` | the Vestaboard component (text → fixed grid → deck-roll) |
+| `.studioGate` / `.studioPeek` | `src/pages/index.module.css` | variant_c gate + the arch-masked scene peek (mask position via `--arch-*`) |
+| `.boutiqueGate` / `.boutiquePeek` | `src/pages/index.module.css` | variant_d gate + its masked lit opening |
+| `SplitFlap` default export | `src/components/SplitFlap/index.tsx` | the Vestaboard component (text → fixed grid → deck-roll; `spinning` churns then settles) |
 | `DECK` (in `SplitFlap`) | `src/components/SplitFlap/index.tsx` | the flap charset the cells roll THROUGH (`' A-Z0-9punct'`) |
 | `.foldDown` / `.foldUp` / `.leaf` | `src/components/SplitFlap/styles.module.css` | the 3D flap fold (leaves must stay OPAQUE — see gotchas) |
 | `EXPERIMENTS['homepage-hero-scroll']` | `src/experiments.ts` | the SCROLL-MODEL flag (`control`=`static` timer, `pin`, `inplace`, `horizontal`). Composed with `homepage-hero-anim`: when anim resolves to `studio`, this picks timer vs parallax wrapper. |
@@ -81,14 +91,44 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
   Keep the peak alpha of the `.flashArch` gradient BELOW opaque (see white-out gotcha).
 - **Tune the board:** `FLASH_BOARD_COLS` widens it via filler tiles (NOT a wider bezel);
   `FLASH_SETTLE_MS` is the roll duration; `.flashBoard` font-size scales the tiles.
-- **Change the rotation logic / add a control:** go through `step(delta)` so the flash + flip stay in
-  sync; the auto-interval re-arms on `active` change (so manual nav resets it, no double-fire). The
-  train gate has its OWN `step(delta)` (it records `prev` + `dir` for the cross-slide, no flash).
-- **Tune the train (variant C):** the slide speed = `TRAIN_SLIDE_MS` (JS, clears `prev` when the slide
-  ends) which must match the `--train-slide` fallback in the `trainEnter*/trainExit*` keyframes; the
-  blur strength = the `blur(...)` value in those keyframes; the hang sway = the `trainSway` keyframe
-  amplitude on `.trainBoardSwing`. The DRESSING backlog (iron frame, amber glow, clock, modern-vs-
-  Victorian theme) is deferred — see `.claude/plans/hashed-drifting-valiant.md` before adding it.
+- **Change the rotation logic / add a control (flash/boutique):** go through `step(delta)` so the flash
+  + flip stay in sync; the auto-interval re-arms on `active` change (so manual nav resets it, no
+  double-fire). (The studio house does NOT use `step` — it is progress-driven, see below.)
+- **Change the studio house's DRIVER or its progress model:** the house's every animatable piece (flash
+  bloom, door/scene swap, board flip) is a pure function of ONE progress `p in [0,1]` via
+  `deriveSceneState(p, count, reduce)`. TWO drivers feed it: `useTimerScene` (rAF clock, the default) and
+  `useScrollScene` (scroll position, the parallax). To retune the timing, change `deriveSceneState`
+  (shared by both) or `TRANSITION_FRACTION` (how much of each scene's slice is the crossing vs settled).
+  To flip the homepage DEFAULT to scroll, change `DEFAULT_SCROLL_MODEL` in `HeroChooser` (a one-line
+  routing change) AND update the homepage e2e `DEFAULT (bare /)` assertion (it asserts NO
+  `.parallaxSpacer`) + the skeleton height parity.
+
+### Change the PIN scroll experience (the scroll-synced parallax)
+
+The pin model pins the house full-screen in a tall `.parallaxSpacer` runway; scrolling the runway
+advances the scenes, then the hero releases and the page scrolls on. Four things were hard-won here
+(see the matching gotchas 17-20); touch them carefully:
+
+- **The released guard (gotcha 17):** the snap effect in `ParallaxStudio` must compute the RAW
+  (unclamped) progress `raw = -rect.top / scrollable` and BAIL when `raw < 0 || raw >= 1`. Above/below
+  the runway the hero is off-screen or released, so it must NEVER write scroll. Clamping progress to
+  `[0,1]` before this check is what made the page YANK BACK ~2000px into the hero after a fast flick to
+  the bottom. Never re-clamp before the guard.
+- **The forward snap (gotcha 18):** when scrolling STOPS mid-transition, the snap picks its target with
+  the SAME rule the visuals use: past the flash peak (`t >= 0.5`) the door already shows the NEXT scene,
+  so land FORWARD (`s + 1`); before the peak land back on `s`. Also bail when `s === stops - 1` (the last
+  slice is entirely settled). Do not go back to `Math.round(...)` (it can only rewind).
+- **The board settle-per-scene (gotcha 19):** `ParallaxStudio` passes
+  `spinning={scrolling && scene.boardFromText !== scene.boardToText}` so the Vestaboard churns ONLY in
+  the flash transition and rolls to the scene title the moment you enter a settled zone (even while still
+  scrolling). Don't widen it back to `spinning={scrolling}` (churns the whole journey; board never syncs).
+- **The compact pinned header + fold fit (gotcha 20):** when a pinned model is active, the closest
+  `<header>` gets `data-parallax-pinned` (set in `ParallaxStudio`), and `.heroBanner[data-parallax-pinned]`
+  shrinks the title block while `.parallaxSticky` caps the house width by viewport height so the whole
+  house + WELCOME frames at scroll 0. The cap is
+  `min(--body-w, (100vh - 2*--pin-house-offset) / --pin-house-ratio)`; both knobs are Hero-Tuner
+  params (`pinHouseOffset` / `pinHouseRatio` in `src/lib/hero-tuning.ts`), dial live and bake defaults.
+  Re-check the `≤600px` mobile block still FILLS the pinned viewport door-only (it overrides the cap).
 
 ## ⚠️ Gotchas (the things that bite — don't re-break these)
 
@@ -115,14 +155,18 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
 7. **The hero must fit ABOVE THE FOLD.** The whole gate (title → arch → board) is tuned to sit in a
    laptop viewport; the hero band padding + subtitle margin are tight on purpose. If you enlarge the
    portal, re-check the board isn't pushed off-screen.
-8. **The train-slide's `filter: blur()` is the SAME GPU-layer seam risk as the flash** (gotcha 3).
-   It's kept safe by `overflow:hidden` + `isolation:isolate` on `.trainArchBox` (the blur is clipped
-   and the box has its own stacking context) and by returning blur to `0` at the slide's start AND
-   end (so there's no blurred layer at rest). Don't add `mix-blend-mode`, and don't let the blur
-   linger non-zero between slides; re-check at DPR=2 mid-slide if you touch the keyframes.
-9. **Variant C uses the variant KEY in the URL override**, `?ab-homepage-hero-anim=variant_c` (not
-   `=train`). `urlOverride` matches the variant key, and `train` is the VALUE; `=train` silently falls
-   through to control. The e2e + visual specs force `variant_c`.
+8. **ANY animated `filter: blur()` is the SAME GPU-layer seam risk as the flash** (gotcha 3). (An
+   earlier train-slide variant used a motion-blur here; it was replaced by the studio house, but the
+   lesson stands for any future blur.) Keep a blurred layer CLIPPED (`overflow:hidden`) inside a box
+   with its OWN stacking context (`isolation:isolate`), and return the blur to `0` at rest (no blurred
+   layer sitting composited when nothing is moving). Don't pair it with `mix-blend-mode`; re-check at
+   DPR=2 while the blur is mid-animation if you add one.
+9. **A URL override matches the variant KEY, not the VALUE.** `urlOverride` reads
+   `?ab-homepage-hero-anim=<KEY>` where KEY is `control`/`test`/`variant_c`/`variant_d` (NOT the values
+   `scroll`/`flash`/`studio`/`boutique`); an unknown key silently falls through to control. So the studio
+   house is forced with `=variant_c` (or the alias `=studio`, which `HeroChooser` also accepts), and the
+   scroll model with `?ab-homepage-hero-scroll=pin|inplace|horizontal`. The e2e + visual specs force
+   `variant_c` + a scroll model this way.
 10. **A negative-margin OVERLAP between two same-context elements is ALSO a DPR-seam source** (another
     `[[mix-blend-hidpi-seam]]` instance). `.studioRoof` overlaps `.studioBody`'s top edge with a
     negative `margin-bottom` so the eave covers the body's lighter top gradient edge. At `-1px` the
@@ -191,15 +235,62 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
     keep `.studioFacade` transparent in every theme; tint the WALL on `.studioBody`, never the container.
     Diagnose by probing `elementsFromPoint` at a roof CORNER (outside the triangle) — if it hits
     `.studioFacade` with a non-transparent bg, that's the bleed.
+17. **The pin snap must be RELEASED-AWARE: never write scroll when the hero is not pinned.** The
+    snap-to-scene effect in `ParallaxStudio` reads the spacer's `getBoundingClientRect()` and eases the
+    page to the nearest settled scene when scrolling stops mid-transition. The trap: it used to CLAMP
+    progress to `[0,1]` FIRST, so once you scrolled PAST the runway (progress pinned at 1) it still read
+    "stopped mid-transition on the last scene" and glided the page ~2000px back UP into the hero after a
+    fast flick to the bottom (a horrible yank-back; the whole area below the hero was a no-rest zone).
+    **Fix: compute the RAW unclamped progress `raw = -rect.top / scrollable` and BAIL when
+    `raw < 0 || raw >= 1`** (above the runway = off-screen, at/below 1 = released). Only snap while the
+    hero is genuinely PINNED. The e2e `[pin] resting BELOW the hero is stable` guards this (stop at the
+    bottom, wait 2.5s, assert scrollY held). Never re-introduce a pre-guard clamp.
+18. **The pin snap must land FORWARD past the flash peak, matching the visuals.** `deriveSceneState`
+    swaps the door to the NEXT scene at the flash PEAK (`t >= 0.5`). So a stop PAST the peak has already
+    committed to the next scene on screen; snapping BACKWARD to the scene you were leaving contradicts
+    the door + board. The old target `Math.round(p*stops - 0.5)` could only ever rewind. **Fix: mirror
+    the engine — `t = (within - settledFrac)/TRANSITION_FRACTION; targetStop = t >= 0.5 ? s+1 : s`**, and
+    bail on the last stop (`s === stops-1`, whose whole slice is settled). Guarded by `[pin] STOP past
+    the flash peak SNAPS FORWARD`.
+19. **The board churns ONLY in transitions, so it settles per-scene while scrolling.**
+    `ParallaxStudio` passes `spinning={scrolling && scene.boardFromText !== scene.boardToText}` to the
+    facade. `boardFromText === boardToText` is exactly `deriveSceneState`'s SETTLED condition, so the
+    Vestaboard churns random glyphs only while crossing between scenes and rolls to the scene's title the
+    moment you enter its settled zone (even if the wheel is still moving) — door + flash + board land on
+    the SAME scene together. The old `spinning={scrolling}` churned during ANY scroll activity, so the
+    board only ever showed a title on a FULL stop (never in sync mid-journey). Don't widen it back.
+    Guarded by `[pin] board SETTLES to the scene title while still scrolling`.
+20. **The pinned hero COMPACTS the title block + caps the house to fit the first viewport.** At scroll 0
+    the eyebrow/title/subtitle sit ABOVE the pinned viewport, so a full-size title pushed the house half
+    below the fold. `ParallaxStudio` marks the closest `<header>` with `data-parallax-pinned`;
+    `.heroBanner[data-parallax-pinned]` shrinks the title block (uses `--text-*`/`--space-*` tokens), and
+    `.parallaxSticky` caps the house width by viewport height:
+    `min(--body-w, (100vh - 2*--pin-house-offset) / --pin-house-ratio)` (the sticky CENTRES the house in
+    a 100vh box that starts `offset` px down at scroll 0, so `facadeH <= vh - 2*offset`). Both knobs are
+    Hero-Tuner params (`pinHouseOffset` default `189px`, `pinHouseRatio` default `0.75` in
+    `src/lib/hero-tuning.ts` — keep the schema defaults in lockstep with the CSS fallbacks). The `≤600px`
+    mobile block OVERRIDES this (the house FILLS the pinned `100svh` viewport door-only); re-check both
+    desktop AND 375px if you touch either.
 
 ## Verify any change
 
-- `make test-e2e` (the `homepage.spec.ts` functional A/B/C assertions: control=strip, test=flash
-  gate, variant_c=train gate, one active scene each, arrows slide).
+- `make validate-hero-anchors` — confirms every symbol this skill names still exists (exit 2 on drift).
+  **If you rename an anchored symbol, update this skill AND `scripts/validate-hero-anchors.js` in the
+  same change.**
+- `make test-e2e` (the `homepage.spec.ts` functional assertions: control=strip, test=flash gate,
+  variant_c=studio house, one active scene each, arrows step; the parallax block covers pin/inplace/
+  horizontal scene-forcing + navbar sync + the four pin behaviors: advance-then-release, snap clears the
+  flash, resting-below-is-stable, snap-forward, board-settles-while-scrolling). Note the
+  `[inplace] ?hero-scene=N` navbar-highlight test is a PRE-EXISTING flake (IntersectionObserver race on
+  rapid multi-scene nav); CI retries absorb it.
 - **`make test-visual`** — the VISUAL regression baselines (hero across DPR 1+2, viewports, light+dark,
-  settled + mid-flash + the train gate settled). This is what catches the retina seam / white-out /
-  overflow. After an INTENTIONAL visual change, regenerate with `make test-visual-update` and commit
-  the new baselines.
+  settled + mid-flash). This is what catches the retina seam / white-out / overflow. After an
+  INTENTIONAL visual change, regenerate with `make test-visual-update` and commit the new baselines.
 - `yarn build` exit 0.
-- Eyeball it on the dev server at `/?ab-homepage-hero-anim=test`, `=variant_c`, and `=control`, light
-  + dark, and at a retina DPR if you can — the seam class of bug hides at DPR=1.
+- Eyeball it on the dev server across arms: `/?ab-homepage-hero-anim=test` (flash), `=variant_c`
+  (studio timer house), `=variant_d` (boutique), `=control` (strip), and the scroll models
+  `/?ab-homepage-hero-scroll=pin|inplace|horizontal`, light + dark, at a retina DPR if you can (the seam
+  class of bug hides at DPR=1). For `pin`, run the scroll checks by hand: flick to the bottom and confirm
+  the page HOLDS (no yank-back); stop mid-transition past the flash peak and confirm the snap goes
+  FORWARD; slow-scrub and confirm the board shows each title in its settled zone; and confirm the whole
+  house + WELCOME frames at scroll 0 on desktop AND fills the viewport door-only at 375px.

@@ -759,12 +759,15 @@ function StudioFacade({
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
-  // BOARD ↔ SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
-  // (`shown`), or WELCOME in door mode — so the board can never settle to a title the door hasn't
-  // reached. CHURN is SCROLL-ONLY (`spinning`): while the wheel moves the board churns random letters
-  // and settles on stop. The TIMER house (spinning=undefined) instead does the clean per-cell flap-roll
-  // on a text change. Each title is CENTERED on the (wider-than-the-title) board, so short titles sit
-  // dead-center with blank flap tiles either side.
+  // BOARD <-> SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
+  // (`shown`), or WELCOME in door mode, so the board can never settle to a title the door hasn't
+  // reached. CHURN (`spinning`) is now SCOPED to the flash TRANSITION only (the scroll wrapper passes
+  // spinning only while mid-crossing): while crossing between scenes the board churns random letters,
+  // and the moment it enters a scene's settled zone it rolls cleanly to that title (even if the wheel
+  // is still moving), so the board tracks the door scene-by-scene instead of only settling on a full
+  // stop. The TIMER house (spinning=undefined) does the clean per-cell flap-roll on a text change. Each
+  // title is CENTERED on the (wider-than-the-title) board, so short titles sit dead-center with blank
+  // flap tiles either side.
   const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
   const boardSpinning = spinning;
   // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
@@ -1019,6 +1022,17 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   // centre so the door + flash + board all land on the SAME scene (no resting mid-crossing with the
   // flash lingering). Inplace has no spacer runway, so it's skipped; reduced-motion + ?hero-scene skip.
   //
+  // Two hard invariants (both cost real bugs to learn):
+  //   • RELEASED = UNTOUCHABLE. The snap only ever fires while the hero is PINNED (raw progress in
+  //     [0,1)). Above the runway (raw < 0) or below it (raw >= 1) the hero is off-screen or released,
+  //     so we must NEVER write scroll there. Clamping progress to [0,1] BEFORE this check is what let
+  //     the old code read "past the runway" as "stopped mid-transition on the last scene" and yank the
+  //     page ~2000px back UP into the hero after a fast flick to the bottom. Compute `raw` first, bail.
+  //   • SNAP AGREES WITH THE VISUALS. The door swaps to the next scene at the flash PEAK (t >= 0.5 in
+  //     deriveSceneState). So a stop PAST the peak has already committed to the next scene visually —
+  //     snapping BACKWARD to the stop we were leaving would contradict the door + board. We bias the
+  //     target FORWARD past the peak (t >= 0.5 → next stop) and backward before it, mirroring the swap.
+  //
   // Driven by a rAF EASE (not window.scrollTo({behavior:'smooth'}) + a guard, which raced with its own
   // scroll events and intermittently failed to fire on deeper stops). The ease writes scrollTop each
   // frame toward the target; a GENUINE new user scroll (a delta we didn't write) cancels it. So it
@@ -1036,13 +1050,21 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     const vh = window.innerHeight || 1;
     const scrollable = rect.height - vh;
     if (scrollable <= 0) return;
+    // RAW (unclamped) progress: <0 above the runway, >=1 released below it. Only snap while PINNED.
+    const raw = -rect.top / scrollable;
+    if (raw < 0 || raw >= 1) return; // hero not pinned → never touch scroll (kills the yank-back trap)
     const stops = count + 1;
-    const p = Math.min(0.999999, Math.max(0, progressRef.current));
+    const p = Math.min(0.999999, Math.max(0, raw));
+    const s = Math.floor(p * stops); // current stop (mirrors deriveSceneState)
+    if (s >= stops - 1) return; // the LAST stop's whole slice is settled there (no transition to snap)
+    const settledFrac = 1 - TRANSITION_FRACTION;
     const within = (p * stops) % 1;
-    if (within <= 1 - TRANSITION_FRACTION) return; // already settled in this slice → no snap
+    if (within < settledFrac) return; // already settled in this slice → no snap
 
-    const stop = Math.min(stops - 1, Math.max(0, Math.round(p * stops - 0.5)));
-    const targetP = (stop + (1 - TRANSITION_FRACTION) / 2) / stops; // centre of that stop's settled zone
+    // FORWARD-BIAS: past the flash peak (t >= 0.5) the door already shows the NEXT scene, so land there.
+    const t = (within - settledFrac) / TRANSITION_FRACTION;
+    const stop = t >= 0.5 ? s + 1 : s;
+    const targetP = (stop + settledFrac / 2) / stops; // centre of that stop's settled zone
     const spacerTopPage = rect.top + window.scrollY; // page-coords of progress 0
     const targetY = Math.round(spacerTopPage + targetP * scrollable);
 
@@ -1130,8 +1152,15 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
           </div>
         </div>
       )}
-      {/* spinning = the user is scrolling → the board churns; on stop it settles to the title. */}
-      <StudioFacade {...scene} spinning={scrolling} />
+      {/* Board churn is SCOPED to transition zones: it spins ONLY while scrolling AND the engine is
+          mid-crossing (boardFromText !== boardToText). Entering a scene's SETTLED zone (even while the
+          wheel is still moving) stops the churn so the board rolls to that scene's title, landing the
+          door, flash, and board on the SAME scene together. `boardFromText === boardToText` is exactly
+          deriveSceneState's settled condition, so this stays engine-consistent (no separate math). */}
+      <StudioFacade
+        {...scene}
+        spinning={scrolling && scene.boardFromText !== scene.boardToText}
+      />
     </Link>
   );
 
