@@ -16,6 +16,7 @@ import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
 import Catalog from '@site/src/components/Catalog';
 import RepoCatalog from '@site/src/components/RepoCatalog';
+import RepoPointer from '@site/src/components/RepoPointer';
 import TaskList from '@site/src/components/TaskList';
 import ThoughtKind, {ThoughtKindLegend, MindsetKindLegend} from '@site/src/components/ThoughtKind';
 import UsedIn from '@site/src/components/UsedIn';
@@ -115,6 +116,11 @@ export default {
   // the hand-authored src/data/repos-of-interest.json. Use as <RepoCatalog/> or filter
   // with <RepoCatalog tags={['tool']}/>.
   RepoCatalog,
+  // RepoPointer: a single "here's the source repo" card for a design post (one repo, an
+  // optional path + pinned commit), built on the Card primitives. Distinct from
+  // RepoCatalog (a many-repo list). Use as
+  // <RepoPointer repo="owner/name" path="plugins/local-guide" blurb="..."/>.
+  RepoPointer,
   // TaskList: wrap a markdown task list to render its capture tags (>due, @done(), ~Nx~,
   // #stamp/#tag) as styled chips instead of raw text. The markdown stays the source of truth.
   TaskList,
