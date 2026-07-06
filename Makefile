@@ -89,6 +89,9 @@ validate-noteplan-links: ## Verify every noteplan:// link resolves to a real not
 validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA + path + line range exist & are pushed)
 	( cd ${SITEROOT} && node scripts/validate-footnotes.js $(DIRS) )
 
+validate-mdx-imports: ## Catch a Capitalized JSX tag used in .mdx but never imported/registered (a render break drafts hide)
+	( cd ${SITEROOT} && node scripts/validate-mdx-imports.js $(DIRS) --error-only )
+
 validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
