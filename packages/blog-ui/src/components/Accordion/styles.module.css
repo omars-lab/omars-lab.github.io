@@ -1,0 +1,93 @@
+/* Accordion — native <details>/<summary> folds for decision/option posts. Zero JS,
+   keyboard-accessible by default. Themed from design-system tokens. */
+
+.accordion {
+  margin: var(--space-8) 0;
+  border: 1px solid var(--bop-divider);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.label {
+  margin: 0;
+  padding: var(--space-3) var(--space-5);
+  background: var(--ifm-background-color);
+  border-bottom: 1px solid var(--bop-divider);
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}
+
+.item + .item {
+  border-top: 1px solid var(--bop-divider);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  cursor: pointer;
+  list-style: none;
+  font-weight: 500;
+  color: var(--text-body);
+  transition: background var(--duration-fast, 0.12s) var(--ease-standard, ease);
+}
+.summary::-webkit-details-marker {
+  display: none;
+}
+.summary:hover {
+  background: var(--ifm-background-color);
+}
+.summary:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: -2px;
+}
+
+.summaryText {
+  flex: 1;
+}
+
+.verdict {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-background-surface-color);
+  background: var(--ifm-color-primary);
+  border-radius: var(--radius-pill);
+  padding: 0.125rem var(--space-3);
+}
+
+.chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--ifm-color-content-secondary);
+  border-bottom: 2px solid var(--ifm-color-content-secondary);
+  transform: rotate(45deg);
+  transition: transform var(--duration-fast, 0.12s) var(--ease-standard, ease);
+  flex: none;
+}
+.item[open] > .summary .chevron {
+  transform: rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .summary {
+    transition: none;
+  }
+}
+
+.body {
+  padding: 0 var(--space-5) var(--space-5);
+  color: var(--text-body);
+  line-height: 1.6;
+}
+.body > :first-child {
+  margin-top: 0;
+}
+.body > :last-child {
+  margin-bottom: 0;
+}

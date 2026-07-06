@@ -50,6 +50,8 @@ import {
 import {
   DiagramWithFootnotes,
   FlowDiagram,
+  ComparisonMatrix,
+  Accordion,
   Mockup,
   Walkthrough,
   Assumption,
@@ -125,6 +127,18 @@ export default {
   // flow/loop/handoff instead of hand-authoring mermaid; DiagramWithFootnotes still wraps a
   // hand-authored mermaid diagram when you want the numbered-legend treatment.
   FlowDiagram,
+  // ComparisonMatrix: a criteria x options decision table (options are columns, criteria rows;
+  // the chosen option's column is highlighted + badged; yes/no/partial render as ●/○/◐ marks
+  // with sr-only labels). A real accessible <table> that scrolls on mobile; a build-time gate
+  // throws on a cell keyed to a nonexistent option. Use <ComparisonMatrix title=... options={[]}
+  // criteria={[]}/> for a head-to-head. (OptionGrid/DecisionNote show explored DESIGN directions
+  // with a chosen ring + WHY; ComparisonMatrix is the feature-by-feature decision table.)
+  ComparisonMatrix,
+  // Accordion: a foldable option list on native <details>/<summary> (zero JS, keyboard-accessible).
+  // Each item has a one-line summary, an expandable body, and an optional verdict pill. Pairs with
+  // ComparisonMatrix: the accordion carries the narrative, the matrix the head-to-head. Use
+  // <Accordion label=... items={[{summary, body, verdict?, open?}]}/> on a decision post.
+  Accordion,
   // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
   // (browser/window/phone chrome) — shows what a design would LOOK like.
   Mockup,

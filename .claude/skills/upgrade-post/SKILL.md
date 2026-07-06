@@ -134,6 +134,37 @@ so a flow ships only when it reads cleanly. HOW:
   non-flow (class/ER/context) diagram, reach for `DiagramWithFootnotes` (mermaid + numbered
   legend) instead. FlowDiagram is for flows; it is deliberately not a general mermaid renderer.
 
+### Decision kit: ComparisonMatrix + Accordion
+
+WHAT: two components for a post that argues a CHOICE. `ComparisonMatrix` is the head-to-head
+table (options are columns, criteria rows, the `chosen` column highlighted + badged;
+`yes`/`no`/`partial` render as ●/○/◐ marks with sr-only labels, any other string as literal
+text). `Accordion` is the narrative (foldable options on native `<details>`, zero JS, each
+with a `summary`, a React `body`, an optional `verdict` pill, an optional `open`). WHEN: a
+decision/comparison/critique post. The matrix answers "how do they score"; the accordion
+answers "why". HOW:
+
+```mdx
+<ComparisonMatrix title="Where to store the data" desc="Three stores vs our needs."
+  options={[{id:'pg',label:'Postgres'},{id:'sq',label:'SQLite',chosen:true}]}
+  criteria={[
+    {label:'Zero-ops', cells:{pg:'no', sq:'yes'}},
+    {label:'Cost', cells:{pg:'$$', sq:'free'}},
+  ]}/>
+
+<Accordion label="The options" items={[
+  {summary:'Rebuild from scratch', verdict:'rejected', body:<>Slow; loses the edge cases.</>},
+  {summary:'Keep SQLite', verdict:'chosen', open:true, body:<>Zero-ops, durable, free.</>},
+]}/>
+```
+
+- Both registered in `MDXComponents` (no import). Live demo: `/handbook/components/structural/decision-kit`.
+- ComparisonMatrix THROWS at build if a cell is keyed to an option id that is not in `options`.
+  It scrolls inside its own wrapper on mobile (never pushes the page sideways).
+- WHEN NOT: `OptionGrid`/`OptionTile`/`DecisionNote` show explored DESIGN directions with a
+  chosen ring + WHY (a design specimen). ComparisonMatrix is the feature-by-feature decision
+  TABLE. Use the matrix for "which option scores better", OptionGrid for "which mock we picked".
+
 ### Mockup (UX mockups — show what it LOOKS like)
 
 WHAT: a framed, theme-aware wrapper (`browser` / `window` / `phone` / `none` chrome) that

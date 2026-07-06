@@ -1,0 +1,105 @@
+---
+slug: /components/structural/decision-kit
+usage_pattern:
+  - '<ComparisonMatrix'
+  - '<Accordion'
+kind: showcase
+title: '🧩 Decision kit (ComparisonMatrix + Accordion)'
+description: 'Two components for decision posts: a ComparisonMatrix head-to-head table and an Accordion of foldable options, so a choice reads at a glance instead of as a wall of prose.'
+authors: [oeid]
+tags: [docusaurus, react, components, decision]
+draft: false
+---
+
+When a post argues a choice between options, two components carry it: a
+**ComparisonMatrix** for the head-to-head (options are columns, criteria are rows, the
+chosen option's column is highlighted), and an **Accordion** for the narrative (each
+option is a fold with a one-line summary, an expandable why, and an optional verdict pill).
+The matrix answers "how do they score"; the accordion answers "why".
+
+## ComparisonMatrix
+
+A real accessible table. Ratings of `yes` / `no` / `partial` render as marks (with
+screen-reader labels); any other string renders as literal text. The `chosen` column is
+highlighted and badged. The table scrolls inside its own wrapper on mobile. A build-time
+gate throws if a cell is keyed to an option id that does not exist.
+
+<ComparisonMatrix
+  title="Where to store the data"
+  desc="Comparing three stores against what this project needs."
+  options={[
+    {id: 'pg', label: 'Postgres'},
+    {id: 'sqlite', label: 'SQLite', chosen: true},
+    {id: 'redis', label: 'Redis'},
+  ]}
+  criteria={[
+    {label: 'Zero-ops', cells: {pg: 'no', sqlite: 'yes', redis: 'partial'}},
+    {label: 'Relational', cells: {pg: 'yes', sqlite: 'yes', redis: 'no'}},
+    {label: 'Durable on disk', cells: {pg: 'yes', sqlite: 'yes', redis: 'partial'}},
+    {label: 'Cost', cells: {pg: '$$', sqlite: 'free', redis: '$'}},
+  ]}
+/>
+
+```mdx
+<ComparisonMatrix
+  title="Where to store the data"
+  desc="Comparing three stores against what this project needs."
+  options={[
+    {id: 'pg', label: 'Postgres'},
+    {id: 'sqlite', label: 'SQLite', chosen: true},
+    {id: 'redis', label: 'Redis'},
+  ]}
+  criteria={[
+    {label: 'Zero-ops', cells: {pg: 'no', sqlite: 'yes', redis: 'partial'}},
+    {label: 'Relational', cells: {pg: 'yes', sqlite: 'yes', redis: 'no'}},
+    {label: 'Cost', cells: {pg: '$$', sqlite: 'free', redis: '$'}},
+  ]}
+/>
+```
+
+## Accordion
+
+Foldable options on native `<details>` / `<summary>`: zero JavaScript, keyboard-accessible
+by default. Each item has a `summary`, a React `body` (prose, a list, or a component), an
+optional `open` default, and an optional `verdict` pill so the decision stays scannable
+while folded.
+
+<Accordion
+  label="The options"
+  items={[
+    {
+      summary: 'Rebuild the store from scratch',
+      verdict: 'rejected',
+      body: (
+        <>It is the cleanest design on paper, but it throws away every edge case the current
+        store has already learned, and it is the slowest path to shipping.</>
+      ),
+    },
+    {
+      summary: 'Reach for a hosted database',
+      verdict: 'rejected',
+      body: <>Solves durability, but it adds an ops surface this project deliberately avoids.</>,
+    },
+    {
+      summary: 'Keep SQLite, add only the new surface',
+      verdict: 'chosen',
+      open: true,
+      body: (
+        <>Zero-ops, durable on disk, relational, and free. It keeps the proven core and adds
+        just the one capability the feature needs.</>
+      ),
+    },
+  ]}
+/>
+
+```mdx
+<Accordion
+  label="The options"
+  items={[
+    {summary: 'Rebuild from scratch', verdict: 'rejected', body: <>Slow, and we lose the edge cases.</>},
+    {summary: 'Keep SQLite, add the new surface', verdict: 'chosen', open: true, body: <>Zero-ops, durable, free.</>},
+  ]}
+/>
+```
+
+<UsedIn slug="/components/structural/decision-kit" />

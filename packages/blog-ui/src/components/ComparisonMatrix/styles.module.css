@@ -1,0 +1,120 @@
+/* ComparisonMatrix — a criteria x options decision table. Themed from the blog's
+   design-system tokens; light and dark work with no extra wiring. Zero JS. */
+
+.matrix {
+  margin: var(--space-8) 0;
+}
+
+.scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--bop-divider);
+  border-radius: var(--radius-lg);
+}
+
+.matrix table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--text-body-md);
+}
+
+.caption {
+  caption-side: bottom;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+  text-align: left;
+}
+
+.matrix th,
+.matrix td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--bop-divider);
+}
+.matrix tbody tr:last-child th,
+.matrix tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.corner {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-content-secondary);
+  background: var(--ifm-background-color);
+}
+
+.option {
+  background: var(--ifm-background-color);
+  font-weight: 600;
+  vertical-align: bottom;
+  min-width: 120px;
+}
+.optionChosen {
+  background: var(--accent-tint);
+  color: var(--ifm-color-primary);
+}
+.optionLabel {
+  display: block;
+}
+.chosenBadge {
+  display: inline-block;
+  margin-top: var(--space-1);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-background-surface-color);
+  background: var(--ifm-color-primary);
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-2);
+}
+
+.criterion {
+  font-weight: 500;
+  color: var(--text-body);
+  white-space: nowrap;
+}
+
+.cell {
+  color: var(--text-body);
+}
+.cellChosen {
+  background: color-mix(in oklab, var(--accent-tint) 55%, transparent);
+}
+
+.mark {
+  font-size: var(--text-body-lg);
+  line-height: 1;
+}
+.mark-yes {
+  color: var(--ifm-color-primary);
+}
+.mark-no {
+  color: var(--ifm-color-content-secondary);
+}
+.mark-partial {
+  /* a warm amber for "partial"; no design-system token exists for it yet, so a
+     documented literal (kept distinct from brand green / content colors). */
+  color: #b8860b;
+}
+
+.value {
+  color: var(--ifm-color-content-secondary);
+  font-size: var(--text-body-sm);
+}
+
+/* Screen-reader-only text for the marks (so the glyph reads as "yes"/"no"/"partial"). */
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
