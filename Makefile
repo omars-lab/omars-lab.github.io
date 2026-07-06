@@ -98,6 +98,12 @@ validate-questions: ## Lint the optional `questions:` frontmatter (present → m
 validate-visual-density: ## Nudge: flag H2 sections that run long (>280 words) with no visual (advisory — a picture is worth a thousand words)
 	( cd ${SITEROOT} && node scripts/validate-visual-density.js $(DIRS) )
 
+features-check: ## Check the feature why-docs (features/*.md) for drift (auto-heals moves; exits non-zero on real drift)
+	python3 ${SITEROOT}/scripts/features_check.py
+
+features-seed: ## Seed the content-hash cache for any new/uncached feature-doc anchors
+	python3 ${SITEROOT}/scripts/features_check.py --seed
+
 validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
