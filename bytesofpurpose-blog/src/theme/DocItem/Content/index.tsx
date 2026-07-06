@@ -5,6 +5,7 @@ import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import ShareButton from '@site/src/components/ShareButton';
+import PostQuestions from '@site/src/components/PostQuestions';
 
 // Swizzled @theme/DocItem/Content: re-implements the upstream component (which
 // only renders a synthetic <h1> + the MDX body) and additionally mounts the
@@ -56,6 +57,7 @@ export default function DocItemContent({
           <ShareButton surface="doc-title" title={shareTitle} description={shareDescription} />
         </div>
       )}
+      <PostQuestions questions={frontMatter.questions} />
       <MDXContent>{children}</MDXContent>
     </div>
   );
