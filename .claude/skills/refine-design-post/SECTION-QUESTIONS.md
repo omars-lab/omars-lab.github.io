@@ -65,6 +65,15 @@ Optional:
 - Why it's built this way (the reflective coda the author favors).
 - What carried over from a prior build.
 
+## Recurring failure modes (from audits)
+
+- **The silent "who" drop in the opener.** The most common opener miss: it answers *why this
+  matters* and *what it enables* strongly, then never names *who benefits + what they'd do with it*.
+  The beneficiary is often implied ("nobody wants to learn Socrata's dialect") but never stated as a
+  person the reader can picture. Fix = one clause naming concrete beneficiaries and their payoff (a
+  resident, a would-be tenant, a reporter), not an abstract "users". This also closes the
+  Problem/motivation "who has it?" row — they are the same gap. — [local-guide-skill.mdx]
+
 ## Notes for the auditor
 
 - **Thin vs. padded.** A section missing a required answer is THIN (add the answer). A section that

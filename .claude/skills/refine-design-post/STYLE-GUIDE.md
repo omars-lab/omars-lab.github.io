@@ -55,3 +55,16 @@
 
 _(Appended by the `refine-design-post` capture step. Format: `- **Rule.** rationale — [post that
 taught it]`. Empty until the first audit adds to it.)_
+
+- **A vivid metaphor is a "thing" too — state it once.** The "State a thing once" rule isn't only
+  for invariants and decisions; it covers a coined metaphor/framing. If an early section lands a
+  memorable line ("the skills carry the judgment, the CLI carries the muscle"), a later section must
+  not re-coin it near-verbatim. Reference it or let the diagram carry it; don't restate the whole
+  frame. — [local-guide-skill.mdx: "muscle/judgment" stated in §"Plugins are roles" then re-opened
+  §"Why a plugin and not just a script"]
+- **A "closing verdict" must add a beat, not re-narrate.** When a section ends on the
+  long-sentence-then-short-verdict cadence, the verdict should be the PUNCH, not a recap of a number
+  or claim already shown above it. "That is the thesis working: the detector surfaced 27 permits"
+  re-states a count already in the diagram AND lightly announces-importance ("that is the thesis
+  working"). Cut to the bare verdict — "None were on a map yet. All were on the public record." The
+  fewer words carry more. — [local-guide-skill.mdx]

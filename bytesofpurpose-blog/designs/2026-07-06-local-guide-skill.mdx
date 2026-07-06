@@ -22,15 +22,18 @@ draft: true
 A map tells you what is **already open**. It cannot tell you what is *about to* open.
 But a new business leaves a public paper trail long before its doors do: an entity
 registration, a lease, a building permit, a sign permit, a liquor license, a business
-certificate. Most of that record is free and online. It is just scattered across a
-different portal in every city, behind inconsistent schemas, and nobody wants to learn
-Socrata's query dialect to check whether the vacant storefront on their block is quietly
-becoming a restaurant.
+certificate. Most of that record is free and online. It is just scattered: a different
+portal in every city, each with its own schema. And nobody wants to learn Socrata's query
+dialect to check whether the vacant storefront on their block is quietly becoming a
+restaurant.
 
-So I packaged the knowledge (where to look, in what order, and how to read it) into a
-Claude Code plugin called **`local-guide`**. You ask in plain English; the plugin drives a
-small standard-library CLI over open data and reports the filings with citations. No API
-keys, no accounts.
+Anyone watching a block can read that trail: a resident curious about the corner lot, a
+would-be tenant scouting rents, a local reporter, a small-business owner sizing up the
+competition. The record is public; it is just unreadable in practice. So I packaged the
+knowledge (where to look, in what order, and how to read it) into a Claude Code plugin
+called **`local-guide`**. You ask in plain English; the plugin drives a small
+standard-library CLI over open data and reports the filings with citations. No API keys,
+no accounts.
 
 <!-- truncate -->
 
@@ -198,14 +201,13 @@ And a sample of what came back. Real filings, real permit numbers:
 | **1031 Valencia** | `office → retail sales` | issued | 2025-06-05 | *"change of use from … trade office to proposed retail store w/ service center."* $420k. |
 | **309 Valencia** | `workshop → barber/beauty salon` | issued | 2025-03-10 | *"change of use from art gallery to nail salon."* |
 
-None of these were on a map yet. All of them are on the public record. That is the thesis
-working: the detector surfaced 27 change-of-use permits on one street since 2024.
+None were on a map yet. All were on the public record.
 
 ## Why a plugin and not just a script
 
-The CLI is the muscle; the skills are the judgment. A raw script needs you to already know
-which portal, which dataset ID, which columns, and how to read a change-of-use. The skills
-encode all of that, so a plain-English question resolves to the right calls.
+A raw script needs you to already know which portal, which dataset ID, which columns, and
+how to read a change-of-use. The skills encode all of that, so a plain-English question
+resolves to the right calls:
 
 <div className="mermaid-animated flow-dot">
 
