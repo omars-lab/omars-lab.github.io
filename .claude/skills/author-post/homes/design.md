@@ -78,9 +78,25 @@ you wire it yourself (no importer):
 Deep skill for the component APIs, step types, and the Claude-terminal scene: **`author-walkthrough`**.
 Worked hand-authored example: `designs/_mockups/fleetplane.mdx`.
 
+## Write it in the author's voice (read the guide files)
+
+Before drafting, read the two living rubric files in the **`refine-design-post`** skill so the post
+is born on-voice and answering the right questions:
+
+- **`.claude/skills/refine-design-post/SECTION-QUESTIONS.md`** — the set of questions each section
+  must answer (lead with *why it matters → value → what it enables → who benefits → what they'd do
+  with it*, then mechanism). Draft each section to answer its required questions.
+- **`.claude/skills/refine-design-post/STYLE-GUIDE.md`** — the voice + wording rules (state a thing
+  once, cut hedges, one idea per sentence, keep the question-hook opening and the reflective closer)
+  and the **generality** rule: prefer the reusable pattern, strip employer/proprietary specifics.
+
+After drafting, run **`refine-design-post`** on the post to audit + tighten it.
+
 ## Validate before commit
 
 - `make validate-outline` (or `node scripts/validate-post-outline.js <file>`) — the kind's outline.
+- `make validate-design-clarity` — the mechanical clarity/leak guard (trailing "…", verbatim dupes,
+  banned proprietary terms). Warn-tier.
 - `make validate-seo` — description/title length; `make validate-links`.
 - No em-dash: `grep -c $'—' <file> <sidecar>` must be 0.
 - **Render check** (mermaid + mockups + walkthroughs are client-rendered and draft-only): serve the
@@ -88,6 +104,7 @@ Worked hand-authored example: `designs/_mockups/fleetplane.mdx`.
 
 ## Cross-links
 
-`import-co-design` (HLD path) · `author-walkthrough` + `upgrade-post` (components) ·
-`implement-with-design-system` (on-brand CSS) · `author-blog-post` (MDX pitfalls) ·
+`refine-design-post` (voice + section-questions + generality — read its guide files BEFORE drafting,
+audit with it AFTER) · `import-co-design` (HLD path) · `author-walkthrough` + `upgrade-post`
+(components) · `implement-with-design-system` (on-brand CSS) · `author-blog-post` (MDX pitfalls) ·
 `author-mermaid` (diagram syntax) · `publish-site` (go live).

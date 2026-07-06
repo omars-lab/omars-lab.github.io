@@ -98,6 +98,9 @@ validate-questions: ## Lint the optional `questions:` frontmatter (present → m
 validate-visual-density: ## Nudge: flag H2 sections that run long (>280 words) with no visual (advisory — a picture is worth a thousand words)
 	( cd ${SITEROOT} && node scripts/validate-visual-density.js $(DIRS) )
 
+validate-design-clarity: ## Nudge: mechanical clarity/leak tells in /designs posts (trailing "…", verbatim dupes, banned proprietary terms, thin sections, ascii-redraw of a mermaid) — the greppable half of the refine-design-post skill
+	( cd ${SITEROOT} && node scripts/validate-design-clarity.js $(DIRS) )
+
 features-check: ## Check the feature why-docs (features/*.md) for drift (auto-heals moves; exits non-zero on real drift)
 	python3 ${SITEROOT}/scripts/features_check.py
 

@@ -1,6 +1,6 @@
 ---
 name: author-blog-post
-description: Author or edit blog posts and docs for the Bytes of Purpose Docusaurus site — correct frontmatter, MDX pitfalls that break the build (bare <br>, unescaped braces), where content lives, and how to validate before deploy. Use when writing/editing a post or doc, fixing frontmatter, or diagnosing an MDX build failure.
+description: Author or edit blog posts and docs for the Bytes of Purpose Docusaurus site — correct frontmatter, MDX pitfalls that break the build (bare br tags, unescaped braces), where content lives, and how to validate before deploy. Use when writing/editing a post or doc, fixing frontmatter, or diagnosing an MDX build failure. For a /designs post, pairs with refine-design-post (read its STYLE-GUIDE.md + SECTION-QUESTIONS.md to write in the author's voice and answer each section's core questions).
 ---
 
 # Author content for Bytes of Purpose
