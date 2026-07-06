@@ -169,6 +169,9 @@ answers "why". HOW:
   `footnotes: [{id, content}]` definition list. Plain-string cells stay static; zero client JS
   ships unless a cell has a note. E.g.
   `cells={{sqlite: {rating:'yes', note:<>Single file, no server.<sup>1</sup></>, footnotes:[{id:'1', content:<>In-process.</>}]}}}`.
+- LEGEND: pass `legend` to render a small key under the table (● yes / ○ no / ◐ partial, only the
+  marks in use), plus a "clickable for the reasoning" hint when any cell has a note. Rendered from
+  the mark map so it can't drift. Off by default; opt in per matrix. (Modeled on `<PowerLegend>`.)
 - WHEN NOT: `OptionGrid`/`OptionTile`/`DecisionNote` show explored DESIGN directions with a
   chosen ring + WHY (a design specimen). ComparisonMatrix is the feature-by-feature decision
   TABLE. Use the matrix for "which option scores better", OptionGrid for "which mock we picked".

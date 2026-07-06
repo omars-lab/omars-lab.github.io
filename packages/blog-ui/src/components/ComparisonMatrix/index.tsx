@@ -82,6 +82,10 @@ export interface ComparisonMatrixProps {
   desc?: string;
   options: MatrixOption[];
   criteria: MatrixCriterion[];
+  /** Show a small key explaining the marks (● yes / ○ no / ◐ partial), plus a note that a
+   *  mark with a "why" dot is clickable when any cell carries a justification. Off by
+   *  default; rendered straight from the mark map so it can never drift from the cells. */
+  legend?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -138,7 +142,7 @@ interface ActiveCell {
 }
 
 const ComparisonMatrix: React.FC<ComparisonMatrixProps> = (props) => {
-  const {title, desc, options, criteria, className, style} = props;
+  const {title, desc, options, criteria, legend = false, className, style} = props;
   // Throws (fails the build) on a cell keyed to a nonexistent option.
   const warnings = assertValid(props);
   useEffect(() => {
@@ -150,6 +154,18 @@ const ComparisonMatrix: React.FC<ComparisonMatrixProps> = (props) => {
   const interactive = criteria.some((c) =>
     options.some((o) => cellNote(c.cells[o.id]) !== undefined),
   );
+
+  // Which marks actually appear, so the legend only keys the ones in use (in mark order).
+  const usedMarks = (() => {
+    const present = new Set<string>();
+    for (const c of criteria)
+      for (const o of options) {
+        const r = cellRating(c.cells[o.id]);
+        if (r && MARK[r]) present.add(r);
+      }
+    return (['yes', 'no', 'partial'] as const).filter((k) => present.has(k));
+  })();
+  const showLegend = legend && usedMarks.length > 0;
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState<ActiveCell | null>(null);
@@ -248,6 +264,30 @@ const ComparisonMatrix: React.FC<ComparisonMatrixProps> = (props) => {
           </tbody>
         </table>
       </div>
+
+      {showLegend && (
+        <dl className={styles.legend} aria-label="What the marks mean">
+          {usedMarks.map((k) => {
+            const m = MARK[k];
+            return (
+              <div className={styles.legendRow} key={k}>
+                <dt className={clsx(styles.mark, styles[`mark-${m.cls}`])} aria-hidden="true">
+                  {m.glyph}
+                </dt>
+                <dd className={styles.legendText}>{m.label}</dd>
+              </div>
+            );
+          })}
+          {interactive && (
+            <div className={styles.legendRow}>
+              <dt className={styles.legendWhy} aria-hidden="true">
+                <span className={styles.whyDot} />
+              </dt>
+              <dd className={styles.legendText}>a mark with this dot is clickable for the reasoning</dd>
+            </div>
+          )}
+        </dl>
+      )}
 
       {interactive && (
         <dialog

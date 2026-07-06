@@ -262,3 +262,31 @@
     transition: none;
   }
 }
+
+/* Optional legend: a small key for the marks, rendered from the mark map (drift-free). */
+.legend {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+.legendRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.legend dt {
+  margin: 0;
+}
+.legendText {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+.legendWhy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+}
