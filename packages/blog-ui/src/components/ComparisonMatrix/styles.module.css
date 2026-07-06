@@ -16,6 +16,11 @@
   border-collapse: collapse;
   width: 100%;
   font-size: var(--text-body-md);
+  /* The site's global markdown stylesheet gives every <table> a top/bottom margin;
+     inside the rounded scroll wrapper that pushes the table down and exposes a band of
+     page background above the header (the chosen-column tint then looks detached from
+     the top). Reset it so the header band sits flush against the wrapper's top edge. */
+  margin: 0;
 }
 
 .caption {
