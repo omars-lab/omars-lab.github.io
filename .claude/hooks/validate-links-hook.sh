@@ -17,6 +17,15 @@ case "$file_path" in
 esac
 [ -f "$file_path" ] || exit 0
 
+# Skip the feature why-docs: features/<id>.md deliberately carries BARE GitHub permalinks
+# as code anchors (parsed by the feature-docs engine, features_lib.py). That format is
+# validated by `make features-check`, not by link hygiene, so the bare-url gate must not
+# fire on it. (validate-links's DEFAULT_DIRS already exclude features/ for the full sweep;
+# this excludes it for the per-file hook path too.)
+case "$file_path" in
+  */features/*) exit 0 ;;
+esac
+
 # Locate the validator relative to the project dir (cwd from the hook payload).
 proj="${CLAUDE_PROJECT_DIR:-$(printf '%s' "$input" | jq -r '.cwd // empty')}"
 script="$proj/bytesofpurpose-blog/scripts/validate-links.js"

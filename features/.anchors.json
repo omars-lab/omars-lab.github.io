@@ -1,0 +1,16 @@
+{
+  "bytesofpurpose-blog/scripts/validate-mdx-imports.js#L173-L180": {
+    "context": "sha256:054120a3e5feb40c01bcef84c80a74ff2d0eaaa461f66c3cc424595d4411b4b0",
+    "feature": "mdx-imports-check",
+    "hash": "sha256:6987e7df603e7c742de1de54ac32f29185ea1c69b995acb9d52465b41d26e1c4",
+    "label": "the four-way resolution: a tag is OK if registered, imported, locally defined, or a built-in",
+    "url": "https://github.com/omars-lab/omars-lab.github.io/blob/b4ca9f734f4c018b728776ef25c857ba109a96ee/bytesofpurpose-blog/scripts/validate-mdx-imports.js#L173-L180"
+  },
+  "packages/blog-ui/src/components/FlowDiagram/layout.ts#L341-L362": {
+    "context": "sha256:e2fe0b33f88be2e8ff1f415fb736c4a22c0ab46015bff703cc0b920893eade2a",
+    "feature": "diagram-legibility-gate",
+    "hash": "sha256:26372c531c51ff3ce37ba4b6775835079ec50d663bae5597dff8b729f8a28eca",
+    "label": "the FlowDiagram overlap gate: count crossing-free edges, throw below 75% unless allowOverlap",
+    "url": "https://github.com/omars-lab/omars-lab.github.io/blob/b4ca9f734f4c018b728776ef25c857ba109a96ee/packages/blog-ui/src/components/FlowDiagram/layout.ts#L341-L362"
+  }
+}
