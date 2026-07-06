@@ -17,6 +17,9 @@
  *   link-to-draft    A PUBLISHED page links to a `draft: true` page (which is    [WARN]
  *                    excluded from the prod build → a build-time broken link).
  *                    A draft→draft link is allowed (they ship together later).
+ *   link-to-deprecated  A page links to a `deprecated: true` page. The target    [WARN]
+ *                    still resolves (deprecated pages ship), so it's not broken —
+ *                    but linking readers into deprecated content is a smell.
  *   test-stale-slug  A test/e2e file (`goto('/docs/…')`, README) references a     [WARN]
  *                    /docs/<slug> that resolves to no doc — an IA move changed it.
  *                    A redirect keeps users working but lands the test on the
@@ -57,6 +60,7 @@ const SEVERITY = {
   // intentionally forward-link to a page not yet published.
   'broken-internal': 'warn', // /docs/... link resolves to no published page
   'link-to-draft': 'warn',   // a PUBLISHED page links to a draft: true page
+  'link-to-deprecated': 'warn', // a link points at a deprecated: true page (still live; a smell)
   // e2e specs hardcode doc slugs in goto()/baseURL refs. When an IA move changes a
   // slug, a redirect keeps real users working but lands the test on the redirect
   // STUB (no canvas/content) → spurious timeout. Catch the stale slug here, at
@@ -148,7 +152,7 @@ function fmField(fmLines, key) {
 
 /**
  * Build the corpus slug index used by the internal-link checks.
- * Maps a normalized route ("/<slug-without-leading-slash>") → { rel, draft }.
+ * Maps a normalized route ("/<slug-without-leading-slash>") → { rel, draft, deprecated }.
  * Only docs carry author-controlled absolute slugs we link to via /docs/…, so
  * we index the docs/ tree (the only space these /docs/ links can target).
  * Returns { byRoute, hasAnyDoc }.
@@ -162,9 +166,10 @@ function buildSlugIndex(docsDir) {
     if (!slug || !slug.startsWith('/')) continue; // only absolute-slug docs are addressable
     const draftRaw = (fmField(fm, 'draft') || '').toLowerCase();
     const draft = draftRaw === 'true';
+    const deprecated = (fmField(fm, 'deprecated') || '').toLowerCase() === 'true';
     // Route the doc is served at, minus the /docs prefix, normalized (no trailing slash).
     const route = (DOCS_ROUTE_PREFIX + slug).replace(/\/+$/, '');
-    byRoute.set(route, { rel: path.relative(ROOT, f), draft });
+    byRoute.set(route, { rel: path.relative(ROOT, f), draft, deprecated });
   }
   return { byRoute, hasAnyDoc: files.length > 0 };
 }
@@ -394,6 +399,16 @@ function scanFile(file, slugIndex) {
             file: rel, line: lineNo, kind: 'link-to-draft', severity: SEVERITY['link-to-draft'],
             detail: `published page links to a draft page (${hit.rel} has draft: true)`,
             suggest: 'un-draft the target before linking from a live page, or remove/defer the link',
+          });
+        } else if (hit.deprecated) {
+          // The target resolves (deprecated pages ship), so it's not broken — but a link
+          // INTO deprecated content is a smell. Flagged for any live target (not draft:
+          // a draft→deprecated link isn't shipped yet, but the draft branch already caught
+          // draft targets, so reaching here means the target is a live deprecated page).
+          problems.push({
+            file: rel, line: lineNo, kind: 'link-to-deprecated', severity: SEVERITY['link-to-deprecated'],
+            detail: `link points at a deprecated page (${hit.rel} has deprecated: true)`,
+            suggest: 'point at the replacement (deprecated_for) instead, or drop the link',
           });
         }
       }

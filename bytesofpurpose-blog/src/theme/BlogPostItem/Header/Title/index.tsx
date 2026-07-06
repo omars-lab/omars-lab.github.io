@@ -6,6 +6,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import ShareButton from '@site/src/components/ShareButton';
 import {isLocalhost} from '@site/src/experiments';
 import {DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
+import {DeprecatedBadge} from '@site/src/theme/DocSidebarItem/deprecatedBadge';
 import styles from './styles.module.css';
 
 // Build a vscode://file/<abs-path> URI from the post's aliased source path
@@ -40,6 +41,16 @@ function useIsDraftPost(frontMatter?: {draft?: boolean}): boolean {
   return frontMatter?.draft === true && isLocalhost();
 }
 
+// Deprecated posts ship to prod (unlike drafts), but their "Dep" badge is
+// dev/localhost-gated by design — same gate as the draft badge above.
+// `deprecated` isn't a declared field on BlogPostFrontMatter (unlike `draft`), so
+// read it through an unknown-cast the way the Content swizzles do for `questions`.
+function useIsDeprecatedPost(frontMatter?: unknown): boolean {
+  if (process.env.NODE_ENV === 'production') return false;
+  const deprecated = (frontMatter as {deprecated?: unknown} | undefined)?.deprecated;
+  return deprecated === true && isLocalhost();
+}
+
 export default function BlogPostItemHeaderTitle({
   className,
 }: {
@@ -51,6 +62,7 @@ export default function BlogPostItemHeaderTitle({
   const shareDescription =
     (frontMatter?.description as string | undefined) || metadata.description;
   const isDraft = useIsDraftPost(frontMatter);
+  const isDeprecated = useIsDeprecatedPost(frontMatter);
   const TitleHeading = isBlogPostPage ? 'h1' : 'h2';
 
   // Dev-only: when a post is a draft, make its "D" badge a link that opens the
@@ -82,6 +94,7 @@ export default function BlogPostItemHeaderTitle({
     <TitleHeading className={clsx(styles.title, className)}>
       {isBlogPostPage ? title : <Link to={permalink}>{title}</Link>}
       {badge}
+      {isDeprecated && <DeprecatedBadge />}
     </TitleHeading>
   );
 

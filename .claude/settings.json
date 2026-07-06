@@ -33,6 +33,11 @@
           },
           {
             "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-deprecated-hook.sh\"",
+            "timeout": 20
+          },
+          {
+            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-docs-structure-hook.sh\"",
             "timeout": 20
           },

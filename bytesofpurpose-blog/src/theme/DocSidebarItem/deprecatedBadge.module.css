@@ -1,0 +1,24 @@
+/* Dev/localhost-only "Dep" pill shown after a sidebar item's label. Red, to
+   distinguish it from the amber draft "D" pill (draftBadge.module.css). */
+.deprecatedBadge {
+  display: inline-block;
+  flex: none;
+  margin-left: 0.4rem;
+  padding: 0 0.32rem;
+  min-width: 1.15em;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap; /* never wrap "Dep" to its own line beside long labels */
+  vertical-align: middle;
+  color: #991b1b;
+  background: #fecaca;
+  border: 1px solid #ef4444;
+}
+html[data-theme='dark'] .deprecatedBadge {
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.18);
+  border-color: #b91c1c;
+}

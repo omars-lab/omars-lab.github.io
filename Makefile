@@ -479,6 +479,12 @@ validate-idea-tags: ## Check every board (ideas/experiments) tag has a tooltip g
 	@# .claude/hooks/validate-idea-tags-hook.sh runs this on a board-post / registry edit.
 	( cd ${SITEROOT} && node scripts/validate-idea-tags.js )
 
+validate-deprecated: ## Check every deprecated:true post/doc has a deprecated_reason (+ its deprecated_for resolves)
+	@# Warn-only (always exit 0): a deprecated page's red banner needs a reason to be useful.
+	@# The warn-tier hook .claude/hooks/validate-deprecated-hook.sh runs this on a content edit
+	@# that mentions `deprecated`. See the deprecated-post mechanism (mirrors the draft path).
+	( cd ${SITEROOT} && node scripts/validate-deprecated.js )
+
 validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registered <Catalog>, every hub-kind post has a valid area
 	@# Exit 2 if a kind:hub doc renders no <Catalog> / an unregistered kind, or a hub-kind post
 	@# (project/tinkering/research) has a missing/invalid `area:` (it would vanish from its hub).

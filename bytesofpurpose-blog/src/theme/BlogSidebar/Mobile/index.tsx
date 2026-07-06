@@ -6,6 +6,7 @@ import {NavbarSecondaryMenuFiller} from '@docusaurus/theme-common';
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useLocation} from '@docusaurus/router';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
+import {useIsBlogDeprecated, DeprecatedBadge} from '@site/src/theme/DocSidebarItem/deprecatedBadge';
 import {
   useBlogSidebarLabel,
   usePartitionedBlogItems,
@@ -20,6 +21,7 @@ import styles from './styles.module.css';
 
 function SidebarItemLink({item}: {item: {title: string; permalink: string}}) {
   const isDraft = useIsBlogDraft(item.permalink);
+  const isDeprecated = useIsBlogDeprecated(item.permalink);
   const label = useBlogSidebarLabel(item.permalink, item.title);
   return (
     <Link
@@ -30,6 +32,7 @@ function SidebarItemLink({item}: {item: {title: string; permalink: string}}) {
       title={item.title}>
       {label}
       {isDraft && <DraftBadge />}
+      {isDeprecated && <DeprecatedBadge />}
     </Link>
   );
 }
