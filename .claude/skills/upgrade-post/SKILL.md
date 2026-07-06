@@ -93,6 +93,47 @@ graph LR
 Registered in `MDXComponents` (no import needed in docs, but importing is harmless). MANUAL
 opt-in — a re-import would clobber it, so only on finalized pages.
 
+### FlowDiagram (prop-driven flow, built-in legibility gate)
+
+WHAT: a directed-flow figure rendered as inline SVG from a `nodes`/`edges` spec (data, not a
+mermaid string, not an image). Five shapes, usually INFERRED from the graph so you rarely pass
+`shape`: `pipeline` (A → B → C), `loop` (a cycle: a back-edge to an earlier node), `sequence`
+(a vertical stack), `branch` (a fork / decision fan-out: a node with 2+ out-edges), `swimlane`
+(labeled owner bands via each node's `lane`). WHEN: a flow/loop/handoff/decision you'd have
+hand-drawn in mermaid. It fails the BUILD on a dangling edge id or a tangled (crossing) layout,
+so a flow ships only when it reads cleanly. HOW:
+
+```mdx
+<FlowDiagram
+  title="The habit loop"
+  desc="A cue triggers a routine, which delivers a reward; craving closes the loop."
+  legend
+  nodes={[
+    {id: 'cue', label: 'Cue', detail: 'The trigger that starts the loop.'},
+    {id: 'routine', label: 'Routine', detail: 'The behavior you run on autopilot.'},
+    {id: 'reward', label: 'Reward', detail: 'The payoff that makes it worth repeating.'},
+  ]}
+  edges={[
+    {from: 'cue', to: 'routine'},
+    {from: 'routine', to: 'reward'},
+    {from: 'reward', to: 'cue', label: 'craving'},
+  ]}
+/>
+```
+
+- Registered in `MDXComponents` (no import needed). `title` is required (SVG a11y + id salt);
+  pass `desc` for the accessible description (a missing `desc` warns to the console).
+- Node `kind`: `store` (datastore), `external` (outside the system, dashed), `edge` (trust
+  boundary). `legend` shows a key for the special kinds actually used.
+- A node with `detail` becomes clickable and opens a focus modal listing what feeds it / what
+  it feeds. All motion (edges draw in, boxes fade in) respects `prefers-reduced-motion`.
+- The overlap gate THROWS (fails `make build`) past 25% crossing edges. If a diagram is
+  legitimately dense, pass `allowOverlap` to downgrade it to a warning; better, reorder nodes
+  so the flow reads without backtracking, or split it.
+- WHEN NOT: for a diagram with steps that each need a sentence but no strong flow, or a
+  non-flow (class/ER/context) diagram, reach for `DiagramWithFootnotes` (mermaid + numbered
+  legend) instead. FlowDiagram is for flows; it is deliberately not a general mermaid renderer.
+
 ### Mockup (UX mockups — show what it LOOKS like)
 
 WHAT: a framed, theme-aware wrapper (`browser` / `window` / `phone` / `none` chrome) that

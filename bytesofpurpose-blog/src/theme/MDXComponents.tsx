@@ -49,6 +49,7 @@ import {
 // (single source of truth; the blog consumes it). The bundled styles are imported once.
 import {
   DiagramWithFootnotes,
+  FlowDiagram,
   Mockup,
   Walkthrough,
   Assumption,
@@ -117,6 +118,13 @@ export default {
   // System-design posts: a diagram paired with a generated numbered legend (the badges
   // ①②③ are authored into the mermaid labels; this renders the matching explanations).
   DiagramWithFootnotes,
+  // FlowDiagram: a prop-driven directed-flow figure (pipeline/loop/sequence/branch/swimlane)
+  // rendered as inline SVG from a nodes/edges spec. Layout is deterministic and a build-time
+  // gate fails on a dangling edge id or a tangled (unreadable) layout, so a flow ships only
+  // when it reads cleanly. Use <FlowDiagram title=... nodes={[...]} edges={[...]} /> for a
+  // flow/loop/handoff instead of hand-authoring mermaid; DiagramWithFootnotes still wraps a
+  // hand-authored mermaid diagram when you want the numbered-legend treatment.
+  FlowDiagram,
   // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
   // (browser/window/phone chrome) — shows what a design would LOOK like.
   Mockup,
