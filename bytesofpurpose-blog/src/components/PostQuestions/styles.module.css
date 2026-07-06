@@ -1,0 +1,39 @@
+/* PostQuestions — the "Questions this post answers" box. A quiet sunken card that
+   sits between the post header and the body. Themed from design-system tokens so it
+   works in light and dark with no extra wiring. */
+
+.box {
+  margin: var(--space-5) 0 var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--bop-divider);
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: var(--radius-md);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-sans-body);
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}
+
+.list {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.item {
+  color: var(--text-body);
+  line-height: 1.55;
+}
+
+.item::marker {
+  color: var(--ifm-color-primary);
+}

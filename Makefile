@@ -92,6 +92,9 @@ validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA +
 validate-mdx-imports: ## Catch a Capitalized JSX tag used in .mdx but never imported/registered (a render break drafts hide)
 	( cd ${SITEROOT} && node scripts/validate-mdx-imports.js $(DIRS) --error-only )
 
+validate-questions: ## Lint the optional `questions:` frontmatter (present → must be a list of items each ending in "?")
+	( cd ${SITEROOT} && node scripts/validate-questions.js $(DIRS) )
+
 validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 

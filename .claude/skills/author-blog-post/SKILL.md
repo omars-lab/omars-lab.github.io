@@ -140,6 +140,26 @@ make fix-blog-posts    # fix frontmatter for recently modified posts + placehold
 Blog posts support a truncation marker for list previews — add `<!-- truncate -->`
 after the intro so paginated lists show a short preview (a warning nags otherwise).
 
+### `questions:` — the reader questions a post answers (optional)
+
+A post MAY declare the reader questions it sets out to answer. They render as a
+"Questions this post answers" box at the top of the post (the `<PostQuestions>` box,
+mounted automatically by the swizzled blog/doc item — no import, no placement needed).
+This is the reader-facing mirror of the repo convention "frame each task around the
+MAIN QUESTION it answers": the questions usually come straight from the request that
+prompted the post.
+
+```yaml
+questions:
+  - What is the loop behind every habit?
+  - Why does willpower behave like a muscle rather than a fixed trait?
+```
+
+Rules (warn-validated by `validate-questions.js` + the `validate-questions` hook, and
+`make validate-questions`): the field is OPTIONAL, but when present it must be a YAML
+list (block `- item` form or inline `[a?, b?]`), non-empty, with each item a real
+question ending in `?` (not a topic label). Absent → the box simply does not render.
+
 ## Premium content (how to MARK it — the mechanics)
 
 > For *whether* a doc should be premium (the editorial policy — depth/originality
