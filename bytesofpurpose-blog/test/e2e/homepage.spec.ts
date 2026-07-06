@@ -361,6 +361,130 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     const lit = page.locator('[class*="navbarSceneActive"]');
     await expect(lit).toHaveCount(1);
   });
+
+  // ── The three fixes: released-below-the-hero stability, forward-snap, board-settles-while-scrolling ──
+
+  test('[pin] resting BELOW the hero is stable — no yank-back into the pinned hero', async ({ page }) => {
+    // REGRESSION: the snap effect used to CLAMP progress to 1 once you were past the runway, read that
+    // as "stopped mid-transition on the last scene", and glide the page ~2000px back UP into the hero
+    // after a fast flick to the bottom. The released guard (raw progress out of [0,1) → never touch
+    // scroll) fixes it. This test STOPS at the bottom and asserts the page holds (the old "releases"
+    // test only proved the bottom was momentarily reachable, so it never caught the yank-back).
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Real wheel to the very bottom (wheel events drive the scroll-state machine the way a user does).
+    await page.mouse.move(640, 450);
+    for (let k = 0; k < 120; k++) {
+      const atBottom = await page.evaluate(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        return window.scrollY >= max - 2;
+      });
+      if (atBottom) break;
+      await page.mouse.wheel(0, 500);
+      await page.waitForTimeout(12);
+    }
+    const settledY = await page.evaluate(() => Math.round(window.scrollY));
+    // WAIT well past the scroll-idle debounce (140ms) + any glide: if a yank-back were going to fire it
+    // fires within a few hundred ms. 2.5s is a generous margin.
+    await page.waitForTimeout(2500);
+    const finalY = await page.evaluate(() => Math.round(window.scrollY));
+    expect(
+      Math.abs(finalY - settledY),
+      `page must hold below the hero (was ${settledY}, now ${finalY}) — no yank-back into the pinned hero`,
+    ).toBeLessThanOrEqual(6);
+  });
+
+  test('[pin] STOP past the flash peak SNAPS FORWARD (agrees with the door, never rewinds)', async ({ page }) => {
+    // The door commits to the NEXT scene at the flash PEAK (t >= 0.5). So a stop PAST the peak has
+    // already shown the next scene; snapping BACKWARD to the scene we were leaving would contradict the
+    // visuals. The forward-bias lands on the committed scene. We drive to a point past the peak using
+    // the spacer geometry (deterministic), nudge to register a real scroll, stop, and assert the snap
+    // moved FORWARD (scrollY did not decrease) and kept the committed scene, with the flash cleared.
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+
+    // Park in the LATE part of stop 2's transition (within ~0.85 → t ~0.7, past the 0.5 peak).
+    const target = await page.evaluate(() => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const stops = 8; // CHOOSER_CARDS.length (7) + 1
+      const p = (2 + 0.85) / stops; // stop 2, within 0.85
+      return { y: Math.round(spacerTopPage + p * scrollable) };
+    });
+    await page.evaluate((y) => window.scrollTo(0, y), target.y);
+    await page.waitForTimeout(30);
+    // a tiny real wheel nudge so the scroll-state machine registers activity then settles
+    await page.mouse.move(640, 450);
+    await page.mouse.wheel(0, 3);
+    await page.waitForTimeout(40);
+    const sceneAtStop = await root.getAttribute('data-active-scene');
+    const yAtStop = await page.evaluate(() => Math.round(window.scrollY));
+
+    // let the snap glide + settle
+    await expect.poll(() => flashOpacity(page), { timeout: 4000 }).toBeLessThan(0.1);
+    await page.waitForTimeout(300);
+    const sceneAfter = await root.getAttribute('data-active-scene');
+    const yAfter = await page.evaluate(() => Math.round(window.scrollY));
+
+    expect(sceneAfter, 'the committed scene must not rewind past the flash peak').toBe(sceneAtStop);
+    expect(yAfter, `snap must move FORWARD, not back up (stop ${yAtStop} → ${yAfter})`).toBeGreaterThanOrEqual(
+      yAtStop - 2,
+    );
+  });
+
+  test('[pin] board SETTLES to the scene title while still scrolling through a settled zone', async ({ page }) => {
+    // The board used to churn during ANY scroll activity, so it only ever showed a title on a FULL stop
+    // (door + board never in sync mid-journey). Churn is now scoped to the flash TRANSITION only, so
+    // scrolling THROUGH a scene's settled zone lets the board roll to that scene's title even while the
+    // wheel is still moving. We oscillate ±1px inside a settled zone (keeping "scrolling" true) and
+    // assert the board converges to the active scene's title without a full stop.
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+
+    // Position at the centre of stop 3's settled zone (scene 2 = INITIATIVES).
+    const baseY = await page.evaluate(() => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const stops = 8;
+      const p = (3 + 0.25) / stops; // stop 3, well inside the settled half
+      return Math.round(spacerTopPage + p * scrollable);
+    });
+
+    // Board text with SplitFlap's doubled faces collapsed (each flap shows front+back = duplicate glyph).
+    const boardText = () =>
+      page.evaluate(() => {
+        const b = document.querySelector('[class*="studioSign"]') as HTMLElement;
+        return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
+      });
+
+    // Oscillate ±1px inside the settled zone so "scrolling" stays true but the scene never changes.
+    await expect
+      .poll(
+        async () => {
+          await page.evaluate((y) => window.scrollTo(0, y + (Date.now() % 2)), baseY);
+          return boardText();
+        },
+        {
+          timeout: 5000,
+          message: 'board should roll to the scene title WHILE still scrolling (settled zone)',
+        },
+      )
+      .toContain('INITIATIVES');
+
+    await expect(root, 'scene held at 2 while scrolling the settled zone').toHaveAttribute(
+      'data-active-scene',
+      '2',
+    );
+  });
 });
 
 /*
