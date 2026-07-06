@@ -524,6 +524,46 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       '2',
     );
   });
+
+  // ── The festoon string-light progress indicator (one bulb per scene, clickable to jump) ──────────
+
+  const festoonBulbs = (page: Page) => page.locator('button[class*="studioBulb"]');
+
+  test('[pin] the festoon has one clickable bulb per scene, lit L-to-R by progress', async ({ page }) => {
+    await page.goto(heroUrl('pin', 0), { waitUntil: 'domcontentloaded' }); // ?hero-scene=0 pins scene 0
+    await page.waitForLoadState('networkidle');
+    // one <button> bulb per destination scene
+    await expect(festoonBulbs(page)).toHaveCount(EXPECTED_CARDS.length);
+    // at scene 0 exactly the first bulb is lit
+    const litCount = () => page.locator('button[class*="studioBulbLit"]').count();
+    expect(await litCount(), 'scene 0 → only the first bulb lit').toBe(1);
+
+    // forcing a later scene lights up through it (bulbs 0..N)
+    await page.goto(heroUrl('pin', 4), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    expect(await litCount(), 'scene 4 → bulbs 0..4 lit (5 total)').toBe(5);
+  });
+
+  test('[pin] clicking a festoon bulb JUMPS to that scene (and does NOT navigate away)', async ({ page }) => {
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(root).toHaveAttribute('data-active-scene', '0');
+
+    // click the LAST bulb → jump to the last scene; the URL must stay '/' (the gate Link must NOT fire)
+    await festoonBulbs(page).nth(EXPECTED_CARDS.length - 1).click();
+    await expect(root).toHaveAttribute('data-active-scene', String(EXPECTED_CARDS.length - 1), {
+      timeout: 4000,
+    });
+    await expect(root).toHaveAttribute('data-active-dest', EXPECTED_CARDS[EXPECTED_CARDS.length - 1].href);
+    expect(new URL(page.url()).pathname, 'a bulb click must NOT navigate the gate Link').toBe('/');
+
+    // and jump BACK to an earlier scene
+    await festoonBulbs(page).nth(1).click();
+    await expect(root).toHaveAttribute('data-active-scene', '1', { timeout: 4000 });
+    expect(new URL(page.url()).pathname).toBe('/');
+  });
 });
 
 /*
