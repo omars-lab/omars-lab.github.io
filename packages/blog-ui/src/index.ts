@@ -32,6 +32,23 @@ export type {
   FlowNodeKind,
 } from './components/FlowDiagram';
 
+// ComparisonMatrix — a criteria x options decision table (options are columns, criteria
+// rows; the chosen option's column is highlighted + badged; yes/no/partial render as marks).
+// A real accessible <table>; a build-time gate throws on a cell keyed to a nonexistent option.
+export {default as ComparisonMatrix} from './components/ComparisonMatrix';
+export type {
+  ComparisonMatrixProps,
+  MatrixOption,
+  MatrixCriterion,
+  Rating,
+} from './components/ComparisonMatrix';
+
+// Accordion — a foldable option list on native <details>/<summary> (zero JS). Each item has a
+// one-line summary, an expandable body, and an optional verdict pill ("chosen"/"rejected").
+// Pairs with ComparisonMatrix: the accordion carries the narrative, the matrix the head-to-head.
+export {default as Accordion} from './components/Accordion';
+export type {AccordionProps, AccordionItem} from './components/Accordion';
+
 export {default as Assumption} from './components/Assumption';
 export type {AssumptionProps} from './components/Assumption';
 
