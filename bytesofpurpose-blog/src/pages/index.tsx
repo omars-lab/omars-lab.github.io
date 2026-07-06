@@ -701,6 +701,7 @@ function useTimerScene(count: number, paused: boolean): SceneState {
 function useScrollProgress(
   compute: () => number,
   progressRef: React.MutableRefObject<number>,
+  directionRef?: React.MutableRefObject<number>,
 ): {tick: number; scrolling: boolean} {
   const [tick, setTick] = useState(0);
   const [scrolling, setScrolling] = useState(false);
@@ -708,6 +709,7 @@ function useScrollProgress(
     let raf = 0;
     let pending = false;
     let idle = 0; // timer that flips `scrolling` back to false after a short pause
+    let lastY = window.scrollY; // for the scroll DIRECTION (so the snap can go WITH your momentum)
     // recompute the progress fraction (without touching the `scrolling` flag — used by the mount init).
     const recompute = () => {
       if (pending) return;
@@ -724,6 +726,11 @@ function useScrollProgress(
     const onScroll = () => {
       // a REAL scroll event: mark scrolling true + reset the idle timer that settles it back to false.
       // (NOT called on mount, so the board starts at rest showing WELCOME rather than churning.)
+      // Also record the DIRECTION of this scroll (down = +1, up = -1) so the snap glides WITH the user's
+      // momentum instead of ever pulling them back against the way they were scrolling.
+      const y = window.scrollY;
+      if (directionRef && y !== lastY) directionRef.current = y > lastY ? 1 : -1;
+      lastY = y;
       setScrolling(true);
       window.clearTimeout(idle);
       idle = window.setTimeout(() => setScrolling(false), 140); // ~140ms of no scroll = "stopped"
@@ -980,6 +987,7 @@ const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (
 function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JSX.Element {
   const count = CHOOSER_CARDS.length;
   const progressRef = useRef(0);
+  const directionRef = useRef(1); // last scroll direction: +1 down, -1 up (so the snap goes WITH momentum)
   const spacerRef = useRef<HTMLDivElement | null>(null);
   const gateRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -1012,7 +1020,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     return Math.min(1, Math.max(0, -rect.top / scrollable));
   }, [model]);
 
-  const {tick, scrolling} = useScrollProgress(compute, progressRef);
+  const {tick, scrolling} = useScrollProgress(compute, progressRef, directionRef);
   const scene = useScrollScene(progressRef, count, tick);
   const {active} = scene;
 
@@ -1028,10 +1036,10 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   //     so we must NEVER write scroll there. Clamping progress to [0,1] BEFORE this check is what let
   //     the old code read "past the runway" as "stopped mid-transition on the last scene" and yank the
   //     page ~2000px back UP into the hero after a fast flick to the bottom. Compute `raw` first, bail.
-  //   • SNAP AGREES WITH THE VISUALS. The door swaps to the next scene at the flash PEAK (t >= 0.5 in
-  //     deriveSceneState). So a stop PAST the peak has already committed to the next scene visually —
-  //     snapping BACKWARD to the stop we were leaving would contradict the door + board. We bias the
-  //     target FORWARD past the peak (t >= 0.5 → next stop) and backward before it, mirroring the swap.
+  //   • SNAP WITH YOUR MOMENTUM. When you stop mid-transition, the glide continues the DIRECTION you were
+  //     scrolling: down → forward to the next scene, up → back to the current one. It never pulls you the
+  //     opposite way you were going (an earlier "nearest settled centre" rule yanked a just-past-centre
+  //     stop BACKWARD against a down-scroll). The door/board scrub to match the target as the glide eases.
   //
   // Driven by a rAF EASE (not window.scrollTo({behavior:'smooth'}) + a guard, which raced with its own
   // scroll events and intermittently failed to fire on deeper stops). The ease writes scrollTop each
@@ -1061,9 +1069,14 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     const within = (p * stops) % 1;
     if (within < settledFrac) return; // already settled in this slice → no snap
 
-    // FORWARD-BIAS: past the flash peak (t >= 0.5) the door already shows the NEXT scene, so land there.
-    const t = (within - settledFrac) / TRANSITION_FRACTION;
-    const stop = t >= 0.5 ? s + 1 : s;
+    // SNAP WITH YOUR MOMENTUM, never against it. You're stopped in a TRANSITION zone (between two settled
+    // scenes). The snap glides you to the nearest settled centre — but if it always chose "nearest", a
+    // stop just past a settled centre would pull you BACKWARD, up against a down-scroll (the "it goes
+    // backwards" bug). So we pick the target by the DIRECTION you were last scrolling: scrolling DOWN
+    // lands you FORWARD on the next scene; scrolling UP lands you BACK on the current one. Either way the
+    // glide continues the way you were already going, and the door/board scrub to match as it eases in.
+    const goingDown = directionRef.current >= 0;
+    const stop = goingDown ? s + 1 : s;
     const targetP = (stop + settledFrac / 2) / stops; // centre of that stop's settled zone
     const spacerTopPage = rect.top + window.scrollY; // page-coords of progress 0
     const targetY = Math.round(spacerTopPage + targetP * scrollable);
