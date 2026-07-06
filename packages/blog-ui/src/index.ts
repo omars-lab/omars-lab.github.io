@@ -18,6 +18,20 @@ export type {GifProps, GifFrame} from './components/Gif';
 export {default as DiagramWithFootnotes, circledNumber} from './components/DiagramWithFootnotes';
 export type {DiagramWithFootnotesProps} from './components/DiagramWithFootnotes';
 
+// FlowDiagram — a prop-driven directed-flow diagram (pipeline/loop/sequence/branch/
+// swimlane) rendered as one inline SVG. The author writes a nodes/edges spec (data,
+// not an image); layout is deterministic and a build-time gate fails on a dangling
+// edge id or a tangled (unreadable) layout. Distinct from DiagramWithFootnotes,
+// which wraps a hand-authored mermaid diagram with a numbered legend.
+export {default as FlowDiagram} from './components/FlowDiagram';
+export type {
+  FlowDiagramProps,
+  FlowNode,
+  FlowEdge,
+  FlowShape,
+  FlowNodeKind,
+} from './components/FlowDiagram';
+
 export {default as Assumption} from './components/Assumption';
 export type {AssumptionProps} from './components/Assumption';
 

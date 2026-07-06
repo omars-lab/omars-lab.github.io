@@ -17,12 +17,21 @@ itself: the case studies are worth it.
 
 <!-- truncate -->
 
-```mermaid
-flowchart LR
-    Cue["Cue<br/>(the trigger)"] --> Routine["Routine<br/>(the behavior)"]
-    Routine --> Reward["Reward<br/>(the payoff)"]
-    Reward -. "craving<br/>(anticipation)" .-> Cue
-```
+<FlowDiagram
+  title="The habit loop"
+  desc="A cue triggers a routine, which delivers a reward; a craving for that reward closes the loop back to the cue."
+  legend
+  nodes={[
+    {id: 'cue', label: 'Cue', detail: 'The trigger that starts the loop: a time, a place, an emotion, a preceding action.'},
+    {id: 'routine', label: 'Routine', detail: 'The behavior you run on autopilot once the cue fires.'},
+    {id: 'reward', label: 'Reward', detail: 'The payoff that tells your brain the loop is worth repeating.'},
+  ]}
+  edges={[
+    {from: 'cue', to: 'routine'},
+    {from: 'routine', to: 'reward'},
+    {from: 'reward', to: 'cue', label: 'craving'},
+  ]}
+/>
 
 ## The loop underneath everything
 
