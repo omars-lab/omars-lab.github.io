@@ -73,6 +73,10 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `StudioFacade` | `src/pages/index.tsx` | the presentational Lebanese central-hall house (roof + body + 3 arches + hanging board + door↔scene flash), driven by props; rendered by BOTH the timer `ChooserStudio` and `ParallaxStudio` |
 | `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 3 models (`pin`/`inplace`/`horizontal`); pin/horizontal use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel) |
 | `useNavbarSceneHighlight` | `src/pages/index.tsx` | lights the top-navbar `<a>` matching the active scene's destination; only while the hero is on-screen (IntersectionObserver), reverts on leave |
+| `StudioFestoon` | `src/pages/index.tsx` | the festoon string-light PROGRESS indicator: one bulb per scene, lit L-to-R by `active`. With `onJump` (scroll models) each bulb is a `<button>` that scrolls to that scene; without it (timer house) they are read-only spans. |
+| `jumpToScene` (in `ParallaxStudio`) | `src/pages/index.tsx` | scroll to scene `i`'s settled centre (the festoon bulbs call it). Reuses the snap's rAF ease + a jump-generation token so a new jump supersedes an in-flight one; reduced-motion jumps instantly. |
+| `directionRef` (in `ParallaxStudio` / `useScrollProgress`) | `src/pages/index.tsx` | the last scroll direction (+1 down, -1 up); the snap glides WITH it so it never pulls you against your scroll |
+| `.studioFestoon` / `.studioBulb` / `.studioBulbLit` | `src/pages/index.module.css` | the festoon swag + a bulb + its lit (warm-glow) state |
 | `.parallaxSpacer` / `.parallaxStick` | `src/pages/index.module.css` | the tall scroll runway + the sticky pinned viewport (pin/horizontal) |
 | `.parallaxPanTrack` | `src/pages/index.module.css` | the horizontal-pan depth backdrop (the 7 scenes panned behind the facade; isolated, low-opacity) |
 | `.navbarSceneActive` | `src/pages/index.module.css` | the active-scene navbar highlight style |
@@ -129,6 +133,14 @@ advances the scenes, then the hero releases and the page scrolls on. Four things
   `min(--body-w, (100vh - 2*--pin-house-offset) / --pin-house-ratio)`; both knobs are Hero-Tuner
   params (`pinHouseOffset` / `pinHouseRatio` in `src/lib/hero-tuning.ts`), dial live and bake defaults.
   Re-check the `≤600px` mobile block still FILLS the pinned viewport door-only (it overrides the cap).
+- **The snap follows scroll DIRECTION (gotcha 18):** `useScrollProgress` records the last scroll
+  direction into `directionRef`; the snap glides that way (down → next scene, up → current) so it never
+  pulls you against your momentum. Do not revert to a peak-only / nearest-centre rule (it yanked a
+  just-past-centre stop backward).
+- **The festoon = the progress indicator (gotchas 21-22).** `StudioFestoon` draws a swag of bulbs, one
+  per scene, lit L-to-R by `active`. In the scroll models each bulb is a `<button>` that calls
+  `jumpToScene(i)`; the timer house passes no `onJump`, so they are read-only spans. `jumpToScene`
+  eases to the scene's settled centre with the same rAF glide as the snap.
 
 ## ⚠️ Gotchas (the things that bite — don't re-break these)
 
@@ -271,6 +283,20 @@ advances the scenes, then the hero releases and the page scrolls on. Four things
     `src/lib/hero-tuning.ts` — keep the schema defaults in lockstep with the CSS fallbacks). The `≤600px`
     mobile block OVERRIDES this (the house FILLS the pinned `100svh` viewport door-only); re-check both
     desktop AND 375px if you touch either.
+21. **A festoon bulb BEHIND the board is an unclickable tap target.** `StudioFestoon` strings the bulbs
+    across the top of the body, but on DESKTOP the wide Vestaboard sits high and covers the middle. If
+    the festoon's `z-index` is below the board, the middle bulbs are not just visually hidden, the board
+    INTERCEPTS their pointer events (Playwright reports "a glyph span intercepts pointer events" and the
+    click times out). Fix: the festoon is `z-index: 6` (IN FRONT of the board, which is `z-index: 3`), so
+    a real-festoon look AND every bulb stays clickable. If you re-layer the board or festoon, re-verify a
+    middle bulb is clickable on desktop (not only the flanking ones). On mobile the board hangs lower, so
+    all bulbs are already clear.
+22. **A festoon bulb click must NOT fire the gate `<Link>`.** The whole facade is inside the destination
+    `<Link>` (the click-through gate). A bulb's `onClick` therefore does `e.preventDefault()` +
+    `e.stopPropagation()` and calls `jumpToScene` instead of navigating; without it, clicking a bulb
+    would navigate to that scene's page rather than scroll to it. The e2e asserts the URL stays `/` after
+    a bulb click. `jumpToScene` bumps a jump-generation token so a second bulb click cleanly supersedes
+    an in-flight jump (two rAF loops writing scroll would otherwise fight); reduced-motion jumps instantly.
 
 ## Verify any change
 

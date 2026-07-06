@@ -783,6 +783,119 @@
   box-shadow: 0 14px 30px rgba(80, 40, 20, 0.18);
 }
 
+/* ── FESTOON string lights = the scene-progress indicator ──────────────────────────────────────────
+   A swag of warm bulbs strung under the eave across the top of the teal body, one per scene, warming
+   up left-to-right as you advance. A Lebanese courtyard motif, not a UI bar. The strip is a thin band
+   pinned to the top of .studioBody; the bulbs are absolutely placed along a catenary and the cord is
+   an SVG path through the same curve. */
+.studioFestoon {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.6rem;
+  right: 0.6rem;
+  height: 22px; /* the swag band: cord + bulbs, strung under the eave */
+  z-index: 6; /* IN FRONT of the hanging board (z-index 3): a real festoon hangs before the sign, and it
+                 keeps every bulb visible + CLICKABLE (behind the board they'd be unreachable tap targets) */
+  pointer-events: none; /* only the bulbs themselves are interactive */
+}
+/* the swag CORD: a thin dark line dipping across the strip (drawn as an SVG catenary). */
+.studioFestoonCord {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.studioFestoonCord path {
+  fill: none;
+  stroke: rgba(30, 20, 10, 0.55); /* a dark cord against the teal */
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke; /* keep the cord hairline-thin regardless of the viewBox stretch */
+  stroke-linecap: round;
+}
+/* one BULB: a small glass drop hanging off the cord. Unlit = a dim glass bead; lit = a warm glowing
+   amber bulb. Placed by inline left/top (% along the catenary); translated to hang FROM that point. */
+.studioBulb {
+  position: absolute;
+  width: 11px;
+  height: 14px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translate(-50%, -2px); /* centre on the cord point, drop the bulb just below it */
+  pointer-events: auto; /* the bulbs ARE clickable (the strip itself is not) */
+  cursor: pointer;
+  /* a generous invisible HIT AREA so the small bulb is an easy tap target (esp. on touch). */
+}
+.studioBulb::before {
+  content: '';
+  position: absolute;
+  inset: -16px -10px; /* expand the tap target to ~44px tall for touch */
+}
+/* the visible glass drop of the bulb. */
+.studioBulbGlass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; /* a light-bulb teardrop */
+  /* UNLIT: a dim, cool glass bead (the bulb is off). */
+  background: radial-gradient(60% 55% at 50% 35%, rgba(255, 255, 255, 0.35), rgba(90, 100, 100, 0.5));
+  border: 1px solid rgba(30, 20, 10, 0.4);
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.35);
+  transition: background 0.45s ease, box-shadow 0.45s ease;
+}
+/* a tiny brass CAP where the bulb meets the cord. */
+.studioBulbGlass::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  transform: translateX(-50%);
+  border-radius: 1px;
+  background: #b8881f;
+}
+/* LIT: a warm amber bulb with a soft glow. The glow uses a box-shadow bloom (no filter: hi-DPI seam). */
+.studioBulbLit .studioBulbGlass {
+  background:
+    radial-gradient(55% 50% at 50% 38%, #fff6d8 0%, #ffd772 45%, #f0a92e 100%);
+  border-color: #d9a441;
+  box-shadow:
+    0 0 6px 1px rgba(255, 197, 74, 0.85),
+    0 0 14px 3px rgba(255, 180, 60, 0.45),
+    inset 0 -1px 2px rgba(180, 110, 20, 0.4);
+  animation: studioBulbGlow 2.6s ease-in-out infinite;
+  animation-delay: var(--bulb-delay, 0s);
+}
+@keyframes studioBulbGlow {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(255, 197, 74, 0.85), 0 0 14px 3px rgba(255, 180, 60, 0.45), inset 0 -1px 2px rgba(180, 110, 20, 0.4); }
+  50% { box-shadow: 0 0 8px 2px rgba(255, 210, 110, 0.95), 0 0 20px 5px rgba(255, 190, 80, 0.55), inset 0 -1px 2px rgba(180, 110, 20, 0.4); }
+}
+/* the CURRENT scene's bulb reads a touch brighter/larger so "you are here" is clear. */
+.studioBulb[aria-current='true'] .studioBulbGlass {
+  transform: scale(1.15);
+}
+/* keyboard focus: a clear ring on the bulb button (it's a real control). */
+.studioBulb:focus-visible {
+  outline: none;
+}
+.studioBulb:focus-visible .studioBulbGlass {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+/* hover affordance (desktop): lit-preview the bulb you're about to jump to. */
+.studioBulb:hover .studioBulbGlass {
+  border-color: #d9a441;
+  box-shadow: 0 0 5px 1px rgba(255, 197, 74, 0.6), inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+/* Reduced motion: kill the glow PULSE (the lit state + all other cues stay). */
+@media (prefers-reduced-motion: reduce) {
+  .studioBulbLit .studioBulbGlass {
+    animation: none;
+  }
+}
+
 /* The pitched terracotta-tile ROOF capping the facade (the signature of a Lebanese central-hall home).
    A TRIANGULAR gable (front-on hip roof): rises from the full width at the eave to a short ridge at
    the top, terracotta tile with rib highlights. Height ≈ 1/2 the body's arches, matching the

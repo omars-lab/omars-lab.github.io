@@ -750,18 +750,94 @@ function useScrollProgress(
   return {tick, scrolling};
 }
 
+/* FESTOON STRING LIGHTS: the scene-progress indicator. A swag of bulbs strung under the eave, one per
+   destination scene, warming up LEFT-TO-RIGHT as you advance through the scenes (a Lebanese courtyard
+   string-light motif, not a UI progress bar). Bulb `i` is LIT once `active >= i`. When `onJump` is
+   given (the scroll models), each bulb is a real <button> that scrolls to that scene; without it (the
+   timer house) the bulbs are a plain read-only indicator. The swag CORD is a single SVG catenary curve
+   the bulbs hang from. Reduced motion is handled in CSS (no glow pulse). */
+function StudioFestoon({
+  active,
+  onJump,
+}: {
+  active: number;
+  onJump?: (scene: number) => void;
+}): React.JSX.Element {
+  const count = CHOOSER_CARDS.length;
+  // The bulbs hang along a shallow catenary (a dipping swag). We place `count` bulbs evenly across the
+  // width and drop each onto the curve; the cord is one SVG path through the same points.
+  const xs = Array.from({length: count}, (_, i) => (100 * (i + 0.5)) / count); // % across the width
+  const dip = (x: number) => {
+    // a gentle parabola dipping in the middle: 0 at the ends, max ~ at centre (in % of the strip height)
+    const t = (x - 50) / 50; // -1..1
+    return 78 - 55 * t * t; // higher number = lower on the strip; ends ride up, centre sags
+  };
+  const cordPts = xs.map((x) => `${x.toFixed(1)},${dip(x).toFixed(1)}`);
+  // Anchor the cord to the top corners of the strip so it looks pinned to the eave.
+  const cordPath = `M0,8 L${cordPts.join(' L')} L100,8`;
+  return (
+    <div className={styles.studioFestoon} aria-hidden={onJump ? undefined : true}>
+      <svg
+        className={styles.studioFestoonCord}
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true">
+        <path d={cordPath} />
+      </svg>
+      {xs.map((x, i) => {
+        const lit = active >= i;
+        const title = stripEmoji(CHOOSER_CARDS[i].title);
+        const style = {
+          left: `${x}%`,
+          top: `${dip(x)}%`,
+          // stagger the (reduced-motion-gated) glow so the lit bulbs shimmer like a real string
+          ['--bulb-delay' as string]: `${(i % 4) * 0.4}s`,
+        } as React.CSSProperties;
+        const cls = clsx(styles.studioBulb, lit && styles.studioBulbLit);
+        return onJump ? (
+          <button
+            key={CHOOSER_CARDS[i].to}
+            type="button"
+            className={cls}
+            style={style}
+            aria-label={`Go to ${title}`}
+            aria-current={active === i ? 'true' : undefined}
+            onClick={(e) => {
+              // The whole facade is inside the gate <Link>; a bulb click must NOT navigate, it JUMPS.
+              e.preventDefault();
+              e.stopPropagation();
+              onJump(i);
+            }}>
+            <span className={styles.studioBulbGlass} aria-hidden="true" />
+          </button>
+        ) : (
+          <span key={CHOOSER_CARDS[i].to} className={cls} style={style} aria-hidden="true">
+            <span className={styles.studioBulbGlass} aria-hidden="true" />
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 /* The presentational FACADE: the Lebanese central-hall home (roof + square body + three arches + the
    hanging Vestaboard + the centre door↔scene flash), driven purely by props. Both the original timer
    ChooserStudio and the scroll-driven parallax wrappers render this with their own {active, mode,
    flashing}, so the visual house is defined ONCE. The clickable <Link> + hover/keyboard behaviour and
    the data-hero-root / gateRef belong to the wrappers (they differ per scroll-model). */
 function StudioFacade({
+  active,
   shown,
   mode,
   flash,
   boardToText,
   spinning,
-}: SceneState & {spinning?: boolean}): React.JSX.Element {
+  onJump,
+}: SceneState & {
+  spinning?: boolean;
+  /** Only the scroll models pass this: jump to scene `i` (the festoon bulbs call it). */
+  onJump?: (scene: number) => void;
+}): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
@@ -784,8 +860,14 @@ function StudioFacade({
       {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
       <div className={styles.studioRoof} aria-hidden="true" />
 
-      {/* The SQUARE terracotta house body: holds the board + the three arches. */}
+      {/* The SQUARE terracotta house body: holds the festoon lights + the board + the three arches. */}
       <div className={styles.studioBody}>
+        {/* FESTOON STRING LIGHTS = the scene-progress indicator. A swag of warm bulbs draped under the
+            eave: one bulb per destination scene, lighting up LEFT-TO-RIGHT as you advance (bulb i is
+            "on" once you've reached scene i). A Lebanese courtyard motif rather than a UI progress bar.
+            Each bulb is a real <button> that JUMPS to its scene (scroll models only; the timer house
+            has no runway, so it renders the bulbs as a plain read-only indicator with no onJump). */}
+        <StudioFestoon active={active} onJump={onJump} />
         <div className={styles.studioRow}>
           {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
           <div className={styles.studioArch}>
@@ -1125,6 +1207,50 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   // layer BEHIND the facade; the door still carries the actual door↔scene flash).
   const panPct = model === 'horizontal' ? -(active * (100 / count)) : 0;
 
+  // JUMP-TO-SCENE (the festoon bulbs): scroll to scene `i`'s settled centre. Scene `i` is stop `i+1`
+  // (stop 0 is the door), so its settled centre is at progress (i + 1 + settledFrac/2)/stops of the
+  // runway. We reuse the SAME rAF ease as the snap (a deliberate glide, abort on a genuine user scroll)
+  // and point `directionRef` at the jump so the settle-snap agrees with the jump instead of fighting it.
+  // Pinned models only (inplace has no runway to scroll within); reduced-motion jumps INSTANTLY.
+  const jumpGenRef = useRef(0); // bumped per jump so a NEW jump cleanly supersedes an in-flight one
+  const jumpToScene = useCallback(
+    (i: number) => {
+      const el = spacerRef.current;
+      if (!el || !pinned) return;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const scrollable = rect.height - vh;
+      if (scrollable <= 0) return;
+      const stops = count + 1;
+      const settledFrac = 1 - TRANSITION_FRACTION;
+      const targetP = (i + 1 + settledFrac / 2) / stops; // scene i => stop i+1, its settled centre
+      const spacerTopPage = rect.top + window.scrollY;
+      const targetY = Math.round(spacerTopPage + targetP * scrollable);
+      directionRef.current = targetY >= window.scrollY ? 1 : -1; // glide + snap agree with the jump
+      snapActive.current = false; // a jump supersedes any in-flight settle-snap
+      const gen = (jumpGenRef.current += 1); // this jump's token; a newer jump invalidates it
+      if (prefersReducedMotion()) {
+        window.scrollTo(0, targetY); // no animation under reduced motion
+        return;
+      }
+      let last = window.scrollY;
+      const step = () => {
+        if (jumpGenRef.current !== gen) return; // a newer jump took over → stop this loop
+        if (Math.abs(window.scrollY - last) > 3) return; // a genuine user scroll → hand it back
+        const cur = window.scrollY;
+        if (Math.abs(targetY - cur) < 1) {
+          window.scrollTo(0, targetY); // land exactly
+          return;
+        }
+        window.scrollTo(0, cur + (targetY - cur) * 0.2); // ease 20%/frame, same feel as the snap
+        last = window.scrollY;
+        window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    },
+    [count, pinned],
+  );
+
   const gate = (
     <Link
       ref={gateRef}
@@ -1173,6 +1299,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
       <StudioFacade
         {...scene}
         spinning={scrolling && scene.boardFromText !== scene.boardToText}
+        onJump={pinned ? jumpToScene : undefined}
       />
     </Link>
   );
