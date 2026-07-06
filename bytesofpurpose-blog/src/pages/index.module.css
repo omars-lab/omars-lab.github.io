@@ -790,10 +790,10 @@
    an SVG path through the same curve. */
 .studioFestoon {
   position: absolute;
-  top: 0.3rem;
+  top: 0.15rem; /* pinned high, right under the eave, so the swag clears the board hanging below */
   left: 0.6rem;
   right: 0.6rem;
-  height: 22px; /* the swag band: cord + bulbs, strung under the eave */
+  height: 30px; /* the swag band: cord near the top, bulbs hang a short way below it */
   z-index: 6; /* IN FRONT of the hanging board (z-index 3): a real festoon hangs before the sign, and it
                  keeps every bulb visible + CLICKABLE (behind the board they'd be unreachable tap targets) */
   pointer-events: none; /* only the bulbs themselves are interactive */
@@ -817,8 +817,8 @@
    amber bulb. Placed by inline left/top (% along the catenary); translated to hang FROM that point. */
 .studioBulb {
   position: absolute;
-  width: 11px;
-  height: 14px;
+  width: 9px;
+  height: 12px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -1259,41 +1259,34 @@
    and show just the central door + board, centred and a touch larger, so the interactive part (the
    door you travel through + the board that names it) is fully visible above the fold. */
 @media screen and (max-width: 600px) {
-  /* On mobile the pinned viewport was much taller than the house, leaving big empty gaps. Make the
-     house FILL the pinned viewport: the sticky is the small-viewport height, the gate + facade STRETCH
-     to fill it (the body grows to take the leftover height instead of a fixed aspect box), so there's
-     no dead space above or below. */
+  /* On mobile the pinned viewport is TALL and the house is door-only (narrow). We CENTRE the house in
+     the viewport at a NATURAL proportion instead of STRETCHING it to fill the height (which made the
+     door section hugely elongated). A little empty teal above/below reads far better than a stretched
+     house. */
   .parallaxStick {
-    align-items: stretch;
+    align-items: center;
     height: 100svh; /* small-viewport unit: excludes the mobile browser chrome, so no phantom gap */
   }
   .parallaxSticky {
     justify-content: center;
     width: 100%;
-    height: 100%;
   }
   .studioGate {
-    max-width: min(96vw, 440px); /* wide on mobile so the house is large */
-    height: 100%;
+    max-width: min(92vw, 380px); /* the door-only house is narrow; keep it a sensible size */
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  /* the facade fills the gate height; the roof keeps its shape, the BODY grows to take the rest so the
-     house occupies the whole viewport (no empty wall gaps top/bottom). */
   .studioFacade {
-    height: 100%;
     justify-content: center;
   }
-  /* On mobile the house is DOOR-ONLY (side windows hidden). The body GROWS to fill the leftover height
-     (flex), instead of a fixed aspect box, so the house fills the pinned viewport. */
+  /* On mobile the house is DOOR-ONLY (side windows hidden). Keep a NATURAL portrait-ish aspect (room
+     for the hanging board above + the tall door below) rather than stretching to fill the viewport. */
   .studioBody {
-    aspect-ratio: auto;
-    flex: 1 1 auto;
-    min-height: 0;
+    aspect-ratio: 3 / 4;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
   }
   .studioRow {
     grid-template-columns: 1fr; /* single column: just the centre door */

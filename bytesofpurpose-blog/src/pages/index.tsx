@@ -757,9 +757,13 @@ function useScrollProgress(
    timer house) the bulbs are a plain read-only indicator. The swag CORD is a single SVG catenary curve
    the bulbs hang from. Reduced motion is handled in CSS (no glow pulse). */
 function StudioFestoon({
+  litCount,
   active,
   onJump,
 }: {
+  /** How many bulbs are lit (0 at the WELCOME door; scene i reached => i+1 lit). */
+  litCount: number;
+  /** The current scene index (for the aria-current "you are here" marker). */
   active: number;
   onJump?: (scene: number) => void;
 }): React.JSX.Element {
@@ -767,14 +771,27 @@ function StudioFestoon({
   // The bulbs hang along a shallow catenary (a dipping swag). We place `count` bulbs evenly across the
   // width and drop each onto the curve; the cord is one SVG path through the same points.
   const xs = Array.from({length: count}, (_, i) => (100 * (i + 0.5)) / count); // % across the width
-  const dip = (x: number) => {
-    // a gentle parabola dipping in the middle: 0 at the ends, max ~ at centre (in % of the strip height)
+  // The CORD droops in scallops between pins: it sags between each pair of bulbs and lifts at each bulb,
+  // like a real string of lights. `cordY` is where the cord passes THROUGH each bulb's pin (high in the
+  // strip); the bulbs then hang a UNIFORM short drop BELOW that (bulbAt), so they form a neat even row
+  // that stays high and clears the board hanging below, instead of a deep parabola that dips onto it.
+  const cordY = (x: number) => {
     const t = (x - 50) / 50; // -1..1
-    return 78 - 55 * t * t; // higher number = lower on the strip; ends ride up, centre sags
+    return 18 - 8 * t * t; // a gentle overall arch: 18 at centre, 10 at the ends (both near the top)
   };
-  const cordPts = xs.map((x) => `${x.toFixed(1)},${dip(x).toFixed(1)}`);
-  // Anchor the cord to the top corners of the strip so it looks pinned to the eave.
-  const cordPath = `M0,8 L${cordPts.join(' L')} L100,8`;
+  const bulbDrop = 12; // % of the strip: how far each bulb hangs below its cord pin (uniform)
+  const bulbAt = (x: number) => cordY(x) + bulbDrop;
+  // Build the cord as scallops: from the top-left anchor, sag between each pin, lifting at each bulb.
+  const seg = xs
+    .map((x, i) => {
+      const prevX = i === 0 ? 0 : xs[i - 1];
+      const midX = (prevX + x) / 2;
+      const sag = Math.max(cordY(prevX), cordY(x)) + 7; // the low point of the droop between two pins
+      return `Q ${midX.toFixed(1)},${sag.toFixed(1)} ${x.toFixed(1)},${cordY(x).toFixed(1)}`;
+    })
+    .join(' ');
+  const lastX = xs[xs.length - 1];
+  const cordPath = `M0,7 ${seg} Q ${((lastX + 100) / 2).toFixed(1)},${(cordY(lastX) + 7).toFixed(1)} 100,7`;
   return (
     <div className={styles.studioFestoon} aria-hidden={onJump ? undefined : true}>
       <svg
@@ -785,11 +802,11 @@ function StudioFestoon({
         <path d={cordPath} />
       </svg>
       {xs.map((x, i) => {
-        const lit = active >= i;
+        const lit = i < litCount; // 0 lit at the WELCOME door; N lit once you've reached scene N-1
         const title = stripEmoji(CHOOSER_CARDS[i].title);
         const style = {
           left: `${x}%`,
-          top: `${dip(x)}%`,
+          top: `${bulbAt(x)}%`, // hang a uniform short drop below the cord pin (a neat even row)
           // stagger the (reduced-motion-gated) glow so the lit bulbs shimmer like a real string
           ['--bulb-delay' as string]: `${(i % 4) * 0.4}s`,
         } as React.CSSProperties;
@@ -867,7 +884,11 @@ function StudioFacade({
             "on" once you've reached scene i). A Lebanese courtyard motif rather than a UI progress bar.
             Each bulb is a real <button> that JUMPS to its scene (scroll models only; the timer house
             has no runway, so it renders the bulbs as a plain read-only indicator with no onJump). */}
-        <StudioFestoon active={active} onJump={onJump} />
+        <StudioFestoon
+          litCount={mode === 'door' ? 0 : active + 1}
+          active={active}
+          onJump={onJump}
+        />
         <div className={styles.studioRow}>
           {/* LEFT: the cleaned zellij WINDOW (static), with a GOLD balcony railing in front of it. */}
           <div className={styles.studioArch}>
