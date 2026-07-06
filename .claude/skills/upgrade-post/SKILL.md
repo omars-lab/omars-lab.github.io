@@ -165,6 +165,40 @@ answers "why". HOW:
   chosen ring + WHY (a design specimen). ComparisonMatrix is the feature-by-feature decision
   TABLE. Use the matrix for "which option scores better", OptionGrid for "which mock we picked".
 
+### UseCaseDiagram (UML use-case, built-in legibility gates)
+
+WHAT: a UML use-case diagram as inline SVG. Actors sit OUTSIDE a system boundary; use cases
+are ovals INSIDE; a solid line is an `association`, dashed `«include»`/`«extend»` arrows relate
+use cases. WHEN: a "who uses X and what they do" figure (Mermaid has no real use-case support,
+so this is the only way to author one here). HOW:
+
+```mdx
+<UseCaseDiagram title="Bytes of Purpose" desc="Who works with the blog and what they do."
+  actors={[
+    {id:'author', label:'Author', kind:'internal'},
+    {id:'reader', label:'Reader'},
+    {id:'cron', label:'Scheduled job', kind:'system'},
+  ]}
+  useCases={[
+    {id:'write', label:'Write a post', detail:'Draft in MDX, run the validators.'},
+    {id:'publish', label:'Publish', detail:'Build and deploy.'},
+    {id:'read', label:'Read a post'},
+  ]}
+  links={[
+    {from:'author', to:'write'}, {from:'author', to:'publish'}, {from:'cron', to:'publish'},
+    {from:'reader', to:'read'}, {from:'publish', to:'write', type:'include'},
+  ]}/>
+```
+
+- Registered in `MDXComponents` (no import). Live demo: `/handbook/components/diagrams/use-case`.
+- Actor `kind`: `internal` (a filled mark) + `system` (a gear) pull LEFT; `external` (default,
+  a line person) pulls RIGHT, so lines fan to the nearest edge. The layout is deterministic.
+- TWO build-time gates THROW (fail `make build`): the overlap gate (>25% crossing lines) and the
+  actor line-angle BALANCE gate (an actor whose lines fan lopsidedly, i.e. it sits off-center from
+  its use cases). If a diagram legitimately needs it, pass `allowOverlap` to downgrade both to
+  warnings; better, give each actor use cases that straddle it vertically, reorder, or split.
+- A use case with `detail` opens a click-to-focus modal (Used by / Includes / Extends).
+
 ### Mockup (UX mockups — show what it LOOKS like)
 
 WHAT: a framed, theme-aware wrapper (`browser` / `window` / `phone` / `none` chrome) that
