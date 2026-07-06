@@ -694,7 +694,7 @@
      block below overrides this (the house FILLS the pinned viewport door-only instead). */
   max-width: min(
     var(--body-w, 720px),
-    calc((100vh - 2 * var(--pin-house-offset, 189px)) / var(--pin-house-ratio, 0.75))
+    calc((100vh - 2 * var(--pin-house-offset, 189px)) / var(--pin-house-ratio, 0.8))
   );
   margin-inline: auto;
 }
@@ -762,7 +762,11 @@
    above is a triangle = half this body's height. The board + the three arches live INSIDE the body. */
 .studioBody {
   position: relative;
-  aspect-ratio: 2 / 1; /* HALF-height: a wide rectangle (the square's height cut in half) */
+  /* A wide rectangle. Slightly TALLER than 2:1 (1.82:1) to open a teal band at the TOP: the festoon
+     lights hang there, and the board's wood mount bar drops below them (at 2:1 the bar collided with
+     the lights, which sit at the eave). The extra height is small enough that the fold-fit cap still
+     frames the whole house at scroll 0 (--pin-house-ratio tracks this). */
+  aspect-ratio: 1.82 / 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end; /* arches sit at the bottom; the board hangs in the upper space */
@@ -1124,8 +1128,10 @@
   position: absolute;
   left: 50%;
   /* sit ABOVE the door but pulled DOWN into the wall gap, so there's terracotta + the bracket/chains
-     visible above the board (and BELOW the cornice, not overlapping it). */
-  bottom: calc(100% + 0.5rem);
+     visible above the board. Lowered (was `+ 0.5rem`) so the wood mount BAR drops clear BELOW the
+     festoon lights at the eave (they collided when the bar rode too high); the board's bottom now sits
+     right at the door-arch top like a sign hung over a doorway. */
+  bottom: calc(100% - 0.3rem);
   z-index: 3;
   display: flex;
   justify-content: center;
@@ -1292,12 +1298,13 @@
     grid-template-columns: 1fr; /* single column: just the centre door */
     justify-items: center;
     gap: 0;
-    padding-top: 6rem; /* room for the hanging board ABOVE the door + a teal gap for the rail below it */
+    padding-top: 4rem; /* room for the hanging board ABOVE the door (tightened: the gold rail below the
+                          board is gone now that the festoon lights carry the gold detailing up top) */
   }
-  /* MOBILE: hang the board HIGHER so there's a real teal band between its bottom and the door arch
-     (room for the gold rail to sit in the gap, not on the scene). */
+  /* MOBILE: a small teal band between the board's bottom and the door arch. Tightened now that the
+     board rail no longer needs to sit in the gap. */
   .studioCenter .studioSignHanger {
-    bottom: calc(100% + 2.1rem);
+    bottom: calc(100% + 1rem);
   }
   /* hide the two flanking WINDOWS (the direct-child arches); keep .studioCenter (door + board) */
   .studioRow > .studioArch {
@@ -1314,31 +1321,11 @@
   .studioCornice { margin-inline: -0.6rem; }
   /* a WIDER board on mobile (more columns set in TSX); smaller font so the extra columns fit the width */
   .studioSign { font-size: 0.62rem; }
-  /* SHOW the gold balcony railing in the gap BETWEEN the hanging board and the door ARCH (side windows
-     + their railings are hidden on mobile). Anchored to .studioCenter's TOP edge (= the arch top) via
-     `bottom: 100%` and pushed UP into the wall band, so it sits in the empty teal ABOVE the arch, NOT
-     across the scene. A touch wider than the door; same gold-baluster look as the window rails. */
+  /* The mobile gold balcony rail in the board->door gap is REMOVED: the festoon lights now carry the
+     Lebanese gold detailing up top, so the extra rail was redundant and cost vertical space. Keep it
+     hidden on mobile (it stays `display:none` from the base rule). */
   .studioBoardRail {
-    display: block;
-    position: absolute;
-    left: -6%;
-    right: -6%; /* overhang the door sides a little */
-    bottom: calc(100% + 0.05rem); /* low in the gap, just ABOVE the arch top (moved down per request) */
-    height: 18px;
-    z-index: 5;
-    /* The TOP + BOTTOM rails are SOLID BORDERS (Firefox renders a solid border crisply with no edge
-       fringe), NOT gradient bands. A gradient color-stop sitting ON the box's top/bottom edge gets
-       antialiased against the edge in Firefox into a faint light hairline (the "white line under the
-       rail" — Firefox-only, invisible in Chrome, survived the transparent-keyword fix because the
-       fringe is the gradient-EDGE antialiasing itself, not the `transparent` color). With solid
-       borders the box edges are crisp; only the vertical BALUSTERS (which never touch the top/bottom
-       edge) use a repeating gradient, and its gaps are transparent-GOLD so they don't fringe either. */
-    border-top: 2.5px solid #d9a441;
-    border-bottom: 2.5px solid #b8881f;
-    background: repeating-linear-gradient(90deg, #d9a441 0 2px, rgba(217, 164, 65, 0) 2px 8px);
-    background-clip: content-box; /* keep the baluster gradient OFF the borders */
-    box-sizing: border-box;
-    /* NO `filter: drop-shadow` (GPU-layer hairline risk); grounding, if wanted, via a solid element. */
+    display: none;
   }
 }
 
