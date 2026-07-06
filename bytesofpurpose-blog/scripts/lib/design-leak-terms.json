@@ -1,0 +1,14 @@
+{
+  "__doc__": "SINGLE SOURCE OF TRUTH for the mechanical leak check in the refine-design-post skill. Each `terms[]` entry is a proprietary / employer / internal name that MUST NOT appear in a published /designs post — the whole /designs blog trades in GENERALIZABLE patterns, not private instances. CONSUMER: scripts/validate-design-clarity.js flags any case-insensitive whole-word match in a designs post body (warn-tier, never blocks). This catches only the greppable subset; the judgment call (is a passage a leak or a fair generalization?) stays with the refine-design-post skill. RULES: (1) whole-word, case-insensitive; use `aliases` for spelling/spacing/casing variants and codenames. (2) `allow[]` lists generic words that would false-match a term substring and are legitimately fine (e.g. a common English word that is also an internal codename) — the validator skips a hit that equals an allow entry. (3) Add a term the moment you notice one in a draft; this file is grown by the author + the skill's capture step. (4) This file is NOT a secret (it names things to AVOID, not any credential) — but keep entries minimal and don't paste anything itself sensitive.",
+  "terms": [
+    {"name": "AcmeCorp", "aliases": ["Acme Corp", "Acme"], "note": "PLACEHOLDER — replace with the real employer name(s) to guard. Example entry showing the shape."},
+    {"name": "InternalCodename", "aliases": ["Internal Codename"], "note": "PLACEHOLDER — replace with real internal system/service/tool codenames."}
+  ],
+  "allow": [
+    "design",
+    "system",
+    "service",
+    "pipeline",
+    "platform"
+  ]
+}
