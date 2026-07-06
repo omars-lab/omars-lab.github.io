@@ -21,6 +21,22 @@
   component=Claude. Date drives the card's execution/inception date.
 -->
 
+## [2026-07-06] A diagram kit and content-quality governance, influenced by the earlbear blog
+<!-- meta: type=feature category=development priority=high component=Site -->
+Studied a sibling blog in depth and folded its best ideas into ours across seven shipped PRs. Built a prop-driven diagram kit in `@omars-lab/blog-ui`, where an author writes a nodes/edges spec (data, not an image) and the component renders inline SVG with a build-time legibility gate that fails the build on a tangled or broken layout. The `FlowDiagram` covers five shapes (pipeline, loop, sequence, branch, swimlane) with shape auto-inference and a click-to-focus modal; `ComparisonMatrix` and `Accordion` carry decision posts (a head-to-head table plus foldable options); and `UseCaseDiagram` draws a real UML use-case figure with a two-sided actor layout, a crossing reducer, and a balance gate that genuinely caught an unreadable example and forced a cleaner one. Added a reader-facing `questions:` frontmatter field that renders a "Questions this post answers" box, the mirror of framing each task around its main question. On the governance side: a used-but-not-imported MDX check that catches the render break our draft-excluding build hides, a visual-density nudge that flags a wall of text with no visual, and the crown jewel, a feature why-docs system that pins a rationale to exact code and auto-heals when the code moves while warning when it genuinely drifts.
+
+- What diagram/visual capabilities does earlbear have that we lack?
+- Which earlbear skills and hooks should influence our SDLC?
+- Which editorial and design patterns from earlbear should we adopt?
+- Synthesize a prioritized improvement plan influenced by earlbear + frontend-design
+- Phase 1: Port FlowDiagram to blog-ui
+- Phase 6: Used-but-not-imported MDX check
+- Phase 5: questions frontmatter field + rendered box
+- Phase 2: ComparisonMatrix + Accordion
+- Phase 3: UseCaseDiagram
+- Phase 4: Visual-density + visual-expectations governance
+- Phase 7: Feature why-docs + content-hash drift auto-heal
+
 ## [2026-07-03] The big IA reorg: two new roots, a reframed Journey, a Prompts hub, and a clean deploy
 <!-- meta: type=feature category=development priority=high component=Site -->
 Reorganized the whole site around where content truly belongs, then shipped it. Stood up two new durable Docusaurus roots: `/knowledge` (the mental models, flattened by theme) and `/habits` (every habit, grouped professional, personal, and spiritual), each with a pinned Welcome landing. Reframed `/journey` from "how I see myself" into "what drives me forward, the pieces of the puzzle I am motivated by," and moved entrepreneurship and productivity into it (faith stays). Folded self-reflection and personal-growth into their real homes as habits, moved my-contributions up and renamed it contributions-across-career, and turned prompts into a real Prompts hub with a new `prompt` kind, relocating the initiative-flavored prompts to `/initiatives`. Made NotePlan links first-class `<NotePlanButton>` components with a local-only validator, gave experiment cards a frontmatter-driven `<ExperimentOverview>` header, flipped the quote-set emoji to a speaker, and added the missing navbar hover tooltips for the new roots. Built the reusable machinery behind all of it: `reorganize-content`, `prune-content`, `manage-docs-instances`, `transform-noteplan-links`, and a `discover-my-journey` delta skill plus Stop-hook that surfaces patterns about the author from recent writing. Deployed the merged work across ten PRs to production, encrypted premium content clean, and verified every new URL and redirect renders live in the browser.
