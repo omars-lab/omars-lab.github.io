@@ -126,8 +126,8 @@ const ComparisonMatrix: React.FC<ComparisonMatrixProps> = (props) => {
                   scope="col"
                   className={clsx(styles.option, o.chosen && styles.optionChosen)}
                 >
-                  <span className={styles.optionLabel}>{o.label}</span>
                   {o.chosen && <span className={styles.chosenBadge}>chosen</span>}
+                  <span className={styles.optionLabel}>{o.label}</span>
                 </th>
               ))}
             </tr>

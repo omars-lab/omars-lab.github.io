@@ -49,13 +49,24 @@
   text-transform: uppercase;
   color: var(--ifm-color-content-secondary);
   background: var(--ifm-background-color);
+  /* Shrink-wrap the criterion column to its label so the option columns stretch to fill
+     the table width (width:1% is the standard table trick: the browser gives this column
+     only what its content needs, and auto-width columns take the rest). */
+  width: 1%;
+  white-space: nowrap;
 }
 
 .option {
   background: var(--ifm-background-color);
   font-weight: 600;
   vertical-align: bottom;
-  min-width: 120px;
+  /* Let the option columns absorb the width left over after the (shrink-wrapped) criterion
+     column, so the table fills its wrapper instead of sizing to content and leaving an
+     empty band on the right. `width: auto` here + `width: 1%` on the criterion column
+     (below) makes the browser stretch these equal-ish columns to fill the row. The
+     min-width keeps a mark column from collapsing too narrow. */
+  width: auto;
+  min-width: 110px;
 }
 .optionChosen {
   background: var(--accent-tint);
@@ -66,7 +77,8 @@
 }
 .chosenBadge {
   display: inline-block;
-  margin-top: var(--space-1);
+  /* The badge sits ABOVE the option label, so it reads "CHOSEN: SQLite" top-to-bottom. */
+  margin-bottom: var(--space-1);
   font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.08em;

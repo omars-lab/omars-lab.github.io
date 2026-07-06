@@ -140,7 +140,9 @@ WHAT: two components for a post that argues a CHOICE. `ComparisonMatrix` is the 
 table (options are columns, criteria rows, the `chosen` column highlighted + badged;
 `yes`/`no`/`partial` render as ●/○/◐ marks with sr-only labels, any other string as literal
 text). `Accordion` is the narrative (foldable options on native `<details>`, zero JS, each
-with a `summary`, a React `body`, an optional `verdict` pill, an optional `open`). WHEN: a
+with a `summary`, a React `body`, an optional `open`, and either `chosen: true` (a solid green
+CHOSEN pill) or a `verdict` on the rest (a quiet grey CONSIDERED pill, so only one pill draws
+the eye)). WHEN: a
 decision/comparison/critique post. The matrix answers "how do they score"; the accordion
 answers "why". HOW:
 
@@ -153,8 +155,8 @@ answers "why". HOW:
   ]}/>
 
 <Accordion label="The options" items={[
-  {summary:'Rebuild from scratch', verdict:'rejected', body:<>Slow; loses the edge cases.</>},
-  {summary:'Keep SQLite', verdict:'chosen', open:true, body:<>Zero-ops, durable, free.</>},
+  {summary:'Rebuild from scratch', verdict:'considered', body:<>Slow; loses the edge cases.</>},
+  {summary:'Keep SQLite', chosen:true, open:true, body:<>Zero-ops, durable, free.</>},
 ]}/>
 ```
 
