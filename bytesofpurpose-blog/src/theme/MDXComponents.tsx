@@ -52,6 +52,7 @@ import {
   FlowDiagram,
   ComparisonMatrix,
   Accordion,
+  UseCaseDiagram,
   Mockup,
   Walkthrough,
   Assumption,
@@ -139,6 +140,14 @@ export default {
   // ComparisonMatrix: the accordion carries the narrative, the matrix the head-to-head. Use
   // <Accordion label=... items={[{summary, body, verdict?, open?}]}/> on a decision post.
   Accordion,
+  // UseCaseDiagram: a UML use-case diagram (actors outside a system boundary, use cases as ovals
+  // inside, solid association lines + dashed «include»/«extend»). A deterministic two-sided layout
+  // (internal/system actors pull left, external pull right) with barycenter crossing reduction; two
+  // build-time gates fail on an unreadable layout (too many crossing lines, or a lopsided actor
+  // line-fan). A use case with `detail` opens a click-to-focus modal. Use <UseCaseDiagram title=...
+  // actors={[]} useCases={[]} links={[]}/> for a "who uses X and what they do" figure. (Mermaid has
+  // no real use-case support, so this is the only way to author one here.)
+  UseCaseDiagram,
   // UX mockups: a framed, theme-aware wrapper that turns live HTML into a UI mockup
   // (browser/window/phone chrome) — shows what a design would LOOK like.
   Mockup,

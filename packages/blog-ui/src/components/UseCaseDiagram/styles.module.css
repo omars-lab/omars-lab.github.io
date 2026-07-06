@@ -1,0 +1,244 @@
+/* UseCaseDiagram: inline-SVG UML use-case figure. Themed from the blog's design-system
+   tokens so light and dark work with no extra wiring. The --bopucd-* vars are the local
+   contract the oval gradients read; they alias real theme tokens. */
+
+.ucd {
+  --bopucd-data-1: var(--brand-green);
+  --bopucd-data-2: var(--tea-mint);
+  --bopucd-data-3: var(--tea-green);
+  --bopucd-data-4: var(--tea-pink);
+  --bopucd-data-5: #cfe3ff;
+  --bopucd-data-6: #ffe6b0;
+  --bopucd-data-7: #e3d1ff;
+  --bopucd-data-8: #bfe7d6;
+  --bopucd-surface: var(--ifm-background-surface-color, #f4f6f5);
+
+  margin: var(--space-8, 3.5rem) 0;
+}
+
+.scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ucd svg {
+  width: 100%;
+  height: auto;
+  min-width: 320px;
+  display: block;
+}
+
+/* System boundary */
+.boundary rect {
+  fill: var(--ifm-background-color, #eef1ef);
+  stroke: var(--ifm-color-emphasis-300, #cbd2ce);
+  stroke-width: 1.5;
+}
+.boundaryLabel {
+  fill: var(--ifm-color-content-secondary, #5b625e);
+  font-family: var(--font-sans-body, system-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Use-case ovals */
+.oval ellipse {
+  stroke: var(--ifm-color-emphasis-300, #cbd2ce);
+  stroke-width: 1;
+}
+.ucLabel {
+  fill: var(--ifm-heading-color, #14201a);
+  font-family: var(--font-sans-body, system-ui);
+  font-size: 15px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Actors */
+.actor-internal {
+  color: var(--ifm-color-primary);
+}
+.actor-external,
+.actor-system {
+  color: var(--ifm-color-content-secondary, #5b625e);
+}
+.actorLabel {
+  fill: var(--ifm-color-content-secondary, #5b625e);
+  font-family: var(--font-sans-body, system-ui);
+  font-size: 13px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+
+/* Links: solid association, dashed include/extend. */
+.link line {
+  stroke: var(--ifm-color-emphasis-500, #8a938e);
+  stroke-width: 1.5;
+  fill: none;
+}
+.link-include line,
+.link-extend line {
+  stroke: var(--ifm-color-content-secondary, #5b625e);
+  stroke-dasharray: 5 4;
+}
+.stereotype {
+  fill: var(--ifm-color-content-secondary, #5b625e);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+/* Motion: association lines draw in, everything else fades in. */
+@keyframes bopucd-draw {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes bopucd-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.link-association line {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation: bopucd-draw 480ms var(--ease-out, ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+.link-include line,
+.link-extend line,
+.stereotype,
+.actor,
+.oval {
+  animation: bopucd-fade 320ms var(--ease-out, ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .link-association line {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .link-include line,
+  .link-extend line,
+  .stereotype,
+  .actor,
+  .oval {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.caption {
+  margin-top: var(--space-3, 0.75rem);
+  font-size: var(--text-caption, 0.85rem);
+  color: var(--ifm-color-content-secondary, #5b625e);
+  text-align: center;
+}
+
+/* Interactive ovals + focus modal (mirrors the FlowDiagram modal). */
+.ovalInteractive {
+  cursor: pointer;
+}
+.ovalInteractive ellipse {
+  transition: stroke var(--duration-fast, 0.12s) var(--ease-standard, ease);
+}
+.ovalInteractive:hover ellipse,
+.ovalInteractive:focus-visible ellipse {
+  stroke: var(--ifm-color-primary);
+  stroke-width: 2;
+}
+.ovalInteractive:focus-visible {
+  outline: none;
+}
+
+.modal {
+  border: 1px solid var(--ifm-color-emphasis-300, #cbd2ce);
+  border-radius: var(--radius-lg, 14px);
+  padding: 0;
+  max-width: min(440px, 92vw);
+  width: 100%;
+  background: var(--ifm-background-surface-color, #f4f6f5);
+  color: var(--ifm-font-color-base, #1a1d1b);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(26, 26, 26, 0.16));
+}
+.modal::backdrop {
+  background: rgba(20, 32, 26, 0.4);
+}
+.modalInner {
+  position: relative;
+  padding: var(--space-6, 2rem);
+}
+.modalClose {
+  position: absolute;
+  top: var(--space-3, 0.75rem);
+  right: var(--space-3, 0.75rem);
+  border: none;
+  background: transparent;
+  font-size: var(--text-h4, 1.3rem);
+  line-height: 1;
+  color: var(--ifm-color-content-secondary, #5b625e);
+  cursor: pointer;
+  padding: var(--space-1, 0.25rem);
+  border-radius: var(--radius-sm, 0.4rem);
+}
+.modalClose:hover {
+  color: var(--ifm-font-color-base, #1a1d1b);
+  background: var(--ifm-background-color, #eef1ef);
+}
+.modalEyebrow {
+  font-size: var(--text-eyebrow, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+  margin: 0 0 var(--space-2, 0.5rem);
+}
+.modalTitle {
+  font-size: var(--text-h3, 1.5rem);
+  font-weight: 600;
+  margin: 0 0 var(--space-3, 0.75rem);
+  padding-right: var(--space-6, 2rem);
+}
+.modalDetail {
+  margin: 0 0 var(--space-4, 1rem);
+  color: var(--ifm-color-content-secondary, #5b625e);
+  line-height: 1.6;
+}
+.modalRels {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2, 0.5rem) var(--space-4, 1rem);
+}
+.modalRels dt {
+  font-size: var(--text-eyebrow, 0.8rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-content-secondary, #5b625e);
+  align-self: center;
+}
+.modalRels dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 0.5rem);
+}
+.modalRels dd span {
+  font-size: var(--text-body-sm, 0.95rem);
+  background: var(--ifm-background-color, #eef1ef);
+  border: 1px solid var(--bop-divider, rgba(26, 26, 26, 0.1));
+  border-radius: var(--radius-pill, 3em);
+  padding: 0.125rem var(--space-3, 0.75rem);
+}

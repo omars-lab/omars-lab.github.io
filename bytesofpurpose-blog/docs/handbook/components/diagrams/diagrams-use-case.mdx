@@ -1,0 +1,84 @@
+---
+slug: /components/diagrams/use-case
+usage_pattern:
+  - '<UseCaseDiagram'
+kind: showcase
+title: '🧩 Use-case diagram'
+description: 'A UML use-case diagram as inline SVG: actors outside a system boundary, use cases as ovals inside, with a build-time gate that fails on an unreadable (tangled) layout.'
+authors: [oeid]
+tags: [docusaurus, react, components, diagram, uml]
+draft: false
+---
+
+A UML use-case diagram answers "who uses this system, and what do they do". Actors sit
+outside a system boundary; use cases are ovals inside; a solid line is an association, and
+dashed `«include»` / `«extend»` arrows show how use cases relate. Mermaid has no real
+use-case support, so `UseCaseDiagram` is the way to author one here.
+
+The layout is deterministic and its readability is **enforced at build time**: internal and
+system actors pull to the left, external actors to the right, so association lines fan to the
+nearest edge; the use cases order by a crossing-reducer. Two gates fail the build if the
+result is still unreadable (too many crossing lines, or an actor whose lines fan lopsidedly).
+A use case with `detail` becomes clickable and opens a focus modal listing who uses it and
+what it includes or extends.
+
+<UseCaseDiagram
+  title="Bytes of Purpose"
+  desc="Who works with the blog and what each one does: the author writes, publishes, and reviews; the reader reads and shares; and a scheduled job runs the deploy."
+  actors={[
+    {id: 'reader', label: 'Reader'},
+    {id: 'author', label: 'Author', kind: 'internal'},
+    {id: 'cron', label: 'Scheduled job', kind: 'system'},
+  ]}
+  useCases={[
+    {id: 'read', label: 'Read a post'},
+    {id: 'share', label: 'Share a post', detail: 'Copy a tagged link or post it to LinkedIn.'},
+    {id: 'write', label: 'Write a post', detail: 'Draft in MDX, weave in components, run the validators.'},
+    {id: 'review', label: 'Review the site', detail: 'A reader-experience and mobile pass before shipping.'},
+    {id: 'publish', label: 'Publish', detail: 'Build the site and deploy it to GitHub Pages.'},
+  ]}
+  links={[
+    {from: 'reader', to: 'read'},
+    {from: 'reader', to: 'share'},
+    {from: 'author', to: 'write'},
+    {from: 'author', to: 'review'},
+    {from: 'author', to: 'publish'},
+    {from: 'cron', to: 'publish'},
+    {from: 'publish', to: 'write', type: 'include'},
+    {from: 'share', to: 'read', type: 'extend'},
+  ]}
+/>
+
+```mdx
+<UseCaseDiagram
+  title="Bytes of Purpose"
+  desc="Who works with the blog and what each one does."
+  actors={[
+    {id: 'author', label: 'Author', kind: 'internal'},
+    {id: 'reader', label: 'Reader'},
+    {id: 'cron', label: 'Scheduled job', kind: 'system'},
+  ]}
+  useCases={[
+    {id: 'write', label: 'Write a post', detail: 'Draft in MDX, run the validators.'},
+    {id: 'publish', label: 'Publish', detail: 'Build and deploy.'},
+    {id: 'read', label: 'Read a post'},
+    {id: 'share', label: 'Share a post'},
+  ]}
+  links={[
+    {from: 'author', to: 'write'},
+    {from: 'author', to: 'publish'},
+    {from: 'cron', to: 'publish'},
+    {from: 'reader', to: 'read'},
+    {from: 'reader', to: 'share'},
+    {from: 'publish', to: 'write', type: 'include'},
+    {from: 'share', to: 'read', type: 'extend'},
+  ]}
+/>
+```
+
+An `internal` actor pulls left (rendered with a filled mark), a `system` actor also pulls
+left (a gear), and an `external` actor pulls right (a line person). If a diagram gets too
+tangled to read, the build fails with an actionable message; pass `allowOverlap` to ship it
+as a warning instead, but prefer reordering or splitting.
+
+<UsedIn slug="/components/diagrams/use-case" />

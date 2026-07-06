@@ -49,6 +49,19 @@ export type {
 export {default as Accordion} from './components/Accordion';
 export type {AccordionProps, AccordionItem} from './components/Accordion';
 
+// UseCaseDiagram — a UML use-case diagram (actors outside a system boundary, use cases as ovals
+// inside, association / include / extend links). Deterministic two-sided layout with barycenter
+// crossing reduction; two build-time gates fail on an unreadable layout (too many crossing lines,
+// or a lopsided actor line-fan). A use case with detail opens a click-to-focus modal.
+export {default as UseCaseDiagram} from './components/UseCaseDiagram';
+export type {
+  UseCaseDiagramProps,
+  Actor,
+  UseCase,
+  Link,
+  ActorKind,
+} from './components/UseCaseDiagram';
+
 export {default as Assumption} from './components/Assumption';
 export type {AssumptionProps} from './components/Assumption';
 
