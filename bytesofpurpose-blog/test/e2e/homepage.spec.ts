@@ -395,45 +395,84 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     ).toBeLessThanOrEqual(6);
   });
 
-  test('[pin] STOP past the flash peak SNAPS FORWARD (agrees with the door, never rewinds)', async ({ page }) => {
-    // The door commits to the NEXT scene at the flash PEAK (t >= 0.5). So a stop PAST the peak has
-    // already shown the next scene; snapping BACKWARD to the scene we were leaving would contradict the
-    // visuals. The forward-bias lands on the committed scene. We drive to a point past the peak using
-    // the spacer geometry (deterministic), nudge to register a real scroll, stop, and assert the snap
-    // moved FORWARD (scrollY did not decrease) and kept the committed scene, with the flash cleared.
+  // Geometry helper: page-Y for a given (stop, within) in the runway.
+  const yForStopWithin = (page: Page, stop: number, within: number) =>
+    page.evaluate(
+      ({ stop, within }) => {
+        const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+        const rect = spacer.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const scrollable = rect.height - vh;
+        const spacerTopPage = rect.top + window.scrollY;
+        const stops = 8; // CHOOSER_CARDS.length (7) + 1
+        return Math.round(spacerTopPage + ((stop + within) / stops) * scrollable);
+      },
+      { stop, within },
+    );
+
+  test('[pin] a DOWN-scroll that stops mid-transition snaps FORWARD, never backward', async ({ page }) => {
+    // REGRESSION for "sometimes we go backwards from the main scroll direction": the snap used to pull a
+    // just-past-a-settled-centre stop BACK to that centre, up against a down-scroll. The snap is now
+    // DIRECTION-aware — a down-scroll always lands FORWARD on the next scene. We stop in the EARLY part
+    // of a transition (within ~0.6, BEFORE the flash peak — the case the old peak-only rule rewound) and
+    // assert the page moved FORWARD (down), advanced the scene, and the flash cleared.
     await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
     const root = page.locator('[data-hero-root]');
 
-    // Park in the LATE part of stop 2's transition (within ~0.85 → t ~0.7, past the 0.5 peak).
-    const target = await page.evaluate(() => {
-      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
-      const rect = spacer.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const scrollable = rect.height - vh;
-      const spacerTopPage = rect.top + window.scrollY;
-      const stops = 8; // CHOOSER_CARDS.length (7) + 1
-      const p = (2 + 0.85) / stops; // stop 2, within 0.85
-      return { y: Math.round(spacerTopPage + p * scrollable) };
-    });
-    await page.evaluate((y) => window.scrollTo(0, y), target.y);
-    await page.waitForTimeout(30);
-    // a tiny real wheel nudge so the scroll-state machine registers activity then settles
+    // Real wheel DOWN into stop 2's early transition (within ~0.6), so the last scroll direction is down.
+    const targetY = await yForStopWithin(page, 2, 0.6);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(120);
     await page.mouse.move(640, 450);
-    await page.mouse.wheel(0, 3);
-    await page.waitForTimeout(40);
-    const sceneAtStop = await root.getAttribute('data-active-scene');
+    let y = 0;
+    while (y < targetY - 40) {
+      await page.mouse.wheel(0, 80);
+      await page.waitForTimeout(10);
+      y = await page.evaluate(() => Math.round(window.scrollY));
+    }
     const yAtStop = await page.evaluate(() => Math.round(window.scrollY));
+    const sceneAtStop = Number(await root.getAttribute('data-active-scene'));
 
     // let the snap glide + settle
     await expect.poll(() => flashOpacity(page), { timeout: 4000 }).toBeLessThan(0.1);
     await page.waitForTimeout(300);
-    const sceneAfter = await root.getAttribute('data-active-scene');
     const yAfter = await page.evaluate(() => Math.round(window.scrollY));
+    const sceneAfter = Number(await root.getAttribute('data-active-scene'));
 
-    expect(sceneAfter, 'the committed scene must not rewind past the flash peak').toBe(sceneAtStop);
-    expect(yAfter, `snap must move FORWARD, not back up (stop ${yAtStop} → ${yAfter})`).toBeGreaterThanOrEqual(
-      yAtStop - 2,
+    expect(yAfter, `down-scroll snap must not go BACKWARD (stop ${yAtStop} → ${yAfter})`).toBeGreaterThan(
+      yAtStop - 3,
+    );
+    expect(sceneAfter, 'a down-scroll stop should land on the NEXT scene, not rewind').toBeGreaterThanOrEqual(
+      sceneAtStop,
+    );
+  });
+
+  test('[pin] an UP-scroll that stops mid-transition snaps BACK, never forward', async ({ page }) => {
+    // The mirror of the above: scrolling UP and stopping mid-transition must continue UP (back to the
+    // current scene), never be pulled DOWN/forward against the up-scroll.
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Start deep, then real wheel UP to a transition point.
+    const startY = await yForStopWithin(page, 4, 0.9);
+    const targetY = await yForStopWithin(page, 3, 0.7);
+    await page.evaluate((sy) => window.scrollTo(0, sy), startY);
+    await page.waitForTimeout(200);
+    await page.mouse.move(640, 450);
+    let y = await page.evaluate(() => Math.round(window.scrollY));
+    while (y > targetY + 40) {
+      await page.mouse.wheel(0, -80);
+      await page.waitForTimeout(10);
+      y = await page.evaluate(() => Math.round(window.scrollY));
+    }
+    const yAtStop = await page.evaluate(() => Math.round(window.scrollY));
+
+    await expect.poll(() => flashOpacity(page), { timeout: 4000 }).toBeLessThan(0.1);
+    await page.waitForTimeout(300);
+    const yAfter = await page.evaluate(() => Math.round(window.scrollY));
+    expect(yAfter, `up-scroll snap must not go FORWARD/down (stop ${yAtStop} → ${yAfter})`).toBeLessThan(
+      yAtStop + 3,
     );
   });
 
