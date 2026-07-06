@@ -13,6 +13,13 @@
 import type { CarouselItem } from '@site/src/components/Carousel';
 
 import learningResources from './learning-resources.json';
+import learnAboutGraphql from './learn-about-graphql.json';
+import learnAboutMl from './learn-about-ml.json';
+import learnAboutNlp from './learn-about-nlp.json';
+import learnAboutJava from './learn-about-java.json';
+import learnAboutAgile from './learn-about-agile.json';
+import learnAboutKubernetes from './learn-about-kubernetes.json';
+import learnAboutPostgresql from './learn-about-postgresql.json';
 
 export type ReferenceItem = CarouselItem;
 
@@ -34,6 +41,13 @@ export interface ReferenceTopic {
 // The registry: topic key -> its data. Add a line here when you add a topic.
 export const references: Record<string, ReferenceTopic> = {
   'learning-resources': learningResources as unknown as ReferenceTopic,
+  'learn-about-graphql': learnAboutGraphql as unknown as ReferenceTopic,
+  'learn-about-ml': learnAboutMl as unknown as ReferenceTopic,
+  'learn-about-nlp': learnAboutNlp as unknown as ReferenceTopic,
+  'learn-about-java': learnAboutJava as unknown as ReferenceTopic,
+  'learn-about-agile': learnAboutAgile as unknown as ReferenceTopic,
+  'learn-about-kubernetes': learnAboutKubernetes as unknown as ReferenceTopic,
+  'learn-about-postgresql': learnAboutPostgresql as unknown as ReferenceTopic,
 };
 
 // Look up one category's items for a topic. Returns [] if absent so a post

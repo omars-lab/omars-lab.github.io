@@ -1,0 +1,235 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The Software Backend Developer/Learning Topics/Backend Languages/Learn about Java.md",
+    "source_commit": "40186c4ab6c35ffd1dc537982237f6d4b4810091",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Language, libraries & build tools": [
+    {
+      "title": "What is Java Database Connectivity (JDBC)? | Definition from TechTarget",
+      "href": "https://www.theserverside.com/definition/Java-Database-Connectivity-JDBC",
+      "description": "Java Database Connectivity (JDBC)is an application program interface (API) specification for connecting programs written in Java to the data in popular databases.",
+      "meta": "theserverside.com"
+    },
+    {
+      "title": "Apache Ant Command Line Example - Examples Java Code Geeks - 2026",
+      "href": "https://examples.javacodegeeks.com/apache-ant-command-line-arguments-example/",
+      "description": "1. Introduction In this example, we will explain Apache Ant Command Line Arguments. In software development, the term building usually means the",
+      "meta": "examples.javacodegeeks.com"
+    },
+    {
+      "title": "Introducing new Code With Me Series - Build a book tracker app (Spring Boot + Cassandra)",
+      "href": "https://www.youtube.com/watch?v=LxVGFBRpEFM",
+      "description": "Click here to register for a free account on DataStax (Required for following along the series):https://dtsx.io/3sxR2NlGitHub Link: https://github.com/koushi...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "How to Write Doc Comments for the Javadoc Tool",
+      "href": "https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html",
+      "description": "This document describes the style guide, tag and image conventions we use in documentation comments for Java programs written at Java Software, Oracle. It does not rehash related material covered elsewhere:",
+      "meta": "oracle.com"
+    },
+    {
+      "title": "Project Lombok",
+      "href": "https://projectlombok.org/",
+      "description": "Project Lombok is a java library that automatically plugs into your editor and build tools, spicing up your java. Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your…",
+      "meta": "projectlombok.org"
+    },
+    {
+      "title": "Stable",
+      "href": "https://projectlombok.org/features/",
+      "description": "or: How I learned to stop worrying and love the NullPointerException.",
+      "meta": "projectlombok.org"
+    },
+    {
+      "title": "Configuration file :: Apache Log4j",
+      "href": "https://logging.apache.org/log4j/2.x/manual/configuration.html#XML",
+      "description": "Using a configuration file is the most popular and recommended approach for configuring Log4j Core. In this page we will examine the composition of a configuration file and how Log4j Core uses it.",
+      "meta": "logging.apache.org"
+    },
+    {
+      "title": "Asserting exceptions in JUnit | Cássio Molin",
+      "href": "https://cassiomolin.com/archive/asserting-exceptions-in-junit/",
+      "description": "This post explores some techniques for asserting exceptions in Java with JUnit.",
+      "meta": "cassiomolin.com"
+    },
+    {
+      "title": "Mockito framework site",
+      "href": "https://site.mockito.org/",
+      "description": "A landing page for information about Mockito framework, a mocking framework for unit tests written in Java.",
+      "meta": "site.mockito.org"
+    }
+  ],
+  "Concurrency & the JVM": [
+    {
+      "title": "GitHub - resilience4j/resilience4j: Resilience4j is a fault tolerance library designed for Java8 and functional program…",
+      "href": "https://github.com/resilience4j/resilience4j",
+      "description": "Resilience4j is a fault tolerance library designed for Java8 and functional programming - resilience4j/resilience4j",
+      "meta": "github.com"
+    },
+    {
+      "title": "Be Aware of ForkJoinPool#commonPool()",
+      "href": "https://dzone.com/articles/be-aware-of-forkjoinpoolcommonpool",
+      "description": "Sometimes, we don't want to specify our thread-pool and just use the default for the current library. This article demonstrates how this is handled in the JDK.",
+      "meta": "dzone.com"
+    },
+    {
+      "title": "non-blocking IO vs async IO and implementation in Java",
+      "href": "https://stackoverflow.com/questions/25099640/non-blocking-io-vs-async-io-and-implementation-in-java",
+      "description": "Trying to summarize for myself the difference between these 2 concepts (because I'm really confused when I see people are using both of them in one sentence, like \"non-blocking async IO\" which I'm ...",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "An Introduction to ThreadLocal in Java | Baeldung",
+      "href": "https://www.baeldung.com/java-threadlocal",
+      "description": "A quick and practical guide to using ThreadLocal for storing thread-specific data in Java.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "What Is Thread-Safety and How to Achieve It? | Baeldung",
+      "href": "https://www.baeldung.com/java-thread-safety",
+      "description": "Learn about the different use cases for thread-safety and concurrent access.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "Guide to Java String Pool | Baeldung",
+      "href": "https://www.baeldung.com/java-string-pool",
+      "description": "Learn how the JVM optimizes the amount of memory allocated to String storage in the Java String Pool.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "What Is Thread-Safety and How to Achieve It? | Baeldung",
+      "href": "https://www.baeldung.com/java-thread-safety#volatile-fields",
+      "description": "Learn about the different use cases for thread-safety and concurrent access.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "A Guide to the Java ExecutorService | Baeldung",
+      "href": "https://www.baeldung.com/java-executor-service-tutorial",
+      "description": "An intro and guide to the ExecutorService framework provided by the JDK - which simplifies the execution of tasks in asynchronous mode.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "Java Management Extensions (JMX)",
+      "href": "https://www.oracle.com/java/technologies/javase/javamanagement.html",
+      "description": "The JMX technology provides the tools for building distributed, Web-based, modular and dynamic solutions for managing and monitoring devices, applications, and service-driven networks. By design, this standard is suitable for adapting lega…",
+      "meta": "oracle.com"
+    },
+    {
+      "title": "Client Configuration - AWS SDK for Java 1.x",
+      "href": "https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/section-client-configuration.html",
+      "description": "How to change proxy configuration, HTTP transport configuration, and TCP socket buffer size hints by using the AWS SDK for Java.",
+      "meta": "docs.aws.amazon.com"
+    },
+    {
+      "title": "Set the JVM TTL for DNS name lookups - AWS SDK for Java 1.x",
+      "href": "https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/jvm-ttl-dns.html",
+      "description": "Learn how to set Java virtual machine (JVM) for DNS name lookups using the AWS SDK for Java.",
+      "meta": "docs.aws.amazon.com"
+    },
+    {
+      "title": "The Security Manager (The Java™ Tutorials > Essential Java Classes > The Platform Environment)",
+      "href": "https://docs.oracle.com/javase/tutorial/essential/environment/security.html",
+      "description": "This Java tutorial describes exceptions, basic input/output, concurrency, regular expressions, and the platform environment",
+      "meta": "docs.oracle.com"
+    },
+    {
+      "title": "Java TreeMap vs HashMap | Baeldung",
+      "href": "https://www.baeldung.com/java-treemap-vs-hashmap",
+      "description": "Learn about the differences and similarities between TreeMap and HashMap.",
+      "meta": "baeldung.com"
+    }
+  ],
+  "Spring & frameworks": [
+    {
+      "title": "Intro to AspectJ | Baeldung",
+      "href": "https://www.baeldung.com/aspectj",
+      "description": "This article is a quick and practical introduction to AspectJ.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "GitHub - OpenFeign/feign: Feign makes writing java http clients easier",
+      "href": "https://github.com/OpenFeign/feign",
+      "description": "Feign makes writing java http clients easier. Contribute to OpenFeign/feign development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "Spring @Qualifier Annotation",
+      "href": "https://www.baeldung.com/spring-qualifier-annotation",
+      "description": "@Autowired alone isn't sometimes enough to disambiguate dependencies. You can wire more exactly using the @Qualifier annotation. @Primary can also help.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "Difference between vs | Baeldung",
+      "href": "https://www.baeldung.com/spring-contextannotation-contextcomponentscan",
+      "description": "Explore the differences between context:annotation-config and context:component-scan XML elements.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "Spring Tutorial 10 - Bean Autowiring",
+      "href": "https://www.youtube.com/watch?v=suiEGbKf21g&list=PLC97BDEFDCDD169D7&index=10",
+      "description": "We'll now look at a configuration feature provided by Spring to wire dependencies automatically: Bean Autowiring. We'll learn about different types of autowi...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "What Is a Spring Bean? | Baeldung",
+      "href": "https://www.baeldung.com/spring-bean",
+      "description": "A quick and practical explanation of what a Spring Bean is.",
+      "meta": "baeldung.com"
+    },
+    {
+      "title": "Introduction to the Spring IoC Container and Beans :: Spring Framework",
+      "href": "https://docs.spring.io/spring-framework/reference/core/beans/introduction.html",
+      "description": "This chapter covers the Spring Framework implementation of the Inversion of Control (IoC) principle. Dependency injection (DI) is a specialized form of IoC, whereby objects define their dependencies (that is, the other objects they work wi…",
+      "meta": "docs.spring.io"
+    },
+    {
+      "title": "What does this do: @RunWith(SpringJUnit4ClassRunner.class)",
+      "href": "https://stackoverflow.com/questions/25317009/what-does-this-do-runwithspringjunit4classrunner-class",
+      "description": "What does this annotation do? When would I want to use it? When would I not want to use it? @RunWith(SpringJUnit4ClassRunner.class) I can find more usages of this when I Google and do not find ...",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "Spring Tutorial 16 - Writing a BeanFactoryPostProcessor",
+      "href": "https://www.youtube.com/watch?v=szNWTBlewQI&list=PLC97BDEFDCDD169D7&index=16",
+      "description": "In this tutorial, we'll learn about and write our own BeanFactoryPostProcessor. We'll also try out a handy BeanFactoryPostProcessor that comes with Spring: t...",
+      "meta": "youtube.com"
+    },
+    {
+      "title": "Using @Value annotation with static final variable in Spring Framework",
+      "href": "https://stackoverflow.com/questions/14439171/using-value-annotation-with-static-final-variable-in-spring-framework",
+      "description": "I want to make the Request Mappings in my Spring application dynamic. So that my url can not be understandable. And I can show anything meaningless to the user and still mapping purpose will be res...",
+      "meta": "stackoverflow.com"
+    }
+  ],
+  "_dead": [
+    {
+      "url": "https://testng.org/doc/",
+      "status": 404,
+      "error": null,
+      "section": "Test NG",
+      "context": "- https://testng.org/doc/"
+    },
+    {
+      "url": "http://www.javapractices.com/topic/TopicAction.do?Id=171",
+      "status": 503,
+      "error": null,
+      "section": "Throwing Exceptions",
+      "context": "- http://www.javapractices.com/topic/TopicAction.do?Id=171"
+    },
+    {
+      "url": "http://www.amazon.com/exec/obidos/ASIN/0471941484",
+      "status": 503,
+      "error": null,
+      "section": "Monitoring",
+      "context": "- [Garbage Collection: Algorithms for Automatic Dynamic Memory Management: Jones, Richard, Lins, Rafael D: 9780471941484: Amazon.com: Books](http://www.amazon.c"
+    },
+    {
+      "url": "https://dinocajic.medium.com/when-does-garbage-collection-run-in-java-9b48837c4f1f",
+      "status": 410,
+      "error": null,
+      "section": "Monitoring",
+      "context": "https://dinocajic.medium.com/when-does-garbage-collection-run-in-java-9b48837c4f1f"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The Software Backend Developer/Learning Topics/Agile Development/Learn about Agile.md",
+    "source_commit": "40186c4ab6c35ffd1dc537982237f6d4b4810091",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Scrum, Kanban & getting started": [
+    {
+      "title": "What Is Agile?",
+      "href": "https://www.forbes.com/sites/stevedenning/2016/08/13/what-is-agile/#1535b51a26e3",
+      "description": "The Learning Consortium comes to the Drucker Forum.",
+      "meta": "forbes.com"
+    },
+    {
+      "title": "What is Agile? | Atlassian",
+      "href": "https://www.atlassian.com/agile",
+      "description": "The Agile methodology is an approach that divides work into phases, emphasizing continuous delivery and improvement.",
+      "meta": "atlassian.com"
+    },
+    {
+      "title": "What are agile retrospectives? | Atlassian",
+      "href": "https://www.atlassian.com/agile/scrum/retrospectives",
+      "description": "A retrospective helps teams perform better over time. See what the agile community is saying and learn how to run your own retrospective meetings.",
+      "meta": "atlassian.com"
+    },
+    {
+      "title": "Product Management | Atlassian",
+      "href": "https://www.atlassian.com/agile/product-management",
+      "description": "Product management is an organizational function that aims to maximize the value of a product by optimizing every step of the product lifecycle.",
+      "meta": "atlassian.com"
+    },
+    {
+      "title": "9 Books on Agile Project Management Worth Reading in 2021 | Hygger.io",
+      "href": "https://hygger.io/blog/9-books-agile-project-management-worth-reading/",
+      "description": "✅9 Books on Agile Project Management Worth Reading in 2021 - Read Article by Autor Pavel Kukhnavets. ➤See also other materials in Agile category at Hygger.io Blog.",
+      "meta": "hygger.io"
+    },
+    {
+      "title": "Reddit - The heart of the internet",
+      "href": "https://www.reddit.com/r/scrum/comments/hg7lzn/who_is_truly_responsible_for_defining_epics/?utm_source=share&utm_medium=ios_app&utm_name=iossmf",
+      "description": "I was voluntold to be the SM for the team and we have been struggling and truly never producing anything of value. We have no real defined epics/features/themes, everyone on the team writes User Stories and most of them have no details in…",
+      "meta": "reddit.com"
+    }
+  ],
+  "_dead": [
+    {
+      "url": "https://www.amazon.com/Learning-Agile-Understanding-Scrum-Kanban/dp/1449331920/ref=sr_1_3?keywords=agile&qid=1568382862&s=books&sr=1-3",
+      "status": 500,
+      "error": null,
+      "section": "Learn about Agile",
+      "context": "- [ ] https://www.amazon.com/Learning-Agile-Understanding-Scrum-Kanban/dp/1449331920/ref=sr_1_3?keywords=agile&qid=1568382862&s=books&sr=1-3"
+    },
+    {
+      "url": "https://www.scrum.org/resources/blog/30-books-scrum-masters",
+      "status": 403,
+      "error": null,
+      "section": "Learn about Agile",
+      "context": "- [ ] https://www.scrum.org/resources/blog/30-books-scrum-masters"
+    },
+    {
+      "url": "https://hbr-org.cdn.ampproject.org/c/s/hbr.org/amp/2016/05/embracing-agile",
+      "status": 200,
+      "error": "page.evaluate: Execution context was destroyed, most likely because of a navigation",
+      "section": "Learn about Agile",
+      "context": "* [ ] [Embracing Agile](https://hbr-org.cdn.ampproject.org/c/s/hbr.org/amp/2016/05/embracing-agile)"
+    },
+    {
+      "url": "https://www.noteplan.co/blog/how-to-scrum-for-one-man-operations/",
+      "status": 404,
+      "error": null,
+      "section": "Learn about Agile",
+      "context": "- [ ] https://www.noteplan.co/blog/how-to-scrum-for-one-man-operations/"
+    },
+    {
+      "url": "https://www.scrumguides.org/scrum-guide.html",
+      "status": null,
+      "error": "page.goto: Timeout 20000ms exceeded.",
+      "section": "Learn about Agile",
+      "context": "- https://www.scrumguides.org/scrum-guide.html"
+    },
+    {
+      "url": "https://www.reddit.com/r/scrum/comments/hgztwx/zero_knowledge_about_scrum/?utm_source=share&utm_medium=ios_app&utm_name=iossmf",
+      "status": 200,
+      "error": "page.evaluate: Execution context was destroyed, most likely because of a navigation",
+      "section": "Learn about Agile",
+      "context": "- https://www.reddit.com/r/scrum/comments/hgztwx/zero_knowledge_about_scrum/?utm_source=share&utm_medium=ios_app&utm_name=iossmf"
+    }
+  ]
+}

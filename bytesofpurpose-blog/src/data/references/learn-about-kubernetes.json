@@ -1,0 +1,119 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The Software Backend Developer/Learning Topics/DevOps Concepts/Learn about Kubernetes.md",
+    "source_commit": "40186c4ab6c35ffd1dc537982237f6d4b4810091",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Core Kubernetes": [
+    {
+      "title": "Home",
+      "href": "https://thenewstack.io/",
+      "description": "The latest news and resources on cloud native technologies, distributed systems and data architectures with emphasis on DevOps and open source projects.",
+      "meta": "thenewstack.io"
+    },
+    {
+      "title": "GitHub - GoogleContainerTools/skaffold: Easy and Repeatable Kubernetes Development",
+      "href": "https://github.com/GoogleContainerTools/skaffold",
+      "description": "Easy and Repeatable Kubernetes Development. Contribute to GoogleContainerTools/skaffold development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "Operators: A Journey from Helm to Golang to Deliver on Cloud-native Applications' Day-2 Operations - VMblog",
+      "href": "https://vmblog.com/bylines/operators-a-journey-from-helm-to-golang-to-deliver-on-cloud-native-applications-day-2-operations/#.XpiJd1NKjUJ",
+      "description": "By Joe Leslie, Senior Product Manager at NuoDB For several years now, containers and containerization have dominated application development and software delivery conversations, along with process enablers such as CI/CD pipelines. While in…",
+      "meta": "vmblog.com"
+    },
+    {
+      "title": "GitHub - operator-framework/operator-sdk: SDK for building Kubernetes applications. Provides high level APIs, useful ab…",
+      "href": "https://github.com/operator-framework/operator-sdk",
+      "description": "SDK for building Kubernetes applications. Provides high level APIs, useful abstractions, and project scaffolding. - operator-framework/operator-sdk",
+      "meta": "github.com"
+    }
+  ],
+  "Patterns, scaling & cloud": [
+    {
+      "title": "Kubernetes Production Patterns and Anti-Patterns",
+      "href": "https://goteleport.com/blog/kubernetes-production-patterns/",
+      "description": "We explore helpful techniques to improve resiliency and high availability of Kubernetes deployments and take a look at some common mistakes to avoid when working with Docker and Kubernetes.",
+      "meta": "goteleport.com"
+    },
+    {
+      "title": "Kubernetes autoscaling with Istio metrics",
+      "href": "https://medium.com/google-cloud/kubernetes-autoscaling-with-istio-metrics-76442253a45a",
+      "description": "Kubernetes autoscaling with Istio metrics Autoscaling is an approach to automatically scale up or down workloads based on the resource usage. Autoscaling in Kubernetes has two dimensions: the Cluster …",
+      "meta": "medium.com"
+    },
+    {
+      "title": "Azure Kubernetes Service (AKS) documentation",
+      "href": "https://learn.microsoft.com/en-us/azure/aks/",
+      "description": "AKS allows you to quickly deploy a production ready Kubernetes cluster in Azure. Learn how to use AKS with these quickstarts, tutorials, and samples.",
+      "meta": "learn.microsoft.com"
+    },
+    {
+      "title": "Azure Kubernetes Service (AKS) Core Concepts - Azure Kubernetes Service",
+      "href": "https://learn.microsoft.com/en-us/azure/aks/core-aks-concepts",
+      "description": "Learn about the core concepts of Azure Kubernetes Service (AKS).",
+      "meta": "learn.microsoft.com"
+    },
+    {
+      "title": "Best Practices for Azure Kubernetes Service (AKS) - Azure Kubernetes Service",
+      "href": "https://learn.microsoft.com/en-us/azure/aks/best-practices",
+      "description": "Collection of cluster operator and developer best practices to build and manage applications in Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard.",
+      "meta": "learn.microsoft.com"
+    },
+    {
+      "title": "Jsonnet - Jsonnet Configuration Language",
+      "href": "https://jsonnet.org/",
+      "description": "A powerful DSL for elegant description of JSON data.",
+      "meta": "jsonnet.org"
+    },
+    {
+      "title": "GitHub - jsonnet-bundler/jsonnet-bundler: A jsonnet package manager.",
+      "href": "https://github.com/jsonnet-bundler/jsonnet-bundler#install",
+      "description": "A jsonnet package manager. Contribute to jsonnet-bundler/jsonnet-bundler development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "Install Tools",
+      "href": "https://kubernetes.io/docs/tasks/tools/",
+      "description": "Set up Kubernetes tools on your computer.",
+      "meta": "kubernetes.io"
+    },
+    {
+      "title": "GitHub - derailed/k9s: 🐶 Kubernetes CLI To Manage Your Clusters In Style!",
+      "href": "https://github.com/derailed/k9s",
+      "description": "🐶 Kubernetes CLI To Manage Your Clusters In Style! - derailed/k9s",
+      "meta": "github.com"
+    },
+    {
+      "title": "Helm",
+      "href": "https://helm.sh/",
+      "description": "The package manager for Kubernetes",
+      "meta": "helm.sh"
+    },
+    {
+      "title": "Red Hat OpenShift",
+      "href": "https://www.redhat.com/en/technologies/cloud-computing/openshift",
+      "description": "A unified application development platform that lets you build, modernize, and deploy applications at scale on your choice of hybrid cloud infrastructure.",
+      "meta": "redhat.com"
+    },
+    {
+      "title": "GitHub - prometheus-operator/kube-prometheus: Use Prometheus to monitor Kubernetes and applications running on Kubernet…",
+      "href": "https://github.com/prometheus-operator/kube-prometheus",
+      "description": "Use Prometheus to monitor Kubernetes and applications running on Kubernetes - prometheus-operator/kube-prometheus",
+      "meta": "github.com"
+    },
+    {
+      "title": "cluster-monitoring-operator/jsonnet/grafana.jsonnet at 1cff58efb310c00d67ea48135136fc2e2242d945 · openshift/cluster-mon…",
+      "href": "https://github.com/openshift/cluster-monitoring-operator/blob/1cff58efb310c00d67ea48135136fc2e2242d945/jsonnet/grafana.jsonnet#L49",
+      "description": "Manage the OpenShift monitoring stack. Contribute to openshift/cluster-monitoring-operator development by creating an account on GitHub.",
+      "meta": "github.com"
+    },
+    {
+      "title": "GitHub - brancz/kubernetes-grafana: The future of Grafana on Kubernetes with Prometheus.",
+      "href": "https://github.com/brancz/kubernetes-grafana",
+      "description": "The future of Grafana on Kubernetes with Prometheus. - brancz/kubernetes-grafana",
+      "meta": "github.com"
+    }
+  ]
+}

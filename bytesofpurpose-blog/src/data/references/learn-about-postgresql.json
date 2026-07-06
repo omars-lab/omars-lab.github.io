@@ -1,0 +1,229 @@
+{
+  "_provenance": {
+    "source": "roles-software-development/The Data Engineer/Learning Topics/Relational Databases/Learn about Postgresql.md",
+    "source_commit": "40186c4ab6c35ffd1dc537982237f6d4b4810091",
+    "note": "Public links abstracted from the source note's link log; dead links pruned. Refresh by re-running the link pipeline and re-stamping source_commit."
+  },
+  "Querying recipes": [
+    {
+      "title": "How to Group By “Nothing” in SQL",
+      "href": "https://blog.jooq.org/how-to-group-by-nothing-in-sql/",
+      "description": "The SQL standard knows a lesser known feature called GROUPING SETS. One particular side-effect of that feature is that we can group by \"nothing\" in SQL. E.g. when querying the Sakila database: SELECT count(*) FROM film GROUP BY () This wil…",
+      "meta": "blog.jooq.org"
+    },
+    {
+      "title": "https://www.google.com/search?q=fill+left+vs+left+join&rlz=1C5CHFA_enUS815US815&oq=fill+left+vs+left+join&aqs=chrome..6…",
+      "href": "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3Dfill%2Bleft%2Bvs%2Bleft%2Bjoin%26rlz%3D1C5CHFA_enUS815US815%26oq%3Dfill%2Bleft%2Bvs%2Bleft%2Bjoin%26aqs%3Dchrome..69i57j69i64l3.6080j0j1%26sourceid%3Dchrome%26ie%3DUTF-8%26sei%3D6SMoapqBH_-4qtsP4OWw-Q8&q=EhAmABcCTxyOALgMSXO11jPmGOnHoNEGIjDAbs5_ITnaS54eYHcHSs5EmRqQHPCxrJ2DhZ8dT754a0ETHSluGeVtAX1oxn6yFrwyAVJaAUM",
+      "meta": "google.com"
+    },
+    {
+      "title": "PostgreSQL LEFT JOIN or LEFT OUTER JOIN - w3resource",
+      "href": "https://www.w3resource.com/PostgreSQL/postgresql-left-join.php",
+      "description": "The PostgreSQL LEFT JOIN, joins two tables and fetches rows based on a condition, which are matching in both the tables, and the unmatched rows will also be available from the table written before the JOIN clause.",
+      "meta": "w3resource.com"
+    },
+    {
+      "title": "Postgresql - select something where date = \"01/01/11\"",
+      "href": "https://stackoverflow.com/questions/5875712/postgresql-select-something-where-date-01-01-11",
+      "description": "I have a datetime field in my Postgresql, named \"dt\". I'd like to do something like SELECT * FROM myTable WHERE extract (date from dt) = '01/01/11' What is the right syntax to do that? Thanks!",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "Aggregate Functions",
+      "href": "https://www.postgresql.org/docs/9.5/functions-aggregate.html",
+      "description": "Aggregate functions compute a single result from a set of input values. The built-in normal aggregate functions are listed in Table 9-49 and Table 9-50. The built-in ordered-set aggregate functions are listed in Table 9-51 and Table 9-52.…",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "Postgres returns [null] instead of [] for array_agg of join table",
+      "href": "https://stackoverflow.com/questions/31108946/postgres-returns-null-instead-of-for-array-agg-of-join-table",
+      "description": "I'm selecting some objects and their tags in Postgres. The schema is fairly simple, three tables: objects id taggings id | object_id | tag_id tags id | tag I'm joining the tables like this, using",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "pandas.date_range — pandas 3.0.3 documentation",
+      "href": "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.date_range.html",
+      "description": "Returns the range of equally spaced time points (where the difference between any two adjacent points is specified by the given frequency) such that they fall in the range [start, end] , where the first one and the last one are, resp., the…",
+      "meta": "pandas.pydata.org"
+    },
+    {
+      "title": "How to replace nulls with zeros in postgresql crosstabs",
+      "href": "https://stackoverflow.com/questions/6355177/how-to-replace-nulls-with-zeros-in-postgresql-crosstabs",
+      "description": "I've a product table with product_id and 100+ attributes. The product_id is text whereas the attribute columns are integer, i.e. 1 if the attribute exists. When the Postgresql crosstab is run, non-",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "Preserve order from subquery (with GROUP BY and ORDER BY)",
+      "href": "https://stackoverflow.com/questions/35923762/preserve-order-from-subquery-with-group-by-and-order-by",
+      "description": "I am using a smartphone to collect data from the accelerometer and then saving it in a postgresql database, in a server. Basically, each time I read the accelerometer, I save the latitude/longitude...",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "https://www.google.com/search?q=date+from+timestamp+postgres&rlz=1C5CHFA_enUS815US815&oq=date+from+timestamp+post&aqs=c…",
+      "href": "https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3Ddate%2Bfrom%2Btimestamp%2Bpostgres%26rlz%3D1C5CHFA_enUS815US815%26oq%3Ddate%2Bfrom%2Btimestamp%2Bpost%26aqs%3Dchrome.0.0j69i57j0l2j69i60j69i64l3.6217j0j4%26sourceid%3Dchrome%26ie%3DUTF-8%26sei%3DAyQoasajG_SzmtkPl6XSoQw&q=EhAmABcCTxyOALgMSXO11jPmGIPIoNEGIjBKsruBKiPOsNgxeT6ehTNGGbbsmY8eBkO8zEhtWEEflJg_Z_evyg4zphjs4s-jetAyAVJaAUM",
+      "meta": "google.com"
+    },
+    {
+      "title": "Declare a variable in a PostgreSQL query",
+      "href": "https://stackoverflow.com/questions/1490942/declare-a-variable-in-a-postgresql-query",
+      "description": "How do I declare a variable for use in a PostgreSQL 8.3 query? In MS SQL Server I can do this: DECLARE @myvar INT; SET @myvar = 5/ SELECT * FROM somewhere WHERE something = @myvar; How do I d...",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "WITH Queries (Common Table Expressions)",
+      "href": "https://www.postgresql.org/docs/9.1/queries-with.html",
+      "description": "WITH provides a way to write auxiliary statements for use in a larger query. These statements, which are often referred to as Common Table Expressions or CTEs, can be thought of as defining temporary tables that exist just for one query. E…",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "PostgreSQL UNNEST() function - w3resource",
+      "href": "https://w3resource.com/PostgreSQL/postgresql_unnest-function.php",
+      "description": "PostgreSQL UNNEST() function with Example : This function is used to expand an array to a set of rows.",
+      "meta": "w3resource.com"
+    }
+  ],
+  "Schema design & best practices": [
+    {
+      "title": "5.1. Table Basics",
+      "href": "https://www.postgresql.org/docs/12/ddl-basics.html",
+      "description": "5.1.&nbsp;Table Basics A table in a relational database is much like a table on paper: It consists of rows and …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.4. Constraints",
+      "href": "https://www.postgresql.org/docs/12/ddl-constraints.html",
+      "description": "5.4.&nbsp;Constraints 5.4.1. Check Constraints 5.4.2. Not-Null Constraints 5.4.3. Unique Constraints 5.4.4. Primary Keys 5.4.5. Foreign Keys 5.4.6. Exclusion Constraints Data …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.2. Default Values",
+      "href": "https://www.postgresql.org/docs/12/ddl-default.html",
+      "description": "5.2.&nbsp;Default Values A column can be assigned a default value. When a new row is created and no values are …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.3. Generated Columns",
+      "href": "https://www.postgresql.org/docs/12/ddl-generated-columns.html",
+      "description": "5.3.&nbsp;Generated Columns A generated column is a special column that is always computed from other columns. Thus, it is for …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.5. System Columns",
+      "href": "https://www.postgresql.org/docs/12/ddl-system-columns.html",
+      "description": "5.5.&nbsp;System Columns Every table has several system columns that are implicitly defined by the system. Therefore, these names cannot be …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.6. Modifying Tables",
+      "href": "https://www.postgresql.org/docs/12/ddl-alter.html#id-1.5.4.8.10",
+      "description": "5.6.&nbsp;Modifying Tables 5.6.1. Adding a Column 5.6.2. Removing a Column 5.6.3. Adding a Constraint 5.6.4. Removing a Constraint 5.6.5. Changing …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.8. Row Security Policies",
+      "href": "https://www.postgresql.org/docs/12/ddl-rowsecurity.html",
+      "description": "5.8.&nbsp;Row Security Policies In addition to the SQL-standard privilege system available through GRANT, tables can have row security policies that …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.9. Schemas",
+      "href": "https://www.postgresql.org/docs/12/ddl-schemas.html",
+      "description": "5.9.&nbsp;Schemas 5.9.1. Creating a Schema 5.9.2. The Public Schema 5.9.3. The Schema Search Path 5.9.4. Schemas and Privileges 5.9.5. The …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "5.11. Table Partitioning",
+      "href": "https://www.postgresql.org/docs/12/ddl-partitioning.html",
+      "description": "5.11.&nbsp;Table Partitioning 5.11.1. Overview 5.11.2. Declarative Partitioning 5.11.3. Partitioning Using Inheritance 5.11.4. Partition Pruning 5.11.5. Partitioning and Constraint Exclusion 5.11.6. …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "Chapter 14. Performance Tips",
+      "href": "https://www.postgresql.org/docs/12/performance-tips.html",
+      "description": "Chapter&nbsp;14.&nbsp;Performance Tips Table of Contents 14.1. Using EXPLAIN 14.1.1. EXPLAIN Basics 14.1.2. EXPLAIN ANALYZE 14.1.3. Caveats 14.2. Statistics Used by …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "40.3. Materialized Views",
+      "href": "https://www.postgresql.org/docs/12/rules-materializedviews.html",
+      "description": "40.3.&nbsp;Materialized Views Materialized views in PostgreSQL use the rule system like views do, but persist the results in a table-like …",
+      "meta": "postgresql.org"
+    },
+    {
+      "title": "Date/Time Functions and Operators",
+      "href": "https://www.postgresql.org/docs/9.2/functions-datetime.html",
+      "description": "Table 9-28 shows the available functions for date/time value processing, with details appearing in the following subsections. Table 9-27 illustrates the behaviors of the basic arithmetic operators (+, *, etc.). For formatting functions, re…",
+      "meta": "postgresql.org"
+    }
+  ],
+  "Tooling": [
+    {
+      "title": "Data transfer | DBeaver Documentation",
+      "href": "https://dbeaver.com/docs/dbeaver/Data-transfer/",
+      "description": "Learn how to import and export data in many formats including csv, copy data from one database to another, and move data between tables.",
+      "meta": "dbeaver.com"
+    },
+    {
+      "title": "EverSQL | Your Database, Just Faster",
+      "href": "https://www.eversql.com/sql-syntax-check-validator/",
+      "description": "EverSQL is an AI-powered PostgreSQL & MySQL database and SQL optimizer. 100,000+ engineers use EverSQL to monitor and optimize SQL queries online, and get ongoing database performance insights, quickly and easily.",
+      "meta": "eversql.com"
+    },
+    {
+      "title": "PostgreSQL syntax check without running the query",
+      "href": "https://stackoverflow.com/questions/8271606/postgresql-syntax-check-without-running-the-query",
+      "description": "I want to verify the syntax of files containing sql queries before they can be committed in my CVS project. In order to do that, I have a commitinfo script, but I have trouble finding out if the sql",
+      "meta": "stackoverflow.com"
+    },
+    {
+      "title": "Performance implications of MySQL VARCHAR sizes",
+      "href": "https://dba.stackexchange.com/questions/424/performance-implications-of-mysql-varchar-sizes/1915#1915",
+      "description": "Is there a performance difference in MySQL between varchar sizes? For example, varchar(25) and varchar(64000). If not, is there a reason not to declare all varchars with the max size just to ensu...",
+      "meta": "dba.stackexchange.com"
+    }
+  ],
+  "_dead": [
+    {
+      "url": "https://www.postgresqltutorial.com/postgresql-cross-join/",
+      "status": null,
+      "error": "page.goto: Timeout 20000ms exceeded.",
+      "section": "Cross Join to repeat rows across two tables",
+      "context": "https://www.postgresqltutorial.com/postgresql-cross-join/"
+    },
+    {
+      "url": "https://www.postgresqltutorial.com/plpgsql-variables/",
+      "status": 522,
+      "error": null,
+      "section": "Declaring Query Variables",
+      "context": "https://www.postgresqltutorial.com/plpgsql-variables/"
+    },
+    {
+      "url": "https://kb.objectrocket.com/postgresql/declare-row-variable-for-postgresql-825",
+      "status": 404,
+      "error": null,
+      "section": "Declaring Query Variables",
+      "context": "https://kb.objectrocket.com/postgresql/declare-row-variable-for-postgresql-825"
+    },
+    {
+      "url": "https://www.postgresqltutorial.com/postgresql-alias/",
+      "status": 522,
+      "error": null,
+      "section": "Declaring Query Variables",
+      "context": "https://www.postgresqltutorial.com/postgresql-alias/"
+    },
+    {
+      "url": "https://docs.teradata.com/reader/kmuOwjp1zEYg98JsB8fu_A/FTrSJJOjpjqIZ6ue5YuiCQ",
+      "status": 404,
+      "error": null,
+      "section": "Grouping on Arrays",
+      "context": "https://docs.teradata.com/reader/kmuOwjp1zEYg98JsB8fu_A/FTrSJJOjpjqIZ6ue5YuiCQ"
+    },
+    {
+      "url": "https://www.amazon.com/dp/0672327651",
+      "status": 500,
+      "error": null,
+      "section": "Common Non-SQL, Postgres Specific Commands",
+      "context": "- https://www.amazon.com/dp/0672327651"
+    }
+  ]
+}
