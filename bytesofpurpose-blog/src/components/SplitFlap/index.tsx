@@ -68,17 +68,17 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
     return undefined;
   }, [spinning, char, seed]);
 
-  // A BLANK target snaps directly (no roll) so it can never strand on a letter; a letter target rolls.
-  // Keying the Cell on whether it's settled-blank forces a fresh Cell (clears any mid-roll) when we
-  // settle to blank, so a churning random letter can't be left behind in a padding cell.
-  const settledBlank = !spinning && char === ' ';
-  return (
-    <Cell
-      key={settledBlank ? 'blank' : 'glyph'}
-      char={settledBlank ? ' ' : display}
-      settleMs={500}
-    />
-  );
+  // SETTLE lands CLEANLY on the target. When churn stops we MOUNT A FRESH Cell initialized directly at
+  // `char` (keyed on `settled:<char>`), instead of asking a mid-roll Cell to roll from a stale `shown`
+  // to the target. A churning Cell whose roll is interrupted by the next churn tick can strand ONE deck
+  // glyph off the target (an 'L' left showing 'M', an 'H' showing 'I'); that stranding is invisible when
+  // churn only ended on a FULL stop, but the scroll hero now settles the board on entering each scene's
+  // zone WHILE still scrolling, so the churn->settle handoff fires many times per journey and the
+  // stranding became visible ("EXPMORE MY THOUGITS"). A fresh mount at the target can't strand (it never
+  // rolls). While SPINNING we keep the single churning Cell (keyed 'spin') so the churn animates; the
+  // key flip spin<->settled is exactly the clean cut we want. Blank targets settle the same way.
+  const key = spinning ? 'spin' : `settled:${char}`;
+  return <Cell key={key} char={spinning ? display : char} settleMs={500} />;
 }
 
 /** Pad `text` to `columns` with a SPECIFIC left offset, so callers can give every row the SAME offset
