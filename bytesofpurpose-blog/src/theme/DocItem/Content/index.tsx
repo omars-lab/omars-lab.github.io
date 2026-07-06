@@ -6,6 +6,7 @@ import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import ShareButton from '@site/src/components/ShareButton';
 import PostQuestions from '@site/src/components/PostQuestions';
+import DeprecatedBanner from '@site/src/components/DeprecatedBanner';
 
 // Swizzled @theme/DocItem/Content: re-implements the upstream component (which
 // only renders a synthetic <h1> + the MDX body) and additionally mounts the
@@ -40,6 +41,11 @@ export default function DocItemContent({
     (frontMatter.description as string | undefined) || metadata.description;
   return (
     <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
+      <DeprecatedBanner
+        deprecated={(frontMatter as {deprecated?: unknown}).deprecated}
+        reason={(frontMatter as {deprecated_reason?: unknown}).deprecated_reason}
+        replacement={(frontMatter as {deprecated_for?: unknown}).deprecated_for}
+      />
       {syntheticTitle ? (
         // Synthetic title: keep the exact <Heading as="h1"> (preserves TOC/anchor)
         // and place the share control inline beside it.

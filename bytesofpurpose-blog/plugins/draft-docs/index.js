@@ -17,8 +17,9 @@ try {
 
 /**
  * Local Docusaurus plugin: collects the permalink of every DRAFT doc
- * (`draft: true` frontmatter) and of every PREMIUM doc (`premium: true`), and
- * exposes both as global data so the swizzled sidebar can badge those entries.
+ * (`draft: true` frontmatter), every PREMIUM doc (`premium: true`), and every
+ * DEPRECATED doc (`deprecated: true`), and exposes them as global data so the
+ * swizzled sidebar can badge those entries.
  *
  * Drafts are excluded from PRODUCTION builds entirely, so the draft map is only
  * meaningful on `yarn start` — the draft sidebar badge additionally gates on
@@ -27,11 +28,21 @@ try {
  * gated client-side), so the premium map + its lock badge are meaningful in
  * prod too. (V2 of the premium-content-gating design — mirrors the draft path.)
  *
+ * DEPRECATED docs (like premium) are NOT excluded from the build — they still
+ * ship — but by DESIGN their "Dep" badge + red banner are gated to localhost +
+ * non-prod exactly like the draft badge, so the deprecation signal is a dev-only
+ * cue for now and never leaks to real readers. The deprecation REASON lives on
+ * the post's frontmatter (`deprecated_reason`, optional `deprecated_for`); the
+ * on-page banner reads it directly (via useDoc/useBlogPost), so the *Info maps
+ * here are a convenience — the permalink SET is the part the sidebar genuinely
+ * needs (sidebar items carry no frontmatter).
+ *
  * Consumed via:
- *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks    // string[] — draft doc pages
- *   useGlobalData()['draft-docs-plugin'].default.premiumPermalinks  // string[] — premium doc pages
- *   useGlobalData()['draft-docs-plugin'].default.blogSidebarLabels  // {permalink: shortLabel} — blog posts with sidebar_label
- *   useGlobalData()['draft-docs-plugin'].default.docsKindEmoji      // {permalink: emoji} — docs with a `kind:` (e.g. kind: hub -> 🗂️)
+ *   useGlobalData()['draft-docs-plugin'].default.draftPermalinks       // string[] — draft doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.premiumPermalinks     // string[] — premium doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.deprecatedPermalinks  // string[] — deprecated doc pages
+ *   useGlobalData()['draft-docs-plugin'].default.blogSidebarLabels     // {permalink: shortLabel} — blog posts with sidebar_label
+ *   useGlobalData()['draft-docs-plugin'].default.docsKindEmoji         // {permalink: emoji} — docs with a `kind:` (e.g. kind: hub -> 🗂️)
  *
  * Only individual docs with `draft: true` are tracked — the swizzled sidebar
  * badges the LEAF link. (Category/folder badging was dropped: a fully-draft folder
@@ -69,6 +80,14 @@ module.exports = function draftDocsPlugin(context) {
     async loadContent() {
       const draftPermalinks = new Set();
       const premiumPermalinks = new Set();
+      // DEPRECATED docs/posts: shipped to prod, but their "Dep" badge + red banner
+      // are dev/localhost-gated like drafts. The set feeds the sidebar badge; the
+      // *Info maps (permalink -> {reason, replacement}) are a convenience since the
+      // banner reads the frontmatter directly on the page.
+      const deprecatedPermalinks = new Set();
+      const blogDeprecatedPermalinks = new Set();
+      const deprecatedInfo = {};
+      const blogDeprecatedInfo = {};
       const blogDraftPermalinks = new Set();
       // permalink -> short sidebar label, for blog posts that set `sidebar_label:`.
       // The blog sidebar item carries only {title, permalink}, so the swizzle looks
@@ -108,6 +127,14 @@ module.exports = function draftDocsPlugin(context) {
           if (data.premium === true) {
             premiumPermalinks.add(toPermalink(full, docsDir, data));
           }
+          if (data.deprecated === true) {
+            const p = toPermalink(full, docsDir, data);
+            deprecatedPermalinks.add(p);
+            deprecatedInfo[p] = {
+              reason: data.deprecated_reason || '',
+              replacement: data.deprecated_for || '',
+            };
+          }
           // Docs kind emoji: only when the kind is known AND its short label (sidebar_label ||
           // title) doesn't already start with an emoji (authors sometimes hand-type one).
           const kindEmoji = data.kind && BLOG_KIND_EMOJI[data.kind];
@@ -144,6 +171,13 @@ module.exports = function draftDocsPlugin(context) {
           const permalink = toBlogPermalink(entry.name, data, base);
           if (data.draft === true) {
             blogDraftPermalinks.add(permalink);
+          }
+          if (data.deprecated === true) {
+            blogDeprecatedPermalinks.add(permalink);
+            blogDeprecatedInfo[permalink] = {
+              reason: data.deprecated_reason || '',
+              replacement: data.deprecated_for || '',
+            };
           }
           // Pin to the top of the sidebar: explicit `pinned: true`, or any legend (an
           // index/keystone should sit above the year groups regardless of its date).
@@ -182,6 +216,10 @@ module.exports = function draftDocsPlugin(context) {
       return {
         draftPermalinks: [...draftPermalinks],
         premiumPermalinks: [...premiumPermalinks],
+        deprecatedPermalinks: [...deprecatedPermalinks],
+        blogDeprecatedPermalinks: [...blogDeprecatedPermalinks],
+        deprecatedInfo,
+        blogDeprecatedInfo,
         blogDraftPermalinks: [...blogDraftPermalinks],
         blogSidebarLabels,
         blogPinnedPermalinks: [...blogPinnedPermalinks],

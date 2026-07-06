@@ -6,6 +6,7 @@ import {useVisibleBlogSidebarItems} from '@docusaurus/plugin-content-blog/client
 import BlogSidebarContent from '@theme/BlogSidebar/Content';
 import {useLocation} from '@docusaurus/router';
 import {useIsBlogDraft, DraftBadge} from '@site/src/theme/DocSidebarItem/draftBadge';
+import {useIsBlogDeprecated, DeprecatedBadge} from '@site/src/theme/DocSidebarItem/deprecatedBadge';
 import {
   useBlogSidebarLabel,
   usePartitionedBlogItems,
@@ -30,6 +31,7 @@ function SidebarItemLink({
   linkActiveClassName?: string;
 }) {
   const isDraft = useIsBlogDraft(item.permalink);
+  const isDeprecated = useIsBlogDeprecated(item.permalink);
   const label = useBlogSidebarLabel(item.permalink, item.title);
   return (
     <Link
@@ -40,6 +42,7 @@ function SidebarItemLink({
       title={item.title}>
       {label}
       {isDraft && <DraftBadge />}
+      {isDeprecated && <DeprecatedBadge />}
     </Link>
   );
 }

@@ -4,6 +4,7 @@ import {blogPostContainerID} from '@docusaurus/utils-common';
 import {useBlogPost} from '@docusaurus/plugin-content-blog/client';
 import MDXContent from '@theme/MDXContent';
 import PostQuestions from '@site/src/components/PostQuestions';
+import DeprecatedBanner from '@site/src/components/DeprecatedBanner';
 
 // Swizzled @theme/BlogPostItem/Content: re-implements the upstream component
 // (which just wraps the MDX body) and additionally renders the "Questions this
@@ -23,6 +24,13 @@ export default function BlogPostItemContent({
       // This ID is used for the feed generation to locate the main content.
       id={isBlogPostPage ? blogPostContainerID : undefined}
       className={clsx('markdown', className)}>
+      {isBlogPostPage && (
+        <DeprecatedBanner
+          deprecated={(frontMatter as {deprecated?: unknown}).deprecated}
+          reason={(frontMatter as {deprecated_reason?: unknown}).deprecated_reason}
+          replacement={(frontMatter as {deprecated_for?: unknown}).deprecated_for}
+        />
+      )}
       {isBlogPostPage && (
         <PostQuestions questions={(frontMatter as {questions?: unknown}).questions} />
       )}

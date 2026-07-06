@@ -14,6 +14,8 @@
  *                     doesn't exist, or its slug differs). [ERROR — this fails the prod build]
  *   - to-draft        a redirect `to:` a DRAFT page (excluded from prod → invalid prod build).
  *                     [ERROR]
+ *   - to-deprecated   a redirect `to:` a DEPRECATED page. It still resolves (deprecated pages
+ *                     ship), so not a build-breaker — but consider pointing at its replacement. [warn]
  *   - to-chain        a redirect `to:` (b) that is itself the `from:` of ANOTHER redirect (b→c),
  *                     i.e. a chain a→b→c. Docusaurus does NOT follow chains: a→b lands on b, which
  *                     is a redirect stub (a 404), not transitively on c. Collapse it to a→c. [ERROR]
@@ -64,10 +66,13 @@ function walk(absDir, out = []) {
 
 const norm = (u) => (u.length > 1 ? u.replace(/\/$/, '') : u); // strip trailing slash (except '/')
 
-// Build the published-URL set + the draft-URL set.
+// Build the published-URL set + the draft-URL set (+ the deprecated-URL set — a
+// deprecated page is ALSO published, so it lands in both: `published` keeps the
+// redirect valid, `deprecated` powers the advisory `to-deprecated` warning).
 function collectUrls() {
   const published = new Set();
   const draft = new Set();
+  const deprecated = new Set();
 
   // Docs: an absolute (leading-slash) slug is INSTANCE-RELATIVE → base + slug. Otherwise the
   // permalink is base + <dir path> (+ slug rename of the last segment). We resolve the common
@@ -88,6 +93,7 @@ function collectUrls() {
         if (/README|index/i.test(path.basename(fp)) && segs.length === 0 && !data.slug) url = base;
       }
       (data.draft === true ? draft : published).add(norm(url));
+      if (data.deprecated === true) deprecated.add(norm(url));
     }
   }
 
@@ -102,7 +108,9 @@ function collectUrls() {
         .replace(/\.mdx?$/, '')
         .replace(/^\d{4}-\d{2}-\d{2}-/, '');
       const slug = (data.slug || fileSlug).toString().replace(/^\//, '');
-      (data.draft === true ? draft : published).add(norm(`${base}/${slug}`));
+      const url = norm(`${base}/${slug}`);
+      (data.draft === true ? draft : published).add(url);
+      if (data.deprecated === true) deprecated.add(url);
     }
   }
 
@@ -112,7 +120,7 @@ function collectUrls() {
     for (const e of walkPages(pagesDir)) published.add(norm(e));
   }
 
-  return {published, draft};
+  return {published, draft, deprecated};
 }
 
 function walkPages(absDir, base = '', out = []) {
@@ -188,7 +196,7 @@ function wildcardTargetOf(to) {
 // ── 3. Validate ────────────────────────────────────────────────────────────
 function main() {
   const json = process.argv.includes('--json');
-  const {published, draft} = collectUrls();
+  const {published, draft, deprecated} = collectUrls();
   const redirects = loadRedirects();
   const findings = [];
 
@@ -246,6 +254,12 @@ function main() {
     if (published.has(nFrom)) {
       findings.push({tier: 'warn', id: 'from-collision', from, to, detail: `redirect FROM ${from} is also a real published page; the page wins and this redirect never fires.`});
     }
+
+    // to-deprecated: the target resolves (deprecated pages ship), so this is not a build-breaker —
+    // but sending readers to a deprecated page is a smell; point at its replacement if one exists.
+    if (deprecated.has(nTo)) {
+      findings.push({tier: 'warn', id: 'to-deprecated', from, to, detail: `redirect target ${to} is a DEPRECATED page (still live, so this resolves — but consider pointing at its replacement instead).`});
+    }
   }
 
   for (const [from, n] of froms) {
@@ -253,7 +267,7 @@ function main() {
   }
 
   if (json) {
-    console.log(JSON.stringify({counts: {redirects: redirects.length, published: published.size, draft: draft.size}, findings}, null, 2));
+    console.log(JSON.stringify({counts: {redirects: redirects.length, published: published.size, draft: draft.size, deprecated: deprecated.size}, findings}, null, 2));
     process.exit(0);
   }
 

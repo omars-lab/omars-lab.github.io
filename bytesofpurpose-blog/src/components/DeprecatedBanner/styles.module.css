@@ -1,0 +1,38 @@
+/* DeprecatedBanner — a red top-of-page notice that a still-live page is outdated.
+   Models PostQuestions' quiet-card treatment (spacing/radius tokens) but in a red
+   danger palette. Dev-only, so it never ships to real readers; still themed for
+   light + dark so it reads correctly on localhost in either mode. */
+
+.banner {
+  margin: var(--space-4) 0 var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 3px solid #dc2626;
+  border-radius: var(--radius-md);
+}
+html[data-theme='dark'] .banner {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.4);
+  border-left-color: #ef4444;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans-body);
+  font-weight: 700;
+  color: #991b1b;
+}
+html[data-theme='dark'] .title {
+  color: #fca5a5;
+}
+
+.reason {
+  margin: var(--space-2) 0 0;
+  color: var(--text-body);
+  line-height: 1.55;
+}
+
+.replacement {
+  margin: var(--space-2) 0 0;
+}

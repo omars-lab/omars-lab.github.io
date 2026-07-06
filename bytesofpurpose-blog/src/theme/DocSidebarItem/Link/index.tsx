@@ -6,6 +6,7 @@ import Link from '@docusaurus/Link';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import IconExternalLink from '@theme/Icon/ExternalLink';
 import {useIsDraft, DraftBadge} from '../draftBadge';
+import {useIsDeprecated, DeprecatedBadge} from '../deprecatedBadge';
 import {useIsPremium, LockBadge} from '../lockBadge';
 import {useDocKindEmoji} from '../kindEmoji';
 import styles from './styles.module.css';
@@ -41,6 +42,7 @@ export default function DocSidebarItemLink({
   const isActive = isActiveSidebarItem(item, activePath);
   const isInternalLink = isInternalUrl(href);
   const isDraft = useIsDraft(href);
+  const isDeprecated = useIsDeprecated(href);
   const isPremium = useIsPremium(href);
   // Prepend the doc's kind emoji (e.g. 🗂️ for kind: hub) unless the label already has one.
   const kindEmoji = useDocKindEmoji(href);
@@ -73,6 +75,7 @@ export default function DocSidebarItemLink({
         {...props}>
         <LinkLabel label={displayLabel} />
         {isDraft && <DraftBadge />}
+        {isDeprecated && <DeprecatedBadge />}
         {isPremium && <LockBadge />}
         {!isInternalLink && <IconExternalLink />}
       </Link>
