@@ -55,10 +55,20 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ifm-background-surface-color);
-  background: var(--ifm-color-primary);
   border-radius: var(--radius-pill);
   padding: 0.125rem var(--space-3);
+}
+/* The winner: a solid brand pill that draws the eye. */
+.verdictChosen {
+  color: var(--ifm-background-surface-color);
+  background: var(--ifm-color-primary);
+}
+/* Every other option: a quiet outlined grey pill, so it reads as "we looked at this"
+   without competing with the one chosen pill. */
+.verdictConsidered {
+  color: var(--ifm-color-content-secondary);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
 }
 
 .chevron {

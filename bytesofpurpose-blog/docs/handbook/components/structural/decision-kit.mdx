@@ -69,7 +69,7 @@ while folded.
   items={[
     {
       summary: 'Rebuild the store from scratch',
-      verdict: 'rejected',
+      verdict: 'considered',
       body: (
         <>It is the cleanest design on paper, but it throws away every edge case the current
         store has already learned, and it is the slowest path to shipping.</>
@@ -77,12 +77,12 @@ while folded.
     },
     {
       summary: 'Reach for a hosted database',
-      verdict: 'rejected',
+      verdict: 'considered',
       body: <>Solves durability, but it adds an ops surface this project deliberately avoids.</>,
     },
     {
       summary: 'Keep SQLite, add only the new surface',
-      verdict: 'chosen',
+      chosen: true,
       open: true,
       body: (
         <>Zero-ops, durable on disk, relational, and free. It keeps the proven core and adds
@@ -96,8 +96,8 @@ while folded.
 <Accordion
   label="The options"
   items={[
-    {summary: 'Rebuild from scratch', verdict: 'rejected', body: <>Slow, and we lose the edge cases.</>},
-    {summary: 'Keep SQLite, add the new surface', verdict: 'chosen', open: true, body: <>Zero-ops, durable, free.</>},
+    {summary: 'Rebuild from scratch', verdict: 'considered', body: <>Slow, and we lose the edge cases.</>},
+    {summary: 'Keep SQLite, add the new surface', chosen: true, open: true, body: <>Zero-ops, durable, free.</>},
   ]}
 />
 ```
