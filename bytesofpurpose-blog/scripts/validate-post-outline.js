@@ -126,7 +126,7 @@ const CHECKS = {
   'framework-laid-out': (fm, body) =>
     /^\s*\d+\.\s+\S/m.test(body) ||
     hasH2(body) ||
-    /<DiagramWithFootnotes[\s>]/.test(body) ||
+    /<(DiagramWithFootnotes|FlowDiagram|UseCaseDiagram|ComparisonMatrix)[\s>]/.test(body) ||
     /```mermaid/.test(body),
   // tutorial
   'steps-or-artifact': (fm, body) =>
@@ -143,11 +143,15 @@ const CHECKS = {
   // <SlideDeck> IS the visual (a live, navigable reveal.js deck), so it counts.
   mockup: (fm, body) =>
     Boolean(fm.mockups) || /<(Mockup|SlideDeck)[\s>]/.test(body),
+  // A decisions element is satisfied by a decisions/trade-offs heading, OR by a
+  // <ComparisonMatrix> / <Accordion> (which ARE the head-to-head + the option narrative).
   decisions: (fm, body) =>
-    /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body),
-  // backend-design: an architecture view (a diagram component, a mermaid fence, or a flow/components heading)
+    /^#{1,4}\s+.*\b(key decisions?|decisions?|trade[-\s]?offs?)\b/im.test(body) ||
+    /<(ComparisonMatrix|Accordion)[\s>]/.test(body),
+  // backend-design: an architecture view (a diagram component, a mermaid fence, or a flow/components heading).
+  // A <FlowDiagram> (pipeline/flow/swimlane) or <UseCaseDiagram> is a first-class architecture view too.
   architecture: (fm, body) =>
-    /<DiagramWithFootnotes[\s>]/.test(body) ||
+    /<(DiagramWithFootnotes|FlowDiagram|UseCaseDiagram)[\s>]/.test(body) ||
     /```mermaid/.test(body) ||
     /^#{1,4}\s+.*\b(architecture|components?|data ?flow|flow|pipeline|system)\b/im.test(body),
   // agent-design: the agent's loop / capabilities / tools

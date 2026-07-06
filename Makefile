@@ -95,6 +95,9 @@ validate-mdx-imports: ## Catch a Capitalized JSX tag used in .mdx but never impo
 validate-questions: ## Lint the optional `questions:` frontmatter (present → must be a list of items each ending in "?")
 	( cd ${SITEROOT} && node scripts/validate-questions.js $(DIRS) )
 
+validate-visual-density: ## Nudge: flag H2 sections that run long (>280 words) with no visual (advisory — a picture is worth a thousand words)
+	( cd ${SITEROOT} && node scripts/validate-visual-density.js $(DIRS) )
+
 validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
