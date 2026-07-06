@@ -163,6 +163,12 @@ answers "why". HOW:
 - Both registered in `MDXComponents` (no import). Live demo: `/handbook/components/structural/decision-kit`.
 - ComparisonMatrix THROWS at build if a cell is keyed to an option id that is not in `options`.
   It scrolls inside its own wrapper on mobile (never pushes the page sideways).
+- JUSTIFY A RATING: a cell can be `{rating, note, footnotes}` instead of a bare string. A cell
+  with a `note` renders its mark as a clickable button (a small "why" dot hints it) that opens a
+  focus modal with the justification (any React content, incl. `<sup>` footnote refs) + a
+  `footnotes: [{id, content}]` definition list. Plain-string cells stay static; zero client JS
+  ships unless a cell has a note. E.g.
+  `cells={{sqlite: {rating:'yes', note:<>Single file, no server.<sup>1</sup></>, footnotes:[{id:'1', content:<>In-process.</>}]}}}`.
 - WHEN NOT: `OptionGrid`/`OptionTile`/`DecisionNote` show explored DESIGN directions with a
   chosen ring + WHY (a design specimen). ComparisonMatrix is the feature-by-feature decision
   TABLE. Use the matrix for "which option scores better", OptionGrid for "which mock we picked".

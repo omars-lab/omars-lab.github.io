@@ -41,6 +41,9 @@ export type {
   MatrixOption,
   MatrixCriterion,
   Rating,
+  Cell,
+  CellSpec,
+  CellFootnote,
 } from './components/ComparisonMatrix';
 
 // Accordion — a foldable option list on native <details>/<summary> (zero JS). Each item has a

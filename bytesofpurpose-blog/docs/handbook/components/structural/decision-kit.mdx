@@ -33,12 +33,29 @@ gate throws if a cell is keyed to an option id that does not exist.
     {id: 'redis', label: 'Redis'},
   ]}
   criteria={[
-    {label: 'Zero-ops', cells: {pg: 'no', sqlite: 'yes', redis: 'partial'}},
+    {label: 'Zero-ops', cells: {
+      pg: 'no',
+      sqlite: {
+        rating: 'yes',
+        note: (
+          <>The whole database is a single file on disk. There is no server to run, no
+          daemon to keep alive, and no connection pool to tune <sup>1</sup> &mdash; the app
+          just opens the file. That is the entire operational surface.</>
+        ),
+        footnotes: [
+          {id: '1', content: <>SQLite runs in-process; "serverless" here means no separate database server, not a cloud platform.</>},
+        ],
+      },
+      redis: 'partial',
+    }},
     {label: 'Relational', cells: {pg: 'yes', sqlite: 'yes', redis: 'no'}},
     {label: 'Durable on disk', cells: {pg: 'yes', sqlite: 'yes', redis: 'partial'}},
     {label: 'Cost', cells: {pg: '$$', sqlite: 'free', redis: '$'}},
   ]}
 />
+
+Click the **Zero-ops / SQLite** mark above to see the justification modal: a cell can carry a
+`note` (why the rating was given) and optional `footnotes`, and its mark becomes clickable.
 
 ```mdx
 <ComparisonMatrix
