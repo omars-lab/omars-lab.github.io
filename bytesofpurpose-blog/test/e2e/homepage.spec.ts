@@ -659,6 +659,56 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     );
   });
 
+  test('[pickets] the wave is a TRAVELING band (brightest strip sweeps L→R, not a bloom)', async ({ page }) => {
+    // REGRESSION: with too small a PICKET_SPREAD the strips all peak together mid-crossing, so the whole
+    // door blooms WHITE for a stretch with no visible motion ("not smooth as I scroll slowly"). A proper
+    // wave is a NARROW bright band that TRAVELS: the brightest strip's index should sweep 0→N as you
+    // scrub the crossing, and only a few strips should be lit at once (not all of them).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const sweep = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const ops = () =>
+        [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map((p) =>
+          parseFloat(getComputedStyle(p as HTMLElement).opacity),
+        );
+      const brightest: number[] = [];
+      let maxLitAtOnce = 0;
+      window.scrollTo(0, 0);
+      window.dispatchEvent(new Event('scroll'));
+      await new Promise((r) => setTimeout(r, 300));
+      for (let i = 0; i <= 40; i++) {
+        const p = 0.06 + (0.07 * i) / 40; // scrub across the door→scene0 crossing
+        window.scrollTo(0, Math.round(spacerTopPage + p * scrollable));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => requestAnimationFrame(() => r(null)));
+        const o = ops();
+        if (o.length && Math.max(...o) > 0.4) {
+          brightest.push(o.indexOf(Math.max(...o)));
+          maxLitAtOnce = Math.max(maxLitAtOnce, o.filter((x) => x > 0.5).length);
+        }
+      }
+      const first = brightest[0] ?? -1;
+      const last = brightest[brightest.length - 1] ?? -1;
+      // is the brightest-strip index non-decreasing (a left→right sweep)? allow tiny sampling noise.
+      const monotonic = brightest.every((v, i) => i === 0 || v >= brightest[i - 1] - 1);
+      return { first, last, monotonic, maxLitAtOnce, n: brightest.length };
+    });
+
+    // the band must TRAVEL: start near the left, end near the right.
+    expect(sweep.n, 'the wave is lit across the crossing').toBeGreaterThan(5);
+    expect(sweep.first, `the band starts on the LEFT (was strip ${sweep.first})`).toBeLessThanOrEqual(2);
+    expect(sweep.last, `the band ends on the RIGHT (was strip ${sweep.last})`).toBeGreaterThanOrEqual(6);
+    expect(sweep.monotonic, 'the brightest strip sweeps left→right (a traveling band, not a bloom)').toBe(true);
+    // it is a NARROW band, not a whole-door bloom: never more than ~half the strips lit at once.
+    expect(sweep.maxLitAtOnce, `only a few strips lit at once (was ${sweep.maxLitAtOnce})`).toBeLessThanOrEqual(5);
+  });
+
   test('[pickets] past the wave the NEW scene is committed and no picket stays lit', async ({ page }) => {
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');

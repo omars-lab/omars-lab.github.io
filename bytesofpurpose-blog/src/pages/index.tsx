@@ -685,7 +685,11 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
 // then the left strips dim first, revealing the NEW scene strip-by-strip. It is a PURE function of the
 // transition phase `t`, so scrolling back reverses it exactly (no snap, every position is stable).
 const PICKET_COUNT = 9; // odd, so a centre strip peaks at the mid of the crossing
-const PICKET_SPREAD = 0.5; // how much the wave lags the right strips behind the left (0 = all together)
+// How far the strips' peaks are SPREAD across the crossing (0 = all peak together = a single flash;
+// larger = a narrower bright BAND that visibly TRAVELS across, only a few strips lit at once). At 0.5 the
+// peaks bunched in the middle third so the whole door bloomed white with little visible motion; 2.5
+// spreads them so it reads as a wave sweeping strip-by-strip.
+const PICKET_SPREAD = 2.5;
 // When scrolling STOPS in the pickets model, the board does ONE roll from its churning chars to the
 // resting state (the scene title if settled, or a random scramble if stopped mid-crossing) over this
 // long: a real flip to the end state, not an instant snap and not an endless churn.
