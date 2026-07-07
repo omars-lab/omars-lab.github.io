@@ -706,6 +706,31 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       .toBe('DISCOVERMYCRAFT');
   });
 
+  // How many of the board's rows have any non-blank glyph (a full-width single-row title → 1).
+  const filledRowCount = (page: Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[class*="studioSign"] [class*="row"]')].filter(
+        (r) => (r as HTMLElement).innerText.replace(/\s/g, '').length > 0,
+      ).length,
+    );
+
+  test('[pickets] the board churns as a SINGLE row (no 3-rows→1 collapse on stop)', async ({ page }) => {
+    // The board pads short text to a fixed 3-row grid with BLANK rows top + bottom. If those padding
+    // cells churned too, all 3 rows would fill and then visibly COLLAPSE to 1 the instant you stop. The
+    // padding rows must stay blank WHILE churning, so the board is always a single centered row and the
+    // churn→title settle is an in-row flap, not a row-count jump.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Actively scrub through a crossing; at no point should more than ONE row be filled.
+    let maxRows = 0;
+    for (let k = 0; k < 8; k++) {
+      await scrubTo(page, 0.06 + k * 0.006);
+      maxRows = Math.max(maxRows, await filledRowCount(page));
+    }
+    expect(maxRows, 'only the centered row churns; the padding rows stay blank').toBeLessThanOrEqual(1);
+  });
+
   test('[pickets] ?hero-progress=P freezes an exact frame (a mid-wave crossing, deterministically)', async ({
     page,
   }) => {

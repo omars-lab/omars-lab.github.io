@@ -50,10 +50,11 @@ export interface SplitFlapProps {
 // cell at a slightly different rate so the board looks alive); when `spinning` turns false it SETTLES
 // to its target `char`. It delegates the fold animation to <Cell> by driving Cell's `char`.
 //
-// Stray-letter fix: a cell whose target is BLANK (' ') must NEVER show a leftover letter after settle.
-// While spinning we ALWAYS churn (even blank-target cells, so the whole board churns uniformly); on
-// settle we land on `char` — and a SETTLE TO BLANK snaps directly (no deck-roll that could strand on a
-// letter). The settle also keys a remount so the underlying Cell can't be left mid-roll from churn.
+// BLANK-target cells stay BLANK while spinning (they do NOT churn). The board's fixed grid pads short
+// text to `rows` with BLANK rows top + bottom, so a churning title occupies only its own row(s); if the
+// padding cells churned too, all rows would fill with letters and then visibly COLLAPSE (3 rows→1) the
+// instant you stop. Keeping blank-target cells blank throughout means the board churns only where the
+// text lives and there is no collapse to animate. A blank target also SNAPS on settle (never rolls).
 const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
 // The fixed START glyph a settle roll folds FROM (pickets): BLANK (deck index 0), so every target is a
 // bounded FORWARD roll (A,B,C..) that never wraps through the punctuation tail. See the settle logic.
@@ -76,8 +77,9 @@ function SpinningCell({
   const idxRef = useRef(seed % SPIN_LETTERS.length);
 
   useEffect(() => {
-    if (spinning) {
-      // churn EVERY cell (blank-target ones too) so the board churns uniformly and no cell is stuck.
+    // Blank-target cells never churn: they stay blank so the padding rows don't fill (no 3-rows→1
+    // collapse on settle). Only cells whose target is a real glyph churn.
+    if (spinning && char !== ' ') {
       const stride = 1 + (seed % 5);
       const periodMs = 60 + (seed % 7) * 12; // 60..132ms per flip, varied per cell
       const id = window.setInterval(() => {
@@ -86,7 +88,7 @@ function SpinningCell({
       }, periodMs);
       return () => window.clearInterval(id);
     }
-    // SETTLE: land on the target character.
+    // SETTLE (or a blank cell while spinning): land on the target character.
     setDisplay(char);
     return undefined;
   }, [spinning, char, seed]);
@@ -96,13 +98,13 @@ function SpinningCell({
   //  • SNAP (settleRollMs undefined; pin/inplace/horizontal): mount already AT `char` (instant, no roll).
   //    Those models settle the board MANY times per journey while scrolling, so a roll each time would
   //    stutter; the snap is the safe choice there.
-  //  • ROLL (settleRollMs set; PICKETS): mount at BLANK (`ROLL_FROM`) and roll FORWARD to `char` over
-  //    settleRollMs (a real board settle). Starting at blank (deck index 0) makes every letter/digit a
-  //    bounded FORWARD roll (A,B,C..) that never wraps through the punctuation tail, so cells sequence
-  //    cleanly and arrive together (perStep = settleRollMs / steps). A FRESH mount + a single forward
-  //    roll cannot strand: no churn tick interrupts it, and the board target is the STABLE raw-progress
-  //    text (see rawBoardText in ParallaxStudio) so `char` never changes mid-roll to remount the cell.
-  //  A BLANK target always snaps (no roll to an empty cell).
+  //  • ROLL (settleRollMs set; PICKETS): a letter/digit target mounts at BLANK (`ROLL_FROM`, deck index
+  //    0) and rolls FORWARD (A,B,C..), a bounded roll that never wraps through the punctuation tail and
+  //    lands with its neighbours. Blank targets SNAP (the padding rows only churn where the churn itself
+  //    fills them; see the `spinning`-branch grid, which pads the churn to the TARGET's own rows only, so
+  //    there is no 3-rows→1 collapse to animate). A FRESH mount cannot strand: no churn tick interrupts
+  //    it, and the board target is the STABLE raw-progress text (see rawBoardText in ParallaxStudio) so
+  //    `char` never changes mid-roll to remount the cell.
   const rolling = settleRollMs != null;
   const settleToBlank = char === ' ';
   if (spinning) {

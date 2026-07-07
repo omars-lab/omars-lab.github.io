@@ -366,6 +366,11 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     so every target is a bounded forward roll (A,B,C..) that arrives with its neighbours. A non-blank
     start glyph makes targets before it in the deck wrap through the whole punctuation tail (wildly
     different arrival times, ugly). pin/inplace/horizontal keep the instant SNAP (`settleRollMs` unset).
+    (e) BLANK-target cells do NOT churn (they stay blank while spinning) and SNAP on settle. The board
+    pads short text to a fixed 3-row grid; if the 2 padding rows churned, all rows would fill and then
+    COLLAPSE 3-rows→1 in one frame on stop (a jarring jump). Keeping padding cells blank throughout means
+    the board is always a SINGLE centered row and the churn→title settle is an in-row flap, not a
+    row-count jump. Guarded by the `[pickets] the board churns as a SINGLE row` e2e.
 
 ## Verify any change
 
