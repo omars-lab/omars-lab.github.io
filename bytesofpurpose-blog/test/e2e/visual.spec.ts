@@ -118,10 +118,13 @@ test.describe('Homepage hero — visual regression', () => {
  * deterministic without reduced motion. These catch a LOOK regression a numeric test can't: e.g. the
  * whole door washing to white strips, the reveal clipping wrong, or the strips misaligning.
  */
+// p values live in the PICKETS engine mapping (PICKET_TRANSITION_FRACTION 0.7, 8 stops):
+// p = (stop + within)/8, crossing = within in [0.3, 1], t = (within - 0.3)/0.7. If the pickets
+// transition fraction changes, RE-DERIVE these three p values and regenerate the baselines.
 const PICKET_STATES = [
-  { name: 'settled', p: '0.156', note: 'scene 0 fully settled — NO wave' },
-  { name: 'peak', p: '0.094', note: 'the wave at its peak — the door lit by the strip bell' },
-  { name: 'reveal', p: '0.108', note: 'past the peak — the new scene wiping in under dimming strips' },
+  { name: 'settled', p: '0.144', note: 'scene 0 fully settled (stop 1, within 0.15) — NO wave' },
+  { name: 'peak', p: '0.081', note: 'the wave at its peak (t=0.5) — the door lit by the strip bell' },
+  { name: 'reveal', p: '0.101', note: 'past the peak (t≈0.73) — the new scene wiping in under dimming strips' },
 ];
 
 async function openPickets(

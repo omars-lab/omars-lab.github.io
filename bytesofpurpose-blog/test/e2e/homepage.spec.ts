@@ -569,9 +569,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
   // Each crossing plays a staggered per-strip flash wave that reveals the next scene strip-by-strip.
   // It is a PURE function of the transition phase, so a mid-crossing stop is a STABLE picture (NO snap)
   // and scrolling back reverses it. These tests scrub with window.scrollTo + a dispatched scroll event
-  // (the smoothing hook lerps toward the raw progress), then read the live picket + reveal state.
+  // (the CATCH-UP renderer chases the raw progress; see useCatchUpProgress), then read the live state.
 
-  // Scrub to a given progress p in [0,1] of the pinned runway and let the smoothing settle.
+  // Scrub to a given progress p in [0,1] of the pinned runway and let the catch-up converge.
   const scrubTo = async (page: Page, p: number) =>
     page.evaluate(async (p) => {
       const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
@@ -816,9 +816,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
   test('[pickets] ?hero-progress=P freezes an exact frame (a mid-wave crossing, deterministically)', async ({
     page,
   }) => {
-    // hero-progress pins the RAW engine progress, bypassing scroll + smoothing, so a specific pickets
-    // crossing PHASE is frozen (what hero-scene=N, settled-only, cannot do). p≈0.094 is the door→scene0
-    // peak: the wave is lit and the board rests on a scramble (not the title).
+    // hero-progress pins the RAW engine progress, bypassing scroll + the catch-up, so a specific pickets
+    // crossing PHASE is frozen (what hero-scene=N, settled-only, cannot do). p≈0.094 is mid-wave in the
+    // door→scene0 crossing (t≈0.65): the wave is lit and the board rests on a scramble (not the title).
     await page.goto(heroUrl('pickets') + '&hero-progress=0.094', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1200); // let the (one-time) board settle roll finish
@@ -835,6 +835,30 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     // the board rests on a scramble mid-crossing, NOT the destination title
     const board = await boardCollapsed(page);
     expect(board.includes('CRAFT'), 'mid-crossing board is a scramble, not the title').toBe(false);
+  });
+
+  test('[pickets] each crossing spans a REAL scroll runway (a nudge cannot teleport a scene)', async ({
+    page,
+  }) => {
+    // REGRESSION: with the shared pin geometry (0.85vh/scene, half-slice crossings) one crossing was
+    // ~250px of scroll — a single inertial trackpad nudge glides further than that BETWEEN two animation
+    // frames, so the wave teleported past whole crossings ("skips pickets, jumps to the next scene").
+    // Pickets now uses its own taller spacer + a larger transition share; this gate pins the CONTRACT:
+    // one crossing must span at least ~60% of a viewport of scroll.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const runway = await page.evaluate(() => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const vh = window.innerHeight;
+      const scrollable = spacer.getBoundingClientRect().height - vh;
+      const stops = 8; // 7 scenes + the door
+      const transitionFraction = 0.7; // the pickets engine share (PICKET_TRANSITION_FRACTION)
+      return { vh, crossingPx: (scrollable / stops) * transitionFraction };
+    });
+    expect(
+      runway.crossingPx,
+      `one crossing (${Math.round(runway.crossingPx)}px) must span >=60% of a viewport (${runway.vh}px) so a nudge scrubs it, not skips it`,
+    ).toBeGreaterThanOrEqual(0.6 * runway.vh);
   });
 
   test('[pickets] the board does NOT layer-promote every glyph (scroll-lag regression guard)', async ({
@@ -885,10 +909,10 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
   test('[pickets] the wave tracks the scroll LIVE (lights up DURING scroll, not only after stop)', async ({
     page,
   }) => {
-    // REGRESSION: the wave used to be driven off a SMOOTHED progress (exponential ease, ~350ms trail), so
-    // it only "played" AFTER you stopped scrolling — the opposite of a scrubbable wave. It now reads the
-    // RAW scroll, so a strip is lit at the SAME scroll position the crossing is at. We step through a
-    // crossing WITHOUT any settle wait and assert the wave is lit at mid-crossing steps (not just at rest).
+    // REGRESSION: the wave once trailed a slow smoothing (~350ms), so it only "played" AFTER you stopped
+    // scrolling. It now renders from the CATCH-UP display progress (70ms ease), which moves DURING the
+    // scroll, so a strip is lit while the wheel is still turning. We step through a crossing WITHOUT any
+    // settle wait and assert the wave is lit at mid-crossing steps (not just at rest).
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
@@ -924,8 +948,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     page,
   }) => {
     // REGRESSION: a smoothing rAF loop used to bump a second React tick every frame, so ParallaxStudio +
-    // StudioFacade re-rendered ~2× per scroll frame (~140 renders/s), the pickets scroll-lag. The wave now
-    // renders off the raw scroll only. This counts React renders during a fixed scroll (via a render probe
+    // StudioFacade re-rendered ~2× per scroll frame (~140 renders/s), the pickets scroll-lag. The catch-up
+    // renderer now drives the ONE render whose props change (the raw tick's render is memoized to the same
+    // scene object, so it writes no styles). This counts React renders during a fixed scroll (via a render probe
     // that MutationObserves the picket container's style writes as a render proxy) and asserts renders are
     // roughly one-per-scroll-frame, not double. Machine-independent (a ratio, not a wall-clock budget).
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });

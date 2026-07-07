@@ -613,6 +613,12 @@ type SceneState = {
 // scene"). 0.5 ⇒ the back half of every slice is the crossing to the next scene. Larger = longer, more
 // gradual transitions; smaller = the scene holds longer then a quicker cross.
 const TRANSITION_FRACTION = 0.5;
+// PICKETS gives the crossing MORE of each slice (with a ~30% settled dwell so each scene still gets a
+// legible rest). Combined with the taller pickets spacer (PICKET_SCENE_VH), this is the wave's scroll
+// RUNWAY: at 0.5 x 0.85vh-per-scene a whole crossing was ~250px of scroll, so one trackpad nudge
+// teleported past it (skipped pickets, jumped a scene). 0.7 x 1.5vh-per-scene makes a crossing ~650px,
+// long enough that a slow scroll really scrubs it picket by picket.
+const PICKET_TRANSITION_FRACTION = 0.7;
 
 // ── ONE progress-driven model, TWO interchangeable drivers ───────────────────────────────────────
 // Every animatable hero piece (the flash bloom, the door↔scene swap, the board flip) is a pure
@@ -622,8 +628,15 @@ const TRANSITION_FRACTION = 0.5;
 //   • TIME driver    (useTimerScene):  p ramps on a rAF clock — self-running (the non-parallax hero).
 // So the SAME visuals work "on scroll OR on animation" with no per-component special-casing.
 
-/** PURE: map a single progress p∈[0,1] (across `count` scenes) to the full visual SceneState. */
-function deriveSceneState(p: number, count: number, reduce: boolean): SceneState {
+/** PURE: map a single progress p∈[0,1] (across `count` scenes) to the full visual SceneState.
+ * `transitionFraction` is the share of each slice spent crossing (pin keeps the 0.5 default;
+ * pickets passes PICKET_TRANSITION_FRACTION for its longer runway). */
+function deriveSceneState(
+  p: number,
+  count: number,
+  reduce: boolean,
+  transitionFraction: number = TRANSITION_FRACTION,
+): SceneState {
   const clamped = Math.min(0.999999, Math.max(0, p));
   // The journey has count+1 STOPS: stop 0 is the DOOR (board = WELCOME), then stops 1..count are the
   // scenes. So at rest before any scroll you see the carved door saying WELCOME; the first crossing is
@@ -641,7 +654,7 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
   const boardTextOf = (stop: number) =>
     isDoor(stop) ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[sceneOf(stop)].title);
 
-  const settledFrac = 1 - TRANSITION_FRACTION;
+  const settledFrac = 1 - transitionFraction;
   if (within < settledFrac || s === nextStop) {
     // SETTLED on this stop.
     const sc = sceneOf(s);
@@ -657,8 +670,8 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
       transition: null, // settled: no crossing in flight
     };
   }
-  // TRANSITION zone stop s → nextStop. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
-  const t = (within - settledFrac) / TRANSITION_FRACTION;
+  // TRANSITION zone stop s → nextStop. t ramps 0..1 across the back transitionFraction of the slice.
+  const t = (within - settledFrac) / transitionFraction;
   const flash = reduce ? 0 : Math.sin(Math.PI * t); // smooth 0→1→0 hump, peak at t=0.5
   const fromDoor = isDoor(s);
   const toScene = sceneOf(nextStop);
@@ -759,6 +772,7 @@ function useScrollScene(
   progressRef: React.MutableRefObject<number>,
   count: number,
   scrollTick: number,
+  transitionFraction: number = TRANSITION_FRACTION,
 ): SceneState {
   const reduce = prefersReducedMotion();
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
@@ -766,13 +780,13 @@ function useScrollScene(
   return useMemo<SceneState>(() => {
     // ?hero-progress=P wins: derive from that EXACT progress, so a specific crossing PHASE (mid-wave)
     // is frozen deterministically — the picket renderer sees the real `transition` for that p.
-    if (forcedProg != null) return deriveSceneState(forcedProg, count, reduce);
+    if (forcedProg != null) return deriveSceneState(forcedProg, count, reduce, transitionFraction);
     if (forced != null) {
       return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFromText: stripEmoji(CHOOSER_CARDS[forced].title), boardToText: stripEmoji(CHOOSER_CARDS[forced].title), transition: null};
     }
-    return deriveSceneState(progressRef.current, count, reduce);
+    return deriveSceneState(progressRef.current, count, reduce, transitionFraction);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollTick, count, reduce, forced, forcedProg]);
+  }, [scrollTick, count, reduce, forced, forcedProg, transitionFraction]);
 }
 
 /**
@@ -939,6 +953,93 @@ function useScrollProgress(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return {tick, scrolling};
+}
+
+/**
+ * CATCH-UP display progress (pickets only): eases a DISPLAYED progress toward the raw scroll progress
+ * so the renderer sweeps THROUGH every intermediate state instead of teleporting. Scroll input is
+ * quantized and inertial: a trackpad flick moves hundreds of px BETWEEN two animation frames, so a
+ * pure f(rawScroll) renderer skips pickets and whole crossings no matter how fast it renders. This
+ * hook closes that gap with a short exponential ease (TAU below) PLUS a minimum close-rate so a huge
+ * flick still lands within ~CATCHUP_MAX_S seconds (it sweeps fast, it never crawls).
+ *
+ * The TWO prior failure modes this threads between (both shipped, both wrong):
+ *   • long smoothing (tau 0.12s on 400ms+ thrash frames) → the wave TRAILED: "moves only after I stop"
+ *   • raw tracking → the wave TELEPORTED: "a nudge jumps to the next scene"
+ * Short tau + min close-rate + healthy frame times = liquid AND live.
+ *
+ * Rules: NEVER writes to scroll (read-only display easing, no scroll-jack). Disabled (raw passthrough)
+ * for reduced motion and for the ?hero-progress freeze seam. The loop is self-driving until converged,
+ * so the wave keeps sweeping (and the board keeps churning, via `active`) briefly after fingers lift.
+ */
+const CATCHUP_TAU_S = 0.07; // exponential time constant: ~70ms lag feels liquid, not laggy
+const CATCHUP_MAX_S = 0.3; // a small-to-medium gap fully closes within about this long (rate floor)
+// Speed LIMIT on the displayed progress (progress-units/sec; the whole journey is 1.0). Without it a
+// multi-crossing flick still closes in CATCHUP_MAX_S, sweeping so fast that only 2-3 frames of wave
+// render: visually a teleport again. 0.5/s sweeps one crossing (~0.0875) in ~175ms — fast, but every
+// picket and scene visibly passes (GSAP's numeric `scrub` is this same idea, typically 0.5s).
+const CATCHUP_MAX_RATE = 0.5;
+const CATCHUP_EPS = 0.0004; // snap-exact + stop the loop when within this of the raw progress
+function useCatchUpProgress(
+  progressRef: React.MutableRefObject<number>,
+  tick: number,
+  enabled: boolean,
+): {ref: React.MutableRefObject<number>; tick: number; active: boolean} {
+  const displayRef = useRef(progressRef.current);
+  const [displayTick, setDisplayTick] = useState(0);
+  const [active, setActive] = useState(false);
+  const rafRef = useRef(0);
+  const runningRef = useRef(false);
+  const lastTsRef = useRef(0);
+
+  useEffect(() => {
+    if (!enabled) return undefined;
+    if (runningRef.current) return undefined; // the loop is already chasing; it reads the ref live
+    const gap0 = progressRef.current - displayRef.current;
+    if (Math.abs(gap0) < CATCHUP_EPS) {
+      displayRef.current = progressRef.current; // trivially in sync (e.g. mount)
+      return undefined;
+    }
+    runningRef.current = true;
+    setActive(true);
+    lastTsRef.current = performance.now();
+    const step = (now: number) => {
+      const dt = Math.max(0.001, (now - lastTsRef.current) / 1000);
+      lastTsRef.current = now;
+      const gap = progressRef.current - displayRef.current;
+      if (Math.abs(gap) < CATCHUP_EPS) {
+        displayRef.current = progressRef.current;
+        runningRef.current = false;
+        setActive(false);
+        setDisplayTick((t) => (t + 1) % 1_000_000);
+        return;
+      }
+      // exponential ease toward the raw progress, floored by the min close-rate so medium gaps close
+      // within ~CATCHUP_MAX_S, then SPEED-CAPPED so a huge flick still SWEEPS visibly (never teleports)
+      const ease = 1 - Math.exp(-dt / CATCHUP_TAU_S);
+      const floor = Math.min(1, dt / CATCHUP_MAX_S);
+      const desired = gap * Math.max(ease, floor);
+      const capped = Math.sign(desired) * Math.min(Math.abs(desired), CATCHUP_MAX_RATE * dt);
+      displayRef.current += capped;
+      setDisplayTick((t) => (t + 1) % 1_000_000);
+      rafRef.current = window.requestAnimationFrame(step);
+    };
+    rafRef.current = window.requestAnimationFrame(step);
+    return undefined; // the loop self-terminates on convergence; unmount cleanup is below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tick, enabled]);
+
+  // Unmount: stop any in-flight loop.
+  useEffect(
+    () => () => {
+      window.cancelAnimationFrame(rafRef.current);
+      runningRef.current = false;
+    },
+    [],
+  );
+
+  if (!enabled) return {ref: progressRef, tick, active: false};
+  return {ref: displayRef, tick: displayTick, active};
 }
 
 /* FESTOON STRING LIGHTS: the scene-progress indicator. A swag of bulbs strung under the eave, one per
@@ -1389,6 +1490,14 @@ function useNavbarSceneHighlight(
 // never trapped; the listener is passive. prefers-reduced-motion is handled inside the engine.
 type ScrollModel = 'pin' | 'inplace' | 'horizontal' | 'pickets';
 const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (spacer = count * this)
+// PICKETS: a much taller spacer, so each crossing spans real scroll distance (~650px, vs ~250px at
+// 0.85). The wave is a pure function of scroll position, so its scrub fidelity IS its runway: too
+// short and one inertial trackpad nudge jumps a whole crossing (skipped pickets, teleported scenes).
+const PICKET_SCENE_VH = 1.5;
+// Per-model engine knobs, picked once: the spacer height factor + the slice share spent crossing.
+const sceneVhOf = (model: ScrollModel) => (model === 'pickets' ? PICKET_SCENE_VH : SCENE_VH);
+const transitionFractionOf = (model: ScrollModel) =>
+  model === 'pickets' ? PICKET_TRANSITION_FRACTION : TRANSITION_FRACTION;
 
 function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JSX.Element {
   heroPerfBump('parallaxRenders');
@@ -1428,14 +1537,34 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     return Math.min(1, Math.max(0, -rect.top / scrollable));
   }, [model]);
 
-  // PICKETS tracks the RAW scroll directly (like pin's flash), NOT a smoothed value. The old smoothing
-  // (exponential ease, TAU 0.12s) trailed the scroll by ~350ms, so the wave only appeared to "play" AFTER
-  // you stopped — the opposite of what a scrubbable wave should do. Reading raw progress means the wave
-  // scrubs live WITH the wheel. (Reduced motion is handled inside the engine.)
+  // PICKETS renders from a CATCH-UP display progress (useCatchUpProgress): the raw scroll is the
+  // INPUT, but the displayed frame chases it through every intermediate state, so a flick sweeps
+  // through each picket and scene instead of teleporting (see the hook's comment for the two failure
+  // modes this threads between). Other models read the raw progress directly, as before.
   const reduce = useReducedMotion();
+  const tf = transitionFractionOf(model);
   const {tick, scrolling} = useScrollProgress(compute, progressRef, directionRef);
-  const scene = useScrollScene(progressRef, count, tick);
+  const catchUp = useCatchUpProgress(progressRef, tick, model === 'pickets' && !reduce);
+  const scene = useScrollScene(catchUp.ref, count, catchUp.tick, tf);
   const {active} = scene;
+
+  // PERF DEBUG: the engine's scroll GEOMETRY in px, once at mount. crossing = the scroll distance one
+  // picket wave spans; picket = the distance one strip's own rise-and-fall spans. If these are small
+  // (~250px crossing), a single trackpad nudge jumps a whole crossing and the wave cannot read.
+  useEffect(() => {
+    if (!HERO_PERF.on || !spacerRef.current) return;
+    const rect = spacerRef.current.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    const scrollable = Math.max(0, rect.height - vh);
+    const slice = scrollable / (count + 1);
+    const crossing = slice * tf;
+    heroPerfEvent(
+      'GEOMETRY',
+      `scrollable=${Math.round(scrollable)}px slice=${Math.round(slice)}px ` +
+        `crossing=${Math.round(crossing)}px picket=${Math.round(crossing / (1 + PICKET_SPREAD))}px`,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // PERF DEBUG: log the picket lifecycle EDGES (crossing enter/exit, scene commit) with timestamps, so
   // the console shows WHEN the lag hits relative to what the wave is doing. No-op when ?hero-perf is off.
@@ -1456,19 +1585,18 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     }
   }
 
-  // PICKETS BOARD TARGET from RAW progress (not the smoothed value): the board's resting text must be
-  // STABLE the instant scrolling stops, but the SMOOTHED progress keeps easing for ~120ms after a stop,
-  // which flips `scene.transition` (scramble↔title) DURING the ~750ms settle roll and strands the flap
-  // cells (a roll cell remounted mid-fold when its target char changes). The RAW progress stabilizes
-  // immediately at the stop position, so deriving the board target from it gives the settle a FIXED
-  // destination. Recomputed on each raw `tick`; only used by the pickets board (see StudioFacade).
-  // The board's resting text, recomputed each render off the raw progress ref (now the render driver).
+  // PICKETS BOARD TARGET from RAW progress (deliberately NOT the catch-up display progress): the
+  // board's resting text must be STABLE the instant scrolling stops, but the display progress keeps
+  // easing briefly after a stop, which would flip `scene.transition` (scramble↔title) DURING the
+  // ~750ms settle roll and strand the flap cells (a roll cell remounted mid-fold when its target char
+  // changes). The RAW progress stabilizes immediately at the stop position, so deriving the board
+  // target from it gives the settle a FIXED destination. Recomputed on each raw `tick`.
   const rawBoardText = useMemo(() => {
     if (requestedModel !== 'pickets') return undefined;
-    const s = deriveSceneState(progressRef.current, count, reduce);
+    const s = deriveSceneState(progressRef.current, count, reduce, tf);
     return s.transition ? picketBoardScramble(s.transition) : boardTextForScene(s.mode, s.shown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tick, count, reduce, requestedModel]);
+  }, [tick, count, reduce, requestedModel, tf]);
 
   useNavbarSceneHighlight(active, gateRef);
 
@@ -1592,7 +1720,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
       const scrollable = rect.height - vh;
       if (scrollable <= 0) return;
       const stops = count + 1;
-      const settledFrac = 1 - TRANSITION_FRACTION;
+      const settledFrac = 1 - tf; // the MODEL's transition fraction (pickets crossings are longer)
       const targetP = (i + 1 + settledFrac / 2) / stops; // scene i => stop i+1, its settled centre
       const spacerTopPage = rect.top + window.scrollY;
       const targetY = Math.round(spacerTopPage + targetP * scrollable);
@@ -1618,7 +1746,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
       };
       window.requestAnimationFrame(step);
     },
-    [count, pinned],
+    [count, pinned, tf],
   );
 
   const gate = (
@@ -1672,7 +1800,9 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
       <StudioFacade
         {...scene}
         spinning={
-          picketed ? scrolling : scrolling && scene.boardFromText !== scene.boardToText
+          // pickets: churn while the finger scrolls OR while the catch-up wave is still sweeping
+          // (the board should not settle while the door is visibly mid-wave)
+          picketed ? scrolling || catchUp.active : scrolling && scene.boardFromText !== scene.boardToText
         }
         onJump={pinned ? jumpToScene : undefined}
         picketed={picketed}
@@ -1690,13 +1820,15 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     );
   }
 
-  // pin / horizontal: a TALL spacer (count * SCENE_VH viewport-heights) holds a sticky hero. Scrolling
-  // the spacer drives the scenes; when the spacer ends the hero releases and the page scrolls on.
+  // pin / horizontal / pickets: a TALL spacer (count * per-model viewport-heights) holds a sticky
+  // hero. Scrolling the spacer drives the scenes; when the spacer ends the hero releases and the page
+  // scrolls on. Pickets uses a much taller spacer (PICKET_SCENE_VH): the wave's scrub fidelity is its
+  // scroll runway.
   return (
     <div
       ref={spacerRef}
       className={styles.parallaxSpacer}
-      style={{height: `${Math.round(count * SCENE_VH * 100)}vh`}}>
+      style={{height: `${Math.round(count * sceneVhOf(model) * 100)}vh`}}>
       <div className={styles.parallaxStick}>{gate}</div>
     </div>
   );

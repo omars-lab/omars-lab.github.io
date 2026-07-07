@@ -76,7 +76,7 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `picketStates` | `src/pages/index.tsx` | PURE: per-strip `{flash, revealed}` + the reveal `revealRight%` for a crossing at phase `t` (`PICKET_COUNT`=9, `PICKET_SPREAD`=0.5). The staggered wave; `revealed` is monotone so the new scene is ONE contiguous-left clip, not N slices |
 | `StudioFacade` | `src/pages/index.tsx` | the presentational Lebanese central-hall house (roof + body + 3 arches + hanging board + door↔scene flash), driven by props; rendered by BOTH the timer `ChooserStudio` and `ParallaxStudio`. In `picketed` mode, mid-crossing it holds FROM fully lit + reveals TO under a strip clip + renders `StudioPickets`; base-URLs all scene/door imgs ONCE at the top so hook count is constant |
 | `StudioPickets` | `src/pages/index.tsx` | the picket-wave OVERLAY: `PICKET_COUNT` strips, each with an inline per-strip opacity (its point on the wave), masked to the arch + isolated like `.studioFlash`. Replaces the single flash in the pickets model |
-| `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 4 models (`pin`/`inplace`/`horizontal`/`pickets`); pin/horizontal/pickets use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel). `pickets` uses pin geometry but SKIPS the snap (every rest is stable) and drives the wave from the RAW scroll (tracks live, no smoothing lag) |
+| `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 4 models (`pin`/`inplace`/`horizontal`/`pickets`); pin/horizontal/pickets use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel). `pickets` uses pin-style geometry with its OWN taller runway (`PICKET_SCENE_VH`), SKIPS the snap (every rest is stable) and renders from a catch-up display progress (`useCatchUpProgress`) chasing the raw scroll |
 | `useNavbarSceneHighlight` | `src/pages/index.tsx` | lights the top-navbar `<a>` matching the active scene's destination; only while the hero is on-screen (IntersectionObserver), reverts on leave |
 | `StudioFestoon` | `src/pages/index.tsx` | the festoon string-light PROGRESS indicator: one bulb per scene, lit L-to-R by `active`. With `onJump` (scroll models) each bulb is a `<button>` that scrolls to that scene; without it (timer house) they are read-only spans. |
 | `jumpToScene` (in `ParallaxStudio`) | `src/pages/index.tsx` | scroll to scene `i`'s settled centre (the festoon bulbs call it). Reuses the snap's rAF ease + a jump-generation token so a new jump supersedes an in-flight one; reduced-motion jumps instantly. |
@@ -159,14 +159,25 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
   (how far the right strips lag the left; 0 = all flash together = the single flash, higher = a longer
   sweep) are JS constants next to `deriveSceneState`. They are NOT Hero-Tuner CSS vars (the math runs in
   JS), so change them in code, not the panel.
-- **The wave tracks the RAW scroll (no smoothing).** The wave is driven directly off `progressRef` /
-  the raw scroll `tick`, exactly like pin's flash, so a strip is lit at the SAME scroll position the
-  crossing is at. An earlier version smoothed the progress (exponential ease, ~0.35s trail) for a
-  "liquid" feel, but that made the wave TRAIL the scroll so it only appeared to play AFTER you stopped,
-  AND it double-rendered the facade every frame (~140 renders/s = scroll lag). Do NOT reintroduce a
-  smoothing lerp on the render path; if you want a softer feel, tune it WITHOUT trailing the scroll or
-  adding a per-frame React re-render. Guarded by `[pickets] the wave tracks the scroll LIVE` +
-  `[pickets] scrolling does not trigger a render STORM`.
+- **The wave renders from a CATCH-UP display progress (`useCatchUpProgress`), between TWO proven
+  failure modes.** Scroll INPUT is quantized + inertial: a trackpad flick moves hundreds of px BETWEEN
+  two animation frames, so a pure `f(rawScroll)` renderer TELEPORTS (skips pickets, a nudge jumps a
+  scene) no matter how fast it renders. But a long smoothing (an early version: ~0.35s trail on
+  thrashing frames) made the wave TRAIL, playing only AFTER you stopped. The answer threads between:
+  a displayed progress CHASES the raw scroll with a short ease (`CATCHUP_TAU_S` 70ms) + a close-rate
+  floor (`CATCHUP_MAX_S` 300ms) + a SPEED CAP (`CATCHUP_MAX_RATE` 0.5 progress/s) so a multi-crossing
+  flick visibly sweeps every picket and scene in order instead of closing arbitrarily fast (this is
+  GSAP ScrollTrigger's numeric `scrub`, tuned snappy). Rules: it NEVER writes scroll; raw passthrough
+  under reduced motion + the `?hero-progress` freeze; the board settle TARGET stays derived from RAW
+  progress (a moving target strands the flap roll); `spinning` = `scrolling || catchUp.active` so the
+  board churns while the wave still sweeps. Guarded by `[pickets] the wave tracks the scroll LIVE`,
+  `... render STORM`, and hero-perf's `inertial FLICK sweeps THROUGH` + `rapid-succession flicks`.
+- **The wave's scrub fidelity IS its scroll runway.** Pickets has its OWN spacer height
+  (`PICKET_SCENE_VH` 1.5 vs pin's 0.85) and its own crossing share (`PICKET_TRANSITION_FRACTION` 0.7 vs
+  0.5; `deriveSceneState` takes it as a param) so one crossing spans ~650px of scroll instead of ~250px.
+  Shrink either and a single trackpad nudge out-scrolls a whole crossing again. Guarded by
+  `[pickets] each crossing spans a REAL scroll runway`. `?hero-perf=1` logs the live px per
+  crossing/picket in its GEOMETRY line.
 - **The reveal is ONE clip, not N slices:** because `revealed` is monotone in strip index, the new scene
   is always a contiguous LEFT block, so the picket reveal layer is a single `.studioDoorScene` clipped by
   `clip-path: inset(0 revealRight% 0 0)`. Keep the FROM layer (door or the scene you are leaving) fully lit
@@ -177,9 +188,10 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
 - **Freeze a specific frame with `?hero-progress=P`** (localhost only): pins the engine's raw progress
   `p in [0,1]` directly, bypassing scroll, so you can park on an EXACT pickets crossing PHASE
   (a mid-wave frame) or a settled scene — deterministic for manual QA + e2e. `?hero-scene=N` only pins
-  SETTLED scenes; `hero-progress` can freeze a transition. E.g. `&hero-progress=0.094` ≈ the door→scene-0
-  peak bell; `&hero-progress=0.156` ≈ scene 0 settled. Owner `forcedProgress` (index.tsx), registered in
-  the URL-param registry.
+  SETTLED scenes; `hero-progress` can freeze a transition. Under the pickets mapping
+  (`PICKET_TRANSITION_FRACTION` 0.7): `&hero-progress=0.081` ≈ the door→scene-0 peak;
+  `&hero-progress=0.144` ≈ scene 0 settled (p = (stop + within)/8). Owner `forcedProgress` (index.tsx),
+  registered in the URL-param registry; the catch-up hook passes it through untouched.
 
 ## ⚠️ Gotchas (the things that bite — don't re-break these)
 
@@ -379,16 +391,30 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     every glyph (that lags scroll).** During a flap, each leaf clips a full-height `.glyph` and rotates
     it (`rotateX`). Firefox RE-RASTERIZES the clipped glyph every frame of the fold and its sub-pixel
     vertical position DRIFTS, so letters visibly drop ~8px then snap back (Chrome composites it right).
-    The fix is `will-change: transform` on the MOVING leaves `.foldDown`/`.foldUp` only
-    (SplitFlap/styles.module.css) — a handful exist at a time, only while flipping. **Do NOT put the
-    promotion on `.glyph`** (or `.leaf`, or `.cell`): the board has ~144 static glyph spans, and
-    promoting all of them explodes the compositor layer count and makes SCROLL LAG badly on real
-    hardware. Two subtleties: (a) it's a PAINT artifact, so `getBoundingClientRect` reports the correct
-    layout — verify the FIX by screenshotting the board mid-churn IN FIREFOX (the `dev` Playwright project
-    is Firefox); (b) `translateZ(0)` computes to a 2D `matrix(1,0,0,1,0,0)` in Firefox, so a computed-
-    style check for `translateZ` misses it — the regression guard checks `transform !== 'none'` on a
-    RESTING (non-flipping) glyph instead. Guarded by `[pickets] the board does NOT layer-promote every
-    glyph` (a frame-timing test does NOT catch this — a fast CI box composites 144 layers fine).
+    The fix is `will-change: transform` on the MOVING leaves `.foldDown`/`.foldUp` only, and ONLY IN
+    FIREFOX (scoped via `@supports (-moz-appearance: none)` in SplitFlap/styles.module.css). Chromium
+    never had the drift, and a perf trace proved the standing promotion HURT it: while the pickets
+    board churns during scroll, every churn-tick glyph change invalidated a promoted layer, storming
+    the compositor commit (100ms+ `Commit` events). **Do NOT put the promotion on `.glyph`** (or
+    `.leaf`, or `.cell`): the board has ~144 static glyph spans, and promoting all of them explodes
+    the layer count in EVERY browser. Two subtleties: (a) it's a PAINT artifact, so
+    `getBoundingClientRect` reports the correct layout — verify the FIX by screenshotting the board
+    mid-churn IN FIREFOX (the `dev` Playwright project is Firefox); (b) `translateZ(0)` computes to a
+    2D `matrix(1,0,0,1,0,0)` in Firefox, so a computed-style check for `translateZ` misses it — the
+    regression guard checks `transform !== 'none'` on a RESTING (non-flipping) glyph instead. Guarded
+    by `[pickets] the board does NOT layer-promote every glyph` (a frame-timing test does NOT catch
+    this — a fast CI box composites 144 layers fine).
+
+26. **The board CHURN must flip DIRECT, one fold per tick, sized to finish inside the tick.** A churn
+    tick retargets the spinning cell to a RANDOM glyph; letting `Cell` deck-roll toward it (its normal
+    mode) spawns dozens of timer + state updates per second per cell, and a fold LONGER than the tick
+    period never completes, leaving every cell stuck mid-flip mutating text inside the moving leaves —
+    combined across ~20 churning cells this was a main-thread storm that coalesced a whole trackpad
+    gesture's scroll events into ONE delivery (the "multi-second hitch" logs). `SpinningCell` passes
+    `direct` + `settleMs ≈ periodMs - 20` for churn ticks (index.tsx of SplitFlap); the true deck roll
+    remains for real text changes and the pickets settle roll. Same-site TABS SHARE a renderer process:
+    leftover hero tabs (e.g. an old `?hero-perf=1` tab) churn on the SAME main thread as the page you
+    are testing — close them before judging scroll perf.
 
 ## Verify any change
 

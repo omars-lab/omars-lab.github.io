@@ -75,13 +75,14 @@ function SpinningCell({
 }) {
   const [display, setDisplay] = useState(char);
   const idxRef = useRef(seed % SPIN_LETTERS.length);
+  // Per-cell churn cadence, derived purely from the seed so the render below can size the fold to it.
+  const periodMs = 90 + (seed % 7) * 15; // 90..180ms per flip, varied per cell
 
   useEffect(() => {
     // Blank-target cells never churn: they stay blank so the padding rows don't fill (no 3-rows→1
     // collapse on settle). Only cells whose target is a real glyph churn.
     if (spinning && char !== ' ') {
       const stride = 1 + (seed % 5);
-      const periodMs = 60 + (seed % 7) * 12; // 60..132ms per flip, varied per cell
       const id = window.setInterval(() => {
         idxRef.current = (idxRef.current + stride) % SPIN_LETTERS.length;
         setDisplay(SPIN_LETTERS[idxRef.current]);
@@ -91,7 +92,7 @@ function SpinningCell({
     // SETTLE (or a blank cell while spinning): land on the target character.
     setDisplay(char);
     return undefined;
-  }, [spinning, char, seed]);
+  }, [spinning, char, seed, periodMs]);
 
   // While SPINNING, one churning Cell (key 'spin'). On SETTLE we ALWAYS mount a FRESH Cell so a mid-churn
   // fold can never carry over and strand the two faces one glyph apart. Two settle strategies:
@@ -108,7 +109,13 @@ function SpinningCell({
   const rolling = settleRollMs != null;
   const settleToBlank = char === ' ';
   if (spinning) {
-    return <Cell key="spin" char={display} settleMs={500} />;
+    // CHURN ticks flip DIRECT (one fold straight to the random glyph), and the fold is sized to
+    // FINISH just inside this cell's own tick period. Both matter for scroll perf (trace-proven):
+    // without `direct` every tick starts a multi-step DECK ROLL toward a random target (dozens of
+    // timer + state updates per second per cell), and a fold longer than the tick never completes,
+    // leaving every cell stuck mid-flip with its glyph text mutating inside the moving leaves. That
+    // combination was the main-thread storm that made pickets scrolling hitch for whole gestures.
+    return <Cell key="spin" char={display} settleMs={Math.max(40, periodMs - 20)} direct />;
   }
   if (rolling && !settleToBlank) {
     return <Cell key={`roll:${char}`} char={char} from={ROLL_FROM} settleMs={settleRollMs} />;
