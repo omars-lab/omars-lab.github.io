@@ -1,161 +1,213 @@
-# Scroll-synced hero: fix the pin parallax so door + Vestaboard travel together
+# `pickets` scroll mode: a scrubbable picket-wave transition (pin-with-pickets)
 
 ## Context
 
-The scroll-driven parallax hero already exists and is live in the code (PR #110): `ParallaxStudio` +
-the pure `deriveSceneState` engine in `bytesofpurpose-blog/src/pages/index.tsx`, reachable via
-`?ab-homepage-hero-scroll=pin|inplace|horizontal`. The default `/` renders the timer house. The user
-experienced the parallax as "failed". Live probing on :3000 (chrome-devtools, pin model) confirmed
-three real defects plus one layout gap:
+The pin model transitions scenes with ONE full-door flash: `flash = sin(π·t)` and the image swaps
+under the peak at `t = 0.5`. It works, but a stop mid-transition needs the snap to tidy it, and the
+transition is a single event you pass through rather than something scroll *travels*.
 
-1. **Yank-back trap (P0).** Flick to the bottom of the page, stop, and ~300ms later the page
-   auto-scrolls itself ~1900px back up into the hero (observed: y=5758 → y=3885, every time).
-   Root cause: the snap effect (index.tsx:1030-1070) clamps progress to 1 once you are past the
-   runway, and `within ≈ 0.999 > settledFrac` always reads as "stopped mid-transition", so it fires
-   a glide back to the last scene no matter how far below the hero you are. Everything below the
-   hero is a no-rest zone. (The e2e "releases" test only asserts the bottom is momentarily
-   reachable, so it never caught this.)
-2. **Backward snap (P1).** Stopping mid-transition always rewinds to the stop you were LEAVING:
-   `Math.round(p * stops - 0.5)` can never round forward (observed: 1976 → 2176 scrolled, stop,
-   yanked back to 1891) — even when you stopped past the flash peak where the door already shows
-   the NEXT scene. The snap contradicts what the visuals committed to.
-3. **Board is noise while scrolling (the "sync" ask).** `spinning={scrolling}` (index.tsx:1134)
-   churns random glyphs during ANY scroll activity — including the snap's own glide — so the board
-   only ever shows a scene title when everything is fully stopped. Door and board are never in sync
-   mid-journey.
-4. **Fold fit.** At scroll 0 the title block (~270px) sits above the pinned viewport, so the house
-   + WELCOME board start half below the fold (`.heroBanner[data-parallax-pinned]` today only trims
-   `padding-top` to 1rem).
+The user wants a new mode, `pickets` ("pin-with-pickets"): the door is divided into N vertical
+pickets; as you scroll into a transition a translucent flash picket appears at the LEFT, the wave
+sweeps right with brighter pickets joining behind it until the whole door is flash (a bell curve of
+intensity across the pickets), then the left pickets dim first, revealing the NEW image picket by
+picket, left to right. Scrolling up runs the identical wave in reverse. Every scroll position is a
+legitimate, stable picture, so **no snap/bounce is needed** — you can stop mid-wave and go back.
+This is "more true to scrolling": you must travel through all the pickets.
 
-**User decisions (asked + answered):**
-- Fix behind the `?ab-homepage-hero-scroll=pin` override first; flipping the homepage default is a
-  separate follow-up decision after reviewing on localhost.
-- **Pin** is the model to polish (mobile already degrades horizontal → pin, so one model covers both).
-- **Free scrub + release**: never hijack scroll; a fast flick flies through and the page rests
-  wherever the user stops. Snap only tidies a mid-transition rest while the hero is pinned.
-- **Board settles per scene**: churn only during the flash transition; entering a scene's settled
-  zone rolls the board to that scene's title even while still scrolling.
-- **Compact header when pinned** so the full house + WELCOME is framed at scroll 0.
+Research (Codrops SVG-mask scroll transitions, GSAP ScrollTrigger guidance, CSS mask blinds):
+- The staggered-strip wipe is a known pattern, but published versions are time-triggered. Ours is
+  scroll-SCRUBBED: per-picket state is a pure function of progress, hence reversible.
+- Natural-feel guidance: never scroll-jack; native scroll drives; a small catch-up lag (~0.1-0.3s)
+  makes discrete wheel steps read as a liquid wave instead of chunky jumps.
+- Adjacent strips need a tiny overlap (+~0.5px) or anti-aliasing paints hairline seams (same bug
+  class as our hi-DPI arch seam; also: NO mix-blend-mode/filter on the strips).
 
-## Design invariants
+## The engine math (generalizes the existing flash; N=1 degenerates to today's pin)
 
-- **Released = untouchable.** Once the user has scrolled past the runway (or is above it), the hero
-  never writes to scroll again.
-- **Snap agrees with the visuals.** A mid-transition stop lands on the stop whose scene the door is
-  ALREADY showing (the swap happens at the flash peak, t ≥ 0.5): before the peak → back to the
-  current stop, past the peak → forward to the next. No rewinds past a committed swap.
-- **Snap logic mirrors `deriveSceneState`.** The last stop's whole slice is settled there
-  (`s === nextStop` guard); the snap must use the same rule so they can't disagree.
-- **Board target = the scene the door shows** (unchanged rule); churn is scoped to transition zones
-  only, so board/door/flash arrive together at every stop.
-- All existing invariants hold: passive listeners, `prefers-reduced-motion` skips snap + flash, no
-  `mix-blend-mode`/`filter` on animating layers (hi-DPI seam), `?hero-scene` seam untouched.
+All in the existing pure model. For a transition at progress `t ∈ [0,1]` (the existing
+`t = (within - settledFrac) / TRANSITION_FRACTION` from `deriveSceneState`), with `N` pickets and
+stagger spread `S`:
+
+```
+local_i = clamp( (t * (1 + S) - (i / (N - 1)) * S), 0, 1 )   // picket i's own timeline
+flash_i = reduce ? 0 : sin(π * local_i)                       // same hump as today, per picket
+revealed_i = local_i >= 0.5                                    // picket i shows the NEW image
+```
+
+Properties (why this matches the ask):
+- `local_i` decreases with `i`: the LEFT picket leads, the wave sweeps left→right.
+- At `t = 0.5` with `S = 0.5`: local ranges 0.75 (left, dimming, new image) → 0.25 (right,
+  brightening, old image), center = 1.0 flash. The whole door is lit with a bell across pickets.
+- `revealed` is monotone in `i`, so the revealed region is always a CONTIGUOUS LEFT strip:
+  the new image needs ONE `clip-path: inset(0 R% 0 0)`, not N slices.
+  `R = 100 * (1 - revealCount / N)` where `revealCount = |{i : local_i >= 0.5}|` (quantized to
+  picket boundaries: the reveal visibly advances picket by picket).
+- Pure function of `t` → scrolling up plays the exact reverse. No state, no snap needed.
+- Reduced motion: `flash_i = 0` everywhere and reveal snaps at `t >= 0.5` (today's behavior).
+
+Constants: `PICKET_COUNT = 9` (odd, so a center picket peaks at mid), `PICKET_SPREAD = 0.5`.
+Start with these; dial by eye during the live review (they are JS constants, not Hero Tuner CSS
+vars, since the math runs in JS).
 
 ## Changes
 
 All in `bytesofpurpose-blog/` unless noted.
 
-### 1. Fix the snap effect — `src/pages/index.tsx` (the effect at ~1030-1070)
+### 1. Register the variant — `src/experiments.ts` (lines 71-79)
 
-Inside the existing effect, after computing `rect`/`scrollable`:
-- **Released guard:** compute the RAW (unclamped) progress `raw = -rect.top / scrollable`; if
-  `raw < 0 || raw >= 1` return (hero not pinned — never touch scroll). This alone kills the
-  yank-back trap.
-- **Last-stop guard:** derive `s` (current stop) as `deriveSceneState` does; if `s === stops - 1`
-  return (the last slice is entirely settled, mirroring the `s === nextStop` branch at
-  index.tsx:546).
-- **Forward-bias:** replace `const stop = Math.round(p * stops - 0.5)` with the visual-match rule:
-  `t = (within - settledFrac) / TRANSITION_FRACTION; targetStop = t >= 0.5 ? s + 1 : s;`
-  then `targetP = (targetStop + settledFrac / 2) / stops` as today.
-- Keep the rAF ease, the `snapActive` re-entry guard, and the abort-on-genuine-user-scroll delta
-  check exactly as they are (they were the hard-won part; see the code comments).
+Add `pickets: 'pickets'` to `EXPERIMENTS['homepage-hero-scroll'].variants`. URL override
+`?ab-homepage-hero-scroll=pickets` then validates for free (`urlOverride` checks
+`exp.variants[perFlag]`; the `ab-` prefix is already in the url-params registry — no registry edit).
 
-### 2. Board settles per scene — `src/pages/index.tsx` (~1134)
+### 2. Expose the transition to the renderer — `src/pages/index.tsx` `deriveSceneState` (527-577)
 
-Change `<StudioFacade {...scene} spinning={scrolling} />` to scope churn to transition zones:
+Extend `SceneState` with one optional field (non-breaking for all existing consumers):
 
-```tsx
-spinning={scrolling && scene.boardFromText !== scene.boardToText}
+```ts
+transition: null | {t: number; fromScene: number; toScene: number; fromDoor: boolean};
 ```
 
-`boardFromText === boardToText` exactly when `deriveSceneState` is in a settled zone, so this is a
-pure, engine-consistent test: while the wheel moves THROUGH a settled zone the board rolls to that
-stop's title (normal per-cell flap-roll, since `text` is already the shown scene's title); crossing
-a transition churns; the snap glide's tail (which ends inside the settled zone) lets the board
-settle as the glide lands. Update the adjacent comment (index.tsx:762-767 and 1133) to describe the
-new rule. No SplitFlap changes needed — `spinning` + `text` props already do the right thing.
+- Settled branch returns `transition: null`.
+- Transition branch returns `{t, fromScene, toScene, fromDoor}` (all already computed locally).
+- `timerScene` returns `transition: null` (the timer hero never renders pickets).
+- Everything else (`active`/`shown`/`mode`/`flash`/`boardProgress`/board texts, the `t >= 0.5`
+  commit rule, the last-stop guard) is untouched, so pin/inplace/horizontal are bit-identical.
 
-### 3. Compact pinned header + fold fit — `src/pages/index.module.css`
+### 3. Route the new model — `src/pages/index.tsx`
 
-- Extend `.heroBanner[data-parallax-pinned]` (line 24): shrink `.heroTitle` (~4rem → ~2rem),
-  `.heroSubtitle` (~1.5rem → ~1rem), tighten eyebrow/margins/padding. Use design-system `--text-*`
-  / `--space-*` tokens where a named token matches (the `implement-with-design-system` skill; the
-  ds-tokens hook will warn otherwise).
-- Cap the house so header + full house fit in one viewport at scroll 0: on the pinned gate only
-  (`.parallaxSticky.studioGate` or `.parallaxStick .studioGate`), cap width by viewport height,
-  e.g. `max-width: min(var(--body-w, 720px), calc((100vh - <header-allowance>) * <ratio>))`
-  (house total height ≈ width × ~0.85: 2:1 body + roof + hanging board). Dial the exact
-  allowance/ratio live with the Hero Tuner (`tune-hero-visually` skill) and bake the defaults.
-  Keep the mobile block (index.module.css:1122-1211, `100svh`, door-only) working — verify at 375px.
-- The `data-parallax-pinned` attribute wiring already exists (index.tsx:1083-1088); no TSX change.
+- `type ScrollModel = 'pin' | 'inplace' | 'horizontal' | 'pickets';` (line 1087).
+- `HeroChooser` (1427-1430): add `if (scroll === 'pickets') return <ParallaxStudio model="pickets" />;`.
+- `ParallaxStudio`:
+  - `compute` (1109-1124): `pickets` uses the SAME pin geometry (sticky + tall spacer). No change
+    beyond the model union (the pin branch already covers `model !== 'inplace'`; verify the
+    conditional shape and include pickets with pin/horizontal).
+  - **Snap effect (1154-1208): skip entirely for pickets** — extend the early guard to
+    `model === 'inplace' || model === 'pickets'`. Every rest position is stable by design.
+    (The released guard / direction bias stay for pin; untouched.)
+  - Mobile fallback (1102-1104): leave `horizontal → pin`; `pickets` works as-is on mobile
+    (same pin geometry), no fallback needed.
+  - `jumpToScene` + festoon: unchanged (a bulb jump still glides to a settled center; fine).
+  - Pass the mode down: `<StudioFacade {...scene} picketed={model === 'pickets'} ... />`.
 
-### 4. e2e regression tests — `test/e2e/homepage.spec.ts` (the existing parallax describe block)
+### 4. Smoothed progress for the liquid feel — `src/pages/index.tsx` (new small hook)
 
-- **`[pin] resting below the hero is stable`** (the P0 regression): wheel fast to page bottom, wait
-  ~2.5s (snap idle 140ms + glide time), assert `scrollY` unchanged (± a few px). This is the test
-  the old "releases" assertion missed.
-- **`[pin] mid-transition stop snaps FORWARD past the flash peak`**: scroll into a transition past
-  its midpoint, stop, wait for the glide, assert `data-active-scene` kept the NEW scene and
-  `scrollY` moved forward (≥ stop position), and the flash cleared (existing helper).
-- **`[pin] board settles to the active scene's title`**: after a stop + settle, normalize the board
-  text (SplitFlap renders multiple faces per cell — collapse consecutive duplicate glyphs) and
-  assert it contains the title matching `data-active-dest`.
-- Existing assertions (spacer present, `?hero-scene` seam, navbar highlight, default-`/` has no
-  spacer) stay untouched — the default is NOT flipping in this change.
+Wheel events are quantized; raw scrub makes the wave jump in chunks. Add a tiny hook used ONLY by
+the pickets model (pin/etc. keep instant scrub):
 
-### 5. Lockstep obligations (same change)
+```ts
+function useSmoothedProgress(progressRef, tick, enabled): {ref, tick}
+```
 
-- `.claude/skills/maintain-homepage-hero/SKILL.md`: update the parallax gotchas — the released
-  guard ("the hero never touches scroll below the runway"), the forward-snap visual-match rule, the
-  board settle-per-scene rule, the compact pinned header. Run `make validate-hero-anchors` (no
-  anchored symbols are renamed by this plan; if any helper gets extracted/named, add its anchor to
-  `scripts/validate-hero-anchors.js` + the SKILL.md table in the same change).
-- No new URL params, no generated assets, no experiment set changes.
-- No literal em-dash in any reader-facing text (skill/test names/comments — the em-dash hook).
+- A rAF loop lerps a `smoothRef` toward `progressRef.current` with an exponential catch-up
+  (time constant ~120ms, i.e. `cur += (target - cur) * (1 - exp(-dt/0.12))`), stopping (and
+  snapping exact) when within ~0.0005. Bumps its own tick so `useScrollScene` re-derives.
+- NEVER writes to scroll (read-only smoothing of the derived value — no scroll-jack).
+- `enabled=false` (or reduced motion) → passthrough of the raw ref/tick, zero overhead.
+- ParallaxStudio: `const sm = useSmoothedProgress(progressRef, tick, model === 'pickets' && !reduce);`
+  then `useScrollScene(sm.ref, count, sm.tick)`.
 
-## Execution order + tasks (create via TaskCreate at start)
+### 5. Render the pickets — `src/pages/index.tsx` `StudioFacade` (845-995) + `index.module.css`
 
-1. Fix snap: released guard + last-stop guard + forward bias (index.tsx).
-2. Scope board churn to transition zones (index.tsx).
-3. Compact pinned header + house fold fit, dialed via Hero Tuner (index.module.css).
-4. e2e: yank-back regression + forward-snap + board-sync assertions (homepage.spec.ts).
-5. Lockstep: SKILL.md gotchas + validate-hero-anchors green.
-6. Verify end-to-end (below), then branch → PR → ask user to merge (never commit to master).
+New prop `picketed?: boolean`. When `picketed && transition` (from `scene.transition`):
+
+- **Layers during a picket transition** (replaces the mode-swap-at-peak for the visual only):
+  - OLD content fully on: if `fromDoor`, keep `.studioDoorLayer` on; else `fromScene`'s
+    `.studioPeekImg` gets `studioPeekImgActive`.
+  - NEW image on top, clipped: `toScene`'s img ALSO active, with inline
+    `clipPath: inset(0 ${R}% 0 0)` (the DOM order already puts `.studioDoorScene` above
+    `.studioDoorLayer`, and later imgs above earlier ones inside the scene container — verify and
+    rely on it; add an explicit picket z-index class only if needed).
+  - When settled (`transition: null`) render exactly as today (single active img / door layer),
+    so pin's existing behavior is the shared settled path.
+- **New `StudioPickets` subcomponent**: renders inside the arch (sibling of `.studioFlash`) a
+  `.studioPickets` container (absolute inset 0, `pointer-events: none`, the SAME
+  arch-mask-white luminance mask + `isolation: isolate` as `.studioFlash`, z-index above the
+  scene layers like the flash) holding `PICKET_COUNT` spans `.studioPicket`:
+  - `left: (i / N) * 100%`, `width: calc(100% / N + 0.5px)` (the +0.5px kills hairline seams).
+  - background: the same warm white as `.studioFlash` (a simple vertical
+    `linear-gradient(rgba(255,255,255,.95), rgba(255,255,255,1) 45%, rgba(255,255,255,.9))`
+    so it reads as light, not paint), `opacity: flash_i` via inline style.
+  - NO transition on opacity (scrub-exact, same rule as `.studioFlash`), NO mix-blend/filter.
+- The single `.studioFlash` stays for pin; in pickets mode `flash` from the engine still exists
+  but the facade sets `--flash-o: 0` when `picketed` (the pickets ARE the flash).
+- Reduced motion: `.studioPicket { opacity: 0 !important }` alongside the existing
+  `.studioFlash` reduced-motion override; the reveal clip still applies (instant-swap semantics
+  preserved via `revealed` quantization: with `flash_i = 0`, `local_i >= 0.5` still flips at the
+  same scroll positions — acceptable and still scrub-true; verify it feels right, else fall back
+  to the plain `shown` swap under reduce).
+- Board/festoon/navbar: UNCHANGED — `boardProgress`/`spinning`/`active` all still come from the
+  engine's existing fields, so board churn + settle-per-scene + festoon lighting behave exactly
+  as pin does today.
+
+Per-picket math helper: a small pure `picketStates(t, n, spread, reduce): {flash, revealed}[]`
+next to `deriveSceneState` (unit-testable shape, mirrors the engine style).
+
+### 6. e2e — `test/e2e/homepage.spec.ts`
+
+- Add `'pickets'` to `SCROLL_MODELS` (line 216): the shared loop auto-covers gate render +
+  `?hero-scene=N` determinism + navbar highlight for the new mode.
+- New pickets-specific tests:
+  - `[pickets] a mid-transition REST is STABLE (no snap)`: wheel into a transition, stop, wait
+    2.5s, assert `scrollY` unchanged (the anti-snap contract) AND some `.studioPicket` opacity > 0
+    (the wave is holding).
+  - `[pickets] the reveal advances LEFT to RIGHT and is reversible`: mid-transition, read the new
+    image's `clip-path` inset right-% twice while wheeling down (must decrease = more revealed),
+    then wheel up and assert it increases again (reverse works).
+  - `[pickets] past the wave the NEW scene is committed`: scroll through a full transition,
+    settle, assert `data-active-scene` advanced and no `.studioPicket` has opacity > 0.05.
+  - `[pickets] resting BELOW the hero is stable` (inherit the pin regression: released =
+    untouchable — should hold trivially since snap is off, but assert it).
+
+### 7. Lockstep obligations (same change)
+
+- `scripts/validate-hero-anchors.js`: add anchors for `StudioPickets`, `picketStates`,
+  `useSmoothedProgress`, `.studioPicket`; update the prose in the line-63/67 `what` strings from
+  "pin/inplace/horizontal" to include pickets.
+- `.claude/skills/maintain-homepage-hero/SKILL.md`: document the pickets model (the per-picket
+  math, the contiguous-left-reveal invariant that makes one clip-path sufficient, the +0.5px
+  seam overlap, snap-is-off-by-design, the smoothing hook's no-scroll-write rule) as new gotchas;
+  update the scroll-model list.
+- No new URL params (covered by the `ab-` prefix), no generated assets, no design-token literals
+  beyond the flash whites already in use (ds-tokens hook should stay quiet; heed any warning).
+- No literal em-dash in reader-facing text/comments (the em-dash hook blocks index.tsx edits).
+
+## Execution order + tasks (TaskCreate at start)
+
+1. Engine: `transition` field on SceneState + `picketStates` helper (+ keep timer path null).
+2. Variant + routing: experiments.ts, ScrollModel, HeroChooser, snap guard, mobile check.
+3. Renderer: StudioFacade `picketed` path + `StudioPickets` + CSS (mask, seams, reduced-motion).
+4. Smoothing: `useSmoothedProgress`, pickets-only.
+5. e2e: SCROLL_MODELS + the 4 pickets tests.
+6. Lockstep: anchors + SKILL.md.
+7. Verify (below) → branch → PR → ask user to merge.
 
 ## Verification
 
-1. **Live probes on :3000** (dev server already running; re-run the exact chrome-devtools scripts
-   used to diagnose, at `/?ab-homepage-hero-scroll=pin`):
-   - Fast-flick to bottom → wait 2.5s → `scrollY` stays at bottom (was: yanked to 3885).
-   - Scroll to mid-transition just past the flash peak → stop → glide lands FORWARD on the next
-     scene's settled center; `data-active-scene` matches the door image and the board title.
-   - Slow continuous scrub through all 7 scenes → board shows each title in its settled zone
-     (churn only during flashes), navbar highlight tracks, WELCOME at the top.
-   - At scroll 0: full house + WELCOME framed under the compact header (screenshot).
-2. **Mobile pass (repo convention):** 375px viewport at the same URL — full pinned house fits
-   (`100svh`, door-only), board readable, tap-through to a destination works, no horizontal
-   overflow.
-3. **Tests:** `make validate-hero-anchors`; run the homepage e2e per `test/e2e/README.md`
-   (prod-build project: `make build` derivative serve on :4173) — the parallax block including the
-   3 new tests, plus the existing default-`/` assertions to prove the default did not change.
-4. **Hooks/gates:** ds-tokens + contrast warnings clean on the CSS edit; no em-dash hook trips.
+1. **Live on :3000** at `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pickets`
+   (chrome-devtools):
+   - Slow scroll into a transition: left picket lights first, wave sweeps right, full-door bell at
+     mid, left pickets dim revealing the new image picket by picket; board churns then settles.
+   - Stop anywhere mid-wave: NOTHING moves (no snap), the partial picture holds; scroll up:
+     the wave runs backward and the old image returns.
+   - Fast flick to bottom: page rests at bottom (released guard irrelevant but assert stability).
+   - Screenshot the mid-wave state for the user (the money shot: bell of flash + partial reveal).
+   - Compare feel with/without smoothing (temporarily force `enabled=false`) and tune the time
+     constant with the user.
+2. **Both directions + festoon**: bulb click still glides; festoon lights track `active`.
+3. **Mobile pass (repo convention)**: 375px viewport, same URL: pickets legible at small width
+   (9 pickets across ~340px arch ≈ 38px each: fine), no horizontal overflow, tap-through works.
+4. **Reduced motion**: emulate `prefers-reduced-motion`; no picket flash, swaps still happen,
+   nothing animates.
+5. **Tests**: `make validate-hero-anchors`; homepage e2e per `test/e2e/README.md` (the parallax
+   block incl. the new pickets tests); existing pin tests stay green (regression: engine fields
+   unchanged).
+6. **Hooks/gates**: em-dash, ds-tokens, contrast quiet.
 
 ## Out of scope (explicit follow-ups)
 
-- Flipping `DEFAULT_SCROLL_MODEL` to `pin` (a one-line routing change at index.tsx:1212 + homepage
-  e2e default assertions + skeleton height parity) — decide after reviewing the fixed experience.
-- Launching the `homepage-hero-scroll` PostHog flag for a real A/B.
-- `inplace`/`horizontal` polish (they inherit the snap + board fixes automatically since the code
-  is shared, but only pin gets the fold-fit/visual pass).
-- Parallax visual-regression baselines (pending task #119) and the known-unsolved Firefox
-  arch-stack seam (SKILL gotcha 15).
+- Flipping `DEFAULT_SCROLL_MODEL` (pin vs pickets vs static stays a separate decision after the
+  live review).
+- Launching the `homepage-hero-scroll` PostHog flag.
+- Hero-Tuner sliders for `PICKET_COUNT`/`PICKET_SPREAD` (JS-side math; the tuner is CSS-var-only —
+  only add if dial-in demands it).
+- Visual-regression baselines for parallax (pending task) and the unsolved Firefox arch seam.

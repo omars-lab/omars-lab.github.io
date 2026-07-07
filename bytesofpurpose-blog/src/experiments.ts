@@ -65,6 +65,9 @@ export const EXPERIMENTS = {
   //   pin        = the hero pins full-screen and each scroll step advances one scene, then releases.
   //   inplace    = the hero stays in normal flow; the door morphs as the hero scrolls past.
   //   horizontal = vertical scroll pans the 7 scenes horizontally inside a pinned hero.
+  //   pickets    = pin, but each crossing plays a staggered per-strip flash WAVE (a bell of light
+  //                sweeping left→right) that reveals the next scene strip-by-strip; fully scrubbable,
+  //                so a mid-crossing stop is a stable picture and needs no snap.
   // Separate from homepage-hero-anim so the scroll-model question is answered independently of the
   // flash-vs-scroll-strip question. The payload is the variant id (the homepage reads it to pick the
   // scroll wrapper). Default (control) keeps the non-jacking timer hero so nothing regresses.
@@ -75,6 +78,7 @@ export const EXPERIMENTS = {
       pin: 'pin',
       inplace: 'inplace',
       horizontal: 'horizontal',
+      pickets: 'pickets',
     },
   },
 } satisfies Record<string, Experiment>;

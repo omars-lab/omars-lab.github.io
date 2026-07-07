@@ -213,7 +213,7 @@ test.describe('Homepage hero A/B: camera-flash variant', () => {
  * per-scene assertions, PLUS one real-scroll test that the active scene actually advances on scroll.
  */
 test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
-  const SCROLL_MODELS = ['pin', 'inplace', 'horizontal'] as const;
+  const SCROLL_MODELS = ['pin', 'inplace', 'horizontal', 'pickets'] as const;
   // scene index → its destination + the navbar label that should light up (matches CHOOSER_CARDS)
   const SCENE_NAV: Array<{ dest: string; nav: RegExp }> = [
     { dest: '/craft', nav: /Craft/ },
@@ -563,6 +563,117 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     await festoonBulbs(page).nth(1).click();
     await expect(root).toHaveAttribute('data-active-scene', '1', { timeout: 4000 });
     expect(new URL(page.url()).pathname).toBe('/');
+  });
+
+  // ── PICKETS: the scrubbable per-strip flash wave (pin-with-pickets) ───────────────────────────────
+  // Each crossing plays a staggered per-strip flash wave that reveals the next scene strip-by-strip.
+  // It is a PURE function of the transition phase, so a mid-crossing stop is a STABLE picture (NO snap)
+  // and scrolling back reverses it. These tests scrub with window.scrollTo + a dispatched scroll event
+  // (the smoothing hook lerps toward the raw progress), then read the live picket + reveal state.
+
+  // Scrub to a given progress p in [0,1] of the pinned runway and let the smoothing settle.
+  const scrubTo = async (page: Page, p: number) =>
+    page.evaluate(async (p) => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const targetY = Math.round(spacerTopPage + p * scrollable);
+      // step in so scroll events fire (the smoothing loop chases the raw progress), then wait for it.
+      for (let i = 1; i <= 6; i++) {
+        window.scrollTo(0, Math.round((targetY * i) / 6));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => setTimeout(r, 25));
+      }
+      await new Promise((r) => setTimeout(r, 450));
+      return Math.round(window.scrollY);
+    }, p);
+
+  // The per-strip opacities of the picket wave (one entry per strip).
+  const picketOpacities = (page: Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map(
+        (el) => parseFloat(getComputedStyle(el as HTMLElement).opacity),
+      ),
+    );
+  // The reveal clip's RIGHT inset % (100 = nothing revealed, 0 = fully revealed). null if no reveal layer.
+  const revealRightPct = (page: Page) =>
+    page.evaluate(() => {
+      const layer = [...document.querySelectorAll('[class*="studioDoorScene"]')].find(
+        (d) => (d as HTMLElement).style.clipPath,
+      ) as HTMLElement | undefined;
+      const m = layer?.style.clipPath.match(/inset\(0(?:px)? ([\d.]+)%/);
+      return m ? parseFloat(m[1]) : null;
+    });
+
+  test('[pickets] a mid-crossing REST is STABLE — no snap moves the page or the wave', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Scrub into the door→scene0 crossing (mid-wave) and confirm the wave is LIT.
+    await scrubTo(page, 0.1);
+    const opsAtRest = await picketOpacities(page);
+    expect(opsAtRest.length, 'the picket wave renders during a crossing').toBeGreaterThan(0);
+    expect(Math.max(...opsAtRest), 'some picket strip is lit mid-crossing').toBeGreaterThan(0.3);
+
+    const yAtRest = await page.evaluate(() => Math.round(window.scrollY));
+    const clipAtRest = await revealRightPct(page);
+    // WAIT well past any snap window (pin snaps within a few hundred ms). Pickets must NOT move.
+    await page.waitForTimeout(2500);
+    const yAfter = await page.evaluate(() => Math.round(window.scrollY));
+    const clipAfter = await revealRightPct(page);
+
+    expect(Math.abs(yAfter - yAtRest), `pickets must not snap (was ${yAtRest}, now ${yAfter})`).toBeLessThanOrEqual(4);
+    expect(clipAfter, 'the partial reveal must hold (no snap advancing/retreating it)').toBe(clipAtRest);
+  });
+
+  test('[pickets] the reveal wipes LEFT to RIGHT and REVERSES when you scroll back', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Two points in the same crossing, the second FURTHER in: the reveal must advance (right inset drops).
+    await scrubTo(page, 0.098);
+    const clipEarly = await revealRightPct(page);
+    await scrubTo(page, 0.11);
+    const clipLater = await revealRightPct(page);
+    expect(clipEarly, 'a reveal layer exists mid-crossing').not.toBeNull();
+    expect(clipLater, 'a reveal layer exists mid-crossing').not.toBeNull();
+    expect(clipLater!, `scrolling deeper reveals MORE (right inset ${clipEarly} → ${clipLater})`).toBeLessThan(
+      clipEarly!,
+    );
+
+    // Now scroll BACK toward the start of the crossing: the reveal must RETREAT (right inset grows again).
+    await scrubTo(page, 0.098);
+    const clipBack = await revealRightPct(page);
+    expect(clipBack!, `scrolling back retreats the reveal (${clipLater} → ${clipBack})`).toBeGreaterThan(
+      clipLater!,
+    );
+  });
+
+  test('[pickets] past the wave the NEW scene is committed and no picket stays lit', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+
+    // Settle PAST the first crossing, into scene 0's settled zone (stop 1, well inside the settled half).
+    await scrubTo(page, (1 + 0.2) / 8);
+    await expect(root, 'the first crossing committed scene 0').toHaveAttribute('data-active-scene', '0');
+    // In a settled zone there is no wave: either no picket strips render, or every strip is dark.
+    const ops = await picketOpacities(page);
+    expect(ops.every((o) => o < 0.05), 'no picket stays lit once settled').toBe(true);
+  });
+
+  test('[pickets] resting BELOW the hero is stable (released = untouchable, snap is off)', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(200);
+    const settledY = await page.evaluate(() => Math.round(window.scrollY));
+    await page.waitForTimeout(2000); // no snap should pull us back up
+    const finalY = await page.evaluate(() => Math.round(window.scrollY));
+    expect(Math.abs(finalY - settledY), `page must hold below the hero (${settledY} → ${finalY})`).toBeLessThanOrEqual(6);
   });
 });
 

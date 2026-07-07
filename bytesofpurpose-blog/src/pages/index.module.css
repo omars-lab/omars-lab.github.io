@@ -1082,6 +1082,49 @@
     opacity: 0 !important; /* no strobe; the door/scene just cross-fades */
   }
 }
+
+/* ── PICKET WAVE: the picket scroll-model's per-strip flash (replaces the single .studioFlash) ──────
+   A row of vertical strips filling the arch. Each strip's opacity is set inline (its own point on the
+   staggered sin-wave), so the bloom sweeps left→right and back as you scrub. Masked + isolated exactly
+   like .studioFlash (the same arch mask, NO mix-blend/filter per the hi-DPI seam lesson). The reveal of
+   the new scene under the wave is done with clip-path on a scene layer (JS-driven), not here. */
+.studioPickets {
+  position: absolute;
+  inset: 0;
+  z-index: 4; /* above the scene layers + the (off) single flash, so the wave reads as the top bloom */
+  pointer-events: none;
+  isolation: isolate; /* contain the strips' compositing (the hi-DPI seam lesson) */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.studioPicket {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* left + width + opacity are set inline per strip (left = i/N, width = 1/N + 0.5px overlap so
+     anti-aliasing paints no seam between neighbours, opacity = this strip's wave value). NO transition,
+     so the strips scrub EXACTLY with scroll (stop = the wave holds), like .studioFlash. NO mix-blend /
+     filter. A soft vertical warm-white so it reads as LIGHT rather than paint. */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 1) 45%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .studioPicket {
+    opacity: 0 !important; /* no strobe; the scene reveal (clip-path) still swaps, just no flash */
+  }
+}
 /* GOLD balcony RAILING in front of each WINDOW only (not the door): a short balustrade at the base of
    the window arch that extends a bit on either side. A row of gold balusters between a gold top +
    bottom rail. Positioned absolutely at the window's base; wider than the arch so it overhangs a bit. */

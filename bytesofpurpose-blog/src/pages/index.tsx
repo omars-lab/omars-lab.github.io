@@ -508,6 +508,11 @@ type SceneState = {
   boardProgress: number; // CONTINUOUS board flip-progress [0,1] for the transition in flight
   boardFromText: string; // the board text flipping FROM (e.g. 'WELCOME' or a scene title)
   boardToText: string; // the board text flipping TO
+  // The CROSSING in flight, exposed for the PICKET renderer (null when settled on a stop). `t` is the
+  // raw transition phase [0,1] (same `t` that drives `flash`); `fromDoor` means we are leaving the door.
+  // The single flash consumers (pin/timer house) ignore this; the picket renderer reads it to build the
+  // per-strip wave. Non-picket paths behave identically whether this is null or populated.
+  transition: null | {t: number; fromScene: number; toScene: number; fromDoor: boolean};
 };
 
 // The fraction of each scene's slice spent in the TRANSITION zone (the rest is "settled on this
@@ -555,6 +560,7 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
       boardProgress: 1,
       boardFromText: txt,
       boardToText: txt,
+      transition: null, // settled: no crossing in flight
     };
   }
   // TRANSITION zone stop s → nextStop. t ramps 0..1 across the back TRANSITION_FRACTION of the slice.
@@ -573,7 +579,43 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
     boardProgress: reduce ? (past ? 1 : 0) : t,
     boardFromText: boardTextOf(s),
     boardToText: boardTextOf(nextStop),
+    // the crossing in flight, for the picket renderer (the single-flash consumers ignore it)
+    transition: {t, fromScene, toScene, fromDoor},
   };
+}
+
+// ── PICKETS: a scrubbable per-strip flash wave (the "pin-with-pickets" scroll model) ───────────────
+// The single flash blooms the WHOLE arch at once; the PICKET wave divides the arch into vertical strips
+// and staggers the SAME sin-hump across them left→right. As you scroll into a crossing, the LEFT strip
+// lights first, the wave sweeps right until the whole arch is lit (a bell of intensity across strips),
+// then the left strips dim first, revealing the NEW scene strip-by-strip. It is a PURE function of the
+// transition phase `t`, so scrolling back reverses it exactly (no snap, every position is stable).
+const PICKET_COUNT = 9; // odd, so a centre strip peaks at the mid of the crossing
+const PICKET_SPREAD = 0.5; // how much the wave lags the right strips behind the left (0 = all together)
+
+/** PURE: per-strip {flash, revealed} for a crossing at phase `t`, plus the reveal INSET (right %).
+ *  `local_i` is strip i's own phase, staggered so lower i (left) leads; `flash_i = sin(π·local_i)`;
+ *  a strip has flipped to the NEW scene once its own phase passes the peak (`local_i >= 0.5`). Because
+ *  `local_i` is monotone in i, the revealed strips are always a CONTIGUOUS LEFT block, so the new scene
+ *  needs ONE clip-path inset (revealRight %) rather than N separate slices. */
+function picketStates(
+  t: number,
+  n: number,
+  spread: number,
+  reduce: boolean,
+): {flash: number[]; revealRight: number} {
+  const flash: number[] = [];
+  let revealed = 0;
+  for (let i = 0; i < n; i++) {
+    // strip i's own timeline: the whole wave spans (1 + spread); strip i starts `frac·spread` later.
+    const frac = n > 1 ? i / (n - 1) : 0;
+    const local = Math.min(1, Math.max(0, t * (1 + spread) - frac * spread));
+    flash.push(reduce ? 0 : Math.sin(Math.PI * local));
+    if (local >= 0.5) revealed++; // this strip now shows the NEW scene
+  }
+  // reveal is a contiguous left block of `revealed` strips → clip the new image to hide the right rest.
+  const revealRight = 100 * (1 - revealed / n);
+  return {flash, revealRight};
 }
 
 /**
@@ -590,7 +632,7 @@ function useScrollScene(
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
   return useMemo<SceneState>(() => {
     if (forced != null) {
-      return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFromText: stripEmoji(CHOOSER_CARDS[forced].title), boardToText: stripEmoji(CHOOSER_CARDS[forced].title)};
+      return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFromText: stripEmoji(CHOOSER_CARDS[forced].title), boardToText: stripEmoji(CHOOSER_CARDS[forced].title), transition: null};
     }
     return deriveSceneState(progressRef.current, count, reduce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -620,6 +662,7 @@ function timerScene(
   const settled = (sc: number, txt: string, door: boolean): SceneState => ({
     active: sc, shown: sc, mode: door ? 'door' : 'scene', flash: 0, boardProgress: 1,
     boardFromText: door ? 'WELCOME' : txt, boardToText: door ? 'WELCOME' : txt,
+    transition: null, // the timer house never renders pickets
   });
   // WRAP an index into 0..count-1. The crossing from the LAST scene targets `count` (out of bounds);
   // `active`/`shown` index CHOOSER_CARDS directly, so an unwrapped `count` makes CHOOSER_CARDS[count]
@@ -638,6 +681,7 @@ function timerScene(
       boardProgress: reduce ? (past ? 1 : 0) : t,
       boardFromText: fromDoor ? 'WELCOME' : titleOf(fromIdx),
       boardToText: titleOf(toIdx),
+      transition: null, // the timer house uses the single flash, never the picket wave
     };
   };
 
@@ -750,6 +794,60 @@ function useScrollProgress(
   return {tick, scrolling};
 }
 
+/**
+ * SMOOTHED progress (the pickets "liquid wave" feel): wheel events land the raw progress in discrete
+ * jumps; scrubbing a strip wave off that raw value reads chunky. This hook lerps a SMOOTH ref toward
+ * the raw `progressRef` on a rAF clock (exponential catch-up, ~120ms time constant) and bumps its own
+ * tick so `useScrollScene` re-derives off the smooth value. It ONLY reads/writes its own ref and the
+ * scroll position is NEVER touched (no scroll-jack) — this smooths the DERIVED value, not the page.
+ * When `enabled` is false (every non-picket model, or reduced motion) it is a zero-cost passthrough of
+ * the raw ref + raw tick, so pin/inplace/horizontal keep their exact instant scrub.
+ */
+function useSmoothedProgress(
+  progressRef: React.MutableRefObject<number>,
+  rawTick: number,
+  enabled: boolean,
+): {ref: React.MutableRefObject<number>; tick: number} {
+  const smoothRef = useRef(progressRef.current);
+  const [smoothTick, setSmoothTick] = useState(0);
+  useEffect(() => {
+    if (!enabled) {
+      smoothRef.current = progressRef.current; // keep it exact so a later enable starts aligned
+      return undefined;
+    }
+    let raf = 0;
+    let last: number | null = null;
+    const TAU = 0.12; // seconds: how fast the smooth value catches up to the raw target
+    const step = (now: number) => {
+      const target = progressRef.current;
+      const dt = last == null ? 0 : (now - last) / 1000;
+      last = now;
+      const cur = smoothRef.current;
+      const diff = target - cur;
+      if (Math.abs(diff) < 0.0005) {
+        // close enough: snap exact, bump once, and PARK (a new raw scroll re-runs this effect via rawTick)
+        if (cur !== target) {
+          smoothRef.current = target;
+          setSmoothTick((t) => (t + 1) % 1_000_000);
+        }
+        return;
+      }
+      // exponential ease toward target, frame-rate independent: fraction = 1 - e^(-dt/TAU)
+      const k = dt > 0 ? 1 - Math.exp(-dt / TAU) : 0.2;
+      smoothRef.current = cur + diff * k;
+      setSmoothTick((t) => (t + 1) % 1_000_000);
+      raf = window.requestAnimationFrame(step);
+    };
+    raf = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(raf);
+    // rawTick restarts the loop whenever the raw progress moves (so parked → chasing again)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, rawTick]);
+
+  // passthrough when disabled: the raw ref + raw tick, so non-picket models are untouched.
+  return enabled ? {ref: smoothRef, tick: smoothTick} : {ref: progressRef, tick: rawTick};
+}
+
 /* FESTOON STRING LIGHTS: the scene-progress indicator. A swag of bulbs strung under the eave, one per
    destination scene, warming up LEFT-TO-RIGHT as you advance through the scenes (a Lebanese courtyard
    string-light motif, not a UI progress bar). Bulb `i` is LIT once `active >= i`. When `onJump` is
@@ -837,6 +935,31 @@ function StudioFestoon({
   );
 }
 
+/* PICKET WAVE overlay: the picket scroll-model's replacement for the single white flash. `PICKET_COUNT`
+   vertical strips fill the arch; each strip's opacity is its own point on the staggered sin-wave (from
+   picketStates), so the bloom sweeps left→right and back as you scrub. Masked to the arch + isolated,
+   exactly like .studioFlash (NO mix-blend/filter, per the hi-DPI seam lesson); each strip is a hair
+   WIDER than 1/N (+0.5px) so anti-aliasing paints no hairline seam between neighbours. Reduced motion
+   zeroes every strip in CSS (matching .studioFlash). */
+function StudioPickets({flash}: {flash: number[]}): React.JSX.Element {
+  const n = flash.length;
+  return (
+    <div className={styles.studioPickets} aria-hidden="true">
+      {flash.map((o, i) => (
+        <span
+          key={i}
+          className={styles.studioPicket}
+          style={{
+            left: `${(i / n) * 100}%`,
+            width: `calc(${100 / n}% + 0.5px)`, // +0.5px overlap kills the hairline seam between strips
+            opacity: o,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* The presentational FACADE: the Lebanese central-hall home (roof + square body + three arches + the
    hanging Vestaboard + the centre door↔scene flash), driven purely by props. Both the original timer
    ChooserStudio and the scroll-driven parallax wrappers render this with their own {active, mode,
@@ -848,12 +971,16 @@ function StudioFacade({
   mode,
   flash,
   boardToText,
+  transition,
   spinning,
   onJump,
+  picketed,
 }: SceneState & {
   spinning?: boolean;
   /** Only the scroll models pass this: jump to scene `i` (the festoon bulbs call it). */
   onJump?: (scene: number) => void;
+  /** The `pickets` scroll-model: render the per-strip flash WAVE instead of the single door flash. */
+  picketed?: boolean;
 }): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
@@ -870,8 +997,25 @@ function StudioFacade({
   // flap tiles either side.
   const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
   const boardSpinning = spinning;
-  // the flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var the .studioFlash reads.
-  const flashStyle = {['--flash-o' as string]: String(flash)} as React.CSSProperties;
+  // Base-URL the scene + door images ONCE, at the top level, so hook count is constant across renders.
+  // CHOOSER_CARDS has a fixed length, so this map is a fixed number of useBaseUrl calls; the picket
+  // reveal layer reuses cardUrls[toScene] instead of calling useBaseUrl conditionally (which would
+  // change the hook count between settled and crossing renders and crash React).
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const cardUrls = CHOOSER_CARDS.map((c) => useBaseUrl(c.img));
+  const doorUrl = useBaseUrl('/img/cards/door.png');
+  const windowUrl = useBaseUrl('/img/cards/window.png');
+  // PICKET WAVE: only in the pickets model, mid-crossing. Build the per-strip flash + the reveal inset
+  // that clips the NEW scene to a contiguous LEFT block. Outside a crossing (or any other model) this is
+  // null and the single-flash / settled path renders exactly as before.
+  const reduce = prefersReducedMotion();
+  const wave =
+    picketed && transition
+      ? picketStates(transition.t, PICKET_COUNT, PICKET_SPREAD, reduce)
+      : null;
+  // the single flash opacity is CONTINUOUS (driven by scroll); expose it as a CSS var .studioFlash reads.
+  // In picket mode the PICKETS are the flash, so the single-flash overlay is forced off (--flash-o 0).
+  const flashStyle = {['--flash-o' as string]: String(wave ? 0 : flash)} as React.CSSProperties;
   return (
     <div className={styles.studioFacade}>
       {/* The TEAL triangular roof sits ABOVE the square body (a sibling, not inside it). */}
@@ -894,7 +1038,7 @@ function StudioFacade({
           <div className={styles.studioArch}>
             <img
               className={styles.studioArchImg}
-              src={useBaseUrl('/img/cards/window.png')}
+              src={windowUrl}
               alt=""
               aria-hidden="true"
               loading="eager"
@@ -927,16 +1071,19 @@ function StudioFacade({
             {/* The centre arch is the DOORWAY you peek through: the carved DOOR (mode 'door') OR the
                 current project SCENE (mode 'scene'), with a WHITE FLASH masked to the arch that blooms
                 over the swap (a long camera-exposure). The door + scene cross-fade; the flash peak
-                masks the change. */}
+                masks the change. In the PICKET model a mid-crossing renders differently: the FROM
+                content stays fully visible while the TO scene is revealed strip-by-strip under a
+                staggered per-strip wave (see below), so no single peak-swap happens. */}
             <div className={styles.studioArch} style={flashStyle}>
-              {/* the carved DOOR (shown when mode === 'door') */}
+              {/* the carved DOOR: shown in door mode, OR (picket crossing) whenever we are LEAVING the
+                  door (it stays fully lit underneath while the first scene reveals over it). */}
               <img
                 className={clsx(
                   styles.studioArchImg,
                   styles.studioDoorLayer,
-                  mode === 'door' && styles.studioLayerOn,
+                  (wave ? transition!.fromDoor : mode === 'door') && styles.studioLayerOn,
                 )}
-                src={useBaseUrl('/img/cards/door.png')}
+                src={doorUrl}
                 alt=""
                 aria-hidden="true"
                 loading="eager"
@@ -946,16 +1093,24 @@ function StudioFacade({
                 height={400}
               />
               {/* the current project SCENE (shown when mode === 'scene'), clipped to the arch interior.
-                  We show `shown` (the scene the door currently displays; it swaps to the next scene at
-                  the flash peak during a scroll transition), not necessarily `active`. */}
+                  Normally we show `shown` (the scene the door displays; it swaps at the flash peak on a
+                  scroll transition). In a PICKET crossing this is the FROM layer instead: it holds the
+                  scene we are LEAVING fully visible (hidden when leaving the door), and the TO scene
+                  reveals over it in the picket reveal layer below. */}
               <div
-                className={clsx(styles.studioDoorScene, mode === 'scene' && styles.studioLayerOn)}
+                className={clsx(
+                  styles.studioDoorScene,
+                  (wave ? !transition!.fromDoor : mode === 'scene') && styles.studioLayerOn,
+                )}
                 aria-hidden="true">
                 {CHOOSER_CARDS.map((card, i) => (
                   <img
                     key={card.to}
-                    className={clsx(styles.studioPeekImg, i === shown && styles.studioPeekImgActive)}
-                    src={useBaseUrl(card.img)}
+                    className={clsx(
+                      styles.studioPeekImg,
+                      i === (wave ? transition!.fromScene : shown) && styles.studioPeekImgActive,
+                    )}
+                    src={cardUrls[i]}
                     alt=""
                     // The FIRST scene is above-the-fold on load (the door opens onto it); eager-load it
                     // so the arch isn't briefly empty. The other 6 scenes stay lazy (only the active one
@@ -967,8 +1122,30 @@ function StudioFacade({
                   />
                 ))}
               </div>
-              {/* the white flash bloom, masked to the arch; opacity is the CONTINUOUS --flash-o var */}
+              {/* PICKET REVEAL layer: the TO scene on top of FROM, clipped to a contiguous LEFT block
+                  (inset from the right by revealRight%). As the wave sweeps right, more strips have
+                  passed their peak, revealRight shrinks, and the new scene wipes in left-to-right. */}
+              {wave && (
+                <div
+                  className={clsx(styles.studioDoorScene, styles.studioLayerOn)}
+                  style={{clipPath: `inset(0 ${wave.revealRight}% 0 0)`}}
+                  aria-hidden="true">
+                  <img
+                    className={clsx(styles.studioPeekImg, styles.studioPeekImgActive)}
+                    src={cardUrls[transition!.toScene]}
+                    alt=""
+                    loading="eager"
+                    decoding="async"
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              )}
+              {/* the white flash bloom, masked to the arch; opacity is the CONTINUOUS --flash-o var.
+                  Forced to 0 in picket mode (the picket wave IS the flash). */}
               <span className={styles.studioFlash} aria-hidden="true" />
+              {/* the PICKET WAVE: per-strip flashes that sweep the arch (picket model, mid-crossing). */}
+              {wave && <StudioPickets flash={wave.flash} />}
             </div>
           </div>
 
@@ -978,7 +1155,7 @@ function StudioFacade({
           <div className={styles.studioArch}>
             <img
               className={styles.studioArchImg}
-              src={useBaseUrl('/img/cards/window.png')}
+              src={windowUrl}
               alt=""
               aria-hidden="true"
               loading="eager"
@@ -1084,7 +1261,7 @@ function useNavbarSceneHighlight(
 // All three feed the shared useScrollScene engine; only the geometry (`compute`) + the wrapper layout
 // differ. Pin/horizontal RELEASE after the last scene (the tall spacer simply ends), so the wheel is
 // never trapped; the listener is passive. prefers-reduced-motion is handled inside the engine.
-type ScrollModel = 'pin' | 'inplace' | 'horizontal';
+type ScrollModel = 'pin' | 'inplace' | 'horizontal' | 'pickets';
 const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (spacer = count * this)
 
 function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JSX.Element {
@@ -1124,7 +1301,11 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   }, [model]);
 
   const {tick, scrolling} = useScrollProgress(compute, progressRef, directionRef);
-  const scene = useScrollScene(progressRef, count, tick);
+  // PICKETS smooths the derived progress for a liquid wave; every other model reads the raw progress
+  // instantly (passthrough). Reduced motion disables smoothing (no animation to smooth).
+  const reduce = useReducedMotion();
+  const sm = useSmoothedProgress(progressRef, tick, requestedModel === 'pickets' && !reduce);
+  const scene = useScrollScene(sm.ref, count, sm.tick);
   const {active} = scene;
 
   useNavbarSceneHighlight(active, gateRef);
@@ -1153,7 +1334,10 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   // aborts only on a genuine NEW user scroll (a delta it didn't write).
   const snapActive = useRef(false);
   useEffect(() => {
-    if (scrolling || model === 'inplace' || snapActive.current) return; // act only on a real STOP
+    // PICKETS deliberately has NO snap: every scroll position is already a stable, legible picture (a
+    // partial wave / partial reveal), so tidying a mid-crossing rest would fight the "stop anywhere,
+    // scroll back" contract. inplace has no runway to snap within. Both bail here.
+    if (scrolling || model === 'inplace' || model === 'pickets' || snapActive.current) return; // act only on a real STOP
     if (prefersReducedMotion() || forcedScene(count) != null) return;
     const el = spacerRef.current;
     if (!el) return;
@@ -1212,7 +1396,10 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     applyHeroParams(gateRef.current);
   }, []);
 
-  const pinned = model === 'pin' || model === 'horizontal';
+  // pickets uses the SAME pinned geometry as pin (sticky hero over a tall spacer); it only differs in
+  // how a CROSSING is rendered (the per-strip wave vs the single flash) and in skipping the snap.
+  const pinned = model === 'pin' || model === 'horizontal' || model === 'pickets';
+  const picketed = model === 'pickets';
 
   // PIN FROM THE FIRST SCROLL: the hero header (eyebrow/title/subtitle) normally sits ABOVE the hero in
   // flow, so scrolling pushes those away first and the house DRIFTS up before the sticky engages. For
@@ -1321,6 +1508,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
         {...scene}
         spinning={scrolling && scene.boardFromText !== scene.boardToText}
         onJump={pinned ? jumpToScene : undefined}
+        picketed={picketed}
       />
     </Link>
   );
@@ -1397,7 +1585,7 @@ function useResolvedVariant(exp: Experiment): string | null {
 // the ANIMATION-driven Lebanese HOUSE — the self-running timer (ChooserStudio via useTimerScene), NOT
 // the scroll-driven parallax. So `localhost:3000/` cycles the house on its own clock (hold → flash →
 // next), no scroll-jacking. The parallax scroll-models stay reachable + A/B-able via the override
-// `?ab-homepage-hero-scroll=pin|inplace|horizontal`; the experiment overrides always win.
+// `?ab-homepage-hero-scroll=pin|inplace|horizontal|pickets`; the experiment overrides always win.
 const DEFAULT_HERO = 'studio'; // anim default → the house
 const DEFAULT_SCROLL_MODEL = 'static'; // scroll default → the self-running TIMER house (not parallax)
 
@@ -1427,6 +1615,7 @@ function HeroChooser() {
     if (scroll === 'pin') return <ParallaxStudio model="pin" />;
     if (scroll === 'inplace') return <ParallaxStudio model="inplace" />;
     if (scroll === 'horizontal') return <ParallaxStudio model="horizontal" />;
+    if (scroll === 'pickets') return <ParallaxStudio model="pickets" />;
     return <ChooserStudio />; // `static` (the default) → the rAF-driven timer hero
   }
   return <ChooserStrip />;
