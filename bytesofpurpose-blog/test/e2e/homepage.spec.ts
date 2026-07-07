@@ -617,6 +617,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     expect(opsAtRest.length, 'the picket wave renders during a crossing').toBeGreaterThan(0);
     expect(Math.max(...opsAtRest), 'some picket strip is lit mid-crossing').toBeGreaterThan(0.3);
 
+    // Let the smoothing fully settle before snapshotting the "rest" clip (the exponential ease can still
+    // be micro-adjusting for a beat after scrubTo's wait, esp. under load).
+    await page.waitForTimeout(400);
     const yAtRest = await page.evaluate(() => Math.round(window.scrollY));
     const clipAtRest = await revealRightPct(page);
     // WAIT well past any snap window (pin snaps within a few hundred ms). Pickets must NOT move.
@@ -625,7 +628,12 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     const clipAfter = await revealRightPct(page);
 
     expect(Math.abs(yAfter - yAtRest), `pickets must not snap (was ${yAtRest}, now ${yAfter})`).toBeLessThanOrEqual(4);
-    expect(clipAfter, 'the partial reveal must hold (no snap advancing/retreating it)').toBe(clipAtRest);
+    // The reveal must HOLD: a snap would jump it by a full scene (100%); tolerate at most one picket
+    // step (100/9 ≈ 11.2%) of smoothing quantization, which is NOT a snap.
+    expect(
+      Math.abs((clipAfter ?? 0) - (clipAtRest ?? 0)),
+      `the partial reveal must hold, not snap (was ${clipAtRest}, now ${clipAfter})`,
+    ).toBeLessThanOrEqual(11.2);
   });
 
   test('[pickets] the reveal wipes LEFT to RIGHT and REVERSES when you scroll back', async ({ page }) => {

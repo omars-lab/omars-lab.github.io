@@ -372,6 +372,16 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     the board is always a SINGLE centered row and the churn→title settle is an in-row flap, not a
     row-count jump. Guarded by the `[pickets] the board churns as a SINGLE row` e2e.
 
+25. **FIREFOX-ONLY: split-flap letters "glitch downward" a few px mid-crossing unless the glyph is on
+    its own layer.** During a flap, each leaf clips a full-height `.glyph` and rotates it (`rotateX`).
+    Firefox RE-RASTERIZES the clipped glyph every frame of the fold, and its sub-pixel vertical position
+    DRIFTS, so letters visibly drop ~8px then snap back (Chrome composites it correctly). The fix is
+    `transform: translateZ(0); backface-visibility: hidden` on `.glyph` (SplitFlap/styles.module.css):
+    that promotes the glyph to a compositor layer rasterized ONCE, so the leaf's rotate transforms a
+    stable layer. This is a PAINT artifact — `getBoundingClientRect` reports the correct layout position,
+    so a numeric e2e can't catch it; verify by screenshotting the board mid-churn IN FIREFOX (the `dev`
+    Playwright project is Firefox). Do not remove the glyph's `translateZ(0)`.
+
 ## Verify any change
 
 - `make validate-hero-anchors` — confirms every symbol this skill names still exists (exit 2 on drift).

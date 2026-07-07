@@ -95,6 +95,13 @@
   line-height: 1.18em;
   text-align: center;
   color: #f4f1ea;
+  /* FIREFOX FIX: promote the glyph to its own compositor layer so it is rasterized ONCE and the leaf's
+     rotateX transforms that stable layer. Without this, Firefox re-rasterizes the clipped glyph each
+     frame of the fold and its sub-pixel vertical position drifts, so letters appear to GLITCH DOWNWARD
+     a few px mid-crossing (a Firefox-only repaint artifact; Chrome composites it correctly). translateZ
+     forces the layer without changing layout. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .leafTop .glyph {
   top: 0;
