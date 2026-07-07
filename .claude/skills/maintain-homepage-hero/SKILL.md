@@ -73,11 +73,10 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `EXPERIMENTS['homepage-hero-scroll']` | `src/experiments.ts` | the SCROLL-MODEL flag (`control`=`static` timer, `pin`, `inplace`, `horizontal`, `pickets`). Composed with `homepage-hero-anim`: when anim resolves to `studio`, this picks timer vs parallax wrapper. |
 | `useScrollScene` | `src/pages/index.tsx` | the parallax ENGINE: maps a `[0,1]` scroll progress → `{active, mode, flashing, transition}`; crossing a scene band fires the camera flash (scroll-triggered, not timed); reduced-motion snaps with no flash. `transition` (the crossing phase + from/to) is what the picket renderer reads |
 | `useScrollProgress` | `src/pages/index.tsx` | the rAF-throttled, PASSIVE, SSR-safe scroll/resize listener that writes the progress fraction (each model supplies its own `compute`) |
-| `useSmoothedProgress` | `src/pages/index.tsx` | PICKETS-ONLY: rAF lerp (exp catch-up ~120ms) of the DERIVED progress so the wave scrubs liquid instead of chunky on discrete wheel steps. NEVER writes scroll (smooths the value, not the page); a zero-cost passthrough for every other model + reduced motion |
 | `picketStates` | `src/pages/index.tsx` | PURE: per-strip `{flash, revealed}` + the reveal `revealRight%` for a crossing at phase `t` (`PICKET_COUNT`=9, `PICKET_SPREAD`=0.5). The staggered wave; `revealed` is monotone so the new scene is ONE contiguous-left clip, not N slices |
 | `StudioFacade` | `src/pages/index.tsx` | the presentational Lebanese central-hall house (roof + body + 3 arches + hanging board + door↔scene flash), driven by props; rendered by BOTH the timer `ChooserStudio` and `ParallaxStudio`. In `picketed` mode, mid-crossing it holds FROM fully lit + reveals TO under a strip clip + renders `StudioPickets`; base-URLs all scene/door imgs ONCE at the top so hook count is constant |
 | `StudioPickets` | `src/pages/index.tsx` | the picket-wave OVERLAY: `PICKET_COUNT` strips, each with an inline per-strip opacity (its point on the wave), masked to the arch + isolated like `.studioFlash`. Replaces the single flash in the pickets model |
-| `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 4 models (`pin`/`inplace`/`horizontal`/`pickets`); pin/horizontal/pickets use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel). `pickets` uses pin geometry but SKIPS the snap (every rest is stable) and drives the facade from smoothed progress |
+| `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 4 models (`pin`/`inplace`/`horizontal`/`pickets`); pin/horizontal/pickets use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel). `pickets` uses pin geometry but SKIPS the snap (every rest is stable) and drives the wave from the RAW scroll (tracks live, no smoothing lag) |
 | `useNavbarSceneHighlight` | `src/pages/index.tsx` | lights the top-navbar `<a>` matching the active scene's destination; only while the hero is on-screen (IntersectionObserver), reverts on leave |
 | `StudioFestoon` | `src/pages/index.tsx` | the festoon string-light PROGRESS indicator: one bulb per scene, lit L-to-R by `active`. With `onJump` (scroll models) each bulb is a `<button>` that scrolls to that scene; without it (timer house) they are read-only spans. |
 | `jumpToScene` (in `ParallaxStudio`) | `src/pages/index.tsx` | scroll to scene `i`'s settled centre (the festoon bulbs call it). Reuses the snap's rAF ease + a jump-generation token so a new jump supersedes an in-flight one; reduced-motion jumps instantly. |
@@ -160,10 +159,14 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
   (how far the right strips lag the left; 0 = all flash together = the single flash, higher = a longer
   sweep) are JS constants next to `deriveSceneState`. They are NOT Hero-Tuner CSS vars (the math runs in
   JS), so change them in code, not the panel.
-- **Tune the liquid feel:** `useSmoothedProgress`'s `TAU` (~0.12s) is how fast the wave catches up to the
-  raw scroll. Lower = snappier/chunkier, higher = more liquid/laggy. It ONLY smooths the derived value;
-  it must NEVER call `scrollTo` (that would scroll-jack). Reduced motion + every non-picket model get a
-  zero-cost passthrough.
+- **The wave tracks the RAW scroll (no smoothing).** The wave is driven directly off `progressRef` /
+  the raw scroll `tick`, exactly like pin's flash, so a strip is lit at the SAME scroll position the
+  crossing is at. An earlier version smoothed the progress (exponential ease, ~0.35s trail) for a
+  "liquid" feel, but that made the wave TRAIL the scroll so it only appeared to play AFTER you stopped,
+  AND it double-rendered the facade every frame (~140 renders/s = scroll lag). Do NOT reintroduce a
+  smoothing lerp on the render path; if you want a softer feel, tune it WITHOUT trailing the scroll or
+  adding a per-frame React re-render. Guarded by `[pickets] the wave tracks the scroll LIVE` +
+  `[pickets] scrolling does not trigger a render STORM`.
 - **The reveal is ONE clip, not N slices:** because `revealed` is monotone in strip index, the new scene
   is always a contiguous LEFT block, so the picket reveal layer is a single `.studioDoorScene` clipped by
   `clip-path: inset(0 revealRight% 0 0)`. Keep the FROM layer (door or the scene you are leaving) fully lit
@@ -172,7 +175,7 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
   the mid-crossing rest is a stable picture. Do NOT add a snap back; it would fight the scrub-and-reverse
   contract that is the whole point of the mode.
 - **Freeze a specific frame with `?hero-progress=P`** (localhost only): pins the engine's raw progress
-  `p in [0,1]` directly, bypassing scroll + smoothing, so you can park on an EXACT pickets crossing PHASE
+  `p in [0,1]` directly, bypassing scroll, so you can park on an EXACT pickets crossing PHASE
   (a mid-wave frame) or a settled scene — deterministic for manual QA + e2e. `?hero-scene=N` only pins
   SETTLED scenes; `hero-progress` can freeze a transition. E.g. `&hero-progress=0.094` ≈ the door→scene-0
   peak bell; `&hero-progress=0.156` ≈ scene 0 settled. Owner `forcedProgress` (index.tsx), registered in

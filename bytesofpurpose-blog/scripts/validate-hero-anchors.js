@@ -63,7 +63,6 @@ const ANCHORS = [
   {file: EXP, needle: /['"]homepage-hero-scroll['"]/, what: "experiments.ts: the 'homepage-hero-scroll' flag key (pin/inplace/horizontal/pickets scroll-models)"},
   {file: TSX, needle: /function useScrollScene\b/, what: 'index.tsx: useScrollScene (scroll progress → {active, mode, flashing}; the scroll-triggered flash)'},
   {file: TSX, needle: /function useScrollProgress\b/, what: 'index.tsx: useScrollProgress (rAF-throttled passive scroll listener → progress)'},
-  {file: TSX, needle: /function useSmoothedProgress\b/, what: 'index.tsx: useSmoothedProgress (pickets-only rAF lerp of the derived progress for the liquid wave; never touches scroll)'},
   {file: TSX, needle: /function StudioFacade\b/, what: 'index.tsx: StudioFacade (the presentational Lebanese house, shared by timer + parallax)'},
   {file: TSX, needle: /function StudioPickets\b/, what: 'index.tsx: StudioPickets (the picket-wave overlay: per-strip flash that replaces the single flash)'},
   {file: TSX, needle: /function picketStates\b/, what: 'index.tsx: picketStates (PURE per-strip {flash, revealed} + reveal inset for the picket wave)'},

@@ -831,6 +831,99 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       `no static glyph may be GPU-layer-promoted (found ${promoted.promotedGlyphs} of ${promoted.glyphTotal})`,
     ).toBe(0);
   });
+
+  test('[pickets] the wave tracks the scroll LIVE (lights up DURING scroll, not only after stop)', async ({
+    page,
+  }) => {
+    // REGRESSION: the wave used to be driven off a SMOOTHED progress (exponential ease, ~350ms trail), so
+    // it only "played" AFTER you stopped scrolling — the opposite of a scrubbable wave. It now reads the
+    // RAW scroll, so a strip is lit at the SAME scroll position the crossing is at. We step through a
+    // crossing WITHOUT any settle wait and assert the wave is lit at mid-crossing steps (not just at rest).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const litDuringScroll = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const maxOp = () =>
+        Math.max(
+          0,
+          ...[...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map((el) =>
+            parseFloat(getComputedStyle(el as HTMLElement).opacity),
+          ),
+        );
+      let litFrames = 0;
+      // walk across the door→scene0 crossing; sample IMMEDIATELY each step (one rAF), NO settle wait
+      for (let i = 1; i <= 18; i++) {
+        window.scrollTo(0, Math.round(spacerTopPage + (0.11 * scrollable * i) / 18));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => requestAnimationFrame(() => r(null)));
+        if (maxOp() > 0.15) litFrames++;
+      }
+      return litFrames;
+    });
+    // several mid-scroll samples must show a lit strip — with the old smoothing trail this was ~0 (the
+    // wave hadn't caught up yet during the scroll).
+    expect(litDuringScroll, 'the wave must light up WHILE scrolling, not only after a stop').toBeGreaterThanOrEqual(3);
+  });
+
+  test('[pickets] scrolling does not trigger a render STORM (no smoothing double-render regression)', async ({
+    page,
+  }) => {
+    // REGRESSION: a smoothing rAF loop used to bump a second React tick every frame, so ParallaxStudio +
+    // StudioFacade re-rendered ~2× per scroll frame (~140 renders/s), the pickets scroll-lag. The wave now
+    // renders off the raw scroll only. This counts React renders during a fixed scroll (via a render probe
+    // that MutationObserves the picket container's style writes as a render proxy) and asserts renders are
+    // roughly one-per-scroll-frame, not double. Machine-independent (a ratio, not a wall-clock budget).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const ratio = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      let frames = 0;
+      let raf = 0;
+      const rec = () => {
+        frames++;
+        raf = requestAnimationFrame(rec);
+      };
+      raf = requestAnimationFrame(rec);
+      // count how many times the FACADE restyles (a render proxy) vs how many animation frames elapse.
+      let styleWrites = 0;
+      const mo = new MutationObserver((m) => {
+        styleWrites += m.length;
+      });
+      mo.observe(document.querySelector('[class*="studioFacade"]')!, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style'],
+      });
+      // continuous scroll through crossings for ~1.5s
+      const t0 = performance.now();
+      let i = 0;
+      while (performance.now() - t0 < 1500) {
+        const p = 0.06 + 0.09 * (0.5 + 0.5 * Math.sin(i / 10));
+        window.scrollTo(0, Math.round(spacerTopPage + p * scrollable));
+        window.dispatchEvent(new Event('scroll'));
+        i++;
+        await new Promise((r) => setTimeout(r, 14));
+      }
+      mo.disconnect();
+      cancelAnimationFrame(raf);
+      // style writes PER animation frame. The picket wave writes 9 strip opacities + a clip per RENDER,
+      // so ~10 writes/render. With the old double-render it was ~2 renders/frame → ~20 writes/frame; a
+      // single render/frame is ~10. Assert we're not in double-render territory.
+      return styleWrites / Math.max(1, frames);
+    });
+    // one render per frame ≈ 10 style writes/frame; a double-render regression pushes this toward ~20+.
+    expect(ratio, `facade style writes per frame (${ratio.toFixed(1)}) must not indicate a double render`).toBeLessThan(16);
+  });
 });
 
 /*

@@ -498,47 +498,70 @@ const HERO_PERF: {
   facadeRenders: number;
   parallaxRenders: number;
   scrollEvents: number;
-  smoothTicks: number;
   rawTicks: number;
-  worstStyleMs: number;
   started: boolean;
-} = {on: false, facadeRenders: 0, parallaxRenders: 0, scrollEvents: 0, smoothTicks: 0, rawTicks: 0, worstStyleMs: 0, started: false};
-function heroPerfBump(k: 'facadeRenders' | 'parallaxRenders' | 'scrollEvents' | 'smoothTicks' | 'rawTicks') {
+  lastFrameStart: number; // performance.now() at the last rAF, to time the frame that FOLLOWS an event
+} = {on: false, facadeRenders: 0, parallaxRenders: 0, scrollEvents: 0, rawTicks: 0, started: false, lastFrameStart: 0};
+function heroPerfBump(k: 'facadeRenders' | 'parallaxRenders' | 'scrollEvents' | 'rawTicks') {
   if (!HERO_PERF.on) return;
   HERO_PERF[k]++;
+}
+// Log a discrete lifecycle EVENT with a timestamp, so we can line up WHEN the lag hits vs what happened
+// (scroll started/stopped, a picket crossing entered/exited, the board settled). No-op when off.
+function heroPerfEvent(label: string, extra?: string) {
+  if (!HERO_PERF.on) return;
+  const t = (performance.now() / 1000).toFixed(3);
+  // eslint-disable-next-line no-console
+  console.log(`[hero-perf @${t}s] ${label}${extra ? ' ' + extra : ''}`);
 }
 function heroPerfStart() {
   if (HERO_PERF.started || typeof window === 'undefined') return;
   HERO_PERF.on = heroPerfOn();
   if (!HERO_PERF.on) return;
   HERO_PERF.started = true;
+  heroPerfEvent('perf logging ON', '(fps sampled each second; events timestamped as they happen)');
   // frame timing via rAF gaps
   let last = performance.now();
   let frames = 0;
   let overBudget = 0;
   let worstFrame = 0;
+  let worstFrameAt = 0;
   const tick = (now: number) => {
     const d = now - last;
     last = now;
+    HERO_PERF.lastFrameStart = now;
     frames++;
     if (d > 20) overBudget++;
-    if (d > worstFrame) worstFrame = d;
+    if (d > worstFrame) {
+      worstFrame = d;
+      worstFrameAt = now;
+    }
+    // Flag a SEVERE hitch immediately with context (which is the lag the user feels), not just in the
+    // 1s summary — so we can see exactly when a long frame lands relative to the lifecycle events.
+    if (d > 50) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[hero-perf @${(now / 1000).toFixed(3)}s] HITCH ${d.toFixed(1)}ms frame | ` +
+          `since last sec: renders(P=${HERO_PERF.parallaxRenders} F=${HERO_PERF.facadeRenders}) ` +
+          `scroll=${HERO_PERF.scrollEvents} raw=${HERO_PERF.rawTicks}`,
+      );
+    }
     window.requestAnimationFrame(tick);
   };
   window.requestAnimationFrame(tick);
   window.setInterval(() => {
     // eslint-disable-next-line no-console
     console.log(
-      `[hero-perf] fps~${frames} overBudgetFrames=${overBudget} worstFrame=${worstFrame.toFixed(1)}ms | ` +
-        `scrollEvents=${HERO_PERF.scrollEvents} rawTicks=${HERO_PERF.rawTicks} smoothTicks=${HERO_PERF.smoothTicks} | ` +
+      `[hero-perf] fps~${frames} overBudgetFrames=${overBudget} worstFrame=${worstFrame.toFixed(1)}ms@${(worstFrameAt / 1000).toFixed(3)}s | ` +
+        `scrollEvents=${HERO_PERF.scrollEvents} rawTicks=${HERO_PERF.rawTicks} | ` +
         `ParallaxStudio renders=${HERO_PERF.parallaxRenders} StudioFacade renders=${HERO_PERF.facadeRenders}`,
     );
     frames = 0;
     overBudget = 0;
     worstFrame = 0;
+    worstFrameAt = 0;
     HERO_PERF.scrollEvents = 0;
     HERO_PERF.rawTicks = 0;
-    HERO_PERF.smoothTicks = 0;
     HERO_PERF.parallaxRenders = 0;
     HERO_PERF.facadeRenders = 0;
   }, 1000);
@@ -877,6 +900,7 @@ function useScrollProgress(
         }
       });
     };
+    let scrollingNow = false; // local mirror so we can log the true→false / false→true EDGES
     const onScroll = () => {
       heroPerfBump('scrollEvents');
       // a REAL scroll event: mark scrolling true + reset the idle timer that settles it back to false.
@@ -886,9 +910,17 @@ function useScrollProgress(
       const y = window.scrollY;
       if (directionRef && y !== lastY) directionRef.current = y > lastY ? 1 : -1;
       lastY = y;
+      if (!scrollingNow) {
+        scrollingNow = true;
+        heroPerfEvent('SCROLL START', `y=${Math.round(y)}`);
+      }
       setScrolling(true);
       window.clearTimeout(idle);
-      idle = window.setTimeout(() => setScrolling(false), 140); // ~140ms of no scroll = "stopped"
+      idle = window.setTimeout(() => {
+        setScrolling(false);
+        scrollingNow = false;
+        heroPerfEvent('SCROLL STOP', `y=${Math.round(window.scrollY)}`);
+      }, 140); // ~140ms of no scroll = "stopped"
       recompute();
     };
     recompute(); // initialise progress on mount WITHOUT flagging "scrolling"
@@ -903,79 +935,6 @@ function useScrollProgress(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return {tick, scrolling};
-}
-
-/**
- * SMOOTHED progress (the pickets "liquid wave" feel): wheel events land the raw progress in discrete
- * jumps; scrubbing a strip wave off that raw value reads chunky. This hook lerps a SMOOTH ref toward
- * the raw `progressRef` on a rAF clock (exponential catch-up, ~120ms time constant) and bumps its own
- * tick so `useScrollScene` re-derives off the smooth value. It ONLY reads/writes its own ref and the
- * scroll position is NEVER touched (no scroll-jack) — this smooths the DERIVED value, not the page.
- * When `enabled` is false (every non-picket model, or reduced motion) it is a zero-cost passthrough of
- * the raw ref + raw tick, so pin/inplace/horizontal keep their exact instant scrub.
- */
-function useSmoothedProgress(
-  progressRef: React.MutableRefObject<number>,
-  rawTick: number,
-  enabled: boolean,
-): {ref: React.MutableRefObject<number>; tick: number} {
-  const smoothRef = useRef(progressRef.current);
-  const renderedRef = useRef(progressRef.current); // the smoothed value we last RE-RENDERED on
-  const [smoothTick, setSmoothTick] = useState(0);
-  useEffect(() => {
-    if (!enabled) {
-      smoothRef.current = progressRef.current; // keep it exact so a later enable starts aligned
-      renderedRef.current = progressRef.current;
-      return undefined;
-    }
-    let raf = 0;
-    let last: number | null = null;
-    const TAU = 0.12; // seconds: how fast the smooth value catches up to the raw target
-    // Only trigger a React re-render when the smoothed value moved enough to CHANGE the visible frame.
-    // The wave is 9 pickets across ~8 stops; a progress delta below this is sub-pixel/imperceptible, so
-    // re-rendering the whole facade on every rAF ease step (the pickets scroll-lag: ~80 renders/s) is
-    // wasted work. This coarsens the ease to only paint-worthy steps while `smoothRef` still eases
-    // continuously (so the FINAL landed value is exact). Tuned small enough that the wave still reads
-    // liquid, large enough to cut the render count sharply.
-    const RENDER_EPS = 0.0006;
-    const bump = (v: number) => {
-      smoothRef.current = v;
-      if (Math.abs(v - renderedRef.current) >= RENDER_EPS) {
-        renderedRef.current = v;
-        heroPerfBump('smoothTicks');
-        setSmoothTick((t) => (t + 1) % 1_000_000);
-      }
-    };
-    const step = (now: number) => {
-      const target = progressRef.current;
-      const dt = last == null ? 0 : (now - last) / 1000;
-      last = now;
-      const cur = smoothRef.current;
-      const diff = target - cur;
-      if (Math.abs(diff) < 0.0005) {
-        // close enough: snap EXACT and force a final render so the landed frame is precise, then PARK
-        // (a new raw scroll re-runs this effect via rawTick).
-        if (cur !== target || renderedRef.current !== target) {
-          smoothRef.current = target;
-          renderedRef.current = target;
-          heroPerfBump('smoothTicks');
-          setSmoothTick((t) => (t + 1) % 1_000_000);
-        }
-        return;
-      }
-      // exponential ease toward target, frame-rate independent: fraction = 1 - e^(-dt/TAU)
-      const k = dt > 0 ? 1 - Math.exp(-dt / TAU) : 0.2;
-      bump(cur + diff * k);
-      raf = window.requestAnimationFrame(step);
-    };
-    raf = window.requestAnimationFrame(step);
-    return () => window.cancelAnimationFrame(raf);
-    // rawTick restarts the loop whenever the raw progress moves (so parked → chasing again)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, rawTick]);
-
-  // passthrough when disabled: the raw ref + raw tick, so non-picket models are untouched.
-  return enabled ? {ref: smoothRef, tick: smoothTick} : {ref: progressRef, tick: rawTick};
 }
 
 /* FESTOON STRING LIGHTS: the scene-progress indicator. A swag of bulbs strung under the eave, one per
@@ -1465,13 +1424,33 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     return Math.min(1, Math.max(0, -rect.top / scrollable));
   }, [model]);
 
-  const {tick, scrolling} = useScrollProgress(compute, progressRef, directionRef);
-  // PICKETS smooths the derived progress for a liquid wave; every other model reads the raw progress
-  // instantly (passthrough). Reduced motion disables smoothing (no animation to smooth).
+  // PICKETS tracks the RAW scroll directly (like pin's flash), NOT a smoothed value. The old smoothing
+  // (exponential ease, TAU 0.12s) trailed the scroll by ~350ms, so the wave only appeared to "play" AFTER
+  // you stopped — the opposite of what a scrubbable wave should do. Reading raw progress means the wave
+  // scrubs live WITH the wheel. (Reduced motion is handled inside the engine.)
   const reduce = useReducedMotion();
-  const sm = useSmoothedProgress(progressRef, tick, requestedModel === 'pickets' && !reduce);
-  const scene = useScrollScene(sm.ref, count, sm.tick);
+  const {tick, scrolling} = useScrollProgress(compute, progressRef, directionRef);
+  const scene = useScrollScene(progressRef, count, tick);
   const {active} = scene;
+
+  // PERF DEBUG: log the picket lifecycle EDGES (crossing enter/exit, scene commit) with timestamps, so
+  // the console shows WHEN the lag hits relative to what the wave is doing. No-op when ?hero-perf is off.
+  const prevInCrossingRef = useRef(false);
+  const prevActiveRef = useRef(active);
+  if (HERO_PERF.on) {
+    const inCrossing = scene.transition != null;
+    if (inCrossing !== prevInCrossingRef.current) {
+      heroPerfEvent(
+        inCrossing ? 'CROSSING ENTER' : 'CROSSING EXIT (settled)',
+        `active=${active} shown=${scene.shown}`,
+      );
+      prevInCrossingRef.current = inCrossing;
+    }
+    if (active !== prevActiveRef.current) {
+      heroPerfEvent('SCENE COMMIT', `active ${prevActiveRef.current}→${active}`);
+      prevActiveRef.current = active;
+    }
+  }
 
   // PICKETS BOARD TARGET from RAW progress (not the smoothed value): the board's resting text must be
   // STABLE the instant scrolling stops, but the SMOOTHED progress keeps easing for ~120ms after a stop,
@@ -1479,6 +1458,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   // cells (a roll cell remounted mid-fold when its target char changes). The RAW progress stabilizes
   // immediately at the stop position, so deriving the board target from it gives the settle a FIXED
   // destination. Recomputed on each raw `tick`; only used by the pickets board (see StudioFacade).
+  // The board's resting text, recomputed each render off the raw progress ref (now the render driver).
   const rawBoardText = useMemo(() => {
     if (requestedModel !== 'pickets') return undefined;
     const s = deriveSceneState(progressRef.current, count, reduce);
