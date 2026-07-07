@@ -372,15 +372,20 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     the board is always a SINGLE centered row and the churn→title settle is an in-row flap, not a
     row-count jump. Guarded by the `[pickets] the board churns as a SINGLE row` e2e.
 
-25. **FIREFOX-ONLY: split-flap letters "glitch downward" a few px mid-crossing unless the glyph is on
-    its own layer.** During a flap, each leaf clips a full-height `.glyph` and rotates it (`rotateX`).
-    Firefox RE-RASTERIZES the clipped glyph every frame of the fold, and its sub-pixel vertical position
-    DRIFTS, so letters visibly drop ~8px then snap back (Chrome composites it correctly). The fix is
-    `transform: translateZ(0); backface-visibility: hidden` on `.glyph` (SplitFlap/styles.module.css):
-    that promotes the glyph to a compositor layer rasterized ONCE, so the leaf's rotate transforms a
-    stable layer. This is a PAINT artifact — `getBoundingClientRect` reports the correct layout position,
-    so a numeric e2e can't catch it; verify by screenshotting the board mid-churn IN FIREFOX (the `dev`
-    Playwright project is Firefox). Do not remove the glyph's `translateZ(0)`.
+25. **FIREFOX-ONLY: split-flap letters "glitch downward" mid-crossing — fix it on the FOLD LEAVES, NOT
+    every glyph (that lags scroll).** During a flap, each leaf clips a full-height `.glyph` and rotates
+    it (`rotateX`). Firefox RE-RASTERIZES the clipped glyph every frame of the fold and its sub-pixel
+    vertical position DRIFTS, so letters visibly drop ~8px then snap back (Chrome composites it right).
+    The fix is `will-change: transform` on the MOVING leaves `.foldDown`/`.foldUp` only
+    (SplitFlap/styles.module.css) — a handful exist at a time, only while flipping. **Do NOT put the
+    promotion on `.glyph`** (or `.leaf`, or `.cell`): the board has ~144 static glyph spans, and
+    promoting all of them explodes the compositor layer count and makes SCROLL LAG badly on real
+    hardware. Two subtleties: (a) it's a PAINT artifact, so `getBoundingClientRect` reports the correct
+    layout — verify the FIX by screenshotting the board mid-churn IN FIREFOX (the `dev` Playwright project
+    is Firefox); (b) `translateZ(0)` computes to a 2D `matrix(1,0,0,1,0,0)` in Firefox, so a computed-
+    style check for `translateZ` misses it — the regression guard checks `transform !== 'none'` on a
+    RESTING (non-flipping) glyph instead. Guarded by `[pickets] the board does NOT layer-promote every
+    glyph` (a frame-timing test does NOT catch this — a fast CI box composites 144 layers fine).
 
 ## Verify any change
 

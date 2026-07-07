@@ -762,6 +762,51 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     const board = await boardCollapsed(page);
     expect(board.includes('CRAFT'), 'mid-crossing board is a scramble, not the title').toBe(false);
   });
+
+  test('[pickets] the board does NOT layer-promote every glyph (scroll-lag regression guard)', async ({
+    page,
+  }) => {
+    // PERF REGRESSION GUARD (deterministic, machine-independent). The split-flap board has ~144 glyph
+    // spans. Promoting EVERY one to its own compositor layer (a naive Firefox fix: `transform:
+    // translateZ(0)` / `will-change: transform` on `.glyph`) explodes the layer count and makes SCROLL
+    // lag badly on real hardware. A frame-timing test misses this on a fast CI box (it composites 144
+    // layers fine), so instead we assert the CODE-LEVEL invariant: only a SMALL, bounded number of
+    // board elements carry a layer-promoting property, and NONE of them are the numerous static glyphs.
+    // The legit promotions are the FOLDING leaves (.foldDown/.foldUp) — a handful, only while flipping.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Settle on a scene (no cells flipping) so the ONLY layer-promoting styles left are ones baked into
+    // a static rule — a correctly-built board has NONE. (During a flip, fold leaves legitimately promote,
+    // which is fine and transient; we check the RESTING state to isolate the bad `.glyph` rule.)
+    await scrubTo(page, (1 + 0.25) / 8);
+    await expect
+      .poll(() => boardCollapsed(page), { timeout: 5000 })
+      .toBe('DISCOVERMYCRAFT');
+    const promoted = await page.evaluate(() => {
+      // A promoted GLYPH shows a non-`none` transform (translateZ(0) computes to matrix(1,0,0,1,0,0), a
+      // 2D matrix in Firefox, so we can't string-match translateZ — any non-none transform on a static
+      // glyph means it was force-promoted) OR a transform-related will-change.
+      const isPromoted = (el: Element) => {
+        const s = getComputedStyle(el);
+        return (s.transform && s.transform !== 'none') || /transform/.test(s.willChange || '');
+      };
+      const board = document.querySelector('[class*="studioSign"]')!;
+      const glyphs = [...board.querySelectorAll('[class*="glyph"]')];
+      return {
+        promotedGlyphs: glyphs.filter(isPromoted).length,
+        glyphTotal: glyphs.length,
+      };
+    });
+
+    // THE guard: ZERO static glyphs are layer-promoted. Promoting all ~168 glyphs (a naive Firefox fix
+    // on `.glyph`) is the compositor-layer explosion that lagged scroll. The Firefox fix must live on the
+    // transient fold LEAVES only (see SplitFlap/styles.module.css), never the static glyphs.
+    expect(
+      promoted.promotedGlyphs,
+      `no static glyph may be GPU-layer-promoted (found ${promoted.promotedGlyphs} of ${promoted.glyphTotal})`,
+    ).toBe(0);
+  });
 });
 
 /*

@@ -95,13 +95,6 @@
   line-height: 1.18em;
   text-align: center;
   color: #f4f1ea;
-  /* FIREFOX FIX: promote the glyph to its own compositor layer so it is rasterized ONCE and the leaf's
-     rotateX transforms that stable layer. Without this, Firefox re-rasterizes the clipped glyph each
-     frame of the fold and its sub-pixel vertical position drifts, so letters appear to GLITCH DOWNWARD
-     a few px mid-crossing (a Firefox-only repaint artifact; Chrome composites it correctly). translateZ
-     forces the layer without changing layout. */
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .leafTop .glyph {
   top: 0;
@@ -113,12 +106,22 @@
 /* The MOVING leaves during a flip. The OLD char's top half folds DOWN to the hinge in the first
    half of the step; the NEW char's bottom half folds UP from the hinge in the second half. Each is
    an opaque dark leaf so no light bleeds through. */
+/* FIREFOX FIX (scoped to the MOVING leaves only, so it does NOT explode compositor layers): the two
+   folding leaves clip a full-height glyph and rotateX it. Firefox re-rasterizes that clipped glyph each
+   frame and its sub-pixel vertical position drifts, so letters appear to GLITCH DOWNWARD a few px
+   mid-crossing (Chrome composites it right). `will-change: transform` promotes JUST the folding leaf
+   (only a handful exist at a time, one pair per actively-flipping cell, and only during a flip) to a
+   stable layer, so the glyph is rasterized once and the rotate transforms the layer. We do NOT promote
+   the 144 STATIC glyphs — that layer explosion is what caused the scroll lag; only the leaves that
+   actually rotate get a layer, and only while they are rotating. */
 .foldDown {
   z-index: 2;
+  will-change: transform;
   animation: flapFoldDown calc(var(--flip-ms) / 2) cubic-bezier(0.4, 0, 1, 0.5) forwards;
 }
 .foldUp {
   z-index: 2;
+  will-change: transform;
   animation: flapFoldUp calc(var(--flip-ms) / 2) cubic-bezier(0, 0.5, 0.6, 1) forwards;
   animation-delay: calc(var(--flip-ms) / 2);
   transform: rotateX(90deg);
