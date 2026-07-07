@@ -924,6 +924,63 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     // one render per frame ≈ 10 style writes/frame; a double-render regression pushes this toward ~20+.
     expect(ratio, `facade style writes per frame (${ratio.toFixed(1)}) must not indicate a double render`).toBeLessThan(16);
   });
+
+  test('[pickets] a per-frame hero style write does NOT force a whole-document reflow (layout thrash)', async ({
+    page,
+  }) => {
+    // THE big lag: the picket wave writes styles (opacities + reveal clip-path) every scroll frame. If the
+    // hero is NOT layout-contained, each write dirties the WHOLE document, and Docusaurus's global scroll
+    // handler then forces a full synchronous reflow — which ballooned single frames to 400ms–2s on real
+    // hardware (a fast dev box under-reproduces, so a wall-clock budget would flakily pass). Instead we
+    // assert the STRUCTURAL fix + a relative cost: (1) the sticky is layout-contained; (2) forcing layout
+    // AFTER a hero style write costs about the SAME as with no write (contained) rather than far more
+    // (thrash). The ratio is machine-independent.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    await scrubTo(page, 0.1); // into a crossing so the reveal + picket layers exist
+
+    const probe = await page.evaluate(async () => {
+      const stick = document.querySelector('[class*="parallaxStick"]') as HTMLElement | null;
+      const contain = stick ? getComputedStyle(stick).contain : '';
+      const reveal = [...document.querySelectorAll('[class*="studioDoorScene"]')].find(
+        (d) => (d as HTMLElement).style.clipPath,
+      ) as HTMLElement | undefined;
+      const pickets = [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')] as HTMLElement[];
+      if (!reveal || !pickets.length) return { contain, err: 'no crossing layers' };
+
+      // time forcing a document layout AFTER a hero style write vs after NO write. Contained → similar;
+      // thrashing → the write path is far more expensive because it reflows the whole doc.
+      const time = (write: (k: number) => void, n = 60) => {
+        // warm up
+        for (let k = 0; k < 5; k++) { write(k); void document.body.offsetHeight; }
+        const t0 = performance.now();
+        for (let k = 0; k < n; k++) { write(k); void document.body.offsetHeight; }
+        return (performance.now() - t0) / n;
+      };
+      const withWrite = time((k) => {
+        reveal.style.clipPath = `inset(0 ${15 + (k % 40)}% 0 0)`;
+        pickets.forEach((p, i) => (p.style.opacity = String(((0.3 + 0.01 * k + 0.05 * i) % 1))));
+      });
+      const noWrite = time(() => {});
+      return { contain, withWriteMs: +withWrite.toFixed(3), noWriteMs: +noWrite.toFixed(3) };
+    });
+
+    // PRIMARY (deterministic, machine-independent): the sticky must be layout-contained. This IS the fix;
+    // a bare `contain: none`/'' is the bug that let a hero style write dirty the whole document.
+    expect(probe.contain, 'the pinned hero must be layout-contained (contain: layout paint style)').toMatch(
+      /layout|paint|content|strict/,
+    );
+    // SECONDARY (absolute, generous): with containment, forcing layout after a hero style write is cheap
+    // (sub-ms on any machine, since only the hero subtree reflows). The thrash bug made this balloon
+    // because the whole document reflowed. A generous 5ms ceiling catches the gross regression without
+    // being flaky on a loaded CI box. (Skipped if the crossing layers weren't captured.)
+    if (probe.withWriteMs != null) {
+      expect(
+        probe.withWriteMs,
+        `forcing layout after a hero style write (${probe.withWriteMs}ms) must stay cheap — a big value means it reflows the whole document (thrash)`,
+      ).toBeLessThan(5);
+    }
+  });
 });
 
 /*

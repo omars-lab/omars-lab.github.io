@@ -81,6 +81,15 @@ export default defineConfig({
       use: { ...devices['Desktop Firefox'], baseURL: DEV_BASE },
     },
     {
+      // HERO SCROLL PERFORMANCE against the dev server (:3000). CHROMIUM-only: it uses CDP
+      // `Emulation.setCPUThrottlingRate` to slow the CPU down (reproduce slow-hardware scroll lag on a
+      // fast runner), which Firefox/WebKit can't do. Catches the pickets layout-thrash class of bug that
+      // correctness tests + a fast-box frame budget both miss. Runs its own throttled contexts.
+      name: 'hero-perf',
+      testMatch: /hero-perf\.spec\.ts$/,
+      use: { ...devices['Desktop Chrome'], baseURL: DEV_BASE },
+    },
+    {
       // A11y + SEO scans against a PRODUCTION build (:4173). These MUST run on a
       // real build, not the dev server, because build-only transforms (e.g. the
       // task-list aria-label rehype plugin) don't run in `yarn start`. Start the
