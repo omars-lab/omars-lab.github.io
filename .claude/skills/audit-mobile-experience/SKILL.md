@@ -13,8 +13,10 @@ emits a **prioritized report** — it does not silently auto-edit (same contract
 `review-reader-experience`).
 
 Pairs with: `review-reader-experience` (the reader's-lens audit — labels/voice/IA),
-`validate-deployment` (post-deploy live checks). Apply any fixes through the owning
-surface's conventions; this skill only finds and prioritizes.
+`audit-test-realism` (the sibling that audits whether the PLAYWRIGHT SUITES drive
+touch/gesture/journeys like a real user — this skill audits the rendered page, that one
+audits the tests), `validate-deployment` (post-deploy live checks). Apply any fixes through
+the owning surface's conventions; this skill only finds and prioritizes.
 
 ## Audit from the MOBILE USER's perspective (not the device's)
 

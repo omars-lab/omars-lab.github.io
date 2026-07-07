@@ -229,12 +229,28 @@ The tests are configured to:
 
 **Test Speed**: Tests use optimized timeouts and single-worker execution for faster, more reliable runs.
 
+## Auditing test REALISM (do the tests drive the site like a real user?)
+
+A green suite proves the site works **the way the tests drive it**, not the way a person does.
+The `audit-test-realism` skill audits these specs for that gap: a uniform `window.scrollTo`
+teleport standing in for an inertial trackpad flick (the exact shortcut that let the pickets
+hero scroll bug ship green — only a **decaying-momentum flick that samples every frame**, in
+`hero-perf.spec.ts`, reproduced it), a `.click()` standing in for a touch tap, or always
+`page.goto(finalUrl)` instead of the real arrival paths (cold deep-land, back button, anchor,
+shared URL). It also names the standing structural gap: **every project here is Desktop
+(`devices['Desktop …']`), so `hasTouch` is false and there is no mobile-viewport project** — so
+touch/mobile-viewport behaviors are untestable in e2e today (the mobile *experience* is audited
+manually via `audit-mobile-experience`). Run that skill after a scroll/gesture/interaction change
+or when a bug slips past a green suite.
+
 ## Limitations
 
 - Text extraction from canvas is approximate (uses pixel analysis)
 - Tests rely on visual patterns rather than exact text matching
 - Some tests may be flaky if graph layout changes between runs
 - Screenshots are for manual verification, not automated comparison
+- **Input realism**: most specs drive synthetic input (`scrollTo`, `.click()`); see the
+  `audit-test-realism` skill for where a real gesture/tap/journey would tell a different story.
 
 ## Future Improvements
 

@@ -12,8 +12,10 @@ The **desktop user is a different person in a different mode**, and the layout h
 reader with a mouse and a wide monitor can read and work comfortably.
 
 Pairs with: `audit-mobile-experience` (the touch/small-screen sibling),
-`review-reader-experience` (labels/voice/IA), `validate-deployment`. Report only — it finds
-and prioritizes; it does not auto-edit.
+`audit-test-realism` (audits whether the PLAYWRIGHT SUITES drive input/journeys like a real
+user — the test-level counterpart to this page-level audit), `review-reader-experience`
+(labels/voice/IA), `validate-deployment`. Report only — it finds and prioritizes; it does not
+auto-edit.
 
 ## Audit from the DESKTOP USER's perspective (not the device's)
 

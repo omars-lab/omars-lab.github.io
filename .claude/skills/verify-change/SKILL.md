@@ -35,7 +35,7 @@ convention: a new interactive component is not done until it has been LOOKED AT 
 | **`docusaurus.config.js` redirects** | `validate-redirects` (needs the FULL install — it imports the config → prism themes); after a MOVE, repoint + collapse chains |
 | **CSS (`src/css/custom.css`)** | `check-contrast`, `validate-ds-tokens`; if it touches the hero, `test-visual` |
 | **A `@omars-lab/blog-ui` or `src/` component** | `make build-blog-ui` (rebuild dist + relink), `yarn typecheck`, `yarn test` (jest), T4 render, the mobile/desktop audit (`audit-mobile-experience`) |
-| **The homepage hero** (`index.tsx`/`index.module.css`/`SplitFlap`) | `validate-hero-anchors`, `test-visual` |
+| **The homepage hero** (`index.tsx`/`index.module.css`/`SplitFlap`) | `validate-hero-anchors`, `test-visual`; if you changed a SCROLL/GESTURE behavior, audit test realism (`audit-test-realism`) — a uniform `scrollTo` test can pass while a real inertial flick breaks (the pickets teleport class) |
 | **A generator or generated data** | `npm run generate-assets`, then validate the consumer (the block-generated-edits hook forbids editing the output directly) |
 | **A URL query param** | `validate-url-params` |
 | **A hero card PNG / arch asset** | `validate-arch-assets` |
