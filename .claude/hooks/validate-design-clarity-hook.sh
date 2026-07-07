@@ -2,7 +2,8 @@
 # PostToolUse hook for Edit|Write: WARN (never block) on the MECHANICAL clarity/leak tells in a
 # /designs post. Surfaces every advisory from scripts/validate-design-clarity.js for the edited file:
 #
-#   - leak-term         a banned proprietary/internal term (scripts/lib/design-leak-terms.json)
+#   - leak-term         a banned proprietary/internal term (from the gitignored .env key
+#                       DESIGN_LEAK_TERMS; the validator reads .env itself, so no export is needed)
 #   - trailing-ellipsis a line ends in a "…"/"..." placeholder-thought
 #   - verbatim-dup      a non-trivial line is repeated verbatim within the post
 #   - thin-section      an H2 section is a near-empty stub

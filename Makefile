@@ -99,7 +99,11 @@ validate-visual-density: ## Nudge: flag H2 sections that run long (>280 words) w
 	( cd ${SITEROOT} && node scripts/validate-visual-density.js $(DIRS) )
 
 validate-design-clarity: ## Nudge: mechanical clarity/leak tells in /designs posts (trailing "…", verbatim dupes, banned proprietary terms, thin sections, ascii-redraw of a mermaid) — the greppable half of the refine-design-post skill
-	( cd ${SITEROOT} && node scripts/validate-design-clarity.js $(DIRS) )
+	@# The banned-term list is SENSITIVE, so it lives ONLY in the gitignored .env (key DESIGN_LEAK_TERMS),
+	@# NOT in git. Extract it per-var (NOT `source .env` — shell-special chars) and export it for the
+	@# validator; if it's absent the leak check simply no-ops (the other checks still run).
+	@LEAK=$$(grep -E '^DESIGN_LEAK_TERMS=' .env 2>/dev/null | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | sed 's/^["'\'']//;s/["'\'']$$//'); \
+	( cd ${SITEROOT} && DESIGN_LEAK_TERMS="$$LEAK" node scripts/validate-design-clarity.js $(DIRS) )
 
 features-check: ## Check the feature why-docs (features/*.md) for drift (auto-heals moves; exits non-zero on real drift)
 	python3 ${SITEROOT}/scripts/features_check.py
