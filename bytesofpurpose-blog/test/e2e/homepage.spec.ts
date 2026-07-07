@@ -705,6 +705,30 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board rolls to the scene title' })
       .toBe('DISCOVERMYCRAFT');
   });
+
+  test('[pickets] ?hero-progress=P freezes an exact frame (a mid-wave crossing, deterministically)', async ({
+    page,
+  }) => {
+    // hero-progress pins the RAW engine progress, bypassing scroll + smoothing, so a specific pickets
+    // crossing PHASE is frozen (what hero-scene=N, settled-only, cannot do). p≈0.094 is the door→scene0
+    // peak: the wave is lit and the board rests on a scramble (not the title).
+    await page.goto(heroUrl('pickets') + '&hero-progress=0.094', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1200); // let the (one-time) board settle roll finish
+
+    // the wave is lit at the peak (some picket strip bright), and it is FROZEN (no scroll needed)
+    const ops = await picketOpacities(page);
+    expect(ops.length, 'pickets render at the frozen crossing').toBeGreaterThan(0);
+    expect(Math.max(...ops), 'the wave is lit at the frozen peak').toBeGreaterThan(0.5);
+    // frozen means stable across time with zero interaction
+    const before = await page.evaluate(() => window.scrollY);
+    await page.waitForTimeout(600);
+    const after = await page.evaluate(() => window.scrollY);
+    expect(after, 'a frozen frame does not move').toBe(before);
+    // the board rests on a scramble mid-crossing, NOT the destination title
+    const board = await boardCollapsed(page);
+    expect(board.includes('CRAFT'), 'mid-crossing board is a scramble, not the title').toBe(false);
+  });
 });
 
 /*

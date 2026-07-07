@@ -171,6 +171,12 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
 - **No snap by design:** pickets extends the snap effect's early guard (`model === 'pickets'` bails) and
   the mid-crossing rest is a stable picture. Do NOT add a snap back; it would fight the scrub-and-reverse
   contract that is the whole point of the mode.
+- **Freeze a specific frame with `?hero-progress=P`** (localhost only): pins the engine's raw progress
+  `p in [0,1]` directly, bypassing scroll + smoothing, so you can park on an EXACT pickets crossing PHASE
+  (a mid-wave frame) or a settled scene — deterministic for manual QA + e2e. `?hero-scene=N` only pins
+  SETTLED scenes; `hero-progress` can freeze a transition. E.g. `&hero-progress=0.094` ≈ the door→scene-0
+  peak bell; `&hero-progress=0.156` ≈ scene 0 settled. Owner `forcedProgress` (index.tsx), registered in
+  the URL-param registry.
 
 ## ⚠️ Gotchas (the things that bite — don't re-break these)
 
@@ -341,18 +347,25 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     `--flash-o` is forced to 0 in picket mode (the pickets ARE the flash), and `.studioPickets` sits at
     `z-index: 4` (above the scene layers + the off single-flash) so the wave reads as the top bloom.
 
-24. **The pickets BOARD churns while scrolling, then settles to a scramble (mid-crossing) or the title
-    (settled).** `ParallaxStudio` passes `spinning={scrolling}` for pickets (churn only while the wheel
-    moves). On STOP, `StudioFacade`'s `boardTarget` decides the resting state: mid-crossing
-    (`transition != null`) it is a DETERMINISTIC `picketBoardScramble(transition)` (a stable single-word
-    random string, so a mid-wave rest reads as a departure board frozen mid-swap, not the destination
-    title showing early); settled it is the scene title. The settle is a real ~`PICKET_BOARD_SETTLE_MS`
-    (750ms) roll via SplitFlap's new `settleRollMs` prop. Two traps in `SplitFlap`: (a) the scramble is a
-    SINGLE title-length word (not a board-filling block) so the scramble→title swap keeps the SAME grid
-    footprint (a different-length block reshapes the grid and strands flanking cells); (b) on settle the
-    `SpinningCell` mounts a FRESH `Cell` (rolling from a fixed `ROLL_FROM` glyph via the new `from` prop,
-    or snapping for pin/inplace/horizontal) — a churning cell asked to roll in place can strand its two
-    faces one glyph off ("DISCOVUEUR"); a fresh, uninterrupted roll cannot. Blank-target cells always snap.
+24. **The pickets BOARD churns while scrolling, then does a strand-free roll to a scramble (mid-crossing)
+    or the title (settled).** `ParallaxStudio` passes `spinning={scrolling}` for pickets (churn only while
+    the wheel moves). On STOP the resting state is chosen from the RAW progress (see `rawBoardText` +
+    `boardTextOverride`), NOT the smoothed scene: mid-crossing → a DETERMINISTIC `picketBoardScramble`
+    (a stable random string, so a mid-wave rest reads as a departure board frozen mid-swap, not the
+    destination title early); settled → the scene title. The settle is a real ~`PICKET_BOARD_SETTLE_MS`
+    (750ms) roll via SplitFlap's `settleRollMs`. FOUR traps, each of which stranded the flap cells
+    ("DISCOVUEUR", punctuation stuck mid-roll) until fixed — do not reintroduce any:
+    (a) the board target must be STABLE through the settle; the SMOOTHED scene keeps easing for ~120ms
+    after a stop and flips scramble↔title mid-roll, remounting cells mid-fold. Derive it from RAW progress
+    (`rawBoardText`), which is fixed the instant you stop.
+    (b) the scramble is sized to the DESTINATION title (same length + space positions), so scramble→title
+    is an in-place per-cell swap; a different-length scramble re-centers the grid and shifts cell slots.
+    (c) on settle, `SpinningCell` mounts a FRESH `Cell` (never rolls a churning cell in place — a churn
+    tick or a re-render mid-fold strands the two faces).
+    (d) the fresh settle `Cell` rolls from BLANK (`ROLL_FROM`) FORWARD via `from`; blank is deck index 0
+    so every target is a bounded forward roll (A,B,C..) that arrives with its neighbours. A non-blank
+    start glyph makes targets before it in the deck wrap through the whole punctuation tail (wildly
+    different arrival times, ugly). pin/inplace/horizontal keep the instant SNAP (`settleRollMs` unset).
 
 ## Verify any change
 

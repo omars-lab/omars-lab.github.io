@@ -13,7 +13,7 @@ import SplitFlap from '../components/SplitFlap';
 import posthog from 'posthog-js';
 import {EXPERIMENTS, resolveVariant, isLocalhost, urlOverride, type Experiment} from '../experiments';
 import {applyHeroParams} from '../lib/hero-tuning';
-import {HERO_SCENE_PARAM} from '../lib/url-params';
+import {HERO_SCENE_PARAM, HERO_PROGRESS_PARAM} from '../lib/url-params';
 
 /* The hero chooser cards (folded in from the old /welcome page). To ADD a card, append an
    entry here and drop its arched PNG in static/img/cards/, and the film strip + the seamless loop
@@ -500,6 +500,20 @@ function forcedScene(count: number): number | null {
   return n;
 }
 
+// TEST/QA seam: `?hero-progress=P` PINS the engine's raw progress p in [0,1], bypassing scroll AND the
+// pickets smoothing, so ANY state is deterministically FROZEN — crucially a specific pickets crossing
+// PHASE (a mid-wave frame), which `?hero-scene=N` (settled scenes only) cannot express. Localhost-only
+// (same gate as the ab- overrides + hero-scene) so production ignores it. Registered as `hero-progress`
+// in the URL-param registry (src/lib/url-params.ts). When set it wins over hero-scene.
+function forcedProgress(): number | null {
+  if (!isLocalhost()) return null;
+  const raw = new URLSearchParams(window.location.search).get(HERO_PROGRESS_PARAM);
+  if (raw == null) return null;
+  const p = Number.parseFloat(raw);
+  if (!Number.isFinite(p)) return null;
+  return Math.min(1, Math.max(0, p)); // clamp to [0,1]
+}
+
 type SceneState = {
   active: number; // the scene currently CENTERED (the one the gate links to / commits)
   shown: number; // the scene the DOOR currently shows (swaps to `active` at the flash peak)
@@ -603,6 +617,12 @@ const PICKET_BOARD_SETTLE_MS = 750;
 // scramble→title swap is a clean per-cell letter change on the SAME grid footprint (a full-board block
 // of a different length would reshape the grid and strand cells). Seeded by the crossing so it is STABLE
 // while you rest (does not re-roll each frame) yet differs per crossing. Deck letters/digits only.
+// The board's SETTLED text for a (mode, shown scene): WELCOME at the door, else the scene's title.
+// Shared by StudioFacade and ParallaxStudio's raw-progress board target so they can't disagree.
+function boardTextForScene(mode: 'door' | 'scene', shown: number): string {
+  return mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
+}
+
 const SCRAMBLE_GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 function picketBoardScramble(t: {fromScene: number; toScene: number; fromDoor: boolean}): string {
   let s = ((t.fromDoor ? 97 : t.fromScene + 1) * 131 + (t.toScene + 1) * 17 + 7) >>> 0;
@@ -610,9 +630,14 @@ function picketBoardScramble(t: {fromScene: number; toScene: number; fromDoor: b
     s = (s * 1103515245 + 12345) >>> 0;
     return s;
   };
-  const len = 13 + (next() % 4); // 13..16 chars: one centered line, a title-sized single word
+  // The scramble is EXACTLY as long as the DESTINATION title (toScene), with spaces in the SAME
+  // positions. This is load-bearing: SplitFlap centers text on its own width, so a scramble of a
+  // different length/shape than the title it settles to would re-center the grid, shift the per-cell
+  // slots, and STRAND flapping cells at the churn->settle handoff. Matching the title's exact footprint
+  // (length + word breaks) makes the scramble→title settle a clean in-place per-cell swap.
+  const title = stripEmoji(CHOOSER_CARDS[Math.max(0, t.toScene)].title).toUpperCase();
   let out = '';
-  for (let i = 0; i < len; i++) out += SCRAMBLE_GLYPHS[next() % SCRAMBLE_GLYPHS.length];
+  for (const ch of title) out += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[next() % SCRAMBLE_GLYPHS.length];
   return out;
 }
 
@@ -653,13 +678,17 @@ function useScrollScene(
 ): SceneState {
   const reduce = prefersReducedMotion();
   const forced = forcedScene(count); // TEST seam: ?hero-scene=N pins the scene (localhost only)
+  const forcedProg = forcedProgress(); // TEST seam: ?hero-progress=P pins raw progress (wins over scene)
   return useMemo<SceneState>(() => {
+    // ?hero-progress=P wins: derive from that EXACT progress, so a specific crossing PHASE (mid-wave)
+    // is frozen deterministically — the picket renderer sees the real `transition` for that p.
+    if (forcedProg != null) return deriveSceneState(forcedProg, count, reduce);
     if (forced != null) {
       return {active: forced, shown: forced, mode: 'scene', flash: 0, boardProgress: 1, boardFromText: stripEmoji(CHOOSER_CARDS[forced].title), boardToText: stripEmoji(CHOOSER_CARDS[forced].title), transition: null};
     }
     return deriveSceneState(progressRef.current, count, reduce);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollTick, count, reduce, forced]);
+  }, [scrollTick, count, reduce, forced, forcedProg]);
 }
 
 /**
@@ -998,12 +1027,17 @@ function StudioFacade({
   spinning,
   onJump,
   picketed,
+  boardTextOverride,
 }: SceneState & {
   spinning?: boolean;
   /** Only the scroll models pass this: jump to scene `i` (the festoon bulbs call it). */
   onJump?: (scene: number) => void;
   /** The `pickets` scroll-model: render the per-strip flash WAVE instead of the single door flash. */
   picketed?: boolean;
+  /** PICKETS: the board's resting text computed from RAW (unsmoothed) progress, so it is STABLE the
+   *  instant scrolling stops. Overrides the internally-derived (smoothed) target, which lags and would
+   *  flip scramble↔title mid-settle and strand the flap cells. */
+  boardTextOverride?: string;
 }): React.JSX.Element {
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
@@ -1023,9 +1057,15 @@ function StudioFacade({
   //  • (PICKETS only, stopped MID-crossing) a stable RANDOM string, so a rest mid-wave leaves the board
   //    looking like a departure board frozen mid-swap rather than showing the destination early. The
   //    string is DETERMINISTIC (seeded by the crossing) so it does not re-roll every frame while at rest.
-  const sceneTitle = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
+  //  PICKETS passes boardTextOverride (derived from RAW progress, stable at stop) so the settle roll has
+  //  a fixed destination; every other model uses the smoothed scene directly.
+  const sceneTitle = boardTextForScene(mode, shown);
   const boardTarget =
-    picketed && transition ? picketBoardScramble(transition) : sceneTitle;
+    boardTextOverride != null
+      ? boardTextOverride
+      : picketed && transition
+        ? picketBoardScramble(transition)
+        : sceneTitle;
   const boardSpinning = spinning;
   // Base-URL the scene + door images ONCE, at the top level, so hook count is constant across renders.
   // CHOOSER_CARDS has a fixed length, so this map is a fixed number of useBaseUrl calls; the picket
@@ -1342,6 +1382,19 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
   const scene = useScrollScene(sm.ref, count, sm.tick);
   const {active} = scene;
 
+  // PICKETS BOARD TARGET from RAW progress (not the smoothed value): the board's resting text must be
+  // STABLE the instant scrolling stops, but the SMOOTHED progress keeps easing for ~120ms after a stop,
+  // which flips `scene.transition` (scramble↔title) DURING the ~750ms settle roll and strands the flap
+  // cells (a roll cell remounted mid-fold when its target char changes). The RAW progress stabilizes
+  // immediately at the stop position, so deriving the board target from it gives the settle a FIXED
+  // destination. Recomputed on each raw `tick`; only used by the pickets board (see StudioFacade).
+  const rawBoardText = useMemo(() => {
+    if (requestedModel !== 'pickets') return undefined;
+    const s = deriveSceneState(progressRef.current, count, reduce);
+    return s.transition ? picketBoardScramble(s.transition) : boardTextForScene(s.mode, s.shown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tick, count, reduce, requestedModel]);
+
   useNavbarSceneHighlight(active, gateRef);
 
   // SNAP-TO-CLOSEST-SCENE: when scrolling STOPS mid-transition, glide to the nearest stop's settled
@@ -1548,6 +1601,7 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
         }
         onJump={pinned ? jumpToScene : undefined}
         picketed={picketed}
+        boardTextOverride={rawBoardText}
       />
     </Link>
   );

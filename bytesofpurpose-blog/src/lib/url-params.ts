@@ -25,6 +25,7 @@
 // imports it instead of hard-coding the literal. (Prefix params like `ab-`/`ht-` are matched by prefix
 // in their owners; those owners stay the prefix's home.)
 export const HERO_SCENE_PARAM = 'hero-scene';
+export const HERO_PROGRESS_PARAM = 'hero-progress';
 export const INGRESS_MARKER_PARAM = 'im';
 export const INTERNAL_TRAFFIC_PARAM = 'internal';
 
@@ -95,6 +96,18 @@ export const URL_PARAMS: ReadonlyArray<UrlParam> = [
       'CHOOSER_CARDS), bypassing scroll math, so e2e + manual QA can land on a scene deterministically.',
     scope: 'localhost',
     example: '?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pin&hero-scene=5',
+  },
+  {
+    // literal must match HERO_PROGRESS_PARAM above.
+    key: 'hero-progress',
+    owner: 'src/pages/index.tsx (forcedProgress)',
+    purpose:
+      'TEST/QA: PIN the scroll-driven parallax hero to a specific RAW progress p in [0,1], bypassing ' +
+      'scroll + smoothing, so ANY state is deterministically frozen — including a specific pickets ' +
+      'crossing PHASE (a mid-wave frame). Unlike hero-scene (settled scenes only), this can freeze a ' +
+      'transition. Overrides hero-scene when both are set.',
+    scope: 'localhost',
+    example: '?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pickets&hero-progress=0.094',
   },
 
   // ── Ingress attribution / analytics (src/posthog.js) ───────────────────────────────────────────
