@@ -906,7 +906,11 @@ function useSmoothedProgress(
    given (the scroll models), each bulb is a real <button> that scrolls to that scene; without it (the
    timer house) the bulbs are a plain read-only indicator. The swag CORD is a single SVG catenary curve
    the bulbs hang from. Reduced motion is handled in CSS (no glow pulse). */
-function StudioFestoon({
+// MEMOIZED: the festoon rebuilds an SVG catenary path + all its bulbs on every render, but its inputs
+// (litCount/active/onJump) only change per SCENE, not per scroll frame. Without memo the pickets model
+// (which re-renders StudioFacade every smoothed-progress frame) would rebuild the whole festoon ~60×/s,
+// a big chunk of the scroll-lag cost. React.memo skips the rebuild unless a prop actually changes.
+const StudioFestoon = React.memo(function StudioFestoon({
   litCount,
   active,
   onJump,
@@ -985,7 +989,7 @@ function StudioFestoon({
       })}
     </div>
   );
-}
+});
 
 /* PICKET WAVE overlay: the picket scroll-model's replacement for the single white flash. `PICKET_COUNT`
    vertical strips fill the arch; each strip's opacity is its own point on the staggered sin-wave (from
@@ -993,8 +997,14 @@ function StudioFestoon({
    exactly like .studioFlash (NO mix-blend/filter, per the hi-DPI seam lesson); each strip is a hair
    WIDER than 1/N (+0.5px) so anti-aliasing paints no hairline seam between neighbours. Reduced motion
    zeroes every strip in CSS (matching .studioFlash). */
+// The strips' left/width are CONSTANT (only opacity changes per frame), so precompute them once for the
+// fixed PICKET_COUNT instead of rebuilding the strings every render.
+const PICKET_GEOMETRY = Array.from({length: PICKET_COUNT}, (_, i) => ({
+  left: `${(i / PICKET_COUNT) * 100}%`,
+  width: `calc(${100 / PICKET_COUNT}% + 0.5px)`, // +0.5px overlap kills the hairline seam between strips
+}));
+
 function StudioPickets({flash}: {flash: number[]}): React.JSX.Element {
-  const n = flash.length;
   return (
     <div className={styles.studioPickets} aria-hidden="true">
       {flash.map((o, i) => (
@@ -1002,8 +1012,8 @@ function StudioPickets({flash}: {flash: number[]}): React.JSX.Element {
           key={i}
           className={styles.studioPicket}
           style={{
-            left: `${(i / n) * 100}%`,
-            width: `calc(${100 / n}% + 0.5px)`, // +0.5px overlap kills the hairline seam between strips
+            left: PICKET_GEOMETRY[i].left,
+            width: PICKET_GEOMETRY[i].width,
             opacity: o,
           }}
         />

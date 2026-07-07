@@ -277,7 +277,7 @@ function Cell({
   );
 }
 
-export default function SplitFlap({
+function SplitFlap({
   text,
   settleMs = 750,
   columns,
@@ -340,3 +340,9 @@ export default function SplitFlap({
     </span>
   );
 }
+
+// MEMOIZED: the board is the facade's most expensive child (up to 72 cells × leaves). Its props change
+// only per-scene / per-scroll-state (text / spinning / settle knobs), NOT on every smoothed-progress
+// frame, so React.memo skips reconciling the whole board when only the picket wave changed — a big cut
+// to the pickets scroll cost. (Its own internal churn/settle timers keep animating regardless.)
+export default React.memo(SplitFlap);

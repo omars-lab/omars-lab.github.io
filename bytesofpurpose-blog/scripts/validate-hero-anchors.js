@@ -56,7 +56,7 @@ const ANCHORS = [
   {file: CSS, needle: /var\(--arch-x\b/, what: 'index.module.css: --arch-x (tunable arch mask position; the Hero Tuner CSS-var contract)'},
   {file: CSS, needle: /data-hero-mask-overlay/, what: 'index.module.css: the Hero Tuner mask-overlay affordance'},
   {file: SF_TSX, needle: /const DECK\b/, what: 'SplitFlap/index.tsx: DECK (the flap charset)'},
-  {file: SF_TSX, needle: /export default function SplitFlap\b/, what: 'SplitFlap/index.tsx: the SplitFlap component'},
+  {file: SF_TSX, needle: /function SplitFlap\b/, what: 'SplitFlap/index.tsx: the SplitFlap component (default export is React.memo(SplitFlap))'},
   {file: SF_CSS, needle: /\.foldDown\b/, what: 'SplitFlap/styles.module.css: .foldDown (the flap fold)'},
 
   // ── The scroll-driven PARALLAX pivot (the House post documents this) ────────────────────────────
