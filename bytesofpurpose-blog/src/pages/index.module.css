@@ -678,6 +678,13 @@
   justify-content: center;
   height: 100vh; /* the pinned viewport: the hero is centred full-screen while scenes advance */
   overflow: hidden;
+  /* PERF: CONTAIN the hero's layout + paint so a per-frame style write inside it (the picket wave's
+     opacities + reveal clip-path, the board flaps) invalidates ONLY this subtree, not the whole document.
+     Without this, every scroll frame dirties the page's layout, and Docusaurus's global scroll handler
+     then FORCES a full synchronous reflow reading scroll position — the layout-thrash that produced
+     multi-hundred-ms to multi-SECOND frame hitches on some machines (the pickets "great deal of lag").
+     `size` is intentionally omitted so the sticky still sizes to 100vh. */
+  contain: layout paint style;
 }
 /* the gate inside a pinned model fills the sticky viewport height so the facade is vertically centred */
 .parallaxSticky {
