@@ -757,8 +757,8 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
         signW: sign ? Math.round(sign.getBoundingClientRect().width) : 0,
       };
     });
-    // the house must not collapse to a tiny width...
-    expect(dims.bodyW, `house body must not collapse on a short window (was ${dims.bodyW}px)`).toBeGreaterThanOrEqual(340);
+    // the house must stay near full size (floored at --pin-house-min 600px), not collapse...
+    expect(dims.bodyW, `house body must stay near full size on a short window (was ${dims.bodyW}px)`).toBeGreaterThanOrEqual(560);
     // ...and the hanging board must FIT inside the house body (not overflow the arch).
     expect(dims.signW, `the board (${dims.signW}px) must fit inside the house body (${dims.bodyW}px)`).toBeLessThanOrEqual(dims.bodyW + 2);
   });
