@@ -1,6 +1,6 @@
 ---
 name: refine-design-post
-description: Audit a /designs post for GENERALITY (no employer/trade-secret specifics — keep only the reusable pattern), MINIMALISM (does each section answer its core question-set), CLARITY (over-wordiness, redundant restatements, hedges, throat-clearing), and VISUAL LEVERAGE (prose that should be a mermaid diagram or table). Produces a prioritized findings report with quoted excerpts + suggested trims/generalizations; makes NO edits until you approve each. As you give feedback, it captures the generalizable rule back into STYLE-GUIDE.md / SECTION-QUESTIONS.md so the skill sharpens with every post. Use when "review/tighten/refine this design post", "is this too wordy / too specific", "am I leaking anything", "make this more general", "does this need a diagram", "does this answer my core questions". Pairs with author-blog-post + author-post (which read the guide files when writing new posts).
+description: Audit a /designs post for GENERALITY (no employer/trade-secret specifics — keep only the reusable pattern), MINIMALISM (does each section answer its core question-set), CLARITY (over-wordiness, redundant restatements, hedges, throat-clearing), VISUAL LEVERAGE (prose that should be a mermaid diagram or table), and the READER'S FIRST READ (is there a relatable story, am I being bombarded with information, what are the core concerns + which section is each in, do the existing visuals actually guide me — produces a concern map). Produces a prioritized findings report with quoted excerpts + suggested trims/generalizations; makes NO edits until you approve each. As you give feedback, it captures the generalizable rule back into STYLE-GUIDE.md / SECTION-QUESTIONS.md so the skill sharpens with every post. Use when "review/tighten/refine this design post", "is this too wordy / too specific", "am I leaking anything", "make this more general", "does this need a diagram", "does this answer my core questions", "can a reader follow this / relate to it", "am I bombarding the reader", "what are the core concerns and where". Pairs with author-blog-post + author-post (which read the guide files when writing new posts), review-reader-experience (whole-site IA).
 ---
 
 # Refine a design post (generality · minimalism · clarity)
@@ -16,10 +16,14 @@ Pairs with `author-blog-post` / `author-post` (they read the guide files when wr
 `review-reader-experience` (whole-site IA), `upgrade-post` (the actual diagram insertion), and the
 mechanical guard `scripts/validate-design-clarity.js` (see the bottom section).
 
-## The four audit axes
+## The five audit axes
 
-Run all four on the post, in this order. Axis 1 (generality) is first because it is the author's
-stated guiding theme; a leak is the one finding that must not ship regardless of prose quality.
+Run all five on the post. Axes 1 to 4 are EDITOR lenses (is it general? does it answer the
+questions? is it wordy? should it be a diagram?). Axis 5 is the READER lens: read the post cold, as
+someone arriving for the first time, and ask whether you can actually follow it. Do axis 1
+(generality) first because it is the author's stated guiding theme; a leak is the one finding that
+must not ship regardless of prose quality. Do axis 5 LAST, after you understand the post well enough
+to judge how a newcomer would experience it.
 
 ### 1. Generality / leak-risk — is this the pattern, or the private instance?
 
@@ -88,6 +92,38 @@ Flag prose that describes a **process or structure** that a reader would grasp f
 Note the candidate and hand the actual insertion to `upgrade-post` (owns the mermaid/table/component
 snippets). Do not add the diagram in this skill; propose it.
 
+### 5. Reader's first read — can a newcomer actually follow this?
+
+Read the post as someone arriving COLD, not as an editor checking rules. Where axes 2 to 4 ask "does
+this obey the contract?", this asks "would a real reader make it through and understand?" Answer these
+five questions, and let the answers drive the **concern map** (the deliverable below):
+
+- **Is there a story I can relate to?** Does the post give the reader a relatable entry point (a
+  scenario, a "you" they can be, a problem they've felt) before it dives into mechanism? If there is
+  no narrative to hang the design on, that is a finding: propose one (name the reader and the moment
+  they'd reach for this). Labeled as JUDGMENT, never fabricate a false story.
+- **Am I being bombarded with information?** This is macro cognitive load, distinct from axis 3's
+  per-sentence wordiness. A section can have tight sentences and still be a wall: too many concepts
+  introduced at once, a table with too many columns, a paragraph that is all mechanism and no
+  breather. Flag sections that overload, and say what to split, stage, or move later.
+- **What are the core concerns?** Extract, in the reader's words, the handful of things this post is
+  really about (e.g. "keeping secrets on-device", "cost control", "who sees whose data"). Name them.
+- **Which section is each concern discussed in?** Map each concern to the section(s) that cover it. A
+  concern discussed in five scattered places, or one with no clear home, is a finding.
+- **Are there good visuals to guide understanding?** Audit the visuals that EXIST (not the missing
+  ones from axis 4): does each diagram/table actually help a newcomer, or is it decoration / too dense
+  to read / unlabeled? A core concern with no supporting visual is a candidate for axis 4.
+
+**The concern map** (the axis-5 deliverable): one row per core concern the reader extracts.
+
+| Concern (reader's words) | Section(s) | Visually supported? | Overloaded? |
+|---|---|---|---|
+| Keeping secrets on-device | §Exec Summary, §Phase 2 | ✓ sanitize-flow diagram | no |
+| Who sees whose data | §Phase 4 only | ✗ none | yes (dense RBAC prose) |
+
+Read it as the reader's real table of contents: a concern with no home, no visual, or crammed into an
+overloaded section is where the post loses them.
+
 ## The report format
 
 Emit findings ranked most-impactful first (a leak outranks a wordy sentence). One block per finding:
@@ -99,7 +135,9 @@ Emit findings ranked most-impactful first (a leak outranks a wordy sentence). On
    Suggested: <the trim / generalization / diagram-candidate>
 ```
 
-Then the per-section **coverage table** from axis 2. **Make NO edits.** The author approves,
+Then two tables: the per-section **coverage table** (axis 2) and the **concern map** (axis 5). The
+report ends with the axis-5 reader verdict in plain words: is there a relatable story, is any section
+bombarding the reader, and which concern is least well served. **Make NO edits.** The author approves,
 rejects, or reshapes each finding; only then do you apply the approved trims.
 
 ## Preserve the voice — do NOT flatten these
@@ -136,10 +174,13 @@ volume, not merely longer.
 
 1. Read the target post in full. Note its `kind:` (backend/frontend/agent/tooling-cli-design).
 2. Read `SECTION-QUESTIONS.md` and `STYLE-GUIDE.md` — the current accumulated contract.
-3. Run all four axes. Axis 2 produces the per-section coverage verdict.
-4. Emit the ranked report + coverage table. Make no edits.
-5. Walk the findings with the author; apply only the approved trims/generalizations.
-6. **Capture**: triage each acted-on finding into STYLE-GUIDE / SECTION-QUESTIONS or skip-with-reason;
+3. Run axes 1 to 4 (editor lenses). Axis 2 produces the per-section coverage verdict.
+4. Run axis 5 LAST (the reader's cold first read): answer the five reader questions and build the
+   concern map.
+5. Emit the ranked report + the coverage table + the concern map + the plain-words reader verdict.
+   Make no edits.
+6. Walk the findings with the author; apply only the approved trims/generalizations.
+7. **Capture**: triage each acted-on finding into STYLE-GUIDE / SECTION-QUESTIONS or skip-with-reason;
    print the "Captured this session" block.
 
 ## The mechanical guard (companion, warn-tier)
@@ -155,7 +196,14 @@ they don't false-positive on prose judgment:
   `allow` false-match list). If `DESIGN_LEAK_TERMS` is unset the leak check simply no-ops.
 - (heuristic nudges) a very thin `## H2` section; a mermaid fence immediately redrawn as ASCII
 
-Everything else — real wordiness, hedge nuance, question-set coverage, leak-vs-fair-generalization —
-is a judgment call and stays in THIS skill. The guard warns, never blocks (exit 0), so it can't
-interrupt a mid-draft. When you notice a proprietary term worth banning, add it to the root `.env`
-`DESIGN_LEAK_TERMS=` list (format `Name|alias1|alias2, OtherName`), not to git.
+The **"am I being bombarded" (axis 5) mechanical signal** is the repo's existing
+`scripts/validate-visual-density.js` (`make validate-visual-density`) — it flags a `## H2` section
+over ~280 prose words with no visual (a "wall-of-text"). It now scans `designs/` too, so a design
+post's overloaded sections surface there; this skill doesn't duplicate that check. The concern map
+and the story/relatability/visuals-actually-guide judgments stay in THIS skill.
+
+Everything else — real wordiness, hedge nuance, question-set coverage, leak-vs-fair-generalization,
+the reader's first-read judgments — is a judgment call and stays in THIS skill. The guards warn,
+never block (exit 0), so they can't interrupt a mid-draft. When you notice a proprietary term worth
+banning, add it to the root `.env` `DESIGN_LEAK_TERMS=` list (format `Name|alias1|alias2, OtherName`),
+not to git.
