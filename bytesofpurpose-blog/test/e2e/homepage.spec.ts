@@ -739,6 +739,30 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     expect(maxRows, 'only the centered row churns; the padding rows stay blank').toBeLessThanOrEqual(1);
   });
 
+  test('[pin] on a SHORT viewport the house does not collapse + the board fits the arch', async ({ page }) => {
+    // REGRESSION: the pinned fold-fit cap is `min(--body-w, (100vh - 2*offset) / ratio)`. On a SHORT
+    // window that height term collapses (a 506px-tall viewport → (506-378)/0.8 = 160px), shrinking the
+    // whole house to a postage stamp with the wide Vestaboard OVERFLOWING the arch. The fix floors it at
+    // `--pin-house-min`. The visual regression matrix only uses TALL viewports (h=780/860), so it never
+    // exercised this — this test does. Use `pin` (deterministic layout; pickets shares the same cap).
+    await page.setViewportSize({ width: 1200, height: 520 }); // short + wide
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const dims = await page.evaluate(() => {
+      const body = document.querySelector('[class*="studioBody"]') as HTMLElement | null;
+      const sign = document.querySelector('[class*="studioSign"]') as HTMLElement | null;
+      return {
+        bodyW: body ? Math.round(body.getBoundingClientRect().width) : 0,
+        signW: sign ? Math.round(sign.getBoundingClientRect().width) : 0,
+      };
+    });
+    // the house must not collapse to a tiny width...
+    expect(dims.bodyW, `house body must not collapse on a short window (was ${dims.bodyW}px)`).toBeGreaterThanOrEqual(340);
+    // ...and the hanging board must FIT inside the house body (not overflow the arch).
+    expect(dims.signW, `the board (${dims.signW}px) must fit inside the house body (${dims.bodyW}px)`).toBeLessThanOrEqual(dims.bodyW + 2);
+  });
+
   test('[pickets] ?hero-progress=P freezes an exact frame (a mid-wave crossing, deterministically)', async ({
     page,
   }) => {

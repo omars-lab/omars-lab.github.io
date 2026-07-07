@@ -691,10 +691,16 @@
        facadeH <= vh - 2*offset,  and facadeH ~= width * houseRatio (roof + 2:1 body ~= 0.75), so
        maxWidth = (100vh - 2*offset) / houseRatio.
      Both knobs are Hero-Tuner-tunable vars with baked defaults; never widen past --body-w. On mobile the
-     block below overrides this (the house FILLS the pinned viewport door-only instead). */
+     block below overrides this (the house FILLS the pinned viewport door-only instead).
+     FLOOR the height-based cap at --pin-house-min (360px): on a SHORT window the raw formula collapses
+     (e.g. a 506px-tall viewport → (506 - 378)/0.8 = 160px, a tiny house with the board overflowing the
+     arch). Better to let the house be a touch tall on a short window than shrink into a postage stamp. */
   max-width: min(
     var(--body-w, 720px),
-    calc((100vh - 2 * var(--pin-house-offset, 189px)) / var(--pin-house-ratio, 0.8))
+    max(
+      var(--pin-house-min, 360px),
+      calc((100vh - 2 * var(--pin-house-offset, 189px)) / var(--pin-house-ratio, 0.8))
+    )
   );
   margin-inline: auto;
 }
