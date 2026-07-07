@@ -150,10 +150,12 @@ they don't false-positive on prose judgment:
 
 - trailing "…"/`...` placeholder endings
 - a line/sentence duplicated verbatim within one post
-- a banned term from `scripts/lib/design-leak-terms.json` (the seed leak list — grow it)
+- a banned term from the **gitignored** `.env` key `DESIGN_LEAK_TERMS` (the real employer/proprietary
+  names live there, NOT in git; `scripts/lib/design-leak-terms.json` holds only the non-sensitive
+  `allow` false-match list). If `DESIGN_LEAK_TERMS` is unset the leak check simply no-ops.
 - (heuristic nudges) a very thin `## H2` section; a mermaid fence immediately redrawn as ASCII
 
 Everything else — real wordiness, hedge nuance, question-set coverage, leak-vs-fair-generalization —
 is a judgment call and stays in THIS skill. The guard warns, never blocks (exit 0), so it can't
-interrupt a mid-draft. When you add a proprietary term worth banning, add it to
-`design-leak-terms.json` in the same change.
+interrupt a mid-draft. When you notice a proprietary term worth banning, add it to the root `.env`
+`DESIGN_LEAK_TERMS=` list (format `Name|alias1|alias2, OtherName`), not to git.

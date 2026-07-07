@@ -36,22 +36,59 @@ const matter = require('gray-matter');
 const ROOT = path.join(__dirname, '..');
 const DEFAULT_DIRS = ['designs'];
 
-// Leak list is the single source of truth in lib/. Read defensively — a missing/broken file just
-// means the leak-term check is a no-op (the other checks still run).
-let LEAK = {terms: [], allow: []};
+// The leak-term list is SENSITIVE (real employer/proprietary names), so it does NOT live in git.
+// The committed JSON holds only the non-sensitive config (the `allow` false-match list + the
+// __doc__ contract); the actual BANNED TERMS come from the gitignored root .env, key
+// DESIGN_LEAK_TERMS. Both are read defensively — a missing/empty source just makes the leak-term
+// check a no-op (the other checks still run). This is fail-OPEN on purpose: an empty list is a
+// warn-tier advisory losing coverage, not a secret shipping, so it must not abort the build.
+let LEAK = {allow: []};
 try {
   LEAK = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'design-leak-terms.json'), 'utf8'));
 } catch {
-  LEAK = {terms: [], allow: []};
+  LEAK = {allow: []};
 }
 const ALLOW = new Set((LEAK.allow || []).map((s) => s.toLowerCase()));
-// Flatten every term + its aliases into {surface, canonical} pairs for whole-word matching.
-const LEAK_SURFACES = [];
-for (const t of LEAK.terms || []) {
-  const canonical = t.name;
-  for (const surface of [t.name, ...(t.aliases || [])]) {
-    if (surface && typeof surface === 'string') LEAK_SURFACES.push({surface, canonical});
+
+// Pull DESIGN_LEAK_TERMS from the environment if the caller exported it (the make target does),
+// else read it straight from the gitignored root .env — per-var extraction, NEVER `source .env`
+// (some .env values hold shell-special chars that break sourcing; see CLAUDE.md). Format:
+//   DESIGN_LEAK_TERMS=AcmeCorp|Acme Corp|Acme, InternalCodename, Foobar Service
+// entries separated by comma OR semicolon; within an entry, `|` separates a canonical name from
+// its aliases (spelling/spacing/casing variants). Quotes and a trailing # comment are stripped.
+function readLeakTermsRaw() {
+  if (process.env.DESIGN_LEAK_TERMS) return process.env.DESIGN_LEAK_TERMS;
+  // ROOT is bytesofpurpose-blog/; the secrets .env is at the repo root, one level up.
+  for (const envPath of [path.join(ROOT, '..', '.env'), path.join(ROOT, '.env')]) {
+    try {
+      const line = fs
+        .readFileSync(envPath, 'utf8')
+        .split('\n')
+        .find((l) => /^\s*DESIGN_LEAK_TERMS\s*=/.test(l));
+      if (line) {
+        return line
+          .replace(/^\s*DESIGN_LEAK_TERMS\s*=/, '')
+          .replace(/\s*#.*$/, '') // strip trailing comment
+          .trim()
+          .replace(/^["']|["']$/g, ''); // strip surrounding quotes
+      }
+    } catch {
+      /* no .env here — try the next candidate */
+    }
   }
+  return '';
+}
+
+// Flatten the raw string into {surface, canonical} pairs for whole-word matching.
+const LEAK_SURFACES = [];
+for (const entry of readLeakTermsRaw().split(/[;,]/)) {
+  const parts = entry
+    .split('|')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!parts.length) continue;
+  const canonical = parts[0];
+  for (const surface of parts) LEAK_SURFACES.push({surface, canonical});
 }
 
 const MIN_SECTION_WORDS = 12; // below this, an H2 section is likely a stub (conservative)
