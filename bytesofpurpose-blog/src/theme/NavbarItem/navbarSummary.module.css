@@ -63,6 +63,21 @@
   }
 }
 
+/* Inside the "More" OVERFLOW dropdown menu the popup is BOTH redundant (the items are already a
+   labeled menu) AND harmful: an absolutely-positioned popup at `top: 100%` expands the dropdown
+   menu's scroll area, so Infima's `.dropdown__menu { overflow: auto }` sprouts stray scrollbars (a
+   phantom horizontal bar under the last item + a vertical one). `display: none` removes it from the
+   scroll box entirely, so the menu sizes to its items with no scrollbars. */
+:global(.dropdown__menu) .summaryPopup {
+  display: none;
+}
+/* Inside the dropdown the wrapper must STACK its item (a menu is a vertical list). `.navItemWrap` is
+   `inline-flex` for the top navbar row, which made two dropdown items share a line ("Vote" + "Todos"
+   side by side). Force block so each dropdown item gets its own row. */
+:global(.dropdown__menu) .navItemWrap {
+  display: block;
+}
+
 /* Don't animate for users who prefer reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   .summaryPopup {

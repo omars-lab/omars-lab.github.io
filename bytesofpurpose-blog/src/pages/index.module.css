@@ -1010,7 +1010,9 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.45s ease;
+  /* NO cross-fade: the door<->scene swap happens at the flash PEAK, so the flash masks it. A 0.45s
+     fade outlived the flash on a scroll transition and the door/scene blended visibly after it cleared;
+     an instant swap means the new layer is fully in place by the time the flash is gone. */
 }
 /* The "on" layer must WIN over the base `opacity: 0` above. Both are single-class selectors (equal
    specificity), so in the DEV CSS the later `.studioLayerOn` wins, but the PRODUCTION CSS-Modules
@@ -1240,7 +1242,10 @@
   height: 100%;
   object-fit: contain;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  /* NO cross-fade: the scene image is SWAPPED at the flash PEAK (t~0.5), when the white flash fully
+     masks the arch. A 0.5s opacity cross-fade outlived the flash on a scroll transition, so the OLD and
+     NEW scenes were still blending AFTER the flash had faded ("we see the image transition"). Swapping
+     instantly means that by the time the flash clears, the new scene is already fully in place. */
 }
 /* Two-class so it wins over `.studioPeekImg { opacity: 0 }` regardless of prod CSS order (same
    cascade race as .studioLayerOn above). */
