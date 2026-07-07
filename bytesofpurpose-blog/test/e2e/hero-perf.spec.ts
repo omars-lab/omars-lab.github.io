@@ -114,3 +114,67 @@ test('[pin] no catastrophic frame hitch while scrolling (baseline, same throttle
     await page.close();
   }
 });
+
+test('[pickets] the wave MOVES during short start/stop scroll bursts (trackpad-gesture pattern)', async () => {
+  // The reported symptom: "pickets don't move until I stop scrolling" during a real trackpad gesture —
+  // scroll a bit, stop, lift fingers, scroll a bit more. If the per-frame paint is too slow (the 1024px
+  // masked+clipped scene image), the rendered wave LAGS the scroll and only catches up on the pause, so
+  // it reads as "only moves after I stop". Under CPU throttle we drive several SHORT bursts with pauses
+  // and assert the wave's opacity actually CHANGES *while* each burst is scrolling (tracking live), not
+  // only during the pause.
+  test.setTimeout(60000);
+  const page = await browser.newPage();
+  try {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'load' });
+    await page.waitForSelector('[class*="parallaxSpacer"]', { timeout: 15000 });
+    await page.waitForTimeout(800);
+    const client = await page.context().newCDPSession(page);
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 6 });
+
+    const result = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const maxOp = () => {
+        const ps = [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')];
+        return ps.length ? Math.max(...ps.map((p) => parseFloat(getComputedStyle(p as HTMLElement).opacity))) : -1;
+      };
+      // walk progress 0 → through ~2-3 crossings as SHORT BURSTS with pauses between them, and for each
+      // burst record whether the wave's lit-opacity CHANGED across the burst's own frames (moved live).
+      let burstsWithLiveMotion = 0;
+      let burstsThatCrossed = 0;
+      const bursts = 10;
+      let p = 0.02;
+      for (let b = 0; b < bursts; b++) {
+        const opsThisBurst: number[] = [];
+        // one burst = ~6 quick scroll steps (fingers moving), sampling the wave each step, NO settle
+        for (let s = 0; s < 6; s++) {
+          p += 0.006;
+          window.scrollTo(0, Math.round(spacerTopPage + p * scrollable));
+          window.dispatchEvent(new Event('scroll'));
+          await new Promise((r) => requestAnimationFrame(() => r(null)));
+          opsThisBurst.push(maxOp());
+        }
+        const lit = opsThisBurst.filter((o) => o > 0.1);
+        if (lit.length >= 1) burstsThatCrossed++;
+        const distinct = new Set(opsThisBurst.filter((o) => o > 0.1).map((o) => Math.round(o * 20)));
+        if (distinct.size >= 2) burstsWithLiveMotion++;
+        // PAUSE — lift fingers off the trackpad
+        await new Promise((r) => setTimeout(r, 180));
+      }
+      return { burstsWithLiveMotion, burstsThatCrossed };
+    });
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+
+    // Of the bursts inside a crossing, several must show the wave changing live DURING the burst (not
+    // frozen until the pause). Require at least 2 bursts with live intra-burst motion.
+    expect(
+      result.burstsWithLiveMotion,
+      `the wave must move WITH the scroll during bursts (live-motion bursts=${result.burstsWithLiveMotion}, crossing bursts=${result.burstsThatCrossed})`,
+    ).toBeGreaterThanOrEqual(2);
+  } finally {
+    await page.close();
+  }
+});
