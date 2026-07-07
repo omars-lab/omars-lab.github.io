@@ -31,7 +31,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const DEFAULT_DIRS = ['blog', 'docs'];
+const DEFAULT_DIRS = ['blog', 'designs', 'docs'];
 const WORD_THRESHOLD = 280;
 
 // What counts as a "visual" inside a section: one of our visual components, media, a
