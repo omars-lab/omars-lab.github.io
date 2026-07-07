@@ -1786,18 +1786,29 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
 }
 
 /* A neutral SKELETON shown while the A/B variant is resolving (and as the SSR/no-JS fallback). It
-   doesn't commit to any arm. The DEFAULT hero is now the ANIMATION (timer) house in NORMAL flow (not
-   the pinned spacer), so the skeleton reserves that house's natural height with a house-shaped pulse.
-   No scrollbar jump when the real hero swaps in. (The parallax models, reached via override, manage
-   their own spacer height; this default skeleton matches the timer house.) */
+   doesn't commit to any arm. The DEFAULT hero is the scroll-scrubbed PICKETS house, which mounts a
+   TALL parallax spacer (a ~12-viewport scroll runway) with the house STICKY at the top. So the
+   skeleton reserves the SAME pinned shape: a tall spacer (`heroSkeletonSpacer`, its height matching
+   `count * PICKET_SCENE_VH` vh) with the house-pulse stuck to the top. Otherwise the document would
+   jump from ~1 screen tall to ~12 the instant the real hero swaps in (a large CLS / scrollbar jump on
+   every bare-/ load). An explicit override to a NON-pinned model (`?ab-homepage-hero-scroll=static`)
+   over-reserves height for one paint, a far cheaper miss than under-reserving the pinned default. */
+const SKELETON_SPACER_VH = Math.round(CHOOSER_CARDS.length * PICKET_SCENE_VH * 100);
 function ChooserSkeleton() {
   return (
-    <div className={styles.heroSkeleton} aria-hidden="true">
-      <div className={styles.heroSkeletonHouse}>
-        <div className={styles.heroSkeletonRoof} />
-        <div className={styles.heroSkeletonBody}>
-          <div className={styles.heroSkeletonBoard} />
-          <div className={styles.heroSkeletonDoor} />
+    <div
+      className={styles.heroSkeletonSpacer}
+      style={{height: `${SKELETON_SPACER_VH}vh`}}
+      aria-hidden="true">
+      <div className={styles.heroSkeletonStick}>
+        <div className={styles.heroSkeleton}>
+          <div className={styles.heroSkeletonHouse}>
+            <div className={styles.heroSkeletonRoof} />
+            <div className={styles.heroSkeletonBody}>
+              <div className={styles.heroSkeletonBoard} />
+              <div className={styles.heroSkeletonDoor} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1833,12 +1844,13 @@ function useResolvedVariant(exp: Experiment): string | null {
 }
 
 // The DEFAULT homepage hero when no experiment flag / override gives a signal (a bare visit to `/`):
-// the ANIMATION-driven Lebanese HOUSE — the self-running timer (ChooserStudio via useTimerScene), NOT
-// the scroll-driven parallax. So `localhost:3000/` cycles the house on its own clock (hold → flash →
-// next), no scroll-jacking. The parallax scroll-models stay reachable + A/B-able via the override
-// `?ab-homepage-hero-scroll=pin|inplace|horizontal|pickets`; the experiment overrides always win.
+// the ANIMATION-driven Lebanese HOUSE, driven by the scroll-scrubbed PICKETS parallax. So a bare
+// `localhost:3000/` PINS the house and lets the visitor scroll THROUGH the destinations (the picket
+// wave reveals each scene strip-by-strip, the Vestaboard scrubs in lockstep). The self-running timer
+// house + the other parallax models stay reachable + A/B-able via the override
+// `?ab-homepage-hero-scroll=static|pin|inplace|horizontal`; the experiment overrides always win.
 const DEFAULT_HERO = 'studio'; // anim default → the house
-const DEFAULT_SCROLL_MODEL = 'static'; // scroll default → the self-running TIMER house (not parallax)
+const DEFAULT_SCROLL_MODEL = 'pickets'; // scroll default → the scrubbable picket-wave parallax house
 
 function HeroChooser() {
   // Two composed experiments: `anim` picks WHICH hero (scroll strip / flash gate / studio house /
@@ -1860,8 +1872,9 @@ function HeroChooser() {
   if (anim === 'variant_d' || anim === 'boutique') return <ChooserBoutique />;
   if (anim === 'variant_c' || anim === 'studio') {
     // The studio HOUSE: the scroll experiment decides the DRIVER. NO scroll signal (`control`) → the
-    // DEFAULT (`static`) = the self-running TIMER house. An explicit pin/inplace/horizontal override
-    // → the SCROLL-driven parallax. (Both go through the SAME progress model, just a different driver.)
+    // DEFAULT (`pickets`) = the scroll-scrubbed picket-wave parallax house. An explicit
+    // static/pin/inplace/horizontal override picks another driver. (All go through the SAME progress
+    // model, just a different driver.)
     const scroll = scrollVariant === 'control' ? DEFAULT_SCROLL_MODEL : scrollVariant;
     if (scroll === 'pin') return <ParallaxStudio model="pin" />;
     if (scroll === 'inplace') return <ParallaxStudio model="inplace" />;

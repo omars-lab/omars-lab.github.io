@@ -81,6 +81,21 @@
    the flag is read. It reserves the chooser's height (arch card) to avoid layout shift. */
 /* The skeleton reserves the DEFAULT (animation/timer house) natural height in NORMAL flow, with a
    HOUSE-shaped pulse, so the page doesn't jump when the real hero swaps in. */
+/* The skeleton's PINNED reservation: a tall spacer (height set inline to match the pickets runway)
+   holding a sticky house-pulse at the top, so the document height is already the pinned hero's height
+   before the real hero swaps in (no CLS jump). Mirrors .parallaxSpacer / .parallaxStick. */
+.heroSkeletonSpacer {
+  position: relative;
+  width: 100%;
+}
+.heroSkeletonStick {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  align-items: center;
+}
 .heroSkeleton {
   position: relative;
   width: 100%;

@@ -53,7 +53,7 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | Symbol | File | Owns |
 |---|---|---|
 | `EXPERIMENTS['homepage-hero-anim']` | `src/experiments.ts` | the anim flag key + variants (`control`=`scroll` strip, `test`=`flash` gate, `variant_c`=`studio` house, `variant_d`=`boutique`) |
-| `HeroChooser` | `src/pages/index.tsx` | resolves BOTH experiments (URL override → PostHog flag → control fallback after `RESOLVE_TIMEOUT_MS`); picks strip / flash / studio / boutique, and for studio picks the DRIVER (timer vs pin/inplace/horizontal parallax). Renders a skeleton until resolved (no flash-of-strip). `DEFAULT_HERO='studio'`, `DEFAULT_SCROLL_MODEL='static'`. |
+| `HeroChooser` | `src/pages/index.tsx` | resolves BOTH experiments (URL override → PostHog flag → control fallback after `RESOLVE_TIMEOUT_MS`); picks strip / flash / studio / boutique, and for studio picks the DRIVER (timer vs pin/inplace/horizontal/pickets parallax). Renders a skeleton until resolved (no flash-of-strip). `DEFAULT_HERO='studio'`, `DEFAULT_SCROLL_MODEL='pickets'` (a bare `/` is the scroll-scrubbed picket-wave house; the skeleton reserves the PINNED runway height so there is no CLS jump). |
 | `ChooserStrip` | `src/pages/index.tsx` | the CONTROL marquee (renders `CHOOSER_CARDS` twice for a seamless loop) |
 | `ChooserFlash` | `src/pages/index.tsx` | the TEST/flash gate: the portal + persistent board + the rotation/flash choreography (timer + arrow keys) |
 | `ChooserStudio` | `src/pages/index.tsx` | variant_c/studio, TIMER driver: the Lebanese house self-running on a rAF clock (`useTimerScene`); renders `StudioFacade`. The DEFAULT hero. |
@@ -109,12 +109,17 @@ the **House** design post (`designs/2026-06-28-lebanese-house-hero.mdx`); the **
   double-fire). (The studio house does NOT use `step` — it is progress-driven, see below.)
 - **Change the studio house's DRIVER or its progress model:** the house's every animatable piece (flash
   bloom, door/scene swap, board flip) is a pure function of ONE progress `p in [0,1]` via
-  `deriveSceneState(p, count, reduce)`. TWO drivers feed it: `useTimerScene` (rAF clock, the default) and
+  `deriveSceneState(p, count, reduce)`. TWO drivers feed it: `useTimerScene` (rAF clock) and
   `useScrollScene` (scroll position, the parallax). To retune the timing, change `deriveSceneState`
   (shared by both) or `TRANSITION_FRACTION` (how much of each scene's slice is the crossing vs settled).
-  To flip the homepage DEFAULT to scroll, change `DEFAULT_SCROLL_MODEL` in `HeroChooser` (a one-line
-  routing change) AND update the homepage e2e `DEFAULT (bare /)` assertion (it asserts NO
-  `.parallaxSpacer`) + the skeleton height parity.
+  The homepage DEFAULT is `DEFAULT_SCROLL_MODEL='pickets'` (a bare `/` is the scroll-scrubbed
+  picket-wave house). To change which model is the default, edit that one constant in `HeroChooser`, then
+  keep THREE things in lockstep: (1) the homepage e2e `DEFAULT (bare /)` assertion (it asserts the
+  `.parallaxSpacer` IS present + the gate `data-scroll-model="pickets"` — invert if you move to a
+  non-pinned default like `static`); (2) the skeleton reservation — `ChooserSkeleton` reserves the
+  PINNED runway height (`SKELETON_SPACER_VH` = `count * PICKET_SCENE_VH`) so the document does not jump
+  ~12 screens when the real hero swaps in (a bare-/ CLS/scrollbar jump); a non-pinned default would
+  over-reserve, so shrink it back; (3) this anchor row's `DEFAULT_SCROLL_MODEL` value.
 
 ### Change the PIN scroll experience (the scroll-synced parallax)
 

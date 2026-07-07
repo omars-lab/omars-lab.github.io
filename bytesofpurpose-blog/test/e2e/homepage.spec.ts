@@ -229,15 +229,21 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=${model}` +
     (scene == null ? '' : `&hero-scene=${scene}`);
 
-  test('DEFAULT (bare /) is the ANIMATION timer house — the house, in normal flow, NOT a pinned spacer', async ({
+  test('DEFAULT (bare /) is the scroll-scrubbed PICKETS house — the house, PINNED in a tall spacer', async ({
     page,
   }) => {
+    // DEFAULT_SCROLL_MODEL is 'pickets', so a bare visit (no anim/scroll signal) resolves to the
+    // studio house driven by the picket-wave parallax: the facade renders, PINNED in a tall spacer
+    // (the scroll runway), and the hero gate advertises model=pickets. (If this flips back to the
+    // timer house, DEFAULT_SCROLL_MODEL changed — update this test with it.)
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
     // the house renders (variant_c facade) ...
     await expect(page.locator('[class*="studioFacade"]')).toHaveCount(1);
-    // ... in NORMAL flow: the timer hero has NO tall parallax spacer (that's the pin/horizontal models)
-    await expect(page.locator('[class*="parallaxSpacer"]')).toHaveCount(0);
+    // ... PINNED: the parallax models mount a tall scroll-runway spacer
+    await expect(page.locator('[class*="parallaxSpacer"]')).toHaveCount(1);
+    // ... driven by pickets specifically (the gate advertises its scroll model)
+    await expect(page.locator('a[data-hero-root][data-scroll-model="pickets"]')).toHaveCount(1);
     // and it is NOT the legacy film strip
     await expect(page.locator('[class*="chooserTrack"]')).toHaveCount(0);
   });
