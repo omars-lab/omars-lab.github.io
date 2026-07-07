@@ -41,6 +41,11 @@ export interface SplitFlapProps {
    *    over this duration — one true quick flip to the end state. Pickets uses this: the board rests
    *    on random chars while the wave holds, then does ONE ~250ms roll to the title once the wave ends. */
   settleRollMs?: number;
+  /** SETTLE SWEEP (only meaningful with `settleRollMs`): stagger each COLUMN's settle roll left→right
+   * by this many ms, measured from the row's first non-blank column, so the letters FALL INTO PLACE
+   * column by column, sweeping across the board the way the picket wave sweeps across the door.
+   * Undefined = all cells roll together (every cell arrives at the same moment). */
+  settleSweepMs?: number;
   /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
    * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
   direct?: boolean;
@@ -65,6 +70,7 @@ function SpinningCell({
   spinning,
   seed,
   settleRollMs,
+  settleDelayMs = 0,
 }: {
   char: string;
   spinning: boolean;
@@ -72,6 +78,9 @@ function SpinningCell({
   /** When set, settle by ROLLING the same churning cell to the target over this many ms (one quick
    *  flip to the end state). When undefined, settle by SNAPPING (a fresh mount at the target). */
   settleRollMs?: number;
+  /** L→R SWEEP: hold this cell's settle roll back this many ms (column stagger), so the letters land
+   *  column by column instead of all at once. Only used on the ROLL settle path. */
+  settleDelayMs?: number;
 }) {
   const [display, setDisplay] = useState(char);
   const idxRef = useRef(seed % SPIN_LETTERS.length);
@@ -118,7 +127,11 @@ function SpinningCell({
     return <Cell key="spin" char={display} settleMs={Math.max(40, periodMs - 20)} direct />;
   }
   if (rolling && !settleToBlank) {
-    return <Cell key={`roll:${char}`} char={char} from={ROLL_FROM} settleMs={settleRollMs} />;
+    // The L→R settle SWEEP: each column's roll starts `settleDelayMs` later (the cell sits blank
+    // until its turn), so the title falls into place column by column, echoing the picket wave.
+    return (
+      <Cell key={`roll:${char}`} char={char} from={ROLL_FROM} settleMs={settleRollMs} delayMs={settleDelayMs} />
+    );
   }
   return <Cell key={`settled:${char}`} char={char} settleMs={500} />;
 }
@@ -186,6 +199,7 @@ function Cell({
   settleMs,
   direct = false,
   from,
+  delayMs = 0,
 }: {
   char: string;
   settleMs: number;
@@ -195,6 +209,9 @@ function Cell({
    *  freshly-mounted settle cell animate a clean roll from a known glyph (no strand) instead of
    *  snapping. When omitted, the cell mounts already showing `char` (no roll on mount). */
   from?: string;
+  /** Hold the roll's START by this many ms (the cell shows `from` until then). The L→R settle sweep:
+   *  the board passes each column a growing delay so letters land column by column. */
+  delayMs?: number;
 }) {
   const [shown, setShown] = useState(from ?? char); // the settled glyph currently displayed
   const [next, setNext] = useState(from ?? char); // the glyph this step is flipping TO
@@ -238,7 +255,12 @@ function Cell({
       }, perStep);
       timers.current.push(mid, end);
     };
-    run(0);
+    if (delayMs > 0) {
+      // L→R sweep: hold at the start glyph until this column's turn, then roll.
+      timers.current.push(window.setTimeout(() => run(0), delayMs));
+    } else {
+      run(0);
+    }
 
     return () => {
       timers.current.forEach((t) => window.clearTimeout(t));
@@ -292,6 +314,7 @@ function SplitFlap({
   className,
   spinning,
   settleRollMs,
+  settleSweepMs,
   direct = false,
 }: SplitFlapProps): React.JSX.Element {
   // Build the centered/padded GRID for a message.
@@ -317,19 +340,27 @@ function SplitFlap({
     let seed = 0;
     return (
       <span className={clsx(styles.board, className)} role="text" aria-label={text}>
-        {grid.map((row, r) => (
-          <span key={r} className={styles.row}>
-            {Array.from(row).map((c, i) => (
-              <SpinningCell
-                key={i}
-                char={c}
-                spinning={spinning}
-                seed={(seed = seed + 7 + i * 3)}
-                settleRollMs={settleRollMs}
-              />
-            ))}
-          </span>
-        ))}
+        {grid.map((row, r) => {
+          // The L→R settle sweep counts columns from THIS row's first letter (not the grid edge), so
+          // a centered title starts falling immediately instead of waiting out its blank left padding.
+          const firstLit = row.search(/\S/);
+          return (
+            <span key={r} className={styles.row}>
+              {Array.from(row).map((c, i) => (
+                <SpinningCell
+                  key={i}
+                  char={c}
+                  spinning={spinning}
+                  seed={(seed = seed + 7 + i * 3)}
+                  settleRollMs={settleRollMs}
+                  settleDelayMs={
+                    settleSweepMs && firstLit >= 0 ? Math.max(0, i - firstLit) * settleSweepMs : 0
+                  }
+                />
+              ))}
+            </span>
+          );
+        })}
       </span>
     );
   }

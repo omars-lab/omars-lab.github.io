@@ -72,6 +72,8 @@ const ANCHORS = [
   {file: TSX, needle: /const PICKET_SCENE_VH\b/, what: 'index.tsx: PICKET_SCENE_VH (the taller pickets spacer: the wave scrub fidelity IS its scroll runway)'},
   {file: TSX, needle: /const PICKET_TRANSITION_FRACTION\b/, what: 'index.tsx: PICKET_TRANSITION_FRACTION (pickets crossing share of each slice; deriveSceneState takes it as a param, pin keeps 0.5)'},
   {file: SF_TSX, needle: /settleRollMs/, what: 'SplitFlap/index.tsx: settleRollMs (roll-on-settle for the pickets board; undefined = snap for pin/inplace/horizontal)'},
+  {file: SF_TSX, needle: /settleSweepMs/, what: 'SplitFlap/index.tsx: settleSweepMs (per-column L→R stagger on the settle roll: letters fall into place column by column, the board echo of the picket wave)'},
+  {file: TSX, needle: /const PICKET_BOARD_SWEEP_MS\b/, what: 'index.tsx: PICKET_BOARD_SWEEP_MS (the pickets board settle sweep: ms per column, left to right)'},
   {file: SF_TSX, needle: /const ROLL_FROM\b/, what: 'SplitFlap/index.tsx: ROLL_FROM (blank start glyph for the pickets settle FORWARD roll; avoids the punctuation-wrap strand)'},
   {file: TSX, needle: /function ParallaxStudio\b/, what: 'index.tsx: ParallaxStudio (the 4 scroll-models: pin/inplace/horizontal/pickets)'},
   {file: TSX, needle: /function useNavbarSceneHighlight\b/, what: 'index.tsx: useNavbarSceneHighlight (light the matching navbar item per active scene)'},

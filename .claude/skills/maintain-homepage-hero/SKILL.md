@@ -368,7 +368,10 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     `boardTextOverride`), NOT the smoothed scene: mid-crossing → a DETERMINISTIC `picketBoardScramble`
     (a stable random string, so a mid-wave rest reads as a departure board frozen mid-swap, not the
     destination title early); settled → the scene title. The settle is a real ~`PICKET_BOARD_SETTLE_MS`
-    (750ms) roll via SplitFlap's `settleRollMs`. FOUR traps, each of which stranded the flap cells
+    (750ms per cell) roll via SplitFlap's `settleRollMs`, and it SWEEPS left→right like the picket wave:
+    `settleSweepMs` (`PICKET_BOARD_SWEEP_MS`, 45ms) staggers each COLUMN's roll start, measured from the
+    row's first non-blank column, so the letters fall into place column by column (the whole sweep lands
+    in ~1.6s; guarded by `[pickets] the board SETTLE sweeps left→right`). FOUR traps, each of which stranded the flap cells
     ("DISCOVUEUR", punctuation stuck mid-roll) until fixed — do not reintroduce any:
     (a) the board target must be STABLE through the settle; the SMOOTHED scene keeps easing for ~120ms
     after a stop and flips scramble↔title mid-roll, remounting cells mid-fold. Derive it from RAW progress

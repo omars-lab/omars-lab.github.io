@@ -705,8 +705,12 @@ const PICKET_COUNT = 9; // odd, so a centre strip peaks at the mid of the crossi
 const PICKET_SPREAD = 2.5;
 // When scrolling STOPS in the pickets model, the board does ONE roll from its churning chars to the
 // resting state (the scene title if settled, or a random scramble if stopped mid-crossing) over this
-// long: a real flip to the end state, not an instant snap and not an endless churn.
+// long per cell: a real flip to the end state, not an instant snap and not an endless churn.
 const PICKET_BOARD_SETTLE_MS = 750;
+// ...and the settle SWEEPS left→right like the picket wave: each column's roll starts this many ms
+// after the one to its left (measured from the title's first letter), so the letters fall into place
+// column by column across the board, echoing the door's strip-by-strip reveal.
+const PICKET_BOARD_SWEEP_MS = 45;
 
 // A DETERMINISTIC board scramble for a mid-crossing REST (pickets): when you stop the wheel mid-wave,
 // the board settles to THIS instead of the destination title, so it reads as a departure board frozen
@@ -1284,9 +1288,11 @@ function StudioFacade({
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
                     // PICKETS: the board churns for the WHOLE crossing and, when the wave ends, does ONE
-                    // true quick ROLL (~0.25s) from the random chars to the destination title, instead of
-                    // snapping. Other models leave this undefined (instant snap on settle, no per-stop roll).
+                    // true ROLL from the random chars to the destination text, SWEEPING left→right column
+                    // by column (the board's echo of the picket wave). Other models leave these undefined
+                    // (instant snap on settle, no per-stop roll).
                     settleRollMs={picketed ? PICKET_BOARD_SETTLE_MS : undefined}
+                    settleSweepMs={picketed ? PICKET_BOARD_SWEEP_MS : undefined}
                   />
                 </div>
               </div>

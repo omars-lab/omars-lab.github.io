@@ -748,7 +748,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     // STOP mid-crossing: the board must settle to a stable RANDOM scramble (a departure board frozen
     // mid-swap), NOT the destination title, and HOLD (not keep churning).
     await scrubTo(page, 0.1);
-    await page.waitForTimeout(1100); // the ~750ms settle roll + margin
+    // the settle SWEEPS L→R (per-column stagger + the ~750ms roll), so the LAST column lands ~1.6s
+    // after the stop; wait past the whole sweep before snapshotting the "rest" text.
+    await page.waitForTimeout(2600);
     const mid1 = await boardCollapsed(page);
     await page.waitForTimeout(500);
     const mid2 = await boardCollapsed(page);
@@ -762,6 +764,30 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     await expect
       .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board rolls to the scene title' })
       .toBe('DISCOVERMYCRAFT');
+  });
+
+  test('[pickets] the board SETTLE sweeps left→right, letters landing column by column', async ({ page }) => {
+    // The board's echo of the picket wave: on settle, each column's roll starts a beat after the one
+    // to its left (SplitFlap settleSweepMs), so the title falls into place L→R instead of every cell
+    // arriving at once. We stop in a SETTLED zone and sample the board through the sweep: some sample
+    // must show the title's LEFT PREFIX already final while the right side is still rolling, and the
+    // final sample must be the full title.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    await scrubTo(page, (1 + 0.15) / 8); // scene 0's settled zone → the board settles to the title
+    const TITLE = 'DISCOVERMYCRAFT';
+    const samples: string[] = [];
+    for (let i = 0; i < 32; i++) {
+      samples.push(await boardCollapsed(page));
+      await page.waitForTimeout(100);
+    }
+    const midSweep = samples.some((s) => s.startsWith('DISC') && s !== TITLE);
+    expect(
+      midSweep,
+      `some sample must show the left prefix landed while the right still rolls (saw ${JSON.stringify(samples.filter((s, i) => i === 0 || s !== samples[i - 1]).slice(0, 12))})`,
+    ).toBe(true);
+    expect(samples[samples.length - 1], 'the sweep ends on the full title').toBe(TITLE);
   });
 
   // How many of the board's rows have any non-blank glyph (a full-width single-row title → 1).
