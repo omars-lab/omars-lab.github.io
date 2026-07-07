@@ -592,6 +592,29 @@ function deriveSceneState(p: number, count: number, reduce: boolean): SceneState
 // transition phase `t`, so scrolling back reverses it exactly (no snap, every position is stable).
 const PICKET_COUNT = 9; // odd, so a centre strip peaks at the mid of the crossing
 const PICKET_SPREAD = 0.5; // how much the wave lags the right strips behind the left (0 = all together)
+// When scrolling STOPS in the pickets model, the board does ONE roll from its churning chars to the
+// resting state (the scene title if settled, or a random scramble if stopped mid-crossing) over this
+// long: a real flip to the end state, not an instant snap and not an endless churn.
+const PICKET_BOARD_SETTLE_MS = 750;
+
+// A DETERMINISTIC board scramble for a mid-crossing REST (pickets): when you stop the wheel mid-wave,
+// the board settles to THIS instead of the destination title, so it reads as a departure board frozen
+// mid-swap. It is a SINGLE centered word the same shape as a title (one line, ~title length), so the
+// scramble→title swap is a clean per-cell letter change on the SAME grid footprint (a full-board block
+// of a different length would reshape the grid and strand cells). Seeded by the crossing so it is STABLE
+// while you rest (does not re-roll each frame) yet differs per crossing. Deck letters/digits only.
+const SCRAMBLE_GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function picketBoardScramble(t: {fromScene: number; toScene: number; fromDoor: boolean}): string {
+  let s = ((t.fromDoor ? 97 : t.fromScene + 1) * 131 + (t.toScene + 1) * 17 + 7) >>> 0;
+  const next = () => {
+    s = (s * 1103515245 + 12345) >>> 0;
+    return s;
+  };
+  const len = 13 + (next() % 4); // 13..16 chars: one centered line, a title-sized single word
+  let out = '';
+  for (let i = 0; i < len; i++) out += SCRAMBLE_GLYPHS[next() % SCRAMBLE_GLYPHS.length];
+  return out;
+}
 
 /** PURE: per-strip {flash, revealed} for a crossing at phase `t`, plus the reveal INSET (right %).
  *  `local_i` is strip i's own phase, staggered so lower i (left) leads; `flash_i = sin(π·local_i)`;
@@ -995,7 +1018,14 @@ function StudioFacade({
   // stop. The TIMER house (spinning=undefined) does the clean per-cell flap-roll on a text change. Each
   // title is CENTERED on the (wider-than-the-title) board, so short titles sit dead-center with blank
   // flap tiles either side.
-  const boardTarget = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
+  // The board's SETTLE target (the glyphs it rolls to when scrolling stops):
+  //  • the scene TITLE (or WELCOME at the door) in a settled zone, OR
+  //  • (PICKETS only, stopped MID-crossing) a stable RANDOM string, so a rest mid-wave leaves the board
+  //    looking like a departure board frozen mid-swap rather than showing the destination early. The
+  //    string is DETERMINISTIC (seeded by the crossing) so it does not re-roll every frame while at rest.
+  const sceneTitle = mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
+  const boardTarget =
+    picketed && transition ? picketBoardScramble(transition) : sceneTitle;
   const boardSpinning = spinning;
   // Base-URL the scene + door images ONCE, at the top level, so hook count is constant across renders.
   // CHOOSER_CARDS has a fixed length, so this map is a fixed number of useBaseUrl calls; the picket
@@ -1060,6 +1090,10 @@ function StudioFacade({
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
+                    // PICKETS: the board churns for the WHOLE crossing and, when the wave ends, does ONE
+                    // true quick ROLL (~0.25s) from the random chars to the destination title, instead of
+                    // snapping. Other models leave this undefined (instant snap on settle, no per-stop roll).
+                    settleRollMs={picketed ? PICKET_BOARD_SETTLE_MS : undefined}
                   />
                 </div>
               </div>
@@ -1499,14 +1533,19 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
           </div>
         </div>
       )}
-      {/* Board churn is SCOPED to transition zones: it spins ONLY while scrolling AND the engine is
-          mid-crossing (boardFromText !== boardToText). Entering a scene's SETTLED zone (even while the
-          wheel is still moving) stops the churn so the board rolls to that scene's title, landing the
-          door, flash, and board on the SAME scene together. `boardFromText === boardToText` is exactly
-          deriveSceneState's settled condition, so this stays engine-consistent (no separate math). */}
+      {/* Board churn. It spins (churns random glyphs) ONLY while actively SCROLLING; on STOP it does one
+          quick roll to a resting state. Two rules for that resting TARGET (handled in StudioFacade):
+          • pin/inplace/horizontal: churn only while scrolling AND mid-crossing (boardFromText !==
+            boardToText), settling to the scene TITLE (entering a settled zone stops the churn so door +
+            flash + board land on the same scene).
+          • PICKETS: churn while scrolling regardless of zone; on STOP roll to the scene TITLE if we
+            landed in a settled zone, or to a stable RANDOM string if we stopped mid-crossing (a
+            departure board frozen mid-swap). See StudioFacade's boardTarget + settleRollMs. */}
       <StudioFacade
         {...scene}
-        spinning={scrolling && scene.boardFromText !== scene.boardToText}
+        spinning={
+          picketed ? scrolling : scrolling && scene.boardFromText !== scene.boardToText
+        }
         onJump={pinned ? jumpToScene : undefined}
         picketed={picketed}
       />

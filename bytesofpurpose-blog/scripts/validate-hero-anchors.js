@@ -67,6 +67,8 @@ const ANCHORS = [
   {file: TSX, needle: /function StudioFacade\b/, what: 'index.tsx: StudioFacade (the presentational Lebanese house, shared by timer + parallax)'},
   {file: TSX, needle: /function StudioPickets\b/, what: 'index.tsx: StudioPickets (the picket-wave overlay: per-strip flash that replaces the single flash)'},
   {file: TSX, needle: /function picketStates\b/, what: 'index.tsx: picketStates (PURE per-strip {flash, revealed} + reveal inset for the picket wave)'},
+  {file: TSX, needle: /function picketBoardScramble\b/, what: 'index.tsx: picketBoardScramble (the stable random board text at a mid-crossing REST in pickets)'},
+  {file: SF_TSX, needle: /settleRollMs/, what: 'SplitFlap/index.tsx: settleRollMs (roll-on-settle for the pickets board; undefined = snap for pin/inplace/horizontal)'},
   {file: TSX, needle: /function ParallaxStudio\b/, what: 'index.tsx: ParallaxStudio (the 4 scroll-models: pin/inplace/horizontal/pickets)'},
   {file: TSX, needle: /function useNavbarSceneHighlight\b/, what: 'index.tsx: useNavbarSceneHighlight (light the matching navbar item per active scene)'},
   {file: TSX, needle: /function StudioFestoon\b/, what: 'index.tsx: StudioFestoon (the festoon string-light scene-progress indicator; bulbs jump on click)'},

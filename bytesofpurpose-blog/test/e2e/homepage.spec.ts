@@ -675,6 +675,36 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     const finalY = await page.evaluate(() => Math.round(window.scrollY));
     expect(Math.abs(finalY - settledY), `page must hold below the hero (${settledY} → ${finalY})`).toBeLessThanOrEqual(6);
   });
+
+  // The board text with SplitFlap's doubled faces collapsed (each flap shows front+back = duplicate).
+  const boardCollapsed = (page: Page) =>
+    page.evaluate(() => {
+      const b = document.querySelector('[class*="studioSign"]') as HTMLElement;
+      return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
+    });
+
+  test('[pickets] the board RESTS on random chars mid-crossing, and on the TITLE when settled', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // STOP mid-crossing: the board must settle to a stable RANDOM scramble (a departure board frozen
+    // mid-swap), NOT the destination title, and HOLD (not keep churning).
+    await scrubTo(page, 0.1);
+    await page.waitForTimeout(1100); // the ~750ms settle roll + margin
+    const mid1 = await boardCollapsed(page);
+    await page.waitForTimeout(500);
+    const mid2 = await boardCollapsed(page);
+    expect(mid1, 'the board holds mid-crossing (not churning)').toBe(mid2);
+    expect(mid1.includes('CRAFT') || mid1.includes('WELCOME'), 'mid-crossing shows a scramble, not the title').toBe(
+      false,
+    );
+
+    // Now SETTLE past the wave: the board rolls to the scene TITLE and holds.
+    await scrubTo(page, (1 + 0.25) / 8);
+    await expect
+      .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board rolls to the scene title' })
+      .toBe('DISCOVERMYCRAFT');
+  });
 });
 
 /*

@@ -341,6 +341,19 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     `--flash-o` is forced to 0 in picket mode (the pickets ARE the flash), and `.studioPickets` sits at
     `z-index: 4` (above the scene layers + the off single-flash) so the wave reads as the top bloom.
 
+24. **The pickets BOARD churns while scrolling, then settles to a scramble (mid-crossing) or the title
+    (settled).** `ParallaxStudio` passes `spinning={scrolling}` for pickets (churn only while the wheel
+    moves). On STOP, `StudioFacade`'s `boardTarget` decides the resting state: mid-crossing
+    (`transition != null`) it is a DETERMINISTIC `picketBoardScramble(transition)` (a stable single-word
+    random string, so a mid-wave rest reads as a departure board frozen mid-swap, not the destination
+    title showing early); settled it is the scene title. The settle is a real ~`PICKET_BOARD_SETTLE_MS`
+    (750ms) roll via SplitFlap's new `settleRollMs` prop. Two traps in `SplitFlap`: (a) the scramble is a
+    SINGLE title-length word (not a board-filling block) so the scramble→title swap keeps the SAME grid
+    footprint (a different-length block reshapes the grid and strands flanking cells); (b) on settle the
+    `SpinningCell` mounts a FRESH `Cell` (rolling from a fixed `ROLL_FROM` glyph via the new `from` prop,
+    or snapping for pin/inplace/horizontal) — a churning cell asked to roll in place can strand its two
+    faces one glyph off ("DISCOVUEUR"); a fresh, uninterrupted roll cannot. Blank-target cells always snap.
+
 ## Verify any change
 
 - `make validate-hero-anchors` — confirms every symbol this skill names still exists (exit 2 on drift).

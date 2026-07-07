@@ -33,6 +33,14 @@ export interface SplitFlapProps {
    * the final letters). Used by the scroll-driven hero: spinning = the user is scrolling; settle =
    * they stopped. (When undefined, the board behaves normally: it rolls on a `text` change.) */
   spinning?: boolean;
+  /** SETTLE-ROLL: how the board leaves the churn when `spinning` turns false.
+   *  • undefined (default): SNAP straight to `text` (a fresh cell mount at the target — instant, no
+   *    roll). This is what pin/inplace/horizontal use, because they settle the board MANY times per
+   *    journey while scrolling and a roll each time would strand/stutter.
+   *  • a number (ms): the churning cells ROLL through the deck from their current glyph to the target
+   *    over this duration — one true quick flip to the end state. Pickets uses this: the board rests
+   *    on random chars while the wave holds, then does ONE ~250ms roll to the title once the wave ends. */
+  settleRollMs?: number;
   /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
    * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
   direct?: boolean;
@@ -47,8 +55,23 @@ export interface SplitFlapProps {
 // settle we land on `char` — and a SETTLE TO BLANK snaps directly (no deck-roll that could strand on a
 // letter). The settle also keys a remount so the underlying Cell can't be left mid-roll from churn.
 const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
+// The fixed START glyph a settle ROLL folds FROM (pickets). A single direct fold from here to the
+// target reads as a clean "flap to the end state"; any fixed glyph works since it is one fold.
+const ROLL_FROM = 'O';
 
-function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; seed: number}) {
+function SpinningCell({
+  char,
+  spinning,
+  seed,
+  settleRollMs,
+}: {
+  char: string;
+  spinning: boolean;
+  seed: number;
+  /** When set, settle by ROLLING the same churning cell to the target over this many ms (one quick
+   *  flip to the end state). When undefined, settle by SNAPPING (a fresh mount at the target). */
+  settleRollMs?: number;
+}) {
   const [display, setDisplay] = useState(char);
   const idxRef = useRef(seed % SPIN_LETTERS.length);
 
@@ -68,17 +91,37 @@ function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; 
     return undefined;
   }, [spinning, char, seed]);
 
-  // SETTLE lands CLEANLY on the target. When churn stops we MOUNT A FRESH Cell initialized directly at
-  // `char` (keyed on `settled:<char>`), instead of asking a mid-roll Cell to roll from a stale `shown`
-  // to the target. A churning Cell whose roll is interrupted by the next churn tick can strand ONE deck
-  // glyph off the target (an 'L' left showing 'M', an 'H' showing 'I'); that stranding is invisible when
-  // churn only ended on a FULL stop, but the scroll hero now settles the board on entering each scene's
-  // zone WHILE still scrolling, so the churn->settle handoff fires many times per journey and the
-  // stranding became visible ("EXPMORE MY THOUGITS"). A fresh mount at the target can't strand (it never
-  // rolls). While SPINNING we keep the single churning Cell (keyed 'spin') so the churn animates; the
-  // key flip spin<->settled is exactly the clean cut we want. Blank targets settle the same way.
-  const key = spinning ? 'spin' : `settled:${char}`;
-  return <Cell key={key} char={spinning ? display : char} settleMs={500} />;
+  // TWO settle strategies:
+  //  • SNAP (settleRollMs undefined, the pin/inplace/horizontal default): MOUNT A FRESH Cell at `char`
+  //    (keyed `settled:<char>`), instead of asking a mid-roll Cell to roll from a stale glyph. A churning
+  //    Cell whose roll is interrupted by the next churn tick can strand ONE deck glyph off the target
+  //    (an 'L' left showing 'M'); invisible on a FULL stop, but those models settle the board on entering
+  //    each scene's zone WHILE still scrolling, so the handoff fires many times per journey and the
+  //    stranding became visible ("EXPMORE MY THOUGITS"). A fresh mount can't strand (it never rolls).
+  //  • ROLL (settleRollMs set, PICKETS): KEEP the same Cell across the churn->settle boundary (stable key
+  //    'spin'), so when `display` is replaced by `char` on settle the Cell flips from its last churning
+  //    glyph to the target. We use DIRECT mode (a SINGLE fold straight to the target) so the whole flip
+  //    finishes within settleRollMs (~0.25s) instead of rolling through the deck, which the per-step floor
+  //    can stretch to ~0.5s. Churn has stopped by then, so this single flip is never interrupted.
+  // While SPINNING, keep the single churning Cell (key 'spin'). On SETTLE we ALWAYS mount a FRESH Cell
+  // (keyed `settled:<char>`) so a mid-churn fold can never strand the faces (the "DISCOVUEUR" bug). The
+  // two strategies differ only in whether that fresh cell ROLLS or SNAPS:
+  //  • SNAP (settleRollMs undefined, pin/inplace/horizontal): mount already at `char` (instant, no roll).
+  //  • ROLL (settleRollMs set, PICKETS): mount showing a fixed START glyph (`from`) and let the fresh
+  //    cell roll ONE clean fold to `char` over settleRollMs. A fresh cell's roll is never interrupted by
+  //    a churn tick (churn is over), so it animates a real transition to the end state without stranding.
+  //  A BLANK target snaps either way (no roll to an empty cell).
+  const rolling = settleRollMs != null;
+  const settleToBlank = char === ' ';
+  if (spinning) {
+    return <Cell key="spin" char={display} settleMs={500} />;
+  }
+  if (rolling && !settleToBlank) {
+    // fresh mount that ROLLS through the deck from a fixed start glyph to the target over settleRollMs
+    // (a real split-flap settle). Fresh + uninterrupted, so it never strands.
+    return <Cell key={`roll:${char}`} char={char} from={ROLL_FROM} settleMs={settleRollMs} />;
+  }
+  return <Cell key={`settled:${char}`} char={char} settleMs={500} />;
 }
 
 /** Pad `text` to `columns` with a SPECIFIC left offset, so callers can give every row the SAME offset
@@ -143,14 +186,19 @@ function Cell({
   char,
   settleMs,
   direct = false,
+  from,
 }: {
   char: string;
   settleMs: number;
   /** When true, flip STRAIGHT to the target in one fold (no rolling through the deck). */
   direct?: boolean;
+  /** Optional START glyph: the cell mounts showing THIS and immediately rolls to `char`. Lets a
+   *  freshly-mounted settle cell animate a clean roll from a known glyph (no strand) instead of
+   *  snapping. When omitted, the cell mounts already showing `char` (no roll on mount). */
+  from?: string;
 }) {
-  const [shown, setShown] = useState(char); // the settled glyph currently displayed
-  const [next, setNext] = useState(char); // the glyph this step is flipping TO
+  const [shown, setShown] = useState(from ?? char); // the settled glyph currently displayed
+  const [next, setNext] = useState(from ?? char); // the glyph this step is flipping TO
   const [flipping, setFlipping] = useState(false);
   const [stepMs, setStepMs] = useState(120);
   const timers = useRef<number[]>([]);
@@ -244,6 +292,7 @@ export default function SplitFlap({
   rows: fixedRows,
   className,
   spinning,
+  settleRollMs,
   direct = false,
 }: SplitFlapProps): React.JSX.Element {
   // Build the centered/padded GRID for a message.
@@ -272,7 +321,13 @@ export default function SplitFlap({
         {grid.map((row, r) => (
           <span key={r} className={styles.row}>
             {Array.from(row).map((c, i) => (
-              <SpinningCell key={i} char={c} spinning={spinning} seed={(seed = seed + 7 + i * 3)} />
+              <SpinningCell
+                key={i}
+                char={c}
+                spinning={spinning}
+                seed={(seed = seed + 7 + i * 3)}
+                settleRollMs={settleRollMs}
+              />
             ))}
           </span>
         ))}
