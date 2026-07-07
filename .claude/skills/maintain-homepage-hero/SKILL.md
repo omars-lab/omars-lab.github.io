@@ -168,10 +168,10 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
   floor (`CATCHUP_MAX_S` 300ms) + a SPEED CAP (`CATCHUP_MAX_RATE` 0.5 progress/s) so a multi-crossing
   flick visibly sweeps every picket and scene in order instead of closing arbitrarily fast (this is
   GSAP ScrollTrigger's numeric `scrub`, tuned snappy). Rules: it NEVER writes scroll; raw passthrough
-  under reduced motion + the `?hero-progress` freeze; the board settle TARGET stays derived from RAW
-  progress (a moving target strands the flap roll); `spinning` = `scrolling || catchUp.active` so the
-  board churns while the wave still sweeps. Guarded by `[pickets] the wave tracks the scroll LIVE`,
-  `... render STORM`, and hero-perf's `inertial FLICK sweeps THROUGH` + `rapid-succession flicks`.
+  under reduced motion + the `?hero-progress` freeze. The BOARD rides the same display progress via its
+  scrubbed SWEEP mode (gotcha 24), so wave + board move as one. Guarded by
+  `[pickets] the wave tracks the scroll LIVE`, `... render STORM`, and hero-perf's
+  `inertial FLICK sweeps THROUGH` + `rapid-succession flicks`.
 - **The wave's scrub fidelity IS its scroll runway.** Pickets has its OWN spacer height
   (`PICKET_SCENE_VH` 1.5 vs pin's 0.85) and its own crossing share (`PICKET_TRANSITION_FRACTION` 0.7 vs
   0.5; `deriveSceneState` takes it as a param) so one crossing spans ~650px of scroll instead of ~250px.
@@ -362,33 +362,29 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     `--flash-o` is forced to 0 in picket mode (the pickets ARE the flash), and `.studioPickets` sits at
     `z-index: 4` (above the scene layers + the off single-flash) so the wave reads as the top bloom.
 
-24. **The pickets BOARD churns while scrolling, then does a strand-free roll to a scramble (mid-crossing)
-    or the title (settled).** `ParallaxStudio` passes `spinning={scrolling}` for pickets (churn only while
-    the wheel moves). On STOP the resting state is chosen from the RAW progress (see `rawBoardText` +
-    `boardTextOverride`), NOT the smoothed scene: mid-crossing → a DETERMINISTIC `picketBoardScramble`
-    (a stable random string, so a mid-wave rest reads as a departure board frozen mid-swap, not the
-    destination title early); settled → the scene title. The settle is a real ~`PICKET_BOARD_SETTLE_MS`
-    (750ms per cell) roll via SplitFlap's `settleRollMs`, and it SWEEPS left→right like the picket wave:
-    `settleSweepMs` (`PICKET_BOARD_SWEEP_MS`, 45ms) staggers each COLUMN's roll start, measured from the
-    row's first non-blank column, so the letters fall into place column by column (the whole sweep lands
-    in ~1.6s; guarded by `[pickets] the board SETTLE sweeps left→right`). FOUR traps, each of which stranded the flap cells
-    ("DISCOVUEUR", punctuation stuck mid-roll) until fixed — do not reintroduce any:
-    (a) the board target must be STABLE through the settle; the SMOOTHED scene keeps easing for ~120ms
-    after a stop and flips scramble↔title mid-roll, remounting cells mid-fold. Derive it from RAW progress
-    (`rawBoardText`), which is fixed the instant you stop.
-    (b) the scramble is sized to the DESTINATION title (same length + space positions), so scramble→title
-    is an in-place per-cell swap; a different-length scramble re-centers the grid and shifts cell slots.
-    (c) on settle, `SpinningCell` mounts a FRESH `Cell` (never rolls a churning cell in place — a churn
-    tick or a re-render mid-fold strands the two faces).
-    (d) the fresh settle `Cell` rolls from BLANK (`ROLL_FROM`) FORWARD via `from`; blank is deck index 0
-    so every target is a bounded forward roll (A,B,C..) that arrives with its neighbours. A non-blank
-    start glyph makes targets before it in the deck wrap through the whole punctuation tail (wildly
-    different arrival times, ugly). pin/inplace/horizontal keep the instant SNAP (`settleRollMs` unset).
-    (e) BLANK-target cells do NOT churn (they stay blank while spinning) and SNAP on settle. The board
-    pads short text to a fixed 3-row grid; if the 2 padding rows churned, all rows would fill and then
-    COLLAPSE 3-rows→1 in one frame on stop (a jarring jump). Keeping padding cells blank throughout means
-    the board is always a SINGLE centered row and the churn→title settle is an in-row flap, not a
-    row-count jump. Guarded by the `[pickets] the board churns as a SINGLE row` e2e.
+24. **The pickets BOARD is SCRUBBED by scroll (SplitFlap SWEEP mode) — no churn, no settle roll, no
+    scramble.** The board is a PURE function of the crossing phase, in lockstep with the wave: `StudioFacade`
+    feeds `boardFromText`/`boardToText`/`boardProgress` into SplitFlap's `sweepFromText`/`sweepProgress`,
+    and a flip FRONT walks left→right across the LIT SPAN (the union of where either text has letters,
+    row-major). Cells the front has passed show the NEXT title, cells ahead still show the text you came
+    from, and the ONLY animation at any instant is the single fold of the column the front is crossing.
+    Stop mid-wave → the half-new/half-old board FREEZES (nothing flips at rest); scroll back → the letters
+    revert column by column. This replaced TWO earlier designs that both broke: whole-board CHURN + a
+    settle roll on stop (the stop re-animated every cell), and a time-based L→R settle cascade (same
+    problem, prettier). Traps that remain load-bearing:
+    (a) `boardSweepProgress` is QUANTIZED to the board's column resolution in StudioFacade, so the
+    memoized board re-renders only when the front actually steps, not on every catch-up frame.
+    (b) `Cell` must cancel its visual flip state when retargeted BACK to the glyph it already shows
+    (the sweep front retreating mid-fold): the effect's early-return path calls `setFlipping(false)`,
+    else the cell strands mid-fold with both leaves up (the "DISCOWVWER" bug).
+    (c) pin/inplace/horizontal still use SPINNING mode (churn only while scrolling mid-crossing, SNAP
+    on settle) — do not give them the sweep; their crossings are a single flash, not a scrubbed front.
+    (d) BLANK-target cells stay blank in both modes. The board pads short text to a fixed 3-row grid;
+    if the 2 padding rows ever filled, all rows would fill and then COLLAPSE 3-rows→1 in one frame (a
+    jarring jump). The sweep's lit span never touches them, and spinning-mode padding cells never churn.
+    Guarded by `[pickets] the board stays a SINGLE row through a crossing`; the sweep contract itself is
+    guarded by `[pickets] the board FREEZES mid-crossing as a stable old/new MIX` + `[pickets] the board
+    letters land column by column WITH the scroll`.
 
 25. **FIREFOX-ONLY: split-flap letters "glitch downward" mid-crossing — fix it on the FOLD LEAVES, NOT
     every glyph (that lags scroll).** During a flap, each leaf clips a full-height `.glyph` and rotates

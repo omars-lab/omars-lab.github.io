@@ -162,12 +162,17 @@ async function openPickets(
 test.describe('Homepage hero — pickets visual regression', () => {
   // Desktop only (the wave is the same shape at every DPR; mobile is door-only + covered by the studio
   // baselines when those land). Light + dark to catch theme-specific strip/scene blending.
+  //
+  // Screenshot the STICKY HERO, not the whole header: the pickets spacer makes the header ~9000px of
+  // mostly-empty runway, and on an image that big the shared maxDiffPixelRatio dilutes a real hero
+  // change (e.g. the whole BOARD text) below the tolerance — a stale baseline silently keeps passing.
+  // The stick is the ~viewport-sized pinned house, so the ratio actually bites there.
   const m = MATRIX[0]; // desktop-1x
   for (const theme of ['light', 'dark'] as const) {
     for (const s of PICKET_STATES) {
       test(`pickets ${s.name} · ${m.name} · ${theme}`, async ({ browser }) => {
         const page = await openPickets(browser, s.p, m, theme);
-        await expect(page.locator('header').first()).toHaveScreenshot(
+        await expect(page.locator('[class*="parallaxStick"]').first()).toHaveScreenshot(
           `hero-pickets-${s.name}-${m.name}-${theme}.png`,
         );
         await page.context().close();

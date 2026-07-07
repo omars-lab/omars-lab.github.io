@@ -33,19 +33,14 @@ export interface SplitFlapProps {
    * the final letters). Used by the scroll-driven hero: spinning = the user is scrolling; settle =
    * they stopped. (When undefined, the board behaves normally: it rolls on a `text` change.) */
   spinning?: boolean;
-  /** SETTLE-ROLL: how the board leaves the churn when `spinning` turns false.
-   *  • undefined (default): SNAP straight to `text` (a fresh cell mount at the target — instant, no
-   *    roll). This is what pin/inplace/horizontal use, because they settle the board MANY times per
-   *    journey while scrolling and a roll each time would strand/stutter.
-   *  • a number (ms): the churning cells ROLL through the deck from their current glyph to the target
-   *    over this duration — one true quick flip to the end state. Pickets uses this: the board rests
-   *    on random chars while the wave holds, then does ONE ~250ms roll to the title once the wave ends. */
-  settleRollMs?: number;
-  /** SETTLE SWEEP (only meaningful with `settleRollMs`): stagger each COLUMN's settle roll left→right
-   * by this many ms, measured from the row's first non-blank column, so the letters FALL INTO PLACE
-   * column by column, sweeping across the board the way the picket wave sweeps across the door.
-   * Undefined = all cells roll together (every cell arrives at the same moment). */
-  settleSweepMs?: number;
+  /** SWEEP mode (the pickets board — pass BOTH sweep props): the board is SCRUBBED by scroll, exactly
+   * like the door. `sweepProgress` p∈[0,1] positions a flip FRONT across the board: cells LEFT of the
+   * front already show `text` (the destination), cells RIGHT of it still show `sweepFromText` (where
+   * you came from), and only the cell the front is crossing flips. A pure function of p: stopping
+   * mid-crossing FREEZES the half-new/half-old board, scrolling back makes the letters revert, and at
+   * any instant only the column the scroll is impacting animates (no whole-board churn or cascade). */
+  sweepFromText?: string;
+  sweepProgress?: number;
   /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
    * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
   direct?: boolean;
@@ -61,26 +56,15 @@ export interface SplitFlapProps {
 // instant you stop. Keeping blank-target cells blank throughout means the board churns only where the
 // text lives and there is no collapse to animate. A blank target also SNAPS on settle (never rolls).
 const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
-// The fixed START glyph a settle roll folds FROM (pickets): BLANK (deck index 0), so every target is a
-// bounded FORWARD roll (A,B,C..) that never wraps through the punctuation tail. See the settle logic.
-const ROLL_FROM = ' ';
 
 function SpinningCell({
   char,
   spinning,
   seed,
-  settleRollMs,
-  settleDelayMs = 0,
 }: {
   char: string;
   spinning: boolean;
   seed: number;
-  /** When set, settle by ROLLING the same churning cell to the target over this many ms (one quick
-   *  flip to the end state). When undefined, settle by SNAPPING (a fresh mount at the target). */
-  settleRollMs?: number;
-  /** L→R SWEEP: hold this cell's settle roll back this many ms (column stagger), so the letters land
-   *  column by column instead of all at once. Only used on the ROLL settle path. */
-  settleDelayMs?: number;
 }) {
   const [display, setDisplay] = useState(char);
   const idxRef = useRef(seed % SPIN_LETTERS.length);
@@ -103,35 +87,19 @@ function SpinningCell({
     return undefined;
   }, [spinning, char, seed, periodMs]);
 
-  // While SPINNING, one churning Cell (key 'spin'). On SETTLE we ALWAYS mount a FRESH Cell so a mid-churn
-  // fold can never carry over and strand the two faces one glyph apart. Two settle strategies:
-  //  • SNAP (settleRollMs undefined; pin/inplace/horizontal): mount already AT `char` (instant, no roll).
-  //    Those models settle the board MANY times per journey while scrolling, so a roll each time would
-  //    stutter; the snap is the safe choice there.
-  //  • ROLL (settleRollMs set; PICKETS): a letter/digit target mounts at BLANK (`ROLL_FROM`, deck index
-  //    0) and rolls FORWARD (A,B,C..), a bounded roll that never wraps through the punctuation tail and
-  //    lands with its neighbours. Blank targets SNAP (the padding rows only churn where the churn itself
-  //    fills them; see the `spinning`-branch grid, which pads the churn to the TARGET's own rows only, so
-  //    there is no 3-rows→1 collapse to animate). A FRESH mount cannot strand: no churn tick interrupts
-  //    it, and the board target is the STABLE raw-progress text (see rawBoardText in ParallaxStudio) so
-  //    `char` never changes mid-roll to remount the cell.
-  const rolling = settleRollMs != null;
-  const settleToBlank = char === ' ';
+  // While SPINNING, one churning Cell (key 'spin'). On SETTLE we ALWAYS mount a FRESH Cell already AT
+  // `char` (an instant SNAP) so a mid-churn fold can never carry over and strand the two faces one
+  // glyph apart. The spinning models (pin/inplace/horizontal) settle the board MANY times per journey
+  // while scrolling, so a roll each time would stutter; the snap is the safe choice. (The pickets board
+  // does not spin at all any more — it uses the scroll-scrubbed SWEEP mode; see SplitFlap.)
   if (spinning) {
     // CHURN ticks flip DIRECT (one fold straight to the random glyph), and the fold is sized to
     // FINISH just inside this cell's own tick period. Both matter for scroll perf (trace-proven):
     // without `direct` every tick starts a multi-step DECK ROLL toward a random target (dozens of
     // timer + state updates per second per cell), and a fold longer than the tick never completes,
     // leaving every cell stuck mid-flip with its glyph text mutating inside the moving leaves. That
-    // combination was the main-thread storm that made pickets scrolling hitch for whole gestures.
+    // combination was the main-thread storm that made scrolling hitch for whole gestures.
     return <Cell key="spin" char={display} settleMs={Math.max(40, periodMs - 20)} direct />;
-  }
-  if (rolling && !settleToBlank) {
-    // The L→R settle SWEEP: each column's roll starts `settleDelayMs` later (the cell sits blank
-    // until its turn), so the title falls into place column by column, echoing the picket wave.
-    return (
-      <Cell key={`roll:${char}`} char={char} from={ROLL_FROM} settleMs={settleRollMs} delayMs={settleDelayMs} />
-    );
   }
   return <Cell key={`settled:${char}`} char={char} settleMs={500} />;
 }
@@ -198,29 +166,28 @@ function Cell({
   char,
   settleMs,
   direct = false,
-  from,
-  delayMs = 0,
 }: {
   char: string;
   settleMs: number;
   /** When true, flip STRAIGHT to the target in one fold (no rolling through the deck). */
   direct?: boolean;
-  /** Optional START glyph: the cell mounts showing THIS and immediately rolls to `char`. Lets a
-   *  freshly-mounted settle cell animate a clean roll from a known glyph (no strand) instead of
-   *  snapping. When omitted, the cell mounts already showing `char` (no roll on mount). */
-  from?: string;
-  /** Hold the roll's START by this many ms (the cell shows `from` until then). The L→R settle sweep:
-   *  the board passes each column a growing delay so letters land column by column. */
-  delayMs?: number;
 }) {
-  const [shown, setShown] = useState(from ?? char); // the settled glyph currently displayed
-  const [next, setNext] = useState(from ?? char); // the glyph this step is flipping TO
+  const [shown, setShown] = useState(char); // the settled glyph currently displayed
+  const [next, setNext] = useState(char); // the glyph this step is flipping TO
   const [flipping, setFlipping] = useState(false);
   const [stepMs, setStepMs] = useState(120);
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
-    if (char === shown) return undefined;
+    if (char === shown) {
+      // Retargeted BACK to the glyph already shown while a flip was in flight (e.g. the sweep front
+      // retreating on a scroll-back): the effect cleanup has cancelled the flip's timers, so ALSO
+      // cancel the visual flip state, else the cell strands mid-fold (flipping=true forever, both
+      // leaves up). No-ops when the cell was already at rest.
+      setFlipping(false);
+      setNext(char);
+      return undefined;
+    }
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
 
@@ -255,12 +222,7 @@ function Cell({
       }, perStep);
       timers.current.push(mid, end);
     };
-    if (delayMs > 0) {
-      // L→R sweep: hold at the start glyph until this column's turn, then roll.
-      timers.current.push(window.setTimeout(() => run(0), delayMs));
-    } else {
-      run(0);
-    }
+    run(0);
 
     return () => {
       timers.current.forEach((t) => window.clearTimeout(t));
@@ -313,8 +275,8 @@ function SplitFlap({
   rows: fixedRows,
   className,
   spinning,
-  settleRollMs,
-  settleSweepMs,
+  sweepFromText,
+  sweepProgress,
   direct = false,
 }: SplitFlapProps): React.JSX.Element {
   // Build the centered/padded GRID for a message.
@@ -333,34 +295,58 @@ function SplitFlap({
 
   const grid = toGrid(text);
 
+  // SWEEP mode (the pickets board): the board is a PURE FUNCTION of `sweepProgress`, scrubbed by the
+  // scroll like the door. A flip FRONT moves left→right across the LIT SPAN of the board (the union of
+  // where the from-text and to-text have letters, row-major): cells the front has passed show the
+  // DESTINATION glyph, cells ahead of it still show the FROM glyph, and the only animation at any
+  // instant is the single fold of the cell the front is crossing (Cell flips when its char changes).
+  // Stop mid-crossing → the mixed board FREEZES; scroll back → the letters revert, column by column.
+  if (sweepProgress != null && sweepFromText != null) {
+    const fromGrid = toGrid(sweepFromText);
+    const p = Math.min(1, Math.max(0, sweepProgress));
+    // Each row's lit span (union across from+to); the front walks these spans row-major.
+    const spans = grid.map((row, r) => {
+      const both = Array.from(row).map((c, i) => (c !== ' ' ? c : (fromGrid[r]?.[i] ?? ' ')));
+      const s = both.findIndex((c) => c !== ' ');
+      const e = s < 0 ? -1 : both.length - 1 - [...both].reverse().findIndex((c) => c !== ' ');
+      return s < 0 ? null : {start: s, end: e};
+    });
+    const total = spans.reduce((n, sp) => n + (sp ? sp.end - sp.start + 1 : 0), 0);
+    const frontIdx = Math.round(p * total); // cells with ordinal < frontIdx show the destination
+    let ordinal = 0;
+    return (
+      <span className={clsx(styles.board, className)} role="text" aria-label={text}>
+        {grid.map((row, r) => {
+          const sp = spans[r];
+          return (
+            <span key={r} className={styles.row}>
+              {Array.from(row).map((c, i) => {
+                const inSpan = sp != null && i >= sp.start && i <= sp.end;
+                const passed = inSpan && ordinal++ < frontIdx;
+                const shown = inSpan ? (passed ? c : (fromGrid[r]?.[i] ?? ' ')) : ' ';
+                return <Cell key={i} char={shown} settleMs={220} direct />;
+              })}
+            </span>
+          );
+        })}
+      </span>
+    );
+  }
+
   // SPINNING mode: while `spinning` the board CHURNS random letters; when it stops it SETTLES to `text`.
-  // (Used by the scroll-driven hero: spinning = scrolling, settle = stopped.) A stable per-cell seed
-  // keeps each cell's churn pace consistent across renders.
+  // (Used by the scroll-driven hero pin models: spinning = mid-crossing scroll, settle = snap.) A stable
+  // per-cell seed keeps each cell's churn pace consistent across renders.
   if (spinning != null) {
     let seed = 0;
     return (
       <span className={clsx(styles.board, className)} role="text" aria-label={text}>
-        {grid.map((row, r) => {
-          // The L→R settle sweep counts columns from THIS row's first letter (not the grid edge), so
-          // a centered title starts falling immediately instead of waiting out its blank left padding.
-          const firstLit = row.search(/\S/);
-          return (
-            <span key={r} className={styles.row}>
-              {Array.from(row).map((c, i) => (
-                <SpinningCell
-                  key={i}
-                  char={c}
-                  spinning={spinning}
-                  seed={(seed = seed + 7 + i * 3)}
-                  settleRollMs={settleRollMs}
-                  settleDelayMs={
-                    settleSweepMs && firstLit >= 0 ? Math.max(0, i - firstLit) * settleSweepMs : 0
-                  }
-                />
-              ))}
-            </span>
-          );
-        })}
+        {grid.map((row, r) => (
+          <span key={r} className={styles.row}>
+            {Array.from(row).map((c, i) => (
+              <SpinningCell key={i} char={c} spinning={spinning} seed={(seed = seed + 7 + i * 3)} />
+            ))}
+          </span>
+        ))}
       </span>
     );
   }

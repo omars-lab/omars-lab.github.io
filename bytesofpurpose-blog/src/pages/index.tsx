@@ -703,43 +703,13 @@ const PICKET_COUNT = 9; // odd, so a centre strip peaks at the mid of the crossi
 // peaks bunched in the middle third so the whole door bloomed white with little visible motion; 2.5
 // spreads them so it reads as a wave sweeping strip-by-strip.
 const PICKET_SPREAD = 2.5;
-// When scrolling STOPS in the pickets model, the board does ONE roll from its churning chars to the
-// resting state (the scene title if settled, or a random scramble if stopped mid-crossing) over this
-// long per cell: a real flip to the end state, not an instant snap and not an endless churn.
-const PICKET_BOARD_SETTLE_MS = 750;
-// ...and the settle SWEEPS left→right like the picket wave: each column's roll starts this many ms
-// after the one to its left (measured from the title's first letter), so the letters fall into place
-// column by column across the board, echoing the door's strip-by-strip reveal.
-const PICKET_BOARD_SWEEP_MS = 45;
+// (The pickets board carries NO settle/scramble machinery of its own any more: it renders in
+// SplitFlap's SWEEP mode, a pure function of the crossing phase, in lockstep with the wave. See
+// StudioFacade's board wiring.)
 
-// A DETERMINISTIC board scramble for a mid-crossing REST (pickets): when you stop the wheel mid-wave,
-// the board settles to THIS instead of the destination title, so it reads as a departure board frozen
-// mid-swap. It is a SINGLE centered word the same shape as a title (one line, ~title length), so the
-// scramble→title swap is a clean per-cell letter change on the SAME grid footprint (a full-board block
-// of a different length would reshape the grid and strand cells). Seeded by the crossing so it is STABLE
-// while you rest (does not re-roll each frame) yet differs per crossing. Deck letters/digits only.
 // The board's SETTLED text for a (mode, shown scene): WELCOME at the door, else the scene's title.
-// Shared by StudioFacade and ParallaxStudio's raw-progress board target so they can't disagree.
 function boardTextForScene(mode: 'door' | 'scene', shown: number): string {
   return mode === 'door' ? 'WELCOME' : stripEmoji(CHOOSER_CARDS[shown].title);
-}
-
-const SCRAMBLE_GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-function picketBoardScramble(t: {fromScene: number; toScene: number; fromDoor: boolean}): string {
-  let s = ((t.fromDoor ? 97 : t.fromScene + 1) * 131 + (t.toScene + 1) * 17 + 7) >>> 0;
-  const next = () => {
-    s = (s * 1103515245 + 12345) >>> 0;
-    return s;
-  };
-  // The scramble is EXACTLY as long as the DESTINATION title (toScene), with spaces in the SAME
-  // positions. This is load-bearing: SplitFlap centers text on its own width, so a scramble of a
-  // different length/shape than the title it settles to would re-center the grid, shift the per-cell
-  // slots, and STRAND flapping cells at the churn->settle handoff. Matching the title's exact footprint
-  // (length + word breaks) makes the scramble→title settle a clean in-place per-cell swap.
-  const title = stripEmoji(CHOOSER_CARDS[Math.max(0, t.toScene)].title).toUpperCase();
-  let out = '';
-  for (const ch of title) out += ch === ' ' ? ' ' : SCRAMBLE_GLYPHS[next() % SCRAMBLE_GLYPHS.length];
-  return out;
 }
 
 /** PURE: per-strip {flash, revealed} for a crossing at phase `t`, plus the reveal INSET (right %).
@@ -1178,22 +1148,19 @@ function StudioFacade({
   shown,
   mode,
   flash,
+  boardFromText,
   boardToText,
+  boardProgress,
   transition,
   spinning,
   onJump,
   picketed,
-  boardTextOverride,
 }: SceneState & {
   spinning?: boolean;
   /** Only the scroll models pass this: jump to scene `i` (the festoon bulbs call it). */
   onJump?: (scene: number) => void;
   /** The `pickets` scroll-model: render the per-strip flash WAVE instead of the single door flash. */
   picketed?: boolean;
-  /** PICKETS: the board's resting text computed from RAW (unsmoothed) progress, so it is STABLE the
-   *  instant scrolling stops. Overrides the internally-derived (smoothed) target, which lags and would
-   *  flip scramble↔title mid-settle and strand the flap cells. */
-  boardTextOverride?: string;
 }): React.JSX.Element {
   heroPerfBump('facadeRenders');
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
@@ -1202,28 +1169,26 @@ function StudioFacade({
   const boardCols = isMobile ? STUDIO_BOARD_COLS_MOBILE : STUDIO_BOARD_COLS;
   // BOARD <-> SCENE SYNC: the board's target text is the title of the scene the DOOR currently shows
   // (`shown`), or WELCOME in door mode, so the board can never settle to a title the door hasn't
-  // reached. CHURN (`spinning`) is now SCOPED to the flash TRANSITION only (the scroll wrapper passes
+  // reached. CHURN (`spinning`) is SCOPED to the flash TRANSITION only (the scroll wrapper passes
   // spinning only while mid-crossing): while crossing between scenes the board churns random letters,
-  // and the moment it enters a scene's settled zone it rolls cleanly to that title (even if the wheel
-  // is still moving), so the board tracks the door scene-by-scene instead of only settling on a full
-  // stop. The TIMER house (spinning=undefined) does the clean per-cell flap-roll on a text change. Each
-  // title is CENTERED on the (wider-than-the-title) board, so short titles sit dead-center with blank
-  // flap tiles either side.
-  // The board's SETTLE target (the glyphs it rolls to when scrolling stops):
-  //  • the scene TITLE (or WELCOME at the door) in a settled zone, OR
-  //  • (PICKETS only, stopped MID-crossing) a stable RANDOM string, so a rest mid-wave leaves the board
-  //    looking like a departure board frozen mid-swap rather than showing the destination early. The
-  //    string is DETERMINISTIC (seeded by the crossing) so it does not re-roll every frame while at rest.
-  //  PICKETS passes boardTextOverride (derived from RAW progress, stable at stop) so the settle roll has
-  //  a fixed destination; every other model uses the smoothed scene directly.
+  // and the moment it enters a scene's settled zone it snaps cleanly to that title (even if the wheel
+  // is still moving). The TIMER house (spinning=undefined) does the clean per-cell flap-roll on a text
+  // change. Each title is CENTERED on the (wider-than-the-title) board, so short titles sit dead-center
+  // with blank flap tiles either side.
+  // PICKETS is different: the board is SCRUBBED by the scroll (SplitFlap's SWEEP mode, below), a pure
+  // function of the crossing phase — no churn, no settle roll, no scramble. A flip front tracks the
+  // wave: columns behind it already show the NEXT title, columns ahead still show the text you came
+  // from, and only the column the front is crossing flips. Stop mid-wave = the mixed board freezes;
+  // scroll back = the letters revert. boardProgress (settled: 1, crossing: t) IS the front's position.
   const sceneTitle = boardTextForScene(mode, shown);
-  const boardTarget =
-    boardTextOverride != null
-      ? boardTextOverride
-      : picketed && transition
-        ? picketBoardScramble(transition)
-        : sceneTitle;
-  const boardSpinning = spinning;
+  const boardTarget = sceneTitle;
+  const boardSpinning = picketed ? undefined : spinning;
+  // Quantize the sweep front to the board's own column resolution so the (memoized) board only
+  // re-renders when the front actually moves a step, not on every catch-up frame.
+  const sweepQuantum = 2 * boardCols;
+  const boardSweepProgress = picketed
+    ? Math.round(boardProgress * sweepQuantum) / sweepQuantum
+    : undefined;
   // Base-URL the scene + door images ONCE, at the top level, so hook count is constant across renders.
   // CHOOSER_CARDS has a fixed length, so this map is a fixed number of useBaseUrl calls; the picket
   // reveal layer reuses cardUrls[toScene] instead of calling useBaseUrl conditionally (which would
@@ -1282,17 +1247,16 @@ function StudioFacade({
               <div className={styles.studioSignSwing}>
                 <div className={styles.studioSign}>
                   <SplitFlap
-                    text={boardTarget}
+                    // PICKETS: the SWEEP mode — the board is scrubbed by the crossing phase, its flip
+                    // front tracking the picket wave (boardFromText → boardToText). Other models keep
+                    // the churn-while-crossing + snap-on-settle behavior (sweep props undefined).
+                    text={picketed ? boardToText : boardTarget}
+                    sweepFromText={picketed ? boardFromText : undefined}
+                    sweepProgress={boardSweepProgress}
                     spinning={boardSpinning}
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
-                    // PICKETS: the board churns for the WHOLE crossing and, when the wave ends, does ONE
-                    // true ROLL from the random chars to the destination text, SWEEPING left→right column
-                    // by column (the board's echo of the picket wave). Other models leave these undefined
-                    // (instant snap on settle, no per-stop roll).
-                    settleRollMs={picketed ? PICKET_BOARD_SETTLE_MS : undefined}
-                    settleSweepMs={picketed ? PICKET_BOARD_SWEEP_MS : undefined}
                   />
                 </div>
               </div>
@@ -1591,19 +1555,6 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
     }
   }
 
-  // PICKETS BOARD TARGET from RAW progress (deliberately NOT the catch-up display progress): the
-  // board's resting text must be STABLE the instant scrolling stops, but the display progress keeps
-  // easing briefly after a stop, which would flip `scene.transition` (scramble↔title) DURING the
-  // ~750ms settle roll and strand the flap cells (a roll cell remounted mid-fold when its target char
-  // changes). The RAW progress stabilizes immediately at the stop position, so deriving the board
-  // target from it gives the settle a FIXED destination. Recomputed on each raw `tick`.
-  const rawBoardText = useMemo(() => {
-    if (requestedModel !== 'pickets') return undefined;
-    const s = deriveSceneState(progressRef.current, count, reduce, tf);
-    return s.transition ? picketBoardScramble(s.transition) : boardTextForScene(s.mode, s.shown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tick, count, reduce, requestedModel, tf]);
-
   useNavbarSceneHighlight(active, gateRef);
 
   // SNAP-TO-CLOSEST-SCENE: when scrolling STOPS mid-transition, glide to the nearest stop's settled
@@ -1795,24 +1746,18 @@ function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JS
           </div>
         </div>
       )}
-      {/* Board churn. It spins (churns random glyphs) ONLY while actively SCROLLING; on STOP it does one
-          quick roll to a resting state. Two rules for that resting TARGET (handled in StudioFacade):
-          • pin/inplace/horizontal: churn only while scrolling AND mid-crossing (boardFromText !==
-            boardToText), settling to the scene TITLE (entering a settled zone stops the churn so door +
-            flash + board land on the same scene).
-          • PICKETS: churn while scrolling regardless of zone; on STOP roll to the scene TITLE if we
-            landed in a settled zone, or to a stable RANDOM string if we stopped mid-crossing (a
-            departure board frozen mid-swap). See StudioFacade's boardTarget + settleRollMs. */}
+      {/* The BOARD, two behaviors by model (handled in StudioFacade):
+          • pin/inplace/horizontal: churn random glyphs only while scrolling AND mid-crossing
+            (boardFromText !== boardToText), snapping to the scene TITLE on settle.
+          • PICKETS: NO churn: the board is SCRUBBED by the crossing phase (SplitFlap SWEEP mode):
+            a flip front tracks the picket wave, letters left of it already show the next title,
+            letters right of it still show the previous text, and only the column the front crosses
+            flips. The facade wires boardFromText/boardToText/boardProgress straight through. */}
       <StudioFacade
         {...scene}
-        spinning={
-          // pickets: churn while the finger scrolls OR while the catch-up wave is still sweeping
-          // (the board should not settle while the door is visibly mid-wave)
-          picketed ? scrolling || catchUp.active : scrolling && scene.boardFromText !== scene.boardToText
-        }
+        spinning={picketed ? undefined : scrolling && scene.boardFromText !== scene.boardToText}
         onJump={pinned ? jumpToScene : undefined}
         picketed={picketed}
-        boardTextOverride={rawBoardText}
       />
     </Link>
   );

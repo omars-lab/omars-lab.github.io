@@ -741,53 +741,76 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
     });
 
-  test('[pickets] the board RESTS on random chars mid-crossing, and on the TITLE when settled', async ({ page }) => {
+  test('[pickets] the board FREEZES mid-crossing as a stable old/new MIX, and shows the TITLE when settled', async ({
+    page,
+  }) => {
+    // The board is SCRUBBED by scroll (SplitFlap SWEEP mode): mid-crossing it shows the NEXT title's
+    // left prefix + the PREVIOUS text's right remainder, split at the flip front. Stopping mid-wave
+    // FREEZES that mix (a pure function of position: no churn, no settle animation, nothing flipping).
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // STOP mid-crossing: the board must settle to a stable RANDOM scramble (a departure board frozen
-    // mid-swap), NOT the destination title, and HOLD (not keep churning).
-    await scrubTo(page, 0.1);
-    // the settle SWEEPS L→R (per-column stagger + the ~750ms roll), so the LAST column lands ~1.6s
-    // after the stop; wait past the whole sweep before snapshotting the "rest" text.
-    await page.waitForTimeout(2600);
+    await scrubTo(page, 0.09); // mid door→scene0 crossing
+    await page.waitForTimeout(600); // let the last front-flip finish
     const mid1 = await boardCollapsed(page);
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(600);
     const mid2 = await boardCollapsed(page);
-    expect(mid1, 'the board holds mid-crossing (not churning)').toBe(mid2);
-    expect(mid1.includes('CRAFT') || mid1.includes('WELCOME'), 'mid-crossing shows a scramble, not the title').toBe(
-      false,
+    expect(mid1, 'the mixed board holds frozen mid-crossing').toBe(mid2);
+    // the MIX: the destination's prefix has landed, but the full title has not
+    expect(mid1.startsWith('DIS'), `left prefix shows the NEXT title (was "${mid1}")`).toBe(true);
+    expect(mid1, 'mid-crossing is a mix, not the finished title').not.toBe('DISCOVERMYCRAFT');
+    // nothing animates at rest: no fold leaf exists anywhere in the board
+    const flipping = await page.evaluate(
+      () => document.querySelectorAll('[class*="studioSign"] [class*="foldDown"]').length,
     );
+    expect(flipping, 'no cell flips while frozen mid-crossing').toBe(0);
 
-    // Now SETTLE past the wave: the board rolls to the scene TITLE and holds.
+    // Settle past the wave: the full title, held.
     await scrubTo(page, (1 + 0.25) / 8);
     await expect
-      .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board rolls to the scene title' })
+      .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board shows the scene title' })
       .toBe('DISCOVERMYCRAFT');
   });
 
-  test('[pickets] the board SETTLE sweeps left→right, letters landing column by column', async ({ page }) => {
-    // The board's echo of the picket wave: on settle, each column's roll starts a beat after the one
-    // to its left (SplitFlap settleSweepMs), so the title falls into place L→R instead of every cell
-    // arriving at once. We stop in a SETTLED zone and sample the board through the sweep: some sample
-    // must show the title's LEFT PREFIX already final while the right side is still rolling, and the
-    // final sample must be the full title.
+  test('[pickets] the board letters land column by column WITH the scroll, and revert on scroll-back', async ({
+    page,
+  }) => {
+    // The flip front tracks the wave: scrub DEEPER into the crossing and MORE destination letters are
+    // in place (the prefix grows); scrub BACK and they revert to the previous text. A pure function of
+    // scroll position, like the pickets themselves: only the columns the front passes ever animate.
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    await scrubTo(page, (1 + 0.15) / 8); // scene 0's settled zone → the board settles to the title
     const TITLE = 'DISCOVERMYCRAFT';
-    const samples: string[] = [];
-    for (let i = 0; i < 32; i++) {
-      samples.push(await boardCollapsed(page));
-      await page.waitForTimeout(100);
+    // how many leading chars of the TITLE the board currently shows
+    const landedPrefix = async () => {
+      const s = await boardCollapsed(page);
+      let n = 0;
+      while (n < TITLE.length && s[n] === TITLE[n]) n++;
+      return n;
+    };
+    const depths = [0.055, 0.08, 0.105, 0.13];
+    const landed: number[] = [];
+    for (const p of depths) {
+      await scrubTo(page, p);
+      await page.waitForTimeout(400); // front flip settles
+      landed.push(await landedPrefix());
     }
-    const midSweep = samples.some((s) => s.startsWith('DISC') && s !== TITLE);
-    expect(
-      midSweep,
-      `some sample must show the left prefix landed while the right still rolls (saw ${JSON.stringify(samples.filter((s, i) => i === 0 || s !== samples[i - 1]).slice(0, 12))})`,
-    ).toBe(true);
-    expect(samples[samples.length - 1], 'the sweep ends on the full title').toBe(TITLE);
+    // deeper scroll → strictly more of the title in place, ending complete
+    for (let i = 1; i < landed.length; i++) {
+      expect(landed[i], `deeper scrub lands more letters (${JSON.stringify(landed)})`).toBeGreaterThanOrEqual(
+        landed[i - 1],
+      );
+    }
+    expect(landed[0], 'early in the crossing only a few letters have landed').toBeLessThan(TITLE.length);
+    expect(landed[landed.length - 1], 'past the crossing the full title is in place').toBe(TITLE.length);
+    // and scrolling BACK retreats the front: letters revert toward the previous text
+    await scrubTo(page, 0.06);
+    await page.waitForTimeout(400);
+    const reverted = await landedPrefix();
+    expect(reverted, `scroll-back reverts landed letters (${landed[landed.length - 1]} → ${reverted})`).toBeLessThan(
+      TITLE.length,
+    );
   });
 
   // How many of the board's rows have any non-blank glyph (a full-width single-row title → 1).
@@ -798,11 +821,11 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       ).length,
     );
 
-  test('[pickets] the board churns as a SINGLE row (no 3-rows→1 collapse on stop)', async ({ page }) => {
-    // The board pads short text to a fixed 3-row grid with BLANK rows top + bottom. If those padding
-    // cells churned too, all 3 rows would fill and then visibly COLLAPSE to 1 the instant you stop. The
-    // padding rows must stay blank WHILE churning, so the board is always a single centered row and the
-    // churn→title settle is an in-row flap, not a row-count jump.
+  test('[pickets] the board stays a SINGLE row through a crossing (padding rows never fill)', async ({ page }) => {
+    // The board pads short text to a fixed 3-row grid with BLANK rows top + bottom. The scrubbed
+    // old/new MIX must live only where the texts have letters: if the padding rows ever filled, the
+    // board would visibly collapse 3-rows→1 at the crossing end. Both the from-grid and to-grid pad
+    // rows blank, so the sweep's union span never touches them.
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
