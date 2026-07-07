@@ -26,6 +26,7 @@
 // in their owners; those owners stay the prefix's home.)
 export const HERO_SCENE_PARAM = 'hero-scene';
 export const HERO_PROGRESS_PARAM = 'hero-progress';
+export const HERO_PERF_PARAM = 'hero-perf';
 export const INGRESS_MARKER_PARAM = 'im';
 export const INTERNAL_TRAFFIC_PARAM = 'internal';
 
@@ -108,6 +109,16 @@ export const URL_PARAMS: ReadonlyArray<UrlParam> = [
       'transition. Overrides hero-scene when both are set.',
     scope: 'localhost',
     example: '?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pickets&hero-progress=0.094',
+  },
+  {
+    // literal must match HERO_PERF_PARAM above.
+    key: 'hero-perf',
+    owner: 'src/pages/index.tsx (heroPerfStart)',
+    purpose:
+      'TEMP DEBUG: log per-second hero scroll perf (fps, over-budget frames, scroll events, raw/smooth ' +
+      'ticks, ParallaxStudio + StudioFacade render counts) to the console, to diagnose pickets scroll lag.',
+    scope: 'localhost',
+    example: '?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pickets&hero-perf=1',
   },
 
   // ── Ingress attribution / analytics (src/posthog.js) ───────────────────────────────────────────

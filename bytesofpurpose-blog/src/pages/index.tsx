@@ -487,6 +487,63 @@ function useReducedMotion(): boolean {
   return reduce;
 }
 
+// ── TEMP PERF DEBUG (localhost + ?hero-perf=1): count renders/scroll-events/frames and log once a
+// second so we can see WHERE the pickets scroll lag comes from in the console. Zero-cost when off. ─────
+function heroPerfOn(): boolean {
+  if (typeof window === 'undefined' || !isLocalhost()) return false;
+  return new URLSearchParams(window.location.search).get('hero-perf') === '1';
+}
+const HERO_PERF: {
+  on: boolean;
+  facadeRenders: number;
+  parallaxRenders: number;
+  scrollEvents: number;
+  smoothTicks: number;
+  rawTicks: number;
+  worstStyleMs: number;
+  started: boolean;
+} = {on: false, facadeRenders: 0, parallaxRenders: 0, scrollEvents: 0, smoothTicks: 0, rawTicks: 0, worstStyleMs: 0, started: false};
+function heroPerfBump(k: 'facadeRenders' | 'parallaxRenders' | 'scrollEvents' | 'smoothTicks' | 'rawTicks') {
+  if (!HERO_PERF.on) return;
+  HERO_PERF[k]++;
+}
+function heroPerfStart() {
+  if (HERO_PERF.started || typeof window === 'undefined') return;
+  HERO_PERF.on = heroPerfOn();
+  if (!HERO_PERF.on) return;
+  HERO_PERF.started = true;
+  // frame timing via rAF gaps
+  let last = performance.now();
+  let frames = 0;
+  let overBudget = 0;
+  let worstFrame = 0;
+  const tick = (now: number) => {
+    const d = now - last;
+    last = now;
+    frames++;
+    if (d > 20) overBudget++;
+    if (d > worstFrame) worstFrame = d;
+    window.requestAnimationFrame(tick);
+  };
+  window.requestAnimationFrame(tick);
+  window.setInterval(() => {
+    // eslint-disable-next-line no-console
+    console.log(
+      `[hero-perf] fps~${frames} overBudgetFrames=${overBudget} worstFrame=${worstFrame.toFixed(1)}ms | ` +
+        `scrollEvents=${HERO_PERF.scrollEvents} rawTicks=${HERO_PERF.rawTicks} smoothTicks=${HERO_PERF.smoothTicks} | ` +
+        `ParallaxStudio renders=${HERO_PERF.parallaxRenders} StudioFacade renders=${HERO_PERF.facadeRenders}`,
+    );
+    frames = 0;
+    overBudget = 0;
+    worstFrame = 0;
+    HERO_PERF.scrollEvents = 0;
+    HERO_PERF.rawTicks = 0;
+    HERO_PERF.smoothTicks = 0;
+    HERO_PERF.parallaxRenders = 0;
+    HERO_PERF.facadeRenders = 0;
+  }, 1000);
+}
+
 // TEST/QA seam: `?hero-scene=N` forces the parallax engine to scene N (bypassing scroll), so e2e tests
 // (and manual QA) can land on a SPECIFIC scene deterministically without computing scroll offsets.
 // Localhost-only (same gate as the ab- overrides) so production ignores it. Registered in the URL-param
@@ -815,11 +872,13 @@ function useScrollProgress(
         const next = compute();
         if (next !== progressRef.current) {
           progressRef.current = next;
+          heroPerfBump('rawTicks');
           setTick((t) => (t + 1) % 1_000_000);
         }
       });
     };
     const onScroll = () => {
+      heroPerfBump('scrollEvents');
       // a REAL scroll event: mark scrolling true + reset the idle timer that settles it back to false.
       // (NOT called on mount, so the board starts at rest showing WELCOME rather than churning.)
       // Also record the DIRECTION of this scroll (down = +1, up = -1) so the snap glides WITH the user's
@@ -861,15 +920,32 @@ function useSmoothedProgress(
   enabled: boolean,
 ): {ref: React.MutableRefObject<number>; tick: number} {
   const smoothRef = useRef(progressRef.current);
+  const renderedRef = useRef(progressRef.current); // the smoothed value we last RE-RENDERED on
   const [smoothTick, setSmoothTick] = useState(0);
   useEffect(() => {
     if (!enabled) {
       smoothRef.current = progressRef.current; // keep it exact so a later enable starts aligned
+      renderedRef.current = progressRef.current;
       return undefined;
     }
     let raf = 0;
     let last: number | null = null;
     const TAU = 0.12; // seconds: how fast the smooth value catches up to the raw target
+    // Only trigger a React re-render when the smoothed value moved enough to CHANGE the visible frame.
+    // The wave is 9 pickets across ~8 stops; a progress delta below this is sub-pixel/imperceptible, so
+    // re-rendering the whole facade on every rAF ease step (the pickets scroll-lag: ~80 renders/s) is
+    // wasted work. This coarsens the ease to only paint-worthy steps while `smoothRef` still eases
+    // continuously (so the FINAL landed value is exact). Tuned small enough that the wave still reads
+    // liquid, large enough to cut the render count sharply.
+    const RENDER_EPS = 0.0006;
+    const bump = (v: number) => {
+      smoothRef.current = v;
+      if (Math.abs(v - renderedRef.current) >= RENDER_EPS) {
+        renderedRef.current = v;
+        heroPerfBump('smoothTicks');
+        setSmoothTick((t) => (t + 1) % 1_000_000);
+      }
+    };
     const step = (now: number) => {
       const target = progressRef.current;
       const dt = last == null ? 0 : (now - last) / 1000;
@@ -877,17 +953,19 @@ function useSmoothedProgress(
       const cur = smoothRef.current;
       const diff = target - cur;
       if (Math.abs(diff) < 0.0005) {
-        // close enough: snap exact, bump once, and PARK (a new raw scroll re-runs this effect via rawTick)
-        if (cur !== target) {
+        // close enough: snap EXACT and force a final render so the landed frame is precise, then PARK
+        // (a new raw scroll re-runs this effect via rawTick).
+        if (cur !== target || renderedRef.current !== target) {
           smoothRef.current = target;
+          renderedRef.current = target;
+          heroPerfBump('smoothTicks');
           setSmoothTick((t) => (t + 1) % 1_000_000);
         }
         return;
       }
       // exponential ease toward target, frame-rate independent: fraction = 1 - e^(-dt/TAU)
       const k = dt > 0 ? 1 - Math.exp(-dt / TAU) : 0.2;
-      smoothRef.current = cur + diff * k;
-      setSmoothTick((t) => (t + 1) % 1_000_000);
+      bump(cur + diff * k);
       raf = window.requestAnimationFrame(step);
     };
     raf = window.requestAnimationFrame(step);
@@ -1049,6 +1127,7 @@ function StudioFacade({
    *  flip scramble↔title mid-settle and strand the flap cells. */
   boardTextOverride?: string;
 }): React.JSX.Element {
+  heroPerfBump('facadeRenders');
   // On mobile the house is DOOR-ONLY (side windows hidden via CSS), so the board uses far fewer
   // columns to fit the narrow viewport; on desktop it stays wide (~3x the arch).
   const isMobile = useIsMobile();
@@ -1349,6 +1428,8 @@ type ScrollModel = 'pin' | 'inplace' | 'horizontal' | 'pickets';
 const SCENE_VH = 0.85; // each scene gets ~85vh of scroll in the pinned models (spacer = count * this)
 
 function ParallaxStudio({model: requestedModel}: {model: ScrollModel}): React.JSX.Element {
+  heroPerfBump('parallaxRenders');
+  useEffect(() => heroPerfStart(), []);
   const count = CHOOSER_CARDS.length;
   const progressRef = useRef(0);
   const directionRef = useRef(1); // last scroll direction: +1 down, -1 up (so the snap goes WITH momentum)
