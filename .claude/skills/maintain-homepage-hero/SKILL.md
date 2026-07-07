@@ -27,10 +27,12 @@ parallax. Four parallax models: **`pin`** (the house pins full-screen in a tall 
 advances the scenes, then releases), **`inplace`** (normal flow; scenes advance as the house travels
 through the viewport), **`horizontal`** (pin + a horizontal pan strip behind the facade; degrades to
 `pin` on mobile), and **`pickets`** (pin, but each crossing plays a staggered per-strip flash WAVE that
-reveals the next scene strip-by-strip, fully scrubbable so a mid-crossing stop is stable and needs NO
-snap; see the pickets gotcha). All four parallax models and the timer share ONE progress model
-(`deriveSceneState`) fed by different drivers, so the transitions are consistent regardless of driver.
-See the parallax how-to + gotchas below.
+reveals the next scene strip-by-strip, AND the Vestaboard is scrubbed in lockstep — a flip front walks
+the title in left-to-right as the wave passes; fully scrubbable so a mid-crossing stop is a stable
+half-old/half-new picture and needs NO snap; scroll back and it reverses). All four parallax models and
+the timer share ONE progress model (`deriveSceneState`) fed by different drivers, so the transitions are
+consistent regardless of driver. Pickets adds its OWN taller runway + a catch-up display progress so an
+inertial flick sweeps THROUGH every picket instead of teleporting. See the parallax how-to + gotchas below.
 
 The override URL uses the variant KEY: `?ab-homepage-hero-anim=control|test|variant_c|variant_d` and
 `?ab-homepage-hero-scroll=pin|inplace|horizontal|pickets` (NOT the values `scroll`/`flash`/`studio`). All arms
@@ -67,13 +69,14 @@ The anchors are **symbol names** (not line numbers, which drift). The validator 
 | `--portal-w` (on `.flashGate`) | `src/pages/index.module.css` | the SHARED width axis (arch box + the gate derive from it) |
 | `.studioGate` / `.studioPeek` | `src/pages/index.module.css` | variant_c gate + the arch-masked scene peek (mask position via `--arch-*`) |
 | `.boutiqueGate` / `.boutiquePeek` | `src/pages/index.module.css` | variant_d gate + its masked lit opening |
-| `SplitFlap` default export | `src/components/SplitFlap/index.tsx` | the Vestaboard component (text → fixed grid → deck-roll; `spinning` churns then settles) |
+| `SplitFlap` default export | `src/components/SplitFlap/index.tsx` | the Vestaboard component (text → fixed grid → deck-roll). THREE render modes: default (deck-roll on a `text` change, the timer house); `spinning` (churn random glyphs while scrolling, snap on settle — pin/inplace/horizontal); and SWEEP (`sweepFromText`+`sweepProgress`, the PICKETS board scrubbed by scroll — a flip front splits destination letters on the left from previous text on the right, only the crossed column flips) |
 | `DECK` (in `SplitFlap`) | `src/components/SplitFlap/index.tsx` | the flap charset the cells roll THROUGH (`' A-Z0-9punct'`) |
 | `.foldDown` / `.foldUp` / `.leaf` | `src/components/SplitFlap/styles.module.css` | the 3D flap fold (leaves must stay OPAQUE — see gotchas) |
 | `EXPERIMENTS['homepage-hero-scroll']` | `src/experiments.ts` | the SCROLL-MODEL flag (`control`=`static` timer, `pin`, `inplace`, `horizontal`, `pickets`). Composed with `homepage-hero-anim`: when anim resolves to `studio`, this picks timer vs parallax wrapper. |
 | `useScrollScene` | `src/pages/index.tsx` | the parallax ENGINE: maps a `[0,1]` scroll progress → `{active, mode, flashing, transition}`; crossing a scene band fires the camera flash (scroll-triggered, not timed); reduced-motion snaps with no flash. `transition` (the crossing phase + from/to) is what the picket renderer reads |
 | `useScrollProgress` | `src/pages/index.tsx` | the rAF-throttled, PASSIVE, SSR-safe scroll/resize listener that writes the progress fraction (each model supplies its own `compute`) |
-| `picketStates` | `src/pages/index.tsx` | PURE: per-strip `{flash, revealed}` + the reveal `revealRight%` for a crossing at phase `t` (`PICKET_COUNT`=9, `PICKET_SPREAD`=0.5). The staggered wave; `revealed` is monotone so the new scene is ONE contiguous-left clip, not N slices |
+| `picketStates` | `src/pages/index.tsx` | PURE: per-strip `{flash, revealed}` + the reveal `revealRight%` for a crossing at phase `t` (`PICKET_COUNT`=9, `PICKET_SPREAD`=2.5 — spreads the strip peaks so a NARROW bright band TRAVELS across, not a whole-door bloom). The staggered wave; `revealed` is monotone so the new scene is ONE contiguous-left clip, not N slices |
+| `useCatchUpProgress` | `src/pages/index.tsx` | PICKETS only: eases a DISPLAY progress toward the raw scroll (`CATCHUP_TAU_S` 70ms + a `CATCHUP_MAX_S`/`CATCHUP_MAX_RATE` speed cap) so an inertial flick SWEEPS through every picket + scene instead of teleporting past them. Both the wave AND the board render off this display progress; never writes scroll; passthrough under reduced motion + `?hero-progress` |
 | `StudioFacade` | `src/pages/index.tsx` | the presentational Lebanese central-hall house (roof + body + 3 arches + hanging board + door↔scene flash), driven by props; rendered by BOTH the timer `ChooserStudio` and `ParallaxStudio`. In `picketed` mode, mid-crossing it holds FROM fully lit + reveals TO under a strip clip + renders `StudioPickets`; base-URLs all scene/door imgs ONCE at the top so hook count is constant |
 | `StudioPickets` | `src/pages/index.tsx` | the picket-wave OVERLAY: `PICKET_COUNT` strips, each with an inline per-strip opacity (its point on the wave), masked to the arch + isolated like `.studioFlash`. Replaces the single flash in the pickets model |
 | `ParallaxStudio` | `src/pages/index.tsx` | the scroll-driven hero, one component for all 4 models (`pin`/`inplace`/`horizontal`/`pickets`); pin/horizontal/pickets use a tall spacer + sticky and RELEASE after the last scene (never traps the wheel). `pickets` uses pin-style geometry with its OWN taller runway (`PICKET_SCENE_VH`), SKIPS the snap (every rest is stable) and renders from a catch-up display progress (`useCatchUpProgress`) chasing the raw scroll |
