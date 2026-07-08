@@ -63,7 +63,7 @@ high, with when each is honest:
 | `window.scrollTo(0, y)` (+ dispatched `scroll`) | asserting a state at a KNOWN position (a frozen frame, a settled zone) | standing in for a GESTURE — it teleports, so it hides skip/teleport/coalescing bugs in anything scrubbed by scroll |
 | `mouse.wheel(0, dy)` | a single discrete notch | a flick — one event, no momentum tail, no coalescing |
 | a **decaying-momentum flick** (a rAF loop: `v *= ~0.86` each frame, `scrollTo` the running sum, sample per frame) | scrubbed animations, scroll-linked reveals, momentum start/stop | (this IS the realistic path; the gap is its ABSENCE) |
-| CDP `Input.synthesizeScrollGesture` (Chromium) | the closest to a real OS gesture (true momentum, speed param) | only in Chromium; the repo's decaying-flick loop is the cross-browser stand-in |
+| CDP `Input.synthesizeScrollGesture` with **`preventFling: false`** (Chromium) | the CLOSEST automated reproduction of a real trackpad two-finger swipe — hardware-level scroll events WITH the inertial momentum/fling tail a finger produces (`{x, y, yDistance, speed, gestureSourceType:'touch', preventFling:false}` on a `context.newCDPSession(page)`) | only in Chromium; the repo's decaying-flick rAF loop is the cross-browser stand-in. NOTE `dispatchMouseEvent(mouseWheel)` has NO momentum param — do not reach for it to test fling physics |
 | `.click(selector)` | a desktop pointer click; asserting a handler fires | standing in for a phone TAP on a touch surface (no `hasTouch`, center-hits a target a thumb would miss) |
 | `page.touchscreen.tap(x,y)` / `locator.dispatchEvent('touch…')` on a `hasTouch` context | a real touch tap/swipe | (realistic — the gap is that NO project enables `hasTouch`, see below) |
 | `page.goto(finalUrl)` | testing the page in isolation | standing in for an ARRIVAL — skips deep-landing, back-button, anchor, shared-URL, reload paths |
@@ -77,6 +77,21 @@ decaying velocity, sampling the rendered state every frame DURING the flick and 
 under `Emulation.setCPUThrottlingRate` (6×) so a fast CI box reproduces a mid-device — asserting the
 animation SWEEPS through intermediate states (not just that it ends correctly), and that no state is
 skipped. This is what a uniform `scrollTo` structurally cannot assert.
+
+**The ceiling — even the most realistic automated gesture can PASS while the real hardware fails.**
+Proven the hard way (the pickets "cycles only after I lift my finger" bug, 2026-07): the symptom was a
+RACE in a scroll-driven rAF loop that self-terminated and restarted on input ticks. A synthetic
+`scrollTo`-drive AND a CDP `synthesizeScrollGesture` fling BOTH reported "tracks live" on the buggy
+code — the automated events arrived dense/regular enough that the race never fired — yet the user's
+real trackpad clearly froze until finger-lift. The real-hardware event CADENCE (coalescing, timing
+jitter, the exact fling decay) is the thing no synthetic driver fully reproduces, and it is precisely
+what triggers timing races. **So: (1) a realistic gesture test that PASSES does not prove the gesture
+works on real hardware — it only rules OUT the coarse teleport/skip class; a user-on-real-hardware
+check remains the ground truth for scroll FEEL and timing bugs. (2) When a scroll-driven animation
+uses a start/stop rAF loop keyed on input events, treat that as a race SMELL — prefer a single
+always-on rAF loop that eases a display value toward the input every frame (no restart to race), which
+is what fixed the pickets bug.** Record both when auditing a scroll interaction: the automated tests
+you added, AND that they were confirmed on real hardware by a human (or that this is still pending).
 
 ## Lens 2 — JOURNEY COVERAGE (are all the ways people ARRIVE + MOVE tested?)
 
