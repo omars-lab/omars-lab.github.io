@@ -68,3 +68,13 @@ taught it]`. Empty until the first audit adds to it.)_
   re-states a count already in the diagram AND lightly announces-importance ("that is the thesis
   working"). Cut to the bare verdict — "None were on a map yet. All were on the public record." The
   fewer words carry more. — [local-guide-skill.mdx]
+- **Open on a relatable "you" in a moment, not "an org" in the abstract.** A design post lands harder
+  when the first paragraph puts the READER in the situation, not a generic third party. Before: "An
+  engineering org that has adopted Claude Code faces three gaps." After: "You rolled Claude Code out
+  to a growing fleet, and three things are quietly breaking." Same facts, but now there is a someone
+  and a moment. Pairs with the question-hook opener (KEEP list). — [fleetplane.mdx]
+- **A leak-free technical name is fine to keep; do NOT over-generalize.** An ORIGINAL system name
+  (coined for the post) and an illustrative order-of-magnitude figure are not leaks — only an
+  employer/internal name or a real internal number is. Generalize the INSTANCE, keep the coined name
+  and the round figure. (Author's call: "Fleetplane" + "roughly 50 to 150 USD/month" both stayed.)
+  The generality axis targets what only made sense inside one org, not every proper noun. — [fleetplane.mdx]

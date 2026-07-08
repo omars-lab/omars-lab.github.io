@@ -26,6 +26,14 @@ Required:
 Optional:
 - A question-hook framing (the author's signature opening).
 - One sentence of what makes this hard or non-obvious.
+- **A relatable "you" entry point** — put the reader in the moment (the problem they've felt), not
+  an abstract third party. [added from fleetplane.mdx audit]
+
+> **Exec-Summary / long opener: carry a visual.** If the opening summary runs long (the repo's
+> wall-of-text guard flags a section over ~280 words with no visual), it is the reader's FIRST
+> content block and the worst place to bombard them. A single diagram of the core structure earns
+> its place here more than three more paragraphs. [fleetplane's 372-word Exec Summary → add the
+> two-plane diagram]
 
 ## Problem / motivation
 
@@ -84,3 +92,9 @@ Optional:
 - **Generality interacts with coverage.** If the only answer to a required question is an
   employer-specific instance, the fix is a GENERAL answer, not the private one (see the generality
   axis in `SKILL.md`).
+- **A top reader concern deserves ONE visual home.** When the axis-5 concern map shows a core concern
+  discussed in several scattered sections with no supporting visual, that concern is where the post
+  loses an anxious reader. Consolidate it into a single visual (a small table / matrix) placed where
+  the reader first worries about it, and reference it from the scattered mentions rather than
+  re-explaining. [fleetplane's "who-sees-whose-data" was in 4 sections → one access-matrix table at
+  the top of Phase 4]

@@ -106,15 +106,20 @@ export const HERO_PARAMS: ReadonlyArray<HeroParam> = [
   // the GAP between the three arches (window · door · window): smaller = arches sit closer together.
   {key: 'archGap', label: 'Arch gap', kind: 'slider', cssVar: 'arch-gap', default: '0.3rem',
    variants: ['studio'], group: 'House', min: 0, max: 2, step: 0.05, unit: 'rem'},
-  // PINNED-parallax FOLD FIT: cap the house width so the whole house + WELCOME board frames in the first
-  // viewport at scroll 0. The sticky centres the house in a 100vh box that starts `offset` px down the
-  // viewport (navbar + the compact title block), so maxWidth = (100vh - 2*offset) / ratio.
-  //   pinHouseOffset = px from viewport top to the pinned spacer at scroll 0 (navbar + title block).
+  // PINNED-parallax FOLD FIT: keep the house near its full --body-w width, trimming it only on a SHORT
+  // window so the WELCOME board still frames near the top. maxWidth = min(--body-w, max(--pin-house-min,
+  // (100vh - offset) / ratio)). The floor (--pin-house-min) keeps normal windows at full size; only a
+  // truly short viewport hits the height term. (Old formula subtracted 2*offset + a low floor, which
+  // shrank the house on any window under ~700px tall.)
+  //   pinHouseOffset = px trimmed off the viewport height (navbar + a little breathing room).
   //   pinHouseRatio  = the facade's visual height / width (roof + 1.82:1 body ~= 0.8).
+  //   pinHouseMin    = the FLOOR: the house never shrinks below this on a short window.
   {key: 'pinHouseOffset', label: 'Pin house offset', kind: 'slider', cssVar: 'pin-house-offset',
-   default: '189px', variants: ['studio'], group: 'House', min: 100, max: 300, step: 1, unit: 'px'},
+   default: '120px', variants: ['studio'], group: 'House', min: 60, max: 300, step: 1, unit: 'px'},
   {key: 'pinHouseRatio', label: 'Pin house ratio', kind: 'slider', cssVar: 'pin-house-ratio',
    default: '0.8', variants: ['studio'], group: 'House', min: 0.6, max: 1, step: 0.01},
+  {key: 'pinHouseMin', label: 'Pin house min', kind: 'slider', cssVar: 'pin-house-min',
+   default: '600px', variants: ['studio'], group: 'House', min: 360, max: 720, step: 5, unit: 'px'},
   // sign-x/-y/-scale already exist in Layout and drive --sign-x/-y/-scale on the studio board.
 ];
 

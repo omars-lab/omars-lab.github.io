@@ -36,15 +36,28 @@ import Mockups from './_mockups/fleetplane.mdx';
 
 ## Executive Summary
 
-**The problem.** An engineering org that has adopted Claude Code quickly faces three gaps at once. Every laptop drifts to its own config, so skills, agents, hooks, and permissions are inconsistent and unenforceable. The richest signal about how the fleet actually works, the session transcripts, sits on individual machines where it cannot be measured and, worse, contains raw secrets that must never leave the device. And leadership has no trustworthy numbers: tokens, spend, bugs found, adoption. There is no control plane.
+You rolled Claude Code out to a growing engineering fleet, and three things are quietly breaking. Every laptop's config has drifted, so no two engineers run the same skills, agents, hooks, or permissions. The richest signal about how the fleet actually works, the session transcripts, is trapped on those laptops, next to raw secrets that must never leave the device. And leadership keeps asking for numbers you can't give: tokens, spend, bugs found, adoption. There is no control plane.
 
-**The solution.** Fleetplane splits into two planes that never blur. A **config plane** (push) ships one versioned, enforced configuration to every laptop through a plugin marketplace plus MDM-deployed managed settings. A **data plane** (pull and analyze) runs a small on-device agent that sanitizes transcripts at the edge, mirrors only the clean output, and uploads it to a warehouse that feeds dashboards, a bug pipeline, and a deck studio. Raw transcripts never leave the laptop.
+**The solution** splits into two planes that never blur, and the whole design follows from that split:
 
-**Key decisions.**
-- **D1 (Sanitize at the edge, decided):** the sanitizer runs on-device and is treated as production code with its own CI gate. Only sanitized output is ever uploaded.
-- **D2 (Marts-only frontend, decided):** the web app reads pre-aggregated serving tables, never fact tables, so every panel renders fast and the warehouse can evolve underneath it.
-- **D3 (Everything is IaC, decided):** the whole cloud stack is reproducible in a fresh AWS account in under an hour.
-- **D4 (Policy strictness, phased):** start with a marketplace allowlist; add strict plugin-only customization later, and only if config drift is actually observed.
+```mermaid
+graph LR
+    subgraph config["CONFIG PLANE &#8212; push"]
+        C1[versioned config]
+        C2[marketplace + MDM]
+    end
+    subgraph data["DATA PLANE &#8212; pull and analyze"]
+        D1[sanitize on-device]
+        D2[warehouse]
+        D3[dashboards, bugs, deck]
+    end
+    C1 --> C2 -.enforces.-> LAP[every laptop]
+    LAP --> D1 -->|clean only| D2 --> D3
+```
+
+A **config plane** ships one versioned, enforced configuration to every laptop through a plugin marketplace plus MDM-deployed managed settings. A **data plane** runs a small on-device agent that sanitizes transcripts at the edge, uploads only the clean output to a warehouse, and feeds dashboards, a bug pipeline, and a deck studio. Raw transcripts never leave the laptop.
+
+Four decisions anchor the design (spelled out in [Key Decisions](#key-decisions)); the invariants below make them concrete.
 
 **Expected value.** Live token and cost dashboards exist after Phase 1, before any transcript pipeline is built. That is the point: value lands before collection. Everything after is layered on a foundation whose only expensive-to-get-wrong pieces (the sanitizer, the schema, the consent model) are over-built early and the rest is kept deliberately small.
 
@@ -65,13 +78,13 @@ These rules do not bend as headcount grows. If a change would violate one, that 
 | 5 | **Consent before collection.** | Ship the consent doc and the "what we collect" page before enabling fleet-wide upload. |
 | 6 | **The sanitizer is production code.** | It has its own test suite in CI and a version stamped on every uploaded file. |
 
-Rules 1 to 4 are technical. Rules 5 and 6 are cultural, and equally binding. The trap this whole design guards against is building Stage 3 infrastructure at Stage 1 headcount. Over-engineer only the sanitizer, the schema, and the consent model early. They are the only things expensive to get wrong later.
+Rules 1 to 4 are technical. Rules 5 and 6 are cultural, and equally binding. The trap this whole design guards against is building Stage 3 infrastructure at Stage 1 headcount. Over-build only those three, the sanitizer, the schema, and the consent model; keep everything else deliberately small.
 
 ---
 
 ## Target Architecture (Stage 1: 1 to 100 engineers)
 
-Two planes, cleanly separated. The **config plane** pushes standardized configuration out to laptops. The **data plane** pulls sanitized transcripts back in and analyzes them. The animated view below traces the full loop; the boxed listing after it is the same picture in text.
+Two planes, cleanly separated. The **config plane** pushes standardized configuration out to laptops. The **data plane** pulls sanitized transcripts back in and analyzes them. The animated view below traces the full loop.
 
 <div className="mermaid-animated flow-dot">
 
@@ -114,24 +127,6 @@ graph LR
 ```
 
 </div>
-
-Read as text, the Stage 1 topology is:
-
-```
-CONFIG PLANE (push)                     DATA PLANE (pull + analyze)
-─────────────────                       ──────────────────────────
-claude-fleet monorepo (git)             cc-sync agent (launchd/systemd, on each laptop)
-  ├─ plugin marketplace                   └─ sanitize → clean mirror → upload API
-  ├─ org-core plugin                    S3 (clean transcripts, SSE-KMS, versioned)
-  │    skills, agents, hooks, MCP         └─ S3 event → SQS → Lambda ETL
-  └─ managed-settings.json (via MDM)    Postgres (facts + marts, single instance)
-                                        Fleetplane web app (Fargate, Tailscale-only)
-                                          ├─ transcript viewer
-                                          ├─ plugin hub
-                                          ├─ dashboard
-                                          └─ deck studio
-                                        Grafana OSS (live OTel metrics)
-```
 
 ---
 
@@ -363,7 +358,16 @@ One tool, `log_issue(title, severity, category, target, evidence, suggested_fix)
 
 ## Phase 4: App Plane (Fleetplane) (weeks 4 to 5)
 
-Four experiences behind one API and one login.
+Four experiences behind one API and one login. Before the features, the question every engineer will ask: **who can see whose data?** The default is team-level aggregates; individual transcripts are role-gated and every access is logged.
+
+| Role | Team aggregates | Own transcripts | Others' transcripts | Per-engineer drilldown |
+|---|---|---|---|---|
+| `engineer` | ✓ | ✓ | ✗ | ✗ |
+| `lead` | ✓ | ✓ | ✓ team, audited | ✓ team, audited |
+| `exec` | ✓ | ✓ | ✗ | ✗ (aggregates only) |
+| `admin` | ✓ | ✓ | ✓ audited | ✓ audited |
+
+Every row in the "others' transcripts" column writes an audit-log entry (who viewed whose session). This is the consent model (invariant 5) made concrete in the app.
 
 - **Task 4.1: API plus security model.** FastAPI (or Next API routes) with a DB role that is **read-only on marts**. Auth is OIDC via the IdP with httpOnly, SameSite session cookies. RBAC is enforced **in the API, not the UI** (`engineer`, `lead`, `exec`, `admin`). Transcript bodies are never proxied: the API issues short-lived presigned S3 GET URLs and **logs every access** (who viewed whose session). Hardening covers strict CSP, no third-party scripts, parameterized queries, rate limits, and dependency scanning; the network is reachable only via Tailscale with no public DNS. **Acceptance:** an `engineer`-role token cannot fetch another engineer's session, and every transcript fetch writes an audit-log row.
 - **Task 4.2: Transcript viewer.** A session list with filters (engineer, repo, agent), a rendered event stream plus a raw JSONL toggle, redactions visible as badges, and `log_issue` calls shown inline. **Acceptance:** viewing a session shows redaction badges, and raw access is a logged presigned download.

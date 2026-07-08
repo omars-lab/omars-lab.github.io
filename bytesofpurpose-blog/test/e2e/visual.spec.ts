@@ -109,3 +109,74 @@ test.describe('Homepage hero — visual regression', () => {
     }
   }
 });
+
+/*
+ * PICKETS (variant_c + scroll=pickets) visual baselines. The picket wave is scroll-driven, so we FREEZE
+ * a deterministic frame with ?hero-progress=P (localhost seam: pins raw engine progress, bypassing
+ * scroll). Unlike the flash baselines, these do NOT use reducedMotion:'reduce' — that zeroes the picket
+ * strips, so the wave wouldn't show. A frozen ?hero-progress frame is already static, so it is
+ * deterministic without reduced motion. These catch a LOOK regression a numeric test can't: e.g. the
+ * whole door washing to white strips, the reveal clipping wrong, or the strips misaligning.
+ */
+// p values live in the PICKETS engine mapping (PICKET_TRANSITION_FRACTION 0.7, 8 stops):
+// p = (stop + within)/8, crossing = within in [0.3, 1], t = (within - 0.3)/0.7. If the pickets
+// transition fraction changes, RE-DERIVE these three p values and regenerate the baselines.
+const PICKET_STATES = [
+  { name: 'settled', p: '0.144', note: 'scene 0 fully settled (stop 1, within 0.15) — NO wave' },
+  { name: 'peak', p: '0.081', note: 'the wave at its peak (t=0.5) — the door lit by the strip bell' },
+  { name: 'reveal', p: '0.101', note: 'past the peak (t≈0.73) — the new scene wiping in under dimming strips' },
+];
+
+async function openPickets(
+  browser: Browser,
+  p: string,
+  m: (typeof MATRIX)[number],
+  theme: 'light' | 'dark',
+): Promise<Page> {
+  const context = await browser.newContext({
+    viewport: { width: m.width, height: m.height },
+    deviceScaleFactor: m.dpr,
+    colorScheme: theme,
+    // NOT reduced: the picket strips are gated off under reduced motion. The ?hero-progress freeze makes
+    // the frame static regardless, so the screenshot is still deterministic.
+    reducedMotion: 'no-preference',
+  });
+  const page = await context.newPage();
+  await page.addInitScript((t) => {
+    try {
+      localStorage.setItem('theme', t);
+    } catch {
+      /* noop */
+    }
+  }, theme);
+  await page.goto(
+    `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=pickets&hero-progress=${p}`,
+    { waitUntil: 'load' },
+  );
+  await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+  await page.waitForSelector('[data-hero-root]', { timeout: 10000 });
+  await page.waitForTimeout(1400); // hydrate + the one-time board settle roll
+  return page;
+}
+
+test.describe('Homepage hero — pickets visual regression', () => {
+  // Desktop only (the wave is the same shape at every DPR; mobile is door-only + covered by the studio
+  // baselines when those land). Light + dark to catch theme-specific strip/scene blending.
+  //
+  // Screenshot the STICKY HERO, not the whole header: the pickets spacer makes the header ~9000px of
+  // mostly-empty runway, and on an image that big the shared maxDiffPixelRatio dilutes a real hero
+  // change (e.g. the whole BOARD text) below the tolerance — a stale baseline silently keeps passing.
+  // The stick is the ~viewport-sized pinned house, so the ratio actually bites there.
+  const m = MATRIX[0]; // desktop-1x
+  for (const theme of ['light', 'dark'] as const) {
+    for (const s of PICKET_STATES) {
+      test(`pickets ${s.name} · ${m.name} · ${theme}`, async ({ browser }) => {
+        const page = await openPickets(browser, s.p, m, theme);
+        await expect(page.locator('[class*="parallaxStick"]').first()).toHaveScreenshot(
+          `hero-pickets-${s.name}-${m.name}-${theme}.png`,
+        );
+        await page.context().close();
+      });
+    }
+  }
+});

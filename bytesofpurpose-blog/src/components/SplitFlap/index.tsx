@@ -33,6 +33,14 @@ export interface SplitFlapProps {
    * the final letters). Used by the scroll-driven hero: spinning = the user is scrolling; settle =
    * they stopped. (When undefined, the board behaves normally: it rolls on a `text` change.) */
   spinning?: boolean;
+  /** SWEEP mode (the pickets board — pass BOTH sweep props): the board is SCRUBBED by scroll, exactly
+   * like the door. `sweepProgress` p∈[0,1] positions a flip FRONT across the board: cells LEFT of the
+   * front already show `text` (the destination), cells RIGHT of it still show `sweepFromText` (where
+   * you came from), and only the cell the front is crossing flips. A pure function of p: stopping
+   * mid-crossing FREEZES the half-new/half-old board, scrolling back makes the letters revert, and at
+   * any instant only the column the scroll is impacting animates (no whole-board churn or cascade). */
+  sweepFromText?: string;
+  sweepProgress?: number;
   /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
    * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
   direct?: boolean;
@@ -42,43 +50,58 @@ export interface SplitFlapProps {
 // cell at a slightly different rate so the board looks alive); when `spinning` turns false it SETTLES
 // to its target `char`. It delegates the fold animation to <Cell> by driving Cell's `char`.
 //
-// Stray-letter fix: a cell whose target is BLANK (' ') must NEVER show a leftover letter after settle.
-// While spinning we ALWAYS churn (even blank-target cells, so the whole board churns uniformly); on
-// settle we land on `char` — and a SETTLE TO BLANK snaps directly (no deck-roll that could strand on a
-// letter). The settle also keys a remount so the underlying Cell can't be left mid-roll from churn.
+// BLANK-target cells stay BLANK while spinning (they do NOT churn). The board's fixed grid pads short
+// text to `rows` with BLANK rows top + bottom, so a churning title occupies only its own row(s); if the
+// padding cells churned too, all rows would fill with letters and then visibly COLLAPSE (3 rows→1) the
+// instant you stop. Keeping blank-target cells blank throughout means the board churns only where the
+// text lives and there is no collapse to animate. A blank target also SNAPS on settle (never rolls).
 const SPIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // churn through letters only (looks like a board working)
 
-function SpinningCell({char, spinning, seed}: {char: string; spinning: boolean; seed: number}) {
+function SpinningCell({
+  char,
+  spinning,
+  seed,
+}: {
+  char: string;
+  spinning: boolean;
+  seed: number;
+}) {
   const [display, setDisplay] = useState(char);
   const idxRef = useRef(seed % SPIN_LETTERS.length);
+  // Per-cell churn cadence, derived purely from the seed so the render below can size the fold to it.
+  const periodMs = 90 + (seed % 7) * 15; // 90..180ms per flip, varied per cell
 
   useEffect(() => {
-    if (spinning) {
-      // churn EVERY cell (blank-target ones too) so the board churns uniformly and no cell is stuck.
+    // Blank-target cells never churn: they stay blank so the padding rows don't fill (no 3-rows→1
+    // collapse on settle). Only cells whose target is a real glyph churn.
+    if (spinning && char !== ' ') {
       const stride = 1 + (seed % 5);
-      const periodMs = 60 + (seed % 7) * 12; // 60..132ms per flip, varied per cell
       const id = window.setInterval(() => {
         idxRef.current = (idxRef.current + stride) % SPIN_LETTERS.length;
         setDisplay(SPIN_LETTERS[idxRef.current]);
       }, periodMs);
       return () => window.clearInterval(id);
     }
-    // SETTLE: land on the target character.
+    // SETTLE (or a blank cell while spinning): land on the target character.
     setDisplay(char);
     return undefined;
-  }, [spinning, char, seed]);
+  }, [spinning, char, seed, periodMs]);
 
-  // SETTLE lands CLEANLY on the target. When churn stops we MOUNT A FRESH Cell initialized directly at
-  // `char` (keyed on `settled:<char>`), instead of asking a mid-roll Cell to roll from a stale `shown`
-  // to the target. A churning Cell whose roll is interrupted by the next churn tick can strand ONE deck
-  // glyph off the target (an 'L' left showing 'M', an 'H' showing 'I'); that stranding is invisible when
-  // churn only ended on a FULL stop, but the scroll hero now settles the board on entering each scene's
-  // zone WHILE still scrolling, so the churn->settle handoff fires many times per journey and the
-  // stranding became visible ("EXPMORE MY THOUGITS"). A fresh mount at the target can't strand (it never
-  // rolls). While SPINNING we keep the single churning Cell (keyed 'spin') so the churn animates; the
-  // key flip spin<->settled is exactly the clean cut we want. Blank targets settle the same way.
-  const key = spinning ? 'spin' : `settled:${char}`;
-  return <Cell key={key} char={spinning ? display : char} settleMs={500} />;
+  // While SPINNING, one churning Cell (key 'spin'). On SETTLE we ALWAYS mount a FRESH Cell already AT
+  // `char` (an instant SNAP) so a mid-churn fold can never carry over and strand the two faces one
+  // glyph apart. The spinning models (pin/inplace/horizontal) settle the board MANY times per journey
+  // while scrolling, so a roll each time would stutter; the snap is the safe choice. (The pickets board
+  // does not spin at all any more — it uses the scroll-scrubbed SWEEP mode; see SplitFlap.)
+  if (spinning) {
+    // CHURN ticks flip DIRECT (one fold straight to the random glyph), and the fold is sized to
+    // FINISH just inside this cell's own tick period. Both matter for scroll perf (trace-proven):
+    // without `direct` every tick starts a multi-step DECK ROLL toward a random target (dozens of
+    // timer + state updates per second per cell), and a fold longer than the tick never completes,
+    // leaving every cell stuck mid-flip with its glyph text mutating inside the moving leaves. That
+    // combination was the main-thread storm that made scrolling hitch for whole gestures.
+    return <Cell key="spin" char={display} settleMs={Math.max(40, periodMs - 20)} direct />;
+  }
+  return <Cell key={`settled:${char}`} char={char} settleMs={500} />;
 }
 
 /** Pad `text` to `columns` with a SPECIFIC left offset, so callers can give every row the SAME offset
@@ -156,7 +179,15 @@ function Cell({
   const timers = useRef<number[]>([]);
 
   useEffect(() => {
-    if (char === shown) return undefined;
+    if (char === shown) {
+      // Retargeted BACK to the glyph already shown while a flip was in flight (e.g. the sweep front
+      // retreating on a scroll-back): the effect cleanup has cancelled the flip's timers, so ALSO
+      // cancel the visual flip state, else the cell strands mid-fold (flipping=true forever, both
+      // leaves up). No-ops when the cell was already at rest.
+      setFlipping(false);
+      setNext(char);
+      return undefined;
+    }
     timers.current.forEach((t) => window.clearTimeout(t));
     timers.current = [];
 
@@ -237,13 +268,15 @@ function Cell({
   );
 }
 
-export default function SplitFlap({
+function SplitFlap({
   text,
   settleMs = 750,
   columns,
   rows: fixedRows,
   className,
   spinning,
+  sweepFromText,
+  sweepProgress,
   direct = false,
 }: SplitFlapProps): React.JSX.Element {
   // Build the centered/padded GRID for a message.
@@ -262,9 +295,47 @@ export default function SplitFlap({
 
   const grid = toGrid(text);
 
+  // SWEEP mode (the pickets board): the board is a PURE FUNCTION of `sweepProgress`, scrubbed by the
+  // scroll like the door. A flip FRONT moves left→right across the LIT SPAN of the board (the union of
+  // where the from-text and to-text have letters, row-major): cells the front has passed show the
+  // DESTINATION glyph, cells ahead of it still show the FROM glyph, and the only animation at any
+  // instant is the single fold of the cell the front is crossing (Cell flips when its char changes).
+  // Stop mid-crossing → the mixed board FREEZES; scroll back → the letters revert, column by column.
+  if (sweepProgress != null && sweepFromText != null) {
+    const fromGrid = toGrid(sweepFromText);
+    const p = Math.min(1, Math.max(0, sweepProgress));
+    // Each row's lit span (union across from+to); the front walks these spans row-major.
+    const spans = grid.map((row, r) => {
+      const both = Array.from(row).map((c, i) => (c !== ' ' ? c : (fromGrid[r]?.[i] ?? ' ')));
+      const s = both.findIndex((c) => c !== ' ');
+      const e = s < 0 ? -1 : both.length - 1 - [...both].reverse().findIndex((c) => c !== ' ');
+      return s < 0 ? null : {start: s, end: e};
+    });
+    const total = spans.reduce((n, sp) => n + (sp ? sp.end - sp.start + 1 : 0), 0);
+    const frontIdx = Math.round(p * total); // cells with ordinal < frontIdx show the destination
+    let ordinal = 0;
+    return (
+      <span className={clsx(styles.board, className)} role="text" aria-label={text}>
+        {grid.map((row, r) => {
+          const sp = spans[r];
+          return (
+            <span key={r} className={styles.row}>
+              {Array.from(row).map((c, i) => {
+                const inSpan = sp != null && i >= sp.start && i <= sp.end;
+                const passed = inSpan && ordinal++ < frontIdx;
+                const shown = inSpan ? (passed ? c : (fromGrid[r]?.[i] ?? ' ')) : ' ';
+                return <Cell key={i} char={shown} settleMs={220} direct />;
+              })}
+            </span>
+          );
+        })}
+      </span>
+    );
+  }
+
   // SPINNING mode: while `spinning` the board CHURNS random letters; when it stops it SETTLES to `text`.
-  // (Used by the scroll-driven hero: spinning = scrolling, settle = stopped.) A stable per-cell seed
-  // keeps each cell's churn pace consistent across renders.
+  // (Used by the scroll-driven hero pin models: spinning = mid-crossing scroll, settle = snap.) A stable
+  // per-cell seed keeps each cell's churn pace consistent across renders.
   if (spinning != null) {
     let seed = 0;
     return (
@@ -293,3 +364,9 @@ export default function SplitFlap({
     </span>
   );
 }
+
+// MEMOIZED: the board is the facade's most expensive child (up to 72 cells × leaves). Its props change
+// only per-scene / per-scroll-state (text / spinning / settle knobs), NOT on every smoothed-progress
+// frame, so React.memo skips reconciling the whole board when only the picket wave changed — a big cut
+// to the pickets scroll cost. (Its own internal churn/settle timers keep animating regardless.)
+export default React.memo(SplitFlap);

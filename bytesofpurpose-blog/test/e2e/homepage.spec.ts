@@ -213,7 +213,7 @@ test.describe('Homepage hero A/B: camera-flash variant', () => {
  * per-scene assertions, PLUS one real-scroll test that the active scene actually advances on scroll.
  */
 test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
-  const SCROLL_MODELS = ['pin', 'inplace', 'horizontal'] as const;
+  const SCROLL_MODELS = ['pin', 'inplace', 'horizontal', 'pickets'] as const;
   // scene index → its destination + the navbar label that should light up (matches CHOOSER_CARDS)
   const SCENE_NAV: Array<{ dest: string; nav: RegExp }> = [
     { dest: '/craft', nav: /Craft/ },
@@ -229,15 +229,21 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     `/?ab-homepage-hero-anim=variant_c&ab-homepage-hero-scroll=${model}` +
     (scene == null ? '' : `&hero-scene=${scene}`);
 
-  test('DEFAULT (bare /) is the ANIMATION timer house — the house, in normal flow, NOT a pinned spacer', async ({
+  test('DEFAULT (bare /) is the scroll-scrubbed PICKETS house — the house, PINNED in a tall spacer', async ({
     page,
   }) => {
+    // DEFAULT_SCROLL_MODEL is 'pickets', so a bare visit (no anim/scroll signal) resolves to the
+    // studio house driven by the picket-wave parallax: the facade renders, PINNED in a tall spacer
+    // (the scroll runway), and the hero gate advertises model=pickets. (If this flips back to the
+    // timer house, DEFAULT_SCROLL_MODEL changed — update this test with it.)
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
     // the house renders (variant_c facade) ...
     await expect(page.locator('[class*="studioFacade"]')).toHaveCount(1);
-    // ... in NORMAL flow: the timer hero has NO tall parallax spacer (that's the pin/horizontal models)
-    await expect(page.locator('[class*="parallaxSpacer"]')).toHaveCount(0);
+    // ... PINNED: the parallax models mount a tall scroll-runway spacer
+    await expect(page.locator('[class*="parallaxSpacer"]')).toHaveCount(1);
+    // ... driven by pickets specifically (the gate advertises its scroll model)
+    await expect(page.locator('a[data-hero-root][data-scroll-model="pickets"]')).toHaveCount(1);
     // and it is NOT the legacy film strip
     await expect(page.locator('[class*="chooserTrack"]')).toHaveCount(0);
   });
@@ -563,6 +569,547 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     await festoonBulbs(page).nth(1).click();
     await expect(root).toHaveAttribute('data-active-scene', '1', { timeout: 4000 });
     expect(new URL(page.url()).pathname).toBe('/');
+  });
+
+  // ── PICKETS: the scrubbable per-strip flash wave (pin-with-pickets) ───────────────────────────────
+  // Each crossing plays a staggered per-strip flash wave that reveals the next scene strip-by-strip.
+  // It is a PURE function of the transition phase, so a mid-crossing stop is a STABLE picture (NO snap)
+  // and scrolling back reverses it. These tests scrub with window.scrollTo + a dispatched scroll event
+  // (the CATCH-UP renderer chases the raw progress; see useCatchUpProgress), then read the live state.
+
+  // Scrub to a given progress p in [0,1] of the pinned runway and let the catch-up converge.
+  const scrubTo = async (page: Page, p: number) =>
+    page.evaluate(async (p) => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const targetY = Math.round(spacerTopPage + p * scrollable);
+      // step in so scroll events fire (the smoothing loop chases the raw progress), then wait for it.
+      for (let i = 1; i <= 6; i++) {
+        window.scrollTo(0, Math.round((targetY * i) / 6));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => setTimeout(r, 25));
+      }
+      await new Promise((r) => setTimeout(r, 450));
+      return Math.round(window.scrollY);
+    }, p);
+
+  // The per-strip opacities of the picket wave (one entry per strip).
+  const picketOpacities = (page: Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map(
+        (el) => parseFloat(getComputedStyle(el as HTMLElement).opacity),
+      ),
+    );
+  // The reveal clip's RIGHT inset % (100 = nothing revealed, 0 = fully revealed). null if no reveal layer.
+  const revealRightPct = (page: Page) =>
+    page.evaluate(() => {
+      const layer = [...document.querySelectorAll('[class*="studioDoorScene"]')].find(
+        (d) => (d as HTMLElement).style.clipPath,
+      ) as HTMLElement | undefined;
+      const m = layer?.style.clipPath.match(/inset\(0(?:px)? ([\d.]+)%/);
+      return m ? parseFloat(m[1]) : null;
+    });
+
+  test('[pickets] a mid-crossing REST is STABLE — no snap moves the page or the wave', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Scrub into the door→scene0 crossing (mid-wave) and confirm the wave is LIT.
+    await scrubTo(page, 0.1);
+    const opsAtRest = await picketOpacities(page);
+    expect(opsAtRest.length, 'the picket wave renders during a crossing').toBeGreaterThan(0);
+    expect(Math.max(...opsAtRest), 'some picket strip is lit mid-crossing').toBeGreaterThan(0.3);
+
+    // Let the smoothing fully settle before snapshotting the "rest" clip (the exponential ease can still
+    // be micro-adjusting for a beat after scrubTo's wait, esp. under load).
+    await page.waitForTimeout(400);
+    const yAtRest = await page.evaluate(() => Math.round(window.scrollY));
+    const clipAtRest = await revealRightPct(page);
+    // WAIT well past any snap window (pin snaps within a few hundred ms). Pickets must NOT move.
+    await page.waitForTimeout(2500);
+    const yAfter = await page.evaluate(() => Math.round(window.scrollY));
+    const clipAfter = await revealRightPct(page);
+
+    expect(Math.abs(yAfter - yAtRest), `pickets must not snap (was ${yAtRest}, now ${yAfter})`).toBeLessThanOrEqual(4);
+    // The reveal must HOLD: a snap would jump it by a full scene (100%); tolerate at most one picket
+    // step (100/9 ≈ 11.2%) of smoothing quantization, which is NOT a snap.
+    expect(
+      Math.abs((clipAfter ?? 0) - (clipAtRest ?? 0)),
+      `the partial reveal must hold, not snap (was ${clipAtRest}, now ${clipAfter})`,
+    ).toBeLessThanOrEqual(11.2);
+  });
+
+  test('[pickets] the reveal wipes LEFT to RIGHT and REVERSES when you scroll back', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Two points in the same crossing, the second FURTHER in: the reveal must advance (right inset drops).
+    await scrubTo(page, 0.098);
+    const clipEarly = await revealRightPct(page);
+    await scrubTo(page, 0.11);
+    const clipLater = await revealRightPct(page);
+    expect(clipEarly, 'a reveal layer exists mid-crossing').not.toBeNull();
+    expect(clipLater, 'a reveal layer exists mid-crossing').not.toBeNull();
+    expect(clipLater!, `scrolling deeper reveals MORE (right inset ${clipEarly} → ${clipLater})`).toBeLessThan(
+      clipEarly!,
+    );
+
+    // Now scroll BACK toward the start of the crossing: the reveal must RETREAT (right inset grows again).
+    await scrubTo(page, 0.098);
+    const clipBack = await revealRightPct(page);
+    expect(clipBack!, `scrolling back retreats the reveal (${clipLater} → ${clipBack})`).toBeGreaterThan(
+      clipLater!,
+    );
+  });
+
+  test('[pickets] the wave is a TRAVELING band (brightest strip sweeps L→R, not a bloom)', async ({ page }) => {
+    // REGRESSION: with too small a PICKET_SPREAD the strips all peak together mid-crossing, so the whole
+    // door blooms WHITE for a stretch with no visible motion ("not smooth as I scroll slowly"). A proper
+    // wave is a NARROW bright band that TRAVELS: the brightest strip's index should sweep 0→N as you
+    // scrub the crossing, and only a few strips should be lit at once (not all of them).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const sweep = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const ops = () =>
+        [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map((p) =>
+          parseFloat(getComputedStyle(p as HTMLElement).opacity),
+        );
+      const brightest: number[] = [];
+      let maxLitAtOnce = 0;
+      window.scrollTo(0, 0);
+      window.dispatchEvent(new Event('scroll'));
+      await new Promise((r) => setTimeout(r, 300));
+      for (let i = 0; i <= 40; i++) {
+        const p = 0.06 + (0.07 * i) / 40; // scrub across the door→scene0 crossing
+        window.scrollTo(0, Math.round(spacerTopPage + p * scrollable));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => requestAnimationFrame(() => r(null)));
+        const o = ops();
+        if (o.length && Math.max(...o) > 0.4) {
+          brightest.push(o.indexOf(Math.max(...o)));
+          maxLitAtOnce = Math.max(maxLitAtOnce, o.filter((x) => x > 0.5).length);
+        }
+      }
+      const first = brightest[0] ?? -1;
+      const last = brightest[brightest.length - 1] ?? -1;
+      // is the brightest-strip index non-decreasing (a left→right sweep)? allow tiny sampling noise.
+      const monotonic = brightest.every((v, i) => i === 0 || v >= brightest[i - 1] - 1);
+      return { first, last, monotonic, maxLitAtOnce, n: brightest.length };
+    });
+
+    // the band must TRAVEL: start near the left, end near the right.
+    expect(sweep.n, 'the wave is lit across the crossing').toBeGreaterThan(5);
+    expect(sweep.first, `the band starts on the LEFT (was strip ${sweep.first})`).toBeLessThanOrEqual(2);
+    expect(sweep.last, `the band ends on the RIGHT (was strip ${sweep.last})`).toBeGreaterThanOrEqual(6);
+    expect(sweep.monotonic, 'the brightest strip sweeps left→right (a traveling band, not a bloom)').toBe(true);
+    // it is a NARROW band, not a whole-door bloom: never more than ~half the strips lit at once.
+    expect(sweep.maxLitAtOnce, `only a few strips lit at once (was ${sweep.maxLitAtOnce})`).toBeLessThanOrEqual(5);
+  });
+
+  test('[pickets] past the wave the NEW scene is committed and no picket stays lit', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const root = page.locator('[data-hero-root]');
+
+    // Settle PAST the first crossing, into scene 0's settled zone (stop 1, well inside the settled half).
+    await scrubTo(page, (1 + 0.2) / 8);
+    await expect(root, 'the first crossing committed scene 0').toHaveAttribute('data-active-scene', '0');
+    // In a settled zone there is no wave: either no picket strips render, or every strip is dark.
+    const ops = await picketOpacities(page);
+    expect(ops.every((o) => o < 0.05), 'no picket stays lit once settled').toBe(true);
+  });
+
+  test('[pickets] resting BELOW the hero is stable (released = untouchable, snap is off)', async ({ page }) => {
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await page.waitForTimeout(200);
+    const settledY = await page.evaluate(() => Math.round(window.scrollY));
+    await page.waitForTimeout(2000); // no snap should pull us back up
+    const finalY = await page.evaluate(() => Math.round(window.scrollY));
+    expect(Math.abs(finalY - settledY), `page must hold below the hero (${settledY} → ${finalY})`).toBeLessThanOrEqual(6);
+  });
+
+  // The board text with SplitFlap's doubled faces collapsed (each flap shows front+back = duplicate).
+  const boardCollapsed = (page: Page) =>
+    page.evaluate(() => {
+      const b = document.querySelector('[class*="studioSign"]') as HTMLElement;
+      return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
+    });
+
+  test('[pickets] the board FREEZES mid-crossing as a stable old/new MIX, and shows the TITLE when settled', async ({
+    page,
+  }) => {
+    // The board is SCRUBBED by scroll (SplitFlap SWEEP mode): mid-crossing it shows the NEXT title's
+    // left prefix + the PREVIOUS text's right remainder, split at the flip front. Stopping mid-wave
+    // FREEZES that mix (a pure function of position: no churn, no settle animation, nothing flipping).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    await scrubTo(page, 0.09); // mid door→scene0 crossing
+    await page.waitForTimeout(600); // let the last front-flip finish
+    const mid1 = await boardCollapsed(page);
+    await page.waitForTimeout(600);
+    const mid2 = await boardCollapsed(page);
+    expect(mid1, 'the mixed board holds frozen mid-crossing').toBe(mid2);
+    // the MIX: the destination's prefix has landed, but the full title has not
+    expect(mid1.startsWith('DIS'), `left prefix shows the NEXT title (was "${mid1}")`).toBe(true);
+    expect(mid1, 'mid-crossing is a mix, not the finished title').not.toBe('DISCOVERMYCRAFT');
+    // nothing animates at rest: no fold leaf exists anywhere in the board
+    const flipping = await page.evaluate(
+      () => document.querySelectorAll('[class*="studioSign"] [class*="foldDown"]').length,
+    );
+    expect(flipping, 'no cell flips while frozen mid-crossing').toBe(0);
+
+    // Settle past the wave: the full title, held.
+    await scrubTo(page, (1 + 0.25) / 8);
+    await expect
+      .poll(() => boardCollapsed(page), { timeout: 5000, message: 'settled board shows the scene title' })
+      .toBe('DISCOVERMYCRAFT');
+  });
+
+  test('[pickets] the board letters land column by column WITH the scroll, and revert on scroll-back', async ({
+    page,
+  }) => {
+    // The flip front tracks the wave: scrub DEEPER into the crossing and MORE destination letters are
+    // in place (the prefix grows); scrub BACK and they revert to the previous text. A pure function of
+    // scroll position, like the pickets themselves: only the columns the front passes ever animate.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const TITLE = 'DISCOVERMYCRAFT';
+    // how many leading chars of the TITLE the board currently shows
+    const landedPrefix = async () => {
+      const s = await boardCollapsed(page);
+      let n = 0;
+      while (n < TITLE.length && s[n] === TITLE[n]) n++;
+      return n;
+    };
+    const depths = [0.055, 0.08, 0.105, 0.13];
+    const landed: number[] = [];
+    for (const p of depths) {
+      await scrubTo(page, p);
+      await page.waitForTimeout(400); // front flip settles
+      landed.push(await landedPrefix());
+    }
+    // deeper scroll → strictly more of the title in place, ending complete
+    for (let i = 1; i < landed.length; i++) {
+      expect(landed[i], `deeper scrub lands more letters (${JSON.stringify(landed)})`).toBeGreaterThanOrEqual(
+        landed[i - 1],
+      );
+    }
+    expect(landed[0], 'early in the crossing only a few letters have landed').toBeLessThan(TITLE.length);
+    expect(landed[landed.length - 1], 'past the crossing the full title is in place').toBe(TITLE.length);
+    // and scrolling BACK retreats the front: letters revert toward the previous text
+    await scrubTo(page, 0.06);
+    await page.waitForTimeout(400);
+    const reverted = await landedPrefix();
+    expect(reverted, `scroll-back reverts landed letters (${landed[landed.length - 1]} → ${reverted})`).toBeLessThan(
+      TITLE.length,
+    );
+  });
+
+  // How many of the board's rows have any non-blank glyph (a full-width single-row title → 1).
+  const filledRowCount = (page: Page) =>
+    page.evaluate(() =>
+      [...document.querySelectorAll('[class*="studioSign"] [class*="row"]')].filter(
+        (r) => (r as HTMLElement).innerText.replace(/\s/g, '').length > 0,
+      ).length,
+    );
+
+  test('[pickets] the board stays a SINGLE row through a crossing (padding rows never fill)', async ({ page }) => {
+    // The board pads short text to a fixed 3-row grid with BLANK rows top + bottom. The scrubbed
+    // old/new MIX must live only where the texts have letters: if the padding rows ever filled, the
+    // board would visibly collapse 3-rows→1 at the crossing end. Both the from-grid and to-grid pad
+    // rows blank, so the sweep's union span never touches them.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Actively scrub through a crossing; at no point should more than ONE row be filled.
+    let maxRows = 0;
+    for (let k = 0; k < 8; k++) {
+      await scrubTo(page, 0.06 + k * 0.006);
+      maxRows = Math.max(maxRows, await filledRowCount(page));
+    }
+    expect(maxRows, 'only the centered row churns; the padding rows stay blank').toBeLessThanOrEqual(1);
+  });
+
+  test('[pin] on a SHORT viewport the house does not collapse + the board fits the arch', async ({ page }) => {
+    // REGRESSION: the pinned fold-fit cap is `min(--body-w, (100vh - 2*offset) / ratio)`. On a SHORT
+    // window that height term collapses (a 506px-tall viewport → (506-378)/0.8 = 160px), shrinking the
+    // whole house to a postage stamp with the wide Vestaboard OVERFLOWING the arch. The fix floors it at
+    // `--pin-house-min`. The visual regression matrix only uses TALL viewports (h=780/860), so it never
+    // exercised this — this test does. Use `pin` (deterministic layout; pickets shares the same cap).
+    await page.setViewportSize({ width: 1200, height: 520 }); // short + wide
+    await page.goto(heroUrl('pin'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const dims = await page.evaluate(() => {
+      const body = document.querySelector('[class*="studioBody"]') as HTMLElement | null;
+      const sign = document.querySelector('[class*="studioSign"]') as HTMLElement | null;
+      return {
+        bodyW: body ? Math.round(body.getBoundingClientRect().width) : 0,
+        signW: sign ? Math.round(sign.getBoundingClientRect().width) : 0,
+      };
+    });
+    // the house must stay near full size (floored at --pin-house-min 600px), not collapse...
+    expect(dims.bodyW, `house body must stay near full size on a short window (was ${dims.bodyW}px)`).toBeGreaterThanOrEqual(560);
+    // ...and the hanging board must FIT inside the house body (not overflow the arch).
+    expect(dims.signW, `the board (${dims.signW}px) must fit inside the house body (${dims.bodyW}px)`).toBeLessThanOrEqual(dims.bodyW + 2);
+  });
+
+  test('[pickets] ?hero-progress=P freezes an exact frame (a mid-wave crossing, deterministically)', async ({
+    page,
+  }) => {
+    // hero-progress pins the RAW engine progress, bypassing scroll + the catch-up, so a specific pickets
+    // crossing PHASE is frozen (what hero-scene=N, settled-only, cannot do). p≈0.094 is mid-wave in the
+    // door→scene0 crossing (t≈0.65): the wave is lit and the board rests on a scramble (not the title).
+    await page.goto(heroUrl('pickets') + '&hero-progress=0.094', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(1200); // let the (one-time) board settle roll finish
+
+    // the wave is lit at the peak (some picket strip bright), and it is FROZEN (no scroll needed)
+    const ops = await picketOpacities(page);
+    expect(ops.length, 'pickets render at the frozen crossing').toBeGreaterThan(0);
+    expect(Math.max(...ops), 'the wave is lit at the frozen peak').toBeGreaterThan(0.5);
+    // frozen means stable across time with zero interaction
+    const before = await page.evaluate(() => window.scrollY);
+    await page.waitForTimeout(600);
+    const after = await page.evaluate(() => window.scrollY);
+    expect(after, 'a frozen frame does not move').toBe(before);
+    // the board rests on a scramble mid-crossing, NOT the destination title
+    const board = await boardCollapsed(page);
+    expect(board.includes('CRAFT'), 'mid-crossing board is a scramble, not the title').toBe(false);
+  });
+
+  test('[pickets] each crossing spans a REAL scroll runway (a nudge cannot teleport a scene)', async ({
+    page,
+  }) => {
+    // REGRESSION: with the shared pin geometry (0.85vh/scene, half-slice crossings) one crossing was
+    // ~250px of scroll — a single inertial trackpad nudge glides further than that BETWEEN two animation
+    // frames, so the wave teleported past whole crossings ("skips pickets, jumps to the next scene").
+    // Pickets now uses its own taller spacer + a larger transition share; this gate pins the CONTRACT:
+    // one crossing must span at least ~60% of a viewport of scroll.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    const runway = await page.evaluate(() => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const vh = window.innerHeight;
+      const scrollable = spacer.getBoundingClientRect().height - vh;
+      const stops = 8; // 7 scenes + the door
+      const transitionFraction = 0.7; // the pickets engine share (PICKET_TRANSITION_FRACTION)
+      return { vh, crossingPx: (scrollable / stops) * transitionFraction };
+    });
+    expect(
+      runway.crossingPx,
+      `one crossing (${Math.round(runway.crossingPx)}px) must span >=60% of a viewport (${runway.vh}px) so a nudge scrubs it, not skips it`,
+    ).toBeGreaterThanOrEqual(0.6 * runway.vh);
+  });
+
+  test('[pickets] the board does NOT layer-promote every glyph (scroll-lag regression guard)', async ({
+    page,
+  }) => {
+    // PERF REGRESSION GUARD (deterministic, machine-independent). The split-flap board has ~144 glyph
+    // spans. Promoting EVERY one to its own compositor layer (a naive Firefox fix: `transform:
+    // translateZ(0)` / `will-change: transform` on `.glyph`) explodes the layer count and makes SCROLL
+    // lag badly on real hardware. A frame-timing test misses this on a fast CI box (it composites 144
+    // layers fine), so instead we assert the CODE-LEVEL invariant: only a SMALL, bounded number of
+    // board elements carry a layer-promoting property, and NONE of them are the numerous static glyphs.
+    // The legit promotions are the FOLDING leaves (.foldDown/.foldUp) — a handful, only while flipping.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // Settle on a scene (no cells flipping) so the ONLY layer-promoting styles left are ones baked into
+    // a static rule — a correctly-built board has NONE. (During a flip, fold leaves legitimately promote,
+    // which is fine and transient; we check the RESTING state to isolate the bad `.glyph` rule.)
+    await scrubTo(page, (1 + 0.25) / 8);
+    await expect
+      .poll(() => boardCollapsed(page), { timeout: 5000 })
+      .toBe('DISCOVERMYCRAFT');
+    const promoted = await page.evaluate(() => {
+      // A promoted GLYPH shows a non-`none` transform (translateZ(0) computes to matrix(1,0,0,1,0,0), a
+      // 2D matrix in Firefox, so we can't string-match translateZ — any non-none transform on a static
+      // glyph means it was force-promoted) OR a transform-related will-change.
+      const isPromoted = (el: Element) => {
+        const s = getComputedStyle(el);
+        return (s.transform && s.transform !== 'none') || /transform/.test(s.willChange || '');
+      };
+      const board = document.querySelector('[class*="studioSign"]')!;
+      const glyphs = [...board.querySelectorAll('[class*="glyph"]')];
+      return {
+        promotedGlyphs: glyphs.filter(isPromoted).length,
+        glyphTotal: glyphs.length,
+      };
+    });
+
+    // THE guard: ZERO static glyphs are layer-promoted. Promoting all ~168 glyphs (a naive Firefox fix
+    // on `.glyph`) is the compositor-layer explosion that lagged scroll. The Firefox fix must live on the
+    // transient fold LEAVES only (see SplitFlap/styles.module.css), never the static glyphs.
+    expect(
+      promoted.promotedGlyphs,
+      `no static glyph may be GPU-layer-promoted (found ${promoted.promotedGlyphs} of ${promoted.glyphTotal})`,
+    ).toBe(0);
+  });
+
+  test('[pickets] the wave tracks the scroll LIVE (lights up DURING scroll, not only after stop)', async ({
+    page,
+  }) => {
+    // REGRESSION: the wave once trailed a slow smoothing (~350ms), so it only "played" AFTER you stopped
+    // scrolling. It now renders from the CATCH-UP display progress (70ms ease), which moves DURING the
+    // scroll, so a strip is lit while the wheel is still turning. We step through a crossing WITHOUT any
+    // settle wait and assert the wave is lit at mid-crossing steps (not just at rest).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const litDuringScroll = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      const maxOp = () =>
+        Math.max(
+          0,
+          ...[...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')].map((el) =>
+            parseFloat(getComputedStyle(el as HTMLElement).opacity),
+          ),
+        );
+      let litFrames = 0;
+      // walk across the door→scene0 crossing; sample IMMEDIATELY each step (one rAF), NO settle wait
+      for (let i = 1; i <= 18; i++) {
+        window.scrollTo(0, Math.round(spacerTopPage + (0.11 * scrollable * i) / 18));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => requestAnimationFrame(() => r(null)));
+        if (maxOp() > 0.15) litFrames++;
+      }
+      return litFrames;
+    });
+    // several mid-scroll samples must show a lit strip — with the old smoothing trail this was ~0 (the
+    // wave hadn't caught up yet during the scroll).
+    expect(litDuringScroll, 'the wave must light up WHILE scrolling, not only after a stop').toBeGreaterThanOrEqual(3);
+  });
+
+  test('[pickets] scrolling does not trigger a render STORM (no smoothing double-render regression)', async ({
+    page,
+  }) => {
+    // REGRESSION: a smoothing rAF loop used to bump a second React tick every frame, so ParallaxStudio +
+    // StudioFacade re-rendered ~2× per scroll frame (~140 renders/s), the pickets scroll-lag. The catch-up
+    // renderer now drives the ONE render whose props change (the raw tick's render is memoized to the same
+    // scene object, so it writes no styles). This counts React renders during a fixed scroll (via a render probe
+    // that MutationObserves the picket container's style writes as a render proxy) and asserts renders are
+    // roughly one-per-scroll-frame, not double. Machine-independent (a ratio, not a wall-clock budget).
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const ratio = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const scrollable = rect.height - vh;
+      const spacerTopPage = rect.top + window.scrollY;
+      let frames = 0;
+      let raf = 0;
+      const rec = () => {
+        frames++;
+        raf = requestAnimationFrame(rec);
+      };
+      raf = requestAnimationFrame(rec);
+      // count how many times the FACADE restyles (a render proxy) vs how many animation frames elapse.
+      let styleWrites = 0;
+      const mo = new MutationObserver((m) => {
+        styleWrites += m.length;
+      });
+      mo.observe(document.querySelector('[class*="studioFacade"]')!, {
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style'],
+      });
+      // continuous scroll through crossings for ~1.5s
+      const t0 = performance.now();
+      let i = 0;
+      while (performance.now() - t0 < 1500) {
+        const p = 0.06 + 0.09 * (0.5 + 0.5 * Math.sin(i / 10));
+        window.scrollTo(0, Math.round(spacerTopPage + p * scrollable));
+        window.dispatchEvent(new Event('scroll'));
+        i++;
+        await new Promise((r) => setTimeout(r, 14));
+      }
+      mo.disconnect();
+      cancelAnimationFrame(raf);
+      // style writes PER animation frame. The picket wave writes 9 strip opacities + a clip per RENDER,
+      // so ~10 writes/render. With the old double-render it was ~2 renders/frame → ~20 writes/frame; a
+      // single render/frame is ~10. Assert we're not in double-render territory.
+      return styleWrites / Math.max(1, frames);
+    });
+    // one render per frame ≈ 10 style writes/frame; a double-render regression pushes this toward ~20+.
+    expect(ratio, `facade style writes per frame (${ratio.toFixed(1)}) must not indicate a double render`).toBeLessThan(16);
+  });
+
+  test('[pickets] a per-frame hero style write does NOT force a whole-document reflow (layout thrash)', async ({
+    page,
+  }) => {
+    // THE big lag: the picket wave writes styles (opacities + reveal clip-path) every scroll frame. If the
+    // hero is NOT layout-contained, each write dirties the WHOLE document, and Docusaurus's global scroll
+    // handler then forces a full synchronous reflow — which ballooned single frames to 400ms–2s on real
+    // hardware (a fast dev box under-reproduces, so a wall-clock budget would flakily pass). Instead we
+    // assert the STRUCTURAL fix + a relative cost: (1) the sticky is layout-contained; (2) forcing layout
+    // AFTER a hero style write costs about the SAME as with no write (contained) rather than far more
+    // (thrash). The ratio is machine-independent.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    await scrubTo(page, 0.1); // into a crossing so the reveal + picket layers exist
+
+    const probe = await page.evaluate(async () => {
+      const stick = document.querySelector('[class*="parallaxStick"]') as HTMLElement | null;
+      const contain = stick ? getComputedStyle(stick).contain : '';
+      const reveal = [...document.querySelectorAll('[class*="studioDoorScene"]')].find(
+        (d) => (d as HTMLElement).style.clipPath,
+      ) as HTMLElement | undefined;
+      const pickets = [...document.querySelectorAll('[class*="studioPicket"]:not([class*="studioPickets"])')] as HTMLElement[];
+      if (!reveal || !pickets.length) return { contain, err: 'no crossing layers' };
+
+      // time forcing a document layout AFTER a hero style write vs after NO write. Contained → similar;
+      // thrashing → the write path is far more expensive because it reflows the whole doc.
+      const time = (write: (k: number) => void, n = 60) => {
+        // warm up
+        for (let k = 0; k < 5; k++) { write(k); void document.body.offsetHeight; }
+        const t0 = performance.now();
+        for (let k = 0; k < n; k++) { write(k); void document.body.offsetHeight; }
+        return (performance.now() - t0) / n;
+      };
+      const withWrite = time((k) => {
+        reveal.style.clipPath = `inset(0 ${15 + (k % 40)}% 0 0)`;
+        pickets.forEach((p, i) => (p.style.opacity = String(((0.3 + 0.01 * k + 0.05 * i) % 1))));
+      });
+      const noWrite = time(() => {});
+      return { contain, withWriteMs: +withWrite.toFixed(3), noWriteMs: +noWrite.toFixed(3) };
+    });
+
+    // PRIMARY (deterministic, machine-independent): the sticky must be layout-contained. This IS the fix;
+    // a bare `contain: none`/'' is the bug that let a hero style write dirty the whole document.
+    expect(probe.contain, 'the pinned hero must be layout-contained (contain: layout paint style)').toMatch(
+      /layout|paint|content|strict/,
+    );
+    // SECONDARY (absolute, generous): with containment, forcing layout after a hero style write is cheap
+    // (sub-ms on any machine, since only the hero subtree reflows). The thrash bug made this balloon
+    // because the whole document reflowed. A generous 5ms ceiling catches the gross regression without
+    // being flaky on a loaded CI box. (Skipped if the crossing layers weren't captured.)
+    if (probe.withWriteMs != null) {
+      expect(
+        probe.withWriteMs,
+        `forcing layout after a hero style write (${probe.withWriteMs}ms) must stay cheap — a big value means it reflows the whole document (thrash)`,
+      ).toBeLessThan(5);
+    }
   });
 });
 

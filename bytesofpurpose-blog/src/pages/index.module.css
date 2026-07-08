@@ -81,6 +81,21 @@
    the flag is read. It reserves the chooser's height (arch card) to avoid layout shift. */
 /* The skeleton reserves the DEFAULT (animation/timer house) natural height in NORMAL flow, with a
    HOUSE-shaped pulse, so the page doesn't jump when the real hero swaps in. */
+/* The skeleton's PINNED reservation: a tall spacer (height set inline to match the pickets runway)
+   holding a sticky house-pulse at the top, so the document height is already the pinned hero's height
+   before the real hero swaps in (no CLS jump). Mirrors .parallaxSpacer / .parallaxStick. */
+.heroSkeletonSpacer {
+  position: relative;
+  width: 100%;
+}
+.heroSkeletonStick {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  align-items: center;
+}
 .heroSkeleton {
   position: relative;
   width: 100%;
@@ -678,23 +693,36 @@
   justify-content: center;
   height: 100vh; /* the pinned viewport: the hero is centred full-screen while scenes advance */
   overflow: hidden;
+  /* PERF: CONTAIN the hero's layout + paint so a per-frame style write inside it (the picket wave's
+     opacities + reveal clip-path, the board flaps) invalidates ONLY this subtree, not the whole document.
+     Without this, every scroll frame dirties the page's layout, and Docusaurus's global scroll handler
+     then FORCES a full synchronous reflow reading scroll position — the layout-thrash that produced
+     multi-hundred-ms to multi-SECOND frame hitches on some machines (the pickets "great deal of lag").
+     `size` is intentionally omitted so the sticky still sizes to 100vh. */
+  contain: layout paint style;
 }
 /* the gate inside a pinned model fills the sticky viewport height so the facade is vertically centred */
 .parallaxSticky {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* FOLD FIT (desktop pinned): cap the house WIDTH so the whole house + the WELCOME board frames inside
-     the FIRST viewport at scroll 0 (not half below the fold). Geometry: the sticky centres the house in
-     a 100vh box, but at scroll 0 that box starts `offset` px down the viewport (navbar + the compact
-     title block), so the house's bottom sits at `offset + vh/2 + facadeH/2`. For that to stay <= vh:
-       facadeH <= vh - 2*offset,  and facadeH ~= width * houseRatio (roof + 2:1 body ~= 0.75), so
-       maxWidth = (100vh - 2*offset) / houseRatio.
+  /* FOLD FIT (desktop pinned): keep the house near its FULL --body-w width, only trimming it on a
+     genuinely SHORT window so the WELCOME board still frames near the top. The house height is
+     ~width * --pin-house-ratio (roof + body). We let it be as wide as --body-w, floored at
+     --pin-house-min so normal windows always get the full-size house, and only the height term
+     `(100vh - offset) / ratio` bites on a truly short viewport.
+     History: the old cap subtracted 2*offset (378px) and floored low, so ANY window under ~700px tall
+     shrank the house dramatically (a 506px viewport → 160px postage stamp with the board overflowing
+     the arch). Now the floor is high (--pin-house-min 600px) and the offset single (not doubled), so
+     the house stays ~720px on normal windows and shrinks only slightly on short ones.
      Both knobs are Hero-Tuner-tunable vars with baked defaults; never widen past --body-w. On mobile the
      block below overrides this (the house FILLS the pinned viewport door-only instead). */
   max-width: min(
     var(--body-w, 720px),
-    calc((100vh - 2 * var(--pin-house-offset, 189px)) / var(--pin-house-ratio, 0.8))
+    max(
+      var(--pin-house-min, 600px),
+      calc((100vh - var(--pin-house-offset, 120px)) / var(--pin-house-ratio, 0.8))
+    )
   );
   margin-inline: auto;
 }
@@ -1080,6 +1108,49 @@
 @media (prefers-reduced-motion: reduce) {
   .studioFlash {
     opacity: 0 !important; /* no strobe; the door/scene just cross-fades */
+  }
+}
+
+/* ── PICKET WAVE: the picket scroll-model's per-strip flash (replaces the single .studioFlash) ──────
+   A row of vertical strips filling the arch. Each strip's opacity is set inline (its own point on the
+   staggered sin-wave), so the bloom sweeps left→right and back as you scrub. Masked + isolated exactly
+   like .studioFlash (the same arch mask, NO mix-blend/filter per the hi-DPI seam lesson). The reveal of
+   the new scene under the wave is done with clip-path on a scene layer (JS-driven), not here. */
+.studioPickets {
+  position: absolute;
+  inset: 0;
+  z-index: 4; /* above the scene layers + the (off) single flash, so the wave reads as the top bloom */
+  pointer-events: none;
+  isolation: isolate; /* contain the strips' compositing (the hi-DPI seam lesson) */
+  -webkit-mask-image: url(/img/cards/arch-mask-white.png);
+  mask-image: url(/img/cards/arch-mask-white.png);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.studioPicket {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* left + width + opacity are set inline per strip (left = i/N, width = 1/N + 0.5px overlap so
+     anti-aliasing paints no seam between neighbours, opacity = this strip's wave value). NO transition,
+     so the strips scrub EXACTLY with scroll (stop = the wave holds), like .studioFlash. NO mix-blend /
+     filter. A soft vertical warm-white so it reads as LIGHT rather than paint. */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 1) 45%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+}
+@media (prefers-reduced-motion: reduce) {
+  .studioPicket {
+    opacity: 0 !important; /* no strobe; the scene reveal (clip-path) still swaps, just no flash */
   }
 }
 /* GOLD balcony RAILING in front of each WINDOW only (not the door): a short balustrade at the base of

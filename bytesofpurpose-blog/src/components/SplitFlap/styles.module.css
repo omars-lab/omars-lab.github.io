@@ -117,6 +117,22 @@
   transform: rotateX(90deg);
 }
 
+/* FIREFOX-ONLY FIX (scoped via the -moz-appearance @supports probe): the two folding leaves clip a
+   full-height glyph and rotateX it. Firefox re-rasterizes that clipped glyph each frame and its
+   sub-pixel vertical position drifts, so letters appear to GLITCH DOWNWARD a few px mid-crossing.
+   `will-change: transform` promotes JUST the folding leaf to a stable layer, so the glyph is
+   rasterized once and the rotate transforms the layer. We do NOT promote the 144 STATIC glyphs
+   (that layer explosion caused its own scroll lag), and we do NOT apply this in Chromium: there the
+   drift never happens (the transform animation already composites right), and a perf trace showed
+   the standing promotion turned every churn-tick glyph change into a promoted-layer invalidation,
+   storming the compositor commit (100ms+ Commits) while the pickets board churned during scroll. */
+@supports (-moz-appearance: none) {
+  .foldDown,
+  .foldUp {
+    will-change: transform;
+  }
+}
+
 @keyframes flapFoldDown {
   from {
     transform: rotateX(0deg);
