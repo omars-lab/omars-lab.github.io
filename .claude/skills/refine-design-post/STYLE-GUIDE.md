@@ -93,3 +93,12 @@ taught it]`. Empty until the first audit adds to it.)_
   employer/internal name or a real internal number is. Generalize the INSTANCE, keep the coined name
   and the round figure. (Author's call: "Fleetplane" + "roughly 50 to 150 USD/month" both stayed.)
   The generality axis targets what only made sense inside one org, not every proper noun. — [fleetplane.mdx]
+- **An FAQ that re-explains an earlier section is redundancy, not an FAQ.** When a Q&A answer restates
+  a full section almost verbatim, cut it to a one-line VERDICT plus a link up to the section. The
+  detail belongs in one home; the FAQ points to it. (Real: the "Does this work on localhost?" FAQ
+  fully restated the Dev/prod parity section → trimmed to "Yes, identical except auth; see Dev/prod
+  parity".) — [premium-content-gating.mdx]
+- **Strip an incidental internal ID even in a post openly about your own system.** A post can name its
+  own real domain/repo (public, and it's ABOUT that system) yet still carry a leak-flavored internal
+  number with no reader value (a project ID, an org-internal counter). Drop the number, keep the name.
+  (Real: "PostHog project 448205" → "PostHog"; the blog's own domain + repo stayed.) — [premium-content-gating.mdx]
