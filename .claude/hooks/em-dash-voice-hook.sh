@@ -66,20 +66,43 @@ esac
 #     ("--port" has no leading space-or-start boundary that we treat as prose, and we
 #     explicitly skip "--" immediately followed by a letter when preceded by a non-space).
 hits=$(awk -v mode="$in_scope" '
-  BEGIN { infence=0 }
+  BEGIN { infence=0; inmermaid=0 }
   {
     line=$0
     raw=$0
 
-    # toggle fenced code blocks (``` or ~~~ at line start, allowing indentation)
+    # toggle fenced code blocks (``` or ~~~ at line start, allowing indentation). Track
+    # MERMAID fences separately: a mermaid diagram RENDERS its labels to the reader, so an
+    # em-dash (or its HTML-entity disguise) inside one is still reader-facing AI voice and
+    # must be flagged — unlike a plain code example, which is skipped.
     t=line; sub(/^[[:space:]]+/, "", t)
-    if (t ~ /^(```|~~~)/) { infence = !infence; next }
-    if (infence) next
+    if (t ~ /^(```|~~~)/) {
+      if (!infence && t ~ /^(```|~~~)[[:space:]]*mermaid/) inmermaid=1
+      else if (infence && inmermaid) inmermaid=0
+      infence = !infence
+      next
+    }
 
     flagged=0; reason=""
 
-    # 1) em-dash U+2014
-    if (index(line, "\xE2\x80\x94") > 0) { flagged=1; reason="em-dash" }
+    # 0) em-dash HTML entities — &#8212; (decimal), &#x2014; (hex), &mdash; (named). These
+    # RENDER as an em-dash, so they are the same AI-voice tell wearing an entity disguise
+    # (the mermaid-label bypass the author-mermaid skill used to recommend). Flag them
+    # EVERYWHERE, including inside a mermaid fence (labels are reader-facing).
+    if (line ~ /&#8212;|&#[xX]0*2014;|&mdash;/) {
+      flagged=1; reason="em-dash entity"
+    }
+
+    # From here on, a plain (non-mermaid) code fence is skipped: code examples are not
+    # reader-facing. A mermaid fence is NOT skipped (its labels render).
+    if (infence && !inmermaid) { if (flagged) { } else next }
+
+    # 1) em-dash U+2014 (literal char) — reader-facing everywhere, incl. mermaid labels
+    if (index(line, "\xE2\x80\x94") > 0) { flagged=1; reason=(reason=="" ? "em-dash" : reason " + em-dash") }
+
+    # Inside a mermaid fence, stop here: the "--" checks below would false-fire on mermaid
+    # edge syntax (-->, ---, --). Only the em-dash char + entities apply to mermaid.
+    if (inmermaid) { if (flagged) { printf "  L%d [%s]: %s\n", NR, reason, (length(raw)>120?substr(raw,1,117) "...":raw); } next }
 
     # 2) "--" bypass — scan a SANITIZED copy of the line
     s=line

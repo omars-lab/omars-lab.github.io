@@ -292,9 +292,10 @@ rendered."
    `docs/craft/blogging/diagramming/animated-diagrams` doc. Don't animate context/relationship
    diagrams (the dot looks random).
 3. **Em-dash hook applies inside labels.** A literal `—` (U+2014) ANYWHERE in a
-   `designs/*.mdx` (including mermaid node labels) BLOCKS the edit. In a label, use the entity
-   `&#8212;` (renders as an em-dash, the hook can't see it) or rephrase. En-dash `–` and hyphen
-   `-` are fine.
+   `designs/*.mdx` (including mermaid node labels) BLOCKS the edit. **Do NOT reach for the
+   `&#8212;` / `&mdash;` HTML entity to dodge it** — the entity RENDERS as an em-dash, reads as
+   the same AI voice, and the hook now flags it too (inside mermaid fences as well). Rephrase the
+   label instead: a colon, a comma, or two words. En-dash `–` and hyphen `-` are fine.
 4. **Nesting in docs.** When you show a ```` ```mermaid ```` block INSIDE an `mdx` code fence
    (i.e. documenting it), the OUTER fence needs **4 backticks** (` ```` `), or the inner triple
    fence closes it early and breaks the MDX build.
@@ -328,7 +329,7 @@ especially the beta types. Prove it renders:
 | `kanban` cards not under their column | indentation | cards must be INDENTED under the column line. |
 | `quadrantChart` points off-chart | coords out of range | x,y are 0–1 floats. |
 | Diagram is the wrong colors / unreadable in dark mode | hardcoded `classDef`/`style fill:` | remove them; let the theme color it. |
-| Edit blocked: em-dash in a node label | literal `—` in the label | use `&#8212;` or rephrase. |
+| Edit blocked: em-dash in a node label | literal `—` OR a `&#8212;`/`&mdash;` entity in the label | rephrase the label (colon/comma/two words). The entity is NOT a valid dodge, it renders as an em-dash and is flagged too. |
 | The mermaid example in my DOC broke the page | 3-backtick nesting | wrap the example in a 4-backtick `mdx` fence. |
 
 ## Files / references
