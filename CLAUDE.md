@@ -147,6 +147,22 @@ kind (the `draft-docs` plugin's docs kind-emoji wiring), so its title carries no
 The owning skill is **`manage-hubs`** (the hub registry, the generic generator+component pattern,
 the add-a-hub checklist); this convention is the enforcement.
 
+## ⚠️ Operating convention: artifact-driven development — mock the component, get sign-off, THEN build
+
+When you decide to build a **new frontend / blog-ui component** (or a non-trivial change to one's
+look or API), **do NOT jump straight to code**. First make an **artifact** (a self-contained HTML
+mock via the Artifact tool) that shows the component's LOOK, its BEHAVIOR (with a working mini-demo of
+the key interaction), its proposed **MDX API**, and **how it relates to existing components** (so we
+don't build a near-duplicate of, say, `ComparisonMatrix`). Publish it, get the user's **sign-off on
+the artifact**, iterate on the artifact from their feedback, and only THEN implement the real
+component. A mock is cheap to change; a built-and-linked blog-ui component is not. Ground the artifact
+in the repo's own design system (the `custom.css` tokens, Fraunces/Geist, brand-green) so the mock
+reads as native, not templated (see `artifact-design` + `implement-with-design-system`). The loop is
+**mock → approve → build → the visual+mobile pass below → showcase**. Worked example: the
+`<DecisionTable>` spec artifact was reviewed and refined (a status-hover tooltip was added from user
+feedback) before a single line of the real component was written. Owning skills: `modify-blog-ui-component`,
+`maintain-showcase`; the pass that CLOSES the loop is the next convention.
+
 ## ⚠️ Operating convention: every new interactive component gets a visual + mobile pass
 
 A component that **renders content or takes input** (a board, a modal, a card, a chart, a

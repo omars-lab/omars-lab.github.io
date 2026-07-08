@@ -861,31 +861,7 @@ graph LR
 
 ## 8. Use Cases
 
-The primary use cases, derived from the personas (§1.4). Squares are actors, circles are use cases; dashed arrows show one use case triggering another.
-
-```mermaid
-graph LR
-    OWNER[Store Owner]
-    OP[Operator]
-    AGENT[Experimentation Agent]
-
-    OWNER --> UC1((Connect store<br/>& set autonomy/guardrails))
-    OWNER --> UC2((Approve a gated<br/>pricing/checkout test))
-    OWNER --> UC3((Read wins ledger<br/>/ pause everything))
-    OP --> UC4((Supervise portfolio<br/>& override))
-    OP --> UC5((Tune ideation engine))
-    AGENT --> UC6((Ideate & prioritize<br/>hypotheses))
-    AGENT --> UC7((Generate variants))
-    AGENT --> UC8((Run experiment<br/>on live traffic))
-    AGENT --> UC9((Decide ship/kill<br/>& attribute lift))
-
-    UC6 -.-> UC7 -.-> UC8 -.-> UC9
-    UC9 -.-> UC2
-    UC9 -.-> UC3
-
-```
-
-**Key use cases (actor → goal → flow):**
+The use-case *diagram* (who drives what) is the [`<UseCaseDiagram>` in the opener](#who-its-for-and-what-they-do-with-it). This section is the detail behind it: each use case as **actor → goal → flow**.
 
 - **UC1: Onboard a store** *(Store Owner)* → start getting safe, automated experiments → connect store, pick autonomy tier, set revenue floor / brand rules / no-touch zones.
 - **UC2: Approve a gated experiment** *(Store Owner)* → allow a higher-risk pricing/checkout test → review the agent's proposed change + expected impact on a single approve/decline card.
