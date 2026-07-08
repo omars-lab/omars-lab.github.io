@@ -1,37 +1,45 @@
-/* Assumption — amber inline highlight flagging an unvalidated premise for review. */
+/* Assumption — a quiet inline marker flagging an unvalidated premise for review.
+   ONE signal, not two: a soft amber tint on the text with a small leading label. No filled
+   pill, no raised border (that read as a clunky button); the tint carries the "review this". */
 
 .assumption {
-  background: color-mix(in srgb, #f6c343 38%, transparent);
-  border-bottom: 2px solid #e0a000;
-  border-radius: 3px;
-  padding: 0.05rem 0.3rem;
-  color: inherit; /* keep the page text color; the highlight carries the signal */
+  background: color-mix(in srgb, #f6c343 16%, transparent);
+  border-radius: var(--radius-sm, 4px);
+  padding: 0.08em 0.35em;
+  /* nudge the whole marker to sit on the text baseline instead of riding high */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  color: inherit;
 }
 
+/* A small, unobtrusive label. Lowercase, not a shouty filled pill: a hairline amber outline
+   + amber ink, so it annotates rather than competes with the sentence. */
 .tag {
-  display: inline-block;
-  margin-right: 0.4rem;
-  padding: 0 0.35rem;
-  border-radius: 4px;
-  background: #e0a000;
-  color: #2b2200;
-  font-size: 0.7em;
+  display: inline;
+  margin-right: 0.35em;
+  padding: 0 0.3em;
+  border: 1px solid color-mix(in srgb, #e0a000 55%, transparent);
+  border-radius: 100px;
+  background: transparent;
+  color: #a06a00;
+  font-size: 0.66em;
   font-weight: 700;
+  font-style: normal;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  vertical-align: baseline;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  vertical-align: 0.08em; /* small lift so the tiny caps center on the body text */
 }
 
 .body {
   font-style: italic;
 }
 
-/* Dark mode: a deeper amber that still reads as "highlighted to review". */
+/* Dark mode: a slightly stronger tint + a lighter amber so it still reads as "to review". */
 [data-theme='dark'] .assumption {
-  background: color-mix(in srgb, #f6c343 22%, transparent);
-  border-bottom-color: #f6c343;
+  background: color-mix(in srgb, #f6c343 14%, transparent);
 }
 [data-theme='dark'] .tag {
-  background: #f6c343;
-  color: #241c00;
+  border-color: color-mix(in srgb, #f6c343 50%, transparent);
+  color: #f0c860;
 }
