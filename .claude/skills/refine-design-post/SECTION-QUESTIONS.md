@@ -121,6 +121,18 @@ the road" recipe). One direction needs no fork; two or more do. Propose it; `aut
 
 ## Recurring failure modes (from audits)
 
+> **🥇 THE #1 recurring gap across every audit so far: the post under-serves WHO.** _(Reconciled
+> across 3 audits — local-guide-skill, fleetplane, premium-content-gating — where the same root gap
+> surfaced in three forms.)_ Design posts reliably open on the SYSTEM or the PROBLEM and skip the
+> people: they never name concrete beneficiaries, never put the reader in a moment, and lack the
+> required "Users & use cases" opening + `<UseCaseDiagram>`. **On any audit, check this FIRST.** The
+> fix is almost always the same: add the users/use-cases opening (see that section above) and name a
+> concrete person, not an abstract "users". The instances below are the evidence.
+
+- **Open on a relatable "you" in a moment, not "an org" in the abstract.** Even with a strong hook,
+  the first paragraph often addresses a generic third party ("An engineering org that has adopted X…")
+  instead of putting the reader in the situation ("You rolled X out and three things are quietly
+  breaking"). Same facts, but now there is a someone and a moment. — [fleetplane.mdx]
 - **The silent "who" drop in the opener.** The most common opener miss: it answers *why this
   matters* and *what it enables* strongly, then never names *who benefits + what they'd do with it*.
   The beneficiary is often implied ("nobody wants to learn Socrata's dialect") but never stated as a

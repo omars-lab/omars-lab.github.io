@@ -83,22 +83,20 @@ taught it]`. Empty until the first audit adds to it.)_
   re-states a count already in the diagram AND lightly announces-importance ("that is the thesis
   working"). Cut to the bare verdict — "None were on a map yet. All were on the public record." The
   fewer words carry more. — [local-guide-skill.mdx]
-- **Open on a relatable "you" in a moment, not "an org" in the abstract.** A design post lands harder
-  when the first paragraph puts the READER in the situation, not a generic third party. Before: "An
-  engineering org that has adopted Claude Code faces three gaps." After: "You rolled Claude Code out
-  to a growing fleet, and three things are quietly breaking." Same facts, but now there is a someone
-  and a moment. Pairs with the question-hook opener (KEEP list). — [fleetplane.mdx]
-- **A leak-free technical name is fine to keep; do NOT over-generalize.** An ORIGINAL system name
-  (coined for the post) and an illustrative order-of-magnitude figure are not leaks — only an
-  employer/internal name or a real internal number is. Generalize the INSTANCE, keep the coined name
-  and the round figure. (Author's call: "Fleetplane" + "roughly 50 to 150 USD/month" both stayed.)
-  The generality axis targets what only made sense inside one org, not every proper noun. — [fleetplane.mdx]
+- **Open on a relatable "you" in a moment, not "an org" in the abstract.** The first paragraph puts
+  the READER in the situation, not a generic third party ("You rolled X out and three things are
+  quietly breaking", not "An org that adopted X faces gaps"). Pairs with the question-hook opener
+  (KEEP list). This is one face of the **#1 recurring audit gap (under-serving WHO)** — the structural
+  side (the required users/use-cases opening) lives in `SECTION-QUESTIONS.md`. — [fleetplane.mdx]
+- **The generality axis targets internal NAMES/NUMBERS, not proper nouns.** _(Reconciled from two
+  audits.)_ Keep a coined system name, an illustrative order-of-magnitude figure, and the post's own
+  public domain/repo (a post can be openly about its own system). STRIP an employer/internal name and
+  any incidental internal NUMBER with no reader value (a project ID, an org counter, a real SLA).
+  Generalize the INSTANCE, keep the name. (Author's calls: "Fleetplane" + "roughly 50 to 150 USD/month"
+  stayed; "PostHog project 448205" → just "PostHog", the blog's domain/repo stayed.) — [fleetplane.mdx,
+  premium-content-gating.mdx]
 - **An FAQ that re-explains an earlier section is redundancy, not an FAQ.** When a Q&A answer restates
   a full section almost verbatim, cut it to a one-line VERDICT plus a link up to the section. The
   detail belongs in one home; the FAQ points to it. (Real: the "Does this work on localhost?" FAQ
   fully restated the Dev/prod parity section → trimmed to "Yes, identical except auth; see Dev/prod
-  parity".) — [premium-content-gating.mdx]
-- **Strip an incidental internal ID even in a post openly about your own system.** A post can name its
-  own real domain/repo (public, and it's ABOUT that system) yet still carry a leak-flavored internal
-  number with no reader value (a project ID, an org-internal counter). Drop the number, keep the name.
-  (Real: "PostHog project 448205" → "PostHog"; the blog's own domain + repo stayed.) — [premium-content-gating.mdx]
+  parity".) A specific instance of the top-level "State a thing once" rule. — [premium-content-gating.mdx]
