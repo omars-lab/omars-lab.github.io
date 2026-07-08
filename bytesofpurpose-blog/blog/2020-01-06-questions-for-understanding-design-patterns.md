@@ -1,14 +1,14 @@
 ---
 slug: questions-for-understanding-design-patterns
 title: "Questions for Understanding Design Patterns"
-description: "A reader's question-set for working through the classic Gang of Four Design Patterns book — the questions that actually unlock object-oriented design."
+description: "A reader's question-set for working through the classic Gang of Four Design Patterns book: the questions that actually unlock object-oriented design."
 authors: [oeid]
 tags: [software-engineering, design-patterns, question-set, best-practices]
 date: 2020-01-06
 draft: true
 ---
 
-When I first sat down with *Design Patterns: Elements of Reusable Object-Oriented Software* (Gamma, Helm, Johnson, and Vlissides — the "Gang of Four"), I didn't take notes the usual way. Instead of summarizing what the book said, I wrote down the **questions** each section was answering. A pattern only sticks once you can state the problem it solves, so a good question is worth more than a tidy summary.
+When I first sat down with *Design Patterns: Elements of Reusable Object-Oriented Software* (Gamma, Helm, Johnson, and Vlissides, the "Gang of Four"), I didn't take notes the usual way. Instead of summarizing what the book said, I wrote down the **questions** each section was answering. A pattern only sticks once you can state the problem it solves, so a good question is worth more than a tidy summary.
 
 What follows is that question-set: the questions I'd want a reader to be able to answer after a careful first pass through the book's introduction. Use them as a study guide, a self-quiz, or a checklist for whether a chapter actually landed.
 
@@ -18,9 +18,9 @@ What follows is that question-set: the questions I'd want a reader to be able to
 
 - How is the quality of an object-oriented system measured?
 - How can developers leverage the expertise of other skilled architects and developers?
-- How does one design reusable object-oriented software — and what constraints must the design meet to do so?
+- How does one design reusable object-oriented software, and what constraints must the design meet to do so?
 - How can a design be tested to ensure it is reusable?
-- What do experienced designers know that beginners don't? What traps do they avoid, and how do they steer clear of design déjà vu — solving the same problem the same wrong way again?
+- What do experienced designers know that beginners don't? What traps do they avoid, and how do they steer clear of design déjà vu, solving the same problem the same wrong way again?
 - What activities do design patterns facilitate?
 - What are the essential elements of a design pattern?
 
@@ -44,7 +44,7 @@ What follows is that question-set: the questions I'd want a reader to be able to
 ## Modeling classes and relationships
 
 - How are object implementations (classes) represented in UML?
-- How do you represent an abstract class in a UML diagram — and how do you tell that a class *is* abstract? What is an abstract class?
+- How do you represent an abstract class in a UML diagram, and how do you tell that a class *is* abstract? What is an abstract class?
 - How do you represent inheritance in a UML diagram? What is inheritance?
 - What is the difference between a class and a type?
 - What is the difference between class inheritance and interface inheritance?
@@ -72,7 +72,7 @@ What follows is that question-set: the questions I'd want a reader to be able to
   - What are the different ways a program can be distributed?
   - How do patterns benefit an *application*? What is an application?
   - How do patterns benefit a *toolkit*? What is a toolkit?
-  - What is a *framework*? What is inversion of control? What are the pros and cons of using a framework, and what risks do you incur? How do patterns help you build good frameworks — and how do patterns differ from frameworks?
+  - What is a *framework*? What is inversion of control? What are the pros and cons of using a framework, and what risks do you incur? How do patterns help you build good frameworks, and how do patterns differ from frameworks?
   - Which is harder to design: applications, toolkits, or frameworks?
 
 ## Actually using them
@@ -82,4 +82,4 @@ What follows is that question-set: the questions I'd want a reader to be able to
 
 ---
 
-> These questions follow the introduction of *Design Patterns: Elements of Reusable Object-Oriented Software* by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides (Addison-Wesley, 1994). The questions are mine; the book is theirs — go read it.
+> These questions follow the introduction of *Design Patterns: Elements of Reusable Object-Oriented Software* by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides (Addison-Wesley, 1994). The questions are mine; the book is theirs. Go read it.

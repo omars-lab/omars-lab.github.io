@@ -1,7 +1,7 @@
 ---
 slug: a-learning-plan-for-graphql
 title: "A Learning Plan for GraphQL"
-description: "What to know when you're picking up GraphQL — why you'd reach for it over REST, and a curated set of docs, tutorials, and tools to learn it from."
+description: "What to know when you're picking up GraphQL: why you'd reach for it over REST, and a curated set of docs, tutorials, and tools to learn it from."
 authors: [oeid]
 tags: [backend, software-engineering, learning-plan]
 date: 2020-01-06
@@ -11,13 +11,13 @@ draft: true
 import CategoryCarousel from '@site/src/components/CategoryCarousel';
 
 When I set out to learn GraphQL, the question that actually mattered wasn't "how do
-I write a query" — it was **"why would I reach for this instead of REST?"** GraphQL
+I write a query": it was **"why would I reach for this instead of REST?"** GraphQL
 lets a client ask for exactly the fields it needs in one round trip, instead of
 stitching together several REST endpoints and throwing away the parts it didn't
 want. That's the whole pitch: the client describes the shape of the data, the server
 resolves it. Everything else is detail you can pick up once that clicks.
 
-This is the learning plan I kept — the resources worth starting from, grouped by how
+This is the learning plan I kept: the resources worth starting from, grouped by how
 I actually used them.
 
 <!-- truncate -->
@@ -30,8 +30,8 @@ A good way in, in order:
 lands before the syntax. The goal is to be able to say *when* GraphQL helps and when
 it doesn't.
 
-[Step 2] Work through **one core-concepts tutorial** end to end — schema, types,
-queries, resolvers — rather than skimming several.
+[Step 2] Work through **one core-concepts tutorial** end to end (schema, types,
+queries, resolvers) rather than skimming several.
 
 [Step 3] **Tinker with a real engine.** Stand up a GraphQL layer over a database
 (Hasura over Postgres is the fastest path) and run a stress test against the
@@ -51,12 +51,12 @@ practices that keep a schema sane as it grows.
 
 Once the concepts land, the fastest way to internalize them is to put a GraphQL API
 in front of actual data and poke at it. These are the engines, tutorials, and schema
-tools I used to do that — Hasura over Postgres especially.
+tools I used to do that, Hasura over Postgres especially.
 
 <CategoryCarousel topic="learn-about-graphql" category="Tinker with GraphQL and Postgres ..." />
 
 ---
 
 > This roadmap is curated from my own running notes on GraphQL. The resource lists
-> are a living collection — they're maintained as data, so the list grows without the
+> are a living collection: they're maintained as data, so the list grows without the
 > post changing. Dead links from the original notes have been pruned.
