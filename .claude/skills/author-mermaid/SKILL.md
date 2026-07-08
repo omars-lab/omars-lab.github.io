@@ -51,6 +51,15 @@ flowchart LR
 > ignore it: split the diagram, collapse a `subgraph` into a single node, or switch to `<FlowDiagram>`
 > (a nodes/edges spec that gates its own layout). Only flow diagrams are scored; sequence/ER/class/
 > state/timeline/mindmap lay themselves out and are skipped.
+>
+> **The heavier check (session end).** The text metrics above can't see a diagram that is few-node
+> but still renders huge. So a second, HEAVIER tier — `scripts/validate-mermaid-render.mjs`
+> (`make validate-mermaid-render`, `--changed` for git-scoped) + the `Stop` hook
+> `mermaid-render-check.sh` — actually HEADLESS-RENDERS the changed flow diagrams with Playwright at
+> session end and flags what the source text can't: a **render-fail** (a syntax error the draft-only
+> client render hides until publish), **overlapping nodes**, or an **oversize** render (>1600px tall /
+> >3000px wide, an illegible thumbnail). Git-gated to changed diagrams and non-blocking; it only runs
+> when a session actually touched one. Two tiers: cheap-per-edit (text) + heavy-per-session (render).
 
 ### architecture-beta (system/infra topology)
 Declaration `architecture-beta`; `group id(icon)[Title]`; `service id(icon)[Title] in group`;
