@@ -125,7 +125,7 @@ Two planes, cleanly separated. The **config plane** pushes standardized configur
 %% animate: flow
 graph LR
     subgraph config["CONFIG PLANE &#8212; push"]
-        REPO[claude-fleet monorepo<br/>git]
+        REPO[claude-abacus monorepo<br/>git]
         MKT[Plugin Marketplace]
         CORE[org-core plugin<br/>skills, agents, hooks, MCP]
         MGD[managed-settings.json<br/>via MDM]
@@ -167,10 +167,10 @@ graph LR
 
 Two repos, kept separate on purpose: they have different release cadences and different blast radii. A bad config push and a bad cloud deploy should never be the same commit.
 
-### `claude-fleet` (config plus on-device agent)
+### `claude-abacus` (config plus on-device agent)
 
 ```
-claude-fleet/
+claude-abacus/
 ├── .claude-plugin/
 │   └── marketplace.json                 # marketplace manifest
 ├── plugins/
@@ -179,8 +179,8 @@ claude-fleet/
 │       ├── skills/
 │       │   ├── code-review/SKILL.md
 │       │   ├── release-notes/SKILL.md
-│       │   ├── fleet-setup/SKILL.md      # onboarding walkthrough
-│       │   └── fleet-doctor/SKILL.md     # diagnose broken installs
+│       │   ├── abacus-setup/SKILL.md      # onboarding walkthrough
+│       │   └── abacus-doctor/SKILL.md     # diagnose broken installs
 │       ├── agents/
 │       │   ├── bug-hunter.md
 │       │   └── security-scan.md
@@ -209,10 +209,10 @@ claude-fleet/
     └── test-sanitizer.yml               # BLOCKS merge on any secret escape
 ```
 
-### `fleetplane` (cloud: infra plus ETL plus web app)
+### `abacus` (cloud: infra plus ETL plus web app)
 
 ```
-fleetplane/
+abacus/
 ├── infra/                               # Terraform or CDK
 │   ├── storage.tf                       # S3, KMS, lifecycle
 │   ├── ingest.tf                        # SQS, Lambda, DLQ
@@ -245,7 +245,7 @@ fleetplane/
 
 **Goal:** every laptop runs identical, versioned config, and live token and cost dashboards exist. Ship this before any collection.
 
-- **Task 1.1: Marketplace plus org-core skeleton.** Create the `claude-fleet` repo, `marketplace.json`, and the `org-core` plugin with `plugin.json`; add two starter skills (`code-review`, `release-notes`) and the `bug-hunter` agent. **Acceptance:** on a clean machine, adding the marketplace then installing `org-core` makes the skills and agent available.
+- **Task 1.1: Marketplace plus org-core skeleton.** Create the `claude-abacus` repo, `marketplace.json`, and the `org-core` plugin with `plugin.json`; add two starter skills (`code-review`, `release-notes`) and the `bug-hunter` agent. **Acceptance:** on a clean machine, adding the marketplace then installing `org-core` makes the skills and agent available.
 - **Task 1.2: Managed settings.** Author `managed/managed-settings.json` with `extraKnownMarketplaces`, `enabledPlugins`, a `strictKnownMarketplaces` allowlist, telemetry `env` vars (`CLAUDE_CODE_ENABLE_TELEMETRY`, the OTLP exporter and endpoint), `permissions.deny` (for example `Read(**/.env)` and `Bash(sudo:*)`), and a cleanup period. Document the MDM paths for macOS, Linux, and Windows. **Acceptance:** with the file in place, user or project settings cannot disable org-core or the telemetry env vars.
 - **Task 1.3: CI for plugins.** `validate-plugins.yml` lints every manifest and verifies skill and agent frontmatter. **Acceptance:** a malformed manifest fails the PR check.
 - **Task 1.4: Live telemetry dashboards.** Stand up Grafana OSS plus an ADOT collector on Fargate receiving OTLP from laptops into CloudWatch, with panels for active engineers per day, sessions, tokens by model, and estimated spend. **Acceptance:** a session on an enrolled laptop shows up in Grafana within minutes. **This is the Phase 1 win: value before the transcript pipeline exists.**
@@ -288,7 +288,7 @@ A user LaunchAgent (not a root LaunchDaemon) watches `~/.claude/projects` with a
 
 ### Task 2.4: Distribution (brew, setup skill, self-heal)
 
-A Homebrew formula installs the binary and registers the service via `brew services` (with a scoop or winget path for Windows). The `fleet-setup` skill runs the install, verifies the service is loaded, fires a **synthetic-secret test session**, and confirms the redacted file landed in S3. The `fleet-doctor` skill diagnoses service-dead, token-expired, and upload-lag. A SessionStart self-heal hook verifies the service is loaded, the version is at or above the minimum, and the last upload was recent, then repairs or nags. **Acceptance:** a new engineer runs `/fleet-setup` and ends with a verified, uploading agent without touching a terminal manually.
+A Homebrew formula installs the binary and registers the service via `brew services` (with a scoop or winget path for Windows). The `abacus-setup` skill runs the install, verifies the service is loaded, fires a **synthetic-secret test session**, and confirms the redacted file landed in S3. The `abacus-doctor` skill diagnoses service-dead, token-expired, and upload-lag. A SessionStart self-heal hook verifies the service is loaded, the version is at or above the minimum, and the last upload was recent, then repairs or nags. **Acceptance:** a new engineer runs `/abacus-setup` and ends with a verified, uploading agent without touching a terminal manually.
 
 ### Task 2.5: Consent plus governance artifacts
 
@@ -405,7 +405,7 @@ Every row in the "others' transcripts" column writes an audit-log entry (who vie
 - **Task 4.1: API plus security model.** FastAPI (or Next API routes) with a DB role that is **read-only on marts**. Auth is OIDC via the IdP with httpOnly, SameSite session cookies. RBAC is enforced **in the API, not the UI** (`engineer`, `lead`, `exec`, `admin`). Transcript bodies are never proxied: the API issues short-lived presigned S3 GET URLs and **logs every access** (who viewed whose session). Hardening covers strict CSP, no third-party scripts, parameterized queries, rate limits, and dependency scanning; the network is reachable only via Tailscale with no public DNS. **Acceptance:** an `engineer`-role token cannot fetch another engineer's session, and every transcript fetch writes an audit-log row.
 - **Task 4.2: Transcript viewer.** A session list with filters (engineer, repo, agent), a rendered event stream plus a raw JSONL toggle, redactions visible as badges, and `log_issue` calls shown inline. **Acceptance:** viewing a session shows redaction badges, and raw access is a logged presigned download.
 - **Task 4.3: Plugin hub.** A marketplace landing showing org-core contents, current version, adoption percentage (from `skill_uses` by version), changelog, and a one-copy install command. **Acceptance:** adoption bars reflect real warehouse data and the copy button yields a working install command.
-- **Task 4.4: Dashboard.** KPI tiles (sessions, tokens, spend, bugs logged, active engineers, cost-per-confirmed-bug), a tokens-per-day trend, bugs by severity, an agent leaderboard with precision, skill adoption, and a fleet-health panel (plugin and sanitizer version spread, upload lag, and a sessions-missing-transcripts leak detector). Team-level by default; per-engineer drilldown is role-gated and audited. **Acceptance:** every panel reads a mart (not a fact table) and renders in under one second.
+- **Task 4.4: Dashboard.** KPI tiles (sessions, tokens, spend, bugs logged, active engineers, cost-per-confirmed-bug), a tokens-per-day trend, bugs by severity, an agent leaderboard with precision, skill adoption, and a session-health panel (plugin and sanitizer version spread, upload lag, and a sessions-missing-transcripts leak detector). Team-level by default; per-engineer drilldown is role-gated and audited. **Acceptance:** every panel reads a mart (not a fact table) and renders in under one second.
 - **Task 4.5: Deck studio.** A date-range picker drives a live 16:9 slide preview from `mart_deck_kpis` (sites analyzed, bugs by severity, tokens, cost, bug funnel, adoption); slide notes are drafted via the Claude API from the same numbers and frozen at generation time; a human approves before export to PPTX or PDF. **Acceptance:** regenerating for a new range updates all numbers, export produces a valid PPTX, and nothing exports without approval.
 
 ---
@@ -463,7 +463,7 @@ The single most important discipline in this design is **not** building ahead of
 |---|---|
 | ETL Lambda nears its 15-minute timeout, or analyst queries slow the app | Facts to a Parquet lake (S3 plus Glue plus Athena, dbt on Fargate); Postgres becomes marts only |
 | A second team wants different plugins or policy | Per-team plugins plus managed-settings drop-in fragments |
-| A plugin release breaks more than 10 laptops | Canary rings (`org-core@next` to 5 percent for 48h, then fleet) plus a fleet-version SLO |
+| A plugin release breaks more than 10 laptops | Canary rings (`org-core@next` to 5 percent for 48h, then everyone) plus a config-version SLO |
 | The 9am sync herd throttles the upload API, or a second region onboards | Streaming ingest (Kinesis or Firehose) plus regional endpoints |
 | Any external compliance requirement touches transcripts | Server-side DLP (Macie) as a second scrub, legal hold, SIEM export |
 | Finance asks what team X spends | Chargeback marts plus cost-allocation tagging |
@@ -495,7 +495,7 @@ Each phase is independently shippable; ship them in order.
 
 - [ ] **Phase 0:** write the consent doc plus the "what we collect" page; lock the six invariants.
 - [ ] **Phase 1:** marketplace plus org-core plus managed-settings plus plugin CI plus live OTel dashboards.
-- [ ] **Phase 2:** the CI-gated sanitizer plus the mirror/sync agent plus launchd/systemd plus brew plus fleet-setup and fleet-doctor plus the self-heal hook; pilot on two or three laptops.
+- [ ] **Phase 2:** the CI-gated sanitizer plus the mirror/sync agent plus launchd/systemd plus brew plus abacus-setup and abacus-doctor plus the self-heal hook; pilot on two or three laptops.
 - [ ] **Phase 3:** S3/SQS/Lambda ingest plus the presigned upload API plus the star schema plus marts plus the issue-logger MCP plus reconciliation.
 - [ ] **Phase 4:** the API (RBAC plus audited presign) plus the transcript viewer plus the plugin hub plus the dashboard plus the deck studio.
 - [ ] **Ongoing:** IaC everything; add scale components only when a trigger fires.
