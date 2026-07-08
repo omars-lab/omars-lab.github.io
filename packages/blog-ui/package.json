@@ -1,6 +1,6 @@
 {
   "name": "@omars-lab/blog-ui",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Reusable React components for design/blog posts: animated UX Walkthrough, Mockup frame, Gif animated-media figure, DiagramWithFootnotes, Assumption highlight, and the question-set set (SectionBanner, Question card+modal with power badges, PowerLegend).",
   "license": "MIT",
   "repository": {

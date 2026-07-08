@@ -210,6 +210,42 @@ so this is the only way to author one here). HOW:
   warnings; better, give each actor use cases that straddle it vertically, reorder, or split.
 - A use case with `detail` opens a click-to-focus modal (Used by / Includes / Extends).
 
+### MindMap (themed, clickable mind map from Mermaid text)
+
+WHAT: a mind map rendered as inline SVG from ordinary [Mermaid mindmap](https://mermaid.js.org/syntax/mindmap.html)
+text (the author writes `mindmap` syntax as children, so the SAME text also renders on
+mermaid.live). On top of mermaid it adds the two things mermaid's mindmap renderer cannot do:
+real clickable nodes and theming. A node whose whole label is a markdown link `[Text](href)`
+becomes an `<a>`. WHEN: an idea tree / brainstorm / role map / concept hierarchy where you want
+the branches to be navigable (jump to a heading or another page). HOW:
+
+```mdx
+<MindMap title="Orchestrating Roles" theme="blog">{`
+mindmap
+  root((Orchestrating Roles))
+    [The Starter](#the-starter)
+    [The Executor](#the-executor)
+    [The Finisher](/initiatives/other-post#finisher)
+`}</MindMap>
+```
+
+- Registered in `MDXComponents` (no import). Live demo: `/handbook/components/diagrams/diagrams-mindnode`.
+- Pass the mermaid text as CHILDREN in a **template literal** so `#`, parens, and newlines
+  survive MDX. Malformed text THROWS (fails `make build`) rather than shipping a broken diagram.
+- Links: `[Text](#heading)` (same page), `[Text](/initiatives/slug#anchor)` (another page: use
+  the REAL route, `/initiatives/...` not `/blog/...`), or an `https://` link (opens in a new tab).
+- `theme`: default **`theme="blog"`** for a NEW map authored in a post (it uses the site's green/tea
+  design tokens, so it matches everything else). Use `theme="mindnode"` (cream/brown) only when the
+  map is imported from, or meant to evoke, an Apple MindNode file. Both respect light + dark mode.
+- `layout` (`ltr` default | `spread` two-sided), `density` (`comfortable` | `compact` for big maps),
+  `caption`, and `className`/`style` passthrough (override any `--bopmind-*` token inline).
+- Per-node accent tint via a mermaid `:::name` class (`green`/`mint`/`pink`/`blue`/`amber`/`violet`),
+  e.g. `Ship it:::green` (a space, `Ship it ::: green`, is tolerated too).
+- WHEN NOT: for a directed flow (A → B → C, a loop, a decision fan-out) use `FlowDiagram`; for a
+  non-hierarchy mermaid diagram (ER/class/state/sequence) use a plain ```mermaid fence or
+  `DiagramWithFootnotes`. To turn an actual `.mindnode` file into one of these, see the
+  **import-mindnode** skill (it runs the converter + preview loop for you).
+
 ### Mockup (UX mockups — show what it LOOKS like)
 
 WHAT: a framed, theme-aware wrapper (`browser` / `window` / `phone` / `none` chrome) that

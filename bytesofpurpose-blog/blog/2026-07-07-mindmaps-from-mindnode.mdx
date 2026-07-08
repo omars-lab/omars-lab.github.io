@@ -1,0 +1,95 @@
+---
+slug: mindmaps-from-mindnode
+title: 'Mind Maps From MindNode, Themed and Clickable'
+kind: design-story
+sidebar_label: "Mind Maps From MindNode"
+description: "A small pipeline that turns an Apple MindNode file into a themed, clickable mind map: a converter, an SVG component with real links, and a preview CLI."
+authors: [oeid]
+tags: [system-design, generative-ai, claude, blogging]
+date: 2026-07-07T10:00
+draft: false
+---
+
+I have years of thinking trapped in Apple MindNode files. They are lovely to look at and useless to link to: a `.mindnode` file is a macOS bundle nobody else can open, and even a screenshot of one is a dead end, a picture you cannot click. I wanted the maps on the blog as *real* content, matching MindNode's look, with nodes I could click to jump straight to the section that explains them. So I built a small pipeline to do exactly that, and this post is the first map to come through it.
+
+<!-- truncate -->
+
+Here is the map this post is about, converted and rendered by that pipeline. The three nodes are links: click one and the page scrolls to the section that explains it.
+
+<MindMap title="Orchestrating Roles" caption="The Orchestrating Roles map, rendered by the <MindMap> component. Each node links to its section below.">{`
+mindmap
+  root((Orchestrating Roles))
+    [The Starter](#the-starter)
+    [The Executor](#the-executor)
+    [The Finisher](#the-finisher)
+`}</MindMap>
+
+## From a MindNode bundle to Mermaid text
+
+The first problem is that a `.mindnode` file lies about itself. It is a directory, and the `contents.xml` inside it is not XML at all: it is an Apple binary property list. So the converter reads it with Python's `plistlib` and walks the node tree, turning each title into a line of [Mermaid mindmap](https://mermaid.js.org/syntax/mindmap.html) syntax. A mermaid mindmap is a single-rooted tree, while a MindNode document can hold several disconnected top-level nodes plus free-floating connection arrows, so the converter synthesizes a root from the file name and preserves the arrows as comments. The map above started life as this:
+
+````text
+mindmap
+  root((Orchestrating Roles))
+    The Starter
+    The Executor
+    The Finisher
+
+%% cross-connection: The Starter --> The Executor
+%% cross-connection: The Executor --> The Finisher
+````
+
+That text is deliberately still valid Mermaid, so it renders on mermaid.live for a quick check. The links I added later (`[The Starter](#the-starter)`) are a convention on top: a node whose whole label is a markdown link becomes a real anchor.
+
+## Rendering it to look like MindNode
+
+Mermaid can draw a mindmap, but its mindmap renderer cannot make nodes clickable and will not reliably theme them, so I could not use it directly for what I wanted. Instead the `<MindMap>` component parses that same Mermaid text itself and draws its own SVG, which buys two things: the MindNode look (a warm cream canvas, white rounded nodes with a dark-brown border, pale-olive connectors, all lifted straight from the bundle's own style) and real `<a>` links. A same-page link scrolls; a link to another page navigates; an external link opens in a new tab.
+
+The proof that the look is faithful is a side-by-side. On the left is MindNode's own preview of the file; on the right is what the component renders:
+
+<div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center'}}>
+  <figure style={{flex: '1 1 300px', margin: 0}}>
+    <img src="/img/mindmaps-from-mindnode/original-mindnode-preview.jpg" alt="The original MindNode QuickLook preview of the Orchestrating Roles file" />
+    <figcaption>MindNode's own preview</figcaption>
+  </figure>
+  <figure style={{flex: '1 1 300px', margin: 0}}>
+    <img src="/img/mindmaps-from-mindnode/orchestrating-roles-light.png" alt="The same map rendered by the MindMap component" />
+    <figcaption>Rendered by the component</figcaption>
+  </figure>
+</div>
+
+The original is a left-to-right chain (those were the connection arrows); the rendered version is the proper hierarchy the converter recovered, with the synthesized root. Same palette, same typography, same feel.
+
+## The preview loop: validate before you build
+
+The part that made this pleasant to build is that I did not have to run the whole blog to see whether a map looked right. A small CLI renders any mind map straight to a PNG using the component's own layout code, so the picture is exactly what would ship:
+
+````bash
+node scripts/render-mindmap.mjs \
+  --mindnode "path/to/Orchestrating Roles.mindnode" \
+  --out /tmp/orch --title "Orchestrating Roles"
+
+open /tmp/orch.png "path/to/Orchestrating Roles.mindnode/QuickLook/Preview.jpg"
+````
+
+That is the loop: convert, render, eyeball against MindNode's own preview, adjust, repeat, all without a site build. It renders light and dark themes too, so I could confirm the map keeps its character in dark mode before committing to it. Only once the PNG read like the original did I wrap the text in `<MindMap>` and drop it into this post.
+
+## The three roles
+
+Now the sections the map links to, so the anchors above have somewhere to land.
+
+### The Starter
+
+The Starter kicks a piece of work into motion. It is the part of me that turns a vague pull into a concrete first move, that is willing to begin before everything is figured out. Its risk is starting many things and finishing none, which is why it hands off deliberately rather than lingering.
+
+### The Executor
+
+The Executor does the middle work, the unglamorous stretch between a promising start and a finished thing. It keeps momentum when novelty has worn off. This is also where the connection arrow in the original map pointed: the Starter feeds the Executor, and the Executor feeds the Finisher.
+
+### The Finisher
+
+The Finisher closes things out: the last ten percent, the polish, the actually-shipping-it. It is the rarest and most valuable of the three, and the one the other two exist to serve. This post is a small instance of it, a map that had been sitting in a file for years, finished into something you can read and click.
+
+## How the pieces fit
+
+The mechanics live in three small pieces: `scripts/convert-mindnode.py` (bundle to Mermaid text), the `<MindMap>` component in `@omars-lab/blog-ui` (Mermaid text to a themed, clickable SVG), and `scripts/render-mindmap.mjs` (the preview loop). Each is small and does one thing, which is the only reason a years-old habit of hoarding mind maps finally turned into posts. This is the same instinct as an [earlier effort to make my components genuinely reusable](/initiatives/shipping-a-component-package): the value is not in the map, it is in the map being something you can actually use.

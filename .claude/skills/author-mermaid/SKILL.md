@@ -22,7 +22,7 @@ This repo runs **mermaid 11.15** — all types below are verified to render here
 | A work board (columns + cards) | `kanban` | To Do / Doing / Done with card metadata |
 | 2×2 prioritization (effort vs value, etc.) | `quadrantChart` | plotted points in 4 quadrants |
 | Git branching/merging story | `gitGraph` | commits, branches, merges |
-| Idea tree / brainstorm | `mindmap` | radial hierarchy |
+| Idea tree / brainstorm | `mindmap`, or the **`<MindMap>` component** | radial hierarchy; use `<MindMap>` (see upgrade-post) when you want it THEMED to the site + CLICKABLE nodes, which mermaid's own mindmap cannot do |
 | Dated milestones | `timeline` | chronological events |
 | What a system TOUCHES at its boundary | `architecture-beta` (context) | hub-and-spoke; see Context diagram |
 | **Use-case diagram (UML)** | `flowchart` (no native type) | actors + oval use cases; see recipe |
@@ -195,7 +195,10 @@ Declaration order places the hub's neighbors on its sides — declare them aroun
 each edge leaves the side its target sits on (see Arrow & layout hygiene).
 
 (For `erDiagram`, `classDiagram`, `mindmap`, `timeline`, `C4Context` use the standard
-mermaid-11 syntax; if unsure, probe-verify per the workflow below before shipping.)
+mermaid-11 syntax; if unsure, probe-verify per the workflow below before shipping. Note: for a
+`mindmap` on THIS site, prefer the `<MindMap>` component over a raw ```mermaid fence. It renders
+the same mindmap text but themed to the site and with clickable nodes; see the upgrade-post
+catalog and the import-mindnode skill.)
 
 ## Flowchart mechanisms (shapes / links / subgraphs / styling)
 

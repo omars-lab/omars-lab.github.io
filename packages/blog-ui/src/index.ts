@@ -32,6 +32,20 @@ export type {
   FlowNodeKind,
 } from './components/FlowDiagram';
 
+// MindMap — a themed mind map rendered as one inline SVG from Mermaid mindmap text
+// (the author writes ordinary `mindmap` syntax as children, so it also renders on
+// mermaid.live). On top of mermaid we add real clickable nodes: a node whose label
+// is a markdown link `[Text](#anchor)` renders as an <a> to a same-page heading or
+// another page. Themed to look like Apple MindNode's default (cream canvas, white
+// nodes, brown borders). Parses + lays out itself because mermaid's mindmap renderer
+// supports neither node links nor reliable theming. Pairs with scripts/convert-mindnode.py
+// (which turns a .mindnode bundle into the mermaid text) and the import-mindnode skill.
+export {default as MindMap} from './components/MindMap';
+export type {MindMapProps} from './components/MindMap';
+export type {MindLayout, MindDensity} from './components/MindMap/layout';
+export type {MindNode, MindShape, MindAccent} from './components/MindMap/parser';
+export type {MindStyle} from './components/MindMap/render';
+
 // ComparisonMatrix — a criteria x options decision table (options are columns, criteria
 // rows; the chosen option's column is highlighted + badged; yes/no/partial render as marks).
 // A real accessible <table>; a build-time gate throws on a cell keyed to a nonexistent option.
