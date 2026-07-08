@@ -168,10 +168,16 @@
    marker that SLIDES (with a slight bounce) to the active step. The inner band is inset
    from both ends (left/right margin = the dot radius) so the first/last dots are centered
    on the rail, not clipped at the edge. Dots/fill/marker are positioned by `left: %`. */
+/* the transport (controls + progress) sits ABOVE the scene so it stays put as scene height
+   varies per step; the scene's dynamic height only ever pushes content DOWN, never the bar. */
+.transport {
+  margin-bottom: 0.9rem;
+}
+
 .timeline {
   position: relative;
   height: 16px;
-  margin: 0.8rem 7px 0; /* 7px end-inset centers the first/last dot */
+  margin: 0 7px; /* 7px end-inset centers the first/last dot; no vertical margin (transport spaces it) */
 }
 .tlRail {
   position: absolute;
@@ -233,7 +239,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.5rem;
+  margin-bottom: 0.5rem; /* space between the controls and the progress rail below them */
 }
 .playBtn {
   flex: 0 0 auto;
