@@ -19,7 +19,8 @@
  * rule is the same AI-voice anti-pattern wearing a disguise). The "--" matcher mirrors the
  * hook: it flags "--" only when it reads as a prose dash (" -- " spaced, or "word-- "
  * attached-before) and SKIPS legitimate "--": CLI flags (--port), "---" rules / frontmatter
- * delimiters, "<!-- -->" comments, and fenced ``` code blocks. (The em-dash check stays
+ * delimiters, "<!-- -->" comments, fenced ``` code blocks, and a dash inside a markdown link's
+ * [title] text (a quoted external title). (The em-dash check stays
  * code-inclusive; the "--" check is code-aware because "--" is common+legitimate in code.)
  * Only U+2014 ("—") and the "--" bypass are flagged; en-dash (–) and a lone hyphen (-) are fine.
  *
@@ -80,8 +81,18 @@ files.sort();
 
 // "--" bypass: does this (code-sanitized, non-rule) line use "--" as a prose dash?
 // Mirrors em-dash-voice-hook.sh.
+// Strip the DISPLAY TEXT of a markdown link/image (`[title]` / `![alt]`) from a line before
+// dash scanning. The bracket text of a link is a LABEL — often the verbatim title of an
+// external article — so a dash there is a faithful quote, not the author's AI-voice cadence.
+// This blinds the scanner to bracket contents ONLY; a dash anywhere else on the line (prose,
+// or the (url)) still flags. Example: `[Kafka is fast -- I'll use Postgres](https://…)` is
+// exempt, but `foo -- bar [x](y)` still trips.
+function stripLinkTitles(line) {
+  return line.replace(/!?\[[^\]]*\]/g, '');
+}
+
 function hasDashBypass(line) {
-  let s = line;
+  let s = stripLinkTitles(line);
   s = s.replace(/`[^`]*`/g, ''); // drop inline code spans
   s = s.replace(/<!--/g, '').replace(/-->/g, ''); // drop html comment markers
   const collapsed = s.replace(/\s/g, '');
@@ -108,11 +119,15 @@ for (const file of files) {
     const trimmed = line.trimStart();
     const isFenceToggle = /^(```|~~~)/.test(trimmed);
 
-    const emCount = line.includes(EM_DASH) ? line.split(EM_DASH).length - 1 : 0;
+    // Scan with markdown-link DISPLAY TEXT stripped: a dash inside `[title]` is a quoted
+    // external title (a faithful reproduction), not the author's AI-voice cadence. A dash
+    // anywhere else on the line still flags.
+    const scanLine = stripLinkTitles(line);
+    const emCount = scanLine.includes(EM_DASH) ? scanLine.split(EM_DASH).length - 1 : 0;
     // Em-dash HTML entities (&#8212; decimal, &#x2014; hex, &mdash; named) RENDER as an
     // em-dash, so they are the same AI-voice tell in disguise. Common inside mermaid labels
     // (the old bypass). Code-inclusive like the em-dash check.
-    const entityCount = (line.match(/&#8212;|&#[xX]0*2014;|&mdash;/g) || []).length;
+    const entityCount = (scanLine.match(/&#8212;|&#[xX]0*2014;|&mdash;/g) || []).length;
     const dashBypass = !inFence && !isFenceToggle && hasDashBypass(line);
 
     if (isFenceToggle) inFence = !inFence;
