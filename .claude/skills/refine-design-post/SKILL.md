@@ -43,22 +43,43 @@ The rewrite keeps the LESSON and strips the INSTANCE: "at $EMPLOYER we ran 40k R
 Foobar service" → "a high-throughput service under sustained load". If a passage has no
 generalizable lesson once the specifics are gone, that is itself a finding (cut it).
 
+**Name vs purpose — does the title describe what the tech actually DOES?** A separate accuracy check
+(same axis because both are "does the post misrepresent itself"): read the title and the system name,
+then read what the design actually builds, and ask *do they match?* A name that OVERCLAIMS or
+mislabels is a ranked finding — it sets a false expectation the body then contradicts. The motivating
+case: a system named "**A Control Plane for a Claude Code Fleet**" implies an ADMIN control plane (you
+push commands, you administer the fleet), but the design actually builds a **reporting / observability
+mechanism** (it consolidates usage metrics across sessions; it does not administer anything). The fix
+is a name that matches the built purpose (e.g. a "fleet reporting / observability" framing), and the
+control-plane ambition moves to an optional North Star section (see `SECTION-QUESTIONS.md`) as a
+possible FUTURE direction, not a description of what exists. Distinct from `name-post` (title VOICE —
+does an idea read as a question, an initiative as done): this is title ACCURACY — does the name tell
+the truth about the purpose. Propose the corrected name; the author decides.
+
 ### 2. Minimalism / question-set coverage — does each section answer its core questions?
 
-The author is a minimalist who leads with *why this matters → its value → what it enables → who
-benefits → what they'd do with it*. Auditing for "my style" **means** checking a section answers
-its core questions. Run every section against `SECTION-QUESTIONS.md` and emit an explicit
-**coverage verdict** — a small table per section over its required questions:
+The author is a minimalist who leads with *users and use cases → why this matters → its value → what
+it enables → who benefits → what they'd do with it*. Auditing for "my style" **means** checking a
+section answers its core questions. Run every section against `SECTION-QUESTIONS.md` and emit an
+explicit **coverage verdict** — a small table per section over its required questions:
 
 | Section | Required question | Answered? |
 |---|---|---|
+| Users & use cases (FIRST) | Who are we building for? | ✓ |
+| Users & use cases (FIRST) | How will they use it (use cases)? | ✗ missing |
+| Users & use cases (FIRST) | Use-case diagram present? | ✗ missing |
 | Opener | Why does this matter? | ✓ |
-| Opener | Who benefits + what would they do with it? | ✗ missing |
+
+**The one hard structural rule: a design post MUST open with users & use cases before Scope/CX.** The
+first section answers who / what problem / what we build / how they use it / how it improves their
+life, and carries a **use-case visual** (default `<UseCaseDiagram>`). A post that opens on the system
+(a Scope note or Executive Summary first, with no users/use-cases section ahead of it) is a ranked
+**ordering finding**, and a missing use-case visual in that section is its own finding.
 
 A **missing** required answer is a ranked finding of its own (the section is thin — add the answer).
 A section that answers its questions **and then keeps going** is padded (the surplus is a clarity
-finding for axis 3). Start-with-why: if a section explains mechanism before it establishes why the
-reader should care, flag the ordering.
+finding for axis 3). Start-with-users: if a section explains mechanism or CX before it establishes who
+the post is for and how they use it, flag the ordering.
 
 ### 3. Clarity / wordiness — the concrete tells
 
@@ -88,9 +109,18 @@ Flag prose that describes a **process or structure** that a reader would grasp f
   the "one progress model, two drivers" section).
 - Prose that just re-explains a table already on the page → cut the prose, keep the table (real: the
   "Why three" paragraph in `premium-content-gating.mdx`).
+- The **users + use cases** opening → a **`<UseCaseDiagram>`** (required, per axis 2).
+- **Multiple future directions** in a North Star / vision section → a **"fork in the road"** diagram:
+  a `flowchart` where the current foundation fans out to N divergent future-direction nodes, so the
+  reader sees the options DIVERGE rather than reading them as a list. Two or more directions warrant
+  the fork; one does not. See the "fork in the road" recipe in `author-mermaid`.
+- A **long vertical stack of CX mockups** ("what it looks like") → wrap in **`<Tabs>`/`<TabItem>`**,
+  one tab per self-contained surface, so the reader PICKS a surface instead of scrolling past every
+  one. A mockups sidecar with N (~3+) stacked `<Mockup>`/`<Walkthrough>` blocks is a wall of visuals
+  (the visual analogue of axis-5 bombardment). One or two mocks can stay stacked; a big stack tabs.
 
-Note the candidate and hand the actual insertion to `upgrade-post` (owns the mermaid/table/component
-snippets). Do not add the diagram in this skill; propose it.
+Note the candidate and hand the actual insertion to `upgrade-post` / `author-mermaid` (which own the
+mermaid/table/component snippets). Do not add the diagram in this skill; propose it.
 
 ### 5. Reader's first read — can a newcomer actually follow this?
 

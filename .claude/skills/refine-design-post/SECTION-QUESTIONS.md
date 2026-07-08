@@ -9,12 +9,38 @@
 > in `STYLE-GUIDE.md`). `author-blog-post` / `author-post` read this when drafting a NEW design post,
 > so a post is born answering the right questions.
 >
-> **The spine (applies everywhere).** The author starts from **why it matters → its value → what it
-> enables → who benefits → what they'd do with it**, then mechanism. If a section reaches for
-> mechanism before establishing why the reader should care, that ordering is itself a finding.
+> **The spine (applies everywhere).** The author starts from **users and use cases → why it matters →
+> its value → what it enables → who benefits → what they'd do with it**, then mechanism. A design post
+> opens on the PEOPLE and what they will DO, not on the system. If a section reaches for mechanism or
+> CX before establishing who it is for and how they will use it, that ordering is itself a finding.
 
 Each section lists **required** questions (a missing answer = finding) and **optional** ones (nice to
 have, not gated). Not every post has every section; match by intent, not by heading text.
+
+## Users & use cases (the FIRST section — before Scope, before any CX/mechanism)
+
+**REQUIRED, and it must come first.** Every design post opens by establishing the people and what they
+will do, before the Scope note and before any architecture or CX. A post that opens on the system
+(a Scope note or Executive Summary first) is a ranked ordering finding: the reader should meet the
+users and the use cases before the machine. The five questions this section must answer:
+
+Required:
+- **Who are we building for?** Name the users / personas (roles, not "an org").
+- **What problem do they have?** The concrete pain, in their terms.
+- **What will we build to fix it?** The system, in one plain sentence (not its internals).
+- **How will they use it?** The core use cases: what each user actually does with it.
+- **How will it make their life better?** The outcome / value each user gets.
+
+**Required visual: a use-case diagram.** These questions are answered with a picture, not only prose.
+The default is the repo's `<UseCaseDiagram>` component (actors outside a system boundary, use cases as
+ovals, each with a click-to-focus `detail`) — it maps one-to-one onto who (actors) + how-they-use-it
+(use cases). A persona table or a small journey diagram can also satisfy the visual, but a use-case
+diagram is the canonical fit. Propose it here; hand the actual insertion to `upgrade-post`. A missing
+visual in this section is a finding.
+
+> Auditor note: this section subsumes and precedes the "Opener / hook" below. The opener's
+> why/value/who questions are still required, but they now live DOWNSTREAM of users-and-use-cases —
+> the post answers "who and what they do" first, then "why it matters" as the hook.
 
 ## Opener / hook (the first paragraphs, before `<!-- truncate -->`)
 
@@ -72,6 +98,26 @@ Required:
 Optional:
 - Why it's built this way (the reflective coda the author favors).
 - What carried over from a prior build.
+
+## North Star / vision (OPTIONAL, closing)
+
+An optional closing section that names where the foundation built here **could** go next. It keeps
+the built thing HONEST (the design does X) while capturing the AMBITION (X is the foundation for Y, Z).
+
+Required *if the section is present*:
+- **What does the foundation enable next?** One or more possible future directions.
+- **Framed as possibilities, not the plan.** These are directions the work COULD take, explicitly ONE
+  among OTHERS — not a committed goal, not a description of what exists. (Motivating case: a fleet
+  *reporting* tool is the foundation that could later grow into an admin *control plane* — but it
+  could equally go other ways: a benchmarking service, a cost-optimization advisor, a compliance
+  export.) This is also the honest home for an ambition the NAME must not overclaim (see the
+  name-vs-purpose check in `SKILL.md`).
+
+**Visual when there are multiple directions: a "fork in the road".** When the vision names more than
+one possible path, show that the options DIVERGE with a branching diagram — a `flowchart` where the
+current foundation node fans out to N future-direction nodes (see `author-mermaid` for the "fork in
+the road" recipe). One direction needs no fork; two or more do. Propose it; `author-mermaid` /
+`upgrade-post` own the insertion.
 
 ## Recurring failure modes (from audits)
 

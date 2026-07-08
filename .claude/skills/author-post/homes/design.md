@@ -52,11 +52,22 @@ mockups: ./_mockups/<kebab>.mdx         # only if you add a mockup sidecar (belo
 
 ## Body shape (mirror the other agentic designs)
 
-Open with a `:::note[Scope]` admonition, then `<!-- truncate -->`, then the body. A proven arc
-(see `designs/2026-06-22-self-healing-storefront.mdx`, `designs/2026-07-04-fleetplane.mdx`):
-Executive Summary (problem / solution / key decisions / value) → an animated architecture diagram
-→ components / data model → a **Key Decisions** section → closing. Rich-component catalog:
-`upgrade-post`.
+**Open with USERS & USE CASES, before the Scope note.** The first section establishes the people and
+what they will do — who are we building for, what problem do they have, what will we build to fix it,
+how will they use it, how does it make their life better — and carries a **use-case diagram**
+(`<UseCaseDiagram>`: actors outside a system boundary, use-case ovals; see `author-mermaid` for the
+component + a mermaid fallback). Only after that comes the `:::note[Scope]` admonition, then
+`<!-- truncate -->`, then the body. This ordering is a REQUIRED rule enforced by `refine-design-post`
+(SECTION-QUESTIONS.md "Users & use cases"); a post that opens on the system is an ordering finding.
+
+A proven arc after the users/use-cases opening (see `designs/2026-07-04-fleetplane.mdx`):
+Scope → Executive Summary (problem / solution / value; lead with a relatable "you") → an animated
+architecture diagram → components / data model → a **Key Decisions** section → closing → an OPTIONAL
+**North Star / vision** section (where the foundation could go NEXT, framed as one direction among
+others, NOT the committed goal — the honest home for an ambition the name must not overclaim). When
+the North Star names more than one direction, show them diverge with a **"fork in the road"** diagram
+(a `flowchart` fanning the current foundation out to N future paths; see `author-mermaid`).
+Rich-component catalog: `upgrade-post`.
 
 - **Animate the first mermaid block**: wrap it in `<div className="mermaid-animated flow-dot">` …
   `</div>` and add `%% animate: flow` as the first line inside the fence. Dashes march; flow

@@ -11,9 +11,15 @@
 
 ## Guiding themes
 
-- **Minimalism — get to the core value.** Lead with *why it matters, its value, what it enables, who
-  benefits, what they'd do with it*, then mechanism. Cut anything that doesn't advance a core
-  question (see `SECTION-QUESTIONS.md`). Less, but load-bearing.
+- **Lead with users and use cases — before Scope, before CX, before the system.** A design post opens
+  on the PEOPLE and what they will DO: who are we building for, what problem do they have, what will we
+  build to fix it, how will they use it, how does it make their life better. Only then the mechanism.
+  This opening carries a **use-case diagram** (the repo's `<UseCaseDiagram>`), not just prose. Opening
+  on a Scope note or an Executive Summary (the system first) is the ordering mistake this rule exists
+  to catch. See the "Users & use cases" section in `SECTION-QUESTIONS.md`.
+- **Minimalism — get to the core value.** After users/use-cases, lead with *why it matters, its value,
+  what it enables, who benefits, what they'd do with it*, then mechanism. Cut anything that doesn't
+  advance a core question (see `SECTION-QUESTIONS.md`). Less, but load-bearing.
 - **Generality over specifics.** Prefer the reusable PATTERN to the private instance. Strip
   employer/proprietary/internal names, real internal numbers, and one-off internal process. Keep the
   lesson, drop the instance. This is the guiding theme of the whole `/designs` blog: the value is in
@@ -21,6 +27,11 @@
 
 ## Rules to APPLY (trim toward these)
 
+- **Name the tech for what it DOES, not what it aspires to.** The title + system name must match the
+  built purpose. A name that overclaims sets a false expectation the body contradicts. *(Real:
+  "A Control Plane for a Claude Code Fleet" implies an admin control plane, but the design builds a
+  reporting/observability tool — the control-plane idea belongs in an optional North Star section as a
+  future direction, not the name.)* Accuracy-to-purpose; distinct from `name-post` (title voice).
 - **State a thing once.** Kill the Scope-note → bullets → table → "restated" repetition of the same
   invariant. State it once, reference it after. *(Real: `fleetplane.mdx` states its invariants 3×.)*
 - **Never render the same structure twice.** A mermaid diagram AND an ASCII/prose redraw of the same
@@ -36,6 +47,10 @@
 - **Prefer a table/diagram for parallel structure.** Parallel arms/options/mappings, or an
   input→transform→output flow, read faster as a table or a mermaid flow than as paragraphs. (Propose
   it; `upgrade-post` inserts it.)
+- **Tab a long mockups / "what it looks like" stack.** When the CX section stacks several
+  self-contained mockups vertically, wrap them in `<Tabs>`/`<TabItem>` (one tab per surface) so the
+  reader picks a screen instead of scrolling past all of them. A big vertical mock stack is the visual
+  analogue of a wall of text. *(Real: fleetplane's 4 browser mocks + a walkthrough, 176-line sidecar.)*
 - **No em-dash in the rendered body.** Repo-wide reader-voice rule — a literal `—` reads as AI voice
   and the `em-dash-voice-hook.sh` BLOCKS it. Use a period, a colon, or a parenthesis. (This rule is
   about the POST body, not this guide file.)
