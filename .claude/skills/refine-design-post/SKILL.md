@@ -45,20 +45,28 @@ generalizable lesson once the specifics are gone, that is itself a finding (cut 
 
 ### 2. Minimalism / question-set coverage — does each section answer its core questions?
 
-The author is a minimalist who leads with *why this matters → its value → what it enables → who
-benefits → what they'd do with it*. Auditing for "my style" **means** checking a section answers
-its core questions. Run every section against `SECTION-QUESTIONS.md` and emit an explicit
-**coverage verdict** — a small table per section over its required questions:
+The author is a minimalist who leads with *users and use cases → why this matters → its value → what
+it enables → who benefits → what they'd do with it*. Auditing for "my style" **means** checking a
+section answers its core questions. Run every section against `SECTION-QUESTIONS.md` and emit an
+explicit **coverage verdict** — a small table per section over its required questions:
 
 | Section | Required question | Answered? |
 |---|---|---|
+| Users & use cases (FIRST) | Who are we building for? | ✓ |
+| Users & use cases (FIRST) | How will they use it (use cases)? | ✗ missing |
+| Users & use cases (FIRST) | Use-case diagram present? | ✗ missing |
 | Opener | Why does this matter? | ✓ |
-| Opener | Who benefits + what would they do with it? | ✗ missing |
+
+**The one hard structural rule: a design post MUST open with users & use cases before Scope/CX.** The
+first section answers who / what problem / what we build / how they use it / how it improves their
+life, and carries a **use-case visual** (default `<UseCaseDiagram>`). A post that opens on the system
+(a Scope note or Executive Summary first, with no users/use-cases section ahead of it) is a ranked
+**ordering finding**, and a missing use-case visual in that section is its own finding.
 
 A **missing** required answer is a ranked finding of its own (the section is thin — add the answer).
 A section that answers its questions **and then keeps going** is padded (the surplus is a clarity
-finding for axis 3). Start-with-why: if a section explains mechanism before it establishes why the
-reader should care, flag the ordering.
+finding for axis 3). Start-with-users: if a section explains mechanism or CX before it establishes who
+the post is for and how they use it, flag the ordering.
 
 ### 3. Clarity / wordiness — the concrete tells
 

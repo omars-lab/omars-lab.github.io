@@ -11,9 +11,15 @@
 
 ## Guiding themes
 
-- **Minimalism — get to the core value.** Lead with *why it matters, its value, what it enables, who
-  benefits, what they'd do with it*, then mechanism. Cut anything that doesn't advance a core
-  question (see `SECTION-QUESTIONS.md`). Less, but load-bearing.
+- **Lead with users and use cases — before Scope, before CX, before the system.** A design post opens
+  on the PEOPLE and what they will DO: who are we building for, what problem do they have, what will we
+  build to fix it, how will they use it, how does it make their life better. Only then the mechanism.
+  This opening carries a **use-case diagram** (the repo's `<UseCaseDiagram>`), not just prose. Opening
+  on a Scope note or an Executive Summary (the system first) is the ordering mistake this rule exists
+  to catch. See the "Users & use cases" section in `SECTION-QUESTIONS.md`.
+- **Minimalism — get to the core value.** After users/use-cases, lead with *why it matters, its value,
+  what it enables, who benefits, what they'd do with it*, then mechanism. Cut anything that doesn't
+  advance a core question (see `SECTION-QUESTIONS.md`). Less, but load-bearing.
 - **Generality over specifics.** Prefer the reusable PATTERN to the private instance. Strip
   employer/proprietary/internal names, real internal numbers, and one-off internal process. Keep the
   lesson, drop the instance. This is the guiding theme of the whole `/designs` blog: the value is in
