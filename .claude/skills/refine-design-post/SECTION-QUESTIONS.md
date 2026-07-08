@@ -127,6 +127,11 @@ the road" recipe). One direction needs no fork; two or more do. Propose it; `aut
   person the reader can picture. Fix = one clause naming concrete beneficiaries and their payoff (a
   resident, a would-be tenant, a reporter), not an abstract "users". This also closes the
   Problem/motivation "who has it?" row — they are the same gap. — [local-guide-skill.mdx]
+- **Even a mature, diagram-rich post usually lacks the users & use-cases opening.** The strongest
+  posts (great hook, honest trade-offs, threat-model tables) still tend to open on the Problem or the
+  system, skipping the required "who + use cases + a `<UseCaseDiagram>`" section. Auditing a GOOD post
+  is mostly: add that opening, break the one wall-of-text, and confirm the KEEP list. Don't manufacture
+  findings on a strong post; the new structural rules are usually the real gaps. — [premium-content-gating.mdx]
 
 ## Notes for the auditor
 
