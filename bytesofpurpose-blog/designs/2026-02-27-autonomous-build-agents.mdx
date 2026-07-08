@@ -160,8 +160,8 @@ flowchart TB
         end
     end
 
-    subgraph DECISION_ZONE["Decision Zone &#8212; Where Do Build Agents Live? (D1)"]
-        subgraph IMPL["Autonomous Build Agents (This Design &#8212; Phase 2)"]
+    subgraph DECISION_ZONE["Decision Zone: Where Do Build Agents Live? (D1)"]
+        subgraph IMPL["Autonomous Build Agents (This Design: Phase 2)"]
             direction TB
             IRA["Instance Readiness<br/>Agent"]
             ADA["Auto Developer"]
@@ -422,7 +422,7 @@ flowchart LR
         ORCH["Orchestration / Workflow"]
     end
 
-    subgraph BOUNDARY_UPSTREAM["Upstream (Existing &#8212; Not In Scope)"]
+    subgraph BOUNDARY_UPSTREAM["Upstream (Existing: Not In Scope)"]
         direction TB
         WF_PLAN["Planning Workflows<br/>(Create Req Epics, Tech Design)"]
         STORY["Sprint-Ready Work-Item Record<br/>Tech Guidance + AC + Test Steps + Points"]
@@ -1199,7 +1199,7 @@ sequenceDiagram
     IRA->>CI: Check platform version, capabilities, commits
     CI-->>IRA: Instance state
     alt Incompatible
-        IRA->>S: Update status: "Blocked &#8212; [reason]"
+        IRA->>S: Update status: "Blocked: [reason]"
         Note over IRA: HALT
     else Compatible
         IRA->>S: Update status: "Pre-flight passed"
@@ -1216,7 +1216,7 @@ sequenceDiagram
     S->>ATA: Read test steps
     ATA->>CI: Query configurations (verify existence & correctness)
     CI-->>ATA: Configuration state
-    ATA->>S: Update status: "Validated" or "Failed &#8212; [details]"
+    ATA->>S: Update status: "Validated" or "Failed: [details]"
 
     S->>KTA: Read implementation log (from ADA + ATA)
     KTA->>S: Write structured implementation log

@@ -138,7 +138,7 @@ graph LR
         CATALOG[Catalog & Content]
     end
 
-    subgraph engine["Experimentation Agent &#8212; THIS DESIGN"]
+    subgraph engine["Experimentation Agent: THIS DESIGN"]
         IDEATE((Ideate\nHypotheses))
         DESIGN((Design\nVariants))
         RUN((Run Test\non Live Traffic))
@@ -147,8 +147,8 @@ graph LR
     end
 
     subgraph people["People & Systems"]
-        OWNER[Store Owner\nDIY &#8212; primary]
-        OP[Operator\nus &#8212; supervises]
+        OWNER[Store Owner\nDIY: primary]
+        OP[Operator\nus: supervises]
         STORE[(Commerce Platform\n/ Storefront)]
         SHOPPER[Storefront Visitor]
         LEDGER[(Wins Ledger\n& Experiment Log)]
@@ -350,7 +350,7 @@ graph LR
     subgraph assumed["Assumed / Depended On"]
         SCANNER[Site Scanner\nCO-DESIGN-0002]
         COMMERCE[(Commerce Platform\n+ Analytics)]
-        SERVE[Variant-Serving\nMechanism &#8212; D1]
+        SERVE[Variant-Serving\nMechanism: D1]
         LLM[LLM Provider]
     end
 
@@ -383,8 +383,8 @@ For a typical solo/small ecommerce merchant, the current state is one of three m
 ```mermaid
 graph LR
     OWNER[DIY Store Owner] --> Q{Wants better\nconversion}
-    Q -->|most common| NOTHING((Do nothing\n&#8212; stays flat))
-    Q -->|some| GUESS((Guess & ship\nto 100% &#8212; no control))
+    Q -->|most common| NOTHING((Do nothing,\nstays flat))
+    Q -->|some| GUESS((Guess & ship\nto 100%: no control))
     Q -->|rare| TOOL((Adopt testing tool))
     TOOL --> WALL[Manual hypotheses +\nmanual variants +\nanalyst dashboards +\nweeks of waiting]
     WALL -.->|most tests| ABANDON((Abandoned or\ndecided on noise))
@@ -470,12 +470,12 @@ graph LR
         AN((Analyze +\nDecide\nD2))
     end
 
-    subgraph control["Autonomy / Guardrail Engine &#8212; D3"]
+    subgraph control["Autonomy / Guardrail Engine: D3"]
         GATE{Autonomy tier\n+ guardrails}
         ROLL[Real-time health\n+ auto-rollback]
     end
 
-    subgraph exec["Execution Layer &#8212; D1 (abstracted)"]
+    subgraph exec["Execution Layer: D1 (abstracted)"]
         SERVE[Variant Serving\n+ Bucketing]
     end
 

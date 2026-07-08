@@ -126,7 +126,7 @@ graph LR
         SEED[Operator Seed Lists]
     end
 
-    subgraph engine["Scanning & Lead Engine &#8212; THIS DESIGN"]
+    subgraph engine["Scanning & Lead Engine: THIS DESIGN"]
         DISC((Discover\n& Dedupe))
         SCAN((Scan Site))
         ENRICH((Enrich:\ntraffic + contact))
@@ -183,11 +183,11 @@ graph LR
     PV[Discovery & Enrichment Providers]:::ext
     CRM[CRM / Sequencing Tool]:::ext
 
-    OP --- OPm["wants: a ranked, insight-rich,<br/>contactable lead queue &#8212;<br/>minimal manual prospecting"]:::note
+    OP --- OPm["wants: a ranked, insight-rich,<br/>contactable lead queue<br/>minimal manual prospecting"]:::note
     BD --- BDm["wants: ready-to-send drafts<br/>that convert; low friction<br/>from approve to sent"]:::note
     AG --- AGm["goal: discover→scan→enrich→<br/>score→draft cheaply,<br/>compliantly, at volume"]:::note
-    PR --- PRm["wants: relevant outreach about<br/>real problems on their site &#8212;<br/>not to be spammed"]:::note
-    PV --- PVm["supply candidate sites,<br/>size signals, contacts &#8212;<br/>under licence/ToS terms"]:::note
+    PR --- PRm["wants: relevant outreach about<br/>real problems on their site<br/>not to be spammed"]:::note
+    PV --- PVm["supply candidate sites,<br/>size signals, contacts<br/>under licence/ToS terms"]:::note
     CRM --- CRMm["holds leads + outreach status<br/>as the system of record"]:::note
 
 ```
@@ -343,9 +343,9 @@ graph LR
         AUDIT[(Audit Log)]
     end
 
-    subgraph assumed["Assumed / Integrated &#8212; Not Built"]
+    subgraph assumed["Assumed / Integrated: Not Built"]
         PROV[Discovery & Enrichment Providers]
-        WEB[Prospect Websites &#8212; public, read-only]
+        WEB[Prospect Websites: public, read-only]
         CRM[CRM / Sequencing Tool]
         MAIL[Email / Sending Channel]
         LLM[LLM Provider]
@@ -837,8 +837,8 @@ The primary subject the engine acts on is a **candidate ecommerce site**, which 
 ```mermaid
 graph LR
     J1[Candidate<br/>discovered]:::engine
-    J2[Site scanned &#8212;<br/>signal taxonomy]:::engine
-    J3[Size estimated &#8212;<br/>tier + confidence]:::engine
+    J2[Site scanned<br/>signal taxonomy]:::engine
+    J3[Size estimated<br/>tier + confidence]:::engine
     J4{Clears<br/>ICP fit gate?}:::decision
     J5[Contact found<br/>+ verified]:::engine
     J6[Scored & ranked<br/>with reasons]:::engine
