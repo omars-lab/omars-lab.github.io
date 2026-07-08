@@ -13,7 +13,8 @@
 # DODGE this hook. That is a workaround, not a fix — it reads as a typo and still carries
 # the same AI-dash cadence. So a "--" used as a clause/sentence dash is flagged the same
 # way. (Legitimate "--" is NOT flagged: CLI flags like --port, YAML/markdown "---" rules,
-# HTML "<!-- -->" comments, and anything inside a fenced ``` code block.)
+# HTML "<!-- -->" comments, anything inside a fenced ``` code block, and a dash inside a
+# markdown link's [title] text, which is often the verbatim title of an external article.)
 #
 # SCOPE: user-facing content only —
 #   - prose: bytesofpurpose-blog/{docs,blog,designs,changelog}/**.{md,mdx}
@@ -85,11 +86,18 @@ hits=$(awk -v mode="$in_scope" '
 
     flagged=0; reason=""
 
+    # Strip markdown-link DISPLAY TEXT (the [title] / ![alt] bracket text) before dash scanning:
+    # a dash inside a link label is a quoted external title (a faithful reproduction), not the
+    # authors AI-voice cadence. Blinds detection to bracket contents ONLY; a dash in prose or the
+    # (url) still flags. (awk: "[^]]" = any char except "]".)
+    scan=line
+    gsub(/!?\[[^]]*\]/, "", scan)
+
     # 0) em-dash HTML entities — &#8212; (decimal), &#x2014; (hex), &mdash; (named). These
     # RENDER as an em-dash, so they are the same AI-voice tell wearing an entity disguise
     # (the mermaid-label bypass the author-mermaid skill used to recommend). Flag them
     # EVERYWHERE, including inside a mermaid fence (labels are reader-facing).
-    if (line ~ /&#8212;|&#[xX]0*2014;|&mdash;/) {
+    if (scan ~ /&#8212;|&#[xX]0*2014;|&mdash;/) {
       flagged=1; reason="em-dash entity"
     }
 
@@ -98,14 +106,14 @@ hits=$(awk -v mode="$in_scope" '
     if (infence && !inmermaid) { if (flagged) { } else next }
 
     # 1) em-dash U+2014 (literal char) — reader-facing everywhere, incl. mermaid labels
-    if (index(line, "\xE2\x80\x94") > 0) { flagged=1; reason=(reason=="" ? "em-dash" : reason " + em-dash") }
+    if (index(scan, "\xE2\x80\x94") > 0) { flagged=1; reason=(reason=="" ? "em-dash" : reason " + em-dash") }
 
     # Inside a mermaid fence, stop here: the "--" checks below would false-fire on mermaid
     # edge syntax (-->, ---, --). Only the em-dash char + entities apply to mermaid.
     if (inmermaid) { if (flagged) { printf "  L%d [%s]: %s\n", NR, reason, (length(raw)>120?substr(raw,1,117) "...":raw); } next }
 
-    # 2) "--" bypass — scan a SANITIZED copy of the line
-    s=line
+    # 2) "--" bypass — scan a SANITIZED copy of the (link-title-stripped) line
+    s=scan
     # drop inline code spans `...`
     gsub(/`[^`]*`/, "", s)
     # drop html comments <!-- ... -->
@@ -157,7 +165,8 @@ count=$(printf '%s\n' "$hits" | grep -c .)
   echo "occurrence, offering: replace with a comma · a colon · split into two sentences"
   echo "(period) · parentheses · keep as-is. Apply the user's choice, then continue."
   echo "(Flagged: U+2014 \"—\" and \"--\" used as a sentence dash. A lone hyphen, en-dash,"
-  echo " CLI flags like --port, \"---\" rules, <!-- comments -->, and fenced code are NOT flagged.)"
+  echo " CLI flags like --port, \"---\" rules, <!-- comments -->, fenced code, and a dash inside"
+  echo " a markdown link's [title] (a quoted external title) are NOT flagged.)"
 } >&2
 
 exit 2
