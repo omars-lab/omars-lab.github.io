@@ -38,11 +38,20 @@ describe('DecisionTable', () => {
     expect(screen.getByRole('columnheader', {name: 'Choice'})).toBeInTheDocument();
   });
 
+  it('renders a copy-link button on every row', () => {
+    render(<DecisionTable title="Key Decisions" desc="d" decisions={decisions} />);
+    // One "Copy link to Dn" button per decision (4).
+    expect(screen.getAllByRole('button', {name: /copy link to/i})).toHaveLength(decisions.length);
+  });
+
   it('renders the id as a modal button when a decision has detail, a plain link otherwise', () => {
     render(<DecisionTable title="Key Decisions" desc="d" decisions={decisions} />);
-    // D3 has detail → a button; D1 has none → a link.
+    // D3 has detail → the id opens the modal (its own labelled button, distinct from copy).
     const d3row = document.querySelector('tr#d3')!;
-    expect(within(d3row as HTMLElement).getByRole('button')).toBeInTheDocument();
+    expect(
+      within(d3row as HTMLElement).getByRole('button', {name: /why this decision/i}),
+    ).toBeInTheDocument();
+    // D1 has no detail → the id is a plain #d1 link (the copy button is separate).
     const d1row = document.querySelector('tr#d1')!;
     expect(within(d1row as HTMLElement).getByRole('link', {name: 'D1'})).toHaveAttribute('href', '#d1');
   });

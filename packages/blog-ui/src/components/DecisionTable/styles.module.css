@@ -20,12 +20,26 @@
   margin: 0; /* reset the global markdown table margin inside the rounded wrapper */
 }
 
+/* The visible description sits BELOW the table as a <figcaption> (a <caption> inside the
+   table reserved a stray band of space above the header). */
 .caption {
-  caption-side: bottom;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-4) 0;
   font-size: var(--text-body-sm);
   color: var(--ifm-color-content-secondary);
   text-align: left;
+}
+
+/* A screen-reader-only <caption> keeps the table's accessible name without taking layout. */
+.srCaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .table th,
@@ -61,6 +75,37 @@
 .id {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+/* id (link/button) + copy-anchor button on one line. */
+.idRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+/* The copy-link button: quiet until the row is hovered/focused, then it appears. */
+.copyBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  font-size: 0.8em;
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.row:hover .copyBtn,
+.row:focus-within .copyBtn,
+.copyBtn:focus-visible {
+  opacity: 0.7;
+}
+.copyBtn:hover {
+  opacity: 1 !important;
+  background: var(--ifm-color-emphasis-200);
+}
+.copied {
+  opacity: 1 !important;
+  color: var(--ifm-color-primary);
 }
 .idLink,
 .idButton {

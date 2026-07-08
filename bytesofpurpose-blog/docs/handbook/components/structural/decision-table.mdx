@@ -26,7 +26,9 @@ decision has it. A decision with `detail` renders its ID as a button that opens 
 with the full rationale. A build-time gate throws on a duplicate id or an unknown status.
 
 The row anchors are the point: **click a decision's ID** below (or any `[D3](#d3)` link in a
-post) and the row scrolls to center and highlights.
+post) and the row scrolls to center and highlights. **Hover a row** and a 🔗 button appears to
+**copy that row's deep-link** to the clipboard, so you can share a URL that opens on the exact
+decision.
 
 <DecisionTable
   title="Key Decisions"
@@ -83,6 +85,7 @@ click re-flashes it). Deep-links work too, so a shared `...#d3` URL opens on the
 ```
 
 - **Anchors:** each `id` lowercases to the row anchor (`D1` → `#d1`). Ids must be unique.
+- **Copy link:** hovering a row reveals a 🔗 button that copies the row's absolute deep-link.
 - **Choice column** appears only when at least one decision has a `choice`.
 - **Status hover** shows the fixed gloss for the status value plus the decision's `statusNote`.
 - **Detail modal** opens from the ID button when a decision has `detail`; zero modal JS ships

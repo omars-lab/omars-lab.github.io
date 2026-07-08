@@ -3,6 +3,36 @@ import clsx from 'clsx';
 import Tooltip from '../Tooltip';
 import styles from './styles.module.css';
 
+/** Copy text to the clipboard, with the execCommand fallback for older/insecure contexts.
+ *  (Same pattern as the blog's ShareButton / Graph copyAnchorLink.) */
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
+/** The absolute URL of a decision's row anchor, for copy-to-clipboard. */
+function anchorHref(id: string): string {
+  if (typeof window === 'undefined') return `#${id}`;
+  return `${window.location.origin}${window.location.pathname}#${id}`;
+}
+
 /**
  * DecisionTable: the catalog of a design's decisions (D1, D2, … Dn) as an anchored,
  * status-badged table. Distinct from <ComparisonMatrix> (which is criteria x OPTIONS,
@@ -119,6 +149,22 @@ const DecisionTable: React.FC<DecisionTableProps> = (props) => {
   const showChoice = decisions.some((d) => d.choice !== undefined && d.choice !== null);
   const interactive = decisions.some((d) => d.detail !== undefined && d.detail !== null);
 
+  // ---- copy-anchor: a per-row button copies the row's deep-link + flags "copied" briefly. ----
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyAnchor = useCallback(async (id: string) => {
+    const ok = await copyToClipboard(anchorHref(id));
+    if (!ok) return;
+    // Also set the URL hash so the row highlights, matching a click on the id link.
+    if (typeof window !== 'undefined') window.history.replaceState(null, '', `#${id}`);
+    setCopiedId(id);
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    copyTimer.current = setTimeout(() => setCopiedId(null), 1500);
+  }, []);
+  useEffect(() => () => {
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+  }, []);
+
   // ---- :target enhancement: scroll the linked row to center, flash on (re)click. ----
   const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
   const [flashId, setFlashId] = useState<string | null>(null);
@@ -173,7 +219,7 @@ const DecisionTable: React.FC<DecisionTableProps> = (props) => {
     <figure className={clsx(styles.wrap, className)} style={style}>
       <div className={styles.scroll}>
         <table className={styles.table}>
-          {desc && <caption className={styles.caption}>{desc}</caption>}
+          {desc && <caption className={styles.srCaption}>{desc}</caption>}
           <thead>
             <tr>
               <th scope="col" className={styles.colId}>
@@ -200,24 +246,36 @@ const DecisionTable: React.FC<DecisionTableProps> = (props) => {
                   className={clsx(styles.row, flashId === a && styles.flash)}
                 >
                   <th scope="row" className={styles.id}>
-                    {hasDetail ? (
-                      <button
-                        type="button"
-                        className={styles.idButton}
-                        aria-haspopup="dialog"
-                        aria-label={`${d.id}: why this decision`}
-                        onClick={() =>
-                          setActive({id: d.id, decision: d.decision, detail: d.detail})
-                        }
-                      >
-                        {d.id}
-                        <span className={styles.whyDot} aria-hidden="true" />
-                      </button>
-                    ) : (
-                      <a href={`#${a}`} className={styles.idLink}>
-                        {d.id}
-                      </a>
-                    )}
+                    <span className={styles.idRow}>
+                      {hasDetail ? (
+                        <button
+                          type="button"
+                          className={styles.idButton}
+                          aria-haspopup="dialog"
+                          aria-label={`${d.id}: why this decision`}
+                          onClick={() =>
+                            setActive({id: d.id, decision: d.decision, detail: d.detail})
+                          }
+                        >
+                          {d.id}
+                          <span className={styles.whyDot} aria-hidden="true" />
+                        </button>
+                      ) : (
+                        <a href={`#${a}`} className={styles.idLink}>
+                          {d.id}
+                        </a>
+                      )}
+                      <Tooltip content={copiedId === a ? 'Link copied' : `Copy link to ${d.id}`}>
+                        <button
+                          type="button"
+                          className={clsx(styles.copyBtn, copiedId === a && styles.copied)}
+                          aria-label={`Copy link to ${d.id}`}
+                          onClick={() => copyAnchor(a)}
+                        >
+                          <span aria-hidden="true">{copiedId === a ? '✓' : '🔗'}</span>
+                        </button>
+                      </Tooltip>
+                    </span>
                   </th>
                   <td className={styles.decision}>{d.decision}</td>
                   <td className={styles.statusCell}>
@@ -234,6 +292,8 @@ const DecisionTable: React.FC<DecisionTableProps> = (props) => {
           </tbody>
         </table>
       </div>
+
+      {desc && <figcaption className={styles.caption}>{desc}</figcaption>}
 
       {interactive && (
         <dialog
