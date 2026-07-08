@@ -1,16 +1,86 @@
 ---
 slug: /components/diagrams/diagrams-mindnode
-usage_pattern: 'mindnode'
+usage_pattern:
+  - '<MindMap'
 kind: showcase
-title: '📊 Embedded MindNode Diagrams'
-description: Embedding MindNode mind-maps into a Docusaurus post to share branching ideas and visual outlines.
+title: '📊 MindNode-style mind maps'
+description: 'A themed, clickable mind map rendered as inline SVG from Mermaid mindmap text. Looks like Apple MindNode, adds real node links, and comes from a .mindnode file via a converter + preview CLI.'
 authors: [oeid]
-tags: [docusaurus, tools]
-date: 2025-01-30T10:00
-draft: true
+tags: [docusaurus, react, components, diagram, mindnode]
+date: 2026-07-07T10:00
+draft: false
 ---
 
-<!-- # Embedded MindNodes
-<div class="mindnode" id="hUeMkB8zxTG87BXHyJJWziGRgXTxyrTNqrk7yjYw"></div> -->
+`MindMap` renders a mind map as one inline SVG from ordinary [Mermaid mindmap](https://mermaid.js.org/syntax/mindmap.html)
+text, styled to look like Apple MindNode's default (cream canvas, white rounded nodes, brown
+borders, olive connectors). It parses that text itself rather than handing it to Mermaid,
+because Mermaid's mindmap renderer supports neither clickable nodes nor reliable per-node
+theming. That buys the two things this component is for: the MindNode look, and **real links**.
+
+A node whose entire label is a markdown link becomes an anchor: `[Text](#heading)` jumps to a
+heading on the same page, `[Text](/blog/slug#anchor)` navigates to another page, and an
+`https://` link opens in a new tab. Malformed mindmap text throws at build time, so an
+unreadable diagram fails the build instead of shipping.
+
+<MindMap title="Orchestrating Roles" caption="Each node is a link to a section elsewhere on the site.">{`
+mindmap
+  root((Orchestrating Roles))
+    [The Starter](/initiatives/mindmaps-from-mindnode#the-starter)
+    [The Executor](/initiatives/mindmaps-from-mindnode#the-executor)
+    [The Finisher](/initiatives/mindmaps-from-mindnode#the-finisher)
+`}</MindMap>
+
+````mdx
+<MindMap title="Orchestrating Roles">{`
+mindmap
+  root((Orchestrating Roles))
+    [The Starter](#the-starter)
+    [The Executor](#the-executor)
+    [The Finisher](#the-finisher)
+`}</MindMap>
+````
+
+Pass the mermaid text as children in a **template literal** so `#`, parentheses, and newlines
+survive MDX. Props:
+
+- `title` (required) : the accessible SVG title.
+- `theme` : `mindnode` (default, cream/brown) or `blog` (the site's green/tea design tokens, so
+  the map matches the rest of the blog). Both respect light and dark mode automatically.
+- `layout` : `ltr` (default) or `spread` (MindNode's two-sided look, root centered).
+- `density` : `comfortable` (default) or `compact` (tighter spacing for large maps).
+- `caption`, plus `className`/`style` which pass through to the figure (so you can override any
+  `--bopmind-*` token inline for a one-off color).
+
+A node can carry an accent tint with a mermaid `:::name` class (`green`, `mint`, `pink`, `blue`,
+`amber`, `violet`) : write `The Starter:::green` or the more forgiving `The Starter ::: green`.
+The example below uses the blog theme.
+
+<MindMap title="Priorities" theme="blog" caption="Per-node accents via a :::name class.">{`
+mindmap
+  root((Priorities))
+    Ship it:::green
+    Risky:::pink
+    Explore:::blue
+    Later:::amber
+`}</MindMap>
+
+## From a MindNode file
+
+The text above does not have to be hand-written. `scripts/convert-mindnode.py` turns a
+`.mindnode` bundle (whose `contents.xml` is really a binary plist) into this Mermaid text, and
+`scripts/render-mindmap.mjs` rasterizes any mind map to a PNG **without building the site**, so
+you can compare it to the bundle's own QuickLook preview before embedding it:
+
+````bash
+# convert a bundle to mermaid text
+python3 scripts/convert-mindnode.py "path/to/Foo.mindnode"
+
+# render straight to a PNG and eyeball it against the original
+node scripts/render-mindmap.mjs --mindnode "path/to/Foo.mindnode" --out /tmp/foo
+open /tmp/foo.png "path/to/Foo.mindnode/QuickLook/Preview.jpg"
+````
+
+The full walk-through, including how to add the links, is in the `import-mindnode` skill, and
+the [Mind Maps From MindNode](/initiatives/mindmaps-from-mindnode) post is a worked example.
 
 <UsedIn slug="/components/diagrams/diagrams-mindnode" />

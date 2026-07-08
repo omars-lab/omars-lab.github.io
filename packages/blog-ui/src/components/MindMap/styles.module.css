@@ -1,0 +1,185 @@
+/* MindMap — inline-SVG mind map, themed to look like Apple MindNode's default
+   style (the look of the source .mindnode QuickLook preview): a warm cream
+   canvas, white rounded nodes with a dark-brown border, and pale-olive
+   connectors. The palette is captured from the .mindnode bundle's own style:
+   node border rgba(0.4,0.2,0.0) = #663300, connectors rgba(0.8,0.8,0.6) = #cccc99,
+   text rgba(0.33,0.33,0.33) = #535353, canvas the warm cream from the preview.
+
+   The --bopmind-* vars are the local theming contract (mirrors FlowDiagram's
+   --bopflow-*). Dark mode deepens the canvas and lightens ink so the MindNode
+   character survives html[data-theme='dark']. */
+
+.mind {
+  --bopmind-canvas: #fdf3df;
+  --bopmind-node-fill: #fffdf8;
+  --bopmind-node-border: #663300;
+  --bopmind-node-border-soft: #9c7a4d;
+  --bopmind-connector: #c9c48f;
+  --bopmind-ink: #535353;
+  --bopmind-root-fill: #fff8ec;
+  --bopmind-link: #8a4b1f;
+  --bopmind-radius: 14px;
+
+  margin: var(--space-8, 3.5rem) 0;
+  background: var(--bopmind-canvas);
+  border-radius: var(--bopmind-radius);
+  border: 1px solid color-mix(in oklab, var(--bopmind-node-border) 14%, transparent);
+  padding: var(--space-4, 1rem);
+}
+
+html[data-theme='dark'] .mind {
+  --bopmind-canvas: #2a2320;
+  --bopmind-node-fill: #37302b;
+  --bopmind-node-border: #c69a63;
+  --bopmind-node-border-soft: #8a6f4c;
+  --bopmind-connector: #7d7350;
+  --bopmind-ink: #ece3d4;
+  --bopmind-root-fill: #40352c;
+  --bopmind-link: #e0a86a;
+}
+
+/* theme="blog": re-point the same tokens at the blog's design system (brand green,
+   page surfaces, heading ink) so the map matches the rest of the site. Because
+   these alias real --ifm-* tokens, they dark-swap for free — Docusaurus already
+   swaps those per color mode. The dark override below exists ONLY to out-specify
+   the `html[data-theme='dark'] .mind` mindnode block (same specificity), which
+   would otherwise win and repaint the tokens brown in dark mode; it re-asserts the
+   same --ifm aliases so the values still track the blog's dark palette. */
+.themeBlog,
+html[data-theme='dark'] .themeBlog {
+  --bopmind-canvas: var(--ifm-background-surface-color, #f4f6f5);
+  --bopmind-node-fill: var(--ifm-background-color, #ffffff);
+  --bopmind-node-border: var(--ifm-color-primary, #3c7256);
+  --bopmind-node-border-soft: color-mix(in oklab, var(--ifm-color-primary, #3c7256) 55%, var(--ifm-background-surface-color, #f4f6f5));
+  --bopmind-connector: color-mix(in oklab, var(--ifm-color-primary, #3c7256) 45%, var(--ifm-background-surface-color, #f4f6f5));
+  --bopmind-ink: var(--ifm-heading-color, #14201a);
+  --bopmind-root-fill: color-mix(in oklab, var(--brand-green, #448061) 14%, var(--ifm-background-surface-color, #f4f6f5));
+  --bopmind-link: var(--ifm-color-primary, #3c7256);
+}
+
+.scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.canvas {
+  width: 100%;
+  height: auto;
+  min-width: 300px;
+  display: block;
+}
+
+/* ---- Connectors ---- */
+.connector {
+  stroke: var(--bopmind-connector);
+  fill: none;
+  stroke-linecap: round;
+}
+
+/* ---- Nodes ---- */
+.box {
+  fill: var(--bopmind-node-fill);
+  stroke: var(--bopmind-node-border);
+}
+.depth-0 {
+  fill: var(--bopmind-root-fill);
+  stroke: var(--bopmind-node-border);
+}
+.depth-1 {
+  stroke: var(--bopmind-node-border);
+}
+/* deeper nodes use the softer border so the eye follows the hierarchy inward */
+.depth-2,
+.depth-3 {
+  stroke: var(--bopmind-node-border-soft);
+}
+
+/* ---- Per-node accents (a mermaid `:::name` class) : tint fill + border with the
+   blog's tea-pastel accents. These win over the depth border/fill. Light values;
+   dark mode deepens them below. The accent overrides the fill/border set above. */
+.accent-green { fill: #d2ffc4; stroke: #4a8a69; }
+.accent-mint { fill: #adfff5; stroke: #3d9c94; }
+.accent-pink { fill: #ffc5d3; stroke: #c96b83; }
+.accent-blue { fill: #cfe3ff; stroke: #5b86c2; }
+.accent-amber { fill: #ffe6b0; stroke: #b58a3d; }
+.accent-violet { fill: #e3d1ff; stroke: #8a6bc2; }
+
+html[data-theme='dark'] .accent-green { fill: #2f5d47; stroke: #6fbf95; }
+html[data-theme='dark'] .accent-mint { fill: #2a5551; stroke: #6fbfb5; }
+html[data-theme='dark'] .accent-pink { fill: #5d2f3d; stroke: #bf6f87; }
+html[data-theme='dark'] .accent-blue { fill: #2f435d; stroke: #6f92bf; }
+html[data-theme='dark'] .accent-amber { fill: #5d4a2f; stroke: #bfa06f; }
+html[data-theme='dark'] .accent-violet { fill: #463d5d; stroke: #9a6fbf; }
+
+.label {
+  fill: var(--bopmind-ink);
+  font-family: 'Gill Sans', 'Gill Sans MT', var(--font-sans-body, system-ui);
+  font-size: 14px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.labelRoot {
+  font-weight: 600;
+}
+
+/* ---- Linked nodes : real anchors ---- */
+.nodeLink {
+  cursor: pointer;
+  text-decoration: none;
+}
+.boxLink {
+  stroke: var(--bopmind-link);
+}
+.labelLink {
+  fill: var(--bopmind-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.nodeLink:hover .boxLink,
+.nodeLink:focus-visible .boxLink {
+  stroke-width: 2.6;
+}
+.nodeLink:hover .labelLink {
+  fill: var(--bopmind-node-border);
+}
+.nodeLink:focus-visible {
+  outline: 2px solid var(--bopmind-link);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Caption ---- */
+.caption {
+  margin-top: var(--space-3, 0.75rem);
+  font-size: var(--text-caption, 0.85rem);
+  color: var(--ifm-color-content-secondary, #5b625e);
+  text-align: center;
+}
+
+/* ---- Motion : branches draw + nodes fade, staggered by pre-order index ---- */
+.node {
+  animation: bopmind-fade 320ms var(--ease-out, ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+.connector {
+  animation: bopmind-fade 300ms var(--ease-out, ease-out) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+@keyframes bopmind-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .connector {
+    animation: none;
+    opacity: 1;
+  }
+}

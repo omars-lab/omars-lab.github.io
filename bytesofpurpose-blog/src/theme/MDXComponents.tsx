@@ -51,6 +51,7 @@ import {
 import {
   DiagramWithFootnotes,
   FlowDiagram,
+  MindMap,
   ComparisonMatrix,
   Accordion,
   UseCaseDiagram,
@@ -134,6 +135,15 @@ export default {
   // flow/loop/handoff instead of hand-authoring mermaid; DiagramWithFootnotes still wraps a
   // hand-authored mermaid diagram when you want the numbered-legend treatment.
   FlowDiagram,
+  // MindMap: a themed mind map rendered as inline SVG from Mermaid mindmap text (the author
+  // writes ordinary `mindmap` syntax as children, so it also renders on mermaid.live). On top
+  // of mermaid it adds real clickable nodes: a node whose label is a markdown link
+  // `[Text](#anchor)` renders as an <a> to a same-page heading or another page. Themed to look
+  // like Apple MindNode (cream canvas, white nodes, brown borders). Parses + lays out itself
+  // because mermaid's mindmap renderer supports neither node links nor reliable theming. Feed it
+  // from a .mindnode bundle via scripts/convert-mindnode.py (see the import-mindnode skill). Use
+  // <MindMap title="...">{`mindmap\n  root((...))\n    ...`}</MindMap>.
+  MindMap,
   // ComparisonMatrix: a criteria x options decision table (options are columns, criteria rows;
   // the chosen option's column is highlighted + badged; yes/no/partial render as ●/○/◐ marks
   // with sr-only labels). A real accessible <table> that scrolls on mobile; a build-time gate

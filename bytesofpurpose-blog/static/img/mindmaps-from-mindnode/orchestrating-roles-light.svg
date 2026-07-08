@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 495 244" width="495" height="244" role="img" aria-label="Orchestrating Roles">
+  <rect x="0" y="0" width="495" height="244" rx="14" fill="#fdf3df"/>
+  <g>
+    <path d="M 216.0 106.0 C 258.0 106.0, 258.0 48.0, 300.0 48.0" fill="none" stroke="#c9c48f" stroke-width="2.5" stroke-linecap="round" transform="translate(16 16)"/>
+    <path d="M 216.0 106.0 C 258.0 106.0, 258.0 106.0, 300.0 106.0" fill="none" stroke="#c9c48f" stroke-width="2.5" stroke-linecap="round" transform="translate(16 16)"/>
+    <path d="M 216.0 106.0 C 258.0 106.0, 258.0 164.0, 300.0 164.0" fill="none" stroke="#c9c48f" stroke-width="2.5" stroke-linecap="round" transform="translate(16 16)"/>
+  </g>
+  <g>
+    <g transform="translate(16 16)"><rect x="28.0" y="86.0" width="188" height="40" rx="20" fill="#fff8ec" stroke="#663300" stroke-width="2.4"/><text x="122.0" y="106.0" fill="#535353" font-family="'Gill Sans','Gill Sans MT',system-ui,sans-serif" font-size="14" font-weight="600" text-anchor="middle" dominant-baseline="central">Orchestrating Roles</text></g>
+    <g transform="translate(16 16)"><rect x="300.0" y="28.0" width="128" height="40" rx="10" fill="#fffdf8" stroke="#663300" stroke-width="1.8"/><text x="364.0" y="48.0" fill="#535353" font-family="'Gill Sans','Gill Sans MT',system-ui,sans-serif" font-size="14" font-weight="500" text-anchor="middle" dominant-baseline="central">The Starter</text></g>
+    <g transform="translate(16 16)"><rect x="300.0" y="86.0" width="135" height="40" rx="10" fill="#fffdf8" stroke="#663300" stroke-width="1.8"/><text x="367.5" y="106.0" fill="#535353" font-family="'Gill Sans','Gill Sans MT',system-ui,sans-serif" font-size="14" font-weight="500" text-anchor="middle" dominant-baseline="central">The Executor</text></g>
+    <g transform="translate(16 16)"><rect x="300.0" y="144.0" width="135" height="40" rx="10" fill="#fffdf8" stroke="#663300" stroke-width="1.8"/><text x="367.5" y="164.0" fill="#535353" font-family="'Gill Sans','Gill Sans MT',system-ui,sans-serif" font-size="14" font-weight="500" text-anchor="middle" dominant-baseline="central">The Finisher</text></g>
+  </g>
+</svg>

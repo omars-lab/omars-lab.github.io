@@ -1,7 +1,12 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    // ts-jest transforms .tsx test files with this config; the Docusaurus base
+    // tsconfig is not reliably picked up for JSX emit under ts-jest, so set it
+    // explicitly (the automatic runtime needs no React import in scope).
+    "jsx": "react-jsx",
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.test.ts",
