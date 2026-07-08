@@ -1,0 +1,27 @@
+{
+  "_comment": "Durable record of every personalbook role imported into /journey/roles/. One entry per role. Blog-side ONLY (personalbook is never mutated). excluded_files is the auditable privacy trail: which private artifacts the importer deliberately left behind. See SKILL.md.",
+  "version": 1,
+  "roles": {
+    "The Analyzer": {
+      "source_role_path": "roles/The Analyzer",
+      "journey_doc": "bytesofpurpose-blog/docs/journey/roles/the-analyzer.md",
+      "slug": "/roles/the-analyzer",
+      "status": "drafted",
+      "spun_off_posts": [
+        {
+          "slug": "/a-framework-for-quantifying-yourself",
+          "path": "bytesofpurpose-blog/blog/2025-09-17-a-framework-for-quantifying-yourself.md",
+          "note": "Pre-existing framework post; the role doc links to it. Left as-is."
+        }
+      ],
+      "excluded_files": [
+        "artifacts/obligations.md (intent triad - private)",
+        "artifacts/desires.md (intent triad - private)",
+        "artifacts/motivations.md (intent triad - private)",
+        "artifacts/*.md bodies (personal application: dated todos, private URLs)",
+        "artifacts/aliases.md (folded into 'Role evolution' as summary only)"
+      ],
+      "reconciled_at_personalbook_commit": "1cea0acb6bc50839227553cab82f4d1111384e0c"
+    }
+  }
+}

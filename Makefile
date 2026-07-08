@@ -509,6 +509,20 @@ validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registere
 validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
 	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )
 
+validate-role-privacy: ## FAIL-CLOSED leak gate: a /journey/roles/ post must carry NO private personalbook content
+	@# Exit 2 if a role post leaks private material (the intent triad, dated personal todos, family/
+	@# finance/medical specifics, copied artifact bodies). A role doc is authored from a PRIVATE
+	@# personalbook role folder and must carry only the publishable half. The BLOCKING PostToolUse hook
+	@# .claude/hooks/validate-role-privacy-hook.sh runs this --file-scoped on a role-post edit.
+	@# Owning skill: import-personalbook-role.
+	( cd ${SITEROOT} && node scripts/validate-role-privacy.js )
+
+validate-roles: validate-role-privacy ## Gate the /journey/roles posts: the leak gate (blocking) + the structure check
+	@# validate-role-privacy (above) is the fail-closed leak gate. This adds the warn-tier structure
+	@# check (each role doc has why-it-matters/Skills/Artifacts/Habits + a healthy slug/description).
+	@# The structure warn-hook is .claude/hooks/validate-role-doc-hook.sh. Owning skill: import-personalbook-role.
+	( cd ${SITEROOT} && node scripts/validate-role-doc.js )
+
 test-visual: ## Visual-regression: screenshot the hero (both A/B variants) across DPR 1+2, viewports, light+dark vs committed baselines
 	# Catches retina-only / animation-frame artifacts (a compositing seam, a flash white-out, overflow)
 	# that the functional DPR=1 specs are blind to. Compares against committed baselines.

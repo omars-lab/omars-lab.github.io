@@ -1,0 +1,65 @@
+{
+  "_comment": "Reconciled understanding of how a personalbook role folder is STRUCTURED, so the importer never drifts from how roles are actually shaped. Rebuilt by the skill's Step 0 reconcile: read the SKILL.md of each personalbook role-structuring skill (they OWN the definition of each subfolder), then update this. Re-reconcile when personalbook's HEAD advances past reconciled_at_personalbook_commit AND the structuring skills changed. See SKILL.md 'Step 0'.",
+  "reconciled_at_personalbook_commit": "1cea0acb6bc50839227553cab82f4d1111384e0c",
+  "personalbook_repo": "/Users/omareid/Workspace/git/personalbook",
+  "structuring_skills": [
+    "extract-role-skills",
+    "establish-role-habits",
+    "establish-role-learning",
+    "structure-role-purpose",
+    "extract-obligations-desires"
+  ],
+  "subfolders": {
+    "Overview.md": {
+      "owner": "structure-role-purpose",
+      "is": "The role's front page: Core Philosophy (its WHY / reason-for-being), Key Focus Areas, Role Evolution (aliases/history), and index tables of Skills/Artifacts/Habits/Knowledge.",
+      "publishable": true,
+      "use_for": ["why this role matters", "what the role does", "role evolution", "the skill/habit index tables (labels + essences)"]
+    },
+    "skills/": {
+      "owner": "extract-role-skills",
+      "is": "Reusable PROCESS: how the role does a thing (self-questions, method). Each skills/<kebab>/SKILL.md has a name + description + metadata.scope.",
+      "publishable": true,
+      "use_for": ["the Skills-I-use section: summarize each skill's name + description essence (transferable process only)"]
+    },
+    "knowledge/": {
+      "owner": "extract-role-skills",
+      "is": "Declarative REFERENCE the role already knows/cites: facts, concepts, definitions, mental models (what X IS).",
+      "publishable": true,
+      "caveat": "Scan per-file: a moved-from note can still name a private person/event. The leak gate is the backstop.",
+      "use_for": ["the What-I-know section: name the concepts/distinctions, summarize where transferable"]
+    },
+    "habits/": {
+      "owner": "establish-role-habits",
+      "is": "Recurring PRACTICES that join skills x artifacts. Each habits/<name>/HABIT.md has name + description + frequency + Purpose + Skills Exercised + Artifacts Updated.",
+      "publishable": true,
+      "use_for": ["the Habits-I-keep section: name + cadence (frequency) + what it does, from description/Purpose"]
+    },
+    "artifacts/": {
+      "owner": "extract-role-skills / extract-obligations-desires",
+      "is": "The user's PERSONAL APPLICATION: dated todos, private URLs, family/possession specifics, and the intent triad. Every artifact file carries `blog: no`.",
+      "publishable": false,
+      "rule": "NEVER copy an artifact BODY into a role post. Describe the KINDS of artifacts the role produces, derived from the Overview's Artifacts-table LABELS + the skill names, not the file contents.",
+      "private_always": [
+        "artifacts/obligations.md",
+        "artifacts/desires.md",
+        "artifacts/motivations.md"
+      ],
+      "private_always_note": "The intent triad (obligations = internal self-obligations; desires = wants; motivations = linked want->need). These are the hardest-private files and must never surface, even summarized."
+    },
+    "learning cluster (artifacts/learning-plans.md, reading-list.md, experiment-list.md, ...)": {
+      "owner": "establish-role-learning",
+      "is": "Forward-looking: what the role wants to learn NEXT (subjects, books, experiments).",
+      "publishable": "partial",
+      "caveat": "Often mixes named private mentors / specific personal resources. Treat as artifact-body private by default; only a role's generic learning THEMES are safe, and only if leak-clean.",
+      "use_for": ["optional: a light 'what this role is learning next' note, themes only"]
+    },
+    "Responsibilities.md / Activities.md": {
+      "owner": "legacy / structure-role-purpose",
+      "is": "Older role notes. Activities.md is the raw activity + planning-question material (the pre-structuring source).",
+      "publishable": "as influence",
+      "use_for": ["enrich 'what the role does'; can seed a spun-off /initiatives framework post; NOT copied wholesale"]
+    }
+  },
+  "private_signal_note": "The leak gate scripts/validate-role-privacy.js is the fail-closed backstop for all of the above: it scans the produced role POST (not the source) for intent-triad bullets, family names, note-keeping artifacts (@done/#THOUGHT/>dates), personal Google-doc URLs, and finance/medical/immigration specifics. If personalbook grows a NEW private file-kind, add its signal there in the same reconcile."
+}
