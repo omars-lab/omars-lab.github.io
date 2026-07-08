@@ -26,6 +26,7 @@ This repo runs **mermaid 11.15** — all types below are verified to render here
 | Dated milestones | `timeline` | chronological events |
 | What a system TOUCHES at its boundary | `architecture-beta` (context) | hub-and-spoke; see Context diagram |
 | **Use-case diagram (UML)** | `flowchart` (no native type) | actors + oval use cases; see recipe |
+| **Fork in the road** (diverging future options) | `flowchart` | one foundation node fans out to N divergent paths; see recipe. For a North Star / vision section naming >1 direction |
 
 **Three "boundary/relationship" diagrams that are easy to confuse — pick deliberately:**
 - **Flow** (`flowchart`/`graph`): something MOVES through steps (A→B→C). Activity/data flow.
@@ -172,6 +173,25 @@ flowchart LR
 ```
 Keep actors on one side (`flowchart LR` puts them left), the use cases inside the boundary,
 and few associations per actor so the lines stay clean (visual-verify).
+
+### fork in the road (diverging future directions — for a North Star / vision section)
+When a design's closing vision names MORE THAN ONE possible future, show that the options DIVERGE
+rather than listing them: a `flowchart LR` where the current foundation is one node that fans out to
+N future-direction nodes. Each branch label is the trigger/bet that leads down that path; the
+direction nodes are stadium `([...])` ovals (a "destination" shape). Keep the paths as siblings (do
+NOT chain them) so the fork reads as *alternatives*, not a sequence. Do NOT hardcode colors — the
+theme colors it. Verified-rendering skeleton:
+```
+flowchart LR
+  found([Today: usage reporting])
+  found -->|"admin the fleet"| a([Admin control plane])
+  found -->|"compare teams"| b([Benchmarking service])
+  found -->|"cut spend"| c([Cost-optimization advisor])
+  found -->|"prove compliance"| d([Compliance export])
+```
+This is a `refine-design-post` axis-4 candidate: the skill proposes it when a North Star section names
+2+ directions. One direction needs no fork (a sentence does). Label the branches with the bet that
+opens each path, and keep the direction nodes short (they are destinations, not descriptions).
 
 ### context diagram (architecture-beta hub — what a system TOUCHES)
 Shows a system and the actors/stores/dependencies at its boundary — NOT internal flow. One

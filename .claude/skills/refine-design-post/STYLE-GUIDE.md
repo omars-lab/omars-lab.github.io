@@ -27,6 +27,11 @@
 
 ## Rules to APPLY (trim toward these)
 
+- **Name the tech for what it DOES, not what it aspires to.** The title + system name must match the
+  built purpose. A name that overclaims sets a false expectation the body contradicts. *(Real:
+  "A Control Plane for a Claude Code Fleet" implies an admin control plane, but the design builds a
+  reporting/observability tool — the control-plane idea belongs in an optional North Star section as a
+  future direction, not the name.)* Accuracy-to-purpose; distinct from `name-post` (title voice).
 - **State a thing once.** Kill the Scope-note → bullets → table → "restated" repetition of the same
   invariant. State it once, reference it after. *(Real: `fleetplane.mdx` states its invariants 3×.)*
 - **Never render the same structure twice.** A mermaid diagram AND an ASCII/prose redraw of the same
@@ -42,6 +47,10 @@
 - **Prefer a table/diagram for parallel structure.** Parallel arms/options/mappings, or an
   input→transform→output flow, read faster as a table or a mermaid flow than as paragraphs. (Propose
   it; `upgrade-post` inserts it.)
+- **Tab a long mockups / "what it looks like" stack.** When the CX section stacks several
+  self-contained mockups vertically, wrap them in `<Tabs>`/`<TabItem>` (one tab per surface) so the
+  reader picks a screen instead of scrolling past all of them. A big vertical mock stack is the visual
+  analogue of a wall of text. *(Real: fleetplane's 4 browser mocks + a walkthrough, 176-line sidecar.)*
 - **No em-dash in the rendered body.** Repo-wide reader-voice rule — a literal `—` reads as AI voice
   and the `em-dash-voice-hook.sh` BLOCKS it. Use a period, a colon, or a parenthesis. (This rule is
   about the POST body, not this guide file.)

@@ -99,6 +99,26 @@ Optional:
 - Why it's built this way (the reflective coda the author favors).
 - What carried over from a prior build.
 
+## North Star / vision (OPTIONAL, closing)
+
+An optional closing section that names where the foundation built here **could** go next. It keeps
+the built thing HONEST (the design does X) while capturing the AMBITION (X is the foundation for Y, Z).
+
+Required *if the section is present*:
+- **What does the foundation enable next?** One or more possible future directions.
+- **Framed as possibilities, not the plan.** These are directions the work COULD take, explicitly ONE
+  among OTHERS — not a committed goal, not a description of what exists. (Motivating case: a fleet
+  *reporting* tool is the foundation that could later grow into an admin *control plane* — but it
+  could equally go other ways: a benchmarking service, a cost-optimization advisor, a compliance
+  export.) This is also the honest home for an ambition the NAME must not overclaim (see the
+  name-vs-purpose check in `SKILL.md`).
+
+**Visual when there are multiple directions: a "fork in the road".** When the vision names more than
+one possible path, show that the options DIVERGE with a branching diagram — a `flowchart` where the
+current foundation node fans out to N future-direction nodes (see `author-mermaid` for the "fork in
+the road" recipe). One direction needs no fork; two or more do. Propose it; `author-mermaid` /
+`upgrade-post` own the insertion.
+
 ## Recurring failure modes (from audits)
 
 - **The silent "who" drop in the opener.** The most common opener miss: it answers *why this
