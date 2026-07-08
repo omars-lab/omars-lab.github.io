@@ -1,0 +1,183 @@
+---
+slug: choosing-a-diagram
+title: 'Choosing a Diagram, Before Drawing One'
+kind: design-story
+sidebar_label: "Choosing a Diagram"
+description: "The blog can draw a dozen kinds of diagram. The hard part is knowing which. So I built a chooser that starts from what you are trying to show."
+authors: [oeid]
+tags: [blogging, generative-ai, claude, diagram]
+date: 2026-07-07T11:00
+draft: false
+---
+
+Every time I sat down to add a diagram to a post, I lost a few minutes to the same small paralysis:
+not how to draw the thing, but which KIND of thing to draw. This blog can render a flow, a mind
+map, a use-case, a sequence, a state machine, a system topology, a comparison, a board, and more.
+That richness is a gift right up until the blank page, where it becomes a dozen doors and no sign
+telling me which one. So I built the sign: a chooser that starts from what I am trying to show and
+routes me to the one diagram type that fits.
+
+<!-- truncate -->
+
+## The problem is choosing, not drawing
+
+Drawing a diagram here is genuinely easy. There is a skill for mermaid syntax, a catalog for the
+custom components, an importer for MindNode files. The mechanics are solved. What was never solved
+is the decision that comes first: should this idea be a flowchart at all, or is it really a
+comparison wearing a flowchart's clothes? A tool held wrong is worse than no tool. A sequence
+forced into a flow, or a topology drawn as a timeline, makes the reader do the work the diagram was
+supposed to do for them.
+
+The fix was to stop starting from the tool. The chooser's very first question is not "which diagram
+do you want," it is "what are you trying to show." That one reframing does most of the work, because
+intent maps to type far more reliably than taste does.
+
+## The decision, as a picture
+
+Here is the chooser's spine: an opening question that sorts the intent into a family, and then a
+narrowing that lands on one type and the skill that authors it. Click a leaf to see what that type
+is for.
+
+<FlowDiagram title="Choosing a diagram" shape="branch"
+  desc="Start from what you are trying to show; the answer routes to one diagram type and the skill that owns it."
+  nodes={[
+    {id: 'q', label: 'What are you showing?'},
+    {id: 'move', label: 'Movement'},
+    {id: 'who', label: 'Who uses what'},
+    {id: 'tree', label: 'A hierarchy'},
+    {id: 'choice', label: 'A choice'},
+    {id: 'flow', label: 'FlowDiagram', detail: 'A directed flow: pipeline, loop, sequence, branch, or swimlane.'},
+    {id: 'usecase', label: 'UseCaseDiagram', detail: 'Actors outside a boundary reaching the capabilities they use.'},
+    {id: 'mindmap', label: 'MindMap', detail: 'A single-rooted hierarchy with clickable, themed nodes.'},
+    {id: 'matrix', label: 'ComparisonMatrix', detail: 'Options scored against criteria, the chosen column highlighted.'},
+  ]}
+  edges={[
+    {from: 'q', to: 'move'},
+    {from: 'q', to: 'who'},
+    {from: 'q', to: 'tree'},
+    {from: 'q', to: 'choice'},
+    {from: 'move', to: 'flow'},
+    {from: 'who', to: 'usecase'},
+    {from: 'tree', to: 'mindmap'},
+    {from: 'choice', to: 'matrix'},
+  ]}
+/>
+
+Fittingly, that picture is itself a decision the chooser would make: it is movement through a
+branching set of questions, so it is a [FlowDiagram](/handbook/components/diagrams/diagrams-flow-charts). The
+diagram practices what it preaches.
+
+## Four walks through it, each one drawn
+
+The fastest way to trust a chooser is to see what it hands back. So here are four real requests,
+each carried to its recommended type and rendered the way it would ship in a post. Notice how
+different they look: that difference IS the argument. A flow, a hierarchy, a set of actors, and a
+scored choice are not the same picture, and forcing any of them into a flowchart would lose what
+makes it legible.
+
+### "How does a request get from the browser to the database?"
+
+That is movement through steps, so the chooser lands on a flow. A clean line, a loop, or a fork
+is a `<FlowDiagram>`; only when it needs something the component cannot express does it drop to a
+mermaid flowchart. Here the request travels through a cache, an auth check that can reject, and
+on to the database.
+
+<FlowDiagram title="A request path" legend
+  desc="A browser request passes through a cache and an auth check before it reaches the database."
+  nodes={[
+    {id: 'browser', label: 'Browser', kind: 'external'},
+    {id: 'cache', label: 'Edge cache', kind: 'store', detail: 'Serves a hit without touching the origin.'},
+    {id: 'auth', label: 'Auth check', detail: 'Rejects an unauthenticated request before it reaches data.'},
+    {id: 'api', label: 'API server'},
+    {id: 'db', label: 'Database', kind: 'store'},
+  ]}
+  edges={[
+    {from: 'browser', to: 'cache'},
+    {from: 'cache', to: 'auth', label: 'miss'},
+    {from: 'auth', to: 'api', label: 'ok'},
+    {from: 'api', to: 'db'},
+  ]}
+/>
+
+### "How do these role ideas relate under one theme?"
+
+That is a hierarchy, not movement, so it routes to a
+[mind map](/handbook/components/diagrams/diagrams-mindnode). If I want the branches clickable and
+themed to the site, that is the `<MindMap>` component; a throwaway sketch could stay a plain
+mermaid mindmap. This one maps the three roles from an earlier post, each branch a link.
+
+<MindMap title="Orchestrating roles" theme="blog"
+  caption="A hierarchy: one root, themed branches, each a real link.">{`
+mindmap
+  root((Orchestrating Roles))
+    [The Starter](/initiatives/mindmaps-from-mindnode#the-starter)
+    [The Executor](/initiatives/mindmaps-from-mindnode#the-executor)
+    [The Finisher](/initiatives/mindmaps-from-mindnode#the-finisher)
+`}</MindMap>
+
+### "Who works with this system, and what do they do?"
+
+That is actors reaching capabilities, not a flow and not a hierarchy, so it routes to a
+[use-case diagram](/handbook/components/diagrams/use-case). The `<UseCaseDiagram>` puts the actors
+outside a boundary and the capabilities inside it.
+
+<UseCaseDiagram title="Who uses the blog" desc="An author writes and publishes; a reader reads and shares."
+  actors={[
+    {id:'author', label:'Author', kind:'internal'},
+    {id:'reader', label:'Reader'},
+  ]}
+  useCases={[
+    {id:'write', label:'Write a post', detail:'Draft in MDX, weave in components, run the validators.'},
+    {id:'publish', label:'Publish', detail:'Build the site and deploy it.'},
+    {id:'read', label:'Read a post'},
+    {id:'share', label:'Share a post', detail:'Copy a tagged link or post it out.'},
+  ]}
+  links={[
+    {from:'author', to:'write'},
+    {from:'author', to:'publish'},
+    {from:'reader', to:'read'},
+    {from:'reader', to:'share'},
+    {from:'publish', to:'write', type:'include'},
+    {from:'share', to:'read', type:'extend'},
+  ]}/>
+
+### "Which of these options should we pick?"
+
+That is a head-to-head choice, so it routes to the decision kit: a `<ComparisonMatrix>` for the
+scorecard and an `<Accordion>` for the narrative behind each option. Nothing about that intent is a
+flow, even though a first instinct might reach for one.
+
+<ComparisonMatrix title="Where to store the data" desc="Three stores weighed against what this project needs." legend
+  options={[
+    {id:'pg', label:'Postgres'},
+    {id:'sqlite', label:'SQLite', chosen:true},
+    {id:'file', label:'Flat files'},
+  ]}
+  criteria={[
+    {label:'Zero-ops', cells:{pg:'no', sqlite:'yes', file:'yes'}},
+    {label:'Queryable', cells:{pg:'yes', sqlite:'yes', file:'no'}},
+    {label:'Concurrent writes', cells:{pg:'yes', sqlite:'partial', file:'no'}},
+  ]}/>
+
+<Accordion label="Why SQLite won" items={[
+  {summary:'Postgres', verdict:'considered', body:<>Powerful and concurrent, but a server to run and back up. Overkill for a single-writer site.</>},
+  {summary:'SQLite', chosen:true, open:true, body:<>Zero-ops, queryable, durable, and free. One file, no server, plenty for one writer.</>},
+  {summary:'Flat files', verdict:'considered', body:<>Simplest of all, but nothing to query and no safe concurrent writes.</>},
+]}/>
+
+## Where the machinery lives
+
+The chooser decides and dispatches; it does not re-implement how each diagram gets drawn. That
+separation is the whole point, and I wrote it up as its own design: the inputs it takes, the
+interview that narrows them, and the routing table it ends on are documented in
+[the Choosing a Diagram design](/designs/design-choosing-a-diagram). If you want the reasoning
+behind why it is a chooser and not one long page, and why it routes instead of duplicating, that is
+the place to read it.
+
+This is the same throughline as the last couple of things I built here. When I
+[shipped the components as a package](/initiatives/shipping-a-component-package) and when I
+[turned my MindNode files into clickable maps](/initiatives/mindmaps-from-mindnode), the value was
+never the artifact on its own; it was the artifact becoming something I could actually reach for
+without friction. A pile of diagram types is the same: the diagrams were always drawable. What was
+missing was the small, honest act of choosing, made repeatable. Now the choice in front of me is no
+longer a dozen unlabeled doors.

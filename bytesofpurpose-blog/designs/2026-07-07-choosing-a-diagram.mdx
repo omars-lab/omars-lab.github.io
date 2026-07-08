@@ -1,0 +1,162 @@
+---
+slug: design-choosing-a-diagram
+sidebar_label: Choosing a Diagram
+sidebar_position: 21
+title: 'Choosing a Diagram: A Chooser That Picks the Right Type'
+description: >-
+  A small tool that interviews you about what you are trying to show, picks the
+  one diagram type that fits, and hands off to the skill that authors it.
+authors:
+  - oeid
+tags:
+  - system-design
+  - tooling
+  - diagram
+  - claude
+kind: tooling-cli-design
+draft: true
+---
+
+# Choosing a Diagram: A Chooser That Picks the Right Type
+
+The person this is for is me on a blank page, and anyone else who writes with diagrams: someone
+who knows they want to SHOW something but stalls on which of a dozen diagram types to reach for.
+The pain is real and specific. This blog can draw a flow, a mind map, a use-case, a sequence, a
+state machine, a topology, a comparison, a board, and more, across mermaid and a set of custom
+components, and every one of them is a fine tool held wrong. What such a writer will do with this
+is answer two or three plain questions about their INTENT and get back the single best type,
+already handed to the skill that authors it. The payoff: they stop choosing tools and start
+showing the thing.
+
+<UseCaseDiagram title="Choosing a diagram" desc="Who uses the chooser and what they do with it."
+  actors={[
+    {id:'writer', label:'Writer', kind:'internal'},
+    {id:'reader', label:'Reader'},
+  ]}
+  useCases={[
+    {id:'ask', label:'State the intent', detail:'Answer what am I trying to show, not which tool.'},
+    {id:'pick', label:'Get the right type', detail:'The chooser routes the intent to one diagram type.'},
+    {id:'author', label:'Author it', detail:'Hand off to the skill that owns that type.'},
+    {id:'read', label:'Read a clear diagram', detail:'The reader meets the right picture for the idea.'},
+  ]}
+  links={[
+    {from:'writer', to:'ask'},
+    {from:'writer', to:'pick'},
+    {from:'writer', to:'author'},
+    {from:'reader', to:'read'},
+    {from:'pick', to:'ask', type:'include'},
+    {from:'author', to:'pick', type:'include'},
+  ]}/>
+
+:::note[Scope]
+This design defines **author-diagram**: a chooser that takes a writer's INTENT (what they are
+trying to show) as input, runs a short adaptive interview, and produces one thing as output: the
+single best diagram TYPE, handed to the skill that authors it. It decides and dispatches. It
+deliberately does NOT re-implement how each diagram is drawn; that lives in the skills it calls
+(author-mermaid for raw mermaid, upgrade-post for the components, import-mindnode and
+import-co-design for source artifacts).
+:::
+
+<!-- truncate -->
+
+## Why a chooser, and why now
+
+The blog grew a lot of ways to draw a diagram, and that is the problem. Guidance is scattered:
+one skill knows mermaid syntax, another catalogs the components, a third owns the MindNode import
+path. Nothing sits above them answering the only question a writer actually has at the start,
+which is not "how do I draw a flowchart" but "should this even BE a flowchart." A tool held wrong
+is worse than no tool: a sequence forced into a flow, a comparison crammed into a mind map, a
+topology drawn as a timeline. The cost of the wrong pick is a reader who has to work to understand
+a picture that was supposed to save them the work. So the missing piece was never another
+renderer. It was the wisdom of WHICH one, made repeatable.
+
+## The tool: inputs, transform, output
+
+The chooser is a small input-to-output transform, and the three parts map cleanly.
+
+**Input: the writer's intent.** Not a file, not a tool preference, a sentence about what they are
+trying to show. "How does a request get from the browser to the database." "How do these role
+ideas relate." "Which of three auth options should we pick." The very first question refuses to
+ask "which diagram do you want" and asks "what are you showing."
+
+**The transform: an adaptive interview that narrows to one type.** A first question sorts the
+intent into a family (movement, who-uses-what, a hierarchy, a choice, structure, a lifecycle, an
+interaction, topology, a board, a look, motion). A second question, chosen by the first answer,
+disambiguates within the family: is the movement a strict line, a loop, or a fork; do you want the
+hierarchy CLICKABLE and themed or a throwaway sketch; is the boundary a flow, a topology, or a
+use-case. A third question fires only if a source artifact changes the route (a MindNode file, a
+work-repo HLD, a Figma board each have their own importer). The interview stops the moment the
+type is settled, and it only asks when the answer is genuinely ambiguous.
+
+**Output: one type, handed to its owner.** The transform ends at a routing table whose every row
+names the diagram type, the way to author it, and the skill that owns those mechanics. The chooser
+never draws the diagram itself; it produces the decision and dispatches.
+
+Here is the transform as the writer experiences it, from the opening question to the type it lands
+on:
+
+<FlowDiagram title="Choosing a diagram" shape="branch"
+  desc="Start from what you are trying to show; the answer routes to one diagram type and the skill that owns it."
+  nodes={[
+    {id: 'q', label: 'What are you showing?'},
+    {id: 'move', label: 'Movement'},
+    {id: 'who', label: 'Who uses what'},
+    {id: 'tree', label: 'A hierarchy'},
+    {id: 'choice', label: 'A choice'},
+    {id: 'flow', label: 'FlowDiagram', detail: 'A directed flow: pipeline, loop, sequence, branch, or swimlane. Owned by upgrade-post.'},
+    {id: 'usecase', label: 'UseCaseDiagram', detail: 'Actors outside a boundary reaching the capabilities they use. Owned by upgrade-post.'},
+    {id: 'mindmap', label: 'MindMap', detail: 'A single-rooted hierarchy with clickable, themed nodes. Owned by upgrade-post and import-mindnode.'},
+    {id: 'matrix', label: 'ComparisonMatrix', detail: 'Options scored against criteria, the chosen column highlighted. Owned by upgrade-post.'},
+  ]}
+  edges={[
+    {from: 'q', to: 'move'},
+    {from: 'q', to: 'who'},
+    {from: 'q', to: 'tree'},
+    {from: 'q', to: 'choice'},
+    {from: 'move', to: 'flow'},
+    {from: 'who', to: 'usecase'},
+    {from: 'tree', to: 'mindmap'},
+    {from: 'choice', to: 'matrix'},
+  ]}
+/>
+
+The four families above are the common trunk; the full routing table carries the rest (a
+time-ordered interaction to a sequence diagram, data or type structure to ER or class, a lifecycle
+to a state machine, topology to architecture-beta, a board or git story or milestones or a 2x2 to
+their mermaid types, an existing artifact to its importer). Every leaf, common or rare, ends the
+same way: a named type and the skill that owns authoring it.
+
+## Key Decisions
+
+**A chooser skill, not one mega-document.** I could have written a single long "how to pick a
+diagram" page. I chose a skill with a router and per-type subfiles instead, because the decision is
+a PROCESS (ask, narrow, route) that a static page cannot run, and because the per-type detail wants
+to live next to the routing, not buried in prose. The router asks; each subfile is a short
+"you picked this, here is the snippet and the gotchas" checklist.
+
+**Route, do not duplicate.** The single most important constraint: the chooser names the owner and
+defers. It never restates how to draw a flowchart or wire a component, because the moment it does,
+two sources of truth drift apart. author-mermaid owns mermaid syntax; upgrade-post owns the
+components; the importers own the source-artifact paths. The chooser's whole value is the CHOICE,
+so that is all it holds.
+
+**An interview, not a lookup table the reader scans.** I chose an adaptive question flow over a
+big static "if you want X use Y" table because a writer at the blank page does not yet know which
+row they are on. The questions do the sorting for them, recommendation first, and stop the instant
+the type is settled. A table alone assumes the reader can already classify their own intent, which
+is exactly the skill they lack in the moment.
+
+**Intent first, tool never.** The opening question is deliberately "what are you showing," not
+"which diagram do you like." Anchoring on intent is what prevents the tool-held-wrong failure. It
+is a small wording choice with an outsized effect: it reframes the entire decision away from tool
+preference and toward the reader's need.
+
+## The reusable takeaway
+
+The pattern here is not specific to diagrams. Any time you accumulate many tools for one job, the
+scarce thing stops being another tool and becomes the wisdom of WHICH one, and that wisdom is worth
+making into its own artifact. A chooser that starts from intent, narrows with a few honest
+questions, and then gets out of the way by handing off, is a shape you can lift onto any decision
+where the hard part is not doing the work but knowing which work to do. The diagram gets drawn by
+the same skills as before. What changed is that the choice in front of it is no longer left to
+whoever happens to remember the whole taxonomy.
