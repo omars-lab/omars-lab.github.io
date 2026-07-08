@@ -88,13 +88,15 @@ taught it]`. Empty until the first audit adds to it.)_
   quietly breaking", not "An org that adopted X faces gaps"). Pairs with the question-hook opener
   (KEEP list). This is one face of the **#1 recurring audit gap (under-serving WHO)** — the structural
   side (the required users/use-cases opening) lives in `SECTION-QUESTIONS.md`. — [fleetplane.mdx]
-- **The generality axis targets internal NAMES/NUMBERS, not proper nouns.** _(Reconciled from two
-  audits.)_ Keep a coined system name, an illustrative order-of-magnitude figure, and the post's own
-  public domain/repo (a post can be openly about its own system). STRIP an employer/internal name and
-  any incidental internal NUMBER with no reader value (a project ID, an org counter, a real SLA).
-  Generalize the INSTANCE, keep the name. (Author's calls: "Fleetplane" + "roughly 50 to 150 USD/month"
-  stayed; "PostHog project 448205" → just "PostHog", the blog's domain/repo stayed.) — [fleetplane.mdx,
-  premium-content-gating.mdx]
+- **The generality axis targets internal NAMES/NUMBERS/CODES, not proper nouns.** _(Reconciled from
+  three audits.)_ Keep a coined system name, an illustrative order-of-magnitude figure, and the post's
+  own public domain/repo (a post can be openly about its own system). STRIP an employer/internal name,
+  any incidental internal NUMBER with no reader value (a project ID, an org counter, a real SLA), and
+  an internal ARTIFACT CODE (a design-doc ID like "CO-DESIGN-0002", a ticket key) — a reader doesn't
+  know what the code means, and the thing usually already has a real name. Generalize the INSTANCE,
+  keep the name. (Author's calls: "Fleetplane" + "roughly 50 to 150 USD/month" stayed; "PostHog
+  project 448205" → "PostHog"; "CO-DESIGN-0002" ×21 → "the Site Scanner", its real name, keeping the
+  one link to the sister post.) — [fleetplane.mdx, premium-content-gating.mdx, self-healing-storefront.mdx]
 - **An FAQ that re-explains an earlier section is redundancy, not an FAQ.** When a Q&A answer restates
   a full section almost verbatim, cut it to a one-line VERDICT plus a link up to the section. The
   detail belongs in one home; the FAQ points to it. (Real: the "Does this work on localhost?" FAQ

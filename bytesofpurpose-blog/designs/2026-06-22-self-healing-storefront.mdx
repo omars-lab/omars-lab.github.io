@@ -74,8 +74,56 @@ diagrams:
 
 # High-Level Design: Self-Healing Storefront: Autonomous Experimentation Agent
 
+## Who it's for and what they do with it
+
+**Who.** Three people meet this agent. A **DIY store owner** runs an ecommerce shop, is not a marketing expert, and wants more revenue without hiring one or risking the store. An **operator** (us) runs the agent as a managed service across many stores and needs to supervise it safely and profitably. A **shopper** browses the storefront and never touches the agent, but their behavior is the signal every experiment reads.
+
+**The problem they share.** Continuous A/B testing is the highest-leverage growth lever a store has, and the one a DIY owner cannot pull: today's tools assume an expert who knows what to test, can build variants, and will risk live sales. So most owners do nothing, or guess and ship with no control group.
+
+**What we build to fix it.** An agent that turns detected problems and store analytics into a ranked experiment backlog, generates on-brand variants, runs them safely on live traffic, ships the winners, and reports the dollar lift in plain language. What each person does with it:
+
+<UseCaseDiagram
+  title="Self-Healing Storefront"
+  desc="Who and what drives each use case: the people, the agent, and the upstream scanner."
+  actors={[
+    {id: 'owner', label: 'Store Owner', kind: 'internal'},
+    {id: 'agent', label: 'Experimentation Agent', kind: 'internal'},
+    {id: 'op', label: 'Operator', kind: 'external'},
+    {id: 'scanner', label: 'Site Scanner', kind: 'system'},
+    {id: 'shopper', label: 'Shopper', kind: 'external'},
+  ]}
+  useCases={[
+    {id: 'guard', label: 'Set autonomy + guardrails', detail: 'The owner picks an autonomy tier, sets revenue floors, brand rules, and no-touch zones.'},
+    {id: 'approve', label: 'Approve gated tests', detail: 'Higher-risk pricing/checkout experiments wait for the owner to ship them.'},
+    {id: 'ledger', label: 'Read wins ledger', detail: 'The owner sees shipped wins and the dollar lift in plain language, not a stats dump.'},
+    {id: 'supervise', label: 'Supervise + override', detail: 'The operator reviews risky hypotheses and intervenes on anomalies across many stores.'},
+    {id: 'tune', label: 'Tune ideation engine', detail: 'The operator adjusts how the agent generates and prioritizes hypotheses as it learns.'},
+    {id: 'ideate', label: 'Ideate hypotheses', detail: 'The agent turns scanner findings + analytics into a ranked experiment backlog.'},
+    {id: 'variants', label: 'Generate variants', detail: 'On-brand, accessible copy/layout variants, within the owner’s guardrails.'},
+    {id: 'run', label: 'Run experiment', detail: 'Serve variants to a slice of live traffic; the shopper’s behavior is the signal.'},
+    {id: 'decide', label: 'Decide ship / kill', detail: 'Statistically defensible ship/kill/iterate, never a win the data does not support.'},
+    {id: 'attribute', label: 'Attribute lift', detail: 'Compute per-experiment conversion + revenue delta for the wins ledger.'},
+  ]}
+  links={[
+    {from: 'owner', to: 'guard'},
+    {from: 'owner', to: 'approve'},
+    {from: 'owner', to: 'ledger'},
+    {from: 'op', to: 'supervise'},
+    {from: 'op', to: 'tune'},
+    {from: 'agent', to: 'ideate'},
+    {from: 'agent', to: 'variants'},
+    {from: 'agent', to: 'run'},
+    {from: 'agent', to: 'decide'},
+    {from: 'agent', to: 'attribute'},
+    {from: 'scanner', to: 'ideate'},
+    {from: 'shopper', to: 'run'},
+  ]}
+/>
+
+**How it makes their life better.** The owner gets world-class conversion optimization on autopilot, with control and no risk to the store; the operator supervises many stores at once as the automation earns trust; the shopper just gets a faster, clearer storefront. (Deeper reference: the personas table in [§1.4](#14-system-users--personas), the use-case detail in [§8](#8-use-cases).)
+
 :::note[Scope]
-This document defines the **autonomous CRO (Conversion Rate Optimization) / A/B-testing agent**: the engine that ideates, runs, and ships experiments on a live ecommerce storefront. It is the realization of the **self-healing growth-marketing site** north star named in [CO-DESIGN-2026-06-21-site-scanner-lead-engine](/designs/design-ecommerce-site-scanner-and-lead-generation-engine) (the Site Scanner & Lead Engine). Where 0002 *finds* what's wrong on a prospect's site, this agent *fixes* it; closing the scan → heal loop. The scanner is the front door; this agent is the service the customer pays for.
+This document defines the **autonomous CRO (Conversion Rate Optimization) / A/B-testing agent**: the engine that ideates, runs, and ships experiments on a live ecommerce storefront. It is the realization of the **self-healing growth-marketing site** north star named by the [Site Scanner & Lead Engine](/designs/design-ecommerce-site-scanner-and-lead-generation-engine). Where the Site Scanner *finds* what's wrong on a prospect's site, this agent *fixes* it; closing the scan → heal loop. The scanner is the front door; this agent is the service the customer pays for.
 :::
 
 <!-- truncate -->
@@ -90,7 +138,14 @@ import Mockups from './_mockups/self-healing-storefront.mdx';
 
 **The problem.** Continuous, statistically-sound conversion optimization: A/B testing, is the highest-leverage growth lever an online store has, and it is precisely the one a do-it-yourself (DIY) merchant cannot pull. Today's testing tools assume a marketing expert who knows what to test, can build the variants, can interpret the statistics, and is willing to risk live sales. Most small and mid-sized merchants therefore do nothing, or guess and ship changes with no control group, leaving conversion (and revenue) on the table.
 
-**The solution.** A **Self-Healing Storefront Agent**: an AI agent that turns the conversion problems already detected by our Site Scanner ([CO-DESIGN-0002](/designs/design-ecommerce-site-scanner-and-lead-generation-engine)): plus the store's own analytics; into a ranked backlog of experiments, generates on-brand variants, runs them safely on live traffic with statistics suited to the store's traffic level, ships the winners, and reports the dollar lift in plain language. It is delivered as a **managed service**: we (the **operators**) supervise the agent across many stores, while the **store owner** sets the rules and watches the results.
+**The solution.** A **Self-Healing Storefront Agent**: an AI agent that turns the conversion problems already detected by our [Site Scanner](/designs/design-ecommerce-site-scanner-and-lead-generation-engine): plus the store's own analytics; into a ranked backlog of experiments, generates on-brand variants, runs them safely on live traffic with statistics suited to the store's traffic level, ships the winners, and reports the dollar lift in plain language. It is delivered as a **managed service**: we (the **operators**) supervise the agent across many stores, while the **store owner** sets the rules and watches the results.
+
+```mermaid
+flowchart LR
+    SCAN[Site Scanner: finds<br/>what is wrong] --> AGENT{{This agent: fixes it<br/>ideate, run, ship}}
+    AGENT -->|dollar lift, in plain language| LEDGER[Wins ledger]
+    AGENT -.->|guardrails + approvals| OWNER[Store Owner]
+```
 
 **Key decisions.**
 - **D1: Execution (decided, phased):** launch as a **Shopify-native app** to validate the agent fast, then move to **self-hosted serving** for margin and cross-platform reach.
@@ -107,13 +162,13 @@ import Mockups from './_mockups/self-healing-storefront.mdx';
 
 ### 1.1 Purpose
 
-This document defines the high-level architecture for an **autonomous experimentation agent** that **ideates A/B test hypotheses for an ecommerce storefront, designs the variants, runs the tests safely on live traffic, measures results with statistical rigor, and ships winners**: operating under **configurable autonomy tiers** (from propose-only to fully autonomous, per test category). It is the *fix* half of the **scan → heal loop** opened by [CO-DESIGN-0002](/designs/design-ecommerce-site-scanner-and-lead-generation-engine): where the Site Scanner *finds* growth-marketing problems on a site, this agent *resolves* them through continuous, measured experimentation. The scanner is the front door; this agent is the **service the customer pays for**.
+This document defines the high-level architecture for an **autonomous experimentation agent** that **ideates A/B test hypotheses for an ecommerce storefront, designs the variants, runs the tests safely on live traffic, measures results with statistical rigor, and ships winners**: operating under **configurable autonomy tiers** (from propose-only to fully autonomous, per test category). It is the *fix* half of the **scan → heal loop** opened by [the Site Scanner](/designs/design-ecommerce-site-scanner-and-lead-generation-engine): where the Site Scanner *finds* growth-marketing problems on a site, this agent *resolves* them through continuous, measured experimentation. The scanner is the front door; this agent is the **service the customer pays for**.
 
 The agent's **action space spans all growth-marketing surfaces**: copy/content, layout/UX, pricing/offers, checkout/funnel, and beyond; but **autonomy is gated by risk**. Low-risk, easily reversible categories (**copy/content** and **layout/UX**) can run **fully autonomously** within guardrails; higher-risk categories (**pricing/offers**, **checkout/funnel**) are **supported but require human approval**: the agent ideates and designs the experiment, but a human ships it. This is the core of the **configurable autonomy tiers** model (D3): the *same* agent works across all areas; what differs per category is how much it may do without a human in the loop. See [Section 3](#3-scope) for the autonomy-by-category matrix.
 
 ### 1.2 Who Is Building This & Why
 
-The same two-person founding team behind CO-DESIGN-0002; a **Growth Operator** (technical/product) and a **Sales/BD partner** (commercial): building an agentic growth-marketing service for ecommerce merchants.
+The same two-person founding team behind the Site Scanner; a **Growth Operator** (technical/product) and a **Sales/BD partner** (commercial): building an agentic growth-marketing service for ecommerce merchants.
 
 The strategic thesis carries forward and completes: **the scanner earns trust by reliably finding what's wrong on a site; this agent monetizes that trust by fixing it: provably, with the customer's revenue protected.** CRO is the chosen wedge for the "heal" half because:
 
@@ -133,7 +188,7 @@ The agent sits **on a customer's live storefront**. It consumes signals (the sca
 %% animate: flow
 graph LR
     subgraph signals["Inputs / Signals"]
-        SCAN[Scanner Findings\nCO-DESIGN-0002]
+        SCAN[Scanner Findings]
         ANALYTICS[Store Analytics\n& Conversion Data]
         CATALOG[Catalog & Content]
     end
@@ -173,7 +228,7 @@ graph LR
 
 </div>
 
-*Legend: solid arrows = experiment data flow; dashed = configuration, approval, or feedback. The loop **Ideate → Design → Run → Measure → Decide → (iterate)** is the heart of the agent. The **Scanner Findings** input is the bridge from CO-DESIGN-0002: its detected problems seed this agent's hypothesis backlog.*
+*Legend: solid arrows = experiment data flow; dashed = configuration, approval, or feedback. The loop **Ideate → Design → Run → Measure → Decide → (iterate)** is the heart of the agent. The **Scanner Findings** input is the bridge from the Site Scanner: its detected problems seed this agent's hypothesis backlog.*
 
 ### 1.4 System Users & Personas
 
@@ -182,7 +237,7 @@ graph LR
 | **Store Owner** | **Primary user.** A DIY ecommerce merchant: typically not a marketing expert. Connects their store, picks an **autonomy tier**, sets guardrails (revenue floors, brand/voice rules, no-touch zones), approves gated experiments, and reads the wins ledger. Wants growth on autopilot with control. | Direct | Owner dashboard / app |
 | **Operator** | **Secondary user (us).** Runs the agent as a managed service across many customer stores. Supervises experiments, reviews higher-risk hypotheses, tunes the ideation engine, and intervenes on anomalies. The human safety net behind the autonomy. | Direct (supervise) | Operator console |
 | **Experimentation Agent** | The autonomous system actor we are building: an LLM-driven orchestrator that ideates hypotheses, designs variants, deploys them, runs the statistics, and decides ship/kill/iterate. | System-to-system | (headless) |
-| **Site Scanner** | The CO-DESIGN-0002 engine. Upstream producer of detected CRO problems that seed this agent's hypothesis backlog. | System-to-system | Scanner API / shared store |
+| **Site Scanner** | The Site Scanner engine. Upstream producer of detected CRO problems that seed this agent's hypothesis backlog. | System-to-system | Scanner API / shared store |
 | **Storefront Visitor (Shopper)** | The merchant's site visitor. Bucketed into a variant; their behavior (clicks, add-to-cart, purchase) is the measured signal. Never interacts with the agent directly. | Indirect (subject) | The merchant's storefront |
 | **Commerce Platform / Variant Server** | The storefront stack (e.g., Shopify, custom) plus whatever mechanism serves variants and the analytics that report outcomes. | System-to-system | Platform / experiment APIs |
 
@@ -190,21 +245,7 @@ graph LR
 "**Agent**" in this document means the autonomous experimentation system we are building (an LLM-driven orchestrator with tools), not a person. "**Owner**" always means the **Store Owner** (primary, DIY) persona. "**Operator**" always means **us**, supervising the agent as a service. "**Experiment**" and "**test**" are used interchangeably for a single A/B (or A/B/n) trial. "**Variant**" is one version shown to a slice of traffic (the unchanged version is the **control**).
 :::
 
-**User profiles: who's involved and what they want:**
-
-```mermaid
-graph LR
-    OWNER[Store Owner<br/>DIY merchant]
-    OP[Operator<br/>us / managed service]
-    SHOPPER[Shopper<br/>site visitor]
-
-    OWNER --- OWNER_M(("Wants: more revenue<br/>with no marketing expertise<br/>and no risk to the store"))
-    OP --- OP_M(("Wants: supervise many stores<br/>safely + profitably;<br/>trust the autonomy"))
-    SHOPPER --- SH_M(("Wants: a fast, clear,<br/>trustworthy buying<br/>experience"))
-
-```
-
-*Interests/motivations per persona; the agent must satisfy all three at once: lift the owner's revenue, stay supervisable by the operator, and never degrade the shopper's experience.*
+The three human actors and what each wants are shown in the [use-case diagram in the opener](#who-its-for-and-what-they-do-with-it); this table is the fuller reference, including the system actors. The agent must satisfy all three at once: lift the owner's revenue, stay supervisable by the operator, and never degrade the shopper's experience.
 
 ### 1.5 Key Decisions Summary
 
@@ -262,7 +303,7 @@ Each objective notes the **key decisions** ([§6.5](#65-key-design-decisions)) t
 
 ### 2.1 Business Goals
 
-- **Close the scan → heal loop into revenue.** Convert scanner-sourced prospects (CO-DESIGN-0002) into paying CRO customers by *fixing* the very problems the scan surfaced. _(D4, D6)_
+- **Close the scan → heal loop into revenue.** Convert scanner-sourced prospects (the Site Scanner) into paying CRO customers by *fixing* the very problems the scan surfaced. _(D4, D6)_
 - **Prove attributable dollar lift per store.** Deliver a visible, believable revenue delta per customer: the proof that sustains a recurring subscription and reduces churn. _(D2, D6)_
 - **Maximize operator leverage.** Enable one operator to safely supervise many stores at once; supervision effort per store must fall as trust and automation grow. This ratio is the core margin driver of the managed-service model. _(D3)_
 - **Expand the market beyond CRO-literate merchants.** Make continuous, statistically-sound experimentation available to non-expert DIY owners who would never hire a CRO consultant or operate a testing platform. _(D1, D4)_
@@ -281,12 +322,14 @@ Each objective notes the **key decisions** ([§6.5](#65-key-design-decisions)) t
 
 _Targets below are <Assumption /> placeholders: directionally right, numerically unvalidated. Tune once live data exists._
 
-- **Time to first shipped win**: <Assumption>≤ 30 days</Assumption> from store onboarding to the first statistically-validated, shipped improvement.
-- **Decision yield**: <Assumption>≥ 70%</Assumption> of launched experiments reach a *valid* decision (ship or kill on defensible data) rather than timing out inconclusive.
-- **Net conversion lift per store**: <Assumption>+10% cumulative conversion lift within 6 months</Assumption>, measured against a held-back baseline.
-- **False-win rate**: <Assumption>≤ 5%</Assumption> of shipped winners later shown (via holdback / re-test) to be neutral or negative.
-- **Operator leverage**: <Assumption>1 operator supervises ≥ 25 active stores</Assumption> at steady state, trending upward.
-- **Revenue-safety**: <Assumption>zero unrecovered revenue-harm incidents</Assumption>; any experiment causing a material conversion/revenue drop is auto-rolled-back within a bounded window. _(This is a hard guardrail, not a soft target.)_
+| Metric | Target | Why it matters |
+|---|---|---|
+| **Time to first shipped win** | <Assumption>≤ 30 days</Assumption> | Proves value fast, from onboarding to the first statistically-validated, shipped improvement. |
+| **Decision yield** | <Assumption>≥ 70%</Assumption> | Experiments reach a *valid* ship/kill decision on defensible data, not an inconclusive timeout. |
+| **Net conversion lift per store** | <Assumption>+10% in 6 months</Assumption> | Cumulative lift against a held-back baseline: the headline outcome the subscription is sold on. |
+| **False-win rate** | <Assumption>≤ 5%</Assumption> | Shipped winners later shown (via holdback / re-test) to be neutral or negative. Trust depends on this staying low. |
+| **Operator leverage** | <Assumption>≥ 25 stores / operator</Assumption> | The core margin driver: supervision effort per store must fall as trust and automation grow. |
+| **Revenue-safety** | <Assumption>zero unrecovered incidents</Assumption> | A **hard guardrail, not a soft target**: any material conversion/revenue drop is auto-rolled-back within a bounded window. |
 
 ### 2.4 Non-Goals
 
@@ -294,7 +337,7 @@ _Targets below are <Assumption /> placeholders: directionally right, numerically
 - **Not autonomous pricing or checkout changes.** Pricing/offers and checkout/funnel experiments are **supported but always human-approved**: autonomy in those categories is explicitly out of scope (the *capability* is in scope; the *autonomy* is not). _(D3)_
 - **Not off-site growth.** Paid ads, email/SMS marketing, influencer, and other off-site channels are out of scope: this agent optimizes the **on-site storefront experience** only.
 - **Not a brand-strategy or merchandising decision-maker.** The agent optimizes within owner-set brand/voice/no-touch guardrails; it does not redefine the brand, choose the product assortment, or set business strategy.
-- **Not the scanner / lead-gen engine.** Discovery, scanning, scoring, and outreach are CO-DESIGN-0002's job. This design consumes scanner output; it does not reproduce it.
+- **Not the scanner / lead-gen engine.** Discovery, scanning, scoring, and outreach are the Site Scanner's job. This design consumes scanner output; it does not reproduce it.
 
 ## 3. Scope
 
@@ -306,7 +349,7 @@ _Targets below are <Assumption /> placeholders: directionally right, numerically
 | **Human-approved experimentation** on pricing/offers, checkout/funnel, and other higher-risk on-site areas (agent ideates + designs; human ships) | Off-site growth channels (paid ads, email/SMS, social, influencer) |
 | **Adaptive measurement** that fits method to per-store traffic (frequentist / Bayesian / sequential / bandit) | Building a general-purpose, self-serve experimentation platform for analysts |
 | **Risk-gated autonomy engine** with owner-set guardrails and operator override | Brand strategy, product assortment / merchandising decisions, business strategy |
-| **Grounded ideation** from scanner findings + store analytics + CRO best practice | Site discovery, scanning, scoring, and outreach (owned by CO-DESIGN-0002) |
+| **Grounded ideation** from scanner findings + store analytics + CRO best practice | Site discovery, scanning, scoring, and outreach (owned by the Site Scanner) |
 | **On-brand, accessible variant generation** (copy + layout) | Backend/infra changes to the merchant's commerce platform itself |
 | **Outcome attribution & wins ledger** (per-experiment conversion + revenue delta) | Full re-platforming or theme redesign (the agent edits within the existing storefront) |
 | **Owner dashboard** (guardrails, approvals, ledger) + **operator console** (supervision, tuning) | Customer-support, fulfillment, inventory, or order-management workflows |
@@ -317,9 +360,9 @@ _Targets below are <Assumption /> placeholders: directionally right, numerically
 See the right column above. The most important boundaries to call out explicitly, to avoid reader confusion:
 
 - **Pricing & checkout are in scope as a *capability*, but autonomy over them is not.** The agent can ideate and design a pricing or checkout experiment, but a human must approve and ship it. "Out of scope" here means *autonomous execution*, not *support*.
-- **The scanner/lead engine is not re-built here.** This agent *consumes* CO-DESIGN-0002's output (detected CRO problems) as hypothesis seed input. Discovery, scoring, and outreach remain in 0002.
+- **The scanner/lead engine is not re-built here.** This agent *consumes* the Site Scanner's output (detected CRO problems) as hypothesis seed input. Discovery, scoring, and outreach remain in 0002.
 - **Off-site growth is excluded entirely.** The agent optimizes the on-site storefront experience; it does not touch ad spend, email, or any channel the shopper sees before landing on the store.
-- **Self-healing beyond CRO is the north star, not this design.** CO-DESIGN-0002 named a broader self-healing vision (technical/perf, SEO, content auto-remediation). This design delivers the **CRO/experimentation** slice of that vision. Other self-healing domains are future work.
+- **Self-healing beyond CRO is the north star, not this design.** The Site Scanner named a broader self-healing vision (technical/perf, SEO, content auto-remediation). This design delivers the **CRO/experimentation** slice of that vision. Other self-healing domains are future work. (See [North Star](#north-star-self-healing-beyond-cro) below.)
 
 ### 3.3 System Boundaries
 
@@ -330,7 +373,7 @@ See the right column above. The most important boundaries to call out explicitly
 - The owner dashboard and operator console surfaces
 
 **This design assumes exists (depends on, does not build):**
-- **CO-DESIGN-0002 Site Scanner**: supplies detected CRO problems as hypothesis seeds
+- **the Site Scanner Site Scanner**: supplies detected CRO problems as hypothesis seeds
 - **The merchant's commerce platform** (e.g., Shopify or custom storefront): the surface being experimented on; provides analytics/conversion data
 - **A variant-serving mechanism**: the runtime that actually shows variant vs. control to traffic (D1 decides whether this is a 3rd-party A/B platform, self-hosted injection, or platform-native; see [§6](#6-proposed-design))
 - **An LLM provider**: powers ideation and variant generation
@@ -348,7 +391,7 @@ graph LR
     end
 
     subgraph assumed["Assumed / Depended On"]
-        SCANNER[Site Scanner\nCO-DESIGN-0002]
+        SCANNER[Site Scanner\nthe Site Scanner]
         COMMERCE[(Commerce Platform\n+ Analytics)]
         SERVE[Variant-Serving\nMechanism: D1]
         LLM[LLM Provider]
@@ -413,9 +456,9 @@ Because target stores span low- to mid-traffic, the **classic fixed-sample, freq
 
 <Assumption>** target stores are predominantly Shopify or Shopify-like; the design should not hard-assume Shopify but Shopify is the dominant case to optimize for.**</Assumption> This shapes the execution-model options in [§6](#6-proposed-design).
 
-### 4.4 Where CO-DESIGN-0002 Leaves Off
+### 4.4 Where the Site Scanner Leaves Off
 
-The Site Scanner (CO-DESIGN-0002) already produces, for each scanned site, a structured set of **detected CRO problems** (weak CTAs, buried value propositions, cluttered layouts, missing trust signals, etc.). Today that output ends at a **sales artifact**: it's used to win the prospect, then it stops. There is no engine that takes those findings and *acts* on them. This agent is that missing engine: the scanner's problem list becomes the agent's **seed hypothesis backlog**.
+The Site Scanner (the Site Scanner) already produces, for each scanned site, a structured set of **detected CRO problems** (weak CTAs, buried value propositions, cluttered layouts, missing trust signals, etc.). Today that output ends at a **sales artifact**: it's used to win the prospect, then it stops. There is no engine that takes those findings and *acts* on them. This agent is that missing engine: the scanner's problem list becomes the agent's **seed hypothesis backlog**.
 
 ## 5. Problem Statement & Gaps
 
@@ -423,7 +466,7 @@ The Site Scanner (CO-DESIGN-0002) already produces, for each scanned site, a str
 
 **Continuous, statistically-sound conversion optimization is the single highest-leverage growth lever available to an ecommerce store: and it is precisely the lever a DIY merchant cannot pull.** Every existing path requires expertise, time, and risk tolerance the merchant lacks: forming good hypotheses, building variants, choosing valid statistics, waiting out the runtime, and trusting the result enough to ship it on a live revenue site. The tooling that exists assumes a human expert operator who, for our user, is not in the room (Section 4).
 
-At the same time, the founding team already possesses, via the Site Scanner (CO-DESIGN-0002), a reliable engine that *finds* exactly which conversion problems a given store has. That signal currently dead-ends as a sales artifact. **The problem is that there is no system that turns detected conversion problems into safely-executed, measured, shipped fixes on the owner's behalf.** Building that system both (a) makes world-class CRO accessible to non-experts and (b) converts the scanner's signal into recurring, attributable revenue.
+At the same time, the founding team already possesses, via the Site Scanner (the Site Scanner), a reliable engine that *finds* exactly which conversion problems a given store has. That signal currently dead-ends as a sales artifact. **The problem is that there is no system that turns detected conversion problems into safely-executed, measured, shipped fixes on the owner's behalf.** Building that system both (a) makes world-class CRO accessible to non-experts and (b) converts the scanner's signal into recurring, attributable revenue.
 
 ### 5.2 Gap Analysis
 
@@ -444,7 +487,7 @@ Each gap below maps a **current-state limitation (§4)** to the **objective it b
 
 **If these gaps are not addressed:**
 
-- **The scanner's value is capped at lead-gen.** CO-DESIGN-0002 can win the prospect but the business has nothing to *sell* them; no recurring "heal" product. The strategic thesis (find → fix) stays half-built and the revenue model leans entirely on one-time deal flow.
+- **The scanner's value is capped at lead-gen.** the Site Scanner can win the prospect but the business has nothing to *sell* them; no recurring "heal" product. The strategic thesis (find → fix) stays half-built and the revenue model leans entirely on one-time deal flow.
 - **The DIY market stays unreachable.** Without an autonomous, safe, non-expert-friendly agent, this customer segment continues to do nothing (Section 4.1): there is no product they can actually use, so the largest part of the market is uncaptured.
 - **Any naïve automation actively destroys trust.** A version that ships changes on thin data (G2) or without rollback (G3) will eventually tank a customer's conversion: a single such incident in a managed service is reputationally fatal. The gaps are not just missing features; leaving G2/G3 unsolved makes the product *dangerous*.
 
@@ -580,7 +623,7 @@ graph LR
 - **Phase A (speed to value, validate the agent):** Ship as a **Shopify-native app (Option 3)**. Target stores are predominantly Shopify (§4.3), so a native app gives the fastest onboarding, native distribution via the app store, direct access to catalog/orders/theme, and the least flicker risk: letting us validate the *agent* (ideation quality, measurement, autonomy) before investing in our own serving infrastructure. Non-Shopify stores are deferred to Phase B. Even in Phase A we run **our own** Bayesian/sequential decisioning on the raw events so the measurement engine (D2) is ours from day one. _(Option 1: driving a 3rd-party A/B platform via API; remains the fallback for any non-Shopify pilot before Phase B.)_
 - **Phase B (own the margin and the stack):** Build **Option 2**: self-hosted edge/JS serving; once the agent is proven. This removes per-store platform fees (the managed-service margin driver, §2.1), unifies integration across all stores regardless of platform, and gives end-to-end control of stats and data. The execution-model abstraction (6.1) means this swap doesn't touch the agent brain.
 
-This phasing mirrors CO-DESIGN-0002's philosophy: **earn the right to build the harder, higher-control system by first proving the cheap version works.** It also de-risks D1: we don't have to pick the final serving model before we've validated the agent.
+This phasing mirrors the Site Scanner's philosophy: **earn the right to build the harder, higher-control system by first proving the cheap version works.** It also de-risks D1: we don't have to pick the final serving model before we've validated the agent.
 
 **How this design addresses each gap (§5.2):**
 
@@ -725,7 +768,7 @@ erDiagram
     STORE {
         id id PK
         string platform "shopify | other"
-        string scanner_ref FK "CO-DESIGN-0002"
+        string scanner_ref FK "the Site Scanner"
     }
     HYPOTHESIS {
         id id PK
@@ -881,37 +924,7 @@ The system in its environment; see [§1.3](#13-context) for the annotated contex
 
 ### 10.2 Use Case Diagram
 
-Actors (squares) and the use cases (circles) they drive. The **Store Owner** governs; the **Operator** supervises; the **Agent** does the work; the **Scanner** and **Shopper** are system/indirect actors.
-
-```mermaid
-graph LR
-    OWNER[Store Owner]
-    OP[Operator]
-    AGENT[Experimentation Agent]
-    SCANNER[Site Scanner 0002]
-    SHOPPER[Shopper]
-
-    OWNER --> UC1((Set autonomy tier\n& guardrails))
-    OWNER --> UC2((Approve gated\nexperiment))
-    OWNER --> UC3((Read wins ledger))
-    OP --> UC4((Supervise &\noverride))
-    OP --> UC5((Tune ideation\nengine))
-    AGENT --> UC6((Ideate\nhypotheses))
-    AGENT --> UC7((Generate\nvariants))
-    AGENT --> UC8((Run experiment))
-    AGENT --> UC9((Decide\nship/kill))
-    AGENT --> UC10((Attribute lift))
-    SCANNER -.-> UC6
-    SHOPPER -.-> UC8
-    UC6 -.-> UC7
-    UC7 -.-> UC8
-    UC8 -.-> UC9
-    UC9 -.-> UC10
-    UC9 -.-> UC2
-
-```
-
-*Squares = actors (color-coded by type: green = owner, amber = operator, blue = agent, grey = system/indirect); circles = use cases; dashed arrows = use case triggers another or feedback.*
+The full use-case diagram, actors (Store Owner, Operator, Experimentation Agent, Site Scanner, Shopper) and the use cases each drives, is the [`<UseCaseDiagram>` in the opener](#who-its-for-and-what-they-do-with-it). It is placed there because it is the fastest way to meet the system: who governs, who supervises, and what the agent actually does (ideate → generate → run → decide → attribute).
 
 ### 10.3 Sequence Diagram: Experiment Lifecycle
 
@@ -1043,6 +1056,21 @@ Delivery is phased to mirror the execution-model decision (D1) and the trust-bui
 | Serving infrastructure (D1) | Operator | Operator |; | Store Owner |
 | Attribution & wins ledger (D6) | Agent | Operator |; | Store Owner |
 
+## North Star: self-healing beyond CRO
+
+This design fixes one thing well: conversion. But an agent that can safely observe a live storefront, form a hypothesis, run a controlled experiment, and ship or roll back the result is a foundation, and a foundation opens more than one door. The Site Scanner already detects problems well beyond CRO. These are directions the "heal" half could take next, not a committed roadmap: one of them, several, or something not drawn here.
+
+```mermaid
+flowchart LR
+  found([Today: autonomous CRO / conversion])
+  found -->|"fix what search sees"| a([SEO auto-remediation])
+  found -->|"fix what slows the page"| b([Performance self-healing])
+  found -->|"fix stale or thin copy"| c([Content auto-refresh])
+  found -->|"one agent, many storefronts"| d([Cross-platform beyond Shopify])
+```
+
+The discipline that earns any of these is the same one this design is built on: never ship a change the data does not support, and never mutate a live revenue store without a guardrail and a rollback. CRO is the wedge because every win is a dollar the owner can see; the other domains widen the "self-healing" promise only after the agent has proven it can be trusted on the one that pays.
+
 ## 13. Risks, Dependencies & Open Questions
 
 ### 13.1 Risks
@@ -1060,7 +1088,7 @@ Delivery is phased to mirror the execution-model decision (D1) and the trust-bui
 
 ### 13.2 Dependencies
 
-- **CO-DESIGN-0002 Site Scanner**: supplies detected CRO problems as hypothesis seeds. The interface (shared store vs. API) must be defined. _Hard dependency for the grounded-ideation value prop._
+- **the Site Scanner Site Scanner**: supplies detected CRO problems as hypothesis seeds. The interface (shared store vs. API) must be defined. _Hard dependency for the grounded-ideation value prop._
 - **Commerce platform (Shopify, Phase A)**: app/theme APIs for serving variants and order/analytics data for outcomes.
 - **LLM provider**: powers ideation (C1) and variant generation (C2).
 - **Variant-serving infrastructure**: Shopify app (Phase A) → self-hosted edge/JS (Phase B).
@@ -1070,7 +1098,7 @@ Delivery is phased to mirror the execution-model decision (D1) and the trust-bui
 ### 13.3 Open Questions
 
 - **OQ1 (D7):** What is the orchestration runtime and experiment data store? _(Deferred until Phase-A Shopify build begins; agent brain is serving-independent so this won't block ideation/measurement design.)_
-- **OQ2 (D1):** What exactly is the CO-DESIGN-0002 → this-agent interface: shared database, event stream, or API call?
+- **OQ2 (D1):** What exactly is the the Site Scanner → this-agent interface: shared database, event stream, or API call?
 - **OQ3 (D6):** Does every store get a permanent portfolio holdback (cleanest attribution, small lift cost), or only during onboarding? Trade-off between attribution rigor and realized lift.
 - **OQ4 (D3):** What are the *default* guardrail values (revenue floor %, blast-radius cap %) shipped before an owner customizes them?
 - **OQ5 (D2):** Where exactly is the line where the agent declines to run an experiment because a store's traffic is too low for *any* method to decide in a reasonable window? Is there a "too small to test" floor?
@@ -1110,11 +1138,13 @@ _Researched 2026-06-22 to inform Section 4 (Current State) and the execution/mea
 
 #### A.1 Tooling landscape (2026)
 
-The ecommerce A/B-testing market in 2026 splits into Shopify-native apps, full experience/CRO platforms, and analytics/behavior tools:
+The ecommerce A/B-testing market in 2026 splits into three categories:
 
-- **Shopify-native A/B apps**: Shoplift integrates directly with the Shopify theme editor so variants are built without leaving Shopify admin, with no site-speed impact; Intelligems and ABConvert occupy similar native niches. These target self-directed Shopify merchants.
-- **Full experience/CRO platforms**: VWO is positioned as the operator default for ecommerce stores in the ~£100K-£5M/year band, bundling A/B + multivariate testing, personalization, heatmaps, and session recording. Optimizely and Dynamic Yield target enterprise/Shopify Plus brands needing deep personalization.
-- **Analytics/behavior tools**: heatmaps, session replay, and funnel analytics produce insight a human must still turn into a test.
+| Category | Examples | Who it targets |
+|---|---|---|
+| **Shopify-native A/B apps** | Shoplift (builds variants in the theme editor, no site-speed impact), Intelligems, ABConvert | Self-directed Shopify merchants |
+| **Full experience/CRO platforms** | VWO (operator default in the ~£100K-£5M/year band: A/B + multivariate, personalization, heatmaps, session recording), Optimizely, Dynamic Yield | Enterprise / Shopify Plus brands needing deep personalization |
+| **Analytics/behavior tools** | heatmaps, session replay, funnel analytics | Teams who still turn the insight into a test by hand |
 
 :::tip[Design implication]
 Every incumbent stops at "platform + insight; you do the work." None close the ideate → build → run → decide → ship loop autonomously. This confirms the agent's wedge (Sections 4.2, 5) and that the agent likely *drives* one of these serving mechanisms rather than reinventing variant delivery (informs **D1**).

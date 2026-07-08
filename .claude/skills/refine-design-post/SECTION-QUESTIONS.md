@@ -38,6 +38,14 @@ ovals, each with a click-to-focus `detail`) — it maps one-to-one onto who (act
 diagram is the canonical fit. Propose it here; hand the actual insertion to `upgrade-post`. A missing
 visual in this section is a finding.
 
+> **The opener's `<UseCaseDiagram>` should be the CANONICAL use-case view, not a stripped teaser.**
+> If the post has a fuller use-case diagram buried deep (a mermaid "§10.2 Use Case Diagram" with more
+> actors + the system's own internal use cases), EXPAND the opener to be that full view and remove the
+> buried one (point it up), rather than leaving a simple opener + a rich duplicate. The `<UseCaseDiagram>`
+> component's build-time crossing-free gate keeps even a 5-actor / 9-use-case version legible (split
+> actors by side: the primary human `internal` left; consumers/`external` + `system` right) — verify
+> the expanded spec passes the gate before shipping it. — [self-healing-storefront.mdx]
+
 > Auditor note: this section subsumes and precedes the "Opener / hook" below. The opener's
 > why/value/who questions are still required, but they now live DOWNSTREAM of users-and-use-cases —
 > the post answers "who and what they do" first, then "why it matters" as the hook.
@@ -122,12 +130,13 @@ the road" recipe). One direction needs no fork; two or more do. Propose it; `aut
 ## Recurring failure modes (from audits)
 
 > **🥇 THE #1 recurring gap across every audit so far: the post under-serves WHO.** _(Reconciled
-> across 3 audits — local-guide-skill, fleetplane, premium-content-gating — where the same root gap
-> surfaced in three forms.)_ Design posts reliably open on the SYSTEM or the PROBLEM and skip the
-> people: they never name concrete beneficiaries, never put the reader in a moment, and lack the
-> required "Users & use cases" opening + `<UseCaseDiagram>`. **On any audit, check this FIRST.** The
-> fix is almost always the same: add the users/use-cases opening (see that section above) and name a
-> concrete person, not an abstract "users". The instances below are the evidence.
+> across 4 audits — local-guide-skill, fleetplane, premium-content-gating, self-healing-storefront —
+> where the same root gap surfaced in four forms.)_ Design posts reliably open on the SYSTEM or the
+> PROBLEM and skip the people: they never name concrete beneficiaries, never put the reader in a
+> moment, lack the required "Users & use cases" opening + `<UseCaseDiagram>`, OR bury the user content
+> mid-document where the reader meets it too late. **On any audit, check this FIRST.** The fix is
+> almost always the same: add (or DISTILL UP) the users/use-cases opening (see that section above) and
+> name a concrete person, not an abstract "users". The instances below are the evidence.
 
 - **Open on a relatable "you" in a moment, not "an org" in the abstract.** Even with a strong hook,
   the first paragraph often addresses a generic third party ("An engineering org that has adopted X…")
@@ -144,6 +153,18 @@ the road" recipe). One direction needs no fork; two or more do. Propose it; `aut
   system, skipping the required "who + use cases + a `<UseCaseDiagram>`" section. Auditing a GOOD post
   is mostly: add that opening, break the one wall-of-text, and confirm the KEEP list. Don't manufacture
   findings on a strong post; the new structural rules are usually the real gaps. — [premium-content-gating.mdx]
+- **The user content can EXIST but be BURIED — the fix is distill-up, not add-new.** A very thorough
+  post may have a rich personas table, a use-cases section, and a customer journey, but placed deep in
+  the document (a "§1.4 System Users" a hundred lines in, a "§8 Use Cases" near the end) so the reader
+  meets the system before the people, and there's still no `<UseCaseDiagram>` in the opener. This is
+  the #1 gap in disguise: the WHO is answered, just not in the opening position. Fix = a compact
+  "Who it's for and what they do" opener with a `<UseCaseDiagram>` that DISTILLS the existing buried
+  content up. **CRITICAL: distill-up must REMOVE or merge the redundant source, not just add the
+  opener on top.** If the opener's use-case diagram now covers the same 3 actors + their wants that a
+  buried persona-mermaid showed, that buried mermaid is now duplication ("state a thing once") — delete
+  it and point up to the opener; keep only the parts that add MORE than the opener (e.g. a personas
+  table that also lists the system actors). A distill-up that leaves both is a self-inflicted "same
+  thing twice" finding. — [self-healing-storefront.mdx]
 
 ## Notes for the auditor
 
