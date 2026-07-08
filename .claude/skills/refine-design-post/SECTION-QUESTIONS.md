@@ -164,7 +164,11 @@ the road" recipe). One direction needs no fork; two or more do. Propose it; `aut
   buried persona-mermaid showed, that buried mermaid is now duplication ("state a thing once") — delete
   it and point up to the opener; keep only the parts that add MORE than the opener (e.g. a personas
   table that also lists the system actors). A distill-up that leaves both is a self-inflicted "same
-  thing twice" finding. — [self-healing-storefront.mdx]
+  thing twice" finding. **SWEEP FOR ALL of them:** a thorough post can carry the same use-case view
+  THREE times (a §1.4 persona-wants mermaid, a §8 "Use Cases" diagram, a §10.2 "Use Case Diagram") —
+  after adding the opener, grep the whole post for every actor→use-case mermaid and remove each, not
+  just the first one you spot. Keep only the non-duplicative DETAIL (a personas table, an
+  actor→goal→flow list). — [self-healing-storefront.mdx]
 
 ## Notes for the auditor
 
