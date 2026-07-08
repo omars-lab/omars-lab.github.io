@@ -98,6 +98,9 @@ validate-questions: ## Lint the optional `questions:` frontmatter (present → m
 validate-visual-density: ## Nudge: flag H2 sections that run long (>280 words) with no visual (advisory — a picture is worth a thousand words)
 	( cd ${SITEROOT} && node scripts/validate-visual-density.js $(DIRS) )
 
+validate-mermaid-complexity: ## Nudge: flag a hand-authored mermaid flow diagram too dense to read (>20 nodes / >24 edges / a node fanning to 7+) — split it or use <FlowDiagram>
+	( cd ${SITEROOT} && node scripts/validate-mermaid-complexity.js $(DIRS) )
+
 validate-design-clarity: ## Nudge: mechanical clarity/leak tells in /designs posts (trailing "…", verbatim dupes, banned proprietary terms, thin sections, ascii-redraw of a mermaid) — the greppable half of the refine-design-post skill
 	@# The banned-term list is SENSITIVE, so it lives ONLY in the gitignored .env (key DESIGN_LEAK_TERMS),
 	@# NOT in git. Extract it per-var (NOT `source .env` — shell-special chars) and export it for the

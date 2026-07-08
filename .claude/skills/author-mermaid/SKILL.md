@@ -43,6 +43,15 @@ flowchart LR
   A[Discover] --> B[Scan] --> C[Score] --> D[Draft]
 ```
 
+> **Keep a flowchart legible — the complexity guard.** A hand-authored ```mermaid ``` fence
+> has NO layout gate (unlike `<FlowDiagram>`/`<UseCaseDiagram>`, which fail the build on a tangled
+> layout). A warn-tier check, `scripts/validate-mermaid-complexity.js` (`make validate-mermaid-complexity`)
+> + the PostToolUse `validate-mermaid-complexity-hook.sh`, nudges (never blocks) when a `graph`/`flowchart`
+> gets too dense to read: **>20 nodes, >24 edges, or one node fanning out to 7+**. When it fires, don't
+> ignore it: split the diagram, collapse a `subgraph` into a single node, or switch to `<FlowDiagram>`
+> (a nodes/edges spec that gates its own layout). Only flow diagrams are scored; sequence/ER/class/
+> state/timeline/mindmap lay themselves out and are skipped.
+
 ### architecture-beta (system/infra topology)
 Declaration `architecture-beta`; `group id(icon)[Title]`; `service id(icon)[Title] in group`;
 edges `id:DIR --> DIR:id` where DIR is `T|B|L|R`. Built-in icons: `cloud database disk internet server`.

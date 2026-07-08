@@ -68,6 +68,11 @@
           },
           {
             "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-mermaid-complexity-hook.sh\"",
+            "timeout": 15
+          },
+          {
+            "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-feature-docs-hook.py\"",
             "timeout": 30
           },
