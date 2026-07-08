@@ -8,14 +8,14 @@ date: 2021-07-05
 draft: true
 ---
 
-Behavioral interviews at a lot of companies — Amazon most famously — are built around
+Behavioral interviews at a lot of companies (Amazon most famously) are built around
 a published set of **leadership principles**. The questions feel open-ended ("tell me
 about a time…"), but each one is really probing for a specific principle. If you know
 which principle a question maps to and you have a crisp story ready, the whole format
 gets a lot less intimidating.
 
 This is the prep map I built for myself: each principle, the kind of question that
-surfaces it, and the method for answering. The stories are mine, anonymized — the
+surfaces it, and the method for answering. The stories are mine, anonymized; the
 point here is the *structure*, which transfers to any company that interviews this
 way.
 
@@ -26,16 +26,16 @@ way.
 Answer every behavioral question in the **STAR** format. It forces a complete story
 and keeps you from rambling:
 
-- **Situation** — the problem and its context (who, what, where, when). Keep it brief.
-- **Task** — what *you* specifically had to do, and the constraints (deadlines, costs,
+- **Situation**: the problem and its context (who, what, where, when). Keep it brief.
+- **Task**: what *you* specifically had to do, and the constraints (deadlines, costs,
   technical limits).
-- **Action** — the specific actions you took. Choose actions that *demonstrate*
+- **Action**: the specific actions you took. Choose actions that *demonstrate*
   desirable traits (initiative, leadership, judgment) without you having to name them.
-- **Result** — how it turned out. Quantify if you can, then add what you learned and
+- **Result**: how it turned out. Quantify if you can, then add what you learned and
   what you'd do differently.
 
-A useful variant interviewers use to evaluate the answer is **SBI** — Situation,
-Behavior, Impact — which is just STAR viewed from the listener's side. If your story
+A useful variant interviewers use to evaluate the answer is **SBI** (Situation,
+Behavior, Impact), which is just STAR viewed from the listener's side. If your story
 has a clear situation, a behavior that was yours, and a measurable impact, it works
 under either lens.
 
@@ -144,34 +144,34 @@ mine, anonymized, to show how a story maps onto STAR.
 
 ### A turnaround story (Earn Trust / Dive Deep / Deliver Results)
 
-- **Situation** — I was brought in to lead a team fixing the performance of a complex
+- **Situation**: I was brought in to lead a team fixing the performance of a complex
   GPU-based ML system that processed images. It was supposed to handle 600 images per
-  second; it was managing about 50. The customer was frustrated — at that rate their
+  second; it was managing about 50. The customer was frustrated: at that rate their
   backlog would take a year instead of a month, and they were losing faith we could
   deliver.
-- **Task** — Decompose the architecture, find the strategic improvements that would
+- **Task**: Decompose the architecture, find the strategic improvements that would
   raise throughput in time, and explain each change to the customer so they understood
   *why* it mattered.
-- **Action** — I broke the architecture down, diagrammed it, and mapped every
+- **Action**: I broke the architecture down, diagrammed it, and mapped every
   bottleneck. I documented each proposed enhancement with its rationale, and ran daily
   standups to keep everyone aligned on progress.
-- **Result** — Within a month we took it from ~50 to ~680 images per second. The
+- **Result**: Within a month we took it from ~50 to ~680 images per second. The
   methodical, transparent approach rebuilt the customer's trust, cleared their backlog,
   and opened the door to several follow-on projects.
 
-That one story credibly covers three principles — which is the goal. Strong stories
+That one story credibly covers three principles, which is the goal. Strong stories
 are reusable across principles; you reframe the emphasis to fit the question.
 
 ### A reuse story (Invent and Simplify / Ownership)
 
-- **Situation** — Across many projects I kept solving the same underlying problem: the
+- **Situation**: Across many projects I kept solving the same underlying problem: the
   same pattern of insights, feedback, and evolving profiles, re-implemented each time.
-- **Task** — Take ownership of the recurring problem and convince leadership to
+- **Task**: Take ownership of the recurring problem and convince leadership to
   dedicate resources to solving it once, properly.
-- **Action** — Built proof-of-concepts that showed technical leaders where the reuse
+- **Action**: Built proof-of-concepts that showed technical leaders where the reuse
   potential was, and quantified the time and code that a standardized approach would
   save.
-- **Result** — The standardized components ended up used across teams, and the effort
+- **Result**: The standardized components ended up used across teams, and the effort
   pinned down the definition of a previously ambiguous, overloaded term inside the org.
 
 ## Putting it together

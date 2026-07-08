@@ -1,7 +1,7 @@
 ---
 slug: questions-for-productionizing-a-machine-learning-system
 title: "Questions for Productionizing a Machine Learning System"
-description: "The operational questions that decide how an ML system actually runs in production — when to predict, how to rank, how often to train, and how to stay explainable."
+description: "The operational questions that decide how an ML system actually runs in production: when to predict, how to rank, how often to train, and how to stay explainable."
 authors: [oeid]
 tags: [ai-engineering, llm, question-set]
 date: 2020-06-16
@@ -19,7 +19,7 @@ through an ML system's design, grouped by the concern they belong to.
 ## Feedback and prediction cadence
 
 - What problem are ML engineers generally concerned with here in the first place?
-- How do you ingest feedback — can it be batched up, or does it need to be handled as
+- How do you ingest feedback: can it be batched up, or does it need to be handled as
   it arrives?
 - How often are predictions actually generated? Is this a bulk job, an online
   request, or both?
@@ -28,7 +28,7 @@ through an ML system's design, grouped by the concern they belong to.
   you may need to recompute the top results. How do you reconcile "fresh per request"
   with "the world changed underneath you"?
 - Without online-learning capability, the best you can do may be recomputing once a
-  day — and the model itself might take a while to run. Does your latency budget allow
+  day, and the model itself might take a while to run. Does your latency budget allow
   that?
 
 ## Ranking
@@ -42,7 +42,7 @@ through an ML system's design, grouped by the concern they belong to.
 
 - How frequently do you retrain?
 - When you're doing online training, when do you take a snapshot of the model?
-- Where do heuristics fit — what can you lean on them for while the learned system
+- Where do heuristics fit: what can you lean on them for while the learned system
   catches up?
 
 ## Consumption
@@ -57,7 +57,7 @@ through an ML system's design, grouped by the concern they belong to.
   visibility into *why* they're seeing something, and giving them a genuinely good
   recommendation.
 - What algorithm can balance these? You want a good recommendation service in the
-  long run — but optimizing purely for that can mean recommending bad things in the
+  long run, but optimizing purely for that can mean recommending bad things in the
   short run while the system explores. How much short-run cost will you accept for
   long-run quality?
 
