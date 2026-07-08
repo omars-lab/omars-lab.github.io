@@ -251,16 +251,20 @@ The three human actors and what each wants are shown in the [use-case diagram in
 
 These decisions are defined in detail in [Section 6.5](#65-key-design-decisions). The three flagged as **top concerns** by the founding team are **D1 to D3**: execution, measurement rigor, and autonomy/guardrails; the questions that most determine whether the agent is trustworthy on a live, revenue-generating store.
 
-| ID | Decision | Status |
-|----|----------|--------|
-| **D1** | **Execution / serving model**: how do variants actually get served on a live storefront? (drive a 3rd-party A/B platform via API, self-hosted JS/edge injection, or platform-native app/theme) | **Decided (phased):** Phase A Shopify-native → Phase B self-hosted |
-| **D2** | **Measurement rigor across traffic levels**: how do we trust a "win" when stores range from low- to mid-traffic? (frequentist vs. Bayesian vs. sequential/bandit; minimum-runtime and significance rules) | Leaning: hybrid, Bayesian/sequential default |
-| **D3** | **Autonomy & guardrails model**: what ships without a human, per category? (configurable tiers; revenue floors, blast-radius caps, auto-rollback) | Decided in principle: configurable tiers |
-| **D4** | **Ideation engine**: how are hypotheses generated and prioritized? (scanner findings + analytics + LLM reasoning; prioritization by expected lift × confidence × ease) | Leaning: combined, scanner-seeded + score |
-| **D5** | **Variant generation**: how are concrete copy/layout variants produced and kept on-brand? (LLM generation bounded by brand/voice guardrails; safe-mutation constraints) | Leaning: LLM + brand/a11y gate |
-| **D6** | **Outcome attribution**: how is dollar lift computed and reported to the owner? (per-experiment conversion + revenue delta; ledger model) | Leaning: per-experiment + portfolio holdback |
-| **D7** | **Tech stack & data store**: orchestration runtime, variant-serving infra, experiment store, LLM provider | TBD |
-| **D8** | **Compliance & safety posture**: consent/privacy for visitor bucketing, accessibility of generated variants, brand-safety review | Decided in principle (detail in §9.5) |
+<DecisionTable
+  title="Key Decisions"
+  desc="The eight decisions that shape the agent; D1 to D3 are the top concerns."
+  decisions={[
+    {id: 'D1', decision: <><strong>Execution / serving model:</strong> how do variants actually get served on a live storefront?</>, status: 'decided', statusNote: 'Phased: Phase A native, then Phase B self-hosted.', choice: 'Shopify-native → self-hosted', detail: <>The options weighed: drive a 3rd-party A/B platform via API, self-hosted JS/edge injection, or a platform-native app/theme. Launch native to validate fast, then move to self-hosted for margin and cross-platform reach.</>},
+    {id: 'D2', decision: <><strong>Measurement rigor across traffic levels:</strong> how do we trust a "win" when stores range from low to mid traffic?</>, status: 'leaning', choice: 'Bayesian / sequential default', detail: <>Frequentist vs. Bayesian vs. sequential/bandit, plus minimum-runtime and significance rules. Leaning hybrid with a Bayesian/sequential default so low-traffic stores still reach trustworthy decisions.</>},
+    {id: 'D3', decision: <><strong>Autonomy &amp; guardrails model:</strong> what ships without a human, per category?</>, status: 'decided', statusNote: 'Decided in principle; configurable tiers.', choice: 'Configurable autonomy tiers', detail: <>Configurable tiers with revenue floors, blast-radius caps, and auto-rollback. Low-risk copy/layout can ship autonomously; pricing/checkout require human approval.</>},
+    {id: 'D4', decision: <><strong>Ideation engine:</strong> how are hypotheses generated and prioritized?</>, status: 'leaning', choice: 'Scanner-seeded + scored', detail: <>Scanner findings + analytics + LLM reasoning, prioritized by expected lift × confidence × ease.</>},
+    {id: 'D5', decision: <><strong>Variant generation:</strong> how are on-brand copy/layout variants produced?</>, status: 'leaning', choice: 'LLM + brand/a11y gate', detail: <>LLM generation bounded by brand/voice guardrails, with safe-mutation constraints and an accessibility gate.</>},
+    {id: 'D6', decision: <><strong>Outcome attribution:</strong> how is dollar lift computed and reported?</>, status: 'leaning', choice: 'Per-experiment + portfolio holdback', detail: <>Per-experiment conversion + revenue delta, rolled into a wins ledger, with a portfolio holdback for honest attribution.</>},
+    {id: 'D7', decision: <><strong>Tech stack &amp; data store:</strong> orchestration runtime, variant-serving infra, experiment store, LLM provider</>, status: 'tbd'},
+    {id: 'D8', decision: <><strong>Compliance &amp; safety posture:</strong> consent/privacy for bucketing, variant accessibility, brand-safety review</>, status: 'decided', statusNote: 'Decided in principle; detail in §9.5.', choice: 'Consent + a11y + brand-safety gates'},
+  ]}
+/>
 
 ### 1.6 Challenges / Pain Points
 

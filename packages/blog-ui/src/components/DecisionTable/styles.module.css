@@ -1,0 +1,235 @@
+/* DecisionTable — the catalog of a design's decisions (D1…Dn) with anchored rows,
+   status badges, and a visited-row highlight. Themed from the blog's design-system
+   tokens; light and dark work with no extra wiring. */
+
+.wrap {
+  margin: var(--space-8) 0;
+}
+
+.scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--bop-divider);
+  border-radius: var(--radius-lg);
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--text-body-md);
+  margin: 0; /* reset the global markdown table margin inside the rounded wrapper */
+}
+
+.caption {
+  caption-side: bottom;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--bop-divider);
+  vertical-align: top;
+}
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table thead th {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-content-secondary);
+  background: var(--ifm-background-color);
+  white-space: nowrap;
+}
+
+/* The ID + Status columns shrink-wrap; Decision + Choice take the remaining width. */
+.colId {
+  width: 1%;
+}
+.colStatus {
+  width: 1%;
+}
+
+.id {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.idLink,
+.idButton {
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+.idLink:hover {
+  text-decoration: underline;
+}
+/* A decision with `detail` gets a button (opens the modal) + a "why" dot. */
+.idButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+}
+.whyDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ifm-color-primary);
+  flex: none;
+  opacity: 0.6;
+  transition: opacity var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
+}
+.idButton:hover .whyDot,
+.idButton:focus-visible .whyDot {
+  opacity: 1;
+  background: var(--ifm-color-primary);
+}
+
+.decision {
+  line-height: 1.5;
+}
+.choice {
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.5;
+}
+
+.statusCell {
+  white-space: nowrap;
+}
+
+/* ---- status badges: pastel fill + --tea-ink, per the design-system discipline
+   (pastels are accent FILLS, --tea-ink is the only ink on them). ---- */
+.badge {
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  border-radius: 100px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  cursor: help; /* signals the tooltip */
+  color: var(--tea-ink);
+}
+.badge-decided {
+  background: var(--pastel-sage, var(--accent-tint));
+}
+.badge-leaning {
+  background: var(--pastel-gold, #f8efd8);
+}
+.badge-open {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-content-secondary);
+}
+.badge-tbd {
+  background: transparent;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-content-secondary);
+}
+
+/* ---- the anchored-row highlight (the point). CSS :target lights the row when its
+   id is the URL hash; the .flash class replays a brief pulse on a repeat click. ---- */
+.row:target {
+  background: var(--accent-tint);
+  box-shadow: inset 3px 0 0 var(--ifm-color-primary);
+}
+.row:target .id .idLink,
+.row:target .id .idButton {
+  color: var(--ifm-color-primary);
+}
+.flash {
+  animation: dt-flash var(--duration-slow, 0.6s) var(--ease-standard);
+}
+@keyframes dt-flash {
+  0% {
+    background: var(--ifm-color-primary);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* Focus modal (mirrors the ComparisonMatrix / UseCaseDiagram modal). */
+.modal {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  max-width: min(460px, 92vw);
+  width: 100%;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  box-shadow: var(--shadow-md);
+}
+.modal::backdrop {
+  background: rgba(20, 32, 26, 0.4);
+}
+.modalInner {
+  position: relative;
+  padding: var(--space-6);
+}
+.modalClose {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  border: none;
+  background: transparent;
+  font-size: var(--text-h4);
+  line-height: 1;
+  color: var(--ifm-color-content-secondary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+.modalClose:hover {
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+}
+.modalEyebrow {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+  margin: 0 0 var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+.modalTitle {
+  font-size: var(--text-h4);
+  font-weight: 600;
+  margin: 0 0 var(--space-3);
+  padding-right: var(--space-6);
+  line-height: 1.35;
+}
+.modalNote {
+  margin: 0;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+.modalNote > :first-child {
+  margin-top: 0;
+}
+.modalNote > :last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whyDot {
+    transition: none;
+  }
+  .flash {
+    animation: none;
+  }
+}

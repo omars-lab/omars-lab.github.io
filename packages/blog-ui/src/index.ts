@@ -60,6 +60,19 @@ export type {
   CellFootnote,
 } from './components/ComparisonMatrix';
 
+// DecisionTable — the catalog of a design's decisions (D1…Dn) as an anchored, status-badged
+// table. Distinct from ComparisonMatrix (which is criteria x OPTIONS): this is the numbered
+// list of DECISIONS with status, so "see D3" cross-references become deep-links. Each row is
+// #d3-addressable and highlights when its anchor is the URL hash; status badges carry a
+// tooltip (the status gloss + an optional per-decision statusNote); a decision with `detail`
+// opens a focus modal. Build-time gate throws on a duplicate id or unknown status.
+export {default as DecisionTable} from './components/DecisionTable';
+export type {
+  DecisionTableProps,
+  Decision,
+  DecisionStatus,
+} from './components/DecisionTable';
+
 // Accordion — a foldable option list on native <details>/<summary> (zero JS). Each item has a
 // one-line summary, an expandable body, and an optional verdict pill ("chosen"/"rejected").
 // Pairs with ComparisonMatrix: the accordion carries the narrative, the matrix the head-to-head.
