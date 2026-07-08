@@ -599,7 +599,7 @@ Coupled to D1. The decision is a **hybrid**: the *location* lives inline in the 
   "schemaVersion": 1,
   "threads": [
     {
-      "id": "ab12",                       // join key &#8212; matches <!--rc:* id=ab12-->
+      "id": "ab12",                       // join key: matches <!--rc:* id=ab12-->
       "anchorType": "range",              // range | block | point | doc
       "status": "open",                   // open | resolved | reopened | orphaned
       "createdBy": "reviewer",
@@ -613,7 +613,7 @@ Coupled to D1. The decision is a **hybrid**: the *location* lives inline in the 
       },
       "comments": [
         { "id": "c1", "author": "reviewer", "body": "Is this strictly stronger than fuzzy?", "createdAt": "2026-06-22T14:03:00Z" },
-        { "id": "c2", "author": "claude",   "body": "Yes &#8212; marker moves with the text; fuzzy is the fallback. Clarified in D1.", "createdAt": "2026-06-22T14:09:11Z" }
+        { "id": "c2", "author": "claude",   "body": "Yes: marker moves with the text; fuzzy is the fallback. Clarified in D1.", "createdAt": "2026-06-22T14:09:11Z" }
       ],
       "addressedInCommit": "a1b2c3d"       // set when a Claude round resolves it (D3 traceability)
     }
@@ -814,7 +814,7 @@ Invocation (per D2/D8): `claude -p --output-format json --allowedTools "Read,Edi
 ```jsonc
 {
   "replies": [
-    { "id": "ab12", "resolution": "resolved", "reply": "Clarified &#8212; marker moves with the text; fuzzy is the fallback." },
+    { "id": "ab12", "resolution": "resolved", "reply": "Clarified: marker moves with the text; fuzzy is the fallback." },
     { "id": "cd34", "resolution": "resolved", "reply": "Demoted heading to H3." },
     { "id": "ef56", "resolution": "addressed", "reply": "Added a sentence on git-revert rollback." }
   ]

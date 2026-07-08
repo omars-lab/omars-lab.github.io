@@ -98,13 +98,13 @@ Aide sits between a human-run kanban board and the external systems where work p
 
 ```mermaid
 graph TB
-    subgraph EXEC["Execution Layer &#8212; cloud runtime (scheduled task)"]
+    subgraph EXEC["Execution Layer: cloud runtime (scheduled task)"]
         AGENT["Aide (agent runtime)"]
         PROMPT["Operating model<br/>tenets · queues · templates"]
         SETUP["setup script<br/>installs CLIs, env fixes, snapshots"]
     end
 
-    subgraph SKILLS["Agent Skill Layer &#8212; daily loop"]
+    subgraph SKILLS["Agent Skill Layer: daily loop"]
         SK_CI["check-in"]
         SK_INT["process-intake"]
         SK_PW["pull-work"]
@@ -381,7 +381,7 @@ sequenceDiagram
     actor H as Reviewer
     W->>J: hits a decision it can't make
     W->>J: set flag + blocked-on-human, Tier-3 question, STAY assigned
-    Note over W,J: not Blocked &#8212; this is "waiting on you", not "failed"
+    Note over W,J: not Blocked: this is "waiting on you", not "failed"
     H->>J: answers, swap blocked-on-human → was-blocked-on-human
     Note over W,J: next run
     W->>J: priority-0 Unblocked queue (before Review)
@@ -561,17 +561,17 @@ sequenceDiagram
     participant S as Metrics (MCP)
     participant G as Document store (CLI)
 
-    Note over Sched, G: Phase 1 &#8212; Check-In
+    Note over Sched, G: Phase 1: Check-In
     Sched->>W: nightly trigger
     W->>J: find/create daily subtask under check-in epic
     W->>J: pre-flight connectivity probes
     W->>J: post Check-In comment
 
-    Note over Sched, G: Phase 2 &#8212; Pull Work
+    Note over Sched, G: Phase 2: Pull Work
     W->>J: Queue 1 Review, Queue 2 Rework, Queue 3 Planning, Queue 4 Prioritized
     W->>W: build work queue in priority order
 
-    Note over Sched, G: Phase 3 &#8212; Process each item
+    Note over Sched, G: Phase 3: Process each item
     loop per item
         W->>J: Step 0 self-review own comments
         alt source = Review
@@ -595,7 +595,7 @@ sequenceDiagram
         end
     end
 
-    Note over Sched, G: Phase 4 &#8212; Check-Out
+    Note over Sched, G: Phase 4: Check-Out
     W->>J: Check-Out comment on subtask
     W->>S: insert run + item metrics
     W->>G: upload workspace archive

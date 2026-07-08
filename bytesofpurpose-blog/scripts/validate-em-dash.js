@@ -109,18 +109,26 @@ for (const file of files) {
     const isFenceToggle = /^(```|~~~)/.test(trimmed);
 
     const emCount = line.includes(EM_DASH) ? line.split(EM_DASH).length - 1 : 0;
+    // Em-dash HTML entities (&#8212; decimal, &#x2014; hex, &mdash; named) RENDER as an
+    // em-dash, so they are the same AI-voice tell in disguise. Common inside mermaid labels
+    // (the old bypass). Code-inclusive like the em-dash check.
+    const entityCount = (line.match(/&#8212;|&#[xX]0*2014;|&mdash;/g) || []).length;
     const dashBypass = !inFence && !isFenceToggle && hasDashBypass(line);
 
     if (isFenceToggle) inFence = !inFence;
 
-    if (emCount === 0 && !dashBypass) return;
+    if (emCount === 0 && entityCount === 0 && !dashBypass) return;
     let snip = line.trim();
     if (snip.length > 120) snip = snip.slice(0, 117) + '...';
-    const kind = emCount > 0 && dashBypass ? 'em-dash + "--"' : emCount > 0 ? 'em-dash' : '"--" bypass';
+    const parts = [];
+    if (emCount > 0) parts.push('em-dash');
+    if (entityCount > 0) parts.push('em-dash entity');
+    if (dashBypass) parts.push('"--"');
+    const kind = parts.join(' + ');
     findings.push({
       file: path.relative(SITE_ROOT, file),
       line: i + 1,
-      count: emCount + (dashBypass ? 1 : 0),
+      count: emCount + entityCount + (dashBypass ? 1 : 0),
       kind,
       snippet: snip,
     });

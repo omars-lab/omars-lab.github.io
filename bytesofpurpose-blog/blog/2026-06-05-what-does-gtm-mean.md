@@ -18,13 +18,13 @@ draft: false
 
 A GTM strategy is the plan for how a product reaches and wins customers. It typically covers:
 
-- **Target segment / ICP** &mdash; who the customer is
-- **Positioning & messaging** &mdash; what value prop, against what alternatives
+- **Target segment / ICP**: who the customer is
+- **Positioning & messaging**: what value prop, against what alternatives
 - **Pricing & packaging**
-- **Channels** &mdash; sales-led, self-serve, partners, marketing motions
-- **Launch sequencing** &mdash; pilot, GA, expansion, and how you ramp
-- **Cross-functional alignment** &mdash; sales, marketing, product, support all rowing together
-- **Success metrics** &mdash; adoption, revenue, retention
+- **Channels**: sales-led, self-serve, partners, marketing motions
+- **Launch sequencing**: pilot, GA, expansion, and how you ramp
+- **Cross-functional alignment**: sales, marketing, product, support all rowing together
+- **Success metrics**: adoption, revenue, retention
 
 It's fundamentally a commercial, customer-facing plan. The audience is the market.
 
