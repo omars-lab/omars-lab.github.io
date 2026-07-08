@@ -943,8 +943,17 @@ function useScrollProgress(
  * Short tau + min close-rate + healthy frame times = liquid AND live.
  *
  * Rules: NEVER writes to scroll (read-only display easing, no scroll-jack). Disabled (raw passthrough)
- * for reduced motion and for the ?hero-progress freeze seam. The loop is self-driving until converged,
- * so the wave keeps sweeping (and the board keeps churning, via `active`) briefly after fingers lift.
+ * for reduced motion and for the ?hero-progress freeze seam.
+ *
+ * LIFECYCLE: a SINGLE always-on rAF loop runs for as long as the hook is `enabled` (pickets active).
+ * Every frame it eases `displayRef` toward `progressRef` and, when they differ, bumps `displayTick` to
+ * re-render. When they are equal the frame is a cheap no-op. This is deliberately NOT a start-on-input /
+ * stop-on-converge loop: that earlier design had a RACE — the loop self-terminated inside a rAF
+ * callback (`runningRef=false`), and if a scroll event had already bumped the input `tick` while that
+ * final frame was in flight, the restart effect saw `runningRef` still true, returned early, and then
+ * the loop stopped with no restart queued. So the display FROZE until the NEXT scroll event — which
+ * during a slow, steady finger-drag (coalesced scroll events) read as "the pickets don't cycle until I
+ * stop scrolling and lift my finger". An always-on loop cannot race: there is nothing to restart.
  */
 const CATCHUP_TAU_S = 0.07; // exponential time constant: ~70ms lag feels liquid, not laggy
 const CATCHUP_MAX_S = 0.3; // a small-to-medium gap fully closes within about this long (rate floor)
@@ -953,7 +962,7 @@ const CATCHUP_MAX_S = 0.3; // a small-to-medium gap fully closes within about th
 // render: visually a teleport again. 0.5/s sweeps one crossing (~0.0875) in ~175ms — fast, but every
 // picket and scene visibly passes (GSAP's numeric `scrub` is this same idea, typically 0.5s).
 const CATCHUP_MAX_RATE = 0.5;
-const CATCHUP_EPS = 0.0004; // snap-exact + stop the loop when within this of the raw progress
+const CATCHUP_EPS = 0.0004; // treat the display as in-sync (no re-render) within this of the raw progress
 function useCatchUpProgress(
   progressRef: React.MutableRefObject<number>,
   tick: number,
@@ -963,54 +972,50 @@ function useCatchUpProgress(
   const [displayTick, setDisplayTick] = useState(0);
   const [active, setActive] = useState(false);
   const rafRef = useRef(0);
-  const runningRef = useRef(false);
-  const lastTsRef = useRef(0);
+  const activeRef = useRef(false); // mirrors `active` so the rAF loop only setState on a real edge
 
   useEffect(() => {
     if (!enabled) return undefined;
-    if (runningRef.current) return undefined; // the loop is already chasing; it reads the ref live
-    const gap0 = progressRef.current - displayRef.current;
-    if (Math.abs(gap0) < CATCHUP_EPS) {
-      displayRef.current = progressRef.current; // trivially in sync (e.g. mount)
-      return undefined;
-    }
-    runningRef.current = true;
-    setActive(true);
-    lastTsRef.current = performance.now();
+    // Start the display in sync so the first frames don't sweep from a stale position.
+    displayRef.current = progressRef.current;
+    let last = performance.now();
     const step = (now: number) => {
-      const dt = Math.max(0.001, (now - lastTsRef.current) / 1000);
-      lastTsRef.current = now;
+      const dt = Math.max(0.001, (now - last) / 1000);
+      last = now;
       const gap = progressRef.current - displayRef.current;
       if (Math.abs(gap) < CATCHUP_EPS) {
-        displayRef.current = progressRef.current;
-        runningRef.current = false;
-        setActive(false);
+        // Converged: snap exact, mark inactive on the falling edge, and idle (no re-render this frame).
+        if (displayRef.current !== progressRef.current) {
+          displayRef.current = progressRef.current;
+          setDisplayTick((t) => (t + 1) % 1_000_000);
+        }
+        if (activeRef.current) {
+          activeRef.current = false;
+          setActive(false);
+        }
+      } else {
+        // exponential ease toward the raw progress, floored by the min close-rate so medium gaps close
+        // within ~CATCHUP_MAX_S, then SPEED-CAPPED so a huge flick still SWEEPS visibly (never teleports)
+        const ease = 1 - Math.exp(-dt / CATCHUP_TAU_S);
+        const floor = Math.min(1, dt / CATCHUP_MAX_S);
+        const desired = gap * Math.max(ease, floor);
+        const capped = Math.sign(desired) * Math.min(Math.abs(desired), CATCHUP_MAX_RATE * dt);
+        displayRef.current += capped;
         setDisplayTick((t) => (t + 1) % 1_000_000);
-        return;
+        if (!activeRef.current) {
+          activeRef.current = true;
+          setActive(true);
+        }
       }
-      // exponential ease toward the raw progress, floored by the min close-rate so medium gaps close
-      // within ~CATCHUP_MAX_S, then SPEED-CAPPED so a huge flick still SWEEPS visibly (never teleports)
-      const ease = 1 - Math.exp(-dt / CATCHUP_TAU_S);
-      const floor = Math.min(1, dt / CATCHUP_MAX_S);
-      const desired = gap * Math.max(ease, floor);
-      const capped = Math.sign(desired) * Math.min(Math.abs(desired), CATCHUP_MAX_RATE * dt);
-      displayRef.current += capped;
-      setDisplayTick((t) => (t + 1) % 1_000_000);
       rafRef.current = window.requestAnimationFrame(step);
     };
     rafRef.current = window.requestAnimationFrame(step);
-    return undefined; // the loop self-terminates on convergence; unmount cleanup is below
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tick, enabled]);
-
-  // Unmount: stop any in-flight loop.
-  useEffect(
-    () => () => {
+    return () => {
       window.cancelAnimationFrame(rafRef.current);
-      runningRef.current = false;
-    },
-    [],
-  );
+      activeRef.current = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   if (!enabled) return {ref: progressRef, tick, active: false};
   return {ref: displayRef, tick: displayTick, active};

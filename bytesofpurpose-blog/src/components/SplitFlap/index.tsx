@@ -153,6 +153,34 @@ function wrapToGrid(text: string, columns: number): string[] {
   });
 }
 
+/** SWEEP-mode grids: lay TWO texts on the SAME column grid so a column-wise splice between them is
+ * coherent (the pickets board shows the destination left of the flip front + the from-text to its
+ * right). Both are single-line, centered on the LONGER text's width and padded to the fixed row count,
+ * so column i is the same slot in both. Returns `[toGrid, fromGrid]`. If either text wraps to more than
+ * one line (longer than `columns`), falls back to the per-text `toGrid` centering (multi-line sweep is
+ * not used by the hero; the scene titles are all single-line). */
+function toSharedGrid(
+  toText: string,
+  fromText: string,
+  columns: number,
+  fixedRows: number | undefined,
+): [string[], string[]] {
+  const a = toText.toUpperCase();
+  const b = fromText.toUpperCase();
+  const pad = (g: string[]): string[] => {
+    if (!fixedRows) return g;
+    const blank = ' '.repeat(columns);
+    const top = Math.floor((fixedRows - g.length) / 2);
+    return [...Array(top).fill(blank), ...g, ...Array(fixedRows - g.length - top).fill(blank)];
+  };
+  // Multi-line (a title wider than the board) has no single shared offset — fall back per-text.
+  if (a.length > columns || b.length > columns) {
+    return [pad(wrapToGrid(a, columns)), pad(wrapToGrid(b, columns))];
+  }
+  const left = Math.floor((columns - Math.max(a.length, b.length)) / 2);
+  return [pad([padInColumns(a, columns, left)]), pad([padInColumns(b, columns, left)])];
+}
+
 // The flap DECK: the ordered set of glyphs on a physical split-flap drum. A cell rolls THROUGH this
 // sequence (blank → A..Z → 0..9 → punctuation) one flap at a time until it lands on the target, the
 // way a real departure board does. A char not in the deck is treated as a single direct flip.
@@ -302,7 +330,13 @@ function SplitFlap({
   // instant is the single fold of the cell the front is crossing (Cell flips when its char changes).
   // Stop mid-crossing → the mixed board FREEZES; scroll back → the letters revert, column by column.
   if (sweepProgress != null && sweepFromText != null) {
-    const fromGrid = toGrid(sweepFromText);
+    // BOTH texts must sit on the SAME column grid, or the mid-sweep column splice (destination on the
+    // left of the front, from-text on the right) is INCOHERENT: `toGrid` centers each text on its own
+    // width, so two titles of different length land in different columns and the splice drops the
+    // inter-word space ("EXPLORE MY" → "EXPLOREMY") or doubles a boundary letter. `toSharedGrid`
+    // centers both on the LONGER title's width, so column i means the same slot in both and the swept
+    // line reads as one continuous title with its spaces intact.
+    const [grid, fromGrid] = toSharedGrid(text, sweepFromText, columns, fixedRows);
     const p = Math.min(1, Math.max(0, sweepProgress));
     // Each row's lit span (union across from+to); the front walks these spans row-major.
     const spans = grid.map((row, r) => {

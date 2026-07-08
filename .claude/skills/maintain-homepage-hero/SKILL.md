@@ -180,6 +180,20 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
   scrubbed SWEEP mode (gotcha 24), so wave + board move as one. Guarded by
   `[pickets] the wave tracks the scroll LIVE`, `... render STORM`, and hero-perf's
   `inertial FLICK sweeps THROUGH` + `rapid-succession flicks`.
+- **`useCatchUpProgress` is a SINGLE ALWAYS-ON rAF loop, NOT start-on-input / stop-on-converge — never
+  revert that.** An earlier version started the loop on an input `tick` change and self-terminated
+  (`runningRef=false`) inside a rAF callback when the gap closed. That RACED: if a scroll event bumped
+  the input tick while the final frame was in flight, the restart effect saw `runningRef` still true,
+  returned early, and then the loop stopped with no restart queued, so the display FROZE until the next
+  scroll event. On a slow steady finger-drag (coalesced events) this read as **"the pickets/board don't
+  cycle until I stop scrolling and lift my finger"** (a real user report, 2026-07). The fix: one rAF
+  loop that runs for as long as pickets is enabled and every frame eases `displayRef` toward
+  `progressRef` (a no-op when equal). No restart, nothing to race. IMPORTANT LESSON: this bug PASSED
+  both a synthetic `scrollTo` test AND a CDP `synthesizeScrollGesture` fling test (their events were too
+  regular to trigger the race) and was only caught on the user's REAL trackpad. Any scroll-driven rAF
+  loop keyed on input events is a race smell; verify scroll FEEL on real hardware, not just in e2e (see
+  the `audit-test-realism` skill's "even the most realistic automated gesture can pass while real
+  hardware fails" note).
 - **The wave's scrub fidelity IS its scroll runway.** Pickets has its OWN spacer height
   (`PICKET_SCENE_VH` 1.5 vs pin's 0.85) and its own crossing share (`PICKET_TRANSITION_FRACTION` 0.7 vs
   0.5; `deriveSceneState` takes it as a param) so one crossing spans ~650px of scroll instead of ~250px.
