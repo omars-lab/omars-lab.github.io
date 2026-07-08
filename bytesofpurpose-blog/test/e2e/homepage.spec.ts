@@ -747,6 +747,65 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
     });
 
+  // The board's per-column string with LEADING SPACES preserved, plus the column the text starts at.
+  // (boardCollapsed strips spaces; this one keeps position so we can see a horizontal SHIFT.)
+  const boardLeftOffset = (page: Page) =>
+    page.evaluate(() => {
+      const row = [...document.querySelectorAll('[class*="studioSign"] [class*="row"]')]
+        .map((r) =>
+          [...r.querySelectorAll('[class*="cell"]')]
+            .map((c) => c.querySelector('[class*="glyph"]')?.textContent ?? ' ')
+            .join(''),
+        )
+        .find((s) => s.trim());
+      return row ? row.search(/\S/) : -1;
+    });
+
+  test('[pickets] a scene title occupies the SAME columns across crossings (letters flip, never slide)', async ({
+    page,
+  }) => {
+    // REGRESSION: each scene title was centered on its OWN width, so a title's letters SLID sideways
+    // when you scrolled from its settled zone into the next crossing (the two crossings re-centered on
+    // different pair-max widths). The user saw "sentences shifting left" instead of flipping in place.
+    // Fixed by anchoring every message to one journey-wide width (SplitFlap anchorWidth), so a given
+    // scene sits in the SAME start column everywhere. Assert that: the SAME title read at two scroll
+    // positions (its own settled zone, then just past it entering the next crossing) starts at the same
+    // column. A slide would show two different offsets.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    // scene 0 (DISCOVER MY CRAFT, 17 chars) settled zone, then the start of the CRAFT→JOURNEY crossing
+    // (JOURNEY is 19 chars — a DIFFERENT width, the case that used to shift).
+    await scrubTo(page, (1 + 0.1) / 8); // scene 0 settled
+    await page.waitForTimeout(500);
+    const settledText = await boardCollapsed(page);
+    const settledOffset = await boardLeftOffset(page);
+    expect(settledText, 'settled on scene 0 title').toBe('DISCOVERMYCRAFT');
+
+    // nudge to the very start of the next crossing, where CRAFT is still the fully-shown FROM text
+    await scrubTo(page, (1 + 0.75) / 8);
+    await page.waitForTimeout(500);
+    const crossingText = await boardCollapsed(page);
+    const crossingOffset = await boardLeftOffset(page);
+
+    // if CRAFT is still fully shown here, its start column MUST match the settled one (no slide)
+    if (crossingText === 'DISCOVERMYCRAFT') {
+      expect(
+        crossingOffset,
+        `CRAFT must start at the SAME column in both places (settled ${settledOffset}, crossing ${crossingOffset}) — a mismatch is the sideways slide`,
+      ).toBe(settledOffset);
+    }
+    // Regardless: every title shares ONE anchor offset, so scene 0's and the next scene's titles both
+    // start at the same column. Read scene 1's settled title and assert it shares scene 0's offset.
+    await scrubTo(page, (2 + 0.1) / 8); // scene 1 settled (DISCOVER MY JOURNEY, a different length)
+    await page.waitForTimeout(500);
+    const scene1Offset = await boardLeftOffset(page);
+    expect(
+      scene1Offset,
+      `different-length titles must share the anchor start column (scene0 ${settledOffset}, scene1 ${scene1Offset})`,
+    ).toBe(settledOffset);
+  });
+
   test('[pickets] the board FREEZES mid-crossing as a stable old/new MIX, and shows the TITLE when settled', async ({
     page,
   }) => {

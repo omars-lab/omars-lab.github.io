@@ -425,6 +425,15 @@ const STUDIO_INTERVAL_MS = 4500; // time one state (door OR a scene) is shown be
 // flap tiles flanking the centered title (a real departure board's empty flaps).
 const STUDIO_BOARD_COLS = 24;
 const STUDIO_BOARD_ROWS = 3; // 3 rows of bigger letters (not 5 rows of small)
+// The WIDEST board message across the whole journey (every scene title + the door's WELCOME). The
+// pickets board centers EVERY message on this one width (SplitFlap `anchorWidth`) so each scene sits in
+// the SAME columns in every crossing. Without it, each title is centered on its own width, so a scene's
+// letters SLIDE sideways when you scroll from one crossing into the next (they re-center to a different
+// pair's max width) instead of flipping in place. Computed from the titles so it can never drift.
+const STUDIO_BOARD_ANCHOR_WIDTH = Math.max(
+  'WELCOME'.length,
+  ...CHOOSER_CARDS.map((c) => stripEmoji(c.title).length),
+);
 // The door↔scene WHITE FLASH: the centre arch flashes white (a long camera-exposure bloom); at the
 // flash PEAK the centre swaps door↔scene and the board flips; then the flash recedes. The flash
 // duration is MATCHED to the board roll (FLASH_SETTLE_MS) so the new scene + the settled board ARRIVE
@@ -1262,6 +1271,9 @@ function StudioFacade({
                     columns={boardCols}
                     rows={STUDIO_BOARD_ROWS}
                     settleMs={FLASH_SETTLE_MS}
+                    // PICKETS: anchor every message to the widest title so scenes sit in fixed columns
+                    // across crossings (no sideways slide on a scene change; letters flip in place).
+                    anchorWidth={picketed ? STUDIO_BOARD_ANCHOR_WIDTH : undefined}
                   />
                 </div>
               </div>
