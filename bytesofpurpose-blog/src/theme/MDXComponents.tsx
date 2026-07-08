@@ -53,6 +53,7 @@ import {
   FlowDiagram,
   MindMap,
   ComparisonMatrix,
+  DecisionTable,
   Accordion,
   UseCaseDiagram,
   Mockup,
@@ -151,6 +152,13 @@ export default {
   // criteria={[]}/> for a head-to-head. (OptionGrid/DecisionNote show explored DESIGN directions
   // with a chosen ring + WHY; ComparisonMatrix is the feature-by-feature decision table.)
   ComparisonMatrix,
+  // DecisionTable: the catalog of a design's decisions (D1…Dn) as an anchored, status-badged table.
+  // Distinct from ComparisonMatrix (criteria x OPTIONS): this is the numbered DECISIONS list with
+  // status. Each row is #d3-addressable and highlights when its anchor is the URL hash, so "see D3"
+  // prose refs become deep-links; status badges carry a tooltip (gloss + optional statusNote); a
+  // decision with `detail` opens a focus modal. Build-time gate throws on a dup id or unknown status.
+  // Use <DecisionTable title=... decisions={[{id, decision, status, choice?, statusNote?, detail?}]}/>.
+  DecisionTable,
   // Accordion: a foldable option list on native <details>/<summary> (zero JS, keyboard-accessible).
   // Each item has a one-line summary, an expandable body, and an optional verdict pill. Pairs with
   // ComparisonMatrix: the accordion carries the narrative, the matrix the head-to-head. Use
