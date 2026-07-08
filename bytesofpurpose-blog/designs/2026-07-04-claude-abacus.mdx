@@ -1,12 +1,12 @@
 ---
-slug: design-fleetplane
-sidebar_label: Fleetplane
+slug: design-claude-abacus
+sidebar_label: Claude Abacus
 sidebar_position: 19
-title: 'Fleetplane: A Control Plane for a Claude Code Fleet'
+title: 'Claude Abacus: Measuring the Value Claude Adds Across Distributed Sessions'
 description: >-
-  A build-ready plan to standardize Claude Code across an engineering fleet and
-  turn on-device-sanitized session transcripts into metrics, dashboards, and a
-  bug pipeline.
+  A build-ready plan to consolidate agent-usage metrics across Distributed
+  Claude Code Sessions: tool invocations, agents run, insights generated, and
+  bugs found, from on-device-sanitized transcripts into dashboards and a deck.
 authors:
   - oeid
 tags:
@@ -17,18 +17,52 @@ tags:
   - observability
 kind: backend-design
 draft: true
-mockups: ./_mockups/fleetplane.mdx
+mockups: ./_mockups/claude-abacus.mdx
 ---
 
-# Fleetplane: A Control Plane for a Claude Code Fleet
+# Claude Abacus: Measuring the Value Claude Adds Across Distributed Sessions
+
+## Who it's for and what they do with it
+
+**Who.** Three people care about how Claude Code is actually being used across a team. A **platform / developer-experience lead** owns the rollout and has to show it is working. An **engineer** runs Claude Code all day and wants their own usage and the bugs it caught visible, without their raw transcripts (and the secrets in them) leaving their laptop. **Engineering leadership** funds the tool and keeps asking what it returns.
+
+**The problem they share.** The richest signal about the value Claude adds, the session transcripts, is trapped on individual laptops next to raw secrets, so no one can measure it. Tool invocations, agents run, insights generated, bugs found, spend: all invisible in aggregate.
+
+**What we build to fix it.** A reporting mechanism that sanitizes each transcript on-device, uploads only the clean metrics, and turns them into dashboards, a bug pipeline, and a deck. What each person then does with it:
+
+<UseCaseDiagram
+  title="Claude Abacus"
+  actors={[
+    {id: 'lead', label: 'Platform lead', kind: 'internal'},
+    {id: 'eng', label: 'Engineer', kind: 'internal'},
+    {id: 'exec', label: 'Eng leadership', kind: 'internal'},
+  ]}
+  useCases={[
+    {id: 'adopt', label: 'Track adoption', detail: 'See who is using Claude Code and how much, across all sessions.'},
+    {id: 'value', label: 'See value delivered', detail: 'Tool invocations, agents run, insights, and bugs found, per team.'},
+    {id: 'own', label: 'See my own usage', detail: 'An engineer sees their sessions and the bugs their agents caught, raw transcripts never leaving the laptop.'},
+    {id: 'bugs', label: 'Review found bugs', detail: 'Agent-filed issues land in a deduped pipeline for a human to confirm.'},
+    {id: 'roi', label: 'Prove ROI', detail: 'Spend against bugs found and work done, ready for a leadership deck.'},
+  ]}
+  links={[
+    {from: 'lead', to: 'adopt'},
+    {from: 'lead', to: 'value'},
+    {from: 'eng', to: 'own'},
+    {from: 'eng', to: 'bugs'},
+    {from: 'exec', to: 'value'},
+    {from: 'exec', to: 'roi'},
+  ]}
+/>
+
+**How it makes their life better.** The lead can prove the rollout is landing, the engineer gets credit for the work their agents do without exposing a single secret, and leadership sees spend against value in numbers they trust.
 
 :::note[Scope]
-This design defines **Fleetplane**: a system that (1) centralizes and standardizes Claude Code configuration across an engineering fleet, (2) collects and sanitizes session transcripts **on-device**, and (3) turns them into metrics, dashboards, an issue pipeline, and an investor-ready deck. It is written as a **phased, independently shippable** build: each phase stands on its own, and Stage 1 (1 to 100 engineers) is a strict subset of every later stage, so nothing built early is thrown away when you scale.
+**Claude Abacus** is a reporting mechanism that consolidates agent-usage metrics across **Distributed Claude Code Sessions (DCCS)**: how many tool invocations run, which agents get used, what insights and bugs they surface, and what it all costs. It (1) collects and sanitizes session transcripts **on-device**, (2) turns them into metrics, dashboards, an issue pipeline, and a deck, and (3) ships a small standardized config so every environment reports the same signal. It is written as a **phased, independently shippable** build: each phase stands on its own, and Stage 1 (1 to 100 engineers) is a strict subset of every later stage, so nothing built early is thrown away when you scale.
 :::
 
 <!-- truncate -->
 
-import Mockups from './_mockups/fleetplane.mdx';
+import Mockups from './_mockups/claude-abacus.mdx';
 
 <Mockups />
 
@@ -36,7 +70,7 @@ import Mockups from './_mockups/fleetplane.mdx';
 
 ## Executive Summary
 
-You rolled Claude Code out to a growing engineering fleet, and three things are quietly breaking. Every laptop's config has drifted, so no two engineers run the same skills, agents, hooks, or permissions. The richest signal about how the fleet actually works, the session transcripts, is trapped on those laptops, next to raw secrets that must never leave the device. And leadership keeps asking for numbers you can't give: tokens, spend, bugs found, adoption. There is no control plane.
+You rolled Claude Code out across a team, and you cannot measure what it is doing. The richest signal about the value it adds, the session transcripts, is trapped on individual laptops next to raw secrets that must never leave the device. So tool invocations, agents run, insights generated, bugs found, and spend are all invisible in aggregate. And leadership keeps asking for numbers you can't give. There is no way to report on Distributed Claude Code Sessions.
 
 **The solution** splits into two planes that never blur, and the whole design follows from that split:
 
@@ -61,7 +95,7 @@ Four decisions anchor the design (spelled out in [Key Decisions](#key-decisions)
 
 **Expected value.** Live token and cost dashboards exist after Phase 1, before any transcript pipeline is built. That is the point: value lands before collection. Everything after is layered on a foundation whose only expensive-to-get-wrong pieces (the sanitizer, the schema, the consent model) are over-built early and the rest is kept deliberately small.
 
-**Status and what is open.** The architecture, the invariants, and the star schema are settled. The open items are cultural more than technical: shipping the consent doc and the "what we collect" page before fleet-wide upload, and running the pilot gate on two or three volunteer laptops with a manual raw-versus-clean diff before rollout.
+**Status and what is open.** The architecture, the invariants, and the star schema are settled. The open items are cultural more than technical: shipping the consent doc and the "what we collect" page before org-wide upload, and running the pilot gate on two or three volunteer laptops with a manual raw-versus-clean diff before rollout.
 
 ---
 
@@ -75,7 +109,7 @@ These rules do not bend as headcount grows. If a change would violate one, that 
 | 2 | **Transcripts are append-only.** | Sync is incremental by byte offset. On truncation or inode change, re-sanitize from zero. |
 | 3 | **The frontend reads marts only.** | The web app never queries fact tables, only pre-aggregated serving tables. |
 | 4 | **Everything is IaC.** | The entire cloud stack is reproducible in a fresh AWS account in under an hour. |
-| 5 | **Consent before collection.** | Ship the consent doc and the "what we collect" page before enabling fleet-wide upload. |
+| 5 | **Consent before collection.** | Ship the consent doc and the "what we collect" page before enabling org-wide upload. |
 | 6 | **The sanitizer is production code.** | It has its own test suite in CI and a version stamped on every uploaded file. |
 
 Rules 1 to 4 are technical. Rules 5 and 6 are cultural, and equally binding. The trap this whole design guards against is building Stage 3 infrastructure at Stage 1 headcount. Over-build only those three, the sanitizer, the schema, and the consent model; keep everything else deliberately small.
@@ -113,7 +147,7 @@ graph LR
         S3[(S3 clean transcripts<br/>SSE-KMS, versioned)]
         ETL[SQS to Lambda ETL]
         PG[(Postgres<br/>facts plus marts)]
-        APP[Fleetplane web app<br/>Fargate, Tailscale-only]
+        APP[Claude Abacus web app<br/>Fargate, Tailscale-only]
         GRAF[Grafana OSS<br/>live OTel metrics]
     end
 
@@ -259,10 +293,10 @@ A Homebrew formula installs the binary and registers the service via `brew servi
 
 ### Task 2.5: Consent plus governance artifacts
 
-Publish the exact field list collected, the consent doc, and the default team-level (not individual) dashboard scope. **Acceptance:** these exist and are linked from the plugin hub before fleet-wide upload is enabled.
+Publish the exact field list collected, the consent doc, and the default team-level (not individual) dashboard scope. **Acceptance:** these exist and are linked from the plugin hub before org-wide upload is enabled.
 
 :::warning[Pilot gate]
-Enable on two or three volunteer laptops first. Manually diff sanitized output against the raw transcript before any fleet rollout. The sanitizer is the one component whose failure is unrecoverable, a leaked secret cannot be un-uploaded, so it earns a human diff before it earns trust.
+Enable on two or three volunteer laptops first. Manually diff sanitized output against the raw transcript before any org-wide rollout. The sanitizer is the one component whose failure is unrecoverable, a leaked secret cannot be un-uploaded, so it earns a human diff before it earns trust.
 :::
 
 ---
@@ -356,7 +390,7 @@ One tool, `log_issue(title, severity, category, target, evidence, suggested_fix)
 
 ---
 
-## Phase 4: App Plane (Fleetplane) (weeks 4 to 5)
+## Phase 4: App Plane (Claude Abacus) (weeks 4 to 5)
 
 Four experiences behind one API and one login. Before the features, the question every engineer will ask: **who can see whose data?** The default is team-level aggregates; individual transcripts are role-gated and every access is logged.
 
@@ -388,7 +422,7 @@ sequenceDiagram
     participant S3 as S3 (clean)
     participant ETL as SQS to Lambda ETL
     participant PG as Postgres (facts plus marts)
-    participant APP as Fleetplane app
+    participant APP as Claude Abacus app
 
     CC->>SYNC: append transcript line (raw, may hold secrets)
     Note over SYNC: sanitize at edge<br/>scrub, allowlist, hash, stamp version
@@ -437,7 +471,7 @@ The single most important discipline in this design is **not** building ahead of
 
 **Stage 2 (100 to 1000) introduces SLOs:** upload lag p95 under 15 minutes, dashboard freshness under one hour, and a sanitizer escape rate of zero, verified by scheduled synthetic-secret canary sessions.
 
-**Stage 3 (1000+)** adds a plugin certification pipeline (static analysis plus sanitizer regression plus permission diff before listing), streaming ingest by default, server-side DLP as defense-in-depth, a lakehouse (Iceberg) with Redshift Serverless or Snowflake plus data contracts and lineage, and multi-tenant Fleetplane with policy-engine authz (Cedar or OPA) and SIEM export.
+**Stage 3 (1000+)** adds a plugin certification pipeline (static analysis plus sanitizer regression plus permission diff before listing), streaming ingest by default, server-side DLP as defense-in-depth, a lakehouse (Iceberg) with Redshift Serverless or Snowflake plus data contracts and lineage, and multi-tenant Claude Abacus with policy-engine authz (Cedar or OPA) and SIEM export.
 
 **The trap, restated:** do not build Stage 3 at Stage 1 headcount. Over-engineer only the sanitizer, the schema, and the consent model early. They are the only things expensive to get wrong later.
 
@@ -468,3 +502,20 @@ Each phase is independently shippable; ship them in order.
 - [ ] **Ongoing:** IaC everything; add scale components only when a trigger fires.
 
 The very first things worth handing to a coding agent, in order: scaffold both repos; implement `sanitizer.py` and its tests **first** (it is the critical path and its tests gate everything); build `org-core` and `managed-settings.json` so a laptop can enroll; then the mirror/sync agent and its triggers; then cloud ingest so uploads have somewhere to land. Everything else layers on those five.
+
+---
+
+## North Star: what the foundation could become
+
+Claude Abacus is a reporting mechanism, and that is deliberately all it is today. But a sanitized, consented, warehoused stream of what every agent actually does is a foundation, and a foundation opens more than one door. These are directions the work **could** take, not a committed roadmap. One of them, or none, or something not drawn here.
+
+```mermaid
+flowchart LR
+  found([Today: agent-usage reporting])
+  found -->|"act on sessions, not just watch them"| a([Admin control plane])
+  found -->|"rank teams and prompts"| b([Benchmarking service])
+  found -->|"turn spend into advice"| c([Cost-optimization advisor])
+  found -->|"answer the auditor"| d([Compliance and audit export])
+```
+
+The tempting one is the **admin control plane**: once you can see every environment, pushing policy to it is a short step. It is also the one to resist first, because watching is consented and low-risk while administering is neither. The honest framing is that Abacus earns the right to any of these by first being trustworthy at the one thing it claims to do: measure, without ever leaking a secret.

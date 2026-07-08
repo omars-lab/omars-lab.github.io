@@ -1,11 +1,13 @@
 ---
-# Mockup sidecar for design-fleetplane.
+# Mockup sidecar for design-claude-abacus.
 # Hand-authored UX mockups + one animated walkthrough for the four Phase 4 surfaces
 # (transcript viewer, plugin hub, dashboard, deck studio). The post links this file via its
 # frontmatter `mockups:` field and renders <Mockups /> after the truncate marker.
 ---
 
 import {Mockup, Walkthrough} from '@omars-lab/blog-ui';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 export default function Mockups() {
   const ff = 'var(--ifm-font-family-base)';
@@ -39,7 +41,7 @@ export default function Mockups() {
 
   // ---- The transcript-viewer scene, driven by the Walkthrough ----
   const viewerScene = (
-    <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/transcripts/s_9c2e" caption="Open a session: redactions are badges, the agent's log_issue call is inline, and raw access is a logged download.">
+    <Mockup chrome="browser" title="Claude Abacus" url="abacus.internal/transcripts/s_9c2e" caption="Open a session: redactions are badges, the agent's log_issue call is inline, and raw access is a logged download.">
       <div style={{fontFamily: ff, minHeight: '290px'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.55rem 0.85rem', borderBottom: hair, fontSize: '0.72rem'}}>
           <strong style={{fontSize: '0.8rem'}}>session s_9c2e</strong>
@@ -66,10 +68,14 @@ export default function Mockups() {
     <>
       <h2>What it looks like</h2>
 
-      <p>The four Phase 4 surfaces sit behind one login and one API. The transcript viewer is
-      the one worth watching in motion: it is where the sanitize-at-edge invariant becomes
-      something a reviewer can see. A session is sanitized on-device, uploaded clean, then
-      opened here, where every redaction is a typed badge and every raw download is audited.</p>
+      <p>The four Phase 4 surfaces sit behind one login and one API. Pick a surface below. The
+      transcript viewer is the one worth watching in motion: it is where the sanitize-at-edge
+      invariant becomes something a reviewer can see. A session is sanitized on-device, uploaded
+      clean, then opened here, where every redaction is a typed badge and every raw download is
+      audited.</p>
+
+      <Tabs>
+      <TabItem value="viewer" label="Transcript viewer" default>
 
       <Walkthrough
         steps={[
@@ -97,9 +103,10 @@ export default function Mockups() {
         {viewerScene}
       </Walkthrough>
 
-      <h2>Plugin hub</h2>
+      </TabItem>
+      <TabItem value="plugins" label="Plugin hub">
 
-      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/plugins" caption="The marketplace landing: version, real adoption from skill_uses, and a one-copy install command.">
+      <Mockup chrome="browser" title="Claude Abacus" url="abacus.internal/plugins" caption="The marketplace landing: version, real adoption from skill_uses, and a one-copy install command.">
         <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '240px'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem'}}>
             <div style={{fontWeight: 800, fontSize: '0.95rem'}}>org-core</div>
@@ -107,10 +114,10 @@ export default function Mockups() {
             <span style={{marginLeft: 'auto', fontSize: '0.72rem', color: 'var(--ifm-color-emphasis-700)'}}>skills, agents, hooks, MCP</span>
           </div>
           <div style={{fontFamily: mono, fontSize: '0.72rem', padding: '0.5rem 0.6rem', borderRadius: '8px', background: 'var(--ifm-color-emphasis-100)', marginBottom: '0.7rem', display: 'flex', alignItems: 'center'}}>
-            claude /plugin install org-core@org-fleet
+            claude /plugin install org-core@org
             <span style={{marginLeft: 'auto', padding: '0.1rem 0.5rem', borderRadius: '6px', background: 'var(--ifm-color-primary)', color: '#fff', fontSize: '0.66rem', fontWeight: 700}}>copy</span>
           </div>
-          <div style={{fontSize: '0.66rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.3rem'}}>Adoption across the fleet</div>
+          <div style={{fontSize: '0.66rem', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.3rem'}}>Adoption across sessions</div>
           {adopt('code-review', '92%')}
           {adopt('release-notes', '74%')}
           {adopt('fleet-setup', '68%')}
@@ -118,9 +125,10 @@ export default function Mockups() {
         </div>
       </Mockup>
 
-      <h2>Dashboard</h2>
+      </TabItem>
+      <TabItem value="dashboard" label="Dashboard">
 
-      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/dashboard" caption="Every panel reads a mart, not a fact table, and renders in under a second. Team-level by default.">
+      <Mockup chrome="browser" title="Claude Abacus" url="abacus.internal/dashboard" caption="Every panel reads a mart, not a fact table, and renders in under a second. Team-level by default.">
         <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '260px'}}>
           <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.7rem'}}>
             {tile('Sessions', '3,412', 'last 30d')}
@@ -140,7 +148,7 @@ export default function Mockups() {
               </div>
             </div>
             <div style={{flex: '0 0 190px', border: hair, borderRadius: '9px', padding: '0.6rem 0.7rem'}}>
-              <div style={{fontSize: '0.66rem', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.35rem'}}>Fleet health</div>
+              <div style={{fontSize: '0.66rem', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.35rem'}}>DCCS health</div>
               <div style={{fontSize: '0.72rem', display: 'flex', flexDirection: 'column', gap: '0.3rem'}}>
                 <div>sanitizer <strong>v7</strong> · 98% on latest</div>
                 <div>upload lag p95 · <strong>6 min</strong></div>
@@ -151,16 +159,17 @@ export default function Mockups() {
         </div>
       </Mockup>
 
-      <h2>Deck studio</h2>
+      </TabItem>
+      <TabItem value="deck" label="Deck studio">
 
-      <Mockup chrome="browser" title="Fleetplane" url="fleetplane.internal/deck" caption="A date range drives a live slide from mart_deck_kpis. Notes are drafted by the Claude API and frozen. Nothing exports without approval.">
+      <Mockup chrome="browser" title="Claude Abacus" url="abacus.internal/deck" caption="A date range drives a live slide from mart_deck_kpis. Notes are drafted by the Claude API and frozen. Nothing exports without approval.">
         <div style={{fontFamily: ff, padding: '0.9rem 1rem', minHeight: '250px'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem', fontSize: '0.74rem'}}>
             <span style={{padding: '0.25rem 0.55rem', border: hair, borderRadius: '7px', fontFamily: mono}}>2026-01-01 to 2026-06-30</span>
             <button style={{marginLeft: 'auto', padding: '0.3rem 0.7rem', border: 'none', borderRadius: '7px', background: 'var(--ifm-color-primary)', color: '#fff', fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer'}}>Approve and export PPTX</button>
           </div>
           <div style={{aspectRatio: '16 / 9', border: hair, borderRadius: '10px', padding: '1rem 1.2rem', background: 'var(--ifm-background-surface-color)', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-            <div style={{fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--ifm-color-emphasis-600)'}}>Fleetplane · H1 2026</div>
+            <div style={{fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--ifm-color-emphasis-600)'}}>Claude Abacus · H1 2026</div>
             <div style={{fontWeight: 800, fontSize: '1.15rem', margin: '0.2rem 0 0.6rem'}}>412 sites analyzed · 128 bugs found</div>
             <div style={{display: 'flex', gap: '1.4rem', fontSize: '0.8rem'}}>
               <div><div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-primary)'}}>1.8B</div>tokens</div>
@@ -171,6 +180,9 @@ export default function Mockups() {
           </div>
         </div>
       </Mockup>
+
+      </TabItem>
+      </Tabs>
     </>
   );
 }
