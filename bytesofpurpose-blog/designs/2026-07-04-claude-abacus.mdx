@@ -33,23 +33,22 @@ mockups: ./_mockups/claude-abacus.mdx
 <UseCaseDiagram
   title="Claude Abacus"
   actors={[
-    {id: 'lead', label: 'Platform lead', kind: 'internal'},
     {id: 'eng', label: 'Engineer', kind: 'internal'},
-    {id: 'exec', label: 'Eng leadership', kind: 'internal'},
+    {id: 'lead', label: 'Platform lead', kind: 'external'},
+    {id: 'exec', label: 'Eng leadership', kind: 'external'},
   ]}
   useCases={[
-    {id: 'adopt', label: 'Track adoption', detail: 'See who is using Claude Code and how much, across all sessions.'},
-    {id: 'value', label: 'See value delivered', detail: 'Tool invocations, agents run, insights, and bugs found, per team.'},
     {id: 'own', label: 'See my own usage', detail: 'An engineer sees their sessions and the bugs their agents caught, raw transcripts never leaving the laptop.'},
     {id: 'bugs', label: 'Review found bugs', detail: 'Agent-filed issues land in a deduped pipeline for a human to confirm.'},
+    {id: 'adopt', label: 'Track adoption', detail: 'See who is using Claude Code and how much, across all sessions.'},
+    {id: 'value', label: 'See value delivered', detail: 'Tool invocations, agents run, insights, and bugs found, per team.'},
     {id: 'roi', label: 'Prove ROI', detail: 'Spend against bugs found and work done, ready for a leadership deck.'},
   ]}
   links={[
-    {from: 'lead', to: 'adopt'},
-    {from: 'lead', to: 'value'},
     {from: 'eng', to: 'own'},
     {from: 'eng', to: 'bugs'},
-    {from: 'exec', to: 'value'},
+    {from: 'lead', to: 'adopt'},
+    {from: 'lead', to: 'value'},
     {from: 'exec', to: 'roi'},
   ]}
 />
