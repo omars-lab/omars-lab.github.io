@@ -75,11 +75,11 @@ You rolled Claude Code out across a team, and you cannot measure what it is doin
 
 ```mermaid
 graph LR
-    subgraph config["CONFIG PLANE &#8212; push"]
+    subgraph config["CONFIG PLANE: push"]
         C1[versioned config]
         C2[marketplace + MDM]
     end
-    subgraph data["DATA PLANE &#8212; pull and analyze"]
+    subgraph data["DATA PLANE: pull and analyze"]
         D1[sanitize on-device]
         D2[warehouse]
         D3[dashboards, bugs, deck]
@@ -124,7 +124,7 @@ Two planes, cleanly separated. The **config plane** pushes standardized configur
 ```mermaid
 %% animate: flow
 graph LR
-    subgraph config["CONFIG PLANE &#8212; push"]
+    subgraph config["CONFIG PLANE: push"]
         REPO[claude-abacus monorepo<br/>git]
         MKT[Plugin Marketplace]
         CORE[org-core plugin<br/>skills, agents, hooks, MCP]
@@ -142,7 +142,7 @@ graph LR
         CC --> SYNC --> SAN --> CLEAN
     end
 
-    subgraph cloud["DATA PLANE &#8212; pull and analyze"]
+    subgraph cloud["DATA PLANE: pull and analyze"]
         S3[(S3 clean transcripts<br/>SSE-KMS, versioned)]
         ETL[SQS to Lambda ETL]
         PG[(Postgres<br/>facts plus marts)]
