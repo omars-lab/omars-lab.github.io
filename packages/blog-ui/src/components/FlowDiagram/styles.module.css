@@ -66,9 +66,26 @@
   dominant-baseline: central;
 }
 
-.edge path {
+.edgeLine {
   stroke: var(--ifm-color-emphasis-500, #8a938e);
   stroke-width: 1.5;
+  transition: stroke var(--duration-fast, 0.12s) var(--ease-standard, ease),
+    stroke-width var(--duration-fast, 0.12s) var(--ease-standard, ease);
+}
+/* Invisible, fat pointer target under the thin visible line. transparent (not
+   none) so it still receives pointer events; the group hover then highlights the
+   visible line. Never animated / never drawn. */
+.edgeHit {
+  stroke: transparent;
+  stroke-width: 18;
+  stroke-linecap: round;
+  pointer-events: stroke;
+  cursor: default;
+}
+/* Hovering anywhere on the edge (its fat hit-area) highlights the visible arrow. */
+.edge:hover .edgeLine {
+  stroke: var(--ifm-color-primary);
+  stroke-width: 2.5;
 }
 /* Edge labels sit in a chip so they stay legible over lines and gradient boxes. */
 .edgeChip {
@@ -91,7 +108,7 @@
 }
 
 /* Motion: edges draw in, boxes fade in. Reduced-motion falls to the final state. */
-.edge path {
+.edgeLine {
   stroke-dasharray: var(--len);
   stroke-dashoffset: var(--len);
   animation: bopflow-draw 480ms var(--ease-out, ease-out) forwards;
@@ -115,7 +132,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .edge path {
+  .edgeLine {
     stroke-dasharray: none;
     stroke-dashoffset: 0;
     animation: none;
