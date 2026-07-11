@@ -71,8 +71,8 @@ are in **`mechanics.md`**.
 6. **Name it for its nature** — a thought reads as an open QUESTION, an initiative as what I DID, a
    durable doc as the lasting CONCEPT. The full title-voice contract is in **`mechanics.md`**
    ("Naming"); the audit is **`audit-post-names`** (`make validate-naming`).
-7. **Link the first genuine glossary term** (`link-glossary-terms`) and **lint links**
-   (`validate-links`) before finishing.
+7. **Link the first genuine glossary term** (the contract is in `mechanics.md` → "Glossary linking";
+   audit with `audit-glossary-links`) and **lint links** (`validate-links`) before finishing.
 8. **Validate before commit.** Run the gates the subfile names (outline / seo / structure /
    redirects / links), plus a real render check for anything client-rendered (mermaid, mockups,
    walkthroughs are draft-only + browser-rendered — prove them on the dev server, per `serve-locally`).

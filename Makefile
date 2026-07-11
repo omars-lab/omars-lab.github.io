@@ -117,7 +117,7 @@ features-check: ## Check the feature why-docs (features/*.md) for drift (auto-he
 features-seed: ## Seed the content-hash cache for any new/uncached feature-doc anchors
 	python3 ${SITEROOT}/scripts/features_check.py --seed
 
-validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
+validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the audit-glossary-links skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
 validate-redirects: ## Check the client-redirects array for invalid/draft/colliding/duplicate targets (catches build-breakers early)

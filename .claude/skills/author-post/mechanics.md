@@ -205,6 +205,47 @@ This paragraph is blurred until the reader signs in.
 **Verify premium before deploy:** premium docs require a cache-busted encrypted build + the blocking
 V5 gate — use `make build-premium` (NOT a bare `yarn build`); see `deploy-site`'s cache gotcha.
 
+## Glossary linking — the first-genuine-use contract
+
+The site has a single [Glossary](/glossary): ~19 defined terms of art (System, Service, Library,
+Package, Initiative, Project, Role, Skill, Workflow, …), each with a definition page under `/craft`.
+The convention: **the first time a post uses one of these as the TERM OF ART, that occurrence links
+to its definition; later uses, and all casual-English uses, stay plain.**
+
+The hard part is not finding the word, it's deciding whether *this* use is the term-of-art — a
+judgment a regex cannot make ("Role" is the CLI Role concept in one post and a person's role in life
+in another). So the mechanical check finds **candidates**; you make the **call** while authoring.
+
+**The registry.** `bytesofpurpose-blog/scripts/lib/glossary-terms.json` is the source of truth: each
+`term` → its definition `href` (+ `aliases`, e.g. the plural). Kept in lockstep with the `/glossary`
+home (`src/pages/glossary.mdx`). Adding/moving a term edits BOTH in the same change; if a definition
+page moves, update its `href` + pair a `{from,to}` redirect.
+
+**The rule (precise).** For each registered term in a post:
+1. **Find the first occurrence** in the PROSE (ignore frontmatter, code fences, inline code, and
+   text that is already a link).
+2. **Judge it.** Is this occurrence the TERM OF ART as the glossary defines it (would a reader
+   benefit from the definition here), or ordinary English that shares the word? Read the sentence.
+   - Genuine (link it): "the scanner is one **Service** that calls another"; "an **Initiative** is a
+     goal-bearing effort".
+   - Casual (leave plain): "what **role** do you play in your family?"; "public **libraries** keep
+     reading cheap".
+3. **Link only the FIRST genuine occurrence** to the term's `href`
+   (`[Service](/craft/software-development/terminology/terminology-portfolio)`). Keep the visible
+   text exactly as written (capitalization/plural). Do NOT link later occurrences or casual uses.
+4. **Skip personal/meta posts.** In `question-set`, `reflection`, `legend`, `event-recap` posts
+   these words are almost always casual (the check already skips those kinds); link only an
+   unmistakable term-of-art.
+
+**Idempotent by construction:** step 3 only links an occurrence that is *not already a link*, and
+only the first genuine one, so a second pass finds it linked and does nothing.
+
+> **The audit that surfaces candidates: `audit-glossary-links`** (`validate-glossary-links.js` +
+> its warn hook, `make validate-glossary`). It does file-level triage — which posts have an unlinked
+> first-use candidate — and points here for the per-occurrence call. A casual use you correctly left
+> plain stays a candidate; that's advice, not a defect. Note in your summary which you judged casual
+> so the next run isn't re-litigated.
+
 ## Validate before deploy
 
 ```bash

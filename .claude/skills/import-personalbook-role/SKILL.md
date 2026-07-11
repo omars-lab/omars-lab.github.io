@@ -1,6 +1,6 @@
 ---
 name: import-personalbook-role
-description: Import a role from the private personalbook knowledge base into a consolidated, durable /journey/roles/<role>.md post on the blog — STRICTLY READ-ONLY on personalbook (never writes a marker, note, or edit back). Reads the role folder (Overview.md + skills/ + knowledge/ + habits/, and Activities.md as influence) and consolidates the publishable half into one role portrait: why the role matters, the skills I use, the KINDS of artifacts I produce, and the habits I keep. The private half (the intent triad obligations/desires/motivations, dated personal todos, family/finance/medical specifics, raw artifact bodies) is left behind by default. Anti-drift by design: a Step 0 reconcile re-reads personalbook's role-STRUCTURING skills (extract-role-skills, establish-role-habits, establish-role-learning, structure-role-purpose, extract-obligations-desires) so the importer's model of role anatomy never goes stale (cached in role-anatomy.json, keyed to personalbook HEAD). Fail-closed: the read-only guard blocks any personalbook write, and the role-privacy leak gate (make validate-role-privacy) blocks a post that carries private residue. TRIGGERS on "import a role", "make a /journey/roles post from personalbook", "consolidate The <Role> into a role post", "bring my roles onto the blog". Pairs with author-post (frontmatter/MDX), audit-post-names (title voice), upgrade-post (weave components), link-glossary-terms, review-reader-experience.
+description: Import a role from the private personalbook knowledge base into a consolidated, durable /journey/roles/<role>.md post on the blog — STRICTLY READ-ONLY on personalbook (never writes a marker, note, or edit back). Reads the role folder (Overview.md + skills/ + knowledge/ + habits/, and Activities.md as influence) and consolidates the publishable half into one role portrait: why the role matters, the skills I use, the KINDS of artifacts I produce, and the habits I keep. The private half (the intent triad obligations/desires/motivations, dated personal todos, family/finance/medical specifics, raw artifact bodies) is left behind by default. Anti-drift by design: a Step 0 reconcile re-reads personalbook's role-STRUCTURING skills (extract-role-skills, establish-role-habits, establish-role-learning, structure-role-purpose, extract-obligations-desires) so the importer's model of role anatomy never goes stale (cached in role-anatomy.json, keyed to personalbook HEAD). Fail-closed: the read-only guard blocks any personalbook write, and the role-privacy leak gate (make validate-role-privacy) blocks a post that carries private residue. TRIGGERS on "import a role", "make a /journey/roles post from personalbook", "consolidate The <Role> into a role post", "bring my roles onto the blog". Pairs with author-post (frontmatter/MDX), audit-post-names (title voice), upgrade-post (weave components), audit-glossary-links, review-reader-experience.
 ---
 
 # Import a personalbook role → a durable `/journey/roles/` post
@@ -139,7 +139,7 @@ Track the import as a task (one per role). Then:
 7. **Update `import-ledger.json`** — add/update the role entry: `journey_doc`, `slug`, `status:
    drafted`, `spun_off_posts`, `excluded_files` (the privacy trail), `reconciled_at_personalbook_commit`.
 8. **Confirm personalbook is unmutated**: `git -C <personalbook> status` shows no changes.
-9. **Enrich (optional)** — hand to `upgrade-post` to weave components, `link-glossary-terms` for the
+9. **Enrich (optional)** — hand to `upgrade-post` to weave components, `audit-glossary-links` for the
    first genuine term use. Then publish (drop `draft:`) as a separate, deliberate step.
 
 ## The reader landing
@@ -178,6 +178,6 @@ assessments) without touching an artifact body, and links to the spun-off framew
 ## Pairs with
 
 `author-post` (frontmatter/MDX), `audit-post-names` (title voice), `upgrade-post` (components),
-`link-glossary-terms`, `review-reader-experience` (IA). Personalbook's role-structuring skills
+`audit-glossary-links`, `review-reader-experience` (IA). Personalbook's role-structuring skills
 (`extract-role-skills` et al.) are the PREREQUISITE that shapes a role folder; this skill only reads
 their output.

@@ -1,6 +1,6 @@
 ---
 name: import-noteplan
-description: Migrate content out of NotePlan's `🏡 Personal/🏡📋 Lists` folder onto the Bytes of Purpose blog — WITHOUT ever removing anything from the NotePlan files. Migrating a link/section COPIES it into a real blog post and APPENDS a "🔗 Migrated to Blog" provenance table to the NotePlan file recording the destination URL; it never cuts existing lines. Runs a deterministic, idempotent Node transformer (`import-noteplan.js`: --inventory / --append-migration / --verify / --snapshot / --audit) whose non-destructive contract is proven byte-for-byte and guarded fail-closed by the `noteplan-no-drop-hook.sh` PostToolUse hook. Tracks one task PER FILE being migrated. Classifies each cluster via the site content model (hands to organize-post), drafts posts (author-post), and records the true final blog URL as soon as the post is drafted (slugs are absolute + deterministic). TRIGGERS on "migrate/import from NotePlan", "bring my NotePlan lists/ideas/quotes onto the blog", "move these notes into posts". Pairs with organize-post (classify), mature-content (firm up thin ideas), groom-initiatives (board an idea), author-post (MDX/frontmatter), link-glossary-terms + validate-links (on the new post).
+description: Migrate content out of NotePlan's `🏡 Personal/🏡📋 Lists` folder onto the Bytes of Purpose blog — WITHOUT ever removing anything from the NotePlan files. Migrating a link/section COPIES it into a real blog post and APPENDS a "🔗 Migrated to Blog" provenance table to the NotePlan file recording the destination URL; it never cuts existing lines. Runs a deterministic, idempotent Node transformer (`import-noteplan.js`: --inventory / --append-migration / --verify / --snapshot / --audit) whose non-destructive contract is proven byte-for-byte and guarded fail-closed by the `noteplan-no-drop-hook.sh` PostToolUse hook. Tracks one task PER FILE being migrated. Classifies each cluster via the site content model (hands to organize-post), drafts posts (author-post), and records the true final blog URL as soon as the post is drafted (slugs are absolute + deterministic). TRIGGERS on "migrate/import from NotePlan", "bring my NotePlan lists/ideas/quotes onto the blog", "move these notes into posts". Pairs with organize-post (classify), mature-content (firm up thin ideas), groom-initiatives (board an idea), author-post (MDX/frontmatter), audit-glossary-links + validate-links (on the new post).
 ---
 
 # Import NotePlan Lists content onto the blog (non-destructively)
@@ -156,7 +156,7 @@ touching a file, `TaskCreate` a task like *"Migrate NotePlan `References[GenAI]`
 4. **Draft the post(s), enriching as you go.** Create each doc as `draft: true` with its absolute slug,
    via `author-post`. Turn quote-worthy blockquotes into `<EditorialQuote>` cards (see "Enrich");
    thin idea clusters → `mature-content` first; a board-ready idea → `groom-initiatives`;
-   `link-glossary-terms` + `validate-links` on the new post.
+   `audit-glossary-links` + `validate-links` on the new post.
 5. **Append (or rebuild) the migration table.** `--append-migration "<file>" --records-file <path>`
    with the real deep-link destinations (`blogUrl` + `section`) and any non-link `content` rows. Use
    `--rebuild-migration` instead when repointing rows whose destination changed (e.g. a link now fans
@@ -216,5 +216,5 @@ redirect on the blog per the CLAUDE.md redirect convention.
 
 `organize-post` (the classifier / decision tree), `mature-content` (firm up a thin idea before it's a
 post), `groom-initiatives` (board an idea as an `/initiatives` card), `author-post`
-(frontmatter + MDX), `audit-post-names` (title voice), `link-glossary-terms` + `validate-links` (post
+(frontmatter + MDX), `audit-post-names` (title voice), `audit-glossary-links` + `validate-links` (post
 hygiene), `publish-site` / `deploy-site` (un-draft + ship, the user's call).

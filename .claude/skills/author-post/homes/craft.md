@@ -54,8 +54,9 @@ A topic README landing additionally pins itself: `sidebar_label: '👋 Welcome'`
 
 ## Conventions + validate
 
-- No em-dash; MDX-safe if it uses components. Link the first genuine glossary term
-  (`link-glossary-terms`). Healthy `description:` (`manage-frontmatter-descriptions`).
+- No em-dash; MDX-safe if it uses components. Link the first genuine glossary term (`mechanics.md`
+  → "Glossary linking"; audit with `audit-glossary-links`). Healthy `description:`
+  (`manage-frontmatter-descriptions`).
 - If this doc MOVED from another path, pair it with a `{from,to}` redirect and collapse any chain
   (`reorganize-content` + `validate-redirects`).
 - Gates: `make validate-structure`, `make validate-seo`, `make validate-links`, and
