@@ -1,6 +1,6 @@
 ---
 name: manage-hubs
-description: The durable-HUB system end to end. A hub is a /craft index page (kind: hub 🗂️) that catalogs temporal /initiatives posts of ONE activity kind, grouped by AREA, via a generated <Catalog>. Owns the hub registry (the HUBS manifest in scripts/generate-hubs-data.js), the (kind, area) frontmatter model, the generic generator+component pattern, and the add-a-hub / add-a-post checklists. Use when adding a new hub, adding or re-homing a post that should appear on a hub, changing a hub's areas, or when validate-hubs / the hub build looks wrong. Pairs with groom-initiatives (which boards temporal work), implement-with-design-system (the Catalog is on-brand UI), and maintain-showcase (the sibling generated-index pattern).
+description: The durable-HUB SYSTEM (everything above the single post). A hub is a /craft index page (kind: hub 🗂️) that catalogs temporal /initiatives posts of ONE activity kind, grouped by AREA, via a generated <Catalog>. Owns the hub registry (the HUBS manifest in scripts/generate-hubs-data.js), the (kind, area) MODEL, the generic generator+component pattern, the add-a-NEW-hub checklist, and the validate-hubs gate. The per-POST carding contract (giving a post kind:+area: so it cards, and the re-home move) lives in author-post (homes/initiatives.md + homes/craft.md), since that is done while authoring; this skill points there. Use when adding a new hub, changing a hub's areas, or when validate-hubs / the hub build looks wrong. Pairs with author-post (the per-post carding contract), groom-initiatives (which boards temporal work), implement-with-design-system (the Catalog is on-brand UI), and maintain-showcase (the sibling generated-index pattern).
 ---
 
 # Manage hubs
@@ -99,12 +99,14 @@ chain — `validate-redirects` catches it).
 
 ## Put a POST on a hub (or re-home one)
 
-Give the `/initiatives` post `kind:` (the activity) + `area:` (a valid area for that hub). If it is
-moving OUT of `/craft` (a dated log that was mis-filed as durable), use the proven move: surgical
-frontmatter reshape (slug→bare, ensure `date:`, set `kind:`, add `area:`) + `git mv` into `blog/`
-as `YYYY-MM-DD-<slug>` (NEVER a gray-matter reserialize — it escapes emoji titles). All-draft moves
-need no redirect (a draft has no public `/craft` URL, and the redirect gate rejects a draft target);
-add the redirect when the post is published. Then `make generate-assets` + `make validate-hubs`.
+**The per-post carding contract lives in `author-post`** — giving a post `kind:` + a valid `area:`
+so it cards is a creation-time act, done while authoring: see **`author-post/homes/initiatives.md`**
+("Card it on a hub") for an initiatives post and **`author-post/homes/craft.md`** ("Card a durable
+doc on a hub") for a `pattern`/`technique`. Those own the `area:` vocabulary, the one-field re-sort,
+and the surgical-reshape re-home move (never a gray-matter reserialize — it escapes emoji titles).
+This skill owns everything ABOVE the single post: the registry, the generator/component, adding a
+NEW hub, and the `validate-hubs` gate. After a post's `kind`/`area` lands, `make generate-assets` +
+`make validate-hubs` regenerates and checks it.
 
 ## Gotchas
 

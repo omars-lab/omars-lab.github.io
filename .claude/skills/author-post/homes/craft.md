@@ -29,11 +29,23 @@ Full contract + validator: the **`review-reader-experience`** skill ("Topic-fold
 | `hub` | 🗂️ | a durable INDEX page cataloging posts by area via `<Catalog>` | **`manage-hubs`** (required registry entry) |
 | `showcase` | 🎛️ | a live component demo (the `/handbook/components/*` reference) | **`maintain-showcase`** |
 
-A **hub** and a **showcase** are special: each needs a registry/generator entry in the SAME change
-(hub → `HUBS` in `generate-hubs-data.js`; showcase → `usage_pattern` frontmatter). Do not author one
-without reading its owning skill.
+## Card a durable doc on a hub (`pattern` / `technique`)
 
-A doc that should appear on a hub also carries an **`area:`** (`backend`/`frontend`/`script`/`plugin`).
+A `pattern` or `technique` doc cards on its **CRAFT-sourced hub** (Patterns / Techniques) the moment
+it carries **`kind:`** (the discriminator) + **`area:`** — the same ONE unified vocabulary as the
+initiatives hubs: **`backend` / `frontend` / `script` / `plugin`** (else `other`). Unlike a dated
+`/initiatives` log, a craft-hub doc STAYS in `/craft` (it is durable, not moved to `blog/`) and its
+cards sort **A–Z by title** (no `date:`). Put the doc FLAT under the hub's source dir (the hub's own
+`README` is the `kind: hub` landing, not a card). After adding `kind`+`area`, run
+`make generate-assets` then `make validate-hubs`. A doc MOVED into a craft hub from another `/craft`
+path needs a `{from,to}` redirect (published docs only) and any existing redirect whose `to:` pointed
+at the old path must be repointed (`reorganize-content` + `validate-redirects`).
+
+> **A `hub` doc itself, and a `showcase`, are structural** — each needs a registry/generator entry in
+> the SAME change (hub → the `HUBS` manifest in `generate-hubs-data.js`, rendering `<Catalog>`;
+> showcase → `usage_pattern` frontmatter). Do not author one without its owning skill: **`manage-hubs`**
+> (add a NEW hub) / **`maintain-showcase`** (a showcase). This guide covers only carding a pattern/
+> technique doc on a hub that exists.
 
 ## Frontmatter template
 
