@@ -79,12 +79,13 @@ fix it (or realize the kind is wrong) without leaving the terminal:
 > is fixed by **correcting `kind:`**, not by forcing a mockup/Decisions heading onto it. Most
 > backfill advisories were mis-classifications, not gaps.
 
-**Adding / changing a kind (lockstep).** Edit **`blog-kinds.json`** (emoji + description + `outline`).
-If the new kind introduces a new outline `id`, add its test to the `CHECKS` registry in
-`validate-post-outline.js`. Add a row to the **"🧭 Start Here"** reader legend
-(`blog/2026-06-24-a-guide-to-these-posts.mdx`) — the `legend-drift` check enforces this; if the kind
-is `thought`/`mindset`/`question`-flagged, also update the matching legend (`ThoughtKindLegend` etc.).
-Mirrors the docs emoji system (`scripts/lib/emoji-map.json` + `suggest-emoji`, docs-only).
+**Adding / changing a kind — owned by the `manage-kinds` skill.** The full lockstep (edit
+`blog-kinds.json` → add a `CHECKS` test if a new outline `id` → add a row to the "Start Here" reader
+legend at `docs/handbook/README.mdx`, enforced by `legend-drift` → update the collection legend if
+`thought`/`mindset`/`question`-flagged → add an `author-post/kinds/<name>.md` checklist only if the
+kind has real specifics) lives in **`manage-kinds`**. Guarded by `make validate-kinds-guidance`
+(the guidance side) + `make validate-post-outline` (the data + legend side). Mirrors the docs emoji
+system (`scripts/lib/emoji-map.json` + `suggest-emoji`, docs-only).
 
 ## Naming — the title-voice contract (name it for its nature)
 
