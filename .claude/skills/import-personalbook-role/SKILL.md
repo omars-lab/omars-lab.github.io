@@ -1,6 +1,6 @@
 ---
 name: import-personalbook-role
-description: Import a role from the private personalbook knowledge base into a consolidated, durable /journey/roles/<role>.md post on the blog — STRICTLY READ-ONLY on personalbook (never writes a marker, note, or edit back). Reads the role folder (Overview.md + skills/ + knowledge/ + habits/, and Activities.md as influence) and consolidates the publishable half into one role portrait: why the role matters, the skills I use, the KINDS of artifacts I produce, and the habits I keep. The private half (the intent triad obligations/desires/motivations, dated personal todos, family/finance/medical specifics, raw artifact bodies) is left behind by default. Anti-drift by design: a Step 0 reconcile re-reads personalbook's role-STRUCTURING skills (extract-role-skills, establish-role-habits, establish-role-learning, structure-role-purpose, extract-obligations-desires) so the importer's model of role anatomy never goes stale (cached in role-anatomy.json, keyed to personalbook HEAD). Fail-closed: the read-only guard blocks any personalbook write, and the role-privacy leak gate (make validate-role-privacy) blocks a post that carries private residue. TRIGGERS on "import a role", "make a /journey/roles post from personalbook", "consolidate The <Role> into a role post", "bring my roles onto the blog". Pairs with author-blog-post (frontmatter/MDX), name-post (title voice), upgrade-post (weave components), link-glossary-terms, review-reader-experience.
+description: Import a role from the private personalbook knowledge base into a consolidated, durable /journey/roles/<role>.md post on the blog — STRICTLY READ-ONLY on personalbook (never writes a marker, note, or edit back). Reads the role folder (Overview.md + skills/ + knowledge/ + habits/, and Activities.md as influence) and consolidates the publishable half into one role portrait: why the role matters, the skills I use, the KINDS of artifacts I produce, and the habits I keep. The private half (the intent triad obligations/desires/motivations, dated personal todos, family/finance/medical specifics, raw artifact bodies) is left behind by default. Anti-drift by design: a Step 0 reconcile re-reads personalbook's role-STRUCTURING skills (extract-role-skills, establish-role-habits, establish-role-learning, structure-role-purpose, extract-obligations-desires) so the importer's model of role anatomy never goes stale (cached in role-anatomy.json, keyed to personalbook HEAD). Fail-closed: the read-only guard blocks any personalbook write, and the role-privacy leak gate (make validate-role-privacy) blocks a post that carries private residue. TRIGGERS on "import a role", "make a /journey/roles post from personalbook", "consolidate The <Role> into a role post", "bring my roles onto the blog". Pairs with author-post (frontmatter/MDX), audit-post-names (title voice), upgrade-post (weave components), link-glossary-terms, review-reader-experience.
 ---
 
 # Import a personalbook role → a durable `/journey/roles/` post
@@ -85,7 +85,7 @@ the safe scaffolding, not the file contents.
 
 ## The role-doc shape (the output)
 
-`docs/journey/roles/<role-kebab>.md`, frontmatter per `author-blog-post` conventions:
+`docs/journey/roles/<role-kebab>.md`, frontmatter per `author-post` conventions:
 
 ```yaml
 ---
@@ -114,7 +114,7 @@ Body sections (the required spine, enforced warn-tier by `validate-role-doc.js`)
 
 **Content rules:** no em-dash (`—`) or `--` sentence-dash (the `em-dash-voice-hook.sh` BLOCKS it);
 `description` in the ~50-160 band; escape stray `{braces}` / bare `<br>` (MDX). Follow
-`author-blog-post` for the rest.
+`author-post` for the rest.
 
 ## Procedure
 
@@ -127,7 +127,7 @@ Track the import as a task (one per role). Then:
    artifact bodies into the post; you only need the Overview's Artifacts-table LABELS to name the
    kinds.
 3. **Pick the title + slug** — `The <Role>` / `/roles/<role-kebab>`. If the role name needs a voice
-   check, use `name-post`.
+   check, use `audit-post-names`.
 4. **Derive the date** — the role's authorship date (e.g. `Overview.md`'s `authored_date`, or the
    oldest plausible authorship you can see). Not today, unless nothing else is available.
 5. **Author the doc** into `docs/journey/roles/<role-kebab>.md`, summarizing from the SAFE sources
@@ -156,7 +156,7 @@ A role can BOTH have a role doc AND spin off a focused `/initiatives` post. *The
 narrow self-quantification loop became `a-framework-for-quantifying-yourself` (a real `framework`
 post), and the role doc is the durable index that links to it. When a role's material contains a
 self-contained, transferable framework, consider spinning it off (via `organize-post` /
-`author-blog-post`) and linking it from the role doc's Skills section. Do not force everything into
+`author-post`) and linking it from the role doc's Skills section. Do not force everything into
 the role doc.
 
 ## Worked example: The Analyzer
@@ -177,7 +177,7 @@ assessments) without touching an artifact body, and links to the spun-off framew
 
 ## Pairs with
 
-`author-blog-post` (frontmatter/MDX), `name-post` (title voice), `upgrade-post` (components),
+`author-post` (frontmatter/MDX), `audit-post-names` (title voice), `upgrade-post` (components),
 `link-glossary-terms`, `review-reader-experience` (IA). Personalbook's role-structuring skills
 (`extract-role-skills` et al.) are the PREREQUISITE that shapes a role folder; this skill only reads
 their output.

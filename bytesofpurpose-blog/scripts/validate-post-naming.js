@@ -6,7 +6,8 @@
  * A title is a promise about what the post IS. The common failure is a voice mismatch: an
  * UNACTIONED thought (a /thoughts idea) titled like a finished accomplishment, so it reads as a
  * completed initiative. "My First NotePlan Plugin" reads as "the plugin I built" when the post is
- * really "should I build a NotePlan plugin?". The naming contract (see the name-post skill):
+ * really "should I build a NotePlan plugin?". The naming contract (see author-post/mechanics.md,
+ * "Naming"; the audit-post-names skill runs this check):
  *   - /thoughts (idea-class kinds)  → an open QUESTION / speculative phrasing (it's being weighed)
  *   - /initiatives (acted-on)       → what I DID (a dated accomplishment)
  *   - /craft, /journey (durable)    → the lasting CONCEPT (a noun phrase / "Understanding X")
@@ -100,7 +101,7 @@ function findings(files) {
       out.push({
         file: rel(file),
         id: 'thought-titled-as-done',
-        detail: `title "${(data.title || '').toString()}" reads as a completed initiative, but this is an unactioned thought (${kindNote}). Phrase the question being weighed — e.g. "${tell.suggest}". (See the name-post skill.)`,
+        detail: `title "${(data.title || '').toString()}" reads as a completed initiative, but this is an unactioned thought (${kindNote}). Phrase the question being weighed — e.g. "${tell.suggest}". (See audit-post-names / author-post.)`,
       });
     }
   }
@@ -121,7 +122,7 @@ function run() {
       console.log(`  ${f.file}  [warn:${f.id}]`);
       console.log(`      ↳ ${f.detail}`);
     }
-    console.log('\n(advice only — naming is a judgment call. See the name-post skill.)');
+    console.log('\n(advice only — naming is a judgment call. See audit-post-names / author-post.)');
   }
   process.exit(0); // advisory — never blocks.
 }

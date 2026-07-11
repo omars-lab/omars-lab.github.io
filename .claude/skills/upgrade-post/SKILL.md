@@ -1,6 +1,6 @@
 ---
 name: upgrade-post
-description: Make an existing blog post or doc richer by weaving in the site's reusable MDX components — animated mermaid diagrams (marching dashes + a traveling flow-dot), the DiagramWithFootnotes numbered-legend wrapper, admonitions, Carousel/CategoryCarousel, SvgVariantGrid, Premium/PremiumGate, ShareButton, Evidence footnotes, Timeline, Card, and Tabs. The catalog of WHAT each component is, WHEN to reach for it, the exact MDX snippet, and the gotchas. Use when asked to "make this post better / richer / more visual", to add a diagram/animation/callout/carousel to a page, or after drafting content when deciding which components fit. Content-origin-agnostic (any post or doc, not just imports). Pairs with author-blog-post (frontmatter + MDX pitfalls), import-co-design (which calls this for the enrichment step), and the reader-facing component showcases under docs/handbook/components/*.
+description: Make an existing blog post or doc richer by weaving in the site's reusable MDX components — animated mermaid diagrams (marching dashes + a traveling flow-dot), the DiagramWithFootnotes numbered-legend wrapper, admonitions, Carousel/CategoryCarousel, SvgVariantGrid, Premium/PremiumGate, ShareButton, Evidence footnotes, Timeline, Card, and Tabs. The catalog of WHAT each component is, WHEN to reach for it, the exact MDX snippet, and the gotchas. Use when asked to "make this post better / richer / more visual", to add a diagram/animation/callout/carousel to a page, or after drafting content when deciding which components fit. Content-origin-agnostic (any post or doc, not just imports). Pairs with author-post (frontmatter + MDX pitfalls), import-co-design (which calls this for the enrichment step), and the reader-facing component showcases under docs/handbook/components/*.
 ---
 
 # Upgrade a post with the site's components
@@ -22,7 +22,7 @@ There are TWO doc surfaces this complements, don't duplicate them:
 - **Reader-facing** how-to lives in `docs/craft/blogging/` (`embed-code`, `embed-diagrams`,
   `embed-external-components`, `embed-structural-components`, `diagramming/`). Those teach a
   reader to do it; THIS skill is the agent-facing "which component, when, and the gotchas."
-- **Authoring mechanics** (frontmatter, MDX build-breakers) live in `author-blog-post`.
+- **Authoring mechanics** (frontmatter, MDX build-breakers) live in `author-post`.
 
 ## First, the universal gotchas (every component)
 
@@ -30,7 +30,7 @@ There are TWO doc surfaces this complements, don't duplicate them:
   (`docs/blog/designs/changelog` + `src/`) fails the edit. Use commas / periods / colons.
 - **MDX build-breakers**: bare `<br>` (use `<br/>`), unescaped `{braces}`, a stray `<`
   before a space/digit, and bare `<https://…>` autolinks all break the build. See
-  `author-blog-post`.
+  `author-post`.
 - **Draft discipline**: a content page needs an explicit `draft:` field; drafts render in
   dev (`:3000`) only, never in the prod build.
 - **Re-import clobber**: on a page produced by `import-co-design`, anything you hand-add to
@@ -333,7 +333,7 @@ sibling `_*-variants.js`). Model: the binary-pyramid / rosette design posts.
 WHAT: `<Premium>…</Premium>` soft-gates an inline span (blurred for anonymous); `<PremiumGate>`
 is the whole-doc hard gate (injected by the rehype plugin when `premium: true`). WHEN:
 gating paid/exclusive content. The POLICY ("should this be premium?") is owned by
-`manage-premium-content`; the marking mechanics by `author-blog-post`. Don't gate casually.
+`manage-premium-content`; the marking mechanics by `author-post`. Don't gate casually.
 
 ### ShareButton
 

@@ -1,6 +1,6 @@
 ---
 name: refine-design-post
-description: Audit a /designs post for GENERALITY (no employer/trade-secret specifics — keep only the reusable pattern), MINIMALISM (does each section answer its core question-set), CLARITY (over-wordiness, redundant restatements, hedges, throat-clearing), VISUAL LEVERAGE (prose that should be a mermaid diagram or table), and the READER'S FIRST READ (is there a relatable story, am I being bombarded with information, what are the core concerns + which section is each in, do the existing visuals actually guide me — produces a concern map). Produces a prioritized findings report with quoted excerpts + suggested trims/generalizations; makes NO edits until you approve each. As you give feedback, it captures the generalizable rule back into STYLE-GUIDE.md / SECTION-QUESTIONS.md so the skill sharpens with every post. Use when "review/tighten/refine this design post", "is this too wordy / too specific", "am I leaking anything", "make this more general", "does this need a diagram", "does this answer my core questions", "can a reader follow this / relate to it", "am I bombarding the reader", "what are the core concerns and where". Pairs with author-blog-post + author-post (which read the guide files when writing new posts), review-reader-experience (whole-site IA).
+description: Audit a /designs post for GENERALITY (no employer/trade-secret specifics — keep only the reusable pattern), MINIMALISM (does each section answer its core question-set), CLARITY (over-wordiness, redundant restatements, hedges, throat-clearing), VISUAL LEVERAGE (prose that should be a mermaid diagram or table), and the READER'S FIRST READ (is there a relatable story, am I being bombarded with information, what are the core concerns + which section is each in, do the existing visuals actually guide me — produces a concern map). Produces a prioritized findings report with quoted excerpts + suggested trims/generalizations; makes NO edits until you approve each. As you give feedback, it captures the generalizable rule back into STYLE-GUIDE.md / SECTION-QUESTIONS.md so the skill sharpens with every post. Use when "review/tighten/refine this design post", "is this too wordy / too specific", "am I leaking anything", "make this more general", "does this need a diagram", "does this answer my core questions", "can a reader follow this / relate to it", "am I bombarding the reader", "what are the core concerns and where". Pairs with author-post (which reads the guide files when writing new posts), review-reader-experience (whole-site IA).
 ---
 
 # Refine a design post (generality · minimalism · clarity)
@@ -12,7 +12,7 @@ The two rubric files next to this one are the memory: `SECTION-QUESTIONS.md` (wh
 must answer) and `STYLE-GUIDE.md` (voice + wording rules). Both GROW from your feedback, so post N
 is audited against everything learned from posts 1..N-1.
 
-Pairs with `author-blog-post` / `author-post` (they read the guide files when writing a NEW post),
+Pairs with `author-post` (which reads the guide files when writing a NEW post),
 `review-reader-experience` (whole-site IA), `upgrade-post` (the actual diagram insertion), and the
 mechanical guard `scripts/validate-design-clarity.js` (see the bottom section).
 
@@ -52,7 +52,7 @@ push commands, you administer the fleet), but the design actually builds a **rep
 mechanism** (it consolidates usage metrics across sessions; it does not administer anything). The fix
 is a name that matches the built purpose (e.g. a "fleet reporting / observability" framing), and the
 control-plane ambition moves to an optional North Star section (see `SECTION-QUESTIONS.md`) as a
-possible FUTURE direction, not a description of what exists. Distinct from `name-post` (title VOICE —
+possible FUTURE direction, not a description of what exists. Distinct from `audit-post-names` (title VOICE —
 does an idea read as a question, an initiative as done): this is title ACCURACY — does the name tell
 the truth about the purpose. Propose the corrected name; the author decides.
 

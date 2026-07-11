@@ -117,5 +117,5 @@ After drafting, run **`refine-design-post`** on the post to audit + tighten it.
 
 `refine-design-post` (voice + section-questions + generality — read its guide files BEFORE drafting,
 audit with it AFTER) · `import-co-design` (HLD path) · `author-walkthrough` + `upgrade-post`
-(components) · `implement-with-design-system` (on-brand CSS) · `author-blog-post` (MDX pitfalls) ·
+(components) · `implement-with-design-system` (on-brand CSS) · `author-post` (MDX pitfalls) ·
 `author-mermaid` (diagram syntax) · `publish-site` (go live).

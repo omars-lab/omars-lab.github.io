@@ -318,7 +318,7 @@ rendered."
    (i.e. documenting it), the OUTER fence needs **4 backticks** (` ```` `), or the inner triple
    fence closes it early and breaks the MDX build.
 5. **Labels with `{braces}` / `<…>`** in prose around a diagram are MDX hazards (not inside the
-   fence). See `author-blog-post`.
+   fence). See `author-post`.
 
 ## Verify (mermaid renders client-side — a build is not enough)
 

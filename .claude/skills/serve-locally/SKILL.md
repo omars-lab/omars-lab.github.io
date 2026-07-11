@@ -83,5 +83,5 @@ that build has no drafts.
 
 - `deploy-site` — ship to production (gh-pages); the REAL deploy.
 - `validate-deployment` — verify the LIVE site after a prod deploy.
-- `author-blog-post` — MDX pitfalls; `make check` (MDX lint) and `yarn build` as the
+- `author-post` — MDX pitfalls; `make check` (MDX lint) and `yarn build` as the
   pre-deploy gate.

@@ -1,6 +1,6 @@
 ---
 name: groom-initiatives
-description: Capture and advance a temporal initiative (an idea, experiment, or project) as an /initiatives blog POST whose frontmatter drives a kanban board — NOT a /craft doc. Use when starting a new idea/experiment, moving a card across a board (a `stage` frontmatter change), or concluding one and distilling the durable learning back into /craft. Board-aware: knows the Experimentation + Ideas boards, their columns, and the kind→board mapping. Pairs with the experiment-lifecycle skills (design/run/analyze/decide/conclude-experiment) which drive the Experimentation board specifically, and with author-blog-post (MDX/frontmatter pitfalls).
+description: Capture and advance a temporal initiative (an idea, experiment, or project) as an /initiatives blog POST whose frontmatter drives a kanban board — NOT a /craft doc. Use when starting a new idea/experiment, moving a card across a board (a `stage` frontmatter change), or concluding one and distilling the durable learning back into /craft. Board-aware: knows the Experimentation + Ideas boards, their columns, and the kind→board mapping. Pairs with the experiment-lifecycle skills (design/run/analyze/decide/conclude-experiment) which drive the Experimentation board specifically, and with author-post (MDX/frontmatter pitfalls).
 ---
 
 # Groom initiatives (board-aware capture + advancement)
@@ -85,7 +85,7 @@ board.
 
 1. **Capture.** A new UNACTIONED idea is a NEW **`/thoughts`** post (`board: ideas`); a new
    experiment/acted-on initiative is a NEW **`/initiatives`** post. (Start from the
-   `author-blog-post` skill for the MDX/frontmatter pitfalls.) Set `kind` + `stage` (first
+   `author-post` skill for the MDX/frontmatter pitfalls.) Set `kind` + `stage` (first
    column) + `priority`. Publish when it's real enough to show. When an idea moves from "thought
    about" to "working on it," MOVE the post `blog/` ↔ `thoughts/` and pair the move with a
    `{from,to}` redirect (the move/split-don't-delete + redirect rules).
@@ -106,7 +106,7 @@ board.
   `conclude-experiment`). Those own the experiment POST + the `kind` plan→result flip + the
   Experimentation board. This skill is the general board contract they specialize.
 - **MDX/frontmatter mechanics** (bare `<br>`, unescaped `{word}`, the `kind`/`sidebar_label`
-  system) → `author-blog-post`.
+  system) → `author-post`.
 - **The board component / generator** is owned by the KanbanBoard code; this skill owns the
   *workflow* (which frontmatter, which column, when to distill).
 

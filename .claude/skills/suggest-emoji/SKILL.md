@@ -19,7 +19,7 @@ a folder and applies it. The deterministic half (file mutation) is
 > auto-derived from its frontmatter **`kind:`** (question-set/framework/reflection/… → emoji),
 > mapped in `bytesofpurpose-blog/scripts/lib/blog-kinds.json`, and prepended by the
 > `draft-docs` plugin — authors never type it and this skill never touches `blog/`. To add or
-> change a blog emoji, set `kind:` (see `author-blog-post`, "Blog post `kind:` + the
+> change a blog emoji, set `kind:` (see `author-post`, "Blog post `kind:` + the
 > sidebar"), not this script.
 
 ## When this runs

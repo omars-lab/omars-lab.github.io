@@ -1,6 +1,6 @@
 ---
 name: import-marketplace-plugin
-description: Turn a Claude Code plugin (or skill) you feature in your marketplace into a build-clean /designs post — a first-person skill-design write-up. Covers the framing (a plugin is a ROLE, its skills are ABILITIES/verbs; skills carry judgment, the CLI carries muscle), the frontmatter (kind: tooling-cli-design, sidebar_position = current max + 1, draft: true), the source-repo pointer via <RepoPointer repo path commit> with the fail-closed 404-gate (draft until the repo path resolves 200), the body rules (de-em-dash — the em-dash hook BLOCKS designs/*.mdx; mermaid with NO hardcoded fills so the theme colors it; a REAL worked example from live runs), then hands to refine-design-post + a full build. Use when the user says "make a blog post out of this plugin/skill", "feature my marketplace plugin as a design post", "write up this skill I built", or "import <plugin> into /designs". Pairs with author-blog-post (MDX pitfalls), refine-design-post (voice + coverage audit), upgrade-post (richer components), publish-site (un-draft + deploy), and the [[repo-pointer-component]] convention.
+description: Turn a Claude Code plugin (or skill) you feature in your marketplace into a build-clean /designs post — a first-person skill-design write-up. Covers the framing (a plugin is a ROLE, its skills are ABILITIES/verbs; skills carry judgment, the CLI carries muscle), the frontmatter (kind: tooling-cli-design, sidebar_position = current max + 1, draft: true), the source-repo pointer via <RepoPointer repo path commit> with the fail-closed 404-gate (draft until the repo path resolves 200), the body rules (de-em-dash — the em-dash hook BLOCKS designs/*.mdx; mermaid with NO hardcoded fills so the theme colors it; a REAL worked example from live runs), then hands to refine-design-post + a full build. Use when the user says "make a blog post out of this plugin/skill", "feature my marketplace plugin as a design post", "write up this skill I built", or "import <plugin> into /designs". Pairs with author-post (MDX pitfalls), refine-design-post (voice + coverage audit), upgrade-post (richer components), publish-site (un-draft + deploy), and the [[repo-pointer-component]] convention.
 ---
 
 # Import a marketplace plugin/skill as a Designs post
@@ -119,7 +119,7 @@ Structure that has worked (match the worked reference):
   animated look. (A BLOG.md draft imported from elsewhere often has hardcoded fills + a colored
   legend — strip them; move any legend into text.)
 - **MDX build-breakers:** bare `<br>` → `<br/>`; unescaped `{word}` → escape or code-fence. See
-  `author-blog-post`.
+  `author-post`.
 - **DS tokens, not literals**, in any CSS you add (rare here — the post reuses existing comps).
 
 ### 6. Hand off, then verify
@@ -146,7 +146,7 @@ from going live before the code is real. Flag it to the author every time it hap
 
 ## Pointers
 - **Voice + coverage audit:** `refine-design-post` (its `STYLE-GUIDE.md` + `SECTION-QUESTIONS.md`
-  are the accumulated contract; `author-blog-post` reads them too).
+  are the accumulated contract; `author-post` reads them too).
 - **The repo pointer:** [[repo-pointer-component]] (the `<RepoPointer>` component + its fail-closed
   publish rule).
 - **Richer components:** `upgrade-post` (mermaid/tables/admonitions/Carousel catalog).

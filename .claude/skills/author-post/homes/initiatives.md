@@ -42,7 +42,7 @@ priority: low
 ```
 
 Body: intro → `<!-- truncate -->` → the log. Title VOICE matters — an initiative reads as what I
-DID (`name-post`).
+DID (`audit-post-names`).
 
 ## Experiments have their own lifecycle
 
@@ -62,5 +62,5 @@ durable-vs-temporal tenet + `groom-initiatives`.
 - No em-dash; `date:` present; healthy `description:`. Gates: `make validate-seo`,
   `make validate-links`, `make validate-hubs` (if it cards on a hub), `make validate-naming`.
 - `groom-initiatives` (board contract: kind/stage/priority, advancing, concluding) ·
-  `manage-hubs` (the by-area hub) · the experiment-lifecycle skills · `name-post` ·
-  `author-blog-post` (MDX/frontmatter) · `upgrade-post` (components).
+  `manage-hubs` (the by-area hub) · the experiment-lifecycle skills · `audit-post-names` ·
+  `author-post` (MDX/frontmatter) · `upgrade-post` (components).

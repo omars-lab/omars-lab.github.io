@@ -1,6 +1,6 @@
 ---
 name: link-glossary-terms
-description: Read a blog post and link the FIRST GENUINE (term-of-art) use of each defined glossary term to its definition — using judgment to tell a term-of-art ("Role" the CLI concept) from casual English ("role" in life), which a regex cannot. Use after writing/editing a post, or when the validate-glossary-links validator surfaces candidates. The validator + its warn-tier hook find candidates mechanically; THIS skill makes the semantic call and applies the link. Idempotent: never double-links. Pairs with author-blog-post (MDX) and the /glossary home (the term registry + definitions).
+description: Read a blog post and link the FIRST GENUINE (term-of-art) use of each defined glossary term to its definition — using judgment to tell a term-of-art ("Role" the CLI concept) from casual English ("role" in life), which a regex cannot. Use after writing/editing a post, or when the validate-glossary-links validator surfaces candidates. The validator + its warn-tier hook find candidates mechanically; THIS skill makes the semantic call and applies the link. Idempotent: never double-links. Pairs with author-post (MDX) and the /glossary home (the term registry + definitions).
 ---
 
 # Link glossary terms (the semantic first-genuine-use linker)

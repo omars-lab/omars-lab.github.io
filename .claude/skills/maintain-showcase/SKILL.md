@@ -1,6 +1,6 @@
 ---
 name: maintain-showcase
-description: Maintain the component showcases under docs/handbook/components/* — the site's reference for its embeddable abilities (a card, a diagram, a code embed, a YouTube/Figma embed). Each showcase is a `kind: showcase` 🎛️ doc that demonstrates ONE technique live and carries an auto-generated "used in" index of the published posts that actually leverage it. Use when adding a NEW showcase, when a showcase's "Used in" list looks wrong (empty when it shouldn't be, or noisy/over-matching), when adding a new reusable component that deserves a showcase, or when the detection pattern needs tuning. Owns the `usage_pattern` → `<UsedIn>` → generate-component-usage.js loop. Pairs with upgrade-post (the catalog of what each component is + when to use it), author-blog-post (frontmatter/MDX mechanics), and review-reader-experience (the IA the showcases live in).
+description: Maintain the component showcases under docs/handbook/components/* — the site's reference for its embeddable abilities (a card, a diagram, a code embed, a YouTube/Figma embed). Each showcase is a `kind: showcase` 🎛️ doc that demonstrates ONE technique live and carries an auto-generated "used in" index of the published posts that actually leverage it. Use when adding a NEW showcase, when a showcase's "Used in" list looks wrong (empty when it shouldn't be, or noisy/over-matching), when adding a new reusable component that deserves a showcase, or when the detection pattern needs tuning. Owns the `usage_pattern` → `<UsedIn>` → generate-component-usage.js loop. Pairs with upgrade-post (the catalog of what each component is + when to use it), author-post (frontmatter/MDX mechanics), and review-reader-experience (the IA the showcases live in).
 ---
 
 # Maintain a component showcase
@@ -15,7 +15,7 @@ above all the **"Used in" index** that links each technique to the posts that ac
 > **What lives where (don't duplicate):**
 > - **`upgrade-post`** is the agent-facing CATALOG: what each component is, when to reach for
 >   it, the exact MDX snippet, the gotchas. Reach there to decide WHICH component.
-> - **`author-blog-post`** owns frontmatter + the MDX build-breakers.
+> - **`author-post`** owns frontmatter + the MDX build-breakers.
 > - **THIS skill** owns the showcase docs themselves: the `kind: showcase` contract, the live
 >   demonstration, and the drift-proof `usage_pattern` → `<UsedIn>` "used in" machinery.
 

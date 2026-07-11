@@ -1,6 +1,6 @@
 ---
 name: author-slide-deck
-description: How to build a slide/deck-style blog post that renders as a real, navigable reveal.js deck embedded IN the post and themed entirely from this repo's design-system tokens (Fraunces/Geist, tea pastels as fills, deep green, radii/spacing). Covers the <SlideDeck>/<Slide> component API and its on-brand primitives (<SlideEyebrow>/<SlideTitle>/<SlideLede>/<Pastels>/<PillarGrid>/<FormatList>), the reveal.js integration model (lazy-loaded browser-only via BrowserOnly, no reveal theme shipped, the exports-map import paths), the color/type token-mapping rules for translating a raw slide design into tokens, and the MDX + build gotchas (the nested-<p> hydration trap, em-dash hook, frontend-design outline check). Use when importing a pitch/design deck from claude.ai/design or authoring any slideshow post. Worked example: designs/2026-07-01-blog-pitch-deck.mdx. Pairs with implement-with-design-system (the token vocabulary + discipline), import-co-design (the design-project → post pipeline), author-blog-post (frontmatter/MDX), serve-locally (verify).
+description: How to build a slide/deck-style blog post that renders as a real, navigable reveal.js deck embedded IN the post and themed entirely from this repo's design-system tokens (Fraunces/Geist, tea pastels as fills, deep green, radii/spacing). Covers the <SlideDeck>/<Slide> component API and its on-brand primitives (<SlideEyebrow>/<SlideTitle>/<SlideLede>/<Pastels>/<PillarGrid>/<FormatList>), the reveal.js integration model (lazy-loaded browser-only via BrowserOnly, no reveal theme shipped, the exports-map import paths), the color/type token-mapping rules for translating a raw slide design into tokens, and the MDX + build gotchas (the nested-<p> hydration trap, em-dash hook, frontend-design outline check). Use when importing a pitch/design deck from claude.ai/design or authoring any slideshow post. Worked example: designs/2026-07-01-blog-pitch-deck.mdx. Pairs with implement-with-design-system (the token vocabulary + discipline), import-co-design (the design-project → post pipeline), author-post (frontmatter/MDX), serve-locally (verify).
 ---
 
 # Author a slide-based (reveal.js) blog post
@@ -199,6 +199,6 @@ Run `make start` (drafts visible) and open the post, then:
 
 - `implement-with-design-system` — the token vocabulary + discipline rules the theme obeys.
 - `import-co-design` — the sibling pipeline for importing a co-design HLD into `/designs`.
-- `author-blog-post` — frontmatter, the blog `kind:` system, MDX pitfalls.
+- `author-post` — frontmatter, the blog `kind:` system, MDX pitfalls.
 - `serve-locally` — run it; the stale-route gotcha.
 - `upgrade-post` — the catalog of the OTHER embeddable components (diagrams, mockups, quotes).

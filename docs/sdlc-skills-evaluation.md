@@ -10,8 +10,8 @@ for one-line passthroughs (`make start`). Created 2026-05-31.
 |---|---|---|---|
 | **Setup** | `install`, `add`, `init-site`, `upgrade`, `update-prompts` | ❌ | One-liners; document in CLAUDE.md. |
 | **Develop** | `start`, `start-prod`, `serve`, `clear`, `storybook`, `build-storybook` | ❌ | Trivial passthroughs; `run` built-in skill covers launching. |
-| **Author content** | `fix-frontmatter`, `fix-blog-posts`, `check` | ✅ **author-blog-post** | MDX gotchas (`<br/>`, `{braces}`) silently fail the build late; frontmatter rules. Real judgment. **Built.** |
-| **Build** | `build` | ⚠️ | Folded into deploy-site + author-blog-post (build is the gate). |
+| **Author content** | `fix-frontmatter`, `fix-blog-posts`, `check` | ✅ **author-post** | MDX gotchas (`<br/>`, `{braces}`) silently fail the build late; frontmatter rules. Real judgment. **Built** (was `author-blog-post`; merged into `author-post` 2026-07-11). |
+| **Build** | `build` | ⚠️ | Folded into deploy-site + author-post (build is the gate). |
 | **Test** | `test-e2e*`, `open-e2e-report`, `test-posthog` | ✅ **(analytics part)** | PostHog validation has deep gotchas (bot filter, prod-vs-dev). Covered by test-posthog + the spec. Generic e2e stays a Makefile target. |
 | **Analytics** | `test-posthog` + `posthog_stats.py` | ✅ **manage-cloudflare-access** (stats) + integration plan | Stats readback + event plan. **Built.** |
 | **Secure** | `secret-scan`, `install-hooks`, `audit` | ✅ **(done)** | gitleaks hook + config. **Built** (this session). |
@@ -24,7 +24,7 @@ for one-line passthroughs (`make start`). Created 2026-05-31.
 - `manage-cloudflare-access` — Access admin + PostHog stats
 - `deploy-site` — safe build+deploy flow
 - `validate-deployment` — post-deploy smoke checks
-- `author-blog-post` — content/MDX/frontmatter guardrails
+- `author-post` — content/MDX/frontmatter guardrails (formerly `author-blog-post`, merged 2026-07-11)
 - (secret scanning delivered as Makefile + hook, not a skill — it's a gate, not a flow)
 
 **Deliberately NOT skills** (document in CLAUDE.md instead): setup, dev-server,

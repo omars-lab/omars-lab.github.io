@@ -65,4 +65,4 @@ A topic README landing additionally pins itself: `sidebar_label: '👋 Welcome'`
 
 `organize-post` (is this really durable-craft?) · `reorganize-content` (moving it in) ·
 `manage-hubs` · `maintain-showcase` · `manage-docs-instances` (adding a whole new root) ·
-`review-reader-experience` (the IA + the contract) · `author-blog-post` (MDX pitfalls).
+`review-reader-experience` (the IA + the contract) · `author-post` (MDX pitfalls).

@@ -41,4 +41,4 @@ splitting a whole root instance is a bigger operation owned by **`manage-docs-in
 ## Cross-links
 
 `homes/craft.md` (the shared docs mechanics) · `organize-post` (durable why vs how) ·
-`manage-docs-instances` (root-level changes) · `reorganize-content` (moves) · `author-blog-post`.
+`manage-docs-instances` (root-level changes) · `reorganize-content` (moves) · `author-post`.

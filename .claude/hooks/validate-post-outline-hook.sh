@@ -13,7 +13,7 @@
 # All are judgment calls (a stub mid-draft is fine), so the validator exits 0 and this hook
 # never blocks. For DOCS it only runs when a `kind:` is present; for BLOG/designs it always
 # runs (so a missing kind is caught). Pairs with scripts/validate-post-outline.js + the
-# author-blog-post / upgrade-post skills.
+# author-post / upgrade-post skills.
 
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')

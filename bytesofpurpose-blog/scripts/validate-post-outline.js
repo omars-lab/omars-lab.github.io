@@ -456,7 +456,7 @@ function main() {
       '\nthen decide the IDEAL fix (enrich the post, OR reclassify the kind), then apply it.' +
       '\nA legend that is really an essay, or a system-design that is really a framework, is' +
       '\nfixed by correcting `kind:` (see scripts/lib/blog-kinds.json), not by forcing' +
-      '\nmissing elements onto it. See the author-blog-post + upgrade-post skills.'
+      '\nmissing elements onto it. See the author-post + upgrade-post skills.'
   );
   process.exit(0); // warn-tier: never block
 }

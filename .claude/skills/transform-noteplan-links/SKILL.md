@@ -1,6 +1,6 @@
 ---
 name: transform-noteplan-links
-description: Turn a raw `noteplan://x-callback-url` link into a first-class <NotePlanButton>, and validate that every NotePlan link resolves to a REAL note in the local NotePlan store. Owns the NotePlan x-callback-url scheme (openNote by noteTitle / by filename, the #heading suffix, URL-encoding of emoji + spaces + the literal #), the <NotePlanButton> component API (note / heading / filename / label / url props → the built link + an on-brand "Open in NotePlan" button that is honest it opens the AUTHOR's local app), and the validate-noteplan-links.js gate + its hook (resolves each link's target to a file under ~/Library/Containers/co.noteplan.NotePlan3/… — a note whose first `#` heading matches, or a filename/path — and ERRORs on a missing note; LOCAL-ONLY, so off-machine/CI it checks syntax only and passes). Use when the user pastes a noteplan:// link, asks to "make my NotePlan links buttons / validate my noteplan links / turn this into a NotePlan button", or a NotePlan button's note got renamed/deleted. Pairs with modify-blog-ui-component / author-blog-post (the MDX side), validate-links (the sibling link gate).
+description: Turn a raw `noteplan://x-callback-url` link into a first-class <NotePlanButton>, and validate that every NotePlan link resolves to a REAL note in the local NotePlan store. Owns the NotePlan x-callback-url scheme (openNote by noteTitle / by filename, the #heading suffix, URL-encoding of emoji + spaces + the literal #), the <NotePlanButton> component API (note / heading / filename / label / url props → the built link + an on-brand "Open in NotePlan" button that is honest it opens the AUTHOR's local app), and the validate-noteplan-links.js gate + its hook (resolves each link's target to a file under ~/Library/Containers/co.noteplan.NotePlan3/… — a note whose first `#` heading matches, or a filename/path — and ERRORs on a missing note; LOCAL-ONLY, so off-machine/CI it checks syntax only and passes). Use when the user pastes a noteplan:// link, asks to "make my NotePlan links buttons / validate my noteplan links / turn this into a NotePlan button", or a NotePlan button's note got renamed/deleted. Pairs with modify-blog-ui-component / author-post (the MDX side), validate-links (the sibling link gate).
 ---
 
 # Transform NotePlan links
@@ -98,5 +98,5 @@ note-existence check off-machine is impossible, not a failure. So the hook never
 `scripts/validate-noteplan-links.js` + `.claude/hooks/validate-noteplan-links-hook.sh` +
 `make validate-noteplan-links`, and the `noteplan://` links across `docs/`/`blog/`. Pairs with
 `modify-blog-ui-component` (if the button graduates to the shared blog-ui package),
-`author-blog-post` (MDX authoring), `implement-with-design-system` (the on-brand chip),
+`author-post` (MDX authoring), `implement-with-design-system` (the on-brand chip),
 `validate-links` (the sibling link gate).

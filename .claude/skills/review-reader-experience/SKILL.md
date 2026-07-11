@@ -11,7 +11,7 @@ the author's process, and UI affordances aimed at the author (debug menus, build
 nav) rather than the reader. This skill audits the site from the **reader's** point
 of view and emits a **prioritized report** — it does not silently auto-edit.
 
-Pairs with: `author-blog-post` (content rules + MDX pitfalls), `validate-links`
+Pairs with: `author-post` (content rules + MDX pitfalls), `validate-links`
 (link hygiene), `publish-site` (draft triage). Apply fixes through those skills'
 conventions.
 
@@ -164,7 +164,7 @@ Flag and fix:
     ```
   - **Same rule applies to BLOG posts now.** The Posts sidebar (`/initiatives`) is no longer
     docs-only: every blog post carries a `kind:` and a short `sidebar_label:` (≤ 3 content
-    words), and the kind-derived emoji is prepended automatically — see `author-blog-post`
+    words), and the kind-derived emoji is prepended automatically — see `author-post`
     ("Blog post `kind:` + the sidebar"). A long blog `title:` wraps/truncates in the Posts
     sidebar exactly like a docs title, and the fix is identical: add a short `sidebar_label`,
     keep the full `title` for the H1/SEO. (Mechanism differs: the blog plugin doesn't read
@@ -231,7 +231,7 @@ reader-focused rewrites:
 - A title that's an SEO keyword pile → fine for `title`/SEO, but the **on-page intro**
   should restate it in human terms.
 
-Content edits follow `author-blog-post` rules (frontmatter, MDX `<br/>` / `{}`
+Content edits follow `author-post` rules (frontmatter, MDX `<br/>` / `{}`
 pitfalls). Don't introduce build-breakers while rewriting.
 
 ### 4. Information architecture (file/folder structure)
