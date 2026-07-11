@@ -3,17 +3,19 @@
 /**
  * validate-docs-structure.js — lints the topic-based docs information architecture.
  *
- * The docs/ tree is a TOPIC-based IA with a recurring folder contract (see the
- * review-reader-experience skill, "Topic-folder contract" section, and CLAUDE.md):
+ * The docs/ tree is FIVE separate plugin-content-docs instances, each a TOPIC-based IA
+ * with the same recurring folder contract (see the review-reader-experience skill,
+ * "Topic-folder contract" section, and CLAUDE.md):
  *
  *   docs/
- *     welcome/              ← the topic index (Welcome); not itself a topic
- *     <N>-<topic>/          ← one root folder per reader-facing TOPIC
- *       README.{md,mdx}     ← topic landing, ABSOLUTE slug, _category_.json
- *       _category_.json     ← label + position
- *       terminology/        ← (optional) sorts FIRST
- *       <sub-folder>/       ← each carries a _category_.json; kebab-case
- *       prompts/            ← (optional) sorts LAST
+ *     <instance>/           ← craft | journey | knowledge | habits | handbook
+ *       README.{md,mdx}     ← instance landing, ABSOLUTE instance-relative slug, _category_.json
+ *       <topic>/            ← a reader-facing TOPIC (a child dir with a _category_.json)
+ *         README.{md,mdx}   ← topic landing, ABSOLUTE slug, _category_.json
+ *         _category_.json   ← label + position
+ *         terminology/      ← (optional) sorts FIRST
+ *         <sub-folder>/     ← each carries a _category_.json; kebab-case
+ *         prompts/          ← (optional) sorts LAST
  *
  * Invariants this checks (severity in []):
  *   absolute-slug   [ERROR] every doc has frontmatter `slug:` and it is ABSOLUTE (`/…`).
@@ -34,15 +36,13 @@
  *                           (`_`-prefixed names like _TEMPLATE/_category_ are exempt).
  *   framing-folder  [warn]  no framing-word / topic-echo sub-folder names
  *                           (`*-techniques`, `*-craftsmanship`, `definitions`).
- *   depth           [warn]  folder depth ≤ 5 under a topic root. The Craft/Self
- *                           split adds one container tier above the former topics
- *                           (craft = topic root → software-development → frontend-
- *                           development → techniques → <doc> is a legitimate depth-5
- *                           chain), so the contract is ≤5 from the craft/self root.
+ *   depth           [warn]  folder depth ≤ 5 under an instance root (e.g.
+ *                           craft → software-development → frontend-development →
+ *                           techniques → <doc> is a legitimate depth-5 chain).
  *   terminology-first [warn]  a `terminology/` category sorts first (low position).
  *   prompts-last    [warn]  a `prompts/` category sorts last (high position).
- *   welcome-drift   [warn]  the Welcome topic-index cards (`### [Label](slug)`) match
- *                           the actual root topic folders + their README slugs.
+ *   welcome-drift   [warn]  the homepage chooser (src/pages/index.tsx) leads into BOTH
+ *                           the /craft and /journey halves (its two CTAs).
  *   idea-exec-link  [warn]  the idea↔execution mapping convention: links inside an
  *                           `## Execution` section (Product Management idea docs) or an
  *                           `## Idea`/`## Origin` section (Software Development artifacts)
@@ -110,7 +110,6 @@ try {
 
 const ROOT = path.join(__dirname, '..');
 const DOCS = path.join(ROOT, 'docs');
-const WELCOME = 'docs/welcome';
 
 const SEVERITY = {
   'absolute-slug': 'error',
@@ -445,7 +444,6 @@ function walkDir(dir, depthFromTopic, topicName) {
     }
 
     // depth ≤ 5 under a topic root (topic root = depth 0; flag a folder at depth 6+).
-    // craft/self add one container tier above the former topics — see header.
     if (childDepth >= 6) {
       add('depth', rel(full), `folder is ${childDepth} levels under topic "${topicName}" (contract: ≤5)`);
     }
