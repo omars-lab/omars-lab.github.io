@@ -114,6 +114,24 @@ new token worth guarding, add a rule to the `RULES` manifest in the SAME change.
 **`implement-with-design-system`** (the literal→token map + the discipline rules + the repo-reality
 gotchas); this convention is the enforcement.
 
+## ⚠️ Operating convention: every validator hook ships a `--selftest` that proves it bites
+
+A hook that can BLOCK (exit 2) or FLAG (stderr) is only trustworthy if it still fires on bad input,
+but hooks rot silently (a refactor can turn a guard into a no-op and nothing notices until a real
+leak ships). So **every validator hook in `.claude/hooks/*.sh` carries a `--selftest` branch** (at
+the very top, BEFORE `input=$(cat)`, or it hangs on stdin) that feeds itself a planted-bad payload
+and asserts it bites, plus a clean payload that passes. The shared helpers live in
+`.claude/hooks/lib/selftest.sh` (`assert_blocks` for a blocking hook; `assert_ignored`/`assert_passes`
+for a warn/delegating hook, whose own contract is the SCOPE gate since its bite is the underlying
+validator's, proven separately). This is fail-closed: **`make test-hooks`** / **`make
+validate-hook-tests`** run every hook's selftest, and `scripts/validate-hook-tests.js` (+ the
+`validate-hook-tests-hook.sh` warn hook that fires when a `.claude/hooks/*.sh` file is edited)
+**exits 2** if any non-exempt hook lacks a `--selftest` or its selftest fails. **When you add a new
+hook, add its `--selftest` in the SAME change.** Pure REMINDERS + advisory Stop hooks (always exit 0,
+no per-edit bite) are the only exceptions, listed in the `EXEMPT` set in `validate-hook-tests.js` —
+keep that list tight (a hook that CAN block/flag is not a reminder). Mirrors the `validate-hero-anchors`
+pattern (guard a thing against drift). Owning guard: `validate-hook-tests`.
+
 ## ⚠️ Operating convention: every board tag gets a tooltip gloss in the registry
 
 Each theme **tag** that appears on an Ideas/Experimentation board card (the chips on the card +
