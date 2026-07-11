@@ -12,6 +12,12 @@
 # Scope: a .md/.mdx under bytesofpurpose-blog/{thoughts,blog}/ (where board posts live) OR the registry
 # src/lib/idea-tags.ts. The validator scans all board posts (it's fast); the edited file just triggers it.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

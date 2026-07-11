@@ -13,6 +13,12 @@
 # it exits 0 so the edit is NEVER blocked (mirrors validate-draft-hook.sh). The full
 # warn-tier contract is checked by `make validate-structure`.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

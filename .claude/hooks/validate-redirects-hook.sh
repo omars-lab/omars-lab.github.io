@@ -8,6 +8,12 @@
 # or drop the redirect). Warn-tier findings (dead/duplicate redirects) are left for the full
 # `make validate-redirects`; the hook only blocks on the build-breaking ERROR tier.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

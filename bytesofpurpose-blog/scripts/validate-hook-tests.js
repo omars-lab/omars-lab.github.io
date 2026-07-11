@@ -30,12 +30,15 @@ const {execFileSync} = require('child_process');
 const REPO = path.join(__dirname, '..', '..'); // repo root (hooks live outside bytesofpurpose-blog/)
 const HOOKS_DIR = path.join(REPO, '.claude', 'hooks');
 
-// Pure reminders: always exit 0, never block or flag — nothing to prove. Keep TIGHT.
+// Pure reminders + advisory Stop hooks: always exit 0, no per-edit block/flag to prove. Keep TIGHT.
 const EXEMPT = new Set([
   'changelog-archive-reminder.sh',
   'dev-server-restart-reminder.sh',
   'discover-journey-reminder.sh',
   'refine-capture-reminder.sh',
+  // A Stop hook: session-end, git-gated, advisory (always exit 0). Its "bite" is a rendered-diagram
+  // check that needs Chromium + a real changed diagram — not a payload-driven per-edit contract.
+  'mermaid-render-check.sh',
 ]);
 
 function hookFiles() {

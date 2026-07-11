@@ -11,10 +11,16 @@
 # Advisory only: it exits 0 so the edit is NEVER blocked (mirrors the other content hooks). The
 # blocking enforcement is `make check-contrast` (exit 2 on a failure) — run it before a deploy.
 
+# Scope: the theme's custom.css (the file that defines the palette vars the checker reads).
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'a non-CSS file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 
-# Scope: the theme's custom.css (the file that defines the palette vars the checker reads).
 case "$file_path" in
   */bytesofpurpose-blog/src/css/custom.css) ;;
   *) exit 0 ;;
