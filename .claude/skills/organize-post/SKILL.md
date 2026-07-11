@@ -23,7 +23,7 @@ The whole site hangs on two questions, then a kind. Walk them top-down:
 - **DURABLE** → a distilled learning, framework, strategy, terminology, the way I see the world or
   myself. Return-to knowledge. Home: **`/craft`** (how I see the world: the professional topics) or
   **`/journey`** (how I see myself: faith, personal growth). A durable piece is a DOC in one of
-  those instances, slotted into the right topic folder (see `review-reader-experience` for the
+  those instances, slotted into the right topic folder (see `author-post`, `homes/craft.md`, for the
   topic-folder contract).
 - **TEMPORAL** → a dated, specific thing. Go to question 2.
 

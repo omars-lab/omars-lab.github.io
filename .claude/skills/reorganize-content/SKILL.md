@@ -138,5 +138,5 @@ When `organize-post` says a doc is really N things (e.g. an idea + a technique +
 ## Files / gates this skill leans on (owned elsewhere)
 `docusaurus.config.js` redirects + `scripts/validate-redirects.js` + `.claude/hooks/validate-redirects-hook.sh`
 (the redirect gate — owned by the structure convention in CLAUDE.md); `scripts/validate-docs-structure.js`
-(absolute-slug + the topic-folder contract — owned by `review-reader-experience`); `generate-hubs-data.js`
+(absolute-slug + the topic-folder contract — owned by `author-post`, `homes/craft.md`); `generate-hubs-data.js`
 + `manage-hubs` (when the move touches a hub). This skill is the RECIPE that ties them together for a move.

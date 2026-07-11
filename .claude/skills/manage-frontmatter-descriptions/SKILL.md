@@ -93,8 +93,9 @@ preview must show the `✓` verdict + a clean message. Show that output, don't s
 
 ## Related
 
-- `author-post` — frontmatter + MDX rules for the rest of the page.
-- `review-reader-experience` — owns the topic-folder contract + the validator that emits
-  these description rules.
+- `author-post` — frontmatter + MDX rules for the rest of the page, AND owns the topic-folder
+  contract (`homes/craft.md`) that includes these description rules.
+- `review-reader-experience` — the IA audit; `validate-docs-structure.js` (which it audits with)
+  is the validator that emits these description findings.
 - `validate-links` — sibling link-hygiene lint.
 - Consumer: `src/components/ShareButton/` + `src/ingress-attribution-plan.md`.

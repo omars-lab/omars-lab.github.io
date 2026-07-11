@@ -101,11 +101,17 @@ CREATING or HOMING a doc. But the skill's job is a "5 audits → prioritized rep
 - `validate-links`, `audit-mobile/desktop-experience`, `audit-test-realism` — already the thin-audit
   end-state (own their scripts, or report-only). Nothing to relocate.
 
-## Recommended sequence
+## Status — ALL THREE DONE (on `flowdiagram-edge-hover`)
 
-1. **`link-glossary-terms` → `audit-glossary-links`** (cleanest, isolated — the exact name-post shape).
-2. **`manage-hubs`** per-post contract relocation (light; no rename).
-3. **`review-reader-experience`** topic-folder-contract extraction (own pass; touches SEO machinery).
+1. ✅ **`link-glossary-terms` → `audit-glossary-links`** — contract into `author-post/mechanics.md`
+   ("Glossary linking"), skill slimmed to the auditor. (commit `a361a5527`, content-fix `a842bf7c9`)
+2. ✅ **`manage-hubs`** — per-post carding contract relocated into `author-post/homes/{initiatives,craft}.md`;
+   `manage-hubs` kept as the hub-SYSTEM owner (no rename — no thin-audit residue). (commit `a842bf7c9`)
+3. ✅ **`review-reader-experience`** — done in two steps: first RECONCILED the stale contract to the
+   5-instance model (commit `2ba42f444`), then RELOCATED the corrected contract into
+   `author-post/homes/craft.md` ("The topic-folder contract") + slimmed the skill to the IA auditor
+   that references it. The em-dash pieces + the 5 audits stayed with `review-reader-experience`.
 
-Each is an independent branch/PR. Await user pick before executing any — a rename + contract-move is
-a decision, like the name-post split was.
+Pattern established: a creation-time CONTRACT lives in the CREATION skill (`author-post`); the
+matching AUDIT skill references it and runs the `validate-*` check. Validators/hooks keep their
+(already audit-flavored) names, so `settings.json` never churns.

@@ -1,9 +1,10 @@
 #!/bin/bash
 # PostToolUse hook for Edit|Write: WARN (never block) on docs-structure violations.
 #
-# The docs/ tree follows a topic-based IA contract (see the review-reader-experience
-# skill's "Topic-folder contract" section + CLAUDE.md). The single highest-stakes rule
-# is the URL-freeze guarantee: every doc must carry an ABSOLUTE `slug:` (`slug: /…`).
+# The docs/ tree follows a topic-based IA contract (source of truth: the author-post skill,
+# homes/craft.md "The topic-folder contract"; review-reader-experience audits against it;
+# + CLAUDE.md). The single highest-stakes rule is the URL-freeze guarantee: every doc must
+# carry an ABSOLUTE `slug:` (`slug: /…`).
 # A relative/missing slug silently re-couples the URL to the folder path, so a later
 # move changes the URL with no build error (onBrokenLinks:'warn', no redirects plugin).
 #

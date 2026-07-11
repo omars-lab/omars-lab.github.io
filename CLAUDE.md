@@ -374,7 +374,8 @@ decision that changes this structure or its conventions** (add/rename/retire a t
 change the recurring shape, add a naming rule, change slug/draft policy), you **must
 update the structure-checking validators + hooks in the same change** so they encode
 the new rule — never let the docs and the checks drift. The contract is owned by the
-`review-reader-experience` skill ("Topic-folder contract + validator" section) and
+`author-post` skill (`homes/craft.md`, "The topic-folder contract"); the
+`review-reader-experience` skill AUDITS against it and the contract is
 enforced by `bytesofpurpose-blog/scripts/validate-docs-structure.js`
 (`make validate-structure`) + the warn-only PostToolUse `Write|Edit` hook
 `.claude/hooks/validate-docs-structure-hook.sh` (registered in `.claude/settings.json`
@@ -386,7 +387,7 @@ only ERROR tier; the rest are warn-tier advisories — including the `descriptio
 (missing / length ~50–160 / duplicate), which keep each page's `description:` frontmatter
 healthy because it feeds both `og:description` (SEO/social) and the ShareButton share
 message. If the validator doesn't yet encode a rule you just introduced, add the rule to
-it as part of the decision. The skill's SKILL.md is the source of truth for the contract;
+it as part of the decision. `author-post/homes/craft.md` is the source of truth for the contract;
 keep it and the checks in lockstep.
 
 **SEO is validated in two modes** by `scripts/validate-seo.js`, which SHARES its description/title

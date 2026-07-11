@@ -11,8 +11,9 @@ the author's process, and UI affordances aimed at the author (debug menus, build
 nav) rather than the reader. This skill audits the site from the **reader's** point
 of view and emits a **prioritized report** — it does not silently auto-edit.
 
-Pairs with: `author-post` (content rules + MDX pitfalls), `validate-links`
-(link hygiene), `publish-site` (draft triage). Apply fixes through those skills'
+Pairs with: `author-post` (content rules + MDX pitfalls, AND the topic-folder contract this skill
+audits against — `homes/craft.md`), `reorganize-content` (the drift-free move loop for an IA fix),
+`validate-links` (link hygiene), `publish-site` (draft triage). Apply fixes through those skills'
 conventions.
 
 ## The reader's lens (the one rule)
@@ -269,112 +270,21 @@ the test on the redirect **stub** (no content) → spurious timeout that looks l
 broken component. `make validate-links` now catches this (`test-stale-slug` rule), but
 include `test/` in your own sweep so you fix it up front.
 
-#### Topic-folder contract + validator (`validate-docs-structure.js`)
+#### The topic-folder contract (audit against it)
 
-The docs are **five separate `plugin-content-docs` instances**, each a topic-based IA with the
-same recurring folder contract. This skill owns the contract;
-`bytesofpurpose-blog/scripts/validate-docs-structure.js` enforces it (`make validate-structure`,
-plus a warn-only `Write|Edit` hook). `author-post` (`homes/craft.md` + `homes/journey.md`) is the
-per-instance authoring summary; this section is the full contract + the validator's rules. The
-contract:
+The docs are **five separate `plugin-content-docs` instances** (`craft`/`journey`/`knowledge`/
+`habits`/`handbook`), each a topic-based IA with the same recurring folder contract. **The contract
+itself — the folder shape, instance-relative slugs, `_category_.json` label+position+emoji,
+kebab/no-numeric-prefix, depth ≤5, terminology-first/prompts-last, the description rules, the
+idea↔execution + blog↔doc-trigger conventions, and the legacy-namespace rule — is the SOURCE OF
+TRUTH in `author-post` (`homes/craft.md`, "The topic-folder contract").** It is enforced by
+`bytesofpurpose-blog/scripts/validate-docs-structure.js` (`make validate-structure` + a warn-only
+`Write|Edit` hook; the only ERROR tier is a missing/relative slug, everything else warns).
 
-- **The FIVE docs instances** (each `docs/<name>/`, each its own navbar `docSidebar` +
-  `sidebars-<name>.js`, preset default docs disabled): **`craft`** → `/craft` (how I see the
-  world), **`journey`** → `/journey` (why I build; plugin id is still `'self'`, old `/self/*` 301s
-  to `/journey/*`), **`knowledge`** → `/knowledge` (durable mental models), **`habits`** →
-  `/habits` (practices), **`handbook`** → `/handbook` (the reader's guide; plugin id `'legend'`).
-  There is NO single `/docs` root and no `docs/welcome/` — adding/renaming/splitting an instance is
-  owned by `manage-docs-instances`. Within each instance, a reader-facing TOPIC is a direct child
-  dir with a `_category_.json` (the validator detects topics by structure, not a name pattern), and
-  each instance's landing README pins itself `👋 Welcome` (`sidebar_label` + `sidebar_position: 0`).
-- **Folder NAMES carry no numeric ordering prefix.** Sidebar order comes from the
-  `_category_.json` `"position"` field (folders) and `sidebar_position` frontmatter (docs) — never
-  the name. *Why:* a name prefix couples *order* to *identity* — reordering a prefixed folder is a
-  `git mv` that rewrites every descendant doc's path (churns history), whereas bumping a `position`
-  is a one-line, history-clean edit. The `numeric-prefix` check warns on any prefixed folder name.
-- **Every doc has an ABSOLUTE `slug:` (`slug: /…`)** — the URL-freeze guarantee. The validator
-  treats a missing/relative slug as the only **ERROR** tier (exit 2; the hook surfaces it but never
-  blocks). Everything below is **warn** tier (advisory).
-- **Slugs are INSTANCE-RELATIVE**: a doc's absolute slug is relative to its instance root, and the
-  `draft-docs` plugin prepends the instance segment. A topic README uses `slug: /` → permalink
-  `/craft` (for the craft instance); a nested doc uses `slug: /generative-ai` → `/craft/generative-ai`.
-  Do NOT bake the instance prefix into the slug value (`slug: /craft/generative-ai` would DOUBLE to
-  `/craft/craft/…`). When you move/reorg a doc, rewrite its instance-relative slug to match the new
-  path and add a `{from,to}` client-redirect so the old public URL still resolves — the drift-free
-  move loop (repoint + collapse redirect chains) is owned by `reorganize-content`.
-- Each topic folder has a `README.{md,mdx}` landing (absolute instance-relative slug) + a
-  `_category_.json` (label + position).
-- **Every `_category_.json` `label` LEADS with an emoji** so the sidebar scans visually.
-  The validator warns via **emoji-prefix-category**; the hook nudges on a `_category_.json`
-  save without one. Reuse the emoji a sibling of the same kind uses (🔬/🔨/🛠️/🔧/💬/📖/🧠/💻
-  …) — the topic→emoji map (`scripts/lib/emoji-map.js` / `suggest-emoji`) is the source of truth.
-  Doc leaf labels lead with an emoji too where natural (rolled up as **emoji-prefix-doc**, `--emoji`
-  to expand); a doc with NO `title`/`sidebar_label` falls back to its filename — **sidebar-label-missing**.
-  A `kind:`-carrying doc (e.g. `kind: hub` 🗂️) has its emoji prepended at runtime and is exempt.
-- Every sub-folder that contains docs has a `_category_.json`; none should sit in a
-  folder with no docs and no docs-bearing descendants (orphan category).
-- Names are **kebab-case** (no spaces/uppercase; `_`-prefixed like `_TEMPLATE` exempt).
-- No framing-word / topic-echo folder names (`*-techniques`, `*-craftsmanship`,
-  `definitions`) — use a reader-facing topic noun. (A few such folders survive from the pre-reorg
-  tree with frozen slugs; the validator warns on them.)
-- Folder depth ≤ 5 under an instance root (a domain sub-topic with its own `projects/<project>`
-  legitimately reaches 5, e.g. `craft/software-development/frontend-development/techniques/<doc>`).
-- A `terminology/` category sorts **first**; a `prompts/` category sorts **last**.
-- The **welcome-drift** check validates the homepage chooser (`src/pages/index.tsx`): it must lead
-  into BOTH the `/craft` and `/journey` halves (the two CTAs). It no longer checks a `docs/welcome/`
-  topic-index (that folder is retired).
-- Every doc carries a healthy `description:` frontmatter — present, ~50–160 chars, and
-  distinct from other docs. It feeds both `og:description` (SEO/social preview) and the
-  ShareButton "Here's what it covers:" share message. The validator warns via
-  **description-missing / description-length / description-duplicate**. Deeper drafting/
-  refresh + a share-message preview live in the `manage-frontmatter-descriptions` skill.
-
-**Large topics may split into DOMAIN sub-topics.** `docs/craft/software-development/` is organized
-by build domain — `backend-development/`, `frontend-development/`, `scripting/`, `plugins/` — each
-repeating the recurring shape (`research/ projects/ techniques/ tinkering/`); `terminology/` +
-`prompts/` stay at the topic root. The idea→ship LIFECYCLE is a SEPARATE topic,
-`docs/craft/product-management/` (slug `/product-management`): `ideas/ research/ experiments/
-projects/ roadmaps/ tinkering/`. Rule of thumb: *what to build & why* → Product Management; *what I
-built & how* → Software Development.
-
-**`mental-models/` is a PER-TOPIC subdir, not a root namespace** (warn-validated by the
-`legacy-namespace` check). A topic's "how to think about X" content lives in a
-`mental-models/` subdir *under that topic* with a topic-first slug —
-`interview-prep/mental-models/…`, `companies/mental-models/{career-levels,skills,cultural-values}/…`,
-`generative-ai/mental-models/…`. It is NOT a cross-cutting `/mental-models/*` root URL
-namespace: that earlier shape was an orphan URL tree (a folder organized by topic, a URL
-tree organized by a "understanding-X" lens) with no landing page to climb to. The
-`/mental-models/*` URLs were dissolved into the per-topic subdirs and the old URLs are
-preserved via `@docusaurus/plugin-client-redirects` (the redirect list lives in
-`docusaurus.config.js`; keep it in lockstep with any future slug move). The
-`legacy-namespace` rule warns if any NEW doc reintroduces a `/mental-models/*` slug.
-
-**Idea↔execution mapping convention** (warn-validated by the `idea-exec-link` check): a
-Product Management idea/initiative doc links to its built artifact(s) under an
-`## Execution` section (absolute `/development/…` links); the Software Development
-artifact links back under an `## Idea` (or `## Origin`) section (absolute
-`/product-management/…`). The validator warns if any such link doesn't resolve to an
-existing slug; it never blocks, and back-links are backfilled incrementally.
-
-**Blog↔doc trigger convention** (warn-validated; owned by
-`docs/blogging/blog-post-triggers.mdx`, which is the source of truth for the taxonomy): a
-doc that marks a *moment worth announcing* carries an optional `blog_*` frontmatter block —
-`blog_trigger:` (one of the controlled vocab `conference | book | solution | poc |
-milestone | opinion`), `blog_post:` (slug of the companion `/blog/` post), `blog_status:`
-(`planned | drafted | published`). The doc stays the durable reference; the post is the
-point-in-time announcement that links back to it. Scaffold the post with
-`make generate-blog-stub DOC=…` (read-only on the source doc; refuses to overwrite);
-`make blog-pending` lists post-worthy docs that still owe a post. The validator warns via
-three rules: **blog-trigger-vocab** (value outside the controlled set), **blog-post-exists**
-(`blog_post:` resolves to no `/blog/` post), **blog-post-orphan** (a `/blog/` post links a
-`/docs/<slug>` whose doc lacks the matching `blog_post:` back-reference). Keep the
-controlled vocab in `validate-docs-structure.js` (`BLOG_TRIGGERS`) in lockstep with the
-taxonomy table in the triggers doc.
-
-**Operating convention (also in CLAUDE.md):** any decision that changes this structure
-or its conventions (add/rename/retire a topic, change the recurring shape, add a naming
-rule, change slug/draft policy) MUST update this validator + this section in the same
-change, so the docs and the checks never drift.
+This skill AUDITS against that contract — it flags where the live tree VIOLATES it (below) — but does
+not define it. When you find a violation, fix it per the contract in `author-post` +
+`reorganize-content` (for moves). If a structure DECISION changes the contract, update
+`author-post/homes/craft.md` + `validate-docs-structure.js` in lockstep (the CLAUDE.md tenet).
 
 Survey the tree, then flag:
 - **Over-deep nesting.** Paths 5+ levels deep (e.g.

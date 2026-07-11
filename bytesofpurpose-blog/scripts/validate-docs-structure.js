@@ -4,8 +4,9 @@
  * validate-docs-structure.js — lints the topic-based docs information architecture.
  *
  * The docs/ tree is FIVE separate plugin-content-docs instances, each a TOPIC-based IA
- * with the same recurring folder contract (see the review-reader-experience skill,
- * "Topic-folder contract" section, and CLAUDE.md):
+ * with the same recurring folder contract (the SOURCE OF TRUTH is the author-post skill,
+ * homes/craft.md "The topic-folder contract"; review-reader-experience AUDITS against it;
+ * see also CLAUDE.md):
  *
  *   docs/
  *     <instance>/           ← craft | journey | knowledge | habits | handbook
