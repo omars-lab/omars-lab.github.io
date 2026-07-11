@@ -1,6 +1,6 @@
 ---
 name: import-co-design
-description: Import a public co-design HLD (architecture/co-designs/public/CO-DESIGN-*-hld.md from the work repo) into the Bytes of Purpose Designs blog (/designs) as a build-clean .mdx post, and produce the /initiatives showcase post that summarizes the collection. Runs a deterministic, idempotent transformer that maps frontmatter, de-em-dashes the body (the em-dash voice hook BLOCKS — in designs/*.mdx), fixes MDX build-breakers, rewrites cross-doc links to /designs slugs, converts <a id> footnotes to GFM + labeled scope-notes to admonitions, and wraps the first mermaid diagram for the opt-in flow animation. Use when the user wants to publish a co-design as a design doc, refresh an imported one after the source changed, or stand up the showcase post. Pairs with author-blog-post (MDX pitfalls), publish-site (un-draft + deploy), manage-frontmatter-descriptions (the description field).
+description: Import a public co-design HLD (architecture/co-designs/public/CO-DESIGN-*-hld.md from the work repo) into the Bytes of Purpose Designs blog (/designs) as a build-clean .mdx post, and produce the /initiatives showcase post that summarizes the collection. Runs a deterministic, idempotent transformer that maps frontmatter, de-em-dashes the body (the em-dash voice hook BLOCKS — in designs/*.mdx), fixes MDX build-breakers, rewrites cross-doc links to /designs slugs, converts <a id> footnotes to GFM + labeled scope-notes to admonitions, and wraps the first mermaid diagram for the opt-in flow animation. Use when the user wants to publish a co-design as a design doc, refresh an imported one after the source changed, or stand up the showcase post. Pairs with author-post (MDX pitfalls), publish-site (un-draft + deploy), manage-frontmatter-descriptions (the description field).
 ---
 
 # Import a co-design HLD into the Designs blog
@@ -61,7 +61,7 @@ Pasting an HLD in breaks for four reasons, all handled by the transformer:
    preserved on update), `title` (lead phrase, de-em-dashed), `description` (first exec-summary
    sentence, ~≤158 chars), `authors: [oeid]`, subject-derived `tags`, `kind: system-design`
    (an HLD paints the whole picture; drives the 🏗️ sidebar emoji + the `validate-post-outline.js`
-   system-design outline contract — see `author-blog-post`), `draft: true`, and a
+   system-design outline contract — see `author-post`), `draft: true`, and a
    `source:` provenance block `{repo, path, id, status, imported}`. Filename
    `YYYY-MM-DD-<kebab>.mdx` from the source `date`.
 2. **Footnotes**: the source's `[[aN]](#aN)` references become GFM caret-style references, and

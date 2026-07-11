@@ -18,8 +18,35 @@ acted-on** — a dated thing I did. Its frontmatter makes it a **kanban card** a
 | `reflection` | 💭 | a dated reflection on work done |
 | `event-recap` | 🎙️ | a recap of a talk/event |
 
-Most of these carry an **`area:`** (`backend`/`frontend`/`script`/`plugin`) so they card on the
-matching **hub** (`manage-hubs`). Experiments are their own lifecycle — see below.
+Most of these carry an **`area:`** so they card on the matching **hub**. Experiments are their own
+lifecycle — see below.
+
+## Card it on a hub (the per-post contract)
+
+A **hub** is a durable `/craft` index page that gathers all the `/initiatives` logs of one activity
+`kind` and lays them out by area. A post cards on its kind's hub the moment it carries the two
+fields:
+
+- **`kind:`** — the activity, and the hub discriminator (`project` → Projects hub, `tinkering` →
+  Tinkering, `research` → Research, `prompt` → Prompts).
+- **`area:`** — the DOMAIN it groups under. **ONE unified field** (not a per-hub `*_area`), with a
+  fixed vocabulary: **`backend` / `frontend` / `script` / `plugin`** (anything else falls into
+  `other`). Moving a post between areas is a one-field `area:` edit and it re-sorts on the hub
+  automatically, so the hub can never drift from its entries.
+
+After adding/changing `kind`+`area`, run `make generate-assets` (rebuilds the hub JSON) then
+`make validate-hubs` (it names the exact file if an `area:` is missing or invalid).
+
+**Re-homing a mis-filed durable doc onto a hub.** If a dated log was mis-filed as a durable `/craft`
+doc, move it into `blog/`: a SURGICAL frontmatter reshape (slug → bare, ensure `date:`, set `kind:`,
+add `area:`) + `git mv` into `blog/` as `YYYY-MM-DD-<slug>`. **Never a gray-matter reserialize** — it
+escapes emoji titles (`\U0001F528`); rewrite only the changed keys by hand. An all-draft move needs
+no redirect (a draft has no public `/craft` URL, and the redirect gate rejects a draft target); add
+the `{from,to}` redirect when the post is published. This is a `reorganize-content` move.
+
+> **Adding a NEW hub** (a new activity index page, not just carding a post on an existing one) is a
+> structural op owned by **`manage-hubs`** — the `HUBS` registry, the generator + `<Catalog>`
+> component, the add-a-hub checklist. This guide covers only putting a POST on a hub that exists.
 
 ## Frontmatter template
 
@@ -42,7 +69,7 @@ priority: low
 ```
 
 Body: intro → `<!-- truncate -->` → the log. Title VOICE matters — an initiative reads as what I
-DID (`name-post`).
+DID (`audit-post-names`).
 
 ## Experiments have their own lifecycle
 
@@ -62,5 +89,5 @@ durable-vs-temporal tenet + `groom-initiatives`.
 - No em-dash; `date:` present; healthy `description:`. Gates: `make validate-seo`,
   `make validate-links`, `make validate-hubs` (if it cards on a hub), `make validate-naming`.
 - `groom-initiatives` (board contract: kind/stage/priority, advancing, concluding) ·
-  `manage-hubs` (the by-area hub) · the experiment-lifecycle skills · `name-post` ·
-  `author-blog-post` (MDX/frontmatter) · `upgrade-post` (components).
+  `manage-hubs` (the by-area hub) · the experiment-lifecycle skills · `audit-post-names` ·
+  `author-post` (MDX/frontmatter) · `upgrade-post` (components).

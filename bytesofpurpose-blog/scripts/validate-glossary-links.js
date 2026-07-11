@@ -223,7 +223,7 @@ function main() {
   console.error(
     '\n(advice only, not blocking — these are CANDIDATES, not defects.) A regex cannot tell a' +
       '\nterm-of-art ("Role" the CLI term) from casual English ("role" in life), so each finding' +
-      '\nneeds a SEMANTIC read: run the `link-glossary-terms` skill to decide which first-use is' +
+      '\nneeds a SEMANTIC read: run the `audit-glossary-links` skill to decide which first-use is' +
       '\ngenuine and link only that one. Most candidates here are casual usage and should stay' +
       '\nplain. Source of truth: scripts/lib/glossary-terms.json.',
   );

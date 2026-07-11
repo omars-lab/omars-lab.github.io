@@ -51,7 +51,7 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
    `manage-cloudflare-access`.
 4. **MDX content bugs fail the build late** (during SSR), e.g. bare `<br>` (use
    `<br/>`) or unescaped `{word}` in `.mdx` (wrap in backticks). Run `make check`
-   and a full build before deploying. See the `author-blog-post` skill.
+   and a full build before deploying. See the `author-post` skill.
 5. **Stale `.docusaurus` route cache → `Module not found: @generated/…` build failure.**
    A build that aborts with a flood of `Module not found: Error: Can't resolve
    '@generated/docusaurus-plugin-content-docs/craft/p/craft-tags-*.json'` (or similar

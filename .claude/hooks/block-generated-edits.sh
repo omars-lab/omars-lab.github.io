@@ -26,6 +26,16 @@
 #
 # Exit 2 = block + feed stderr back to the model so it self-corrects to the source.
 
+# --- selftest: prove this hook bites (an edit to a generated asset is blocked). ---
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_blocks '{"tool_input":{"file_path":"/x/bytesofpurpose-blog/src/components/KanbanBoard/kanban-data.json"}}' 'a generated data asset is blocked'
+  assert_blocks '{"tool_input":{"file_path":"/x/bytesofpurpose-blog/build/index.html"}}' 'a build-derived path is blocked'
+  assert_passes '{"tool_input":{"file_path":"/x/bytesofpurpose-blog/designs/_rosette-zeros-variants.js"}}' 'the committed bikar-CLI source is exempt (passes)'
+  assert_passes '{"tool_input":{"file_path":"/x/bytesofpurpose-blog/blog/2026-01-01-a-post.md"}}' 'an ordinary source file passes'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 [ -n "$file_path" ] || exit 0

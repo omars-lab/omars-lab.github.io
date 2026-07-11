@@ -1,13 +1,13 @@
 ---
 name: manage-premium-content
-description: The editorial POLICY for premium/gated content on the Bytes of Purpose blog — what should be premium vs free vs draft, how to choose the sneak-peek/teaser, the tiering decision checklist, and how premium composes with draft. The "should this be premium?" source of truth. Use when deciding whether a doc/section should be gated, or setting the teaser. For the how-to-mark mechanics see author-blog-post; for enforcement see the V1/V5 validators.
+description: The editorial POLICY for premium/gated content on the Bytes of Purpose blog — what should be premium vs free vs draft, how to choose the sneak-peek/teaser, the tiering decision checklist, and how premium composes with draft. The "should this be premium?" source of truth. Use when deciding whether a doc/section should be gated, or setting the teaser. For the how-to-mark mechanics see author-post; for enforcement see the V1/V5 validators.
 ---
 
 # Manage premium content (the editorial policy)
 
 This skill owns **whether** content should be gated — the judgement, not the mechanics.
 
-- **How to MARK a doc premium** (frontmatter, `<Premium>`, build) → `author-blog-post`.
+- **How to MARK a doc premium** (frontmatter, `<Premium>`, build) → `author-post`.
 - **How premium is ENFORCED** (compile-time encryption, the blocking deploy gate) →
   `validate-docs-structure.js` V1 + `scripts/verify-premium-encrypted.js` V5; architecture
   in the `premium-content-gating` design doc + the `premium-gating-architecture` memory.
@@ -78,5 +78,5 @@ populates the gate's gold **disclaimer pane** (the locked-state info box rendere
 Per the repo convention, premium is a STRUCTURE decision. If you change what counts as
 premium (new frontmatter field, new rule), update `validate-docs-structure.js` (V1 premium
 rules) + `verify-premium-encrypted.js` (V5) **in the same change**, and reflect it in
-`author-blog-post` (mechanics) and the `premium-gating-architecture` memory. Keep policy
+`author-post` (mechanics) and the `premium-gating-architecture` memory. Keep policy
 (here) and enforcement (the validators) in lockstep.

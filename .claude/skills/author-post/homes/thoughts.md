@@ -31,7 +31,7 @@ with `organize-post` when the graduation is unclear.
 
 An unactioned thought must read as an **OPEN QUESTION**, not a finished thing. "Should I auto-surface
 my other work streams?" — NOT "My work-stream auto-surfacer". Titling an idea like a completed
-initiative is the classic mismatch `validate-naming` + `name-post` catch. Run **`name-post`** when titling.
+initiative is the classic mismatch `validate-naming` + `audit-post-names` catch. Run **`audit-post-names`** when titling.
 
 ## Frontmatter template (a `/thoughts` idea; boards as an Ideas card)
 
@@ -67,9 +67,9 @@ Any theme tag you put on a `board:`-carrying post needs a one-line **gloss** in 
 
 ## Validate + cross-links
 
-- No em-dash; `date:` present; healthy `description:`; title-voice via `name-post`.
+- No em-dash; `date:` present; healthy `description:`; title-voice via `audit-post-names`.
   Gates: `make validate-naming`, `make validate-seo`, `make validate-idea-tags` (board posts),
   `make validate-links`.
 - `organize-post` (which thought kind / has it graduated?) · `mature-content` (firm up a raw idea) ·
   `groom-initiatives` (board an idea, advance it) · `upgrade-post` (quote/question kits) ·
-  `name-post` · `verify-quote-attribution` + `find-quote-video` (mindset) · `author-blog-post`.
+  `audit-post-names` · `verify-quote-attribution` + `find-quote-video` (mindset) · `author-post`.

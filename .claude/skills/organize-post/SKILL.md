@@ -1,6 +1,6 @@
 ---
 name: organize-post
-description: Classify an arbitrary post, draft, or note against the site's content model and decide WHERE it belongs and what KIND it is — the up-front "what is this and where does it go?" step. Reads the content, asks "durable or temporal?", then "acted on or not?", then which thought KIND(s) it contains (idea/question/simulation/prediction/critique/principle/design), and recommends the home (/craft, /journey, /initiatives, or /thoughts), the `kind:` frontmatter, and a SPLIT plan when the post mixes kinds. TRIGGERS when the user asks "where should this go?", "what kind of post is this?", "how should I organize/file this?", "is this durable or temporal?", "should I split this?", or drops a raw note/braindump to be placed. Hands off to mature-content (to firm up an under-specified piece) and groom-initiatives (to board it). Pairs with author-blog-post (frontmatter/MDX) and review-reader-experience (IA audit).
+description: Classify an arbitrary post, draft, or note against the site's content model and decide WHERE it belongs and what KIND it is — the up-front "what is this and where does it go?" step. Reads the content, asks "durable or temporal?", then "acted on or not?", then which thought KIND(s) it contains (idea/question/simulation/prediction/critique/principle/design), and recommends the home (/craft, /journey, /initiatives, or /thoughts), the `kind:` frontmatter, and a SPLIT plan when the post mixes kinds. TRIGGERS when the user asks "where should this go?", "what kind of post is this?", "how should I organize/file this?", "is this durable or temporal?", "should I split this?", or drops a raw note/braindump to be placed. Hands off to mature-content (to firm up an under-specified piece) and groom-initiatives (to board it). Pairs with author-post (frontmatter/MDX) and review-reader-experience (IA audit).
 ---
 
 # Organize post (classify content → decide its home + kind)
@@ -23,7 +23,7 @@ The whole site hangs on two questions, then a kind. Walk them top-down:
 - **DURABLE** → a distilled learning, framework, strategy, terminology, the way I see the world or
   myself. Return-to knowledge. Home: **`/craft`** (how I see the world: the professional topics) or
   **`/journey`** (how I see myself: faith, personal growth). A durable piece is a DOC in one of
-  those instances, slotted into the right topic folder (see `review-reader-experience` for the
+  those instances, slotted into the right topic folder (see `author-post`, `homes/craft.md`, for the
   topic-folder contract).
 - **TEMPORAL** → a dated, specific thing. Go to question 2.
 
@@ -106,11 +106,11 @@ linking UP to the durable one. Split along that seam.
    if it is an idea), a slug, and a one-line why. If the post is mixed, lead with the SPLIT PLAN.
 6. **Name it in the right voice.** Once the kind/home is decided, the TITLE must match the nature
    (a `/thoughts` thought reads as a QUESTION, an `/initiatives` post as what was DONE, a `/craft`
-   doc as the lasting CONCEPT) → run `name-post`. A just-classified idea is exactly where the
+   doc as the lasting CONCEPT) → run `audit-post-names`. A just-classified idea is exactly where the
    "titled like a finished thing" smell hides.
 7. **Hand off.** An under-specified piece → `mature-content` (the interview that firms it up). A
    board-ready idea/experiment → `groom-initiatives` (to card it). The MDX/frontmatter mechanics →
-   `author-blog-post`. **A re-home or SPLIT of an existing doc → `reorganize-content`** (the
+   `author-post`. **A re-home or SPLIT of an existing doc → `reorganize-content`** (the
    execution recipe: `git mv` + slug rewrite + REPOINT/collapse redirect chains + fold-not-delete +
    validate). This skill decides the target; that one moves it without breaking a URL.
 
@@ -126,7 +126,7 @@ PLACEMENT: <title or note name>
 <if single:> → <home>, kind: <kind> — <why>
 
 OPEN QUESTIONS (if any): <the 1-2 things you must confirm before placing>
-NEXT: hand to <mature-content | groom-initiatives | author-blog-post>; <redirect note if a move>
+NEXT: hand to <mature-content | groom-initiatives | author-post>; <redirect note if a move>
 ```
 
 Keep the call decisive: name the home and the kind, don't survey every option. When you genuinely

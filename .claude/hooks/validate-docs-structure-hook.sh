@@ -1,9 +1,10 @@
 #!/bin/bash
 # PostToolUse hook for Edit|Write: WARN (never block) on docs-structure violations.
 #
-# The docs/ tree follows a topic-based IA contract (see the review-reader-experience
-# skill's "Topic-folder contract" section + CLAUDE.md). The single highest-stakes rule
-# is the URL-freeze guarantee: every doc must carry an ABSOLUTE `slug:` (`slug: /…`).
+# The docs/ tree follows a topic-based IA contract (source of truth: the author-post skill,
+# homes/craft.md "The topic-folder contract"; review-reader-experience audits against it;
+# + CLAUDE.md). The single highest-stakes rule is the URL-freeze guarantee: every doc must
+# carry an ABSOLUTE `slug:` (`slug: /…`).
 # A relative/missing slug silently re-couples the URL to the folder path, so a later
 # move changes the URL with no build error (onBrokenLinks:'warn', no redirects plugin).
 #
@@ -11,6 +12,12 @@
 # file and surfaces any ERROR-tier finding (currently: absolute-slug). It is advisory:
 # it exits 0 so the edit is NEVER blocked (mirrors validate-draft-hook.sh). The full
 # warn-tier contract is checked by `make validate-structure`.
+
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
 
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')

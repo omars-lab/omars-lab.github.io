@@ -1,6 +1,6 @@
 ---
 name: manage-frontmatter-descriptions
-description: Draft, refresh, and heal the frontmatter `description:` of docs/blog pages on the Bytes of Purpose site — the field that powers BOTH the og:description SEO/social card AND the ShareButton share message ("Here's what it covers: <description>"). Use when a page is missing a description, the structure validator flags description-length/duplicate, or you want to preview/tune how a page reads when shared. Pairs with author-blog-post (writing), validate-docs-structure (the audit), and the ingress-attribution ShareButton (the consumer).
+description: Draft, refresh, and heal the frontmatter `description:` of docs/blog pages on the Bytes of Purpose site — the field that powers BOTH the og:description SEO/social card AND the ShareButton share message ("Here's what it covers: <description>"). Use when a page is missing a description, the structure validator flags description-length/duplicate, or you want to preview/tune how a page reads when shared. Pairs with author-post (writing), validate-docs-structure (the audit), and the ingress-attribution ShareButton (the consumer).
 ---
 
 # Manage frontmatter descriptions
@@ -58,7 +58,7 @@ and the spoken-aloud share message. Guidelines:
 - **No trailing period needed** — ShareButton strips one trailing `.` before re-adding it;
   either way is fine, but don't end with `…` (truncation marker).
 - **Match the page** — it's a summary, not a tagline. Pull the real subject from the H1 +
-  opening. Reuse `author-blog-post` frontmatter conventions for everything else.
+  opening. Reuse `author-post` frontmatter conventions for everything else.
 
 ## Workflows
 
@@ -93,8 +93,9 @@ preview must show the `✓` verdict + a clean message. Show that output, don't s
 
 ## Related
 
-- `author-blog-post` — frontmatter + MDX rules for the rest of the page.
-- `review-reader-experience` — owns the topic-folder contract + the validator that emits
-  these description rules.
+- `author-post` — frontmatter + MDX rules for the rest of the page, AND owns the topic-folder
+  contract (`homes/craft.md`) that includes these description rules.
+- `review-reader-experience` — the IA audit; `validate-docs-structure.js` (which it audits with)
+  is the validator that emits these description findings.
 - `validate-links` — sibling link-hygiene lint.
 - Consumer: `src/components/ShareButton/` + `src/ingress-attribution-plan.md`.

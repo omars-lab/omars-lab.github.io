@@ -17,7 +17,7 @@ Each experiment is **one `/initiatives` blog post** at
 design + living status + outcome) — a card on the Experimentation board. Keep its `stage`
 frontmatter current as the experiment moves through this skill (injection point →
 draft → validated → running). Pairs with `setup-posthog` (keys), `query-posthog`
-(readback), `author-blog-post` (component edits).
+(readback), `author-post` (component edits).
 
 ## ▶️ FIRST STEP when this skill runs — create the tracking tasks
 

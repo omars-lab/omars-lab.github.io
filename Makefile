@@ -117,7 +117,7 @@ features-check: ## Check the feature why-docs (features/*.md) for drift (auto-he
 features-seed: ## Seed the content-hash cache for any new/uncached feature-doc anchors
 	python3 ${SITEROOT}/scripts/features_check.py --seed
 
-validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the link-glossary-terms skill)
+validate-glossary: ## Find posts whose first use of a defined glossary term isn't linked (warn-tier candidates; judge + link via the audit-glossary-links skill)
 	( cd ${SITEROOT} && node scripts/validate-glossary-links.js $(DIRS) )
 
 validate-redirects: ## Check the client-redirects array for invalid/draft/colliding/duplicate targets (catches build-breakers early)
@@ -505,6 +505,32 @@ validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registere
 	@# .claude/hooks/validate-hubs-hook.sh runs this on a hub-doc / initiative-post edit. Registry:
 	@# the HUBS manifest in scripts/generate-hubs-data.js. Owning skill: manage-hubs.
 	( cd ${SITEROOT} && node scripts/validate-hubs.js )
+
+test-hooks: ## Run every validator hook's --selftest (proves each hook still bites)
+	@# Each validator hook ships a --selftest branch (see .claude/hooks/lib/selftest.sh) that feeds
+	@# itself a planted-bad payload and asserts it blocks/flags, plus a clean payload that passes.
+	@# This runs them all via the meta-guard. Reminders (always exit 0) are exempt.
+	( cd ${SITEROOT} && node scripts/validate-hook-tests.js )
+
+validate-hook-tests: ## Meta-guard: fail if any validator hook lacks a passing --selftest
+	@# Enumerates .claude/hooks/*.sh; ERRORs if a non-exempt hook has no --selftest branch, or its
+	@# selftest fails. Keeps hooks honest — a guard that silently became a no-op is caught here.
+	@# The warn-tier hook .claude/hooks/validate-hook-tests-hook.sh runs it when a hook file is edited.
+	( cd ${SITEROOT} && node scripts/validate-hook-tests.js )
+
+validate-post-outline: ## Check every blog post's outline matches its kind's contract (blog-kinds.json) + reader-legend drift
+	@# Corpus scan: each post's structural elements vs its kind's `outline` (missing-kind, unknown-kind,
+	@# long-sidebar-label, per-kind outline), plus legend-drift (the "Start Here" reader legend at
+	@# docs/handbook/README.mdx must match blog-kinds.json). Warn-tier advisories; the per-edit hook is
+	@# .claude/hooks/validate-post-outline-hook.sh. Registry: scripts/lib/blog-kinds.json. Skill: manage-kinds.
+	( cd ${SITEROOT} && node scripts/validate-post-outline.js )
+
+validate-kinds-guidance: ## Check the author-post authoring guidance stays in lockstep with the kind registry (blog-kinds.json)
+	@# Exit 2 if a kinds/<name>.md checklist names a kind not in blog-kinds.json (orphan guidance),
+	@# or mechanics.md lost its "SOURCE OF TRUTH: blog-kinds.json" pointer. Stale kind refs +
+	@# uncovered kinds are warn-only. The warn-tier hook .claude/hooks/validate-kinds-guidance-hook.sh
+	@# runs this on a blog-kinds.json / mechanics.md / kinds/*.md edit. Onboarding skill: manage-kinds.
+	( cd ${SITEROOT} && node scripts/validate-kinds-guidance.js )
 
 validate-arch-assets: ## Check every hero card PNG conforms to the canonical arch (no fringe → no white-line edge)
 	( cd ${SITEROOT} && node scripts/validate-arch-assets.js )

@@ -7,7 +7,7 @@ description: Lint markdown/MDX source for link hygiene — bare inline URLs, ove
 
 Static link-hygiene check over the markdown/MDX **source** (`docs/`, `blog/`,
 `changelog/`) so ugly or low-quality links never ship. Pairs with
-`author-blog-post` (authoring guardrails) and `deploy-site` (ship).
+`author-post` (authoring guardrails) and `deploy-site` (ship).
 
 ## When to use
 

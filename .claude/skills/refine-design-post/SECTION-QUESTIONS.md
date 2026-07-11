@@ -6,7 +6,7 @@
 >
 > **Living file.** New question-sets get added here as the author refines what each section type must
 > answer (the `refine-design-post` capture step writes structural rules HERE; voice/wording rules go
-> in `STYLE-GUIDE.md`). `author-blog-post` / `author-post` read this when drafting a NEW design post,
+> in `STYLE-GUIDE.md`). `author-post` reads this when drafting a NEW design post,
 > so a post is born answering the right questions.
 >
 > **The spine (applies everywhere).** The author starts from **users and use cases → why it matters →

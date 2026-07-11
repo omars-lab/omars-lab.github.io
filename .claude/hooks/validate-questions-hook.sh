@@ -7,7 +7,13 @@
 # list, a blank item, or an item that does not read as a question (does not end in "?").
 #
 # Sibling of validate-post-outline-hook.sh (warn-tier). Pairs with
-# scripts/validate-questions.js + src/components/PostQuestions + the author-blog-post skill.
+# scripts/validate-questions.js + src/components/PostQuestions + the author-post skill.
+
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
 
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')

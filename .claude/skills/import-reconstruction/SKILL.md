@@ -1,6 +1,6 @@
 ---
 name: import-reconstruction
-description: Turn an Islamic-geometric-pattern reconstruction built with the bikar/qiyas CLIs into a draft Designs blog post (a first-person design log). Covers the two-CLI loop (bikar renders a .igp DSL recipe to SVG; qiyas reads the SVG back and reports symmetry/shapes), the "no letters" constraint that holds by construction (bikar has no text primitive), committing the rendered SVG variants as SOURCE (NOT gitignored — bikar is a private CLI absent at build), embedding via SvgVariantGrid, citing private source repos with the Evidence privacy rule (clickable permalink only in dev or for public repos), turning qiyas's honest findings into the narrative, and proving it with a rerunnable Playwright spec. Use when the user reconstructs a pattern/logo with bikar+qiyas and wants it written up as a /designs post. Distinct from import-co-design (which transforms an existing HLD markdown doc); this CREATES the artifact from CLI runs. Pairs with author-blog-post (MDX pitfalls), upgrade-post (richer components), review-reader-experience (the em-dash tell).
+description: Turn an Islamic-geometric-pattern reconstruction built with the bikar/qiyas CLIs into a draft Designs blog post (a first-person design log). Covers the two-CLI loop (bikar renders a .igp DSL recipe to SVG; qiyas reads the SVG back and reports symmetry/shapes), the "no letters" constraint that holds by construction (bikar has no text primitive), committing the rendered SVG variants as SOURCE (NOT gitignored — bikar is a private CLI absent at build), embedding via SvgVariantGrid, citing private source repos with the Evidence privacy rule (clickable permalink only in dev or for public repos), turning qiyas's honest findings into the narrative, and proving it with a rerunnable Playwright spec. Use when the user reconstructs a pattern/logo with bikar+qiyas and wants it written up as a /designs post. Distinct from import-co-design (which transforms an existing HLD markdown doc); this CREATES the artifact from CLI runs. Pairs with author-post (MDX pitfalls), upgrade-post (richer components), review-reader-experience (the em-dash tell).
 ---
 
 # Import a bikar/qiyas reconstruction as a Designs post
@@ -120,7 +120,7 @@ title: <human title, no em-dash>
 description: 'A design log: <one sentence>.'   # feeds og:description + ShareButton
 authors: [oeid]
 tags: [design, geometry, cli, dsl, ...]
-kind: system-design   # a build/architecture write-up that paints the whole picture; drives the 🏗️ sidebar emoji + validate-post-outline checks (see author-blog-post). Without it, the post trips a `missing-kind` advisory.
+kind: system-design   # a build/architecture write-up that paints the whole picture; drives the 🏗️ sidebar emoji + validate-post-outline checks (see author-post). Without it, the post trips a `missing-kind` advisory.
 draft: true
 ---
 
@@ -149,7 +149,7 @@ Embed renders right after the intro and inside the iterations:
 - **em-dash hook BLOCKS.** No literal `—` (U+2014) anywhere in `designs/*.mdx`. Write with
   commas, colons, periods, parens. (See `review-reader-experience` → "the em-dash tell".)
 - **MDX build-breakers:** bare `<br>`, unescaped `{braces}`, a stray `<` before a space/digit.
-  See `author-blog-post`.
+  See `author-post`.
 - **validate-docs-structure / validate-links / validate-draft** run warn-tier on save.
 - **validate-footnotes** (only if you add Evidence footnotes — see below).
 

@@ -1,6 +1,6 @@
 ---
 name: mature-content
-description: Mature rough content (a raw idea, a half-formed draft, a thin doc, a loose framework, OR an existing blog post that needs cleaning up / hardening) into organized, decision-ready content by INTERVIEWING the user — ask targeted questions to surface the motivation, the value, the scope, the concrete to-do list, and the success criteria, then restructure it. Encodes the draft→ready maturity gates so you always know what a piece still needs to advance. TRIGGERS when the user asks to "clean up", "harden", "tighten", "firm up", "flesh out", "make this real", "think this through", or "mature" a post/idea/draft/doc — or to take something from draft to ready. Idea-maturing is the primary case: it outputs a board-ready idea (kind/stage/priority) that feeds groom-initiatives. Pairs with groom-initiatives (advances a matured idea across the board), author-blog-post (MDX/frontmatter), and upgrade-post (weaving in reusable components).
+description: Mature rough content (a raw idea, a half-formed draft, a thin doc, a loose framework, OR an existing blog post that needs cleaning up / hardening) into organized, decision-ready content by INTERVIEWING the user — ask targeted questions to surface the motivation, the value, the scope, the concrete to-do list, and the success criteria, then restructure it. Encodes the draft→ready maturity gates so you always know what a piece still needs to advance. TRIGGERS when the user asks to "clean up", "harden", "tighten", "firm up", "flesh out", "make this real", "think this through", or "mature" a post/idea/draft/doc — or to take something from draft to ready. Idea-maturing is the primary case: it outputs a board-ready idea (kind/stage/priority) that feeds groom-initiatives. Pairs with groom-initiatives (advances a matured idea across the board), author-post (MDX/frontmatter), and upgrade-post (weaving in reusable components).
 ---
 
 # Mature content (interview-driven draft → ready)
@@ -146,7 +146,7 @@ title, description, ...
 
 Then hand off to **`groom-initiatives`**, which owns ADVANCING the card across the board (a
 `stage` edit) and the `/thoughts` → `/initiatives` graduation when work begins, and to
-**`author-blog-post`** for the MDX/frontmatter mechanics. This skill FORMS the idea;
+**`author-post`** for the MDX/frontmatter mechanics. This skill FORMS the idea;
 groom-initiatives MOVES it; the durable learning is distilled back into `/craft` when it concludes.
 
 ## Hardening / cleaning up an existing post (a first-class case)
@@ -157,7 +157,7 @@ motivation, hand-wavy claims, no clear takeaway). Run the SAME interview to find
 fails, then tighten: sharpen the motivation up front, make vague claims concrete (or cut them),
 fix the structure/flow, add what's missing, and remove the noise. For a post specifically, also
 honor the repo conventions (no literal em-dashes in reader-facing prose, MDX build-breakers, the
-`kind`/`sidebar_label` system — see `author-blog-post`; weaving in components — see `upgrade-post`).
+`kind`/`sidebar_label` system — see `author-post`; weaving in components — see `upgrade-post`).
 
 ## Track the work as tasks — ENUMERATE up front
 

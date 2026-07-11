@@ -7,7 +7,7 @@ description: Publish the Bytes of Purpose blog — first triage which draft:true
 
 Wraps the **deploy** with an editorial step: surface drafts that are actually ready,
 publish the ones the user approves, then deploy. Pairs with `deploy-site` (the mechanical
-deploy), `author-blog-post` (frontmatter/MDX), `validate-deployment` (post-deploy checks).
+deploy), `author-post` (frontmatter/MDX), `validate-deployment` (post-deploy checks).
 
 ## Draft convention (single source of truth: the `draft:` field)
 
@@ -60,7 +60,7 @@ unpublished. Never auto-publish.
 
 For each file the user approves, set `draft: false` (or remove the `draft:` line) in the
 frontmatter. Then spot-check it builds — drafts often harbor the MDX build-breakers from
-`author-blog-post` (bare `<br>` → `<br/>`, unescaped `{word}` → backticks) because they
+`author-post` (bare `<br>` → `<br/>`, unescaped `{word}` → backticks) because they
 were never built before. A quick `( cd bytesofpurpose-blog && yarn build )` catches these
 before deploy.
 
@@ -109,7 +109,7 @@ PostHog beacon lives in the JS bundle (not inline HTML) — check
 | Symptom | Cause | Fix |
 |---|---|---|
 | Un-drafted page still 404s live | Deploy didn't run / propagation lag | Re-run `make deploy`; GH Pages takes 1–2 min. |
-| Build fails right after un-drafting | Draft had MDX breakers never built before | Fix per `author-blog-post` (`<br/>`, backtick `{braces}`); rebuild. |
+| Build fails right after un-drafting | Draft had MDX breakers never built before | Fix per `author-post` (`<br/>`, backtick `{braces}`); rebuild. |
 | `Broken link … -> linking to /<x>` after un-drafting | A published post links a still-`draft:true` target (excluded from prod) | Publish the whole cluster: un-draft the linked target too (or soften the link). |
 | `Module not found: @generated/…craft-tags-*.json` during the deploy build | Stale `.docusaurus` route cache | `rm -rf bytesofpurpose-blog/{.docusaurus,node_modules/.cache,build}` then rebuild (see `deploy-site`). |
 | `make deploy` aborts on secret-scan | A real or historical leak | See `manage-repo-security` / the leaked-creds memory; don't bypass. |

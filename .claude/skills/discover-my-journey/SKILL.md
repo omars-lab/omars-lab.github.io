@@ -1,6 +1,6 @@
 ---
 name: discover-my-journey
-description: A DELTA self-insight pass over the author's own writing — surface things about him he might not have noticed, by cross-triangulating what he RECENTLY wrote against the RELEVANT PAST writing. Not a full-corpus sweep: it reads the git delta since the last run (a stored watermark), extracts that delta's themes (tags/kind/vocabulary/named values), finds the past docs that share them, and surfaces four kinds of evidenced insight — a RECURRING theme/obsession, an EVOLUTION/shift in a view over time, a CONTRADICTION/tension (new vs old, stated value vs action), or a BLIND SPOT (a driver the pattern implies but he never named). Output is SURFACE-AND-DECIDE: a ranked list, each with the delta+past evidence and a proposed disposition (keep as a /mindset principle · capture as a /thoughts observation · discard); he chooses, and kept ones hand to organize-post → author-blog-post. It DISCOVERS, never auto-publishes. The companion to the reframed /journey ("what drives me forward" made visible). Use on "discover something about my journey / what does my writing reveal / find a pattern in what I wrote / what am I circling / show me a blind spot / a contradiction", or when the discover-journey Stop-hook nudges. Pairs with organize-post (classify a kept insight), author-blog-post (draft it), mature-content (firm it up), and the /journey + /mindset model.
+description: A DELTA self-insight pass over the author's own writing — surface things about him he might not have noticed, by cross-triangulating what he RECENTLY wrote against the RELEVANT PAST writing. Not a full-corpus sweep: it reads the git delta since the last run (a stored watermark), extracts that delta's themes (tags/kind/vocabulary/named values), finds the past docs that share them, and surfaces four kinds of evidenced insight — a RECURRING theme/obsession, an EVOLUTION/shift in a view over time, a CONTRADICTION/tension (new vs old, stated value vs action), or a BLIND SPOT (a driver the pattern implies but he never named). Output is SURFACE-AND-DECIDE: a ranked list, each with the delta+past evidence and a proposed disposition (keep as a /mindset principle · capture as a /thoughts observation · discard); he chooses, and kept ones hand to organize-post → author-post. It DISCOVERS, never auto-publishes. The companion to the reframed /journey ("what drives me forward" made visible). Use on "discover something about my journey / what does my writing reveal / find a pattern in what I wrote / what am I circling / show me a blind spot / a contradiction", or when the discover-journey Stop-hook nudges. Pairs with organize-post (classify a kept insight), author-post (draft it), mature-content (firm it up), and the /journey + /mindset model.
 ---
 
 # Discover my journey
@@ -70,7 +70,7 @@ Present a RANKED list (strongest evidence first), each insight as:
   why: <one line>
 ```
 Then let me choose per insight. For each KEEP: hand to **`organize-post`** (it decides `/mindset`
-principle vs `/thoughts` observation) → **`author-blog-post`** to draft it `draft: true` with the
+principle vs `/thoughts` observation) → **`author-post`** to draft it `draft: true` with the
 evidence woven in; **`mature-content`** if it needs firming up. DISCARD = drop it. When the pass is
 DONE, advance the watermark: write `<current-HEAD-sha> <now-iso>` to the `.last-run` file.
 
@@ -99,5 +99,5 @@ the `.js` if it's too eager or too quiet.
 `.claude/skills/discover-my-journey/SKILL.md` (this), the watermark `.last-run` (gitignored), and
 `.claude/hooks/discover-journey-reminder.{sh,js}` (the nudge). It READS the corpus (docs/blog/thoughts/
 mindset/questions/designs) but writes nothing there directly — kept insights go through `organize-post`
-+ `author-blog-post`. Pairs with those two, `mature-content`, and the `/journey` + `/mindset` model
++ `author-post`. Pairs with those two, `mature-content`, and the `/journey` + `/mindset` model
 (CLAUDE.md durable/temporal tenet: occurrence → curation).

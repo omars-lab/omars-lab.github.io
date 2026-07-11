@@ -5,8 +5,15 @@
 #
 # A title is a promise about what the post IS. An unactioned thought titled like a finished thing
 # reads as something I already did. This catches that at edit time and suggests the question form.
-# See the name-post skill for the full voice-per-kind contract. Warn-tier: exits 0, never blocks
+# See the author-post skill (mechanics.md, "Naming") for the full voice-per-kind contract, and the
+# audit-post-names skill for the audit. Warn-tier: exits 0, never blocks
 # (naming is a judgment call). The full sweep is `make validate-naming`.
+
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
 
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
@@ -37,7 +44,7 @@ if printf '%s' "$out" | grep -q '\[warn:'; then
     printf '%s\n' "$out" | grep -A1 '\[warn:'
     echo ""
     echo "   An unactioned thought should read as the QUESTION being weighed, not a finished thing."
-    echo "   (advice only — not blocking. See the name-post skill; \`make validate-naming\` for all.)"
+    echo "   (advice only — not blocking. See audit-post-names / author-post; \`make validate-naming\` for all.)"
   } >&2
 fi
 

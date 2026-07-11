@@ -207,9 +207,21 @@ const FlowDiagram: React.FC<FlowDiagramProps> = ({
                 : `M ${ed.x1} ${ed.y1} L ${ed.x2} ${ed.y2}`;
               return (
                 <g className={styles.edge} key={i}>
+                  {/* Wide, invisible hit-area so the thin arrow is easy to hover:
+                      an SVG stroke only receives pointer events on its visible
+                      width, which for a 1.5px line is almost nothing. This
+                      transparent ~18px path sits under the visible one and
+                      captures the hover for the whole edge group. */}
                   <path
                     d={path}
                     fill="none"
+                    className={styles.edgeHit}
+                    aria-hidden="true"
+                  />
+                  <path
+                    d={path}
+                    fill="none"
+                    className={styles.edgeLine}
                     markerEnd={`url(#${salt}-arrow)`}
                     style={{'--len': ed.len.toFixed(1), '--i': i} as CSSProperties}
                   />

@@ -11,6 +11,12 @@
 # Scope: .ts/.tsx/.js/.jsx under bytesofpurpose-blog/src/ (where params are read). The validator scans
 # the WHOLE src/ tree (it's fast), so the edited file just triggers the check.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

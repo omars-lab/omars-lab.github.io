@@ -13,6 +13,12 @@
 # leak-vs-fair-generalization) live in the refine-design-post skill. The validator exits 0 (warn-tier)
 # so this hook never blocks the edit. Scoped to /designs content — the blog whose theme is generality.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an out-of-scope file is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

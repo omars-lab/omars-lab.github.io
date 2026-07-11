@@ -1,6 +1,6 @@
 ---
 name: reorganize-content
-description: The EXECUTION recipe for MOVING or SPLITTING existing /craft or /journey docs into a new home — the mechanical half that runs AFTER organize-post decides WHERE content belongs. Owns the drift-free move loop: git mv → rewrite the (instance-relative) slug → fix internal links → REPOINT + COLLAPSE existing redirect chains → add the {from,to} redirect(s) for the old public URLs → fold-not-delete when merging → regenerate assets → validate (redirects/hubs/structure/build). Encodes the gotchas that bite every time (the redirect-CHAIN trap, the /craft instance-prefix, slug collisions, empty-shell cleanup, generated files that self-heal). Use when the user says "move X to Y", "merge X into Y", "split this doc", "this belongs under Z", "move it up/down a level", or when a re-home leaves a 404 / a redirect chain. Pairs with organize-post (which CLASSIFIES — where should this go?), name-post (retitle after a kind change), review-reader-experience (which AUDITS the IA and flags mis-homed docs), and manage-hubs (moving a doc onto/between hubs).
+description: The EXECUTION recipe for MOVING or SPLITTING existing /craft or /journey docs into a new home — the mechanical half that runs AFTER organize-post decides WHERE content belongs. Owns the drift-free move loop: git mv → rewrite the (instance-relative) slug → fix internal links → REPOINT + COLLAPSE existing redirect chains → add the {from,to} redirect(s) for the old public URLs → fold-not-delete when merging → regenerate assets → validate (redirects/hubs/structure/build). Encodes the gotchas that bite every time (the redirect-CHAIN trap, the /craft instance-prefix, slug collisions, empty-shell cleanup, generated files that self-heal). Use when the user says "move X to Y", "merge X into Y", "split this doc", "this belongs under Z", "move it up/down a level", or when a re-home leaves a 404 / a redirect chain. Pairs with organize-post (which CLASSIFIES — where should this go?), audit-post-names (retitle after a kind change), review-reader-experience (which AUDITS the IA and flags mis-homed docs), and manage-hubs (moving a doc onto/between hubs).
 ---
 
 # Reorganize content (execute a move / split / merge)
@@ -39,7 +39,7 @@ A doc's `slug:` is relative to its instance root but is written absolute-with-le
 (`/software-development/techniques/tool-composition` publishes at `/craft/software-development/…`).
 Rewrite it to the NEW path. Keep it absolute (a relative slug bakes the old path into the URL and
 404s silently). If the move also changes what the doc IS (e.g. `patterns` → `techniques`), update
-`kind:` too (`pattern` → `technique`) and re-tag; then consider `name-post` for the title voice.
+`kind:` too (`pattern` → `technique`) and re-tag; then consider `audit-post-names` for the title voice.
 
 ### 3. Fix internal links (in the moved doc AND to it)
 - **In the moved doc:** rewrite any absolute in-repo link that pointed at the old location, and any
@@ -105,7 +105,7 @@ When `organize-post` says a doc is really N things (e.g. an idea + a technique +
 2. MOVE each section's content across (don't retype — cut/paste so nothing drifts).
 3. The original either becomes ONE of the N (keep it, reshape it) or is fully split (then it's a stub
    whose every line moved — remove it + redirect its URL to the most-central of the N).
-4. Redirect + validate as above. Retitle each via `name-post` (a split usually changes each piece's
+4. Redirect + validate as above. Retitle each via `audit-post-names` (a split usually changes each piece's
    nature, so its title voice must change too).
 
 ## Gotchas (each cost real time this session)
@@ -138,5 +138,5 @@ When `organize-post` says a doc is really N things (e.g. an idea + a technique +
 ## Files / gates this skill leans on (owned elsewhere)
 `docusaurus.config.js` redirects + `scripts/validate-redirects.js` + `.claude/hooks/validate-redirects-hook.sh`
 (the redirect gate — owned by the structure convention in CLAUDE.md); `scripts/validate-docs-structure.js`
-(absolute-slug + the topic-folder contract — owned by `review-reader-experience`); `generate-hubs-data.js`
+(absolute-slug + the topic-folder contract — owned by `author-post`, `homes/craft.md`); `generate-hubs-data.js`
 + `manage-hubs` (when the move touches a hub). This skill is the RECIPE that ties them together for a move.

@@ -7,6 +7,14 @@
 #
 # Tenet: "track DEFERRED findings as GitHub issues (deduped via ISSUES.md)" in CLAUDE.md.
 
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  # Bash-matcher hook: its scope key is the COMMAND, not a file path. A non-issue-create command
+  # must be ignored (exit 0, no output).
+  assert_passes '{"tool_input":{"command":"ls -la"}}' 'a non-gh-issue command is ignored'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 
 cmd=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')

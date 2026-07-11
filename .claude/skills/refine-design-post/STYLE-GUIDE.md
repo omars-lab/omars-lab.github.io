@@ -2,7 +2,7 @@
 
 > **What this is.** The accumulated voice + wording rules for the author's `/designs` posts. Each rule
 > has a one-line rationale and, where useful, a before → after. `refine-design-post` audits against
-> these; `author-blog-post` / `author-post` read them when drafting a NEW post so it starts on-voice.
+> these; `author-post` reads them when drafting a NEW post so it starts on-voice.
 >
 > **Living file.** The `refine-design-post` capture step APPENDS to this file as the author gives
 > feedback (voice/wording rules land here; "a section must answer X" structural rules go in
@@ -31,7 +31,7 @@
   built purpose. A name that overclaims sets a false expectation the body contradicts. *(Real:
   "A Control Plane for a Claude Code Fleet" implies an admin control plane, but the design builds a
   reporting/observability tool — the control-plane idea belongs in an optional North Star section as a
-  future direction, not the name.)* Accuracy-to-purpose; distinct from `name-post` (title voice).
+  future direction, not the name.)* Accuracy-to-purpose; distinct from `audit-post-names` (title voice).
 - **State a thing once.** Kill the Scope-note → bullets → table → "restated" repetition of the same
   invariant. State it once, reference it after. *(Real: `fleetplane.mdx` states its invariants 3×.)*
 - **Never render the same structure twice.** A mermaid diagram AND an ASCII/prose redraw of the same
