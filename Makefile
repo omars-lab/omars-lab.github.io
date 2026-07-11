@@ -506,6 +506,18 @@ validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registere
 	@# the HUBS manifest in scripts/generate-hubs-data.js. Owning skill: manage-hubs.
 	( cd ${SITEROOT} && node scripts/validate-hubs.js )
 
+test-hooks: ## Run every validator hook's --selftest (proves each hook still bites)
+	@# Each validator hook ships a --selftest branch (see .claude/hooks/lib/selftest.sh) that feeds
+	@# itself a planted-bad payload and asserts it blocks/flags, plus a clean payload that passes.
+	@# This runs them all via the meta-guard. Reminders (always exit 0) are exempt.
+	( cd ${SITEROOT} && node scripts/validate-hook-tests.js )
+
+validate-hook-tests: ## Meta-guard: fail if any validator hook lacks a passing --selftest
+	@# Enumerates .claude/hooks/*.sh; ERRORs if a non-exempt hook has no --selftest branch, or its
+	@# selftest fails. Keeps hooks honest — a guard that silently became a no-op is caught here.
+	@# The warn-tier hook .claude/hooks/validate-hook-tests-hook.sh runs it when a hook file is edited.
+	( cd ${SITEROOT} && node scripts/validate-hook-tests.js )
+
 validate-post-outline: ## Check every blog post's outline matches its kind's contract (blog-kinds.json) + reader-legend drift
 	@# Corpus scan: each post's structural elements vs its kind's `outline` (missing-kind, unknown-kind,
 	@# long-sidebar-label, per-kind outline), plus legend-drift (the "Start Here" reader legend at

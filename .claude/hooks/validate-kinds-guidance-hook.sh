@@ -13,6 +13,17 @@
 #
 # Scope: blog-kinds.json itself, OR any author-post skill guidance file (mechanics.md / kinds/*.md).
 
+# --- selftest: prove routing (in-scope triggers the validator; out-of-scope is ignored). ---
+# This is a WARN-tier DELEGATING hook: its "bite" is the validator's (proven separately in
+# validate-kinds-guidance.js with planted drift). The hook's own contract is ROUTING, so that's
+# what the selftest asserts, without mutating repo files.
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_ignored '{"tool_input":{"file_path":"/x/unrelated.txt"}}' 'an unrelated file is ignored'
+  assert_passes  '{"tool_input":{"file_path":"'"$CLAUDE_PROJECT_DIR"'/bytesofpurpose-blog/scripts/lib/blog-kinds.json"}}' 'blog-kinds.json in-scope runs clean'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 

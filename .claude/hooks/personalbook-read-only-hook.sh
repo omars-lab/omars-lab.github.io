@@ -17,6 +17,14 @@
 #
 # Fail-closed shape mirrors the repo's other blocking hooks (em-dash-voice, noteplan-no-drop).
 
+# --- selftest: prove this hook bites (a write into personalbook is blocked). ---
+if [ "$1" = "--selftest" ]; then
+  SELFTEST_HOOK="$0"; . "$(dirname "$0")/lib/selftest.sh"
+  assert_blocks '{"tool_input":{"file_path":"/Users/x/git/personalbook/roles/note.md"}}' 'write into personalbook is blocked'
+  assert_passes '{"tool_input":{"file_path":"/Users/x/git/bytesofpurpose-blog/docs/journey/roles/the-analyzer.md"}}' 'write into the blog repo passes'
+  selftest_report; exit $?
+fi
+
 input=$(cat)
 file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // empty')
 [ -n "$file_path" ] || exit 0
