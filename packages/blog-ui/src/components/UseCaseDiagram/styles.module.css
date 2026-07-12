@@ -75,15 +75,32 @@
 }
 
 /* Links: solid association, dashed include/extend. */
-.link line {
+.linkLine {
   stroke: var(--ifm-color-emphasis-500, #8a938e);
   stroke-width: 1.5;
   fill: none;
+  transition: stroke var(--duration-fast, 0.12s) var(--ease-standard, ease),
+    stroke-width var(--duration-fast, 0.12s) var(--ease-standard, ease);
 }
-.link-include line,
-.link-extend line {
+.link-include .linkLine,
+.link-extend .linkLine {
   stroke: var(--ifm-color-content-secondary, #5b625e);
   stroke-dasharray: 5 4;
+}
+/* Invisible, fat pointer target under the thin visible link. transparent (not
+   none) so it still receives pointer events; the group hover then highlights the
+   visible line. Never animated. */
+.linkHit {
+  stroke: transparent;
+  stroke-width: 16;
+  stroke-linecap: round;
+  fill: none;
+  pointer-events: stroke;
+}
+/* Hovering anywhere on the link (its fat hit-area) highlights the visible line. */
+.link:hover .linkLine {
+  stroke: var(--ifm-color-primary);
+  stroke-width: 2.5;
 }
 .stereotype {
   fill: var(--ifm-color-content-secondary, #5b625e);
@@ -109,14 +126,14 @@
     opacity: 1;
   }
 }
-.link-association line {
+.link-association .linkLine {
   stroke-dasharray: var(--len);
   stroke-dashoffset: var(--len);
   animation: bopucd-draw 480ms var(--ease-out, ease-out) forwards;
   animation-delay: calc(var(--i, 0) * 90ms);
 }
-.link-include line,
-.link-extend line,
+.link-include .linkLine,
+.link-extend .linkLine,
 .stereotype,
 .actor,
 .oval {
@@ -124,13 +141,13 @@
   animation-delay: calc(var(--i, 0) * 60ms + 120ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  .link-association line {
+  .link-association .linkLine {
     stroke-dasharray: none;
     stroke-dashoffset: 0;
     animation: none;
   }
-  .link-include line,
-  .link-extend line,
+  .link-include .linkLine,
+  .link-extend .linkLine,
   .stereotype,
   .actor,
   .oval {

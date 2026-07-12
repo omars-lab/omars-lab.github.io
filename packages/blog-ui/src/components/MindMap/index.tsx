@@ -92,18 +92,30 @@ const MindMap: React.FC<MindMapProps> = ({
 
           <g className={styles.connectorsG}>
             {connectors.map((c, i) => (
-              <path
-                key={i}
-                d={c.path}
-                className={styles.connector}
-                style={
-                  {
-                    strokeWidth: connectorStrokeWidth(c.depth),
-                    '--i': i,
-                  } as CSSProperties
-                }
-                fill="none"
-              />
+              <g key={i} className={styles.connectorG}>
+                {/* Wide, invisible hit-area so the thin connector is easy to
+                    hover: an SVG stroke only receives pointer events on its
+                    visible width. This transparent path sits under the visible
+                    one; hovering anywhere on the group highlights the line. The
+                    linked nodes render AFTER (on top), so they stay clickable. */}
+                <path
+                  d={c.path}
+                  className={styles.connectorHit}
+                  fill="none"
+                  aria-hidden="true"
+                />
+                <path
+                  d={c.path}
+                  className={styles.connector}
+                  style={
+                    {
+                      strokeWidth: connectorStrokeWidth(c.depth),
+                      '--i': i,
+                    } as CSSProperties
+                  }
+                  fill="none"
+                />
+              </g>
             ))}
           </g>
 
