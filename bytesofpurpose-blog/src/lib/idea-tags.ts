@@ -79,6 +79,20 @@ export const IDEA_TAG_GLOSS: Record<string, string> = {
   'ab-testing': 'Running an A/B test to compare two variants on real users.',
   experiments: 'A/B experiments run on the site to learn what works.',
   posthog: 'PostHog, the product-analytics tool I use for events and experiments.',
+
+  // Business & physical products (the entrepreneurship thread)
+  business: 'A business idea: turning a concept into something that could make money.',
+  'physical-product': 'A tangible, manufactured product rather than software.',
+  ecommerce: 'Selling directly to customers online.',
+  shopify: 'The Shopify platform for running a direct-to-consumer store.',
+  'islamic-art': 'Islamic geometric art as a design and product language.',
+  coffee: 'The coffee ritual and the accessories around it.',
+
+  // AI products & connectors (the AI-business thread)
+  saas: 'Software sold as a subscription service.',
+  'ai-agents': 'Autonomous AI agents that do multi-step work on your behalf.',
+  mcp: 'The Model Context Protocol: connectors that plug tools into Claude and other clients.',
+  'knowledge-management': 'Capturing, organizing, and resurfacing what you know.',
 };
 
 /** The tooltip text for a tag — its gloss, or a graceful generic fallback. */

@@ -1,0 +1,366 @@
+---
+slug: idea-todo-agent
+title: 'Should I Build a Dump-and-Organize Todo Agent?'
+sidebar_label: 'Todo agent?'
+description: 'A business plan for a bring-your-own-Claude MCP connector: dump raw notes, it files them into the right buckets and auto-builds a knowledge graph and blog.'
+authors: [oeid]
+tags: [ideas, business, saas, ai-agents, mcp, productivity, knowledge-management]
+date: 2026-07-11
+kind: idea
+board: ideas
+stage: backlog
+priority: low
+draft: true
+questions:
+  - What would a dump-and-organize todo agent actually be, and why build it as an MCP connector?
+  - How would a bring-your-own-Claude subscription with rate limits make money?
+  - What has to be true, and what could kill it, before this is worth building?
+---
+
+What if the way you keep notes was: dump everything in one place, and an agent sorts it? No folders
+to pick, no tags to remember, no "where does this go." You brain-dump raw input and a todo agent
+files each piece into the right bucket, splits personal from work, builds you a knowledge graph, and
+hosts your own knowledge blog off it. You bring your own Claude, I charge for the connector that
+orchestrates all of this.
+
+<!-- truncate -->
+
+## The idea in one line
+
+A "dump-and-organize" agent, shipped as an MCP connector you install from the Claude store, that
+takes unstructured input and files it into the right places through structured tools like
+`record_idea()` and `record_reference()`, distills personal from work-related material, auto-builds a
+knowledge graph, and publishes a knowledge blog for you. You pay a subscription, you are rate-limited,
+and the model usage runs on your own Claude.
+
+The whole pitch is the loss of friction. You do not organize; you dump, and the organizing is the
+product. Everything else, the graph and the blog, is durable output that falls out of the dumping for
+free.
+
+## A name for it
+
+Name candidates to weigh, each leaning on a different part of the pitch:
+
+- **Know** (the front-runner): short, a real verb and noun, and it names the OUTPUT, not the chore.
+  You do not manage tasks, you Know things. It reads well as a command ("ask Know") and as a product.
+  The obvious risk is that a common word is hard to own for search and trademark.
+- **Dump** or **Braindump**: names the INPUT and the zero-friction promise, but sells the mess, not the
+  payoff.
+- **Filed** / **Sorted**: names the FILING, honest but small (it is the tidy, not the second brain).
+- **Graeme** / **Graphite** / **Weave**: lean on the knowledge-GRAPH, the durable output that compounds.
+- **Second Brain**: describes the value exactly but is a widely-used phrase, not ownable.
+
+The call comes down to whether to name the input (Dump), the mechanism (Filed, Weave), or the payoff
+(Know, Second Brain). Naming the payoff is usually right, which is why **Know** leads.
+
+## Why this is compelling
+
+:::warning[The pain today]
+Your thoughts, links, and tasks are scattered across five apps, and every one asks YOU to do the filing. The organizing is the tax you pay just to keep notes at all.
+:::
+
+:::tip[The relief]
+You dump raw input in one place and the agent does the filing. The tidiness, the graph, and the blog fall out for free, so you never pay the organizing tax again.
+:::
+
+- **This is the future-of-productivity bet.** Every notes tool still asks the human to do the filing.
+  The next move is an agent that does the filing, and the input shrinks to "just tell me the thing."
+  If that is where productivity is going, the dump-and-organize agent is a direct expression of it.
+- **Bring-your-own-Claude lowers my cost and my risk.** The expensive part, model inference, runs on
+  the customer's own Claude subscription. I am not reselling tokens or eating an unpredictable
+  inference bill. I charge for the orchestration layer, the tools, and the hosting, which are far more
+  predictable to run.
+- **The Claude store is the distribution channel.** As an MCP connector, the install lives where the
+  users already are. Approval and connection get recorded inside Claude, so onboarding is a few
+  clicks, not a signup funnel I have to build and pay to fill.
+- **The magic is legible.** "Dump anything, it lands in the right place" is a one-sentence demo. You
+  can show it working in thirty seconds, which is rare for a productivity tool.
+- **Durable output, not just tidiness.** A knowledge graph and an auto-hosted blog are things the user
+  keeps and can point to. That is stickier than a folder that is merely well-sorted, and it is a
+  built-in reason to stay subscribed.
+
+## The product
+
+**The core loop: dump, then it files.** The user sends raw input, a thought, a link, a task, a quote,
+and the agent routes each piece through a small set of structured tools rather than freeform text.
+The tools are the API of the organizer:
+
+- `record_idea()`, for a raw idea worth keeping.
+- `record_reference()`, for a link or source to file and cite later.
+- `record_todo()`, for an actionable item that belongs on a list.
+- `record_note()`, for context that is neither idea, reference, nor task.
+
+Because the filing goes through named tools, the behavior is inspectable and controllable, not a black
+box that "figures it out."
+
+<Walkthrough
+  claude={{prompt: 'organize what I just dumped', steps: ['● reading the raw note', '● filing via record_idea()', '● linking it into the graph', '✓ published to your blog']}}
+  steps={[
+    {type:'type', target:'#dumpbox', text:'idea: snap-on coaster business + this Shopify link', say:'You dump a raw thought'},
+    {type:'click', target:'#organize', say:'Hit organize'},
+    {type:'scene', to:'claude', say:'The agent files it, splits personal from work, links the graph'},
+    {type:'scene', to:'app', say:'It lands in the right bucket, and your knowledge blog updates'},
+  ]}>
+  <Mockup chrome="window" title="Todo Agent" caption="Dump raw input; the agent files it.">
+    <div style={{display:'flex', flexDirection:'column', gap:'0.75rem', padding:'1rem'}}>
+      <textarea id="dumpbox" placeholder="Dump anything..." style={{width:'100%', minHeight:'70px', padding:'0.5rem', border:'1px solid var(--ifm-color-emphasis-300)', borderRadius:'6px', background:'var(--ifm-background-surface-color)', color:'var(--ifm-font-color-base)'}} />
+      <button id="organize" style={{alignSelf:'flex-start', padding:'0.4rem 0.9rem', background:'var(--ifm-color-primary)', color:'#fff', border:'none', borderRadius:'6px', cursor:'pointer'}}>Organize</button>
+      <div style={{display:'flex', gap:'0.5rem', fontSize:'0.8rem', color:'var(--ifm-color-emphasis-600)'}}>
+        <span>💡 Ideas</span><span>🔗 References</span><span>✅ Todos</span><span>🗒️ Notes</span>
+      </div>
+    </div>
+  </Mockup>
+</Walkthrough>
+
+**Personal vs work distiller.** A classifier splits personal material from work-related material so
+the two never bleed together. This is a headline feature and, as noted in the risks, a trust-critical
+one: mis-filing a personal note into a work bucket is the kind of error that loses a user.
+
+**Auto knowledge graph.** As things get recorded, the agent links them, an idea to its references, a
+todo to the note that spawned it, so the corpus becomes a graph you can traverse, not a pile.
+
+**Auto knowledge blog.** The graph and the recorded material feed a hosted personal knowledge blog,
+published for the user with no extra authoring step. The organizing you already did becomes something
+public (or private) you can share.
+
+**The compounding value: your todo list builds a second brain while you use it.** This is the real
+pitch. You already keep a todo list; you already dump thoughts somewhere. Here that everyday habit is
+the ONLY input, and everything durable falls out of it as a byproduct. Every task you file, every note
+you drop, quietly thickens a knowledge graph and updates a blog you never sat down to write. The value
+is not a one-time tidy, it COMPOUNDS: the more you use the list, the richer the graph, and the richer
+the graph, the smarter the next filing and the more your published knowledge is worth. A plain todo app
+gives you back a checked box. This gives you back a growing, connected, publishable second brain, for
+the same keystrokes you were already spending.
+
+<FlowDiagram
+  title="The compounding loop"
+  desc="Using the todo list records items, which thicken a knowledge graph, which publishes a blog and makes the next filing smarter, which makes the list more worth using."
+  legend
+  nodes={[
+    {id: 'use', label: 'Use the list', detail: 'Dump a thought, file a task, drop a note: the habit you already have.'},
+    {id: 'record', label: 'Records accrue', detail: 'Each item is filed via a structured tool and kept.'},
+    {id: 'graph', label: 'Graph grows', detail: 'The agent links records into a traversable knowledge graph.'},
+    {id: 'publish', label: 'Blog and smarter filing', detail: 'The graph publishes a blog and sharpens how the next item gets filed.'},
+  ]}
+  edges={[
+    {from: 'use', to: 'record'},
+    {from: 'record', to: 'graph'},
+    {from: 'graph', to: 'publish'},
+    {from: 'publish', to: 'use', label: 'more worth using'},
+  ]}
+/>
+
+**Tool-level control.** You can enable or disable specific tools, so a user who does not want the blog,
+or does not want the personal distiller, can turn just that off. The connector is composable, not
+all-or-nothing.
+
+**Guided install and in-Claude approval.** The connector can walk you through installing it, and
+because it lives in the Claude store, granting access and recording approval happen inside Claude. The
+onboarding is part of the product, not a separate manual.
+
+## Who it is for
+
+Three actors share the loop: the people who dump and review, and the agent that does the filing.
+
+<UseCaseDiagram
+  title="The Todo Agent"
+  desc="Who uses the agent and what they do: a knowledge worker dumps raw input and reviews the filing; a builder captures ideas fast; and the agent itself files, links, and publishes."
+  actors={[
+    {id: 'worker', label: 'Knowledge worker', kind: 'internal'},
+    {id: 'builder', label: 'Builder'},
+    {id: 'agent', label: 'The agent', kind: 'system'},
+  ]}
+  useCases={[
+    {id: 'dump', label: 'Dump raw input', detail: 'Send a thought, link, or task in one place, no folders to pick.'},
+    {id: 'review', label: 'Review the filing', detail: 'Confirm the agent put things in the right bucket.'},
+    {id: 'capture', label: 'Capture an idea fast', detail: 'Get an idea down before it rots, filing automated.'},
+    {id: 'file', label: 'File and distill', detail: 'Route each item via record_idea/record_reference; split personal from work.'},
+    {id: 'publish', label: 'Build graph and blog', detail: 'Link the corpus into a graph and host a knowledge blog.'},
+  ]}
+  links={[
+    {from: 'worker', to: 'dump'},
+    {from: 'worker', to: 'review'},
+    {from: 'builder', to: 'capture'},
+    {from: 'agent', to: 'file'},
+    {from: 'agent', to: 'publish'},
+    {from: 'file', to: 'dump', type: 'include'},
+    {from: 'publish', to: 'file', type: 'include'},
+  ]}/>
+
+- **The knowledge worker drowning in scattered notes**, whose thoughts, links, and tasks are spread
+  across five apps and who wants one place to dump and forget.
+- **The builder / tinkerer** who generates ideas faster than they can file them and wants the filing
+  automated so the ideas do not rot.
+- **The note-taker who already lives in Claude** and would rather extend it with a connector than
+  adopt yet another standalone app.
+- **The person who wants a public knowledge output** (a blog, a graph) but will never sit down to
+  author one by hand. The agent makes the byproduct without the chore.
+
+## Market and competition
+
+- **Adjacent players** are the AI note tools (Notion AI, Mem, Reflect), the read-it-later /
+  resurfacing tools (Readwise), and raw ChatGPT or Claude used as a scratchpad. They either still make
+  the human do the filing, or they organize but do not publish, or they have no durable graph.
+- **The wedge is the combination.** Bring-your-own-model (so the economics differ from every
+  subscription-plus-inference competitor), plus a real dump-and-it-files loop through structured tools,
+  plus a knowledge graph and an auto-published blog as output. No single incumbent owns "dump anything,
+  it files itself, and you get a graph and a blog out of it, running on your own Claude."
+- **The other MCP connectors** are the nearest neighbors on distribution, not on function. Most
+  connect Claude to an existing tool; this one is itself the organizing system.
+- **Risk to test early:** is the dump-and-it-files loop a real draw, or do people actually want to
+  keep control of their own filing? The roadmap below is built to learn that cheaply before building
+  the graph and blog on top.
+
+## Business model
+
+- **Subscription for the connector layer.** The recurring charge is for the orchestration, the
+  structured tools, the distiller, the graph, and the hosting, not for model tokens. The customer's own
+  Claude covers inference.
+- **Rate limits as the meter.** The subscription tier sets how much you can dump and how much
+  organizing work the agent will do in a period. Rate limiting is both the fairness mechanism and the
+  thing that separates tiers, since the underlying model cost is the customer's, my cost is
+  orchestration and hosting, and those scale with volume.
+- **Bring-your-own-Claude.** The customer connects their own Claude; I never resell inference. This is
+  the core structural choice and it shapes everything downstream, from pricing to platform risk.
+- **On-device inference as a strategic option.** A second path worth taking seriously: run a small model
+  ON THE PHONE (or laptop) itself. Modern phones can already run capable on-device LLMs, and the filing
+  job (classify a dumped item, route it to a bucket, split personal from work) is well within a small
+  local model's reach, it is not frontier reasoning. If most filing runs locally, three things change at
+  once: inference cost drops toward zero (no per-token bill, mine OR the customer's), the most sensitive
+  data (the personal dump) never leaves the device, which turns the privacy risk into a selling point,
+  and it works offline. The heavy or ambiguous cases can still escalate to a cloud model (local-first,
+  cloud-on-demand), so it is a hybrid, not an either/or. The honest caveat: on-device models are weaker
+  and the good filing quality is exactly what earns trust, so this is a bet to TEST (does a small local
+  model file accurately enough), not an assumption. If it holds, it is a stronger moat and a better
+  privacy story than bring-your-own-Claude alone.
+- **Upsell and downsell paths.** Because the connector already sees what you have done (it can analyze
+  your recorded corpus), it can suggest the right tier: nudge a heavy dumper up, offer a lighter plan
+  to someone about to churn. The analysis of your own activity is the input to the offer.
+
+## Pricing sketch (to validate, not commit)
+
+- **Free or trial tier:** a low dump rate limit, core recording tools only, no blog. Enough to feel
+  the magic, not enough to live in.
+- **Individual tier:** a comfortable dump rate for one person, the personal-vs-work distiller, the
+  knowledge graph, and one hosted blog.
+- **Pro / power tier:** high rate limits, all tools, private and public blog options, and the analysis
+  and upsell features.
+
+The real pricing comes from the cost to run the orchestration and hosting layer per active user at a
+given dump volume, plus a target margin. I cannot fill those numbers in until I have run the MVP long
+enough to measure them. Flagging that as the first hard number to get.
+
+## Distribution and go to market
+
+1. **Publish the connector in the Claude MCP store** as the primary install channel. The store is the
+   funnel; the guided install is the onboarding.
+2. **Lead with the thirty-second demo.** Show a raw dump going in and landing correctly filed, with
+   the graph and a blog post appearing. The legibility of the magic is the whole pitch.
+3. **Seed with the note-drowning crowd** through content: show real messy input getting organized,
+   publish my own knowledge blog built by the tool as the reference example.
+4. **Let the output market itself.** Every user's public blog is a live demo and an inbound link back
+   to the connector.
+5. **Onboard inside Claude.** Because approval and connection are recorded in Claude, there is no
+   separate signup to abandon; reduce the drop-off by keeping the whole first run in one place.
+
+## Unit economics (the numbers to fill in)
+
+I am deliberately not inventing figures. These are the cells that decide whether this is a business,
+and the bring-your-own-model choice reshapes them versus a normal AI SaaS:
+
+- **Cost to run the orchestration and hosting layer** per active user at a realistic dump volume
+  (compute, storage for the graph, blog hosting). Inference is not on this line, which is the point.
+- **Rate-limit economics:** what dump volume a tier allows versus what that volume costs me to
+  orchestrate and host, so each tier is actually margin-positive.
+- **Customer acquisition cost** through the Claude store and content, versus **lifetime value** at
+  each tier.
+- **Churn**, since a productivity tool lives or dies on retention, and the graph plus blog are the
+  bet on making it low.
+- **Distiller error rate**, because a wrong personal-vs-work classification is a trust cost that
+  shows up as churn even though it is not a dollar line.
+
+The first real work is turning these from placeholders into measurements from a running MVP.
+
+## Roadmap
+
+- **Phase 0, validate the pull (cheap):** a landing page plus a demo video of the dump-and-it-files
+  loop, and measure whether the note-drowning crowd wants an agent to do their filing versus keeping
+  control themselves. Learn this before building anything durable on top.
+- **Phase 1, MVP connector:** ship the core recording tools (`record_idea()`, `record_reference()`,
+  `record_todo()`, `record_note()`) as an installable Claude-store connector, bring-your-own-Claude,
+  with guided install and in-Claude approval. No graph, no blog yet.
+- **Phase 2, monetize:** add subscription tiers and rate limits, prove people will pay for the
+  orchestration layer on top of their own Claude.
+- **Phase 3, the durable output:** the personal-vs-work distiller, the auto knowledge graph, and the
+  hosted knowledge blog, the features that make it sticky and give it a public surface.
+- **Phase 4, the upsell engine:** use the connector's analysis of a user's own recorded activity to
+  drive upsell and downsell, right-tiering each user automatically.
+
+## Open questions and risks
+
+- **Platform dependency and bring-your-own-Claude.** The whole thing rides on Anthropic's store and on
+  the customer having their own Claude. If store terms, connector policy, or MCP itself change, or
+  Anthropic ships a first-party version of this, my ground shifts. This is the single biggest risk and
+  the first thing to think through, not the last. **The hedge is portability by design:** MCP is a
+  protocol, not a single vendor, so the connector should target the protocol rather than one store.
+  The valuable, hard-to-move part of the product (the structured recording tools, the personal-vs-work
+  distiller, the knowledge graph, and the hosted blog) lives in MY orchestration layer, and the model
+  is a swappable backend. Concretely, build it as **bring-your-own-model, Claude first**: launch on the
+  Claude store because that is where the users and the cleanest install are, but keep the model behind
+  a seam so it can run on any MCP-capable client. Then if I get squeezed off one store, the customer's
+  whole organized corpus, graph, and blog survive the move, because none of that ever lived in the
+  store. Single-store launch, protocol-portable core.
+- **Privacy of dumping personal and work data.** People would be handing an agent their most
+  unstructured, most personal material. The privacy story (where it is stored, who can see it, whether
+  the blog leaks anything) has to be airtight, or nobody dumps anything real.
+- **Can the model run on the device itself? (the bet that de-risks two others).** If a small on-device
+  model can file accurately enough, it collapses the two risks above and below it at once: the sensitive
+  dump never leaves the phone (privacy solved by architecture, not policy), and the whole thing stops
+  depending on Anthropic's store and the customer's cloud Claude (platform dependency shrinks). The open
+  question is quality: on-device models are weaker, and filing accuracy is exactly what earns trust, so
+  the thing to test is whether a small local model classifies and routes well enough, with a cloud
+  escalation path for the hard cases. This is the highest-leverage experiment in the whole idea, if it
+  works, the economics, the privacy story, and the moat all improve together.
+- **Trusting the distiller.** The personal-vs-work split has to be reliable enough to trust blindly. A
+  personal note surfacing in a work context, or on a public blog, is exactly the failure that loses a
+  user for good. This has to be measured, not assumed.
+- **Moat and defensibility.** An agent that files notes is easy to describe and not hard to clone. The
+  defensibility, if any, is in the accumulated graph, the switching cost of a user's whole organized
+  corpus living here, and the published blog. That is a thin moat early and has to thicken fast. The
+  candidate moat plays, each a thing to test rather than assume:
+  - **Switching cost from the corpus.** The longer a user dumps, the more their organized graph, todos,
+    and references live here, and the more painful it is to leave. This is the base moat, and it only
+    works if the export story is good enough to trust with but painful enough to lose.
+  - **A network of cross-linked blogs.** If every user's public knowledge blog can cite and link
+    another's, the blogs become a small web that is more valuable the more people are on it. That is a
+    network effect competitors starting from zero cannot copy by cloning the agent.
+  - **Data-network effects on the filing itself.** Aggregate (privacy-safe) patterns of how things get
+    recorded and linked make the distiller and the auto-linking smarter for everyone, so the product
+    that has organized the most corpora files new input best. The organizer improves with scale.
+  - **A marketplace of filing recipes.** Let users build and share "recipes" (custom buckets, routing
+    rules, blog templates) so the platform accrues an ecosystem around it, not just a feature set. The
+    recipes others build are switching cost I did not have to write.
+  The honest read: only the first is real on day one. The others are bets that have to be deliberately
+  built, and the roadmap has to earn the right to them before a fast follower shows up.
+- **Rate-limit fairness.** Metering on dump volume has to feel fair, not punitive, or the limit that
+  funds the business becomes the reason people leave. Getting the tier lines right is a real design
+  problem, not a config value.
+
+## Success criteria
+
+- Phase 0 shows real pull: the demo converts clicks to signups and waitlist joins above a threshold I
+  set before building, proving people want the agent to do the filing, not just proving it is possible.
+- The MVP connector installs cleanly from the Claude store, and a real user can dump raw input and see
+  it filed correctly through the structured tools, with the personal-vs-work split trustworthy in
+  practice.
+- Monetization works: a measurable share of active users convert to a paid tier and stay past the
+  first churn window.
+- Retention holds: the graph and the auto-blog measurably lower churn versus the pre-durable-output
+  MVP, and the analysis-driven upsell moves users up a tier without pushing them out.
+
+## Next step
+
+Turn the two hardest unknowns into evidence: run the Phase 0 demo test (does the pull for
+agent-does-the-filing actually exist), and build the smallest possible MVP connector to measure what
+the orchestration layer really costs to run per active user. The graph, the blog, and the upsell
+engine all wait on those two answers.
