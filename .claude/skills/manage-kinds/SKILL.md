@@ -35,7 +35,21 @@ its consumers.
 - **`outline`** — the structural elements the post should contain, each `{id, label}`. The `id` maps
   to a TEST in `validate-post-outline.js`'s `CHECKS`; the `label` is the human contract text. Reuse
   an existing `id` (e.g. `description`, `sections`, `mockup`, `decisions`) when the check already
-  exists — only a genuinely new structural requirement needs a new `id` + a new test.
+  exists — only a genuinely new structural requirement needs a new `id` + a new test. `outline` is
+  the HARD gate (a missing element warns per-post).
+- **`sections`** (OPTIONAL) — the recommended BODY sections + **the question each answers**, each
+  `{anchor, heading, question, guidance}`. Encodes the CLAUDE.md "frame each section around its
+  question" convention as data. **`anchor`** is the STABLE identity (the heading's slug); **`heading`**
+  is the DEFAULT title a post MAY OVERRIDE; **`question`** is what the section answers; **`guidance`**
+  is the one-line how-to. A companion **`sectionsProfile`** string (e.g. `"business-plan"`) + a
+  **`sectionsNote`** say WHEN the sections apply. Unlike `outline`, `sections` is RECOMMENDED not
+  gated: `validate-post-outline.js` warns (`missing-section`, never blocks) only for a post that
+  MATCHES the `sectionsProfile` (so a small idea isn't nagged to write a full plan). A post satisfies
+  a section by a heading whose slug matches `anchor`, or, if it RENAMED the heading, by pinning the
+  anchor with Docusaurus's `## New Title {#anchor}` syntax. NOTE the blog collections the outline +
+  sections checks apply to: `blog`/`designs`/`thoughts`/`mindset`/`questions` (the `isBlogPost` +
+  `DEFAULT_DIRS` set in the validator). Worked example: `idea` carries a 14-section `business-plan`
+  profile.
 
 ## Who consumes it (do NOT hand-maintain a parallel copy anywhere)
 
