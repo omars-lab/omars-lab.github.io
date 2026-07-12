@@ -60,6 +60,17 @@ capture the idea, why it appeals, and what's unresolved. If the idea is still a 
 **`mature-content`** first — it interview-drives a rough idea to board-ready (motivation, value,
 scope, to-dos, success criteria) before you author.
 
+**When the idea is a BUSINESS PLAN**, `blog-kinds.json` (`kinds.idea.sections`, profile
+`business-plan`) declares the recommended body sections AND **the question each one answers**, the
+canonical structure, so you don't reinvent it. The 14 sections run: the idea in one line · a name for
+it · why compelling · the product · who it's for · market and competition · business model · pricing
+sketch · go to market · unit economics · roadmap · open questions and risks · success criteria · next
+step. These are **recommended, not required**: `validate-post-outline.js` warns (`missing-section`,
+never blocks) only when a post already reads like a business plan and is missing one. You may RENAME a
+section's heading, keep its identity by pinning the anchor, `## My Title {#unit-economics}`. The
+**`pressure-test-business-idea`** skill produces exactly this shape; read `kinds.idea.sections` (each
+section's `question` + `guidance`) as the source of truth for what each section should answer.
+
 ## Validate + hand-offs
 
 - Gates: `make validate-naming` (title voice), `make validate-idea-tags` (board tag glosses),

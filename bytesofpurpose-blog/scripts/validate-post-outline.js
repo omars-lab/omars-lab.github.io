@@ -16,6 +16,10 @@
  * a new outline id) — you do NOT hand-edit a rules list here.
  *
  * Findings (all warn-tier — advisory, never blocks):
+ *   - missing-section: a post that fits a kind's `sectionsProfile` (e.g. a business-plan-shaped
+ *     idea) is missing a recommended body section. Matched on the section `anchor` (a post MAY
+ *     rename the heading — the anchor is the stable identity, pinnable via `## Title {#anchor}`).
+ *     Recommended, not required.
  *   - missing-kind        a blog post with no `kind:` (kind drives the sidebar emoji + contract)
  *   - unknown-kind        a `kind:` not in blog-kinds.json
  *   - long-sidebar-label  the sidebar entry (sidebar_label || title) is > ~3 content words
@@ -38,7 +42,7 @@ const path = require('path');
 const matter = require('gray-matter');
 
 const ROOT = path.join(__dirname, '..');
-const DEFAULT_DIRS = ['blog', 'designs', 'docs'];
+const DEFAULT_DIRS = ['blog', 'designs', 'docs', 'thoughts', 'mindset', 'questions'];
 
 // The canonical blog-kind taxonomy is the SINGLE SOURCE OF TRUTH in lib/blog-kinds.json:
 // each kind declares {emoji, description, outline:[{id,label}]}. We read it here so the
@@ -96,6 +100,61 @@ function contentWordCount(text) {
 }
 
 const hasH2 = (body) => /^##\s+\S/m.test(body);
+
+// Slugify a heading the way Docusaurus (github-slugger) does for anchor ids: lowercase,
+// strip anything but word chars / spaces / hyphens, collapse spaces to single hyphens.
+// Good enough to match a section `anchor` against a post's real headings.
+function slugifyHeading(text) {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// All ATX headings (## … ######) in a body, as {slug, text}. Skips fenced code blocks so a
+// commented "## x" inside a code fence isn't read as a heading. Honors an EXPLICIT Docusaurus
+// anchor override `## Custom Title {#pinned-anchor}` — the pinned id becomes the slug, so a
+// post can RENAME a recommended section's heading while keeping its stable anchor identity.
+function extractHeadings(body) {
+  const out = [];
+  let inFence = false;
+  for (const line of body.split('\n')) {
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+    const m = /^#{2,6}\s+(.+?)\s*$/.exec(line);
+    if (!m) continue;
+    let text = m[1].trim();
+    const pinned = /\{#([\w-]+)\}\s*$/.exec(text);
+    if (pinned) {
+      text = text.replace(/\s*\{#[\w-]+\}\s*$/, '').trim();
+      out.push({slug: pinned[1], text}); // explicit anchor wins
+    } else {
+      out.push({slug: slugifyHeading(text), text});
+    }
+  }
+  return out;
+}
+
+// A recommended-section profile only warns for a post that actually FITS the profile, so a
+// small "I might build X" idea isn't nagged to write a 14-section business plan. The
+// business-plan profile: the post says so (description/tags mention "business"), or it already
+// reads like one (has several of the plan's signature sections).
+function matchesSectionsProfile(profile, fm, headings) {
+  if (profile !== 'business-plan') return false;
+  const hay = `${fm.description || ''} ${(fm.tags || []).join(' ')}`.toLowerCase();
+  if (/\bbusiness\b/.test(hay)) return true;
+  const planAnchors = new Set([
+    'business-model', 'unit-economics', 'go-to-market', 'pricing-sketch', 'market-and-competition',
+  ]);
+  const hits = headings.filter((h) => planAnchors.has(h.slug)).length;
+  return hits >= 2; // reads like a business plan already
+}
 
 // CHECKS: the TEST LOGIC for each outline element, keyed by the `id` declared in
 // blog-kinds.json. The JSON owns WHAT each kind requires (the legend authors + the hook
@@ -272,8 +331,10 @@ function checkFile(file) {
   }
   const kind = parsed.data && parsed.data.kind;
   const findings = [];
-  // Only enforce the kind vocabulary for BLOG posts (docs use their own kind words).
-  const isBlogPost = /\/(blog|designs)\//.test(file);
+  // Only enforce the kind vocabulary for BLOG posts (docs use their own kind words). The blog
+  // collections are the /initiatives feed (blog/), designs/, and the three temporal-thought
+  // instances (thoughts/, mindset/, questions/) — all declare a `kind:` from blog-kinds.json.
+  const isBlogPost = /\/(blog|designs|thoughts|mindset|questions)\//.test(file);
 
   // A blog post with NO `kind:` can't get a type-based sidebar emoji. Show the full legend
   // (emoji + description per kind) so the author can pick the right one inline.
@@ -333,18 +394,49 @@ function checkFile(file) {
     }
   }
 
-  if (!OUTLINES[kind]) return findings; // no outline contract for this kind
-  for (const check of OUTLINES[kind]) {
-    if (!check.test(parsed.data, parsed.content)) {
-      findings.push({
-        file: path.relative(ROOT, file),
-        kind,
-        id: check.id,
-        detail:
-          `kind: ${kind} post is missing ${check.label}\n` +
-          `       (a ${KINDS[kind].emoji} ${kind} post should have:\n${outlineExpectations(kind)}\n` +
-          `        ...or the kind may be wrong for this post. source: scripts/lib/blog-kinds.json)`,
-      });
+  if (OUTLINES[kind]) {
+    for (const check of OUTLINES[kind]) {
+      if (!check.test(parsed.data, parsed.content)) {
+        findings.push({
+          file: path.relative(ROOT, file),
+          kind,
+          id: check.id,
+          detail:
+            `kind: ${kind} post is missing ${check.label}\n` +
+            `       (a ${KINDS[kind].emoji} ${kind} post should have:\n${outlineExpectations(kind)}\n` +
+            `        ...or the kind may be wrong for this post. source: scripts/lib/blog-kinds.json)`,
+        });
+      }
+    }
+  }
+
+  // Recommended-SECTIONS check (warn-tier): if the kind declares `sections` and this post fits
+  // the kind's `sectionsProfile`, nudge on any recommended section whose `anchor` (or default
+  // `heading`) has no matching heading in the post. A post MAY override a section's title, so we
+  // match on the anchor slug first, then fall back to the default heading text. Never blocks.
+  const kindDef = KINDS[kind] || {};
+  if (isBlogPost && Array.isArray(kindDef.sections) && kindDef.sections.length) {
+    const headings = extractHeadings(parsed.content);
+    if (matchesSectionsProfile(kindDef.sectionsProfile, parsed.data, headings)) {
+      const headingSlugs = new Set(headings.map((h) => h.slug));
+      const headingTexts = new Set(headings.map((h) => h.text.toLowerCase()));
+      const missing = kindDef.sections.filter(
+        (s) => !headingSlugs.has(s.anchor) && !headingTexts.has((s.heading || '').toLowerCase()),
+      );
+      if (missing.length) {
+        findings.push({
+          file: path.relative(ROOT, file),
+          kind,
+          id: 'missing-section',
+          detail:
+            `kind: ${kind} post reads like a "${kindDef.sectionsProfile}" but is missing recommended section(s):\n` +
+            missing
+              .map((s) => `        · ${s.heading}  (#${s.anchor}) — answers: ${s.question}`)
+              .join('\n') +
+            `\n       (recommended, not required; a post MAY rename a section — the anchor is the identity.\n` +
+            `        source: scripts/lib/blog-kinds.json → kinds.${kind}.sections)`,
+        });
+      }
     }
   }
   return findings;
