@@ -260,13 +260,25 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     ONLY while scrolling the parallax (when the facade is on a GPU layer). Fix: `-2px` (an overlap big
     enough to always cover, regardless of the device grid). Diagnose by live-disabling each candidate
     (`filter`/overflow/border/margin) one at a time and re-shooting MID-SCROLL at DPR 2 AND 3.
-11. **The board TITLES are CENTERED per-message; the board is WIDER than the longest title.**
-    `wrapToGrid` centers each line on its own width (so short titles like WELCOME sit dead-center),
-    and `STUDIO_BOARD_COLS` (24 desktop) / `STUDIO_BOARD_COLS_MOBILE` (22) are wider than the longest
-    title (19) so every title has blank flap tiles flanking it. (An earlier shared-width-stable scheme
-    kept shared-prefix cells from flipping but left short titles left-hugging; the user chose true
-    centering, accepting that CRAFT↔JOURNEY re-centers ~19 cells.) Don't re-narrow the board to the
-    title width or centering loses its margin.
+11. **The board TITLES are CENTERED per-message; changes FLIP column by column, never slide.**
+    `wrapToGrid` centers each line on its OWN width (so short titles like WELCOME sit dead-center), and
+    `STUDIO_BOARD_COLS` (24 desktop) / `STUDIO_BOARD_COLS_MOBILE` (22) are wider than the longest title
+    (~22) so every title has blank flap tiles flanking it. The mental model that makes both "centered"
+    AND "no sideways slide" true at once: **every board column is a STATIC physical slot.** When the
+    content changes (a new or re-centered word), each affected slot CARD-FLIPS from its old glyph to its
+    new glyph (a letter↔letter flip in the shared middle, a letter↔blank flip at the edges as a centered
+    word grows/shrinks). Nothing MOVES horizontally — only each slot's glyph changes, and only by a
+    flip. So WELCOME→DISCOVER MY CRAFT assembles left-to-right column by column
+    (`D..DI..DISC WELCOME → DISCOWELCOME → … → DISCOVER MY CRAFT`), it does not slide the text over.
+    **Two dead ends the user rejected — do NOT reintroduce either:** (a) a per-CROSSING shared width
+    (`Math.max(from,to)`) made a scene's letters JUMP between adjacent crossings (its center differed by
+    pair — the "sentences shifting left" bug); (b) a single journey-wide `anchorWidth` (widest title)
+    stopped the jump but LEFT-HUGGED short titles (WELCOME jammed at column 1 with ~16 trailing blanks).
+    The answer is plain per-title centering (`wrapToGrid`/`toSharedGrid` both center each text on its own
+    width) — the existing front-flip render already turns every slot change into a flip, so centering is
+    all that's needed. Guarded by `[pickets] every scene title is CENTERED` (fail-before: WELCOME leftPad
+    1 vs rightPad 16 when left-hugged) + `[pickets] a scene change FLIPS column by column`. Don't
+    re-narrow the board to the title width (centering loses its margin) and don't add an `anchorWidth`.
 12. **`.studioBoardRail` is a MOBILE-ONLY gold railing** in the teal gap below the hanging board /
     above the door (the side-window railings are hidden on mobile). It's `display:none` by default and
     shown only in the `≤600px` media query. The dev-only-surfaces e2e doesn't guard it (it's real
@@ -404,9 +416,12 @@ geometry + the festoon + the board; only the crossing visual + the snap differ (
     (d) BLANK-target cells stay blank in both modes. The board pads short text to a fixed 3-row grid;
     if the 2 padding rows ever filled, all rows would fill and then COLLAPSE 3-rows→1 in one frame (a
     jarring jump). The sweep's lit span never touches them, and spinning-mode padding cells never churn.
+    (e) ALIGNMENT: `toSharedGrid` centers BOTH texts each on its OWN width (per-title centering) — see
+    gotcha 11 for the full centered-AND-no-slide model + the two dead ends (per-pair shared width, and a
+    journey-wide `anchorWidth`) that must not come back.
     Guarded by `[pickets] the board stays a SINGLE row through a crossing`; the sweep contract itself is
     guarded by `[pickets] the board FREEZES mid-crossing as a stable old/new MIX` + `[pickets] the board
-    letters land column by column WITH the scroll`.
+    letters land column by column WITH the scroll` + `[pickets] a scene change FLIPS column by column`.
 
 25. **FIREFOX-ONLY: split-flap letters "glitch downward" mid-crossing — fix it on the FOLD LEAVES, NOT
     every glyph (that lags scroll).** During a flap, each leaf clips a full-height `.glyph` and rotates
