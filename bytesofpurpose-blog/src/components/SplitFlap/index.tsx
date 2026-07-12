@@ -41,13 +41,6 @@ export interface SplitFlapProps {
    * any instant only the column the scroll is impacting animates (no whole-board churn or cascade). */
   sweepFromText?: string;
   sweepProgress?: number;
-  /** ANCHOR WIDTH: center every message as if the longest possible message were this many chars wide,
-   * so EVERY message occupies the SAME fixed columns regardless of its own length. Without this, each
-   * title is centered on its own width, so changing between two different-length titles SHIFTS the
-   * shared letters sideways (they slide into a new centered position) instead of flipping in place.
-   * Pass the width of the widest message the board will ever show (e.g. the longest scene title) and
-   * every scene change becomes a pure per-column card-flip with no horizontal slide. */
-  anchorWidth?: number;
   /** DIRECT mode (timer mode only): each cell flips STRAIGHT to the target glyph in a single fold,
    * instead of rolling through the deck. Off by default (the hero keeps the deck roll). */
   direct?: boolean;
@@ -149,33 +142,35 @@ function wrapLines(text: string, columns: number): string[] {
 
 /** Word-wrap `text` into lines of at most `columns` chars (like a real board), then CENTER each line
  * within the board and pad so every row is exactly `columns` wide (blank filler tiles fill the rest).
- * Returns the grid as equal-length strings. By default each message is centered on its OWN width. Pass
- * `anchorWidth` (the widest message the board will ever show) to center every line as if it were that
- * wide instead — so a short and a long message START at the SAME left column and shared letters flip in
- * place across a message change rather than sliding sideways. */
-function wrapToGrid(text: string, columns: number, anchorWidth?: number): string[] {
+ * Returns the grid as equal-length strings. Each message is centered on its OWN width, so short titles
+ * (WELCOME) sit DEAD-CENTER and long ones fill more of the row, with blank flap tiles flanking each
+ * centered title. When the message changes, the board's fixed-slot cells FLIP to their new glyph (a
+ * card-flip, never an instant slide) — centering just decides which slot holds which letter. */
+function wrapToGrid(text: string, columns: number): string[] {
   const lines = wrapLines(text, columns);
   return lines.map((l) => {
-    const basis = Math.min(columns, Math.max(l.length, anchorWidth ?? l.length));
-    const left = Math.floor((columns - basis) / 2);
+    const left = Math.floor((columns - l.length) / 2);
     return padInColumns(l, columns, left);
   });
 }
 
 /** SWEEP-mode grids: lay TWO texts on the SAME column grid so a column-wise splice between them is
  * coherent (the pickets board shows the destination left of the flip front + the from-text to its
- * right). Both are single-line and padded to the fixed row count, so column i is the same slot in both.
- * The centering basis is `anchorWidth` when given (the widest message across the WHOLE journey), which
- * is what makes every crossing agree on one offset — otherwise centering on this pair's own max width
- * makes a scene's letters JUMP between adjacent crossings (its offset differs by pair). Returns
- * `[toGrid, fromGrid]`. If either text wraps to more than one line (longer than `columns`), falls back
- * to per-text `toGrid` centering (multi-line sweep is not used by the hero; scene titles are single-line). */
+ * right). Each text is CENTERED on its own width (dead-center on the board) and padded to the fixed row
+ * count. Returns `[toGrid, fromGrid]`.
+ *
+ * Every board COLUMN is a static physical slot. The sweep front (see the caller) walks L→R; each column
+ * flips between its `fromGrid[i]` char (the current word) and its `grid[i]` char (the upcoming word) at
+ * that SAME slot. When a word grows/shrinks or a centered word shifts across a crossing, the columns
+ * whose glyph changes FLIP in place (a Cell flips whenever its `char` changes) — it is never an instant
+ * positional slide, because nothing MOVES: only each slot's glyph changes, and only by a card-flip.
+ * Centering (not the earlier shared anchor-width, which left-hugged short titles like WELCOME) keeps
+ * every settled title dead-center. */
 function toSharedGrid(
   toText: string,
   fromText: string,
   columns: number,
   fixedRows: number | undefined,
-  anchorWidth?: number,
 ): [string[], string[]] {
   const a = toText.toUpperCase();
   const b = fromText.toUpperCase();
@@ -185,15 +180,7 @@ function toSharedGrid(
     const top = Math.floor((fixedRows - g.length) / 2);
     return [...Array(top).fill(blank), ...g, ...Array(fixedRows - g.length - top).fill(blank)];
   };
-  // Multi-line (a title wider than the board) has no single shared offset — fall back per-text.
-  if (a.length > columns || b.length > columns) {
-    return [pad(wrapToGrid(a, columns, anchorWidth)), pad(wrapToGrid(b, columns, anchorWidth))];
-  }
-  // Center BOTH on the journey-wide anchor width (falls back to this pair's max if no anchor given), so
-  // column i is the same slot in every crossing and shared letters never slide between crossings.
-  const basis = Math.min(columns, Math.max(a.length, b.length, anchorWidth ?? 0));
-  const left = Math.floor((columns - basis) / 2);
-  return [pad([padInColumns(a, columns, left)]), pad([padInColumns(b, columns, left)])];
+  return [pad(wrapToGrid(a, columns)), pad(wrapToGrid(b, columns))];
 }
 
 // The flap DECK: the ordered set of glyphs on a physical split-flap drum. A cell rolls THROUGH this
@@ -320,14 +307,12 @@ function SplitFlap({
   spinning,
   sweepFromText,
   sweepProgress,
-  anchorWidth,
   direct = false,
 }: SplitFlapProps): React.JSX.Element {
-  // Build the centered/padded GRID for a message. `anchorWidth` (when set) centers every message on one
-  // fixed width so changing messages flips letters in place instead of sliding them to a new center.
+  // Build the centered/padded GRID for a message (each message dead-centered on its own width).
   const toGrid = (s: string): string[] => {
     const upper = s.toUpperCase();
-    let g = columns ? wrapToGrid(upper, columns, anchorWidth) : [upper];
+    let g = columns ? wrapToGrid(upper, columns) : [upper];
     if (columns && fixedRows) {
       if (g.length > fixedRows) g = g.slice(0, fixedRows);
       const blank = ' '.repeat(columns);
@@ -347,13 +332,14 @@ function SplitFlap({
   // instant is the single fold of the cell the front is crossing (Cell flips when its char changes).
   // Stop mid-crossing → the mixed board FREEZES; scroll back → the letters revert, column by column.
   if (sweepProgress != null && sweepFromText != null) {
-    // BOTH texts must sit on the SAME column grid, or the mid-sweep column splice (destination on the
-    // left of the front, from-text on the right) is INCOHERENT: `toGrid` centers each text on its own
-    // width, so two titles of different length land in different columns and the splice drops the
-    // inter-word space ("EXPLORE MY" → "EXPLOREMY") or doubles a boundary letter. `toSharedGrid`
-    // centers both on the LONGER title's width, so column i means the same slot in both and the swept
-    // line reads as one continuous title with its spaces intact.
-    const [grid, fromGrid] = toSharedGrid(text, sweepFromText, columns, fixedRows, anchorWidth);
+    // Both texts are laid on the board CENTERED (toSharedGrid), each on its own width. Every column is
+    // a static slot. The front walks L→R across the LIT SPAN (the union of columns where EITHER text
+    // has a letter): a column the front has PASSED shows its destination glyph (`grid[i]`, which may be
+    // BLANK at the edges when the destination is the shorter word), a column ahead shows its from glyph
+    // (`fromGrid[i]`). So as the front crosses each slot, that slot flips from its from-char to its
+    // to-char — a letter→letter flip in the shared middle, a letter↔blank flip at the edges where the
+    // words differ in length. Nothing slides; a centered word grows/shrinks by its edge slots flipping.
+    const [grid, fromGrid] = toSharedGrid(text, sweepFromText, columns, fixedRows);
     const p = Math.min(1, Math.max(0, sweepProgress));
     // Each row's lit span (union across from+to); the front walks these spans row-major.
     const spans = grid.map((row, r) => {

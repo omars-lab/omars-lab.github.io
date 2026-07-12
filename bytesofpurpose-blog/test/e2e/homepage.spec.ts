@@ -747,9 +747,9 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
       return (b?.innerText || '').replace(/\s+/g, '').replace(/(.)\1/g, '$1');
     });
 
-  // The board's per-column string with LEADING SPACES preserved, plus the column the text starts at.
-  // (boardCollapsed strips spaces; this one keeps position so we can see a horizontal SHIFT.)
-  const boardLeftOffset = (page: Page) =>
+  // The board's leading + trailing blank-tile counts for the settled row (so we can check CENTERING:
+  // a centered title has leftPad ≈ rightPad; a left-hugged one has leftPad ≪ rightPad).
+  const boardPadding = (page: Page) =>
     page.evaluate(() => {
       const row = [...document.querySelectorAll('[class*="studioSign"] [class*="row"]')]
         .map((r) =>
@@ -758,52 +758,91 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
             .join(''),
         )
         .find((s) => s.trim());
-      return row ? row.search(/\S/) : -1;
+      if (!row) return { left: -1, right: -1 };
+      const left = row.search(/\S/);
+      const right = row.length - 1 - [...row].reverse().findIndex((c) => c !== ' ');
+      return { left, right: row.length - 1 - right };
     });
 
-  test('[pickets] a scene title occupies the SAME columns across crossings (letters flip, never slide)', async ({
+  test('[pickets] every scene title is CENTERED on the board (short titles are not left-hugged)', async ({
     page,
   }) => {
-    // REGRESSION: each scene title was centered on its OWN width, so a title's letters SLID sideways
-    // when you scrolled from its settled zone into the next crossing (the two crossings re-centered on
-    // different pair-max widths). The user saw "sentences shifting left" instead of flipping in place.
-    // Fixed by anchoring every message to one journey-wide width (SplitFlap anchorWidth), so a given
-    // scene sits in the SAME start column everywhere. Assert that: the SAME title read at two scroll
-    // positions (its own settled zone, then just past it entering the next crossing) starts at the same
-    // column. A slide would show two different offsets.
+    // REGRESSION: an earlier fix anchored every title to one journey-wide LEFT column so shared letters
+    // would not slide — but that LEFT-HUGGED short titles (WELCOME rendered jammed at the left edge with
+    // ~16 blank tiles trailing, clearly off-center). The board must keep every title DEAD-CENTER. We
+    // read the leading vs trailing blank-tile counts of the settled row at the door (WELCOME, short) and
+    // a scene (a longer title) and assert they are balanced (centered), not lopsided-left.
     await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle');
 
-    // scene 0 (DISCOVER MY CRAFT, 17 chars) settled zone, then the start of the CRAFT→JOURNEY crossing
-    // (JOURNEY is 19 chars — a DIFFERENT width, the case that used to shift).
-    await scrubTo(page, (1 + 0.1) / 8); // scene 0 settled
+    // the door: WELCOME (7 chars) is the SHORTEST message — the worst case for left-hugging.
+    await scrubTo(page, 0.03);
     await page.waitForTimeout(500);
-    const settledText = await boardCollapsed(page);
-    const settledOffset = await boardLeftOffset(page);
-    expect(settledText, 'settled on scene 0 title').toBe('DISCOVERMYCRAFT');
-
-    // nudge to the very start of the next crossing, where CRAFT is still the fully-shown FROM text
-    await scrubTo(page, (1 + 0.75) / 8);
-    await page.waitForTimeout(500);
-    const crossingText = await boardCollapsed(page);
-    const crossingOffset = await boardLeftOffset(page);
-
-    // if CRAFT is still fully shown here, its start column MUST match the settled one (no slide)
-    if (crossingText === 'DISCOVERMYCRAFT') {
-      expect(
-        crossingOffset,
-        `CRAFT must start at the SAME column in both places (settled ${settledOffset}, crossing ${crossingOffset}) — a mismatch is the sideways slide`,
-      ).toBe(settledOffset);
-    }
-    // Regardless: every title shares ONE anchor offset, so scene 0's and the next scene's titles both
-    // start at the same column. Read scene 1's settled title and assert it shares scene 0's offset.
-    await scrubTo(page, (2 + 0.1) / 8); // scene 1 settled (DISCOVER MY JOURNEY, a different length)
-    await page.waitForTimeout(500);
-    const scene1Offset = await boardLeftOffset(page);
+    const welcome = await boardCollapsed(page);
+    const wp = await boardPadding(page);
+    expect(welcome, 'settled on the door shows WELCOME').toBe('WELCOME');
     expect(
-      scene1Offset,
-      `different-length titles must share the anchor start column (scene0 ${settledOffset}, scene1 ${scene1Offset})`,
-    ).toBe(settledOffset);
+      Math.abs(wp.left - wp.right),
+      `WELCOME must be CENTERED (leftPad ${wp.left} ≈ rightPad ${wp.right}), not jammed to one edge`,
+    ).toBeLessThanOrEqual(1);
+
+    // a scene title (longer) is also centered.
+    await scrubTo(page, (1 + 0.1) / 8);
+    await page.waitForTimeout(500);
+    const scene0 = await boardCollapsed(page);
+    const sp = await boardPadding(page);
+    expect(scene0, 'settled on scene 0 title').toBe('DISCOVERMYCRAFT');
+    expect(
+      Math.abs(sp.left - sp.right),
+      `scene 0 title must be CENTERED (leftPad ${sp.left} ≈ rightPad ${sp.right})`,
+    ).toBeLessThanOrEqual(1);
+  });
+
+  test('[pickets] a scene change FLIPS column by column (no instant positional slide)', async ({ page }) => {
+    // The board's columns are static physical slots: when the content changes (a new/shifted centered
+    // word), each affected column CARD-FLIPS to its new glyph — it never slides the text sideways in one
+    // step. We scrub the door→scene0 crossing (WELCOME centered → DISCOVER MY CRAFT centered, the LARGEST
+    // shift) in fine steps and collect the distinct boards. A flip cascade shows the destination
+    // ASSEMBLING gradually (many distinct intermediate boards, growing letter by letter); an instant
+    // slide would jump from WELCOME straight to the full title in ~1 step.
+    await page.goto(heroUrl('pickets'), { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+
+    const distinct = await page.evaluate(async () => {
+      const spacer = document.querySelector('[class*="parallaxSpacer"]') as HTMLElement;
+      const rect = spacer.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      const top = rect.top + window.scrollY;
+      const board = () => {
+        const rows = [...document.querySelectorAll('[class*="studioSign"] [class*="row"]')];
+        return (
+          rows
+            .map((row) =>
+              [...row.querySelectorAll('[class*="cell"]')]
+                .map((c) => c.querySelector('[class*="glyph"]')?.textContent ?? ' ')
+                .join(''),
+            )
+            .find((s) => s.trim()) || ''
+        );
+      };
+      window.scrollTo(0, Math.round(top + 0.02 * scrollable));
+      window.dispatchEvent(new Event('scroll'));
+      await new Promise((r) => setTimeout(r, 500));
+      const seen = new Set<string>();
+      for (let i = 0; i <= 30; i++) {
+        const pp = 0.03 + (0.11 * i) / 30; // across the door→scene0 crossing
+        window.scrollTo(0, Math.round(top + pp * scrollable));
+        window.dispatchEvent(new Event('scroll'));
+        await new Promise((r) => requestAnimationFrame(() => r(null)));
+        await new Promise((r) => setTimeout(r, 80));
+        seen.add(board().replace(/\s+$/g, ''));
+      }
+      return seen.size;
+    });
+
+    // A column-by-column flip cascade produces MANY distinct intermediate boards as the title assembles.
+    // An instant slide would produce only ~2-3. Require a healthy cascade.
+    expect(distinct, `the crossing must flip column by column (saw ${distinct} distinct boards)`).toBeGreaterThanOrEqual(8);
   });
 
   test('[pickets] the board FREEZES mid-crossing as a stable old/new MIX, and shows the TITLE when settled', async ({
@@ -816,19 +855,28 @@ test.describe('Homepage hero: scroll-driven parallax (variant C)', () => {
     await page.waitForLoadState('networkidle');
 
     await scrubTo(page, 0.09); // mid door→scene0 crossing
-    await page.waitForTimeout(600); // let the last front-flip finish
-    const mid1 = await boardCollapsed(page);
-    await page.waitForTimeout(600);
-    const mid2 = await boardCollapsed(page);
-    expect(mid1, 'the mixed board holds frozen mid-crossing').toBe(mid2);
+    // The board is scroll-scrubbed via an always-on catch-up loop, so it may still be converging right
+    // after scrubTo. POLL until it holds STILL (two equal reads a beat apart + nothing flipping) rather
+    // than assuming a fixed wait is enough — that removes the timing race while proving the FREEZE.
+    let mid1 = '';
+    await expect
+      .poll(
+        async () => {
+          const a = await boardCollapsed(page);
+          await page.waitForTimeout(250);
+          const b = await boardCollapsed(page);
+          const flipping = await page.evaluate(
+            () => document.querySelectorAll('[class*="studioSign"] [class*="foldDown"]').length,
+          );
+          mid1 = b;
+          return a === b && flipping === 0;
+        },
+        { timeout: 5000, message: 'the mixed board must hold FROZEN (stable + nothing flipping) mid-crossing' },
+      )
+      .toBe(true);
     // the MIX: the destination's prefix has landed, but the full title has not
     expect(mid1.startsWith('DIS'), `left prefix shows the NEXT title (was "${mid1}")`).toBe(true);
     expect(mid1, 'mid-crossing is a mix, not the finished title').not.toBe('DISCOVERMYCRAFT');
-    // nothing animates at rest: no fold leaf exists anywhere in the board
-    const flipping = await page.evaluate(
-      () => document.querySelectorAll('[class*="studioSign"] [class*="foldDown"]').length,
-    );
-    expect(flipping, 'no cell flips while frozen mid-crossing').toBe(0);
 
     // Settle past the wave: the full title, held.
     await scrubTo(page, (1 + 0.25) / 8);
