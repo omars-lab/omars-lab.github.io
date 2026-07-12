@@ -75,6 +75,25 @@ html[data-theme='dark'] .themeBlog {
   stroke: var(--bopmind-connector);
   fill: none;
   stroke-linecap: round;
+  transition: stroke var(--duration-fast, 0.12s) var(--ease-standard, ease),
+    stroke-width var(--duration-fast, 0.12s) var(--ease-standard, ease);
+}
+/* Invisible, fat pointer target under the thin visible connector. transparent
+   (not none) so it still receives pointer events. Never animated. */
+.connectorHit {
+  stroke: transparent;
+  stroke-width: 16;
+  stroke-linecap: round;
+  fill: none;
+  pointer-events: stroke;
+}
+/* Hovering anywhere on the connector group (its fat hit-area or the visible
+   line) highlights the visible connector. Color only : the visible connector's
+   stroke-width is an inline style (it tapers per depth) and would win over a
+   class rule, so we tint instead of thicken. The tint to the node-border color
+   reads clearly against the pale connector. */
+.connectorG:hover .connector {
+  stroke: var(--bopmind-node-border);
 }
 
 /* ---- Nodes ---- */

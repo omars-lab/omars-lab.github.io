@@ -173,11 +173,24 @@ const UseCaseDiagram: React.FC<UseCaseDiagramProps> = ({
           <g className={styles.linksG}>
             {rLinks.map((l, i) => (
               <g key={i} className={clsx(styles.link, styles[`link-${l.type}`])}>
+                {/* Wide, invisible hit-area so the thin link is easy to hover:
+                    an SVG stroke only receives pointer events on its visible
+                    width. This transparent line sits under the visible one and
+                    captures the hover for the whole link group. */}
                 <line
                   x1={l.x1}
                   y1={l.y1}
                   x2={l.x2}
                   y2={l.y2}
+                  className={styles.linkHit}
+                  aria-hidden="true"
+                />
+                <line
+                  x1={l.x1}
+                  y1={l.y1}
+                  x2={l.x2}
+                  y2={l.y2}
+                  className={styles.linkLine}
                   markerEnd={l.type === 'association' ? undefined : `url(#${salt}-arrow)`}
                   style={{'--len': l.len.toFixed(1), '--i': i} as CSSProperties}
                 />
