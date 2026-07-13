@@ -7,6 +7,14 @@ description: The editorial POLICY for premium/gated content on the Bytes of Purp
 
 This skill owns **whether** content should be gated — the judgement, not the mechanics.
 
+> ⚠️ **Premium is NOT a privacy guarantee.** Gating encrypts the rendered BODY only; the `title`,
+> `slug`/URL, `description`, `premium_teaser`, `tags`, and any README that LISTS the doc all ship
+> PUBLIC in clear. Premium hides the CONTENT, not the FACT (a gated "Targeting Director at LangChain"
+> doc still broadcasts a job search via its title + URL + teaser). If the *existence* or *subject* is
+> the sensitive thing (career/job-search, employer-confidential, personal), premium is the WRONG tool
+> — run the **`privacy-review`** skill and consider `draft: true`, de-identifying into a case study, or
+> keeping it OFF the repo entirely.
+
 - **How to MARK a doc premium** (frontmatter, `<Premium>`, build) → `author-post`.
 - **How premium is ENFORCED** (compile-time encryption, the blocking deploy gate) →
   `validate-docs-structure.js` V1 + `scripts/verify-premium-encrypted.js` V5; architecture
