@@ -211,11 +211,6 @@
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/mermaid-render-check.sh\"",
             "timeout": 90
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/privacy-review-reminder.sh\"",
-            "timeout": 15
           }
         ]
       }
@@ -229,7 +224,8 @@
     "architecture-manager@oeid-claude-plugins": true,
     "code-quality-manager@oeid-claude-plugins": true,
     "knowledge-manager@oeid-claude-plugins": true,
-    "development-manager@oeid-claude-plugins": true
+    "development-manager@oeid-claude-plugins": true,
+    "guardrail-manager@oeid-claude-plugins": true
   },
   "plansDirectory": ".claude/plans"
 }
