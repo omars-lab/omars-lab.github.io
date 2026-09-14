@@ -1,22 +1,48 @@
 #!/usr/bin/env bash
-# Secret-leak guard. Scans STAGED changes with gitleaks before each commit.
+# Secret-leak guard. Two staged-change checks before every commit:
+#   1. gitleaks       — no secret-shaped string enters history
+#   2. check-env-encrypted — no committed .env value is plaintext (dotenvx sidecar)
 # Enable once with:  git config core.hooksPath .githooks   (or: make install-hooks)
+#
+# Fail-closed, per the repo's secure-by-default tenet: a missing gitleaks blocks
+# the commit rather than waving it through. Bypass one commit (both checks) with:
+#   GITLEAKS_SKIP=1 git commit ...
 set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 CONFIG="$REPO_ROOT/.gitleaks.toml"
 
-if ! command -v gitleaks >/dev/null 2>&1; then
-  echo "⚠️  gitleaks not installed — skipping secret scan."
-  echo "    Install:  brew install gitleaks"
-  exit 0
+if [ "${GITLEAKS_SKIP:-}" = "1" ]; then
+  echo "pre-commit: secret scans skipped by GITLEAKS_SKIP=1" >&2
+else
+  # 1 — gitleaks. Fail closed: no gitleaks, no commit.
+  if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "❌ COMMIT BLOCKED: gitleaks not installed — brew install gitleaks" >&2
+    exit 1
+  fi
+  echo "🔎 gitleaks: scanning staged changes for secrets…"
+  if ! gitleaks protect --staged --redact --config "$CONFIG" --verbose; then
+    echo
+    echo "❌ COMMIT BLOCKED: a potential secret was found in your staged changes."
+    echo "   Remove it (or add a justified allowlist entry to .gitleaks.toml) and re-stage."
+    exit 1
+  fi
+  echo "✅ No secrets detected in staged changes."
+
+  # 2 — dotenvx sidecar: any committed .env-shaped file must be fully encrypted.
+  # The .gitignore un-ignores .env.encrypted / .env.*.encrypted; this is what
+  # stands between those exceptions and a plaintext credential slipping through.
+  echo "🔐 check-env-encrypted: verifying committed env values are encrypted…"
+  if ! sh "$REPO_ROOT/scripts/check-env-encrypted.sh" --staged; then
+    echo
+    echo "❌ COMMIT BLOCKED: a staged .env file holds a plaintext value (or the private key)."
+    echo "   Encrypt:  make env-encrypt     Verify:  make env-check"
+    exit 1
+  fi
 fi
 
-echo "🔎 gitleaks: scanning staged changes for secrets…"
-if ! gitleaks protect --staged --redact --config "$CONFIG" --verbose; then
-  echo
-  echo "❌ COMMIT BLOCKED: a potential secret was found in your staged changes."
-  echo "   Remove it (or add a justified allowlist entry to .gitleaks.toml) and re-stage."
-  exit 1
+# Run whatever hook was here before this one was installed.
+dir=$(dirname "$0")
+if [ -x "$dir/pre-commit.local" ]; then
+  "$dir/pre-commit.local" "$@" || exit $?
 fi
-echo "✅ No secrets detected in staged changes."

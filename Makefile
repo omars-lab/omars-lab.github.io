@@ -27,7 +27,7 @@
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-assets generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment
+.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-assets generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment env-encrypt env-bootstrap env-check env-status env-keys-pull env-keys-push env-keys-status test-env
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -652,3 +652,42 @@ open-e2e-report: ## Open the E2E test HTML report in the default browser
 		echo "E2E test report not found. Run 'yarn test:e2e' first."; \
 		exit 1; \
 	fi
+
+# === Secrets at rest (dotenvx sidecar — machinery ported from bikar) ===
+# .env            plaintext, gitignored  <- Makefile targets read this (grep|cut)
+# .env.encrypted  ciphertext, COMMITTED  <- what a new machine clones
+# .env.keys       private key, gitignored <- lives in LastPass (dotenvx/omars-lab.github.io)
+# New machine:  make env-keys-pull && make env-bootstrap
+# After editing .env:  make env-encrypt   (else the committed sidecar goes stale)
+
+env-encrypt: ## Regenerate .env.encrypted from .env (run after editing .env)
+	@bash scripts/env-sync.sh encrypt
+
+env-bootstrap: ## New machine: reconstruct .env from the committed .env.encrypted
+	@bash scripts/env-sync.sh bootstrap
+
+env-check: ## Verify no plaintext secret is committed, and .env matches its sidecar
+	@bash scripts/check-env-encrypted.sh
+	@if [ -f .env.keys ]; then \
+		bash scripts/env-sync.sh check; \
+	else \
+		echo "  SKIPPED drift check: no .env.keys on this machine (make env-keys-pull)"; \
+	fi
+
+env-status: ## Show whether .env, its sidecar, and the LastPass key all agree
+	@bash scripts/env-keys.sh status || true
+	@bash scripts/check-env-encrypted.sh || true
+	@[ -f .env.keys ] && bash scripts/env-sync.sh check || true
+
+env-keys-pull: ## Fetch .env.keys from LastPass (dotenvx/omars-lab.github.io) — do this first
+	@bash scripts/env-keys.sh pull
+
+env-keys-push: ## Store this machine's .env.keys in LastPass as dotenvx/omars-lab.github.io
+	@bash scripts/env-keys.sh push
+
+env-keys-status: ## Compare the local .env.keys fingerprint against the vault's
+	@bash scripts/env-keys.sh status
+
+test-env: ## Test the secret gates and drift detection (no network, no secrets)
+	@bash scripts/check-env-encrypted.test.sh
+	@bash scripts/env-sync.test.sh
