@@ -8,6 +8,12 @@ bytesofpurpose-blog/static/storybook/
 .env
 .env.*
 !.env.example
+# dotenvx secrets-at-rest: the plaintext .env stays gitignored above; the
+# ENCRYPTED sidecar is committed (every value is `encrypted:…`, unreadable
+# without .env.keys, which stays gitignored and lives in LastPass). The
+# check-env-encrypted gate guards these exceptions against a plaintext slip.
+!.env.encrypted
+!.env.*.encrypted
 *.token
 cloudflared/*.json
 

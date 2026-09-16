@@ -27,6 +27,20 @@ secret or gated content, add the fail-closed guard in the SAME change and prove 
 (a planted-leak test that exits non-zero). Owning skills: `deploy-site`,
 `manage-infrastructure`, `validate-deployment`.
 
+**Secrets at rest (dotenvx sidecar).** The plaintext `.env` stays gitignored and is
+still the only thing every consumer reads. Alongside it a committed
+`.env.encrypted` sidecar holds each value as `encrypted:…` — cloneable, useless
+without the private `.env.keys`, which stays gitignored and lives in LastPass under
+`dotenvx/omars-lab.github.io` (entry keyed off the origin remote). New machine:
+`make env-keys-pull && make env-bootstrap`. After editing `.env`:
+`make env-encrypt` (regenerates the sidecar and asserts zero drift). The
+pre-commit hook runs `scripts/check-env-encrypted.sh --staged`, which BLOCKS a
+commit that stages a plaintext value or the private key — this is the fail-closed
+guard on the `.gitignore` `!.env.encrypted` exception. Gotcha, and why every
+dotenvx call goes through `dotenvx_isolated`: dotenvx overlays `process.env` on
+both encrypt and decrypt, so a colliding exported shell var silently corrupts a
+value — see [`docs/issues/dotenvx-processenv-overlay.md`](docs/issues/dotenvx-processenv-overlay.md).
+
 The same tenet governs **private-source content** — material read from the private **personalbook**
 knowledge base. A role imported into `/journey/roles/` must carry only its publishable half, and the
 private half (the intent triad `obligations`/`desires`/`motivations`, dated personal todos,
