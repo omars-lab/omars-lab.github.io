@@ -31,7 +31,24 @@
 set -uo pipefail
 
 CMD="${1:-}"
-DOTENVX="npx -y @dotenvx/dotenvx"
+# Pinned, deliberately. `npx -y @dotenvx/dotenvx` (unpinned) resolves whatever npx
+# has cached, and dotenvx 1.x -> 2.x changed where the private key lives: v1 wrote
+# .env.keys on `encrypt`; v2 mints the key into the macOS login Keychain instead and
+# writes no file. An unpinned bump therefore silently breaks the LastPass-portability
+# model (nothing to push to the vault, nothing for a second machine to pull) with no
+# error. Pin so the behavior this script depends on cannot drift under our feet.
+DOTENVX="npx -y @dotenvx/dotenvx@2.28.0"
+
+# --no-native disables dotenvx v2's OS-secret-store integration (the macOS Keychain,
+# 1Password, Bitwarden). With it, `encrypt` writes the private key back to .env.keys
+# (v1 behavior) and `decrypt` reads the key ONLY from .env.keys / the environment —
+# never the Keychain. That is exactly the model these scripts and LastPass are built
+# on: .env.keys (backed up in LastPass) is the single source of truth for the key.
+# Without it, `encrypt` would leave the minted key stranded in this machine's Keychain
+# (invisible to LastPass, unavailable to the next machine), and `decrypt` would fall
+# back to the Keychain — silently defeating the "no key = fail" guard that check and
+# bootstrap rely on. Passed at every call site as a subcommand option.
+NO_NATIVE="--no-native"
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
@@ -110,7 +127,7 @@ cmd_encrypt() {
     # has no use for .env's prose. check-env-encrypted also blocks a commented
     # plaintext as a backstop, but the leak is best removed at the source.
     { [ -n "$header" ] && echo "$header"; grep -vE '^[[:space:]]*(#|$)' "$f"; } > "$sidecar"
-    dotenvx_isolated "$f" encrypt --no-armor -f "$sidecar" >/dev/null 2>&1 \
+    dotenvx_isolated "$f" encrypt $NO_NATIVE --no-armor -f "$sidecar" >/dev/null 2>&1 \
       || die "dotenvx encrypt failed on $sidecar"
 
     # Encrypting and not checking the result is how a plaintext value gets
@@ -145,7 +162,7 @@ cmd_check() {
       continue
     fi
     local decrypted
-    decrypted=$(dotenvx_isolated "$sidecar" decrypt --stdout -f "$sidecar" 2>/dev/null) || {
+    decrypted=$(dotenvx_isolated "$sidecar" decrypt $NO_NATIVE --stdout -f "$sidecar" 2>/dev/null) || {
       echo "  FAIL       $sidecar — cannot decrypt. Is .env.keys present? (make env-keys-pull)" >&2
       rc=1; continue
     }
@@ -227,7 +244,7 @@ cmd_bootstrap() {
     # Drop dotenvx's banner and public-key line: this file is the plaintext one
     # that the Makefile targets consume with `grep -E '^VAR=' .env | cut`, and a
     # DOTENV_PUBLIC_KEY line would just be dead weight in it.
-    dotenvx_isolated "$sidecar" decrypt --stdout -f "$sidecar" 2>/dev/null \
+    dotenvx_isolated "$sidecar" decrypt $NO_NATIVE --stdout -f "$sidecar" 2>/dev/null \
       | grep -vE '^#/|^DOTENV_PUBLIC_KEY[A-Z_]*=' > "$f" \
       || die "could not decrypt $sidecar (is .env.keys the right key?)"
     [ -s "$f" ] || { rm -f "$f"; die "decrypting $sidecar produced an empty $f"; }
