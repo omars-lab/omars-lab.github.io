@@ -1,0 +1,37 @@
+# How this repo shows on the local launcher (~/Workspace/git/hubs).
+# Check it with `uv run ~/Workspace/git/hubs/launcher/check.py --repo .`
+
+runners:
+  - id: blog
+    port: 7114                    # the port plan's; `make start PORT=...` picks another for one run
+    health: /
+    start: make start             # builds blog-ui and storybook first, so it takes a while
+    host_name: blog
+
+hubs:
+  - id: blog
+    name: Bytes of Purpose blog
+    description: Posts, docs, project and technique pages; premium docs unlock after LinkedIn sign-in.
+    visibility: public
+    use: published
+    fallback: local
+    local: { runner: blog }
+    published:
+      url: https://blog.bytesofpurpose.com/
+      host: github-pages
+      sign_in: staticrypt         # premium pages only; the rest is open
+      deploy: make deploy
+
+apis:
+  - id: blog-access-gate
+    name: Blog sign-in gate
+    description: /api/me (who is signed in), /api/unlock-key (the premium passphrase), /api/redirect (the sign-in bounce).
+    visibility: public
+    use: published
+    published:
+      url: https://blog.bytesofpurpose.com/api/me
+      host: cloudflare-worker
+      sign_in: cloudflare-access
+      deploy: cd workers/access-gate && npx wrangler deploy   # `make gate-deploy` in Phase 2
+    auth: cloudflare-access
+    auth_note: Each new path must be added to the worker's routes and to the Access app, or it 404s at GitHub Pages.
