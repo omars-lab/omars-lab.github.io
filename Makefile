@@ -282,7 +282,9 @@ clean: ## Clean build artifacts and dependencies
 	( cd ${SITEROOT} && yarn clear )
 	( cd ${SITEROOT} && rm -rf node_modules yarn.lock package-lock.json )
 
-PORT ?= 3000
+# 7114 is the blog's port in the hubs port plan (~/Workspace/git/hubs/design.md), so it no longer
+# shares 3000 with portfolio and sacred-patterns. The Playwright dev project still boots its own :3000.
+PORT ?= 7114
 start: build-blog-ui build-storybook ## Start the development server (use PORT=8080 to specify a custom port)
 	# Starts the development server, includes drafts and monitors and auto deploys updates
 	# Builds Storybook first so it's available at /storybook/
@@ -307,7 +309,6 @@ start: build-blog-ui build-storybook ## Start the development server (use PORT=8
 	if [ -z "$$SP" ]; then echo "⚠️  STATICRYPT_PASSPHRASE not in .env — premium will render in CLEAR in dev (no gate)."; fi; \
 	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP CF_ACCESS_CLIENT_ID=$$CID CF_ACCESS_CLIENT_SECRET=$$CSEC yarn start --port ${PORT} )
 
-PORT ?= 3000
 start-prod: build-blog-ui ## Start the development server with NODE_ENV=production
 	# Starts the development server in production mode, includes drafts and monitors and auto deploys updates
 	# Rebuilds @omars-lab/blog-ui first (gitignored dist/, consumed built) so it isn't stale.

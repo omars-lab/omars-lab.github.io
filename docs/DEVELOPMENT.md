@@ -64,7 +64,7 @@ make start-prod
 ```
 
 The development server will:
-- Start Docusaurus on `http://localhost:3000` (or your specified port)
+- Start Docusaurus on `http://localhost:7114` (or your specified port; plain `yarn start` still uses 3000)
 - Automatically build Storybook to `static/storybook/`
 - Enable hot-reloading for changes
 - Serve Storybook at `/storybook/` route
