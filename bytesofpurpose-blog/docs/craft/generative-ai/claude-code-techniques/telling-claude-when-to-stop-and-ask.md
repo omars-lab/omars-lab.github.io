@@ -1,7 +1,7 @@
 ---
 title: 'Telling Claude When to Stop and Ask'
 description: 'Tell Claude Code when to stop and ask you, and how to ask, so your decisions come back as clear choices instead of getting lost in long replies.'
-slug: /generative-ai/claude-code/telling-claude-when-to-stop-and-ask
+slug: /generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask
 kind: technique
 authors: [oeid]
 tags: [claude-code, ai, productivity, decision-making]
@@ -97,7 +97,7 @@ I didn't start with a rule. I started by saying it, over and over, until it was 
 
 ## Related
 
-- [Claude Code Techniques](/craft/generative-ai/claude-code): the other pages in this set.
+- [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
 - [How I Use GenAI](/craft/generative-ai/my-genai-workflow/2025-09-30-how-i-use-genai): my wider
   workflow with AI tools.
 - This page goes with a post in my "How I Used Claude Today" series on LinkedIn.
