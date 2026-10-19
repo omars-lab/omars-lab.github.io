@@ -15,10 +15,14 @@ questions:
 
 ## What annoyed me
 
-Claude Code kept asking me what to do in the middle of its replies. I'd be deep in a task, and a
-long paragraph would end with "Do you want me to push these, or hold them for now?" I'd type a quick
-answer and move on. A week later I couldn't find what I had decided, or why. The question was
-somewhere in a long chat, written as prose, mixed in with everything else.
+Claude Code kept asking me what to do in the middle of its replies, and never the right amount.
+Some days it asked about everything, down to things it could have just picked. Other days it went
+ahead on calls I wanted a say in.
+
+And when it did ask, the question was buried. I'd be deep in a task, and a long paragraph would end
+with "Do you want me to push these, or hold them for now?" I'd type a quick answer and move on. A
+week later I couldn't find what I had decided, or why. The question was somewhere in a long chat,
+written as prose, mixed in with everything else.
 
 Claude Code has a tool made for this. It stops, shows you a few options, and waits for you to pick
 one. Left alone, Claude mostly reaches for it when it is stuck. The rest of the time it asks in
