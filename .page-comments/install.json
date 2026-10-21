@@ -1,0 +1,37 @@
+{
+  "v": 1,
+  "plugin": "development-manager",
+  "changes": [
+    {
+      "kind": "make",
+      "file": "Makefile",
+      "begin": "# page-comments:begin",
+      "end": "# page-comments:end",
+      "target": "comments"
+    },
+    {
+      "kind": "settings",
+      "file": ".claude/settings.json",
+      "key": "enabledPlugins.development-manager@oeid-claude-plugins",
+      "pluginId": "development-manager@oeid-claude-plugins",
+      "createdDir": false,
+      "createdFile": false,
+      "createdObject": false,
+      "keyWasThere": false
+    },
+    {
+      "kind": "claude-md",
+      "file": "CLAUDE.md",
+      "begin": "<!-- page-comments:begin -->",
+      "end": "<!-- page-comments:end -->",
+      "createdFile": false
+    },
+    {
+      "kind": "post-commit-hook",
+      "file": "../omars-lab.github.io/.git/hooks/post-commit",
+      "prev": "../omars-lab.github.io/.git/hooks/post-commit.page-comments-prev",
+      "hadPrevious": false
+    }
+  ],
+  "updated": "2026-10-21T14:08:56Z"
+}

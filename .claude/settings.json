@@ -228,7 +228,8 @@
     "code-repository-manager@oeid-claude-plugins": true,
     "architecture-manager@oeid-claude-plugins": true,
     "code-quality-manager@oeid-claude-plugins": true,
-    "knowledge-manager@oeid-claude-plugins": true
+    "knowledge-manager@oeid-claude-plugins": true,
+    "development-manager@oeid-claude-plugins": true
   },
   "plansDirectory": ".claude/plans"
 }

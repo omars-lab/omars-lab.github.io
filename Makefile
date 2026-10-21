@@ -692,3 +692,9 @@ env-keys-status: ## Compare the local .env.keys fingerprint against the vault's
 test-env: ## Test the secret gates and drift detection (no network, no secrets)
 	@bash scripts/check-env-encrypted.test.sh
 	@bash scripts/env-sync.test.sh
+
+# page-comments:begin
+.PHONY: comments
+comments:  ## Serve the pages with the comment button (development-manager)
+	@.page-comments/run serve --target http://127.0.0.1:4700 --port 8767
+# page-comments:end
