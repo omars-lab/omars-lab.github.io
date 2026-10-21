@@ -3,6 +3,8 @@ title: "Saving the Yeses in Claude's Memory"
 description: 'Claude Code only wrote down what it got wrong, so the things it got right had to be found again. Now a yes from me is saved like a no, with the reason.'
 slug: /generative-ai/claude-code-techniques/saving-the-yeses-in-claude-memory
 kind: technique
+usefulness: 4 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
+sidebar_position: 3
 authors: [oeid]
 tags: [claude-code, ai, productivity, memory]
 image: /img/claude-code/saving-the-yeses-in-claude-memory.png
