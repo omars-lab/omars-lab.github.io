@@ -140,7 +140,7 @@ in, unstamped, waiting for a click.
 
 The rule came out of a few short messages before it was ever code:
 
-- "propose, create relevant csvx, reviewid in ui" (August 2026)
+- "propose, create relevant csvs, reviewed in ui" (August 2026)
 - "the choice to publish should be mine whether buttons in ui or ask question in skill" (August 2026)
 - "we should have a different button - queue for publishgin vs a red publish as exception" (August 2026)
 

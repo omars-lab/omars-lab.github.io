@@ -138,7 +138,7 @@ a documented format, so check the command still works after you update.
 
 I didn't start with a rule. I started by saying it, over and over, until it was worth writing down:
 
-- "use ask question tool to capture my decsiions" (August 2026)
+- "use ask question tool to capture my decisions" (August 2026)
 - "use ask question tool if input needed from me" (August 2026)
 - "... to use the ask question tool to understand my taste" (August 2026)
 

@@ -124,9 +124,9 @@ list of candidates is the useful part, even if you never write the posts.
 
 ## In my own words
 
-- "maybe one post gets broken into many general patters" (July 2026)
+- "maybe one post gets broken into many general patterns" (July 2026)
 - "can we start with a design post for general pattern and move later" (July 2026)
-- "there may be many patterns intetangeld" (July 2026)
+- "there may be many patterns intertangled" (July 2026)
 
 ## Related
 
