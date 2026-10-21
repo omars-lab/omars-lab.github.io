@@ -1423,6 +1423,8 @@ const rehypePremiumEncrypt = require('./plugins/rehype-premium-encrypt');
         prism: {
           theme: lightTheme,
           darkTheme: darkTheme,
+          // Languages the blog uses that prism-react-renderer does not bundle by default
+          additionalLanguages: ['bash', 'sql', 'makefile'],
         },
         metadata: [
           {name: 'twitter:card', content: 'summary_large_image'},
