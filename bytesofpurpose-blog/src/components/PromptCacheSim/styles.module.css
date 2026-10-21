@@ -1,0 +1,335 @@
+/* Prompt cache widgets: a quiet card per widget, brand green for the 1-hour cache, a muted ink for
+   the 5-minute one, and words on every state so colour is never the only signal. */
+
+.widget {
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--radius-lg);
+  background: var(--ifm-background-surface-color);
+  font-size: var(--text-body-md);
+}
+
+.title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  font-size: var(--text-h6);
+  margin-bottom: var(--space-3);
+  color: var(--ifm-heading-color);
+}
+
+.controls {
+  display: grid;
+  gap: var(--space-2) var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin: var(--space-3) 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.field label {
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+/* A 44px-tall hit area for thumbs on a phone. */
+.range {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--ifm-color-primary);
+  margin: 0;
+}
+
+.select {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--ifm-color-emphasis-400);
+  border-radius: var(--radius-sm);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font: inherit;
+}
+
+.readout {
+  margin: var(--space-3) 0;
+}
+
+.note {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+
+.muted {
+  color: var(--ifm-color-content-secondary);
+  font-size: var(--text-body-sm);
+}
+
+/* ---- context bar */
+
+.bar {
+  display: flex;
+  height: 2.5rem;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--ifm-color-emphasis-200);
+}
+
+.layer {
+  height: 100%;
+  transition: width 150ms ease-out;
+}
+
+.layerSystem {
+  background: #2f5d47;
+}
+.layerProject {
+  background: #5a9c7c;
+}
+.layerPast {
+  background: #9ccdb3;
+}
+.layerNew {
+  background: #e3a33b;
+}
+
+.legend {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  font-size: var(--text-body-sm);
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 2px;
+  margin-right: var(--space-1);
+  vertical-align: -1px;
+}
+
+/* ---- chat timeline */
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.preset {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ifm-color-emphasis-400);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+}
+
+.preset[aria-pressed='true'] {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary-contrast-background);
+  font-weight: 600;
+}
+
+.preset:focus-visible,
+.select:focus-visible,
+.range:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.turn {
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.turnHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.turnNo {
+  font-weight: 600;
+  min-width: 4.5rem;
+}
+
+.gapPick {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.15rem var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+}
+
+.chipTtl {
+  font-weight: 600;
+}
+
+.chipCost {
+  font-family: var(--font-mono);
+}
+
+.chipWarm {
+  background: var(--ifm-color-primary-contrast-background);
+  border-color: var(--ifm-color-primary);
+}
+
+.chipCold {
+  background: transparent;
+  border-color: #c2410c;
+  border-style: dashed;
+}
+
+.chipFirst {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+/* ---- totals */
+
+.totals {
+  margin-top: var(--space-4);
+}
+
+.totalRow {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, auto) 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  font-size: var(--text-body-sm);
+}
+
+.totalTrack {
+  height: 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--ifm-color-emphasis-200);
+  overflow: hidden;
+}
+
+.totalFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 150ms ease-out;
+}
+
+.fillShort {
+  background: var(--ifm-color-emphasis-600);
+}
+
+.fillLong {
+  background: var(--ifm-color-primary);
+}
+
+.totalValue {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.share {
+  margin-top: var(--space-3);
+}
+
+.shareTrack {
+  position: relative;
+  height: 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--ifm-color-emphasis-200);
+}
+
+.shareFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--ifm-color-primary);
+  transition: width 150ms ease-out;
+}
+
+/* The break-even line on the share bar. */
+.shareMark {
+  position: absolute;
+  top: -0.3rem;
+  bottom: -0.3rem;
+  width: 3px;
+  margin-left: -1px;
+  background: var(--ifm-font-color-base);
+}
+
+.verdict {
+  font-weight: 600;
+  margin: var(--space-2) 0 0;
+}
+
+@media (max-width: 480px) {
+  .widget {
+    padding: var(--space-3);
+  }
+  .totalRow {
+    grid-template-columns: 1fr auto;
+  }
+  .totalTrack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer,
+  .totalFill,
+  .shareFill {
+    transition: none;
+  }
+}
+
+[data-theme='dark'] .chipCold {
+  border-color: #fb923c;
+}
+
+[data-theme='dark'] .layerSystem {
+  background: #6fbf95;
+}
