@@ -3,6 +3,8 @@ title: "A Skill That Can't Approve Its Own Work"
 description: 'Claude Code offered to sort my chats into share and keep private on its own. Now the skill can only suggest, and the code stops it approving anything.'
 slug: /generative-ai/claude-code-techniques/a-skill-that-cannot-approve-its-own-work
 kind: technique
+usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
+sidebar_position: 4
 authors: [oeid]
 tags: [claude-code, ai, productivity, safety]
 image: /img/claude-code/a-skill-that-cannot-approve-its-own-work.png

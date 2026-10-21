@@ -3,6 +3,8 @@ title: 'Telling Claude When to Stop and Ask'
 description: 'Claude Code kept asking me what to do in the middle of long replies. Now every question goes through its question tool, and a one-line script pulls every decision back out of the session log.'
 slug: /generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask
 kind: technique
+usefulness: 5 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
+sidebar_position: 1
 authors: [oeid]
 tags: [claude-code, ai, productivity, decision-making]
 image: /img/claude-code/telling-claude-when-to-stop-and-ask.png
