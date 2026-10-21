@@ -1,0 +1,234 @@
+---
+title: 'Picking the Prompt Cache Time Limit'
+description: 'The prompt cache can live 5 minutes or an hour. I measured my own pauses to see which one fits, and built three calculators so you can try yours.'
+slug: /generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit
+kind: technique
+authors: [oeid]
+tags: [claude-code, ai, productivity, cost]
+image: /img/claude-code/picking-the-prompt-cache-time-limit.png
+draft: true
+questions:
+  - Should I use the 5-minute or the 1-hour prompt cache in Claude Code?
+  - Why does the first message after a break cost so much more?
+  - How do I set the prompt cache time limit in Claude Code?
+  - How do I measure the pauses between my Claude Code turns?
+---
+
+import {ContextSim, ChatSim, CostSim} from '@site/src/components/PromptCacheSim';
+
+## What annoyed me
+
+I read [a thread on r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
+arguing that anyone who pauses 15 to 45 minutes between turns should switch the prompt cache from
+its 5-minute default to 1 hour. The reasoning was neat: the 1-hour cache costs more to fill, but
+one return after a coffee break pays that back. I pause like that all day. I step away while a long
+task runs, I sit in a meeting, I keep two or three sessions open and hop between them.
+
+But I had no idea what my pauses really looked like, or which limit Claude Code was even using for
+me. I was about to change a setting on the strength of a hunch.
+
+## What I did about it
+
+I read the docs to find out which limit applies when, then had Claude measure every pause in my own
+session logs and work out what each limit would have cost. The answer surprised me: for the way I
+work, it is nearly a wash. Then I built the three calculators below so you can try your own pattern
+before you change anything.
+
+**The technique:** pick the prompt cache's time limit to fit how you work, and measure your pauses
+before you pick.
+
+## What the cache holds
+
+Every request Claude Code sends starts with the same block of text: the system prompt and tool
+definitions, then your `CLAUDE.md`, memory and rules, then the conversation so far. The
+[prompt cache](https://code.claude.com/docs/en/prompt-caching) keeps that block on Anthropic's side,
+so the next request can read it back at a small fraction of the input price instead of paying full
+price to send it again. Each turn adds to the end, so the block grows all session.
+
+<ContextSim />
+
+If the cache is still there, a turn pays a small read price for everything before it and the
+write price only for what it adds. If the cache has expired, the whole block is written again at
+full write price. In a long session that block is easily over 100k tokens.
+
+## The two time limits
+
+The cache lives 5 minutes by default. Every time a request reads it, the clock restarts, so a fast
+back and forth keeps it warm for free. You can ask for 1 hour instead. The catch is the price of
+writing:
+
+| Model | Input | Write, 5-minute cache | Write, 1-hour cache | Read from cache |
+|---|---|---|---|---|
+| Opus 5.5 | $4 | $5 | $8 | $0.20 |
+| Sonnet 5.5 | $2 | $2.50 | $4 | $0.10 |
+| Fable 5.1 | $10 | $12.50 | $20 | $0.25 |
+| Opus 4.5 to 5 | $5 | $6.25 | $10 | $0.50 |
+| Sonnet 4.5 / 4.6 | $3 | $3.75 | $6 | $0.30 |
+| Haiku 4.5 | $1 | $1.25 | $2 | $0.10 |
+
+*Dollars per million tokens, from [Anthropic's pricing page](https://platform.claude.com/docs/en/about-claude/pricing), October 2026.*
+
+A 5-minute write costs 1.25x the input price and a 1-hour write costs 2x, on every model. So the
+1-hour cache costs an extra 0.75x on every token it writes. It earns that back when you return after
+a pause of 5 to 60 minutes: the 5-minute cache is gone and would write the whole block again at
+1.25x, while the 1-hour cache reads it back. On most models a read is 0.1x, so that return saves
+1.15x. On Opus 5.5 and Sonnet 5.5 reads are 0.05x and on Fable 5.1 they are 0.025x, so a return
+saves even a bit more. One return after a 5 to 60 minute pause covers the extra on the same tokens.
+Past an hour, both caches are gone and the 1-hour one has only cost you more.
+
+## Try a day of pauses
+
+Pick an example day, or set the pause before each turn yourself.
+
+<ChatSim />
+
+## What a whole session costs
+
+The rule above is per token, and a session keeps adding tokens. Every turn pays the 0.75x extra on
+what it adds, and only the turns after a 5 to 60 minute pause get the saving back. That gives one
+number to watch: the tokens read back after those pauses, as a share of everything the 1-hour cache
+writes. Above about 63% (65% on older models), 1 hour wins. Below it, 5 minutes wins.
+
+<CostSim />
+
+With the starting settings (Opus 5.5, a 22k start, 8k per turn, 30 turns, one 20-minute break at
+turn 15), the break re-reads 54% of what gets written and the 5-minute cache is slightly cheaper.
+Move the break later, or add a second one, and 1 hour wins: a return late in a long session
+re-reads almost everything written before it. Make the breaks longer than an hour and 5 minutes
+always wins.
+
+## What my own logs said
+
+*Measured on October 21, 2026.*
+
+I had Claude write a small script that reads my Claude Code session logs (personal projects only),
+sorts every request by time and sorts the pause before each one into three groups: up to 5 minutes,
+5 to 60 minutes, and over an hour. It adds up what was written to the cache and read back, and works
+out what the same requests would have cost with a 5-minute cache. Only totals come out.
+
+**First surprise: I was already on 1 hour.** On a Claude subscription, Claude Code gives the main
+conversation a 1-hour cache, and subagents and other helpers get 5 minutes, apart from a few
+helper requests Anthropic's servers control, which get 1 hour. My logs show exactly that split: 840 million tokens written at 1 hour in my main conversations against 2.6 million at
+5 minutes, and the reverse for subagents (741 million at 5 minutes, 1.9 million at 1 hour).
+
+**Second surprise: I hardly ever pause.** Across 297 sessions and 215,063 requests, 98% came within
+5 minutes of the one before. Most requests are Claude itself working through a task: read a file,
+run a command, read the result. My coffee breaks are a tiny share of the requests, though each one
+re-reads a big block (153k tokens on average).
+
+| Pause before a request | All time | Last 30 days |
+|---|---|---|
+| Up to 5 minutes | 210,179 (98%) | 52,945 (98%) |
+| 5 to 60 minutes | 3,385 (1.6%) | 948 (1.8%) |
+| Over an hour | 1,202 (0.6%) | 191 (0.4%) |
+
+The 1-hour cache did its job on those middle pauses: after a 5 to 60 minute pause, 92% of the
+prompt still came from the cache. After pauses over an hour, only 13% did (the shared system
+prompt, kept warm by my other open sessions).
+
+**The result: about even.** All time, a 5-minute cache on my main conversations would have saved
+$3,127 on cheaper writes and cost $2,648 in re-writes after those pauses. That makes the 1-hour
+cache $480 dearer, 2% of $25,479. In the last 30 days it went the other way: $42 cheaper, 1% of
+$3,326. The share from the calculator above tells the same story: tokens read back after a 5 to
+60 minute pause came to 57% of what was written all time and 68% in the last 30 days, either side
+of the line. These are list prices for a subscription I don't pay per token for, so read them as a
+measure of the work, not a bill.
+
+So for me, the default is fine and I'm leaving it. The useful part was finding out where my money
+actually goes: almost all of it is fast back and forth inside a task, where both limits behave the
+same.
+
+## Set it up
+
+**Check which limit you're on.** In Claude Code 2.1.251 or later, `/usage` shows a "Prompt cache
+(main)" line with your hit ratio, how many times the cache was missed, and whether it is still warm.
+For which limit you're on, send one message and look at the usage:
+
+```bash
+claude -p "hello" --output-format json
+# look for usage.cache_creation.ephemeral_1h_input_tokens and ephemeral_5m_input_tokens
+```
+
+**Which limit applies by default** ([Claude Code docs](https://code.claude.com/docs/en/prompt-caching)):
+
+- Main conversation on a Claude subscription, within your plan: 1 hour.
+- Main conversation on an API key, a cloud provider, or usage credits: 5 minutes.
+- Subagents, compaction and other helpers: 5 minutes. On a subscription, a few helper requests
+  that Anthropic's servers control get 1 hour.
+
+**Change it** in `~/.claude/settings.json` (Claude Code 2.1.242 or later):
+
+```json
+{
+  "promptCacheTtl": "1h",
+  "subagentPromptCacheTtl": "5m"
+}
+```
+
+or for one shell with `CLAUDE_CODE_PROMPT_CACHE_TTL=1h` and `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL=5m`.
+`FORCE_PROMPT_CACHING_5M=1` overrides everything. The full order is on the
+[prompt caching page](https://code.claude.com/docs/en/prompt-caching) and the keys are in the
+[settings reference](https://code.claude.com/docs/en/settings).
+
+**Calling the API yourself?** Ask for 1 hour on the block you cache:
+`"cache_control": {"type": "ephemeral", "ttl": "1h"}`. See
+[prompt caching in the API docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
+
+**Measure your own pauses.** Claude Code keeps each session as a `.jsonl` file under
+`~/.claude/projects/`. This counts the pause before every request, across all your sessions
+(it needs `jq`):
+
+```bash
+for f in ~/.claude/projects/*/*.jsonl; do
+  jq -rs '[.[] | select(.type == "assistant" and .message.usage)]
+    | unique_by(.message.id)
+    | map(.timestamp[:19] + "Z" | fromdateiso8601) | sort | .[]' "$f" 2>/dev/null |
+  awk 'NR > 1 { g = ($1 - p) / 60; if (g <= 5) a++; else if (g <= 60) b++; else c++ }
+       { p = $1 } END { print a + 0, b + 0, c + 0 }'
+done | awk '{ a += $1; b += $2; c += $3 }
+  END { printf "up to 5 min: %d\n5 to 60 min: %d\nover 60 min: %d\n", a, b, c }'
+```
+
+The log format isn't documented, so check it still works after an update. If the middle line is a
+real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
+
+## What it looks like
+
+<figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit.png" alt="A Claude Code session: I ask for a technique with simulations of the prompt cache time limit and its cost, and Claude answers with what my own logs show: 98% of requests come within 5 minutes, and the 1-hour cache came out about even" />
+</figure>
+
+I asked for this page, pasting in the Reddit reasoning. Before writing it, Claude went through my
+own logs. The numbers changed what the page says: I came in expecting "switch to 1 hour" and left
+with "measure first".
+
+## Why it works
+
+- **The cost follows your pauses, not the setting.** The same limit is a saving for one person and
+  a cost for another. Only your own pause pattern says which.
+- **A pause is cheap to measure.** Every request is already in your session logs with a time on it.
+- **The break-even is simple.** 1 hour costs 0.75x more on what it writes and saves about 1.15x on
+  each return after 5 to 60 minutes. If those returns are common next to how fast your
+  conversation grows, 1 hour wins.
+- **Subagents are a separate choice.** They work in fast bursts (99% of my subagent requests came
+  within 5 minutes of the last), which is why they default to 5 minutes.
+
+## In my own words
+
+- "i also want to make a new technique with interactive context simulation widgets, chat simulation, cost simulation" (October 2026)
+
+## Related
+
+- [Prompt caching in Claude Code](https://code.claude.com/docs/en/prompt-caching): which limit
+  applies when, and how to change it.
+- [The context window in Claude Code](https://code.claude.com/docs/en/context-window): what fills
+  the context and how it grows.
+- [Costs in Claude Code](https://code.claude.com/docs/en/costs): why usage climbs in a long
+  session.
+- [Prompt caching in the API](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+  and [pricing](https://platform.claude.com/docs/en/about-claude/pricing).
+- [The r/ClaudeAI thread](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
+  that started this. Its break-even reasoning holds; its 0.1x read price is out of date for Opus
+  5.5, Sonnet 5.5 and Fable 5.1, which read for less.
+- [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
+- This page goes with a post in my "How I Used Claude Today" series on LinkedIn.
