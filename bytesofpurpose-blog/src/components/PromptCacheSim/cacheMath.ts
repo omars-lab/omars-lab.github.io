@@ -40,11 +40,15 @@ export type Session = {
 export type TurnResult = {
   turn: number;
   gap: number;
+  /** Minutes since the first turn, when this turn is sent. */
+  elapsed: number;
   /** Tokens already in the prompt when this turn is sent. */
   prefix: number;
   warm: Record<Ttl, boolean>;
   /** Dollars this turn costs for its cached prompt, under each time limit. */
   cost: Record<Ttl, number>;
+  /** Dollars spent so far, this turn included, under each time limit. */
+  running: Record<Ttl, number>;
 };
 
 export type SessionResult = {
@@ -74,7 +78,9 @@ export function simulate(session: Session, model: ModelPrice): SessionResult {
   const total: Record<Ttl, number> = {'5m': 0, '1h': 0};
   let written1h = 0;
   let reReadAfterPause = 0;
+  let elapsed = 0;
   const turns: TurnResult[] = session.gaps.map((gap, i) => {
+    if (i > 0) elapsed += gap;
     const prefix = session.start + i * session.perTurn;
     const warm = {'5m': i > 0 && isWarm(gap, '5m'), '1h': i > 0 && isWarm(gap, '1h')};
     const cost = {'5m': 0, '1h': 0};
@@ -85,7 +91,7 @@ export function simulate(session: Session, model: ModelPrice): SessionResult {
     }
     written1h += (warm['1h'] ? 0 : prefix) + session.perTurn;
     if (warm['1h'] && !warm['5m']) reReadAfterPause += prefix;
-    return {turn: i + 1, gap, prefix, warm, cost};
+    return {turn: i + 1, gap, elapsed, prefix, warm, cost, running: {...total}};
   });
   return {turns, total, oneHourSaves: total['5m'] - total['1h'], written1h, reReadAfterPause};
 }

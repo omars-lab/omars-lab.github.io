@@ -56,6 +56,19 @@ describe('simulate', () => {
   });
 });
 
+describe('the clock and running totals', () => {
+  it('adds up the pauses and the costs turn by turn, ending at the totals', () => {
+    const r = simulate({start: 22_000, perTurn: 8_000, gaps: [0, 1, 10, 1, 20]}, opus55);
+    expect(r.turns.map((t) => t.elapsed)).toEqual([0, 1, 11, 12, 32]);
+    let sum5 = 0;
+    for (const t of r.turns) {
+      sum5 += t.cost['5m'];
+      expect(t.running['5m']).toBeCloseTo(sum5, 12);
+    }
+    expect(r.turns[r.turns.length - 1].running).toEqual(r.total);
+  });
+});
+
 describe('the break-even share', () => {
   it('decides the winner exactly: re-reads after a pause against everything written', () => {
     for (const every of [0, 3, 7, 10, 14, 15, 29]) {

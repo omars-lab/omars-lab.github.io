@@ -158,59 +158,84 @@
   outline-offset: 2px;
 }
 
-.timeline {
-  list-style: none;
-  padding: 0;
+/* The table scrolls sideways inside its own box on a phone, never the page. */
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 calc(-1 * var(--space-1));
+}
+
+.tableWrap:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* Docusaurus gives every markdown table zebra rows and borders; this one draws its own. */
+.tableWrap .chatTable {
+  display: table;
+  overflow: visible;
+  width: 100%;
   margin: 0;
-}
-
-.turn {
-  padding: var(--space-2) 0;
-  border-top: 1px solid var(--ifm-color-emphasis-200);
-}
-
-.turnHead {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
-}
-
-.turnNo {
-  font-weight: 600;
-  min-width: 4.5rem;
-}
-
-.gapPick {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
+  border-collapse: collapse;
   font-size: var(--text-body-sm);
-  color: var(--ifm-color-content-secondary);
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-2);
+.chatTable tr,
+.chatTable tr:nth-child(2n) {
+  background: none;
+  border: 0;
+}
+
+.chatTable th,
+.chatTable td {
+  border: 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.chatTable thead th {
+  border-top: 0;
+  font-weight: 600;
+  color: var(--ifm-color-content-secondary);
+  vertical-align: bottom;
+}
+
+.chatTable thead tr:first-child th[scope='colgroup'] {
+  color: var(--ifm-heading-color);
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+}
+
+.chatTable tbody th {
+  font-weight: 600;
+}
+
+.chatTable .select {
+  min-height: 36px;
+}
+
+/* A rule down the left of each time limit's pair of columns. */
+.side {
+  border-left: 1px solid var(--ifm-color-emphasis-300) !important;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cheaper {
+  font-weight: 700;
 }
 
 .chip {
   display: inline-block;
-  padding: 0.15rem var(--space-2);
+  padding: 0.05rem var(--space-2);
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   font-size: var(--text-body-sm);
   line-height: 1.5;
-}
-
-.chipTtl {
-  font-weight: 600;
-}
-
-.chipCost {
-  font-family: var(--font-mono);
 }
 
 .chipWarm {
@@ -303,6 +328,96 @@
 .verdict {
   font-weight: 600;
   margin: var(--space-2) 0 0;
+}
+
+/* On a phone each turn becomes a small card: turn, pause and clock on top, then the two time
+   limits side by side, this turn's cost above the running total. The table's DOM order is
+   turn, pause, clock, 5m this turn, 5m so far, 1h this turn, 1h so far. */
+@media (max-width: 600px) {
+  .tableWrap {
+    overflow: visible;
+    margin: 0;
+  }
+  .tableWrap .chatTable,
+  .chatTable thead,
+  .chatTable tbody {
+    display: block;
+  }
+  .chatTable tr {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+    column-gap: var(--space-2);
+    border-top: 1px solid var(--ifm-color-emphasis-200) !important;
+    padding: var(--space-2) 0;
+  }
+  .chatTable th,
+  .chatTable td {
+    border: 0 !important;
+    padding: var(--space-1) 0;
+  }
+  .chatTable thead tr:first-child {
+    border-top: 0 !important;
+  }
+  .chatTable thead tr:first-child th:nth-child(-n + 3),
+  .chatTable thead tr:nth-child(2) {
+    display: none;
+  }
+  .chatTable thead tr:first-child th:nth-child(4) {
+    grid-column: 1 / 4;
+  }
+  .chatTable thead tr:first-child th:nth-child(5) {
+    grid-column: 4 / 7;
+  }
+  .chatTable thead tr:first-child th[scope='colgroup'] {
+    border-bottom: 0 !important;
+  }
+  .chatTable tbody > tr > :nth-child(1) {
+    grid-column: 1 / 2;
+  }
+  .chatTable tbody > tr > :nth-child(1)::before {
+    content: 'Turn ';
+  }
+  .chatTable tbody > tr > :nth-child(2) {
+    grid-column: 2 / 5;
+  }
+  .chatTable tbody > tr > :nth-child(3) {
+    grid-column: 5 / 7;
+    text-align: right;
+  }
+  .chatTable tbody > tr > :nth-child(4) {
+    grid-column: 1 / 4;
+    grid-row: 2;
+  }
+  .chatTable tbody > tr > :nth-child(5) {
+    grid-column: 1 / 4;
+    grid-row: 3;
+  }
+  .chatTable tbody > tr > :nth-child(6) {
+    grid-column: 4 / 7;
+    grid-row: 2;
+  }
+  .chatTable tbody > tr > :nth-child(7) {
+    grid-column: 4 / 7;
+    grid-row: 3;
+  }
+  .chatTable tbody > tr > :nth-child(5)::before,
+  .chatTable tbody > tr > :nth-child(7)::before {
+    content: 'so far ';
+    font-family: var(--ifm-font-family-base);
+    font-weight: 400;
+    color: var(--ifm-color-content-secondary);
+  }
+  .chatTable thead tr:first-child th:nth-child(5),
+  .chatTable tbody > tr > :nth-child(6),
+  .chatTable tbody > tr > :nth-child(7) {
+    border-left: 1px solid var(--ifm-color-emphasis-300) !important;
+    padding-left: var(--space-2);
+  }
+  .chatTable thead tr:first-child th:nth-child(4),
+  .chatTable tbody > tr > :nth-child(4) {
+    border-left: 0 !important;
+  }
 }
 
 @media (max-width: 480px) {
