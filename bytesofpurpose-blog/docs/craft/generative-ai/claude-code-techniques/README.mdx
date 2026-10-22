@@ -31,11 +31,20 @@ Most useful to the most people first.
 - **[Saving the Yeses in Claude's Memory](/craft/generative-ai/claude-code-techniques/saving-the-yeses-in-claude-memory)**:
   have Claude write down what you confirmed, not only what you corrected, so the approaches that
   worked survive into the next session.
+- **[Sending Side-Quests to a Fork](/craft/generative-ai/claude-code-techniques/sending-side-quests-to-a-fork)**:
+  hand side work to a forked agent that already knows the conversation, so only a short report
+  comes back instead of every file it read.
 - **[A Skill That Can't Approve Its Own Work](/craft/generative-ai/claude-code-techniques/a-skill-that-cannot-approve-its-own-work)**:
   let a skill suggest, and make the code refuse when it tries to mark its own suggestion as
   approved, so a guess and a decision never look the same.
+- **[Sweeping Every Repo for Unpushed Work](/craft/generative-ai/claude-code-techniques/sweeping-every-repo-for-unpushed-work)**:
+  one skill finds every repo with work that isn't on GitHub, writes each commit message from the
+  diff, and scans for secrets before it pushes.
 - **[Pull Out the Patterns Before You Republish](/craft/generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish)**:
   before reusing a detailed write-up elsewhere, separate the patterns tangled inside it and give
   each one its own general post.
+- **[Diffing Regenerated Data by Key](/craft/generative-ai/claude-code-techniques/diffing-regenerated-data-by-key)**:
+  when a script rewrites a data file, compare the rows by id instead of reading a line diff, so
+  only the real changes show.
 
 *For: anyone using Claude Code day to day who wants it to work more like a careful colleague.*

@@ -4,7 +4,7 @@ description: 'Claude Code planned to turn one design write-up into one general p
 slug: /generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish
 kind: technique
 usefulness: 2 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 5
+sidebar_position: 7
 authors: [oeid]
 tags: [claude-code, ai, productivity, writing]
 image: /img/claude-code/pull-out-the-patterns-before-you-republish.png
