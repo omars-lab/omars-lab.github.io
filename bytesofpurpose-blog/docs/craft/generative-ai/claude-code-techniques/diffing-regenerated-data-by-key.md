@@ -4,7 +4,7 @@ description: 'git said 185 lines changed after Claude Code re-ran a script. Matc
 slug: /generative-ai/claude-code-techniques/diffing-regenerated-data-by-key
 kind: technique
 usefulness: 2 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 16
+sidebar_position: 17
 authors: [oeid]
 tags: [claude-code, ai, productivity, data, git]
 image: /img/claude-code/diffing-regenerated-data-by-key.png
