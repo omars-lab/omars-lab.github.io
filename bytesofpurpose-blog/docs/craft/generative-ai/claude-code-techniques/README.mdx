@@ -55,6 +55,12 @@ Most useful to the most people first.
 - **[Citing the Session, Not a Memory](/craft/generative-ai/claude-code-techniques/citing-the-session-not-a-memory)**:
   make Claude point at the exact line of a past session behind a claim, and add a check that
   refuses a citation whose words aren't on that line.
+- **[Testing a Hook in a Throwaway Session](/craft/generative-ai/claude-code-techniques/testing-a-hook-in-a-throwaway-session)**:
+  check a new hook with a one-line `claude -p` session and count what it wrote, instead of waiting
+  to see whether it fires in real work.
+- **[Running Every CI Check on Your Own Machine](/craft/generative-ai/claude-code-techniques/running-every-ci-check-on-your-own-machine)**:
+  give each check one make target that CI, the commit hook and you all run, so a red build is one
+  command away.
 - **[Pull Out the Patterns Before You Republish](/craft/generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish)**:
   before reusing a detailed write-up elsewhere, separate the patterns tangled inside it and give
   each one its own general post.
