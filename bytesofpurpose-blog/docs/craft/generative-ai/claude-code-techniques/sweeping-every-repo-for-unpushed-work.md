@@ -4,7 +4,7 @@ description: 'A Claude Code skill that finds every repo with work not on GitHub,
 slug: /generative-ai/claude-code-techniques/sweeping-every-repo-for-unpushed-work
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 8
+sidebar_position: 9
 authors: [oeid]
 tags: [claude-code, ai, productivity, git, skills]
 draft: true

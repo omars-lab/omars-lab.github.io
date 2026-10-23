@@ -4,7 +4,7 @@ description: 'When a Claude Code skill will not fire, read its description first
 slug: /generative-ai/claude-code-techniques/reading-the-docs-before-debugging-a-skill
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 9
+sidebar_position: 10
 authors: [oeid]
 tags: [claude-code, ai, productivity, skills, debugging]
 image: /img/claude-code/reading-the-docs-before-debugging-a-skill.png

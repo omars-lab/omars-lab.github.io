@@ -4,7 +4,7 @@ description: 'Claude Code writes plans that sound right. Before any code, I send
 slug: /generative-ai/claude-code-techniques/auditing-the-plan-before-you-build-it
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 10
+sidebar_position: 11
 authors: [oeid]
 tags: [claude-code, ai, productivity, planning, subagents]
 image: /img/claude-code/auditing-the-plan-before-you-build-it.png

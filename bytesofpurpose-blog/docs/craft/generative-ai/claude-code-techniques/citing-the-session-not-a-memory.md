@@ -4,7 +4,7 @@ description: 'Claude Code keeps every session as a log you can search. I make it
 slug: /generative-ai/claude-code-techniques/citing-the-session-not-a-memory
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 11
+sidebar_position: 12
 authors: [oeid]
 tags: [claude-code, ai, productivity, provenance]
 image: /img/claude-code/citing-the-session-not-a-memory.png
