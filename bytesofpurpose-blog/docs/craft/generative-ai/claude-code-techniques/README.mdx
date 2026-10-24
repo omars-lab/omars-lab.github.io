@@ -43,6 +43,9 @@ Most useful to the most people first.
 - **[Seeing the Options Before You Decide](/craft/generative-ai/claude-code-techniques/seeing-the-options-before-you-decide)**:
   have Claude draw a choice as a page of side-by-side options with measured costs before you pick,
   so the number that changes the decision turns up first.
+- **[What Not to Hand to Claude](/craft/generative-ai/claude-code-techniques/what-not-to-hand-to-claude)**:
+  hand Claude the searching, reading and drafting, but keep your curiosity and your calls, so the
+  decisions that set direction still come back to you.
 - **[A Skill That Can't Approve Its Own Work](/craft/generative-ai/claude-code-techniques/a-skill-that-cannot-approve-its-own-work)**:
   let a skill suggest, and make the code refuse when it tries to mark its own suggestion as
   approved, so a guess and a decision never look the same.
@@ -67,11 +70,20 @@ Most useful to the most people first.
 - **[Letting a Hook Remember the Check](/craft/generative-ai/claude-code-techniques/letting-a-hook-remember-the-check)**:
   a Stop hook that reads the session and reminds you only when it did the work that needs a check
   and never ran the check.
+- **[Commenting on Your Own Pages](/craft/generative-ai/claude-code-techniques/commenting-on-your-own-pages)**:
+  press C on a page Claude built, comment on the element you mean, and a watcher in the session
+  hears it, makes the fix and replies on the page with an after picture.
 - **[Pull Out the Patterns Before You Republish](/craft/generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish)**:
   before reusing a detailed write-up elsewhere, separate the patterns tangled inside it and give
   each one its own general post.
 - **[Diffing Regenerated Data by Key](/craft/generative-ai/claude-code-techniques/diffing-regenerated-data-by-key)**:
   when a script rewrites a data file, compare the rows by id instead of reading a line diff, so
   only the real changes show.
+- **[Reading the Agent's Thinking When Evals Fail](/craft/generative-ai/claude-code-techniques/reading-the-agents-thinking-when-evals-fail)**:
+  when an eval fails, have Claude read the agent's logged thinking in order and find the first
+  place it got confused, then fix that one spot and re-run.
+- **[Letting a Cheaper Model Watch Your Agent](/craft/generative-ai/claude-code-techniques/letting-a-cheaper-model-watch-your-agent)**:
+  one Haiku call per agent run sorts the runs into fine, went wrong, or worth an eval, so a person
+  reads only the bad ones.
 
 *For: anyone using Claude Code day to day who wants it to work more like a careful colleague.*
