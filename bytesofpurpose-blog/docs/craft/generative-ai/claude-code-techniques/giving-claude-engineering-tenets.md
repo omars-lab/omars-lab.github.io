@@ -97,9 +97,10 @@ The tenet was the fix for the category.
 This page is the introduction. Each tenet on my list gets its own page and post, with the setup
 and the session behind it. The first ones coming up:
 
-- Tell Claude when not to ask: only a one-way door is worth a question.
-- For research that decides what gets built, two independent researchers and then a checker.
-- Commit a checkpoint before Claude tries something new.
+- [Tell Claude when not to ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-not-to-ask):
+  only a choice that's hard to undo is worth a question.
+- [For research that decides what gets built, two independent researchers and then a checker](/craft/generative-ai/claude-code-techniques/two-researchers-then-a-checker).
+- [Commit a checkpoint before Claude tries something new](/craft/generative-ai/claude-code-techniques/committing-a-checkpoint-before-claude-tries-something-new).
 - Give a long-running script logs you can grep, with a line before and after every call that
   can hang.
 - When a problem forces a change of approach, write the pivot down in the repo.
