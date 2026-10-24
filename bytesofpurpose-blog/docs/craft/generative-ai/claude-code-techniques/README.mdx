@@ -34,6 +34,9 @@ Most useful to the most people first.
 - **[Picking the Prompt Cache Time Limit](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit)**:
   measure the pauses between your turns before choosing a 5-minute or 1-hour prompt cache, with
   three calculators to try your own pattern.
+- **[Saying What It Is, Not What It's Called](/craft/generative-ai/claude-code-techniques/saying-what-it-is-not-what-its-called)**:
+  have Claude write everything you read in plain words, saying what a thing is instead of its name
+  in the code, and put the rule at the top of your `CLAUDE.md` so it reads as a rule for everything.
 - **[Saving the Yeses in Claude's Memory](/craft/generative-ai/claude-code-techniques/saving-the-yeses-in-claude-memory)**:
   have Claude write down what you confirmed, not only what you corrected, so the approaches that
   worked survive into the next session.
@@ -46,6 +49,9 @@ Most useful to the most people first.
 - **[Writing a Continuation Prompt Before You Start Fresh](/craft/generative-ai/claude-code-techniques/writing-a-continuation-prompt-before-you-start-fresh)**:
   before a long session ends, have Claude write where things stand into a file in the repo, so a
   clean new session starts from it instead of from a summary.
+- **[Giving Claude a Standing Order for the Backlog](/craft/generative-ai/claude-code-techniques/giving-claude-a-standing-order-for-the-backlog)**:
+  tell Claude that "continue" means the most value for the effort first, said in one line, and
+  that closing easy items isn't progress while the important work waits.
 - **[Writing the Pivot Down in the Repo](/craft/generative-ai/claude-code-techniques/writing-the-pivot-down-in-the-repo)**:
   when a problem forces Claude to change approach, have it write up what was tried and why in a
   file in the repo, so the next session doesn't try the dead end again.
@@ -91,6 +97,9 @@ Most useful to the most people first.
 - **[Writing a Loop Prompt That Knows When to Stop](/craft/generative-ai/claude-code-techniques/writing-a-loop-prompt-that-knows-when-to-stop)**:
   before you run `/loop`, settle what counts, say what each round does, name the file that holds
   the progress, and say when to hand back, so the loop doesn't drift or lose its place.
+- **[Driving the App by Hand](/craft/generative-ai/claude-code-techniques/driving-the-app-by-hand)**:
+  when a step has no command, let Claude click through the app itself, with a screenshot before
+  and after every click, so a moved button or a pop-up on top is caught instead of pressed blind.
 - **[Running Every CI Check on Your Own Machine](/craft/generative-ai/claude-code-techniques/running-every-ci-check-on-your-own-machine)**:
   give each check one make target that CI, the commit hook and you all run, so a red build is one
   command away.
