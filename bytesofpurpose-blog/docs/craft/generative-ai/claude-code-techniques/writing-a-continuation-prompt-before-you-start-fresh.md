@@ -109,7 +109,7 @@ file in git.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/writing-a-continuation-prompt-before-you-start-fresh.png" alt="A Claude Code session: I say another technique is to do a continuation prompt. Earlier, closing out a long session, Claude notices the five open items are only in the design doc, not in the backlog where the next session will look, and adds them there." />
+  <img src="/img/claude-code/writing-a-continuation-prompt-before-you-start-fresh.png" alt="A Claude Code session: Claude says it will add a technique once it finishes pushing four posts, and I say another technique is to do a continuation prompt. Earlier, closing out a long session, Claude notices the five open items are only in the design doc, not in the backlog where the next session will look, and adds them there." />
 </figure>
 
 The picture pairs two moments from one long session, a week apart. The second is the habit in

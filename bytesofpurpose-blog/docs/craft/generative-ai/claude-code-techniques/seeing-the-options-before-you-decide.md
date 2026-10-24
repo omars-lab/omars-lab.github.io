@@ -61,7 +61,7 @@ anything hard to undo), don't lay the options out as paragraphs.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/seeing-the-options-before-you-decide.png" alt="A Claude Code session: I ask Claude to present the options visually, and it replies that it has built a page with six decisions, and that while writing it found the feature it was deciding about currently does nothing, because none of 208 rows had the tag it checks" />
+  <img src="/img/claude-code/seeing-the-options-before-you-decide.png" alt="A Claude Code session: after Claude reports its work committed with all tests passing, I ask it to present the options visually, and it replies that it has built a page with six decisions, and that while writing it found the feature it was deciding about currently does nothing, because none of 208 rows had the tag it checks" />
 </figure>
 
 This is from a real session in August. I had just built a check that stops a post from being

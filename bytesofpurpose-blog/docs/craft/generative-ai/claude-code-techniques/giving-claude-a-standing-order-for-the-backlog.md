@@ -84,7 +84,7 @@ two seconds to read, and if I disagree, one reply changes the order before any w
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/giving-claude-a-standing-order-for-the-backlog.png" alt="A Claude Code session: I type continue in priority order and Claude says priority order is task number order, so task 55 is next; eight weeks later, with the rule in my CLAUDE.md, I type continue and Claude says every approved technique now has a post, so it will check the backlog for the most valuable work it can do without my calls" />
+  <img src="/img/claude-code/giving-claude-a-standing-order-for-the-backlog.png" alt="A Claude Code session: Claude says a task is complete, I type continue in priority order and Claude says priority order is task number order, so task 55 is next; eight weeks later, with the rule in my CLAUDE.md, Claude says the next batch of techniques waits on me, I type continue and Claude says every approved technique now has a post, so it will check the backlog for the most valuable work it can do without my calls" />
 </figure>
 
 The top half is August, before the rule. Claude read "priority" as the task numbers and then

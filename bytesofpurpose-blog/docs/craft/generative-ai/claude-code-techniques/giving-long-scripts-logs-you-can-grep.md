@@ -108,7 +108,7 @@ off the output. Otherwise every heartbeat wakes Claude up for nothing.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/giving-long-scripts-logs-you-can-grep.png" alt="A Claude Code session: I ask whether we are monitoring comments, and 13 seconds later Claude says two new comments came in on the gallery page that it hadn't seen" />
+  <img src="/img/claude-code/giving-long-scripts-logs-you-can-grep.png" alt="A Claude Code session: Claude says both moved pages load, and I ask whether we are monitoring comments, and 13 seconds later Claude says two new comments came in on the gallery page that it hadn't seen" />
 </figure>
 
 This one is from October, and it shows why "is it alive?" isn't enough.
