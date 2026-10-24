@@ -101,11 +101,11 @@ and the session behind it. The first ones coming up:
   only a choice that's hard to undo is worth a question.
 - [For research that decides what gets built, two independent researchers and then a checker](/craft/generative-ai/claude-code-techniques/two-researchers-then-a-checker).
 - [Commit a checkpoint before Claude tries something new](/craft/generative-ai/claude-code-techniques/committing-a-checkpoint-before-claude-tries-something-new).
-- Give a long-running script logs you can grep, with a line before and after every call that
-  can hang.
-- When a problem forces a change of approach, write the pivot down in the repo.
+- [Give a long-running script logs you can grep](/craft/generative-ai/claude-code-techniques/giving-long-scripts-logs-you-can-grep),
+  with a line before and after every call that can hang.
+- [When a problem forces a change of approach, write the pivot down in the repo](/craft/generative-ai/claude-code-techniques/writing-the-pivot-down-in-the-repo).
 - A standing order for working through a backlog, so "continue" means highest value first.
-- Spot-check what OCR mangles with your own eyes.
+- [Spot-check what OCR mangles with your own eyes](/craft/generative-ai/claude-code-techniques/looking-at-the-source-not-the-score).
 - When there's no scripted path, drive the app by hand, with a screenshot before and after every
   click.
 - Everything a person reads is written in plain words.

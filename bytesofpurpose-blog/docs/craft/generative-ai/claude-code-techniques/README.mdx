@@ -46,6 +46,9 @@ Most useful to the most people first.
 - **[Writing a Continuation Prompt Before You Start Fresh](/craft/generative-ai/claude-code-techniques/writing-a-continuation-prompt-before-you-start-fresh)**:
   before a long session ends, have Claude write where things stand into a file in the repo, so a
   clean new session starts from it instead of from a summary.
+- **[Writing the Pivot Down in the Repo](/craft/generative-ai/claude-code-techniques/writing-the-pivot-down-in-the-repo)**:
+  when a problem forces Claude to change approach, have it write up what was tried and why in a
+  file in the repo, so the next session doesn't try the dead end again.
 - **[Looking at the Page Before Reading the CSS](/craft/generative-ai/claude-code-techniques/looking-at-the-page-before-reading-the-css)**:
   when a page looks wrong, have Claude open it in a browser and look before it reads the
   stylesheet, so it finds the rule that actually won instead of guessing.
@@ -64,9 +67,15 @@ Most useful to the most people first.
 - **[Sweeping Every Repo for Unpushed Work](/craft/generative-ai/claude-code-techniques/sweeping-every-repo-for-unpushed-work)**:
   one skill finds every repo with work that isn't on GitHub, writes each commit message from the
   diff, and scans for secrets before it pushes.
+- **[Giving Long Scripts Logs You Can Grep](/craft/generative-ai/claude-code-techniques/giving-long-scripts-logs-you-can-grep)**:
+  have a long-running script write one line per event that Claude can grep, with a line before
+  and after each call that can hang, so "is it stuck?" is one grep instead of a guess.
 - **[Reading the Docs Before Debugging a Skill](/craft/generative-ai/claude-code-techniques/reading-the-docs-before-debugging-a-skill)**:
   when a skill won't fire, read its description first, since that is the line Claude matches your
   request against, and add a check that catches thin ones.
+- **[Looking at the Source, Not the Score](/craft/generative-ai/claude-code-techniques/looking-at-the-source-not-the-score)**:
+  when Claude pulls text or facts out of files, have it open a sample of the real source, hardest
+  cases included, because a match rate passes on exactly the failures that matter.
 - **[Auditing the Plan Before You Build It](/craft/generative-ai/claude-code-techniques/auditing-the-plan-before-you-build-it)**:
   before any code, send read-only agents to check each claim in the plan against the code and its
   sources, then rewrite the plan once.
