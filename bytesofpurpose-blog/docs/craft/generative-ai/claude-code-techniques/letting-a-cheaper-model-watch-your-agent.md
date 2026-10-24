@@ -17,9 +17,9 @@ questions:
 
 ## What annoyed me
 
-An agent in production writes more transcripts than anyone will read. The evals catch what I
-thought to test for. Everything else shows up later, when someone tells me a run went sideways,
-and by then I'm scrolling through a long transcript looking for the moment it turned.
+An agent in production writes more transcripts than anyone will read. Its evals catch what
+someone thought to test for. Everything else shows up later, when someone reports a run that went
+sideways, and by then you're scrolling through a long transcript looking for the moment it turned.
 
 The runs that pass bother me too. A run can end with the right answer after wandering for twenty
 steps, and a pass/fail eval scores it the same as a run that went straight there.
