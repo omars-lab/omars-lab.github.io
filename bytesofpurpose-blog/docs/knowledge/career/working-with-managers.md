@@ -11,6 +11,7 @@ questions:
   - What do managers ask themselves when they make decisions about people?
   - What drives managers, and what problems do they deal with?
   - How do I turn what I am really thinking into something I can say out loud, and when is the right time and place to say it?
+  - How can Claude help me practice this, by wording what I say or by playing my director?
 ---
 
 Ethan Evans spent years as a vice president at Amazon. In a long interview on Ryan Peterman's
@@ -36,6 +37,278 @@ I watched this with four questions:
 
 The fourth one became the center of this page, because Ethan calls it a skill he has not figured
 out how to teach.
+
+## Two Claude skills from this video
+
+Reading the skills below is one thing. Practicing them is another, so I turned two parts of the
+video into Claude skills:
+
+- **polite-fiction** is a wordsmithing skill. Tell it what you are really thinking and who will
+  hear it, and it writes versions you can say and mean, plus when to say them. It is built on
+  [Skill 1](#skill-1-say-the-polite-fiction).
+- **play-the-director** is a role-play skill. Claude plays a director, with the questions and
+  worries from [What managers ask themselves](#what-managers-ask-themselves) running in its head,
+  so you can rehearse the talk before you have it. When you stop, it steps out and tells you what
+  landed and what didn't.
+
+Each skill has a `references/` file listing the points it is built on, each with a link to the
+moment in the video. Neither copies the transcript. The references say where YouTube shows it, so
+you (or Claude) can check the context.
+
+Save each skill under `.claude/skills/<name>/` in your project, or in `~/.claude/skills/` so it
+works from any folder.
+
+### polite-fiction
+
+`polite-fiction/SKILL.md`:
+
+```markdown
+---
+name: polite-fiction
+description: Turn what someone is really thinking into a sentence they can say to their
+  manager, a peer or another team, sincerely, and pick when to say it. Use when asked to word
+  an ask for scope, a promotion, a team move, severance or help from another team, or to make
+  an ask sound less like a threat. Built on Ethan Evans's interview on Ryan Peterman's channel;
+  the points and timestamps are in references/ethan-evans.md.
+---
+
+# Polite fiction
+
+A polite fiction is the version of what you want that you can say out loud, mean, and that the
+other person can agree with. It is not a lie. If the person could not say it sincerely, it is
+the wrong sentence.
+
+## Steps
+
+1. **Get the raw thought, in their words.** "Give me more scope or I'll leave." Don't soften it
+   yet.
+2. **Ask who will hear it and what that person wants:** a stable org, keeping good people, a
+   firing that doesn't upset the team. If the person doesn't know, ask; don't guess.
+3. **Find the part both of them want.** The sayable version leads with it.
+4. **Write two or three versions in the listener's terms.** Each must be true for the person
+   saying it. Check every sentence: is any of it a lie? Drop the ones that are.
+5. **Turn the demand into a request for help.** "How can you help me?" and "What do you need so
+   we can make this work?", never "What are you going to do for me?"
+6. **Pick the moment.** Before the meeting, not after an outage or as they rush out. If a hard
+   talk starts at a bad time, say you want to hear it properly and ask for tomorrow morning.
+7. **Name the one phrase to practice out loud,** and how it should sound: warm with the person,
+   firm about the need.
+
+## What to give back
+
+- The raw thought, restated in one line.
+- What the listener wants.
+- Two or three sayable versions, the recommended one first, each with one line on why it lands.
+- When to say it, and when not to.
+- The one phrase to practice.
+
+## Never
+
+- Never write a sentence the person couldn't say and mean.
+- Never hide a threat in the wording. If leaving is real, say it calmly, as a fact about their
+  career.
+- Never invent facts about the listener.
+
+## References
+
+`references/ethan-evans.md`: the ideas this skill is built on, each with a link to the moment in
+the video.
+```
+
+`polite-fiction/references/ethan-evans.md`:
+
+```markdown
+# Ethan Evans on polite fictions
+
+Source: "Amazon VP: How Corporate Politics Work And How To Win", Ethan Evans on Ryan Peterman's
+channel, March 30, 2026: https://www.youtube.com/watch?v=6WaeGfLnRvc
+
+The full transcript is on YouTube: open the video, then "...more" under the title, then "Show
+transcript". Every point below is paraphrased; each link jumps to the moment he says it, so you
+can read the transcript around it.
+
+## The idea
+
+- The raw thought is "more scope". The version you say is that you want what's best for the
+  org. Both are true, and only the second makes your manager want to help.
+  [0:34:56](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=2096s)
+- It only works if the polished version is also true for you.
+  [0:36:15](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=2175s)
+- Frame it as what they would do in your place. Ethan, moving teams after giving his word to a
+  senior VP, asked his boss what he should do; he never said the threat out loud.
+  [0:59:44](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3584s),
+  [1:00:52](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3652s)
+- Practice the key phrase until you can say it sincerely. His test: nothing he said was a lie.
+  [1:01:56](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3716s)
+
+## How it should feel
+
+- The same words said warmly get help; said with an edge, they get pushback.
+  [1:02:59](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3779s)
+- Friendly with the person, firm about what you need, no "you against me".
+  [1:04:09](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3849s)
+- Ask how they can help you. People like to see themselves as helpful.
+  [1:05:17](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3917s)
+- Ask what they need too, and offer to make room for them.
+  [1:06:21](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3981s)
+- It won't always work, but nobody leaves angry.
+  [1:07:30](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=4050s)
+
+## When to say it
+
+- Work out the wording before you're in the room; most of these talks are on the calendar.
+  [1:01:56](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3716s)
+- Plan the opening move, avoid moments of pressure, start from common ground.
+  [1:09:39](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=4179s)
+- If a hard talk starts at a bad moment, ask to do it tomorrow morning.
+  [2:14:31](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8071s)
+
+## Phrasings he suggests (paraphrased)
+
+- More scope: if a reorg opens something up, I'm ready to step up, and I plan to stay.
+  [0:34:56](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=2096s)
+- A promotion: my career matters a lot to me; if it matters less to the company, I'll have to
+  think about that. [1:02:59](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3779s)
+- Severance: you've been supportive and I'd tell the team so; I'd hope you'd support my move
+  financially so I can tell that story.
+  [2:13:22](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8002s)
+```
+
+### play-the-director
+
+`play-the-director/SKILL.md`:
+
+```markdown
+---
+name: play-the-director
+description: Role-play a director or senior manager so someone can rehearse a conversation
+  with theirs, such as asking for scope or a promotion, reporting a problem manager, pitching a
+  proposal or pushing back on a request. Claude answers in character, driven by the questions
+  and worries a director has in their head, then steps out and says what landed. Use when asked
+  to play my director, rehearse a talk, or guess how a skip-level will hear something. Built on
+  Ethan Evans's interview on Ryan Peterman's channel; the points and timestamps are in
+  references/ethan-evans.md.
+---
+
+# Play the director
+
+## Before starting
+
+Ask, in one message: what the person wants from the talk, who the director is (level, what their
+org is under pressure from, anything known about how they decide), and how the talk will open.
+Where something is unknown, play the general case; never invent the director's history.
+
+## In character
+
+Answer as the director would: short, the way a busy person talks. Before each reply, pick which
+of the questions below are running in the director's head and let them shape the answer. Don't
+say them out loud unless the director would.
+
+### Questions in the director's head
+
+- In a reorg: who do I have to keep, and who would I be fine losing?
+- Who will put up with waiting? (Usually the quiet, dependable one.)
+- Is this complaint about a manager real, or is this person high-maintenance? Believing it gives
+  me three problems: the manager, a replacement, and the work in between.
+- Is it safer to push back on my boss, or on my team?
+- If I back this proposal, how do I look if it fails, and can I count on this person when it
+  gets hard?
+- Do I trust them without checking their work, and do I enjoy working with them?
+- Does their manager support this? I won't promote over that manager's objection.
+- Have I tried everything? (Before a firing.)
+
+### What's pressing on the director
+
+- Head count is easy to measure, so it gets rewarded.
+- Promotions are a queue: someone is already next.
+- When growth is flat, the only way to grow is to take scope from another team.
+- They keep the people who make their problems go away.
+- They're busy, and won't guess what you want.
+- They hate firing and want to feel they treated the person well.
+- Their tidy org plan never survives deadlines, outages and leave.
+
+## Stepping out
+
+When the person says stop, or the talk reaches an end, step out of character and give:
+
+- what the director heard, in one line;
+- which questions above the person answered, and which they left open;
+- the moment the talk turned, for better or worse;
+- one change to try on the next run.
+
+Then offer to run it again, from the top or from the turn.
+
+## Never
+
+- Never play a villain or a pushover. Play a busy, reasonable person with problems of their own.
+- Never claim to know the person's real director.
+
+## References
+
+`references/ethan-evans.md`: where each question and pressure comes from, with a link to the
+moment in the video.
+```
+
+`play-the-director/references/ethan-evans.md`:
+
+```markdown
+# Ethan Evans on what directors think about
+
+Source: "Amazon VP: How Corporate Politics Work And How To Win", Ethan Evans on Ryan Peterman's
+channel, March 30, 2026: https://www.youtube.com/watch?v=6WaeGfLnRvc
+
+The full transcript is on YouTube: open the video, then "...more" under the title, then "Show
+transcript". Every point below is paraphrased; each link jumps to the moment he says it.
+
+## Questions in their head
+
+- Reorgs: once the business reason is settled, leaders use the same change to keep key people.
+  [0:10:16](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=616s),
+  [0:12:22](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=742s)
+- Waiting: between two similar people, the one who hinted at leaving gets saved first, because
+  the quiet one will wait. [0:17:15](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=1035s),
+  [0:18:20](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=1100s)
+- Complaints: believing a report about a manager creates three problems for the boss above, so
+  they lean toward not believing it.
+  [0:51:33](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3093s),
+  [0:52:38](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3158s)
+- Pushing back: a manager who passes every request down finds the team the safer target.
+  [1:37:58](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=5878s),
+  [1:39:13](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=5953s)
+- Backing a proposal: blame if it fails, and whether future conflicts will be settled
+  reasonably. Talking privately first calms both.
+  [1:47:57](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=6477s),
+  [1:49:11](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=6551s)
+- Trust and enjoyment decide between equals; trust is earned most in a crisis.
+  [2:27:16](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8836s),
+  [2:28:19](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8899s),
+  [2:30:34](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=9034s)
+- Promoting over a manager's objection: in his experience, it doesn't happen.
+  [2:40:40](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=9640s)
+- Firing: by then the manager has told themselves they tried everything.
+  [2:18:11](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8291s),
+  [2:19:19](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8359s)
+
+## What's pressing on them
+
+- Head count is the easiest thing to measure.
+  [0:02:26](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=146s),
+  [0:04:30](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=270s)
+- Promotions are a queue tracked months ahead.
+  [0:29:37](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=1777s)
+- Slow growth means fights over existing teams.
+  [0:32:40](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=1960s)
+- Leaders keep the people who solve their problems.
+  [0:40:05](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=2405s)
+- They're busy and don't guess what you want.
+  [0:50:30](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=3030s)
+- Many need anger as fuel to deliver a hard message.
+  [1:36:43](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=5803s)
+- They hate firing. [2:16:59](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=8219s)
+- The clean org plan meets reality.
+  [2:03:59](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=7439s),
+  [2:05:09](https://www.youtube.com/watch?v=6WaeGfLnRvc&t=7509s)
+```
 
 ## Skill 1: Say the polite fiction
 
