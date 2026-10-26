@@ -158,6 +158,226 @@
   outline-offset: 2px;
 }
 
+/* ---- click-through: Back, the turn, Next, and the pause before the next turn */
+
+.stepper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.stepBtn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--ifm-color-primary-contrast-background);
+  color: var(--ifm-font-color-base);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stepBtn:disabled {
+  border-color: var(--ifm-color-emphasis-300);
+  background: transparent;
+  color: var(--ifm-color-content-secondary);
+  font-weight: 400;
+  cursor: default;
+}
+
+.stepBtn:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.stepAt {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  min-width: 7.5rem;
+  text-align: center;
+}
+
+.stepGap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+
+/* ---- the two terminals. Dark in both themes, like a real terminal window. */
+
+.terms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.term {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #1c1d21;
+  color: #e4e4e7;
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+
+.termBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: #2a2b31;
+  color: #a1a1aa;
+}
+
+.termDots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.termDots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #52525b;
+}
+
+.termBody {
+  height: 15rem;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-3);
+  line-height: 1.5;
+}
+
+.termTurn {
+  margin: var(--space-1) 0;
+  opacity: 0.6;
+}
+
+.termNew {
+  opacity: 1;
+  animation: termIn 250ms ease-out;
+}
+
+@keyframes termIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.termPrompt {
+  color: #a1a1aa;
+}
+
+/* What the cache did on the left, what it cost on the right. */
+.termLine {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.termWarm {
+  color: #86d6a8;
+}
+
+.termCold {
+  color: #fb923c;
+}
+
+.termDim {
+  color: #d4d4d8;
+}
+
+/* A pause between turns: a dashed rule with its length on it, orange when it outlasts this cache. */
+.termBreak {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  color: #a1a1aa;
+}
+
+.termBreak::before,
+.termBreak::after {
+  content: '';
+  flex: 1;
+  border-top: 1px dashed #52525b;
+}
+
+.termBreakLong {
+  color: #fb923c;
+}
+
+.termBreakLong::before,
+.termBreakLong::after {
+  border-top-color: #c2410c;
+}
+
+/* Like Claude Code's status line: one row under the input, what matters right now. */
+.termStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border-top: 1px solid #3f3f46;
+  background: #232429;
+  color: #a1a1aa;
+}
+
+.termStatus .chip {
+  color: #e4e4e7;
+}
+
+.termStatus .chipWarm {
+  background: rgb(134 214 168 / 0.15);
+  border-color: #86d6a8;
+}
+
+.termStatus .chipCold {
+  border-color: #fb923c;
+}
+
+.termStatus .chipFirst {
+  background: transparent;
+  border-color: #52525b;
+}
+
+.termSoFar {
+  margin-left: auto;
+}
+
+.termSoFar b {
+  color: #fafafa;
+}
+
+.details {
+  margin-top: var(--space-3);
+}
+
+.details summary {
+  cursor: pointer;
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.details[open] summary {
+  display: list-item;
+  margin-bottom: var(--space-2);
+}
+
 /* The table scrolls sideways inside its own box on a phone, never the page. */
 .tableWrap {
   overflow-x: auto;
@@ -420,6 +640,16 @@
   }
 }
 
+/* On a phone the two terminals stack, 5-minute above 1-hour, each a little shorter. */
+@media (max-width: 720px) {
+  .terms {
+    grid-template-columns: 1fr;
+  }
+  .termBody {
+    height: 11rem;
+  }
+}
+
 @media (max-width: 480px) {
   .widget {
     padding: var(--space-3);
@@ -438,6 +668,9 @@
   .totalFill,
   .shareFill {
     transition: none;
+  }
+  .termNew {
+    animation: none;
   }
 }
 
