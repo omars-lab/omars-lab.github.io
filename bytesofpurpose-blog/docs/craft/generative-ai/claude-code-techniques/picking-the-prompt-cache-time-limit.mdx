@@ -20,7 +20,10 @@ import {ContextSim, ChatSim, CostSim} from '@site/src/components/PromptCacheSim'
 
 ## What annoyed me
 
-I read [a thread on r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
+I pay $200 a month for my personal Claude plan, and I'd also been given $1,000 in API credits. The
+plan felt like it went much further than the credits did, and I couldn't say why.
+
+Then I came across [a thread on r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
 arguing that anyone who pauses 15 to 45 minutes between turns should switch the prompt cache from
 its 5-minute default to 1 hour. The reasoning was neat: the 1-hour cache costs more to fill, but
 one return after a coffee break pays that back. I pause like that all day. I step away while a long
@@ -161,7 +164,8 @@ measure of the work, not a bill.
 
 So for me, the default is fine and I'm leaving it. The useful part was finding out where my money
 actually goes: almost all of it is fast back and forth inside a task, where both limits behave the
-same.
+same. It also means the cache limit isn't why my plan felt bigger than the credits: for me the two
+limits are 1 to 2% apart.
 
 ## Set it up
 
@@ -216,6 +220,14 @@ done | awk '{ a += $1; b += $2; c += $3 }
 
 The log format isn't documented, so check it still works after an update. If the middle line is a
 real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
+
+**Or ask Claude to do it.** Paste this into a Claude Code session:
+
+```text
+Look at my Claude Code session logs (the .jsonl files under ~/.claude/projects/). Study how I use
+Claude: how long I pause between turns, and how much is written to the prompt cache and read back.
+Then tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl settings, and why.
+```
 
 ## What it looks like
 
