@@ -17,6 +17,7 @@ questions:
 ---
 
 import {ContextSim, ChatSim, CostSim} from '@site/src/components/PromptCacheSim';
+import Gist from 'react-gist';
 
 ## What annoyed me
 
@@ -223,6 +224,21 @@ done | awk '{ a += $1; b += $2; c += $3 }
 
 The log format isn't documented, so check it still works after an update. If the middle line is a
 real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
+
+**Or work out what the other limit would have cost.** The script I used for the numbers above is
+[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253). It needs
+Node 20 and nothing else, reads the logs on the machine you run it on, and prints totals only. If
+your logs ran at 5 minutes (an API key, or subagents), it answers "with 1 hour, you would have
+saved N% of your budget". If they ran at 1 hour, it prices them at 5 minutes:
+
+```bash
+node cache-ttl-gaps.mjs --root ~/.claude --days 30
+# logs too old to say 5m or 1h: add --ran-at 5m
+```
+
+<div style={{maxHeight: '32rem', overflowY: 'auto'}}>
+  <Gist id="4fc25fd8209d7b2199821ad84988a253" />
+</div>
 
 **Or ask Claude to do it.** Paste this into a Claude Code session:
 
