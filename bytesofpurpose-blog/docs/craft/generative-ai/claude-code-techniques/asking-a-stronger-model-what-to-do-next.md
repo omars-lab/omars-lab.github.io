@@ -48,7 +48,10 @@ Two pieces: one setting, one hook.
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "python3 ~/.claude/hooks/ask-advisor-next.py" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/ask-advisor-next.py"
+          }
         ]
       }
     ]
@@ -61,7 +64,8 @@ as strong as the model you work with. Fable needs Fable access on your account; 
 it, `opus` works the same way. You can also run `/advisor` and pick one, or `/advisor off` to turn
 it off. The [advisor docs](https://code.claude.com/docs/en/advisor) have the details.
 
-**The hook.** Save this as `~/.claude/hooks/ask-advisor-next.py`:
+**The hook.** Save this as `~/.claude/hooks/ask-advisor-next.py`, then make it runnable with
+`chmod +x ~/.claude/hooks/ask-advisor-next.py`:
 
 ```python
 #!/usr/bin/env python3
@@ -110,7 +114,7 @@ Change "our customers and users" to whoever your work is for. The word that does
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/asking-a-stronger-model-what-to-do-next.png" alt="A vim window showing settings.json with the advisor model set to fable and a Stop hook that runs ask-advisor-next.py." />
+  <img src="/img/claude-code/asking-a-stronger-model-what-to-do-next.png" alt="A vim window showing settings.json, with the advisor model set to fable and a Stop hook that runs ask-advisor-next.py." />
 </figure>
 
 I turned this on on October 8. Between then and October 26, Claude asked the advisor 2,036 times
