@@ -2,3 +2,6 @@
 {"v":1,"ts":"2026-10-26T17:11:54Z","ev":"shot","role":"comment","author":"omar","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_9aff86/comment.png","sha":"505d08847088"}
 {"v":1,"ts":"2026-10-26T17:12:05Z","ev":"anchor","author":"page","state":"lost"}
 {"v":1,"ts":"2026-10-26T17:13:12Z","ev":"landed","author":"git","commit":"cb3043be","from":"9431272a"}
+{"v":1,"ts":"2026-10-26T17:14:55Z","ev":"shot","role":"after","author":"claude","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_9aff86/after-632231f1.png","sha":"2cfd59ef1c5d","commit":"632231f1"}
+{"v":1,"ts":"2026-10-26T17:15:07Z","ev":"reply","author":"claude","body":"Done in cb3043be (PromptCacheSim/index.tsx and styles.module.css): the status line now names the model picked below the calculator, e.g. \"read · Opus 5.5 · $0.764\". It stays on one line so the two terminals keep the same height. After picture in the thread, ready to check.","commit":"cb3043be"}
+{"v":1,"ts":"2026-10-26T17:15:15Z","ev":"status","author":"claude","status":"resolved","note":"Model shown in the status line in cb3043be"}
