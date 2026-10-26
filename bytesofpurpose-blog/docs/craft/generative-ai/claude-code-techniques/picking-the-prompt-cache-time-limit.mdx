@@ -78,9 +78,16 @@ a pause of 5 to 60 minutes: the 5-minute cache is gone and would write the whole
 saves even a bit more. One return after a 5 to 60 minute pause covers the extra on the same tokens.
 Past an hour, both caches are gone and the 1-hour one has only cost you more.
 
+A pause isn't only you stepping away. When Claude hands a job to a subagent and waits for it, the
+subagent works in its own conversation, so the main one sends nothing until it comes back. A
+subagent that takes 5 to 60 minutes is a coffee break as far as the main cache is concerned. One
+that comes back in under 5 minutes costs nothing either way, and one that takes over an hour finds
+both caches gone.
+
 ## Try a day of pauses
 
-Pick an example day, or set the pause before each turn yourself.
+Pick an example day, or set the pause before each turn yourself. "Waiting on subagents" is a day
+where the long pauses are subagents at work: 10, 20 and 120 minutes.
 
 <ChatSim />
 
@@ -127,6 +134,22 @@ re-reads a big block (153k tokens on average).
 The 1-hour cache did its job on those middle pauses: after a 5 to 60 minute pause, 92% of the
 prompt still came from the cache. After pauses over an hour, only 13% did (the shared system
 prompt, kept warm by my other open sessions).
+
+**Third surprise: most of my middle pauses aren't me.** *Measured again on October 26, with five more
+days of sessions.* I had the script sort each 5 to 60 minute pause by what ended it:
+
+| What ended a 5 to 60 minute pause | All time | Last 30 days |
+|---|---|---|
+| Me typing | 1,637 (43%) | 329 (25%) |
+| A tool finishing: a long command, or me answering a permission prompt or a question | 1,264 (33%) | 392 (29%) |
+| A background job reporting back: a command or a watcher | 742 (19%) | 527 (39%) |
+| A subagent coming back | 185 (5%) | 92 (7%) |
+
+Subagents almost always come back fast. Of the 1,337 times one came back to my main conversation,
+1,148 (86%) took under 5 minutes, 185 took 5 to 60 minutes and 4 took over an hour. So waiting on
+subagents barely moves the choice for me: those 185 waits are about 4% of what a 5-minute cache would
+have cost in re-writes. If you hand long jobs to subagents and wait for them, count those waits as
+pauses when you measure.
 
 **The result: about even.** All time, a 5-minute cache on my main conversations would have saved
 $3,127 on cheaper writes and cost $2,648 in re-writes after those pauses. That makes the 1-hour
@@ -214,6 +237,9 @@ with "measure first".
   conversation grows, 1 hour wins.
 - **Subagents are a separate choice.** They work in fast bursts (99% of my subagent requests came
   within 5 minutes of the last), which is why they default to 5 minutes.
+- **Waiting on a subagent is a pause too.** The main conversation's cache clock runs while a
+  subagent works. Subagents that take 5 to 60 minutes favour 1 hour on the main conversation; ones
+  that finish in under 5 minutes, or take over an hour, don't.
 
 ## In my own words
 

@@ -151,6 +151,8 @@ const PRESETS: {label: string; gaps: number[]}[] = [
   {label: 'Fast back and forth', gaps: [0, 1, 1, 3, 1, 1, 3, 1]},
   {label: 'Coffee and meetings', gaps: [0, 1, 10, 1, 20, 1, 45, 3]},
   {label: 'Two sessions at once', gaps: [0, 10, 10, 20, 10, 10, 20, 10]},
+  // Subagents that take 10, 20 and 120 minutes, each followed by a quick task.
+  {label: 'Waiting on subagents', gaps: [0, 1, 10, 1, 20, 1, 120, 1]},
   {label: 'Back the next day', gaps: [0, 1, 3, 120, 1, 120, 1, 120]},
 ];
 
