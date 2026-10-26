@@ -167,7 +167,7 @@ function chipClass(t: TurnResult, ttl: Ttl): string {
 
 /** One time limit's side of the chat, drawn as a terminal: each pause as a break line, each turn
  * as what the cache did with it, and a status line that shows where things stand. */
-function Terminal({ttl, turns}: {ttl: Ttl; turns: TurnResult[]}) {
+function Terminal({ttl, turns, model}: {ttl: Ttl; turns: TurnResult[]; model: ModelPrice}) {
   const body = useRef<HTMLDivElement>(null);
   const now = turns[turns.length - 1];
   useEffect(() => {
@@ -193,13 +193,16 @@ function Terminal({ttl, turns}: {ttl: Ttl; turns: TurnResult[]}) {
               {t.turn > 1 && (
                 <div className={`${styles.termBreak} ${gone ? styles.termBreakLong : ''}`}>
                   <span>
-                    {minutes(t.gap)} pause{gone ? ', cache gone' : ''}
+                    ⏲️ {minutes(t.gap)} pause{gone ? ', cache gone' : ''}
                   </span>
                 </div>
               )}
               <div className={`${styles.termTurn} ${t === now ? styles.termNew : ''}`}>
-                <div>
-                  <span className={styles.termPrompt}>&gt;</span> turn {t.turn}, at {clock(t.elapsed)}
+                <div className={styles.termLine}>
+                  <span>
+                    <span className={styles.termPrompt}>&gt;</span> do task #{t.turn}
+                  </span>
+                  <span className={styles.termPrompt}>{clock(t.elapsed)}</span>
                 </div>
                 <div
                   className={`${styles.termLine} ${state === 'expired' ? styles.termCold : state === 'read' ? styles.termWarm : styles.termDim}`}>
@@ -220,6 +223,7 @@ function Terminal({ttl, turns}: {ttl: Ttl; turns: TurnResult[]}) {
       </div>
       <div className={styles.termStatus}>
         <span className={`${styles.chip} ${chipClass(now, ttl)}`}>{turnState(now, ttl)}</span>
+        <span className={styles.termModel}>{model.label}</span>
         <span className={styles.termSoFar}>
           so far <b>{money(now.running[ttl])}</b>
         </span>
@@ -266,7 +270,7 @@ export function ChatSim() {
           ◀ Back
         </button>
         <span className={styles.stepAt} aria-live="polite">
-          Turn {step} of {last}
+          Task {step} of {last}
         </span>
         <button type="button" className={styles.stepBtn} disabled={step >= last} onClick={() => setStep(step + 1)}>
           Next ▶
@@ -290,7 +294,7 @@ export function ChatSim() {
       </div>
       <div className={styles.terms}>
         {TTLS.map((ttl) => (
-          <Terminal key={ttl} ttl={ttl} turns={shown} />
+          <Terminal key={ttl} ttl={ttl} turns={shown} model={model} />
         ))}
       </div>
       <Totals total={soFar} saves={soFar['5m'] - soFar['1h']} />
@@ -369,8 +373,8 @@ export function ChatSim() {
       </details>
       <ModelPicker value={model} onChange={setModel} />
       <p className={styles.note}>
-        Starts at 22k tokens and adds 8k a turn. Each Next is one turn: the pause before it, then what each cache
-        did. Clock is hours and minutes since the first message. "Read" means the cache was still there; "expired"
+        Starts at 22k tokens and adds 8k a turn. Each Next is one task you give Claude: the pause before it, then
+        what each cache did. The clock on the right is hours and minutes since the first task. "Read" means the cache was still there; "expired"
         means the whole prompt was written again. The bars are the cost so far. Cost of the cached prompt only;
         output costs the same either way.
       </p>

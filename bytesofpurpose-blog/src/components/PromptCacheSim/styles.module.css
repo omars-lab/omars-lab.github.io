@@ -325,9 +325,10 @@
 /* Like Claude Code's status line: one row under the input, what matters right now. */
 .termStatus {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) var(--space-3);
+  gap: var(--space-2);
+  font-size: 0.85em;
+  white-space: nowrap;
   padding: var(--space-1) var(--space-3);
   border-top: 1px solid #3f3f46;
   background: #232429;
@@ -350,6 +351,13 @@
 .termStatus .chipFirst {
   background: transparent;
   border-color: #52525b;
+}
+
+.termModel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #d4d4d8;
 }
 
 .termSoFar {
