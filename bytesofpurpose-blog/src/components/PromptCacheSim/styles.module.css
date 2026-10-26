@@ -353,6 +353,12 @@
   border-color: #52525b;
 }
 
+.startOver {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
 .termModel {
   min-width: 0;
   overflow: hidden;
@@ -366,6 +372,10 @@
 
 .termSoFar b {
   color: #fafafa;
+}
+
+.termSoFar b.termDearer {
+  color: #f87171;
 }
 
 .details {

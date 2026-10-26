@@ -167,7 +167,7 @@ function chipClass(t: TurnResult, ttl: Ttl): string {
 
 /** One time limit's side of the chat, drawn as a terminal: each pause as a break line, each turn
  * as what the cache did with it, and a status line that shows where things stand. */
-function Terminal({ttl, turns, model}: {ttl: Ttl; turns: TurnResult[]; model: ModelPrice}) {
+function Terminal({ttl, turns, model, dearer}: {ttl: Ttl; turns: TurnResult[]; model: ModelPrice; dearer: boolean}) {
   const body = useRef<HTMLDivElement>(null);
   const now = turns[turns.length - 1];
   useEffect(() => {
@@ -225,7 +225,7 @@ function Terminal({ttl, turns, model}: {ttl: Ttl; turns: TurnResult[]; model: Mo
         <span className={`${styles.chip} ${chipClass(now, ttl)}`}>{turnState(now, ttl)}</span>
         <span className={styles.termModel}>{model.label}</span>
         <span className={styles.termSoFar}>
-          so far <b>{money(now.running[ttl])}</b>
+          <b className={dearer ? styles.termDearer : undefined}>{money(now.running[ttl])}</b>
         </span>
       </div>
     </div>
@@ -275,7 +275,7 @@ export function ChatSim() {
         <button type="button" className={styles.stepBtn} disabled={step >= last} onClick={() => setStep(step + 1)}>
           Next ▶
         </button>
-        {step < last ? (
+        {step < last && (
           <label className={styles.stepGap}>
             then pause{' '}
             <select value={gaps[step]} onChange={(e) => setGap(step, Number(e.target.value))} className={styles.select}>
@@ -286,17 +286,20 @@ export function ChatSim() {
               ))}
             </select>
           </label>
-        ) : (
-          <button type="button" className={styles.stepBtn} onClick={() => setStep(1)}>
-            Start over
-          </button>
         )}
       </div>
       <div className={styles.terms}>
         {TTLS.map((ttl) => (
-          <Terminal key={ttl} ttl={ttl} turns={shown} model={model} />
+          <Terminal key={ttl} ttl={ttl} turns={shown} model={model} dearer={TTLS.every((o) => o === ttl || soFar[ttl] > soFar[o])} />
         ))}
       </div>
+      {step >= last && (
+        <div className={styles.startOver}>
+          <button type="button" className={styles.stepBtn} onClick={() => setStep(1)}>
+            Start over
+          </button>
+        </div>
+      )}
       <Totals total={soFar} saves={soFar['5m'] - soFar['1h']} />
       <details className={styles.details}>
         <summary>Every turn as a table</summary>
@@ -375,7 +378,8 @@ export function ChatSim() {
       <p className={styles.note}>
         Starts at 22k tokens and adds 8k a turn. Each Next is one task you give Claude: the pause before it, then
         what each cache did. The clock on the right is hours and minutes since the first task. "Read" means the cache was still there; "expired"
-        means the whole prompt was written again. The bars are the cost so far. Cost of the cached prompt only;
+        means the whole prompt was written again. The amount at the bottom right of each terminal, and the bars, are the cost so far; the higher terminal amount is in red.
+        Cost of the cached prompt only;
         output costs the same either way.
       </p>
     </figure>
