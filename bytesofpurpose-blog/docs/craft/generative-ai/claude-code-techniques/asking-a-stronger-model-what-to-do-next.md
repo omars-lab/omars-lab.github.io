@@ -117,15 +117,15 @@ Change "our customers and users" to whoever your work is for. The word that does
   <img src="/img/claude-code/asking-a-stronger-model-what-to-do-next.png" alt="A vim window showing settings.json, with the advisor model set to fable and a Stop hook that runs next.py." />
 </figure>
 
-I turned this on on October 8. Between then and October 26, Claude asked the advisor 2,036 times
-across 20 sessions. Most of those calls came from Claude on its own, in the middle of work. 130
-came right at the hand-back, which is the hook at work.
+I set the advisor on October 8. Between then and October 26, across 15 of my personal sessions,
+Claude asked it 1,538 times. Almost all of those came from Claude on its own, in the middle of
+work, and most of them inside subagents.
 
-A long stretch of work now ends with a short "Next" section: one pick, why it matters, and
-whether it's already on the backlog. The call on whether to take it stays mine.
+With the hook on, a long stretch of work ends with a short "Next" section: one pick, why it
+matters, and whether it's already on the backlog. The call on whether to take it stays mine.
 
-The calls Claude makes on its own catch things too. From my own sessions, in Claude's words right
-after a call:
+The calls Claude makes on its own catch things too. From one of my sessions, in Claude's words
+right after a call:
 
 - "The advisor pointed out a gap: the tests start the server on their own port, so they never ran
   my change."
