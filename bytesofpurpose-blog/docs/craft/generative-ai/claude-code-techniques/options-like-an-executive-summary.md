@@ -10,7 +10,7 @@ tags: [claude-code, ai, productivity, decision-making]
 image: /img/claude-code/options-like-an-executive-summary.png
 draft: true
 questions:
-  - How do I get Claude Code to give me options I can decide on quickly?
+  - How do I get Claude to lay out choices I can decide in a minute?
   - What should each option say when Claude asks me to choose?
 ---
 
