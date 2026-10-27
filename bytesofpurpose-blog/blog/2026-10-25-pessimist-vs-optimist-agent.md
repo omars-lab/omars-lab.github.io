@@ -3,7 +3,7 @@ slug: pessimist-vs-optimist-agent
 title: 'Testing Whether a Pessimistic Agent Does Better Work'
 sidebar_label: 'Pessimist vs optimist agent'
 kind: experiment-result
-description: 'One AI agent, one broken job, 150 runs. One paragraph told it to expect the worst or the best. Optimism made it stop checking but left the result unchanged.'
+description: 'One broken job, 180 runs, one paragraph telling the agent to expect the worst or the best. On Haiku at low effort it was a tie. On Haiku, Sonnet and Opus at medium effort, expecting the worst handled the job twice as often.'
 authors: [oeid]
 tags: [experiments, claude-code, ai, agents]
 date: 2026-10-25
@@ -13,6 +13,7 @@ priority: medium
 questions:
   - Does telling an AI agent to expect the worst make it do better work?
   - Does a mindset paragraph in a system prompt change what an agent does?
+  - Does a mindset prompt work the same on Haiku, Sonnet and Opus?
   - How do I test a prompt change on an agent instead of guessing?
   - Why did my headless Claude Code calls answer with a different model?
 ---
@@ -30,14 +31,17 @@ it does.
 
 I gave copies of the same agent the same broken job and changed one paragraph of their
 instructions: one expected the worst, one expected the best, one expected nothing in particular.
-Then I ran it 150 times over two rounds and counted.
+Then I ran it 180 times over three rounds and counted.
 
-- **The result was a tie.** Across both rounds, the mindset paragraph didn't change how often the
-  agent did the job right.
-- **The behavior was not a tie.** The optimist checked less. It read the schedule, warned about
-  the risk and asked the person who gave the task far less often than the other two.
-- **Looking harder didn't mean deciding better.** Every arm made the one costly mistake (emailing
-  the wrong list) about as often.
+- **On three models, expecting the worst won.** In the last round, on Claude Haiku, Sonnet and Opus
+  at medium effort, the pessimist handled the job 14 times out of 15 and the optimist 7. That gap
+  is unlikely to be luck (p = 0.014).
+- **It won on one decision: who to tell.** Both checked their work the same. The optimist kept
+  announcing the fix to the 40-person finance list; the pessimist told the 4-person team that owns
+  the export.
+- **On one small model at low effort, it was a tie.** In the first two rounds, on Haiku alone, the
+  result didn't move. What moved was checking: the optimist read the schedule, warned about the
+  risk and asked questions far less often.
 
 ## The setup
 
@@ -95,8 +99,10 @@ but not the arm, the instructions or the agent's own reasoning, and the runs cam
 under made-up ids. It answered: does the report overclaim, does it say what's still unknown, and
 how clear is it?
 
-The agent was Claude Haiku 5.5 at low effort, called headless through Claude Code with no tools.
-The grader was Claude Sonnet 5.5. Arms were interleaved so no arm got a quieter hour.
+In rounds one and two the agent was Claude Haiku 5.5 at low effort, called headless through
+Claude Code with no tools. Round three ran the pessimist and the optimist on Claude Haiku 5.5,
+Sonnet 5.5 and Opus 5.5, all at medium effort, with the round-two score unchanged. The grader was
+Claude Sonnet 5.5 throughout. Arms were interleaved so no arm got a quieter hour.
 
 ## What happened
 
@@ -153,14 +159,15 @@ on warning. So the better reading may not be "pessimism makes the agent look". I
 **"optimism makes it stop looking."** Against neutral, the optimist read the schedule 6 times vs
 14 (p = 0.054) and warned 9 times vs 18 (p = 0.037).
 
-I didn't predict that, and one of those gaps misses the bar, so it's a lead, not a finding. It's
-what a third round should test.
+I didn't predict that, and one of those gaps misses the bar, so it's a lead, not a finding. It
+needs a round with a neutral arm in it, and round three, below, didn't have one.
 
 ### Seeing the risk is not acting on it
 
-Every arm emailed the 40-person list between 12 and 17 times out of 30. Some runs read the
-schedule, wrote that the fix might not last, and *still* emailed the whole finance list. Looking
-and choosing the right person to tell were separate steps, and the mindset only moved the first.
+In round two, every arm emailed the 40-person list between 12 and 17 times out of 30. Some runs
+read the schedule, wrote that the fix might not last, and *still* emailed the whole finance list.
+Looking and choosing the right person to tell were separate steps, and on this model the mindset
+only moved the first. Round three turned that around.
 
 ### Reports that invent their own history
 
@@ -170,26 +177,59 @@ like "my first attempt didn't take effect, so I re-applied the edit", when the r
 single edit. A report that invents a careful-looking history is something I'd never catch by
 reading the report alone.
 
+### Round three: Haiku, Sonnet and Opus at medium effort
+
+Two rounds on one small model at low effort left an open question: would a stronger model shrug
+the paragraph off? So I ran the pessimist and the optimist again on three models at medium effort,
+5 runs a side each, with the round-two score unchanged. I expected no clear gap on Haiku, and a
+smaller gap on Sonnet and Opus. Both guesses were wrong.
+
+| model | Pessimist | Optimist |
+|---|---|---|
+| Haiku | 5 of 5 | 2 of 5 |
+| Sonnet | 5 of 5 | 3 of 5 |
+| Opus | 4 of 5 | 2 of 5 |
+| **All three** | **14 of 15** | **7 of 15** |
+
+Pessimist against optimist across all three models: p = 0.014. Five runs a side per model is too
+few to call any one model on its own, but all three lean the same way.
+
+Every run, in both arms, fixed the real cause, checked the fix, left the real export alone and
+chased no false lead. The whole gap is in the last check, who got told. Eight of the nine misses
+were optimist runs: seven announced the fix to the 40-person list, and one emailed accounts payable,
+twice. The one pessimist miss, on Opus, emailed the 40-person list too. The pessimist told the
+4-person team that owns the export 11 times out of 15, the optimist 5.
+
+This round flipped the earlier pattern. The checking gap from round two was gone: both arms read
+the schedule 11 times out of 15, and they warned that the fix might not hold about as often. Turns,
+cost and time were within a few percent. The pessimist still asked the person who gave the task
+more often (8 against 3), and asking who to tell gets the name of the right team.
+
+No run repeated its paragraph's words, in its report or in its own reasoning, and the blind grader
+found no overclaiming in any of the 30 reports.
+
 ## Outcome
 
-- **A mindset paragraph changes behavior more than results.** "Expect the best" made the agent
-  check less, warn less and ask less. "Expect the worst" didn't make it any better at the decision
-  that mattered.
-- **The traps that matter are judgment calls.** A careful default already covered the mechanical
-  traps. The misses were "who should hear this" and "is this really done", and a mood didn't fix
-  those.
+- **On stronger settings, the mood changed the result.** On Haiku, Sonnet and Opus at medium
+  effort, "expect the worst" handled the job twice as often as "expect the best". On Haiku at low
+  effort it changed how much the agent checked, but not the result.
+- **Where it matters is the judgment call.** A careful default already covered the mechanical
+  traps on every model. The misses were "who should hear this", and that is exactly where the
+  optimist went wrong: it took the big list the config file names at face value.
 - **The first score was the bigger bug.** It assumed the job could always be finished, and failed
   the runs that noticed it couldn't. Writing the score down first is what let me see that, and
   fix it before round two rather than after peeking.
 
 ## Decision
 
-- **I'm not adding a pessimism paragraph to my own instructions.** It didn't buy better results.
-- **I am keeping optimism out of them.** "This will probably be easy" is the kind of line that
-  creeps into prompts, and it made the agent stop checking without the result showing it.
-- **I'll spell out judgment calls instead of moods.** "Tell the team that owns it, not the whole
-  list" and "if the fix might not hold, say so and don't call it ready" target the actual misses.
-  That's the next experiment.
+- **I am keeping optimism out of my instructions.** "This will probably be easy" is the kind of
+  line that creeps into prompts. On a small model it made the agent stop checking; on three models
+  at medium effort it halved how often the job was handled.
+- **A pessimism paragraph is now worth testing for real, not adding on faith.** It won one round
+  of 15 a side, and tied two rounds on a smaller setup.
+- **I'll test it against spelling out the judgment call.** "Tell the team that owns it, not the
+  whole list" names the exact miss. If that does as well, it's the plainer instruction. That's the
+  next experiment.
 - **I'll check the record, not the report.** A report can overclaim in any arm. Comparing what it
   says against what the run actually did is the check that catches it.
 
@@ -214,8 +254,10 @@ scrubbed from the saved runs before anything is counted.
 
 ## Limits
 
-- **One small model.** A bigger model may react to the paragraph differently.
-- **One scenario,** and four of its six traps caught nobody.
+- **Round three is small.** 5 runs a side per model, 15 in all, and no neutral arm. It changed two
+  things at once, the models and the effort, so I can't say which one made the paragraph matter.
+- **One scenario,** and four of its six traps caught nobody on any model. The result rests on one
+  decision, who to tell.
 - **A scripted world.** The agent picked actions from a menu. It never wrote code or ran anything
   real, and the person it could ask always gave the same answer.
 - **Changed after a pilot.** The first pilot was too easy, so the team's name moved from the
@@ -226,6 +268,6 @@ scrubbed from the saved runs before anything is counted.
 
 Everything you need to rebuild this is on this page: the task, the six traps, the three
 paragraphs and the score. The world is a small script that answers each action with a canned
-result. The whole thing, both rounds and the grading, cost under two dollars at list price, which
-is the part I'd most want someone to take away: testing a prompt change on an agent is cheap
-enough that guessing isn't worth it.
+result. The first two rounds and their grading cost under two dollars at list price, and round
+three about four more, most of it Opus. That is the part I'd most want someone to take away:
+testing a prompt change on an agent is cheap enough that guessing isn't worth it.
