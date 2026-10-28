@@ -39,9 +39,10 @@ me. I was about to change a setting on the strength of a hunch.
 ## What I did about it
 
 I read the docs to find out which limit applies when, then had Claude measure every pause in my own
-session logs and work out what each limit would have cost. The answer surprised me: for the way I
-work, it is nearly a wash. Then I built the three calculators below so you can try your own pattern
-before you change anything.
+session logs and work out what each limit would have cost. The answer surprised me twice. On my
+subscription it is a wash. At work, on API credits, 1 hour would have saved about a tenth, nearly
+all of it in my long sessions. Then I built the three calculators below so you can try your own
+pattern before you change anything.
 
 **The technique:** pick the prompt cache's time limit to fit how you work, and measure your pauses
 before you pick.
@@ -115,22 +116,25 @@ always wins.
 
 ## What my own logs said
 
-*Measured on October 21, 2026.*
+*Measured October 21 to 28, 2026. List prices, main conversation only.*
 
-I had Claude write a small script that reads my Claude Code session logs (personal projects only),
-sorts every request by time and sorts the pause before each one into three groups: up to 5 minutes,
-5 to 60 minutes, and over an hour. It adds up what was written to the cache and read back, and works
-out what the same requests would have cost with a 5-minute cache. Only totals come out.
+I had Claude write a small script that reads my Claude Code session logs, sorts every request by
+time and puts the pause before each one into one of three groups: up to 5 minutes, 5 to 60 minutes,
+and over an hour. Then it works out what the same requests would have cost on the other limit. Only
+totals come out.
 
-**First surprise: I was already on 1 hour.** On a Claude subscription, Claude Code gives the main
-conversation a 1-hour cache, and subagents and other helpers get 5 minutes, apart from a few
-helper requests Anthropic's servers control, which get 1 hour. My logs show exactly that split: 840 million tokens written at 1 hour in my main conversations against 2.6 million at
-5 minutes, and the reverse for subagents (741 million at 5 minutes, 1.9 million at 1 hour).
+I ran it twice: on my personal Macs, where I use a subscription, and on my work Macs, where I use
+API credits.
 
-**Second surprise: I hardly ever pause.** Across 297 sessions and 215,063 requests, 98% came within
-5 minutes of the one before. Most requests are Claude itself working through a task: read a file,
-run a command, read the result. My coffee breaks are a tiny share of the requests, though each one
-re-reads a big block (153k tokens on average).
+### On my subscription: about even
+
+- **I was already on 1 hour.** A subscription gives the main conversation 1 hour and subagents 5
+  minutes, and my logs show exactly that split.
+- **I hardly ever pause.** 98% of my requests came within 5 minutes of the one before. Most
+  requests are Claude working through a task, not me.
+- **Most of my middle pauses aren't me.** I ended only 43% of the 5 to 60 minute pauses by typing.
+  Tools, background jobs and subagents ended the rest, and subagents came back in under 5 minutes
+  86% of the time.
 
 | Pause before a request | All time | Last 30 days |
 |---|---|---|
@@ -138,38 +142,76 @@ re-reads a big block (153k tokens on average).
 | 5 to 60 minutes | 3,385 (1.6%) | 948 (1.8%) |
 | Over an hour | 1,202 (0.6%) | 191 (0.4%) |
 
-The 1-hour cache did its job on those middle pauses: after a 5 to 60 minute pause, 92% of the
-prompt still came from the cache. After pauses over an hour, only 13% did (the shared system
-prompt, kept warm by my other open sessions).
+A 5-minute cache would have saved 2% all time and cost 2% more in the last 30 days. For me, on a
+subscription, the limit doesn't matter.
 
-**Third surprise: most of my middle pauses aren't me.** *Measured again on October 26, with five more
-days of sessions.* I had the script sort each 5 to 60 minute pause by what ended it:
+### At work, on API credits: 1 hour would have saved about a tenth
 
-| What ended a 5 to 60 minute pause | All time | Last 30 days |
-|---|---|---|
-| Me typing | 1,637 (43%) | 329 (25%) |
-| A tool finishing: a long command, or me answering a permission prompt or a question | 1,264 (33%) | 392 (29%) |
-| A background job reporting back: a command or a watcher | 742 (19%) | 527 (39%) |
-| A subagent coming back | 185 (5%) | 92 (7%) |
+On an API key the main conversation runs at 5 minutes. I took the 96 work sessions whose main
+conversation clearly ran at 5 minutes, about 29% of my work spend. With a 1-hour cache they would
+have cost **9% less all time, and 21% less in the last 30 days.**
 
-Subagents almost always come back fast. Of the 1,337 times one came back to my main conversation,
-1,148 (86%) took under 5 minutes, 185 took 5 to 60 minutes and 4 took over an hour. So waiting on
-subagents barely moves the choice for me: those 185 waits are about 4% of what a 5-minute cache would
-have cost in re-writes. If you hand long jobs to subagents and wait for them, count those waits as
-pauses when you measure.
+The saving isn't spread evenly. It sits in the long sessions where I kept coming back:
 
-**The result: about even.** All time, a 5-minute cache on my main conversations would have saved
-$3,127 on cheaper writes and cost $2,648 in re-writes after those pauses. That makes the 1-hour
-cache $480 dearer, 2% of $25,479. In the last 30 days it went the other way: $42 cheaper, 1% of
-$3,326. The share from the calculator above tells the same story: tokens read back after a 5 to
-60 minute pause came to 57% of what was written all time and 68% in the last 30 days, either side
-of the line. These are list prices for a subscription I don't pay per token for, so read them as a
-measure of the work, not a bill.
+| Sessions over $1 | How many | Share of the cost | With 1 hour |
+|---|--:|--:|---|
+| 10 or more pauses of 5 to 60 minutes | 27 | 90% | 11% cheaper |
+| Fewer than 10 | 37 | 10% | 2% dearer |
 
-So for me, the default is fine and I'm leaving it. The useful part was finding out where my money
-actually goes: almost all of it is fast back and forth inside a task, where both limits behave the
-same. If my work sessions look anything like these, the cache limit isn't what eats my work
-credits: the two limits are 1 to 2% apart.
+The other 32 sessions cost under $1 each: one question, one answer, done. 1 hour writes their
+prompt at the higher price and never reads it back, so most would have cost 20% or more extra, on
+pennies. The tables below leave them out.
+
+**Per session.** Read p25 as "in 75% of my sessions, 1 hour would have saved at least this".
+
+| Saved with 1 hour | p10 | p25 | p50 | p75 | p90 |
+|---|--:|--:|--:|--:|--:|
+| Each session over $1 (64) | −18% | −7% | +1% | +8% | +20% |
+| Weighted by what each session cost | −15% | −6% | +7% | +21% | +45% |
+
+So about half my sessions over $1 would have saved something. Half my work dollars sat in sessions
+that would have saved 7% or more, and a quarter in sessions that would have saved 21% or more.
+
+**In 5-point steps.** "This or better" climbs as you read down.
+
+| Saved with 1 hour | Sessions | Share | This or better | Share of the cost | This or better |
+|---|--:|--:|--:|--:|--:|
+| 45% to 50% | 1 | 2% | 2% | 14% | 14% |
+| 40% to 45% | 0 | 0% | 2% | 0% | 14% |
+| 35% to 40% | 0 | 0% | 2% | 0% | 14% |
+| 30% to 35% | 1 | 2% | 3% | 5% | 19% |
+| 25% to 30% | 0 | 0% | 3% | 0% | 19% |
+| 20% to 25% | 5 | 8% | 11% | 10% | 29% |
+| 15% to 20% | 4 | 6% | 17% | 1% | 30% |
+| 10% to 15% | 3 | 5% | 22% | 7% | 37% |
+| 5% to 10% | 11 | 17% | 39% | 23% | 61% |
+| 0% to 5% | 10 | 16% | 55% | 7% | 68% |
+| −5% to 0% | 10 | 16% | 70% | 7% | 75% |
+| −10% to −5% | 6 | 9% | 80% | 5% | 80% |
+| −15% to −10% | 5 | 8% | 88% | 18% | 99% |
+| −20% to −15% | 2 | 3% | 91% | 1% | 100% |
+| Below −20% | 6 | 9% | 100% | 0% | 100% |
+
+**Added up from 0.** Sessions that saved something, but no more than this.
+
+| Saved with 1 hour | Sessions | Share | Share of the cost |
+|---|--:|--:|--:|
+| 0% to 5% | 10 | 16% | 7% |
+| 0% to 10% | 21 | 33% | 31% |
+| 0% to 15% | 24 | 38% | 38% |
+| 0% to 20% | 28 | 44% | 39% |
+| 0% to 25% | 33 | 52% | 49% |
+| 0% to 30% | 33 | 52% | 49% |
+| 0% to 35% | 34 | 53% | 54% |
+| 0% to 50% | 35 | 55% | 68% |
+
+### The result
+
+The same setting came out even on my subscription and about a tenth cheaper at work. The difference
+is the pauses. My heaviest work sessions each had 10 or more returns after a 5 to 60 minute pause,
+and on a 5-minute cache every one of those returns writes the whole conversation again. A 1-hour
+cache isn't the whole gap between my work credits and my subscription. But on an API key it's one
+setting, and my long sessions say it pays.
 
 ## Set it up
 
@@ -256,12 +298,12 @@ Then tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl
 
 That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
 this page, pasting in the Reddit reasoning, and before writing it Claude went through my own logs. The numbers changed what the page says: I came in expecting "switch to 1 hour" and left
-with "measure first".
+with "measure first": it paid at work and made no difference at home.
 
 ## Why it works
 
-- **The cost follows your pauses, not the setting.** The same limit is a saving for one person and
-  a cost for another. Only your own pause pattern says which.
+- **The cost follows your pauses, not the setting.** The same 1-hour limit made no difference on my
+  subscription and saved about a tenth at work. Only your own pause pattern says which.
 - **A pause is cheap to measure.** Every request is already in your session logs with a time on it.
 - **The break-even is simple.** 1 hour costs 0.75x more on what it writes and saves about 1.15x on
   each return after 5 to 60 minutes. If those returns are common next to how fast your
