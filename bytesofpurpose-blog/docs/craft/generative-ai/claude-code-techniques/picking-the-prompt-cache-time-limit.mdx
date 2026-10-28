@@ -205,6 +205,47 @@ that would have saved 7% or more, and a quarter in sessions that would have save
 | 0% to 35% | 34 | 53% | 54% |
 | 0% to 50% | 35 | 55% | 68% |
 
+### My breaks at work
+
+The savings come from my pauses, so I measured them in the same 96 sessions. A break runs from
+Claude's last line to my next message. Tool results and command output don't count as my messages.
+If I stopped Claude, the break starts when I stopped it.
+
+<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-length.png" alt="Bar chart of 1,756 breaks in 96 work sessions by length: 37% under 1 minute, 26% 1 to 5 minutes, 9% 5 to 10, 4% 10 to 15, 7% 15 to 30, 5% 30 to 60, 4% 1 to 2 hours, 2% 2 to 4 hours, 6% over 4 hours. Dashed lines at 5 minutes and 1 hour mark where each cache runs out; 25% of breaks fall between them." />
+</figure>
+
+Most of my breaks are short: **63% under 5 minutes**, where either cache is still warm. A quarter
+fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5 minutes. The last 11% run
+past an hour, and by then both caches are gone.
+
+| Break length | p10 | p25 | p50 | p75 | p90 | p95 | p99 |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| 1,756 breaks | 3 sec | 24 sec | 2.2 min | 12 min | 71 min | 5.8 hours | 2 days |
+
+**By length.** "Up to here" adds up as you read down.
+
+| Break length | Breaks | Share | Up to here |
+|---|--:|--:|--:|
+| Under 1 min | 656 | 37% | 37% |
+| 1 to 5 min | 459 | 26% | 63% |
+| 5 to 10 min | 165 | 9% | 73% |
+| 10 to 15 min | 68 | 4% | 77% |
+| 15 to 30 min | 115 | 7% | 83% |
+| 30 to 60 min | 92 | 5% | 89% |
+| 1 to 2 hours | 72 | 4% | 93% |
+| 2 to 4 hours | 29 | 2% | 94% |
+| Over 4 hours | 100 | 6% | 100% |
+
+<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-hours.png" alt="Bar charts of the 641 breaks over 5 minutes by the hour they began, peaking at noon with 74, and by weekday: Monday 52, Tuesday 130, Wednesday 147, Thursday 149, Friday 104, Saturday 39, Sunday 20." />
+</figure>
+
+The breaks over 5 minutes follow a work day. They climb through the morning, peak at noon, and pick
+up again around 4 to 5pm. Most fall Tuesday to Thursday. They're the ordinary interruptions of a
+work day: I step away while Claude's answer waits, and on a 5-minute cache the whole conversation
+is written again when I come back.
+
 ### The result
 
 The same setting came out even on my subscription and about a tenth cheaper at work. The difference
