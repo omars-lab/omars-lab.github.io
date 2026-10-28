@@ -25,36 +25,76 @@ Most useful to the most people first.
 - **[Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask)**:
   name the moments Claude should stop and ask you, and how to ask, so your decisions come back as
   clear choices instead of getting lost in a long reply.
+- **[Telling Claude When Not to Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-not-to-ask)**:
+  one tenet says only a choice that's hard to undo earns a question; for the rest, Claude makes the
+  call, says what it assumed, and shows you the result.
+- **[Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets)**:
+  write short standing rules in your global `CLAUDE.md`, each with the moment that produced it, so
+  one rule fixes a whole kind of mistake in every repo. Each tenet then gets its own page.
 - **[Picking the Prompt Cache Time Limit](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit)**:
-  measure the pauses between your turns before choosing a 5-minute or 1-hour prompt cache, with
-  three calculators to try your own pattern.
+  measure the pauses between your turns before choosing a 5-minute or 1-hour prompt cache. How
+  the cache works, with calculators to try your own pattern, is on
+  [its own explainer page](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works).
+- **[Saying What It Is, Not What It's Called](/craft/generative-ai/claude-code-techniques/saying-what-it-is-not-what-its-called)**:
+  have Claude write everything you read in plain words, saying what a thing is instead of its name
+  in the code, and put the rule at the top of your `CLAUDE.md` so it reads as a rule for everything.
 - **[Saving the Yeses in Claude's Memory](/craft/generative-ai/claude-code-techniques/saving-the-yeses-in-claude-memory)**:
   have Claude write down what you confirmed, not only what you corrected, so the approaches that
   worked survive into the next session.
 - **[Sending Side-Quests to a Fork](/craft/generative-ai/claude-code-techniques/sending-side-quests-to-a-fork)**:
   hand side work to a forked agent that already knows the conversation, so only a short report
   comes back instead of every file it read.
+- **[Committing a Checkpoint Before Claude Tries Something New](/craft/generative-ai/claude-code-techniques/committing-a-checkpoint-before-claude-tries-something-new)**:
+  have Claude commit the working state before a rewrite or a risky refactor, so a failed
+  experiment costs one reset, and see what Claude Code's rewind does and doesn't cover.
+- **[Writing a Continuation Prompt Before You Start Fresh](/craft/generative-ai/claude-code-techniques/writing-a-continuation-prompt-before-you-start-fresh)**:
+  before a long session ends, have Claude write where things stand into a file in the repo, so a
+  clean new session starts from it instead of from a summary.
+- **[Giving Claude a Standing Order for the Backlog](/craft/generative-ai/claude-code-techniques/giving-claude-a-standing-order-for-the-backlog)**:
+  tell Claude that "continue" means the most value for the effort first, said in one line, and
+  that closing easy items isn't progress while the important work waits.
+- **[Writing the Pivot Down in the Repo](/craft/generative-ai/claude-code-techniques/writing-the-pivot-down-in-the-repo)**:
+  when a problem forces Claude to change approach, have it write up what was tried and why in a
+  file in the repo, so the next session doesn't try the dead end again.
 - **[Looking at the Page Before Reading the CSS](/craft/generative-ai/claude-code-techniques/looking-at-the-page-before-reading-the-css)**:
   when a page looks wrong, have Claude open it in a browser and look before it reads the
   stylesheet, so it finds the rule that actually won instead of guessing.
+- **[Writing the Design Before Plan Mode](/craft/generative-ai/claude-code-techniques/writing-the-design-before-plan-mode)**:
+  have Claude write a design doc and ask you its open questions first, then plan from that doc in
+  plan mode and push back on the plan before any code.
 - **[Seeing the Options Before You Decide](/craft/generative-ai/claude-code-techniques/seeing-the-options-before-you-decide)**:
   have Claude draw a choice as a page of side-by-side options with measured costs before you pick,
   so the number that changes the decision turns up first.
+- **[Options Like an Executive Summary](/craft/generative-ai/claude-code-techniques/options-like-an-executive-summary)**:
+  have Claude lead with its pick, then give each option's pros, cons and what it commits you to,
+  so you can decide in a minute.
 - **[Handoff Prompts That Carry Only the What](/craft/generative-ai/claude-code-techniques/handoff-prompts-that-carry-only-the-what)**:
   start a fresh session with a few lines that say what to do, and let your skills say how, so a
   rule never lives in two places.
+- **[What Not to Hand to Claude](/craft/generative-ai/claude-code-techniques/what-not-to-hand-to-claude)**:
+  hand Claude the searching, reading and drafting, but keep your curiosity and your calls, so the
+  decisions that set direction still come back to you.
 - **[A Skill That Can't Approve Its Own Work](/craft/generative-ai/claude-code-techniques/a-skill-that-cannot-approve-its-own-work)**:
   let a skill suggest, and make the code refuse when it tries to mark its own suggestion as
   approved, so a guess and a decision never look the same.
 - **[Sweeping Every Repo for Unpushed Work](/craft/generative-ai/claude-code-techniques/sweeping-every-repo-for-unpushed-work)**:
   one skill finds every repo with work that isn't on GitHub, writes each commit message from the
   diff, and scans for secrets before it pushes.
+- **[Giving Long Scripts Logs You Can Grep](/craft/generative-ai/claude-code-techniques/giving-long-scripts-logs-you-can-grep)**:
+  have a long-running script write one line per event that Claude can grep, with a line before
+  and after each call that can hang, so "is it stuck?" is one grep instead of a guess.
 - **[Reading the Docs Before Debugging a Skill](/craft/generative-ai/claude-code-techniques/reading-the-docs-before-debugging-a-skill)**:
   when a skill won't fire, read its description first, since that is the line Claude matches your
   request against, and add a check that catches thin ones.
+- **[Looking at the Source, Not the Score](/craft/generative-ai/claude-code-techniques/looking-at-the-source-not-the-score)**:
+  when Claude pulls text or facts out of files, have it open a sample of the real source, hardest
+  cases included, because a match rate passes on exactly the failures that matter.
 - **[Auditing the Plan Before You Build It](/craft/generative-ai/claude-code-techniques/auditing-the-plan-before-you-build-it)**:
   before any code, send read-only agents to check each claim in the plan against the code and its
   sources, then rewrite the plan once.
+- **[Two Researchers, Then a Checker](/craft/generative-ai/claude-code-techniques/two-researchers-then-a-checker)**:
+  when research decides what you build, have two fresh agents answer it separately and a third
+  re-open their sources, so you act on what they agree on and check what they don't.
 - **[Citing the Session, Not a Memory](/craft/generative-ai/claude-code-techniques/citing-the-session-not-a-memory)**:
   make Claude point at the exact line of a past session behind a claim, and add a check that
   refuses a citation whose words aren't on that line.
@@ -64,11 +104,38 @@ Most useful to the most people first.
 - **[Fixing the Check That Missed It](/craft/generative-ai/claude-code-techniques/fixing-the-check-that-missed-it)**:
   when a flaw gets past a hook or validator, fix the check first and prove it catches the case,
   then run it over everything before fixing the file.
+- **[Testing a Hook in a Throwaway Session](/craft/generative-ai/claude-code-techniques/testing-a-hook-in-a-throwaway-session)**:
+  check a new hook with a one-line `claude -p` session and count what it wrote, instead of waiting
+  to see whether it fires in real work.
+- **[Writing a Loop Prompt That Knows When to Stop](/craft/generative-ai/claude-code-techniques/writing-a-loop-prompt-that-knows-when-to-stop)**:
+  before you run `/loop`, settle what counts, say what each round does, name the file that holds
+  the progress, and say when to hand back, so the loop doesn't drift or lose its place.
+- **[Driving the App by Hand](/craft/generative-ai/claude-code-techniques/driving-the-app-by-hand)**:
+  when a step has no command, let Claude click through the app itself, with a screenshot before
+  and after every click, so a moved button or a pop-up on top is caught instead of pressed blind.
+- **[Running Every CI Check on Your Own Machine](/craft/generative-ai/claude-code-techniques/running-every-ci-check-on-your-own-machine)**:
+  give each check one make target that CI, the commit hook and you all run, so a red build is one
+  command away.
+- **[Letting a Hook Remember the Check](/craft/generative-ai/claude-code-techniques/letting-a-hook-remember-the-check)**:
+  a Stop hook that reads the session and reminds you only when it did the work that needs a check
+  and never ran the check.
+- **[Commenting on Your Own Pages](/craft/generative-ai/claude-code-techniques/commenting-on-your-own-pages)**:
+  press C on a page Claude built, comment on the element you mean, and a watcher in the session
+  hears it, makes the fix and replies on the page with an after picture.
+- **[Asking a Stronger Model What to Do Next](/craft/generative-ai/claude-code-techniques/asking-a-stronger-model-what-to-do-next)**:
+  set a stronger advisor model and add a small Stop hook, so a long stretch of work ends with one
+  suggested next step instead of a full stop.
 - **[Pull Out the Patterns Before You Republish](/craft/generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish)**:
   before reusing a detailed write-up elsewhere, separate the patterns tangled inside it and give
   each one its own general post.
 - **[Diffing Regenerated Data by Key](/craft/generative-ai/claude-code-techniques/diffing-regenerated-data-by-key)**:
   when a script rewrites a data file, compare the rows by id instead of reading a line diff, so
   only the real changes show.
+- **[Reading the Agent's Thinking When Evals Fail](/craft/generative-ai/claude-code-techniques/reading-the-agents-thinking-when-evals-fail)**:
+  when an eval fails, have Claude read the agent's logged thinking in order and find the first
+  place it got confused, then fix that one spot and re-run.
+- **[Letting a Cheaper Model Watch Your Agent](/craft/generative-ai/claude-code-techniques/letting-a-cheaper-model-watch-your-agent)**:
+  one Haiku call per agent run sorts the runs into fine, went wrong, or worth an eval, so a person
+  reads only the bad ones.
 
 *For: anyone using Claude Code day to day who wants it to work more like a careful colleague.*

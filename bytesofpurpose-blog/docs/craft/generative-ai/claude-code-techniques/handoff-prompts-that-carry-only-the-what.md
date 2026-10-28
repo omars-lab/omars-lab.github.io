@@ -4,7 +4,7 @@ description: 'Start a fresh Claude Code session with a few lines that say what t
 slug: /generative-ai/claude-code-techniques/handoff-prompts-that-carry-only-the-what
 kind: technique
 usefulness: 4 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 7
+sidebar_position: 6.3
 authors: [oeid]
 tags: [claude-code, ai, productivity, skills, prompts]
 image: /img/claude-code/handoff-prompts-that-carry-only-the-what.png

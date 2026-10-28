@@ -76,7 +76,7 @@ there are hundreds of items.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/saving-the-yeses-in-claude-memory.png" alt="A Claude Code session: I confirm a sorting rule and Claude says it is now recorded, not just its read of my corrections; four days later I say a pass should run on the small model by default and Claude saves that preference to memory" />
+  <img src="/img/claude-code/saving-the-yeses-in-claude-memory.png" alt="A Claude Code session: Claude says two categories are taking most of the technical chats with a rubric that seems to hold, I confirm a sorting rule and Claude says it is now recorded, not just its read of my corrections; four days later, after Claude says none of my sorting skills pin a model, I say a pass should run on the small model by default and Claude saves that preference to memory" />
 </figure>
 
 Both moments are from August 2026, while Claude was sorting a few hundred of my old chats into
@@ -118,12 +118,6 @@ easier, which is exactly why the rule has to be written down.
 - **The reason travels with it.** A note with a why can be applied with judgment, so it doesn't
   harden into a rule that fires in the wrong place.
 - **It's cheap.** A yes is one line from you. The note costs Claude a few seconds.
-
-## In my own words
-
-- "personal dev is more dev fall back bucket" (August 2026)
-- "finding saved pizza places is a claude google mcp technique confirmation" (August 2026)
-- "haiku should be default" (August 2026)
 
 ## Related
 

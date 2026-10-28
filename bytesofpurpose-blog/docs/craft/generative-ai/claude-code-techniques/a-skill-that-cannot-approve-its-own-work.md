@@ -4,7 +4,7 @@ description: 'Claude Code offered to sort my chats into share and keep private o
 slug: /generative-ai/claude-code-techniques/a-skill-that-cannot-approve-its-own-work
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 8
+sidebar_position: 7
 authors: [oeid]
 tags: [claude-code, ai, productivity, safety]
 image: /img/claude-code/a-skill-that-cannot-approve-its-own-work.png
@@ -137,14 +137,6 @@ in, unstamped, waiting for a click.
 - **It doesn't depend on the model behaving.** The instructions explain the rule; the code enforces
   it. If the instructions get skipped, the script still says no.
 - **Re-runs are safe.** A second pass fills in blanks and never touches a row I already decided.
-
-## In my own words
-
-The rule came out of a few short messages before it was ever code:
-
-- "propose, create relevant csvs, reviewed in ui" (August 2026)
-- "the choice to publish should be mine whether buttons in ui or ask question in skill" (August 2026)
-- "we should have a different button - queue for publishgin vs a red publish as exception" (August 2026)
 
 ## Related
 

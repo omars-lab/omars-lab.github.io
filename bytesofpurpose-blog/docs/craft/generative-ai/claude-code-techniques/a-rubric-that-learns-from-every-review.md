@@ -4,7 +4,7 @@ description: 'Turn a review you keep doing by taste into a skill with a rubric f
 slug: /generative-ai/claude-code-techniques/a-rubric-that-learns-from-every-review
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 13
+sidebar_position: 11.3
 authors: [oeid]
 tags: [claude-code, ai, productivity, skills, writing]
 image: /img/claude-code/a-rubric-that-learns-from-every-review.png

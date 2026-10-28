@@ -1,6 +1,6 @@
 ---
 title: 'Picking the Prompt Cache Time Limit'
-description: 'The prompt cache can live 5 minutes or an hour. I measured my own pauses to see which one fits, and built three calculators so you can try yours.'
+description: 'The prompt cache can live 5 minutes or an hour. I measured my own pauses to see which one fits, and how to measure yours before you pick.'
 slug: /generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit
 kind: technique
 usefulness: 4 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
@@ -11,16 +11,23 @@ image: /img/claude-code/picking-the-prompt-cache-time-limit.png
 draft: true
 questions:
   - Should I use the 5-minute or the 1-hour prompt cache in Claude Code?
-  - Why does the first message after a break cost so much more?
   - How do I set the prompt cache time limit in Claude Code?
   - How do I measure the pauses between my Claude Code turns?
 ---
 
-import {ContextSim, ChatSim, CostSim} from '@site/src/components/PromptCacheSim';
+import Gist from 'react-gist';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-## What annoyed me
+## What I observed
 
-I read [a thread on r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
+Do you use Claude Code with an API key? If so, this page is for you.
+
+At work we access Claude, but not through the monthly subscription. Instead, we get a bucket of API
+tokens. After burning through my bucket a couple of times, I compared it with my personal $200 a
+month Max plan. To match what that plan gives me, I'd need about $7,000 a month in credits. I figured tokens were just more expensive.
+
+Then I came across [a thread on r/ClaudeAI](https://www.reddit.com/r/ClaudeAI/comments/1w8p8tn/prompt_cache_ttl_when_does_1_hour_beat_the/)
 arguing that anyone who pauses 15 to 45 minutes between turns should switch the prompt cache from
 its 5-minute default to 1 hour. The reasoning was neat: the 1-hour cache costs more to fill, but
 one return after a coffee break pays that back. I pause like that all day. I step away while a long
@@ -32,91 +39,50 @@ me. I was about to change a setting on the strength of a hunch.
 ## What I did about it
 
 I read the docs to find out which limit applies when, then had Claude measure every pause in my own
-session logs and work out what each limit would have cost. The answer surprised me: for the way I
-work, it is nearly a wash. Then I built the three calculators below so you can try your own pattern
-before you change anything.
+session logs and work out what each limit would have cost. The answer surprised me twice. On my
+subscription it is **a wash**. At work, on API credits, had I known about this setting, I could have
+saved **about 10% all time**, and **about 13% on my most expensive sessions**, the top quarter by cost.
+Then I built three calculators so you can
+try your own pattern before you change anything.
 
 **The technique:** pick the prompt cache's time limit to fit how you work, and measure your pauses
 before you pick.
 
-## What the cache holds
+**How the cache works** is on its own page,
+[How Claude Code's Prompt Cache Works](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works),
+with the calculators:
 
-Every request Claude Code sends starts with the same block of text: the system prompt and tool
-definitions, then your `CLAUDE.md`, memory and rules, then the conversation so far. The
-[prompt cache](https://code.claude.com/docs/en/prompt-caching) keeps that block on Anthropic's side,
-so the next request can read it back at a small fraction of the input price instead of paying full
-price to send it again. Each turn adds to the end, so the block grows all session.
-
-<ContextSim />
-
-If the cache is still there, a turn pays a small read price for everything before it and the
-write price only for what it adds. If the cache has expired, the whole block is written again at
-full write price. In a long session that block is easily over 100k tokens.
-
-## The two time limits
-
-The cache lives 5 minutes by default. Every time a request reads it, the clock restarts, so a fast
-back and forth keeps it warm for free. You can ask for 1 hour instead. The catch is the price of
-writing:
-
-| Model | Input | Write, 5-minute cache | Write, 1-hour cache | Read from cache |
-|---|---|---|---|---|
-| Opus 5.5 | $4 | $5 | $8 | $0.20 |
-| Sonnet 5.5 | $2 | $2.50 | $4 | $0.10 |
-| Fable 5.1 | $10 | $12.50 | $20 | $0.25 |
-| Opus 4.5 to 5 | $5 | $6.25 | $10 | $0.50 |
-| Sonnet 4.5 / 4.6 | $3 | $3.75 | $6 | $0.30 |
-| Haiku 4.5 | $1 | $1.25 | $2 | $0.10 |
-
-*Dollars per million tokens, from [Anthropic's pricing page](https://platform.claude.com/docs/en/about-claude/pricing), October 2026.*
-
-A 5-minute write costs 1.25x the input price and a 1-hour write costs 2x, on every model. So the
-1-hour cache costs an extra 0.75x on every token it writes. It earns that back when you return after
-a pause of 5 to 60 minutes: the 5-minute cache is gone and would write the whole block again at
-1.25x, while the 1-hour cache reads it back. On most models a read is 0.1x, so that return saves
-1.15x. On Opus 5.5 and Sonnet 5.5 reads are 0.05x and on Fable 5.1 they are 0.025x, so a return
-saves even a bit more. One return after a 5 to 60 minute pause covers the extra on the same tokens.
-Past an hour, both caches are gone and the 1-hour one has only cost you more.
-
-## Try a day of pauses
-
-Pick an example day, or set the pause before each turn yourself.
-
-<ChatSim />
-
-## What a whole session costs
-
-The rule above is per token, and a session keeps adding tokens. Every turn pays the 0.75x extra on
-what it adds, and only the turns after a 5 to 60 minute pause get the saving back. That gives one
-number to watch: the tokens read back after those pauses, as a share of everything the 1-hour cache
-writes. Above about 63% (65% on older models), 1 hour wins. Below it, 5 minutes wins.
-
-<CostSim />
-
-With the starting settings (Opus 5.5, a 22k start, 8k per turn, 30 turns, one 20-minute break at
-turn 15), the break re-reads 54% of what gets written and the 5-minute cache is slightly cheaper.
-Move the break later, or add a second one, and 1 hour wins: a return late in a long session
-re-reads almost everything written before it. Make the breaks longer than an hour and 5 minutes
-always wins.
+- [What the cache holds](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#what-the-cache-holds):
+  the block every request sends, and why it grows all session.
+- [The two time limits](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#the-two-time-limits):
+  the prices, and why one return after a 5 to 60 minute pause pays for the 1-hour cache.
+- [Try a day of pauses](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#try-a-day-of-pauses)
+  and [what a whole session costs](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#what-a-whole-session-costs):
+  the calculators.
 
 ## What my own logs said
 
-*Measured on October 21, 2026.*
+*Measured October 21 to 28, 2026. List prices, main conversation only.*
 
-I had Claude write a small script that reads my Claude Code session logs (personal projects only),
-sorts every request by time and sorts the pause before each one into three groups: up to 5 minutes,
-5 to 60 minutes, and over an hour. It adds up what was written to the cache and read back, and works
-out what the same requests would have cost with a 5-minute cache. Only totals come out.
+I had Claude write a small script that reads my Claude Code session logs, sorts every request by
+time and puts the pause before each one into one of three groups: up to 5 minutes, 5 to 60 minutes,
+and over an hour. Then it works out what the same requests would have cost on the other limit. Only
+totals come out.
 
-**First surprise: I was already on 1 hour.** On a Claude subscription, Claude Code gives the main
-conversation a 1-hour cache, and subagents and other helpers get 5 minutes, apart from a few
-helper requests Anthropic's servers control, which get 1 hour. My logs show exactly that split: 840 million tokens written at 1 hour in my main conversations against 2.6 million at
-5 minutes, and the reverse for subagents (741 million at 5 minutes, 1.9 million at 1 hour).
+I ran it on two sets of sessions: the ones on my subscription, and the ones on API credits.
 
-**Second surprise: I hardly ever pause.** Across 297 sessions and 215,063 requests, 98% came within
-5 minutes of the one before. Most requests are Claude itself working through a task: read a file,
-run a command, read the result. My coffee breaks are a tiny share of the requests, though each one
-re-reads a big block (153k tokens on average).
+<Tabs>
+<TabItem value="subscription" label="On a subscription" default>
+
+**About even.**
+
+- **I was already on 1 hour.** A subscription gives the main conversation 1 hour and subagents 5
+  minutes, and my logs show exactly that split.
+- **I hardly ever pause.** 98% of my requests came within 5 minutes of the one before. Most
+  requests are Claude working through a task, not me.
+- **Most of my middle pauses aren't me.** I ended only 43% of the 5 to 60 minute pauses by typing.
+  Tools, background jobs and subagents ended the rest, and subagents came back in under 5 minutes
+  86% of the time.
 
 | Pause before a request | All time | Last 30 days |
 |---|---|---|
@@ -124,21 +90,177 @@ re-reads a big block (153k tokens on average).
 | 5 to 60 minutes | 3,385 (1.6%) | 948 (1.8%) |
 | Over an hour | 1,202 (0.6%) | 191 (0.4%) |
 
-The 1-hour cache did its job on those middle pauses: after a 5 to 60 minute pause, 92% of the
-prompt still came from the cache. After pauses over an hour, only 13% did (the shared system
-prompt, kept warm by my other open sessions).
+A 5-minute cache would have saved 2% all time and cost 2% more in the last 30 days. For me, on a
+subscription, the limit doesn't matter.
 
-**The result: about even.** All time, a 5-minute cache on my main conversations would have saved
-$3,127 on cheaper writes and cost $2,648 in re-writes after those pauses. That makes the 1-hour
-cache $480 dearer, 2% of $25,479. In the last 30 days it went the other way: $42 cheaper, 1% of
-$3,326. The share from the calculator above tells the same story: tokens read back after a 5 to
-60 minute pause came to 57% of what was written all time and 68% in the last 30 days, either side
-of the line. These are list prices for a subscription I don't pay per token for, so read them as a
-measure of the work, not a bill.
+</TabItem>
+<TabItem value="api" label="On an API key">
 
-So for me, the default is fine and I'm leaving it. The useful part was finding out where my money
-actually goes: almost all of it is fast back and forth inside a task, where both limits behave the
-same.
+**At work, 1 hour would have saved about a tenth.**
+
+On an API key the main conversation runs at 5 minutes. I took the work sessions whose main
+conversation clearly ran at 5 minutes and kept only the **meaningful sessions**, the ones that cost
+over $10 each. That left 47, about a quarter of my work spend. The other 49 were quick questions
+that cost under $10 each. With a 1-hour cache the meaningful sessions would have cost **10% less
+all time, and 21% less in the last 30 days.** My most expensive sessions, the top quarter by cost
+(12 sessions of over $150 each, 71% of the cost), would have cost 13% less.
+
+The saving isn't spread evenly. It sits in the long sessions where I kept coming back. The tabs
+below cut the same 47 sessions four ways.
+
+<Tabs>
+<TabItem value="group" label="By group" default>
+
+| Meaningful sessions | How many | Share of the cost | With 1 hour |
+|---|--:|--:|---|
+| 10 or more pauses of 5 to 60 minutes | 27 | 91% | 11% cheaper |
+| Fewer than 10 | 20 | 9% | 2% more expensive |
+
+</TabItem>
+<TabItem value="percentiles" label="Percentiles">
+
+Read p25 as "in 75% of my meaningful sessions, 1 hour would have saved at least this".
+
+| Saved with 1 hour | p10 | p25 | p50 | p75 | p90 |
+|---|--:|--:|--:|--:|--:|
+| Each meaningful session (47) | −11% | −4% | +4% | +10% | +21% |
+| Weighted by what each session cost | −15% | −5% | +7% | +21% | +45% |
+
+About two thirds of my meaningful sessions would have saved something. Half my work dollars sat in
+sessions that would have saved 7% or more, and a quarter in sessions that would have saved 21% or
+more.
+
+</TabItem>
+<TabItem value="steps" label="5-point steps">
+
+Each "or better" column adds that row to every row above it, so it climbs as you read down.
+Green rows are sessions where 1 hour would have saved money; red rows, where it would have cost more.
+
+<style>{`
+  .cache-steps tbody tr td { background: rgba(46, 160, 67, 0.14); }
+  .cache-steps tbody tr:nth-child(n+11) td { background: rgba(218, 54, 51, 0.14); }
+`}</style>
+
+<div className="cache-steps">
+
+| Saved with 1 hour | Sessions | Share | Or better | Of the cost | Or better | $ saved | Or better |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| 45% to 50% | 1 | 2% | 2% | 14% | 14% | $417 | $417 |
+| 40% to 45% | 0 | 0% | 2% | 0% | 14% | $0 | $417 |
+| 35% to 40% | 0 | 0% | 2% | 0% | 14% | $0 | $417 |
+| 30% to 35% | 1 | 2% | 4% | 5% | 19% | $93 | $511 |
+| 25% to 30% | 0 | 0% | 4% | 0% | 19% | $0 | $511 |
+| 20% to 25% | 5 | 11% | 15% | 10% | 30% | $152 | $663 |
+| 15% to 20% | 2 | 4% | 19% | 1% | 30% | $9 | $672 |
+| 10% to 15% | 3 | 6% | 26% | 7% | 38% | $47 | $719 |
+| 5% to 10% | 10 | 21% | 47% | 24% | 61% | $103 | $822 |
+| 0% to 5% | 8 | 17% | 64% | 7% | 68% | $7 | $830 |
+| −5% to 0% | 7 | 15% | 79% | 7% | 75% | −$12 | $818 |
+| −10% to −5% | 4 | 9% | 87% | 5% | 81% | −$25 | $793 |
+| −15% to −10% | 4 | 9% | 96% | 18% | 99% | −$162 | $630 |
+| −20% to −15% | 2 | 4% | 100% | 1% | 100% | −$12 | $618 |
+
+</div>
+
+One session saved $417 on its own. The sessions that would have cost more gave back $212, so the
+last row's $618 is what a 1-hour cache would have saved across all 47.
+
+</TabItem>
+<TabItem value="added" label="Added up">
+
+Sessions that saved something, but no more than this.
+
+| Saved with 1 hour | Sessions | Share | Share of the cost |
+|---|--:|--:|--:|
+| 0% to 5% | 8 | 17% | 7% |
+| 0% to 10% | 18 | 38% | 31% |
+| 0% to 15% | 21 | 45% | 38% |
+| 0% to 20% | 23 | 49% | 39% |
+| 0% to 25% | 28 | 60% | 49% |
+| 0% to 30% | 28 | 60% | 49% |
+| 0% to 35% | 29 | 62% | 54% |
+| 0% to 50% | 30 | 64% | 68% |
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### My breaks at work
+
+The savings come from my pauses, so I measured them in the same 47 meaningful sessions. A break runs
+from Claude's last line to my next message. Tool results and command output don't count as my
+messages. If I stopped Claude, the break starts when I stopped it.
+
+<div className="cache-breaks-columns" style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '1.5rem', alignItems: 'start'}}>
+<div>
+
+**How long they lasted**
+
+<img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-length.png" alt="Bar chart of 1,662 breaks in 47 meaningful work sessions by length: 37% under 1 minute, 26% 1 to 5 minutes, 10% 5 to 10, 4% 10 to 15, 7% 15 to 30, 5% 30 to 60, 4% 1 to 2 hours, 2% 2 to 4 hours, 5% over 4 hours. Dashed lines at 5 minutes and 1 hour mark where each cache runs out; 26% of breaks fall between them." />
+
+Most of my breaks are short: **63% under 5 minutes**, where either cache is still warm. About a
+quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5 minutes. The last
+11% run past an hour, and by then both caches are gone.
+
+<Tabs>
+<TabItem value="three" label="Three groups" default>
+
+| Break length | Breaks | Share | Still warm |
+|---|--:|--:|---|
+| Under 5 min | 1,050 | 63% | Both |
+| 5 to 60 min | 426 | 26% | Only the 1-hour one |
+| Over 60 min | 186 | 11% | Neither |
+
+</TabItem>
+<TabItem value="finer" label="Finer steps">
+
+| Break length | Breaks | Share | Up to here |
+|---|--:|--:|--:|
+| Under 1 min | 611 | 37% | 37% |
+| 1 to 5 min | 439 | 26% | 63% |
+| 5 to 10 min | 158 | 10% | 73% |
+| 10 to 15 min | 67 | 4% | 77% |
+| 15 to 30 min | 113 | 7% | 84% |
+| 30 to 60 min | 88 | 5% | 89% |
+| 1 to 2 hours | 67 | 4% | 93% |
+| 2 to 4 hours | 28 | 2% | 95% |
+| Over 4 hours | 91 | 5% | 100% |
+
+</TabItem>
+</Tabs>
+
+The middle break was 2.4 minutes. One in four ran past 12.6 minutes, and one in ten past 72.
+
+**Sneak peek:** in a future post I plan to share a small helper that watches my Claude Code
+sessions in iTerm and reminds me about five minutes before a session's 1-hour cache runs out, with
+a button that takes me to that tab. It goes after that last 11%: coming back just before the hour
+instead of just after.
+
+</div>
+<div>
+
+**When they began**
+
+<img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-hours.png" alt="Bar charts of the 612 breaks over 5 minutes in 47 meaningful work sessions by the hour they began, peaking at noon with 70, and by weekday: Monday 50, Tuesday 127, Wednesday 136, Thursday 143, Friday 99, Saturday 37, Sunday 20." />
+
+The breaks over 5 minutes follow a work day. They climb through the morning, peak at noon, and pick
+up again around 4 to 5pm. Most fall Tuesday to Thursday. They're the ordinary interruptions of a
+work day: I step away while Claude's answer waits, and on a 5-minute cache the whole conversation
+is written again when I come back.
+
+</div>
+</div>
+
+### The result
+
+The same setting came out **even on my subscription** and **about a tenth cheaper at work**, and
+**13% cheaper on my most expensive work sessions**. The difference is the pauses. My heaviest work
+sessions each had **10 or more returns after a 5 to 60 minute pause**, and on a 5-minute cache
+every one of those returns **writes the whole conversation again**. A 1-hour cache isn't the whole
+gap between my work credits and my subscription. But on an API key it's one setting, and my long
+sessions say it pays.
 
 ## Set it up
 
@@ -147,9 +269,11 @@ same.
 For which limit you're on, send one message and look at the usage:
 
 ```bash
-claude -p "hello" --output-format json
-# look for usage.cache_creation.ephemeral_1h_input_tokens and ephemeral_5m_input_tokens
+claude -p "hello" --output-format json | jq '.usage.cache_creation'
 ```
+
+Whichever of `ephemeral_1h_input_tokens` and `ephemeral_5m_input_tokens` is above zero is the limit
+you're on.
 
 **Which limit applies by default** ([Claude Code docs](https://code.claude.com/docs/en/prompt-caching)):
 
@@ -158,7 +282,12 @@ claude -p "hello" --output-format json
 - Subagents, compaction and other helpers: 5 minutes. On a subscription, a few helper requests
   that Anthropic's servers control get 1 hour.
 
-**Change it** in `~/.claude/settings.json` (Claude Code 2.1.242 or later):
+**Change it** (Claude Code 2.1.242 or later) in one of two ways:
+
+<Tabs>
+<TabItem value="settings" label="In settings.json" default>
+
+For every session, add these to `~/.claude/settings.json`:
 
 ```json
 {
@@ -167,8 +296,22 @@ claude -p "hello" --output-format json
 }
 ```
 
-or for one shell with `CLAUDE_CODE_PROMPT_CACHE_TTL=1h` and `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL=5m`.
-`FORCE_PROMPT_CACHING_5M=1` overrides everything. The full order is on the
+</TabItem>
+<TabItem value="env" label="With environment variables">
+
+For one shell, export these before you start `claude`:
+
+```bash
+export CLAUDE_CODE_PROMPT_CACHE_TTL=1h
+export CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL=5m
+```
+
+Put them in your shell profile to keep them.
+
+</TabItem>
+</Tabs>
+
+`FORCE_PROMPT_CACHING_5M=1` overrides both. The full order is on the
 [prompt caching page](https://code.claude.com/docs/en/prompt-caching) and the keys are in the
 [settings reference](https://code.claude.com/docs/en/settings).
 
@@ -176,9 +319,50 @@ or for one shell with `CLAUDE_CODE_PROMPT_CACHE_TTL=1h` and `CLAUDE_CODE_SUBAGEN
 `"cache_control": {"type": "ephemeral", "ttl": "1h"}`. See
 [prompt caching in the API docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
-**Measure your own pauses.** Claude Code keeps each session as a `.jsonl` file under
-`~/.claude/projects/`. This counts the pause before every request, across all your sessions
-(it needs `jq`):
+**Decide whether to switch.** Claude Code keeps each session as a `.jsonl` file under
+`~/.claude/projects/`, so your own pauses are already on disk. Here are three ways to read them;
+pick one.
+
+<Tabs>
+<TabItem value="ask" label="Ask Claude" default>
+
+Paste this into a Claude Code session:
+
+```text
+I want to know how much money I would save, or lose, by changing my prompt cache time limit.
+First read Claude Code's docs on prompt caching and on settings:
+https://code.claude.com/docs/en/prompt-caching and https://code.claude.com/docs/en/settings.
+Then read this script, which prices my session logs at both limits:
+https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253
+Use it, or the same method, on my session logs (the .jsonl files under ~/.claude/projects/).
+Tell me which limit saves me more money and tokens, for the main conversation and for
+subagents: the share of my spend I would save, and how many tokens I would stop writing to the
+cache a second time. Then tell me whether I should change promptCacheTtl or subagentPromptCacheTtl.
+```
+
+Reading the docs first means Claude works from the current defaults and setting names, not from
+what it remembers. The script gives it a tested way to work out the saving instead of guessing.
+
+</TabItem>
+<TabItem value="script" label="Run the script">
+
+The script I used for the numbers above is
+[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253), and its
+full code is in the [appendix](#appendix-the-script). It needs Node 20 and nothing else, reads the
+logs on the machine you run it on, and prints totals only. If your logs ran at 5 minutes (an API
+key, or subagents), it answers "with 1 hour, you would have saved N% of your budget". If they ran
+at 1 hour, it prices them at 5 minutes. Download it with the GitHub CLI and run it:
+
+```bash
+gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
+node cache-ttl-gaps.mjs --root ~/.claude --days 30
+# logs too old to say 5m or 1h: add --ran-at 5m
+```
+
+</TabItem>
+<TabItem value="jq" label="Count pauses with jq">
+
+This counts the pause before every request, across all your sessions (it needs `jq`):
 
 ```bash
 for f in ~/.claude/projects/*/*.jsonl; do
@@ -194,33 +378,37 @@ done | awk '{ a += $1; b += $2; c += $3 }
 The log format isn't documented, so check it still works after an update. If the middle line is a
 real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
 
+</TabItem>
+</Tabs>
+
 ## What it looks like
 
-<figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit.png" alt="A Claude Code session: I ask for a technique with simulations of the prompt cache time limit and its cost, and Claude answers with what my own logs show: 98% of requests come within 5 minutes, and the 1-hour cache came out about even" />
+<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize its settings around how you take breaks. Claude Code with a prompt typed and ready to send: I want to know how much money I would save, or lose, by changing my prompt cache time limit. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, and tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
 </figure>
 
-I asked for this page, pasting in the Reddit reasoning. Before writing it, Claude went through my
-own logs. The numbers changed what the page says: I came in expecting "switch to 1 hour" and left
-with "measure first".
+That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
+this page, pasting in the Reddit reasoning, and before writing it Claude went through my own logs. The numbers changed what the page says: I came in expecting "switch to 1 hour" and left
+with "measure first": it paid at work and made no difference at home.
 
 ## Why it works
 
-- **The cost follows your pauses, not the setting.** The same limit is a saving for one person and
-  a cost for another. Only your own pause pattern says which.
+- **The cost follows your pauses, not the setting.** The same 1-hour limit made no difference on my
+  subscription and saved about a tenth at work. Only your own pause pattern says which.
 - **A pause is cheap to measure.** Every request is already in your session logs with a time on it.
 - **The break-even is simple.** 1 hour costs 0.75x more on what it writes and saves about 1.15x on
-  each return after 5 to 60 minutes. If those returns are common next to how fast your
-  conversation grows, 1 hour wins.
+  each return after 5 to 60 minutes ([the two time limits](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#the-two-time-limits)).
+  If those returns are common next to how fast your conversation grows, 1 hour wins.
 - **Subagents are a separate choice.** They work in fast bursts (99% of my subagent requests came
   within 5 minutes of the last), which is why they default to 5 minutes.
-
-## In my own words
-
-- "i also want to make a new technique with interactive context simulation widgets, chat simulation, cost simulation" (October 2026)
+- **Waiting on a subagent is a pause too.** The main conversation's cache clock runs while a
+  subagent works. Subagents that take 5 to 60 minutes favour 1 hour on the main conversation; ones
+  that finish in under 5 minutes, or take over an hour, don't.
 
 ## Related
 
+- [How Claude Code's Prompt Cache Works](/craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works):
+  what the cache holds, the two limits and their prices, and the three calculators.
 - [Prompt caching in Claude Code](https://code.claude.com/docs/en/prompt-caching): which limit
   applies when, and how to change it.
 - [The context window in Claude Code](https://code.claude.com/docs/en/context-window): what fills
@@ -234,3 +422,16 @@ with "measure first".
   5.5, Sonnet 5.5 and Fable 5.1, which read for less.
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
 - This page goes with a post in my "How I Used Claude Today" series on LinkedIn.
+
+## Appendix: the script
+
+The `cache-ttl-gaps.mjs` script from [Set it up](#set-it-up), as published in the
+[gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253). To download it:
+
+```bash
+gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
+```
+
+<div style={{maxHeight: '32rem', overflowY: 'auto'}}>
+  <Gist id="4fc25fd8209d7b2199821ad84988a253" />
+</div>

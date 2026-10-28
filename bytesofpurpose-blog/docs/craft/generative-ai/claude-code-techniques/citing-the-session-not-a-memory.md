@@ -4,7 +4,7 @@ description: 'Claude Code keeps every session as a log you can search. I make it
 slug: /generative-ai/claude-code-techniques/citing-the-session-not-a-memory
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 12
+sidebar_position: 11
 authors: [oeid]
 tags: [claude-code, ai, productivity, provenance]
 image: /img/claude-code/citing-the-session-not-a-memory.png
@@ -81,7 +81,7 @@ drift).
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/citing-the-session-not-a-memory.png" alt="A Claude Code session: I ask whether we are logging the exact transcripts and line numbers behind each observation, Claude replies that it replaced paraphrases with verified line numbers and flagged two entries it could not anchor, and later it fixes one of its own citations that pointed at the wrong line" />
+  <img src="/img/claude-code/citing-the-session-not-a-memory.png" alt="A Claude Code session: Claude says it committed both corrections, and I ask whether we are logging the exact transcripts and line numbers behind each observation, Claude replies that it replaced paraphrases with verified line numbers and flagged two entries it could not anchor, and later it fixes one of its own citations that pointed at the wrong line" />
 </figure>
 
 This is from a real session in August. I asked whether each entry on the list pointed at the exact

@@ -4,7 +4,7 @@ description: 'When Claude Code output has a flaw, fix the hook or validator that
 slug: /generative-ai/claude-code-techniques/fixing-the-check-that-missed-it
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 14
+sidebar_position: 11.6
 authors: [oeid]
 tags: [claude-code, ai, productivity, hooks, quality]
 image: /img/claude-code/fixing-the-check-that-missed-it.png

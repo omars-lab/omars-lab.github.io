@@ -1,7 +1,9 @@
 #!/bin/bash
 # PostToolUse hook for Edit|Write: block on ERROR-tier link problems in .md/.mdx.
 #
-# ERROR tier = bare-url, url-as-text (see scripts/validate-links.js / validate-links skill).
+# ERROR tier = bare-url, url-as-text, broken-anchor (a #section link to a page that exists
+#              but has no such heading; also links from other pages INTO the edited one).
+#              See scripts/validate-links.js / the validate-links skill.
 # WARN tier  = long-url, generic-text → printed as advice, never blocks.
 #
 # Exit 2 marks the edit as failed and feeds stderr back to Claude so it can
@@ -46,7 +48,8 @@ if [ "$rc" -eq 2 ]; then
     echo "🔗 Link hygiene: ERROR-tier link problems in $file_path"
     echo "$out"
     echo ""
-    echo "Fix bare/url-as-text links before continuing. To auto-convert:"
+    echo "Fix these before continuing. A broken-anchor: point the link at a heading that exists,"
+    echo "or give the heading a fixed id (## Title {#id}). Bare/url-as-text links auto-convert with:"
     echo "  ( cd $proj/bytesofpurpose-blog && node scripts/validate-links.js --fix \"$file_path\" )"
     echo "(see the validate-links skill for the labeling tiers)"
   } >&2

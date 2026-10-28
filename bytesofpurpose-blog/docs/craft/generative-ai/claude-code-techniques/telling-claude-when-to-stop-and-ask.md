@@ -79,7 +79,7 @@ exact moments in the skill itself:
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/telling-claude-when-to-stop-and-ask.png" alt="A Claude Code session: I ask Claude to use the ask-question tool to capture my decisions, and later in the same session it asks whether to commit two files and push them to a public repo, with four options" />
+  <img src="/img/claude-code/telling-claude-when-to-stop-and-ask.png" alt="A Claude Code session: Claude says it committed and is now tracking seven follow-ups, and I ask it to use the ask-question tool to capture my decisions, and later in the same session it asks whether to commit two files and push them to a public repo, with four options" />
 </figure>
 
 This is from a real session where I was cleaning up my setup scripts. Early on I typed one line:
@@ -135,14 +135,6 @@ a documented format, so check the command still works after you update.
   log, not a sentence somewhere in a long reply, so one command gets them all back.
 - **It cuts the noise too.** The same rule that says when to ask also says when not to. Small,
   reversible calls just get made, and you review the result.
-
-## In my own words
-
-I didn't start with a rule. I started by saying it, over and over, until it was worth writing down:
-
-- "use ask question tool to capture my decisions" (August 2026)
-- "use ask question tool if input needed from me" (August 2026)
-- "... to use the ask question tool to understand my taste" (August 2026)
 
 ## Related
 

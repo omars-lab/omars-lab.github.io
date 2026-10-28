@@ -100,7 +100,7 @@ node forks.mjs ~/.claude/projects/<project folder>/<session-id>.jsonl
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/sending-side-quests-to-a-fork.png" alt="A Claude Code session: I ask for a local admin page for my short links, then add 'and do in sub agent'. Claude says the task is running in a background fork and offers to keep going on something else. Later it reports the app is built and committed." />
+  <img src="/img/claude-code/sending-side-quests-to-a-fork.png" alt="A Claude Code session: Claude says two tasks are done and committed, and I ask for a local admin page for my short links, then add 'and do in sub agent'. Claude says the task is running in a background fork and offers to keep going on something else. Later it reports the app is built and committed." />
 </figure>
 
 I was in the middle of a long session about my LinkedIn posts and asked for a side project: a small
@@ -124,10 +124,6 @@ to 1. The short-links one alone made 32 tool calls and read 26 KB, and returned 
 - **No re-explaining.** A fork starts with everything you've already said, so the brief can be one
   line. A fresh agent would need the whole background written out.
 - **You keep working.** The fork runs in the background, and you get a notice when it's done.
-
-## In my own words
-
-- "and do in sub agent" (August 2026), tacked onto a request for a side project, mid-session.
 
 ## Related
 
