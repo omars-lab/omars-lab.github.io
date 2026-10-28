@@ -4,7 +4,7 @@ description: 'When Claude Code asks me to choose, it now leads with its pick, th
 slug: /generative-ai/claude-code-techniques/options-like-an-executive-summary
 kind: technique
 usefulness: 4 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 5
+sidebar_position: 6.2
 authors: [oeid]
 tags: [claude-code, ai, productivity, decision-making]
 image: /img/claude-code/options-like-an-executive-summary.png

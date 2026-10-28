@@ -4,7 +4,7 @@ description: 'git said 185 lines changed after Claude Code re-ran a script. Matc
 slug: /generative-ai/claude-code-techniques/diffing-regenerated-data-by-key
 kind: technique
 usefulness: 2 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 9
+sidebar_position: 17
 authors: [oeid]
 tags: [claude-code, ai, productivity, data, git]
 image: /img/claude-code/diffing-regenerated-data-by-key.png
@@ -116,7 +116,7 @@ put that command in the rule, so the call is the same every time.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/diffing-regenerated-data-by-key.png" alt="A Claude Code session: I ask why some links to my Claude design files are broken. Claude fixes the script and confirms only those 7 rows changed plus my own filing choices. Later it reports 21 real changes from the new script, matching its earlier manual check." />
+  <img src="/img/claude-code/diffing-regenerated-data-by-key.png" alt="A Claude Code session: Claude says the local server is back up, and I ask why some links to my Claude design files are broken. Claude fixes the script and confirms only those 7 rows changed plus my own filing choices. Later it reports 21 real changes from the new script, matching its earlier manual check." />
 </figure>
 
 I'd noticed some links in my list of Claude chats went to "not found" pages. Claude found the cause:

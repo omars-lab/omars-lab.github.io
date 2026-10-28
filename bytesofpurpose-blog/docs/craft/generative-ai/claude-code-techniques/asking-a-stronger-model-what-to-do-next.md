@@ -4,7 +4,7 @@ description: 'Claude Code can consult a stronger advisor model. A small Stop hoo
 slug: /generative-ai/claude-code-techniques/asking-a-stronger-model-what-to-do-next
 kind: technique
 usefulness: 3 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 7
+sidebar_position: 15.7
 authors: [oeid]
 tags: [claude-code, ai, productivity, hooks]
 image: /img/claude-code/asking-a-stronger-model-what-to-do-next.png
