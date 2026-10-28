@@ -4,7 +4,7 @@ description: 'Claude Code planned to turn one design write-up into one general p
 slug: /generative-ai/claude-code-techniques/pull-out-the-patterns-before-you-republish
 kind: technique
 usefulness: 2 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
-sidebar_position: 15
+sidebar_position: 16
 authors: [oeid]
 tags: [claude-code, ai, productivity, writing]
 image: /img/claude-code/pull-out-the-patterns-before-you-republish.png
@@ -91,7 +91,7 @@ every time. Mine sits in a file next to the skill and the skill reads it before 
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/pull-out-the-patterns-before-you-republish.png" alt="A Claude Code session: I ask for a skill that writes a general version of my posts before I export them, and twelve minutes later I say there may be many patterns tangled together; Claude agrees the skill has to disentangle the patterns first and only then generalize" />
+  <img src="/img/claude-code/pull-out-the-patterns-before-you-republish.png" alt="A Claude Code session: Claude copies two file paths to my clipboard, and I ask for a skill that writes a general version of my posts before I export them, and twelve minutes later, when Claude asks what I want to clarify, I say there may be many patterns tangled together; Claude agrees the skill has to disentangle the patterns first and only then generalize" />
 </figure>
 
 This is the conversation from July 2026 where the skill took shape. My first message asked for a
