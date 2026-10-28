@@ -75,7 +75,7 @@ If the value isn't the one your rule sets, some other rule is winning, and that 
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/looking-at-the-page-before-reading-the-css.png" alt="A Claude Code session: I say I am still seeing tight text; Claude says its CSS fix is being served and blames how tables size cells; the next evening Claude opens the page itself and finds a more specific nowrap rule beating its fix" />
+  <img src="/img/claude-code/looking-at-the-page-before-reading-the-css.png" alt="A Claude Code session: Claude says it found the rule that keeps table text from wrapping, and I say I am still seeing tight text; Claude says its CSS fix is being served and blames how tables size cells; the next evening Claude opens the page itself and finds a more specific nowrap rule beating its fix" />
 </figure>
 
 The top half is the old way. I report the bug again, and Claude answers with a new theory about

@@ -160,7 +160,7 @@ sessions, and a headless `claude -p` run I tried with it on still logged an empt
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/reading-the-agents-thinking-when-evals-fail.png" alt="A Claude Code session: I say that when an agent's evals fail, ask Claude to look into the agent's thinking to see where it got confused, and that this makes a minimal loop. Claude sums it up: when evals fail, read the agent's thinking, pull the thinking blocks out of the session file and find where the agent got confused." />
+  <img src="/img/claude-code/reading-the-agents-thinking-when-evals-fail.png" alt="A Claude Code session: Claude says all checks pass and it is committing three new posts, and I say that when an agent's evals fail, ask Claude to look into the agent's thinking to see where it got confused, and that this makes a minimal loop. Claude sums it up: when evals fail, read the agent's thinking, pull the thinking blocks out of the session file and find where the agent got confused." />
 </figure>
 
 This is the moment I named the loop, while listing the posts I wanted to write. Claude's reply

@@ -17,9 +17,9 @@ questions:
 
 ## What annoyed me
 
-An agent in production writes more transcripts than anyone will read. The evals catch what I
-thought to test for. Everything else shows up later, when someone tells me a run went sideways,
-and by then I'm scrolling through a long transcript looking for the moment it turned.
+An agent in production writes more transcripts than anyone will read. Its evals catch what
+someone thought to test for. Everything else shows up later, when someone reports a run that went
+sideways, and by then you're scrolling through a long transcript looking for the moment it turned.
 
 The runs that pass bother me too. A run can end with the right answer after wandering for twenty
 steps, and a pass/fail eval scores it the same as a run that went straight there.
@@ -160,7 +160,7 @@ wrong.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/letting-a-cheaper-model-watch-your-agent.png" alt="A Claude Code session: I describe a cheaper model that reads every transcript of an agent in production and picks out the problem runs and the ones to build evals around, and Claude sums it up: a Haiku pass over each transcript flags the bad runs and the ones worth an eval, and an eval can also grade the thinking for confusion" />
+  <img src="/img/claude-code/letting-a-cheaper-model-watch-your-agent.png" alt="A Claude Code session: Claude says all checks pass and it is committing three new posts, and I describe a cheaper model that reads every transcript of an agent in production and picks out the problem runs and the ones to build evals around, and Claude sums it up: a Haiku pass over each transcript flags the bad runs and the ones worth an eval, and an eval can also grade the thinking for confusion" />
 </figure>
 
 This is the moment I described it, before any of it existed. To see whether it holds up, I ran
