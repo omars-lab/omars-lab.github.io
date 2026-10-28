@@ -16,6 +16,8 @@ questions:
 ---
 
 import Gist from 'react-gist';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## What annoyed me
 
@@ -90,108 +92,126 @@ subscription, the limit doesn't matter.
 
 ### At work, on API credits: 1 hour would have saved about a tenth
 
-On an API key the main conversation runs at 5 minutes. I took the 96 work sessions whose main
-conversation clearly ran at 5 minutes, about 26% of my work spend. With a 1-hour cache they would
-have cost **9% less all time, and 21% less in the last 30 days.**
+On an API key the main conversation runs at 5 minutes. I took the work sessions whose main
+conversation clearly ran at 5 minutes and kept only the **meaningful sessions**, the ones that cost
+over $10 each. That left 47, about a quarter of my work spend. The other 49 were quick questions
+that cost under $10 each. With a 1-hour cache the meaningful sessions would have cost **10% less
+all time, and 21% less in the last 30 days.**
 
-The saving isn't spread evenly. It sits in the long sessions where I kept coming back:
+The saving isn't spread evenly. It sits in the long sessions where I kept coming back. The tabs
+below cut the same 47 sessions four ways.
 
-| Sessions over $1 | How many | Share of the cost | With 1 hour |
+<Tabs>
+<TabItem value="group" label="By group" default>
+
+| Meaningful sessions | How many | Share of the cost | With 1 hour |
 |---|--:|--:|---|
-| 10 or more pauses of 5 to 60 minutes | 27 | 90% | 11% cheaper |
-| Fewer than 10 | 37 | 10% | 2% dearer |
+| 10 or more pauses of 5 to 60 minutes | 27 | 91% | 11% cheaper |
+| Fewer than 10 | 20 | 9% | 2% dearer |
 
-The other 32 sessions cost under $1 each: one question, one answer, done. 1 hour writes their
-prompt at the higher price and never reads it back, so most would have cost 20% or more extra, on
-pennies. The tables below leave them out.
+</TabItem>
+<TabItem value="percentiles" label="Percentiles">
 
-**Per session.** Read p25 as "in 75% of my sessions, 1 hour would have saved at least this".
+Read p25 as "in 75% of my meaningful sessions, 1 hour would have saved at least this".
 
 | Saved with 1 hour | p10 | p25 | p50 | p75 | p90 |
 |---|--:|--:|--:|--:|--:|
-| Each session over $1 (64) | −18% | −7% | +1% | +8% | +20% |
-| Weighted by what each session cost | −15% | −6% | +7% | +21% | +45% |
+| Each meaningful session (47) | −11% | −4% | +4% | +10% | +21% |
+| Weighted by what each session cost | −15% | −5% | +7% | +21% | +45% |
 
-So about half my sessions over $1 would have saved something. Half my work dollars sat in sessions
-that would have saved 7% or more, and a quarter in sessions that would have saved 21% or more.
+About two thirds of my meaningful sessions would have saved something. Half my work dollars sat in
+sessions that would have saved 7% or more, and a quarter in sessions that would have saved 21% or
+more.
 
-**In 5-point steps.** Each "or better" column adds that row to every row above it, so it climbs as
-you read down.
+</TabItem>
+<TabItem value="steps" label="5-point steps">
+
+Each "or better" column adds that row to every row above it, so it climbs as you read down.
 
 | Saved with 1 hour | Sessions | Share | Or better | Of the cost | Or better | $ saved | Or better |
 |---|--:|--:|--:|--:|--:|--:|--:|
 | 45% to 50% | 1 | 2% | 2% | 14% | 14% | $417 | $417 |
 | 40% to 45% | 0 | 0% | 2% | 0% | 14% | $0 | $417 |
 | 35% to 40% | 0 | 0% | 2% | 0% | 14% | $0 | $417 |
-| 30% to 35% | 1 | 2% | 3% | 5% | 19% | $93 | $511 |
-| 25% to 30% | 0 | 0% | 3% | 0% | 19% | $0 | $511 |
-| 20% to 25% | 5 | 8% | 11% | 10% | 29% | $152 | $663 |
-| 15% to 20% | 4 | 6% | 17% | 1% | 30% | $11 | $674 |
-| 10% to 15% | 3 | 5% | 22% | 7% | 37% | $47 | $721 |
-| 5% to 10% | 11 | 17% | 39% | 23% | 61% | $103 | $824 |
-| 0% to 5% | 10 | 16% | 55% | 7% | 68% | $7 | $832 |
-| −5% to 0% | 10 | 16% | 70% | 7% | 75% | −$12 | $820 |
-| −10% to −5% | 6 | 9% | 80% | 5% | 80% | −$26 | $794 |
-| −15% to −10% | 5 | 8% | 88% | 18% | 99% | −$163 | $631 |
-| −20% to −15% | 2 | 3% | 91% | 1% | 100% | −$12 | $619 |
-| Below −20% | 6 | 9% | 100% | 0% | 100% | −$4 | $615 |
+| 30% to 35% | 1 | 2% | 4% | 5% | 19% | $93 | $511 |
+| 25% to 30% | 0 | 0% | 4% | 0% | 19% | $0 | $511 |
+| 20% to 25% | 5 | 11% | 15% | 10% | 30% | $152 | $663 |
+| 15% to 20% | 2 | 4% | 19% | 1% | 30% | $9 | $672 |
+| 10% to 15% | 3 | 6% | 26% | 7% | 38% | $47 | $719 |
+| 5% to 10% | 10 | 21% | 47% | 24% | 61% | $103 | $822 |
+| 0% to 5% | 8 | 17% | 64% | 7% | 68% | $7 | $830 |
+| −5% to 0% | 7 | 15% | 79% | 7% | 75% | −$12 | $818 |
+| −10% to −5% | 4 | 9% | 87% | 5% | 81% | −$25 | $793 |
+| −15% to −10% | 4 | 9% | 96% | 18% | 99% | −$162 | $630 |
+| −20% to −15% | 2 | 4% | 100% | 1% | 100% | −$12 | $618 |
 
-One session saved $417 on its own. The sessions that would have cost more gave back $217, so the
-last row's $615 is what a 1-hour cache would have saved across all 64.
+One session saved $417 on its own. The sessions that would have cost more gave back $212, so the
+last row's $618 is what a 1-hour cache would have saved across all 47.
 
-**Added up from 0.** Sessions that saved something, but no more than this.
+</TabItem>
+<TabItem value="added" label="Added up">
+
+Sessions that saved something, but no more than this.
 
 | Saved with 1 hour | Sessions | Share | Share of the cost |
 |---|--:|--:|--:|
-| 0% to 5% | 10 | 16% | 7% |
-| 0% to 10% | 21 | 33% | 31% |
-| 0% to 15% | 24 | 38% | 38% |
-| 0% to 20% | 28 | 44% | 39% |
-| 0% to 25% | 33 | 52% | 49% |
-| 0% to 30% | 33 | 52% | 49% |
-| 0% to 35% | 34 | 53% | 54% |
-| 0% to 50% | 35 | 55% | 68% |
+| 0% to 5% | 8 | 17% | 7% |
+| 0% to 10% | 18 | 38% | 31% |
+| 0% to 15% | 21 | 45% | 38% |
+| 0% to 20% | 23 | 49% | 39% |
+| 0% to 25% | 28 | 60% | 49% |
+| 0% to 30% | 28 | 60% | 49% |
+| 0% to 35% | 29 | 62% | 54% |
+| 0% to 50% | 30 | 64% | 68% |
+
+</TabItem>
+</Tabs>
 
 ### My breaks at work
 
-The savings come from my pauses, so I measured them in the same 96 sessions. A break runs from
-Claude's last line to my next message. Tool results and command output don't count as my messages.
-If I stopped Claude, the break starts when I stopped it.
+The savings come from my pauses, so I measured them in the same 47 meaningful sessions. A break runs
+from Claude's last line to my next message. Tool results and command output don't count as my
+messages. If I stopped Claude, the break starts when I stopped it.
 
-<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-length.png" alt="Bar chart of 1,756 breaks in 96 work sessions by length: 37% under 1 minute, 26% 1 to 5 minutes, 9% 5 to 10, 4% 10 to 15, 7% 15 to 30, 5% 30 to 60, 4% 1 to 2 hours, 2% 2 to 4 hours, 6% over 4 hours. Dashed lines at 5 minutes and 1 hour mark where each cache runs out; 25% of breaks fall between them." />
-</figure>
+<div className="cache-breaks-columns" style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '1.5rem', alignItems: 'start'}}>
+<div>
 
-Most of my breaks are short: **63% under 5 minutes**, where either cache is still warm. A quarter
-fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5 minutes. The last 11% run
-past an hour, and by then both caches are gone.
+**How long they lasted**
 
-| Break length | p10 | p25 | p50 | p75 | p90 | p95 | p99 |
-|---|--:|--:|--:|--:|--:|--:|--:|
-| 1,756 breaks | 3 sec | 24 sec | 2.2 min | 12 min | 71 min | 5.8 hours | 2 days |
+<img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-length.png" alt="Bar chart of 1,662 breaks in 47 meaningful work sessions by length: 37% under 1 minute, 26% 1 to 5 minutes, 10% 5 to 10, 4% 10 to 15, 7% 15 to 30, 5% 30 to 60, 4% 1 to 2 hours, 2% 2 to 4 hours, 5% over 4 hours. Dashed lines at 5 minutes and 1 hour mark where each cache runs out; 26% of breaks fall between them." />
 
-**By length.** "Up to here" adds up as you read down.
+Most of my breaks are short: **63% under 5 minutes**, where either cache is still warm. About a
+quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5 minutes. The last
+11% run past an hour, and by then both caches are gone.
 
 | Break length | Breaks | Share | Up to here |
 |---|--:|--:|--:|
-| Under 1 min | 656 | 37% | 37% |
-| 1 to 5 min | 459 | 26% | 63% |
-| 5 to 10 min | 165 | 9% | 73% |
-| 10 to 15 min | 68 | 4% | 77% |
-| 15 to 30 min | 115 | 7% | 83% |
-| 30 to 60 min | 92 | 5% | 89% |
-| 1 to 2 hours | 72 | 4% | 93% |
-| 2 to 4 hours | 29 | 2% | 94% |
-| Over 4 hours | 100 | 6% | 100% |
+| Under 1 min | 611 | 37% | 37% |
+| 1 to 5 min | 439 | 26% | 63% |
+| 5 to 10 min | 158 | 10% | 73% |
+| 10 to 15 min | 67 | 4% | 77% |
+| 15 to 30 min | 113 | 7% | 84% |
+| 30 to 60 min | 88 | 5% | 89% |
+| 1 to 2 hours | 67 | 4% | 93% |
+| 2 to 4 hours | 28 | 2% | 95% |
+| Over 4 hours | 91 | 5% | 100% |
 
-<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-hours.png" alt="Bar charts of the 641 breaks over 5 minutes by the hour they began, peaking at noon with 74, and by weekday: Monday 52, Tuesday 130, Wednesday 147, Thursday 149, Friday 104, Saturday 39, Sunday 20." />
-</figure>
+The middle break was 2.4 minutes. One in four ran past 12.6 minutes, and one in ten past 72.
+
+</div>
+<div>
+
+**When they began**
+
+<img src="/img/claude-code/picking-the-prompt-cache-time-limit-break-hours.png" alt="Bar charts of the 612 breaks over 5 minutes in 47 meaningful work sessions by the hour they began, peaking at noon with 70, and by weekday: Monday 50, Tuesday 127, Wednesday 136, Thursday 143, Friday 99, Saturday 37, Sunday 20." />
 
 The breaks over 5 minutes follow a work day. They climb through the morning, peak at noon, and pick
 up again around 4 to 5pm. Most fall Tuesday to Thursday. They're the ordinary interruptions of a
 work day: I step away while Claude's answer waits, and on a 5-minute cache the whole conversation
 is written again when I come back.
+
+</div>
+</div>
 
 ### The result
 
