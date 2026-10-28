@@ -91,7 +91,7 @@ every time. Mine sits in a file next to the skill and the skill reads it before 
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/pull-out-the-patterns-before-you-republish.png" alt="A Claude Code session: I ask for a skill that writes a general version of my posts before I export them, and twelve minutes later I say there may be many patterns tangled together; Claude agrees the skill has to disentangle the patterns first and only then generalize" />
+  <img src="/img/claude-code/pull-out-the-patterns-before-you-republish.png" alt="A Claude Code session: Claude copies two file paths to my clipboard, and I ask for a skill that writes a general version of my posts before I export them, and twelve minutes later, when Claude asks what I want to clarify, I say there may be many patterns tangled together; Claude agrees the skill has to disentangle the patterns first and only then generalize" />
 </figure>
 
 This is the conversation from July 2026 where the skill took shape. My first message asked for a
