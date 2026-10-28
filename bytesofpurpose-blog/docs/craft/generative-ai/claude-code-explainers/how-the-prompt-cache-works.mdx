@@ -1,0 +1,103 @@
+---
+title: "How Claude Code's Prompt Cache Works"
+description: 'What the prompt cache holds, what the 5-minute and 1-hour limits cost, and three calculators to try a day of pauses or a whole session.'
+slug: /generative-ai/claude-code-explainers/how-the-prompt-cache-works
+kind: reference
+sidebar_position: 1
+authors: [oeid]
+tags: [claude-code, ai, cost]
+draft: true
+questions:
+  - What does Claude Code's prompt cache hold?
+  - Why does the first message after a break cost so much more?
+  - When does the 1-hour prompt cache pay for itself?
+  - Does waiting on a subagent let the main conversation's cache expire?
+---
+
+import {ContextSim, ChatSim, CostSim} from '@site/src/components/PromptCacheSim';
+
+Claude Code sends the same growing block of text with every request, and the prompt cache decides
+whether you pay full price for it each time. This page explains what the cache holds, the two time
+limits you can pick, and what each one costs, with three calculators to try your own pattern.
+
+For whether to change the setting, and what my own logs said, see
+[Picking the Prompt Cache Time Limit](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit).
+
+## What the cache holds {#what-the-cache-holds}
+
+Every request Claude Code sends starts with the same block of text: the system prompt and tool
+definitions, then your `CLAUDE.md`, memory and rules, then the conversation so far. The
+[prompt cache](https://code.claude.com/docs/en/prompt-caching) keeps that block on Anthropic's side,
+so the next request can read it back at a small fraction of the input price instead of paying full
+price to send it again. Each turn adds to the end, so the block grows all session.
+
+<ContextSim />
+
+If the cache is still there, a turn pays a small read price for everything before it and the
+write price only for what it adds. If the cache has expired, the whole block is written again at
+full write price. In a long session that block is easily over 100k tokens.
+
+## The two time limits {#the-two-time-limits}
+
+The cache lives 5 minutes by default. Every time a request reads it, the clock restarts, so a fast
+back and forth keeps it warm for free. You can ask for 1 hour instead. The catch is the price of
+writing:
+
+| Model | Input | Write, 5-minute cache | Write, 1-hour cache | Read from cache |
+|---|---|---|---|---|
+| Opus 5.5 | $4 | $5 | $8 | $0.20 |
+| Sonnet 5.5 | $2 | $2.50 | $4 | $0.10 |
+| Fable 5.1 | $10 | $12.50 | $20 | $0.25 |
+| Opus 4.5 to 5 | $5 | $6.25 | $10 | $0.50 |
+| Sonnet 4.5 / 4.6 | $3 | $3.75 | $6 | $0.30 |
+| Haiku 4.5 | $1 | $1.25 | $2 | $0.10 |
+
+*Dollars per million tokens, from [Anthropic's pricing page](https://platform.claude.com/docs/en/about-claude/pricing), October 2026.*
+
+A 5-minute write costs 1.25x the input price and a 1-hour write costs 2x, on every model. So the
+1-hour cache costs an extra 0.75x on every token it writes. It earns that back when you return after
+a pause of 5 to 60 minutes: the 5-minute cache is gone and would write the whole block again at
+1.25x, while the 1-hour cache reads it back. On most models a read is 0.1x, so that return saves
+1.15x. On Opus 5.5 and Sonnet 5.5 reads are 0.05x and on Fable 5.1 they are 0.025x, so a return
+saves even a bit more. One return after a 5 to 60 minute pause covers the extra on the same tokens.
+Past an hour, both caches are gone and the 1-hour one has only cost you more.
+
+A pause isn't only you stepping away. When Claude hands a job to a subagent and waits for it, the
+subagent works in its own conversation, so the main one sends nothing until it comes back. A
+subagent that takes 5 to 60 minutes is a coffee break as far as the main cache is concerned. One
+that comes back in under 5 minutes costs nothing either way, and one that takes over an hour finds
+both caches gone.
+
+## Try a day of pauses {#try-a-day-of-pauses}
+
+Pick an example day, or set the pause before each turn yourself. "Waiting on subagents" is a day
+where the long pauses are subagents at work: 10, 20 and 120 minutes.
+
+<ChatSim />
+
+## What a whole session costs {#what-a-whole-session-costs}
+
+The rule above is per token, and a session keeps adding tokens. Every turn pays the 0.75x extra on
+what it adds, and only the turns after a 5 to 60 minute pause get the saving back. That gives one
+number to watch: the tokens read back after those pauses, as a share of everything the 1-hour cache
+writes. Above about 63% (65% on older models), 1 hour wins. Below it, 5 minutes wins.
+
+<CostSim />
+
+With the starting settings (Opus 5.5, a 22k start, 8k per turn, 30 turns, one 20-minute break at
+turn 15), the break re-reads 54% of what gets written and the 5-minute cache is slightly cheaper.
+Move the break later, or add a second one, and 1 hour wins: a return late in a long session
+re-reads almost everything written before it. Make the breaks longer than an hour and 5 minutes
+always wins.
+
+## Related
+
+- [Picking the Prompt Cache Time Limit](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit):
+  the technique, my own numbers, and how to change the setting.
+- [Prompt caching in Claude Code](https://code.claude.com/docs/en/prompt-caching): which limit
+  applies when, and how to change it.
+- [The context window in Claude Code](https://code.claude.com/docs/en/context-window): what fills
+  the context and how it grows.
+- [Prompt caching in the API](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+  and [pricing](https://platform.claude.com/docs/en/about-claude/pricing).
+- [Claude Code Explainers](/craft/generative-ai/claude-code-explainers): the other pages in this set.

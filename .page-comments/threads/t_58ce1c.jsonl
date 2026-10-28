@@ -2,3 +2,7 @@
 {"v":1,"ts":"2026-10-28T19:19:26Z","ev":"shot","role":"comment","author":"omar","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_58ce1c/comment.png","sha":"2b7003ab1157"}
 {"v":1,"ts":"2026-10-28T19:22:10Z","ev":"reply","author":"claude","body":"The cache tool now adds up the dollars saved for each row, with a running total (hub commit 2e17eb2), and I have the numbers. I haven't put them on this page yet: they are your work spend, and the page only shows percentages so far. I've asked you in the chat whether the dollars should go on the public page."}
 {"v":1,"ts":"2026-10-28T19:24:44Z","ev":"anchor","author":"page","state":"lost"}
+{"v":1,"ts":"2026-10-28T19:25:30Z","ev":"landed","author":"git","commit":"4175213f","from":"65296a68"}
+{"v":1,"ts":"2026-10-28T19:25:54Z","ev":"shot","role":"after","author":"claude","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_58ce1c/after-4175213f.png","sha":"f762d916e913","commit":"4175213f"}
+{"v":1,"ts":"2026-10-28T19:25:58Z","ev":"reply","author":"claude","body":"Done in 4175213f (picking-the-prompt-cache-time-limit.mdx): each row now has \"$ saved\" and a running \"Or better\" total, ending at $615 across the 64 sessions over $1. I shortened the headings so the wider table still fits, which is why the page lost this comment's heading; there's an after picture in the thread.","commit":"4175213f"}
+{"v":1,"ts":"2026-10-28T19:26:01Z","ev":"status","author":"claude","status":"resolved","note":"Dollars per row and a running total added in 4175213f."}
