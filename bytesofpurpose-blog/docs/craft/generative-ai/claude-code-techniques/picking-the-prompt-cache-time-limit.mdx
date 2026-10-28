@@ -41,7 +41,8 @@ me. I was about to change a setting on the strength of a hunch.
 I read the docs to find out which limit applies when, then had Claude measure every pause in my own
 session logs and work out what each limit would have cost. The answer surprised me twice. On my
 subscription it is a wash. At work, on API credits, had I known about this setting, I could have
-saved about 10% all time, and nearly 50% in one session. Then I built three calculators so you can
+saved about 10% all time, and about 13% on my most expensive sessions, the top quarter by cost.
+Then I built three calculators so you can
 try your own pattern before you change anything.
 
 **The technique:** pick the prompt cache's time limit to fit how you work, and measure your pauses
@@ -71,7 +72,10 @@ totals come out.
 I ran it twice: on my personal Macs, where I use a subscription, and on my work Macs, where I use
 API credits.
 
-### On my subscription: about even
+<Tabs>
+<TabItem value="subscription" label="On a subscription" default>
+
+**About even.**
 
 - **I was already on 1 hour.** A subscription gives the main conversation 1 hour and subagents 5
   minutes, and my logs show exactly that split.
@@ -90,13 +94,17 @@ API credits.
 A 5-minute cache would have saved 2% all time and cost 2% more in the last 30 days. For me, on a
 subscription, the limit doesn't matter.
 
-### At work, on API credits: 1 hour would have saved about a tenth
+</TabItem>
+<TabItem value="api" label="On an API key">
+
+**At work, 1 hour would have saved about a tenth.**
 
 On an API key the main conversation runs at 5 minutes. I took the work sessions whose main
 conversation clearly ran at 5 minutes and kept only the **meaningful sessions**, the ones that cost
 over $10 each. That left 47, about a quarter of my work spend. The other 49 were quick questions
 that cost under $10 each. With a 1-hour cache the meaningful sessions would have cost **10% less
-all time, and 21% less in the last 30 days.**
+all time, and 21% less in the last 30 days.** My most expensive sessions, the top quarter by cost
+(12 sessions of over $150 each, 71% of the cost), would have cost 13% less.
 
 The saving isn't spread evenly. It sits in the long sessions where I kept coming back. The tabs
 below cut the same 47 sessions four ways.
@@ -177,6 +185,9 @@ Sessions that saved something, but no more than this.
 </TabItem>
 </Tabs>
 
+</TabItem>
+</Tabs>
+
 ### My breaks at work
 
 The savings come from my pauses, so I measured them in the same 47 meaningful sessions. A break runs
@@ -194,6 +205,18 @@ Most of my breaks are short: **63% under 5 minutes**, where either cache is stil
 quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5 minutes. The last
 11% run past an hour, and by then both caches are gone.
 
+<Tabs>
+<TabItem value="three" label="Three groups" default>
+
+| Break length | Breaks | Share | Which cache is still warm |
+|---|--:|--:|---|
+| Under 5 min | 1,050 | 63% | Both |
+| 5 to 60 min | 426 | 26% | Only the 1-hour one |
+| Over 60 min | 186 | 11% | Neither |
+
+</TabItem>
+<TabItem value="finer" label="Finer steps">
+
 | Break length | Breaks | Share | Up to here |
 |---|--:|--:|--:|
 | Under 1 min | 611 | 37% | 37% |
@@ -205,6 +228,9 @@ quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5
 | 1 to 2 hours | 67 | 4% | 93% |
 | 2 to 4 hours | 28 | 2% | 95% |
 | Over 4 hours | 91 | 5% | 100% |
+
+</TabItem>
+</Tabs>
 
 The middle break was 2.4 minutes. One in four ran past 12.6 minutes, and one in ten past 72.
 
@@ -225,8 +251,8 @@ is written again when I come back.
 
 ### The result
 
-The same setting came out even on my subscription and about a tenth cheaper at work, with one
-session nearly half cheaper. The difference is the pauses. My heaviest work sessions each had 10 or more returns after a 5 to 60 minute pause,
+The same setting came out even on my subscription and about a tenth cheaper at work, and 13%
+cheaper on my most expensive work sessions. The difference is the pauses. My heaviest work sessions each had 10 or more returns after a 5 to 60 minute pause,
 and on a 5-minute cache every one of those returns writes the whole conversation again. A 1-hour
 cache isn't the whole gap between my work credits and my subscription. But on an API key it's one
 setting, and my long sessions say it pays.
@@ -238,9 +264,11 @@ setting, and my long sessions say it pays.
 For which limit you're on, send one message and look at the usage:
 
 ```bash
-claude -p "hello" --output-format json
-# look for usage.cache_creation.ephemeral_1h_input_tokens and ephemeral_5m_input_tokens
+claude -p "hello" --output-format json | jq '.usage.cache_creation'
 ```
+
+Whichever of `ephemeral_1h_input_tokens` and `ephemeral_5m_input_tokens` is above zero is the limit
+you're on.
 
 **Which limit applies by default** ([Claude Code docs](https://code.claude.com/docs/en/prompt-caching)):
 
@@ -296,15 +324,19 @@ pick one.
 Paste this into a Claude Code session:
 
 ```text
+I want to know how much money I would save, or lose, by changing my prompt cache time limit.
 First read Claude Code's docs on prompt caching and on settings:
 https://code.claude.com/docs/en/prompt-caching and https://code.claude.com/docs/en/settings.
-Then look at my session logs (the .jsonl files under ~/.claude/projects/). Study how I use Claude:
-how long I pause between turns, and how much is written to the prompt cache and read back. Then
-tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl settings, and why.
+Then read this script, which prices my session logs at both limits:
+https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253
+Use it, or the same method, on my session logs (the .jsonl files under ~/.claude/projects/).
+Tell me which limit saves me more money and tokens, for the main conversation and for
+subagents: the share of my spend I would save, and how many tokens I would stop writing to the
+cache a second time. Then tell me whether I should change promptCacheTtl or subagentPromptCacheTtl.
 ```
 
 Reading the docs first means Claude works from the current defaults and setting names, not from
-what it remembers.
+what it remembers. The script gives it a tested way to work out the saving instead of guessing.
 
 </TabItem>
 <TabItem value="script" label="Run the script">
@@ -347,7 +379,7 @@ real share of the total and your prompts are big, try 1 hour for a few days and 
 ## What it looks like
 
 <figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: first read Claude Code's docs on prompt caching and settings, then look at my session logs under ~/.claude/projects/, study how long I pause and how much goes into the prompt cache, then tell me whether to change promptCacheTtl or subagentPromptCacheTtl, and why" />
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: I want to know how much money I would save, or lose, by changing my prompt cache time limit. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, and tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
 </figure>
 
 That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
@@ -367,10 +399,6 @@ with "measure first": it paid at work and made no difference at home.
 - **Waiting on a subagent is a pause too.** The main conversation's cache clock runs while a
   subagent works. Subagents that take 5 to 60 minutes favour 1 hour on the main conversation; ones
   that finish in under 5 minutes, or take over an hour, don't.
-
-## In my own words
-
-- "i also want to make a new technique with interactive context simulation widgets, chat simulation, cost simulation" (October 2026)
 
 ## Related
 
