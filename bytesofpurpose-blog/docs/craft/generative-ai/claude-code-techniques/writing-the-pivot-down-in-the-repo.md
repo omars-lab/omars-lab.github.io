@@ -99,7 +99,7 @@ work out by reading the code, because the code only shows what survived.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/writing-the-pivot-down-in-the-repo.png" alt="A Claude Code session: I ask Claude to track an incident as an issue in docs/issues, Claude says there is no docs/issues folder yet so it will create one with a short index and the incident file, and seven weeks later, on a different fix, Claude says it is writing that fix up in docs/issues while the tests run, as the repo rules ask" />
+  <img src="/img/claude-code/writing-the-pivot-down-in-the-repo.png" alt="A Claude Code session: Claude says my approvals are recorded and an evidence gap is closed, and I ask it to track an incident as an issue in docs/issues, Claude says there is no docs/issues folder yet so it will create one with a short index and the incident file, and seven weeks later, on a different fix, Claude says it is writing that fix up in docs/issues while the tests run, as the repo rules ask" />
 </figure>
 
 The top half is September: my one line, and Claude making the folder for it. The bottom half is

@@ -160,7 +160,7 @@ wrong.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/letting-a-cheaper-model-watch-your-agent.png" alt="A Claude Code session: I describe a cheaper model that reads every transcript of an agent in production and picks out the problem runs and the ones to build evals around, and Claude sums it up: a Haiku pass over each transcript flags the bad runs and the ones worth an eval, and an eval can also grade the thinking for confusion" />
+  <img src="/img/claude-code/letting-a-cheaper-model-watch-your-agent.png" alt="A Claude Code session: Claude says all checks pass and it is committing three new posts, and I describe a cheaper model that reads every transcript of an agent in production and picks out the problem runs and the ones to build evals around, and Claude sums it up: a Haiku pass over each transcript flags the bad runs and the ones worth an eval, and an eval can also grade the thinking for confusion" />
 </figure>
 
 This is the moment I described it, before any of it existed. To see whether it holds up, I ran

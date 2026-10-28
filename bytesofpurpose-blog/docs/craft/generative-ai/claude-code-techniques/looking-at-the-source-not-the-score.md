@@ -69,7 +69,7 @@ that tells me why the rule is there.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/looking-at-the-source-not-the-score.png" alt="A Claude Code session: I ask what the strategy is to tell two machines apart and say I'm still not convinced; Claude says the machine names differ cleanly and it will test that before leaning on it; four minutes later it says the machine name proves contact, not location" />
+  <img src="/img/claude-code/looking-at-the-source-not-the-score.png" alt="A Claude Code session: Claude says an answer of mine matches the file evidence, and I ask what the strategy is to tell two machines apart and say I'm still not convinced; Claude says the machine names differ cleanly and it will test that before leaning on it; four minutes later it says the machine name proves contact, not location" />
 </figure>
 
 This is from August 2026. I keep a list of my Claude Code sessions, and each row says which of my

@@ -60,7 +60,7 @@ When a plan is drafted and before any code is written, run an audit pass:
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/auditing-the-plan-before-you-build-it.png" alt="A Claude Code session: I ask Claude to re-audit the plan and back it up with web research, it says it will, and after three agents report back it says the audit found a real problem: the price table is wrong for every model I use, and fixing it is now step 1" />
+  <img src="/img/claude-code/auditing-the-plan-before-you-build-it.png" alt="A Claude Code session: Claude says its plan is complete and ready for approval, and I ask it to re-audit the plan and back it up with web research, it says it will, and after three agents report back it says the audit found a real problem: the price table is wrong for every model I use, and fixing it is now step 1" />
 </figure>
 
 This is from a real session in August. Claude had drafted a plan for a page that tracks how I use

@@ -92,7 +92,7 @@ change, which session you're in, or how long ago it was.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/committing-a-checkpoint-before-claude-tries-something-new.png" alt="A Claude Code session: I ask whether we lost our changes and whether they are committed, Claude answers that both commits are fully intact in git, and 29 seconds later says it created a branch pointing at both commits, so they are safe" />
+  <img src="/img/claude-code/committing-a-checkpoint-before-claude-tries-something-new.png" alt="A Claude Code session: Claude says it committed and updated a component skill, and I ask whether we lost our changes and whether they are committed, Claude answers that both commits are fully intact in git, and 29 seconds later says it created a branch pointing at both commits, so they are safe" />
 </figure>
 
 This is from July 2026, a couple of months before I wrote the tenet down, and it's the clearest

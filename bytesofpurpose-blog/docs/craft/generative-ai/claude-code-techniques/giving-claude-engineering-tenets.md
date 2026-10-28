@@ -75,7 +75,7 @@ validator) rather than a sentence.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/giving-claude-engineering-tenets.png" alt="A Claude Code session: I say I care less about Claude being wrong once and more about mechanisms that fix a whole class of mistakes, like giving Claude an engineering tenet, and Claude finds a session where stale numbers in docs kept coming back because each fix patched one instance, not the category" />
+  <img src="/img/claude-code/giving-claude-engineering-tenets.png" alt="A Claude Code session: Claude says it is reframing around moments where it was wrong and I supplied the fix, and I say I care less about Claude being wrong once and more about mechanisms that fix a whole class of mistakes, like giving Claude an engineering tenet, and Claude finds a session where stale numbers in docs kept coming back because each fix patched one instance, not the category" />
 </figure>
 
 This is from the session where I said out loud what I'd been doing for weeks. I asked Claude to

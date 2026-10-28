@@ -81,7 +81,7 @@ The habit is the same either way.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/driving-the-app-by-hand.png" alt="A Claude Code session: I ask for a count of the chats assigned to each project and a warning before ignoring a project that still has some; seven minutes later Claude says one project is selected with 2 chats assigned and clicking Ignore should bring up the warning; then it says the warning shows that 1 of these still holds 2 chats, and it will cancel without changing anything" />
+  <img src="/img/claude-code/driving-the-app-by-hand.png" alt="A Claude Code session: Claude says the local server is up, and I ask for a count of the chats assigned to each project and a warning before ignoring a project that still has some; seven minutes later Claude says one project is selected with 2 chats assigned and clicking Ignore should bring up the warning; then it says the warning shows that 1 of these still holds 2 chats, and it will cancel without changing anything" />
 </figure>
 
 This is from August 2026, in a browser rather than a native app, because it's a session I can
