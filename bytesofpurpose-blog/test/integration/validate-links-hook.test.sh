@@ -107,6 +107,24 @@ printf -- '\n* https://github.com/ClearURLs/Addon\n' >> "$f"
 node "$VALIDATOR" "$f" --error-only >/dev/null 2>&1
 [ $? -ne 0 ] && ok "uncommented bare URL alongside comments → still flagged" || bad "uncommented bare URL → not flagged (comment masking too greedy)"
 
+# --- 10. section links: a missing #anchor on an existing page blocks ---------
+# Targets a real page whose sections carry explicit {#id}s (the journey timeline).
+f="$TMP/anchors.md"
+printf -- '---\ntitle: t\n---\n\n## Here\n\nSee [Radian](/journey/contributions-across-career#radian-ml-pipeline-optimization) and [up](#here).\n' > "$f"
+run_hook "$f"
+[ "$HOOK_RC" -eq 0 ] && ok "section link to a real {#id} and same-page heading → exit 0" || bad "good section links → expected 0, got $HOOK_RC: $HOOK_OUT"
+printf -- '\nSee [gone](/journey/contributions-across-career#no-such-section).\n' >> "$f"
+run_hook "$f"
+[ "$HOOK_RC" -eq 2 ] && ok "section link to a missing #id → exit 2 (blocks)" || bad "missing #id → expected 2, got $HOOK_RC"
+echo "$HOOK_OUT" | grep -q 'broken-anchor' && ok "missing #id → named broken-anchor" || bad "missing #id → not labeled broken-anchor"
+f="$TMP/sameanchor.md"
+printf -- '---\ntitle: t\n---\n\n## Here\n\n[up](#not-here)\n' > "$f"
+run_hook "$f"
+[ "$HOOK_RC" -eq 2 ] && ok "same-page link to a missing heading → exit 2" || bad "same-page missing heading → expected 2, got $HOOK_RC"
+printf -- '---\ntitle: t\n---\n\n## Here\n\n[up](#not-here) {/* validate-links-ignore */}\n' > "$f"
+run_hook "$f"
+[ "$HOOK_RC" -eq 0 ] && ok "validate-links-ignore on the line → exit 0" || bad "ignore comment → expected 0, got $HOOK_RC"
+
 # --- summary -------------------------------------------------------------
 echo ""
 echo "  $pass passed, $fail failed"
