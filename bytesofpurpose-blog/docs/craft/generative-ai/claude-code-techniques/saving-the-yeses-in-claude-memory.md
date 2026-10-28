@@ -119,12 +119,6 @@ easier, which is exactly why the rule has to be written down.
   harden into a rule that fires in the wrong place.
 - **It's cheap.** A yes is one line from you. The note costs Claude a few seconds.
 
-## In my own words
-
-- "personal dev is more dev fall back bucket" (August 2026)
-- "finding saved pizza places is a claude google mcp technique confirmation" (August 2026)
-- "haiku should be default" (August 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
