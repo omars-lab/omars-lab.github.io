@@ -2,3 +2,5 @@
 {"v":1,"ts":"2026-10-28T19:29:08Z","ev":"shot","role":"comment","author":"omar","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_e74358/comment.png","sha":"05edc1b55642"}
 {"v":1,"ts":"2026-10-28T19:30:17Z","ev":"landed","author":"git","commit":"e5823f6b","from":"012ac3f3"}
 {"v":1,"ts":"2026-10-28T19:41:16Z","ev":"anchor","author":"page","state":"lost"}
+{"v":1,"ts":"2026-10-28T19:44:09Z","ev":"reply","author":"claude","body":"Done in 7ea9244b. \"The two time limits\", with its price table, is now on the new explainer page: /craft/generative-ai/claude-code-explainers/how-the-prompt-cache-works#the-two-time-limits. This page links to it near the top and from the break-even point in \"Why it works\". I used a separate page rather than an appendix so other posts can link to it too (see the reply on \"What the cache holds\")."}
+{"v":1,"ts":"2026-10-28T19:44:14Z","ev":"status","author":"claude","status":"resolved"}

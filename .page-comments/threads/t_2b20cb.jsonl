@@ -3,3 +3,5 @@
 {"v":1,"ts":"2026-10-28T19:29:42Z","ev":"reply","author":"omar","body":"see instead of appendix, if we should build a dedicated page for Cladue Widgets that postts cna generall reference? "}
 {"v":1,"ts":"2026-10-28T19:30:17Z","ev":"landed","author":"git","commit":"e5823f6b","from":"012ac3f3"}
 {"v":1,"ts":"2026-10-28T19:41:16Z","ev":"anchor","author":"page","state":"lost"}
+{"v":1,"ts":"2026-10-28T19:44:09Z","ev":"reply","author":"claude","body":"Done in 7ea9244b. I made a page instead of an appendix: \"How Claude Code's Prompt Cache Works\", in a new Claude Code Explainers folder (docs/craft/generative-ai/claude-code-explainers/). This section, the other three and all three calculators moved there word for word. This page now links to each section by anchor, and other technique pages can link to the same sections. A new skill, manage-explainers, covers how to add explainers. The link checker now blocks a link to a section that doesn't exist, and also blocks renaming a heading that another page links to (committed separately in 925990f6)."}
+{"v":1,"ts":"2026-10-28T19:44:13Z","ev":"status","author":"claude","status":"resolved"}
