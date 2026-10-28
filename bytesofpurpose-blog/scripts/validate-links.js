@@ -24,11 +24,20 @@
  *                    /docs/<slug> that resolves to no doc — an IA move changed it.
  *                    A redirect keeps users working but lands the test on the
  *                    redirect STUB → spurious timeout. Catch it here, not in CI.
+ *   broken-anchor    A link to a section (`/craft/…#id`, or `#id` on the same    [ERROR]
+ *                    page) whose page EXISTS but has no heading or element with
+ *                    that id. Source-level version of onBrokenAnchors. When the
+ *                    run is scoped to files (the hook), links from the rest of the
+ *                    corpus INTO those files are checked too, so renaming a
+ *                    heading that other pages link to is caught on the edit.
  *
- * The two internal-link checks are cross-file: they build a whole-corpus slug
- * index (absolute `slug:` + `draft:` per doc) and resolve every /docs/ link
- * against it. Both are warn-tier by decision — advisory, never blocking, since a
- * draft may intentionally forward-link to a not-yet-published page.
+ * The internal-link checks are cross-file: they build a whole-corpus route index
+ * (each docs instance's folder → its routeBasePath, plus the legacy /docs prefix)
+ * and resolve every internal link against it. broken-internal / link-to-draft are
+ * warn-tier by decision — advisory, never blocking, since a draft may intentionally
+ * forward-link to a not-yet-published page. broken-anchor is error-tier: the page
+ * is there, so a missing section is a checkable fact, not a judgment call. Opt a
+ * line out with a `validate-links-ignore` comment on it or the line above.
  *
  * SOURCE-level complement to: Docusaurus `onBrokenLinks` (broken internal links,
  * build time) and test/e2e/seo.spec.ts (generic link text on the rendered page).
@@ -66,11 +75,26 @@ const SEVERITY = {
   // STUB (no canvas/content) → spurious timeout. Catch the stale slug here, at
   // `make validate-links` time, instead of in a multi-minute regression run.
   'test-stale-slug': 'warn', // a test/ file references a /docs/<slug> that no longer exists
+  'broken-anchor': 'error',  // a #fragment on an existing page that names no heading/id there
 };
 
-// The docs plugin has no routeBasePath override → docs are served under /docs.
-// So an internal link `/docs/<X>` maps to a doc whose absolute slug is `/<X>`.
+// Legacy prefix: an internal link `/docs/<X>` maps to a doc whose absolute slug is `/<X>`.
 const DOCS_ROUTE_PREFIX = '/docs';
+// The live docs instances (docusaurus.config.js `plugin-content-docs` entries):
+// content folder → routeBasePath. A doc in `dir` is served at `route` + its slug.
+// The blog instances (/initiatives, /thoughts, /mindset, …) route by date, not slug,
+// so they stay unresolved, as before.
+const DOCS_INSTANCES = [
+  { dir: 'docs/craft', route: '/craft' },
+  { dir: 'docs/journey', route: '/journey' },
+  { dir: 'docs/handbook', route: '/handbook' },
+  { dir: 'docs/knowledge', route: '/knowledge' },
+  { dir: 'docs/habits', route: '/habits' },
+];
+const INTERNAL_PREFIXES = [DOCS_ROUTE_PREFIX, ...DOCS_INSTANCES.map((i) => i.route)];
+const isInternalRoute = (url) =>
+  !/\/tags(\/|$|#)/.test(url) && // tag index pages are generated, not docs
+  INTERNAL_PREFIXES.some((p) => url === p || url.startsWith(p + '/') || url.startsWith(p + '#'));
 
 // --- tuning knobs --------------------------------------------------------
 const LONG_URL_THRESHOLD = 120; // chars; above this a URL is "too long" to inline raw
@@ -160,18 +184,96 @@ function fmField(fmLines, key) {
 function buildSlugIndex(docsDir) {
   const byRoute = new Map();
   const files = walk(docsDir);
+  const entryFor = (f, fm) => ({
+    rel: path.relative(ROOT, f),
+    file: f,
+    draft: (fmField(fm, 'draft') || '').toLowerCase() === 'true',
+    deprecated: (fmField(fm, 'deprecated') || '').toLowerCase() === 'true',
+  });
   for (const f of files) {
     const fm = readFrontmatter(f);
     const slug = fmField(fm, 'slug');
     if (!slug || !slug.startsWith('/')) continue; // only absolute-slug docs are addressable
-    const draftRaw = (fmField(fm, 'draft') || '').toLowerCase();
-    const draft = draftRaw === 'true';
-    const deprecated = (fmField(fm, 'deprecated') || '').toLowerCase() === 'true';
     // Route the doc is served at, minus the /docs prefix, normalized (no trailing slash).
     const route = (DOCS_ROUTE_PREFIX + slug).replace(/\/+$/, '');
-    byRoute.set(route, { rel: path.relative(ROOT, f), draft, deprecated });
+    byRoute.set(route, entryFor(f, fm));
+  }
+  // The live routes: each instance's routeBasePath + the doc's slug (absolute), or
+  // its folder path + relative slug / id / file name (Docusaurus's default).
+  for (const inst of DOCS_INSTANCES) {
+    const instDir = path.join(ROOT, inst.dir);
+    for (const f of walk(instDir)) {
+      const fm = readFrontmatter(f);
+      const slug = fmField(fm, 'slug');
+      const dirRoute = path.relative(instDir, path.dirname(f)).split(path.sep).filter(Boolean)
+        .map((s) => s.replace(/^\d+[-_.]/, '')).join('/');
+      const base = path.basename(f).replace(/\.mdx?$/, '');
+      let route;
+      if (slug && slug.startsWith('/')) route = inst.route + slug;
+      else if (slug) route = `${inst.route}/${dirRoute}/${slug}`;
+      else if (/^(readme|index)$/i.test(base)) route = `${inst.route}/${dirRoute}`;
+      else route = `${inst.route}/${dirRoute}/${fmField(fm, 'id') || base.replace(/^\d+[-_.]/, '')}`;
+      route = route.replace(/\/+/g, '/').replace(/\/+$/, '') || '/';
+      byRoute.set(route, entryFor(f, fm));
+    }
   }
   return { byRoute, hasAnyDoc: files.length > 0 };
+}
+
+/**
+ * The anchor ids a page offers: every heading (explicit `{#id}`, else the heading
+ * text slugged the way Docusaurus does, with -1/-2 for repeats) plus any literal
+ * `id="…"` / `name="…"` attribute. Cached per file.
+ */
+const anchorCache = new Map();
+function anchorsOf(file) {
+  if (anchorCache.has(file)) return anchorCache.get(file);
+  const GithubSlugger = require('github-slugger');
+  const slugger = new GithubSlugger();
+  const ids = new Set();
+  const state = { inFence: false, inComment: null };
+  let inFrontmatter = false;
+  fs.readFileSync(file, 'utf8').split('\n').forEach((raw, i) => {
+    if (i === 0 && raw.trim() === '---') { inFrontmatter = true; return; }
+    if (inFrontmatter) { if (raw.trim() === '---') inFrontmatter = false; return; }
+    const wasFenced = state.inFence || /^\s*```/.test(raw);
+    maskCode(raw, state);
+    if (wasFenced) return;
+    const h = raw.match(/^\s{0,3}#{1,6}\s+(.*?)\s*#*\s*$/);
+    if (h) {
+      const explicit = h[1].match(/\{#([^}\s]+)\}\s*$/);
+      if (explicit) ids.add(explicit[1]);
+      else {
+        const text = h[1]
+          .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1') // [text](url) → text
+          .replace(/<[^>]+>/g, '')                   // inline tags
+          .replace(/[`*_~]/g, '');                   // code / emphasis marks
+        ids.add(slugger.slug(text));
+      }
+    }
+    for (const m of raw.matchAll(/\b(?:id|name)=["']([^"']+)["']/g)) ids.add(m[1]);
+  });
+  anchorCache.set(file, ids);
+  return ids;
+}
+
+/** A `validate-links-ignore` comment on this line or the one above opts it out. */
+const lineIgnored = (lines, i) =>
+  /validate-links-ignore/.test(lines[i] || '') || /validate-links-ignore/.test(lines[i - 1] || '');
+
+/** The broken-anchor finding for `url` (a #fragment link), or null if it resolves. */
+function anchorProblem(url, targetFile, rel, lineNo) {
+  const hash = url.indexOf('#');
+  if (hash === -1) return null;
+  let frag = url.slice(hash + 1);
+  try { frag = decodeURIComponent(frag); } catch { /* keep raw */ }
+  if (!frag || anchorsOf(targetFile).has(frag)) return null;
+  const target = path.relative(ROOT, targetFile);
+  return {
+    file: rel, line: lineNo, kind: 'broken-anchor', severity: SEVERITY['broken-anchor'],
+    target, detail: `link → #${frag} names no heading or id on ${target}`,
+    suggest: `point at a heading that exists there, or give the target heading an explicit id: "## Title {#${frag}}"`,
+  };
 }
 
 /**
@@ -381,13 +483,21 @@ function scanFile(file, slugIndex) {
       linkSpans.push([m.index, m.index + m[0].length]);
 
       // --- internal-link integrity (only when we have a slug index) --------
-      // Targets we resolve: site-internal /docs/… links. We ignore external
-      // (http), protocol-relative (//), anchors (#…), and non-/docs internals
-      // (e.g. /blog, /changelog) which other route bases own.
-      if (slugIndex && url.startsWith(DOCS_ROUTE_PREFIX)) {
+      // Targets we resolve: site-internal docs links (/craft/…, /journey/…, the
+      // legacy /docs/…) and same-page #anchors. We ignore external (http),
+      // protocol-relative (//), and other route bases (e.g. /initiatives).
+      if (slugIndex && url.startsWith('#') && !lineIgnored(lines, i)) {
+        const p = anchorProblem(url, file, rel, lineNo);
+        if (p) problems.push(p);
+      }
+      if (slugIndex && isInternalRoute(url)) {
         // Normalize: drop #fragment, ?query, trailing slash.
         const route = url.replace(/[?#].*$/, '').replace(/\/+$/, '');
         const hit = slugIndex.byRoute.get(route);
+        if (hit && !lineIgnored(lines, i)) {
+          const p = anchorProblem(url, hit.file, rel, lineNo);
+          if (p) problems.push(p);
+        }
         if (!hit) {
           problems.push({
             file: rel, line: lineNo, kind: 'broken-internal', severity: SEVERITY['broken-internal'],
@@ -609,6 +719,19 @@ async function main() {
   // Stale-slug guard over the e2e tests (only on a full default scan — skip when the
   // caller passed explicit target paths, so a scoped/hook run stays scoped).
   if (!targets.length) all = all.concat(checkTestSlugs(slugIndex));
+  // Scoped run (the hook): also check links from the rest of the corpus INTO the
+  // scanned files, so renaming a heading other pages link to fails on that edit.
+  if (targets.length && slugIndex) {
+    const scanned = new Set(files.map((f) => path.relative(ROOT, f)));
+    const routesIn = [...slugIndex.byRoute].filter(([, e]) => scanned.has(e.rel)).map(([r]) => r + '#');
+    for (const f of DEFAULT_DIRS.flatMap((d) => walk(path.join(ROOT, d)))) {
+      if (scanned.has(path.relative(ROOT, f))) continue;
+      const text = fs.readFileSync(f, 'utf8');
+      if (!routesIn.some((r) => text.includes(r))) continue; // cheap pre-filter
+      all = all.concat(scanFile(f, slugIndex).problems
+        .filter((p) => p.kind === 'broken-anchor' && scanned.has(p.target)));
+    }
+  }
   if (errorOnly) all = all.filter((p) => p.severity === 'error');
 
   if (json) {

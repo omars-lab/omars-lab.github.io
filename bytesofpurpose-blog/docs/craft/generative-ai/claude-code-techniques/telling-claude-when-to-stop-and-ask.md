@@ -136,14 +136,6 @@ a documented format, so check the command still works after you update.
 - **It cuts the noise too.** The same rule that says when to ask also says when not to. Small,
   reversible calls just get made, and you review the result.
 
-## In my own words
-
-I didn't start with a rule. I started by saying it, over and over, until it was worth writing down:
-
-- "use ask question tool to capture my decisions" (August 2026)
-- "use ask question tool if input needed from me" (August 2026)
-- "... to use the ask question tool to understand my taste" (August 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

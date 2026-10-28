@@ -37,7 +37,8 @@ two lines per problem, so don't count its lines).
 | `long-url` | link URL > 120 chars or carrying tracking params | shorten the URL + give it descriptive text |
 | `url-as-text` | `[text](url)` where the visible **text** is a raw URL | replace text with a human-readable label |
 | `generic-text` | non-descriptive text ("click here", "here", "read more", …) | describe the destination (Lighthouse link-text rule) |
-| `broken-internal` | a `/docs/…` link that resolves to **no published doc slug** | fix the path, or point at an existing absolute slug |
+| `broken-internal` | a `/craft/…`, `/journey/…`, `/handbook/…`, `/knowledge/…`, `/habits/…` (or old `/docs/…`) link that resolves to **no published doc** | fix the path, or point at an existing absolute slug |
+| `broken-anchor` | **ERROR, blocks the edit.** A `#section` link (on a docs route, or same-page `#id`) whose target page exists but has no heading or `id=` with that id | point at a heading that exists, or give the target heading a fixed id: `## Title {#id}`. A component that makes its ids at runtime: `{/* validate-links-ignore */}` on the line or the line above |
 | `link-to-draft` | a **published** page links to a `draft: true` page (excluded from the prod build → a build-time broken link) | un-draft the target first, or remove/defer the link |
 | `test-stale-slug` | a `test/e2e/` file (`goto('/docs/…')`, or the README) references a `/docs/<slug>` that resolves to no doc | point the test at the new slug — a redirect keeps users working but lands the test on the redirect **stub** (no content) → spurious timeout |
 
@@ -50,10 +51,23 @@ beyond the two integrity checks below. (Masking lives in `maskCode` +
 
 ### Internal-link integrity (the `broken-internal` / `link-to-draft` checks)
 
-These two are **cross-file**: the script builds a whole-corpus **slug index**
-(every doc's absolute `slug:` + its `draft:` flag) and resolves each `/docs/…`
-link against it. The docs plugin has no `routeBasePath` override, so a doc with
-`slug: /X` is served at `/docs/X` — that's the mapping used to resolve links.
+These are **cross-file**: the script builds a whole-corpus **route index**
+(every doc's route + its `draft:` flag) and resolves each internal link against
+it. Each docs instance in `docusaurus.config.js` has its own `routeBasePath`
+(`docs/craft` → `/craft`, `docs/journey` → `/journey`, …; the list is
+`DOCS_INSTANCES` in the script, keep it in step with the config). A doc with
+`slug: /X` in `docs/craft` is served at `/craft/X`. The blog instances
+(`/initiatives`, `/thoughts`, `/mindset`, `/questions`, …) route by date and
+are not resolved, and neither are generated `/tags/` pages. Old `/docs/X` links
+still resolve the way they used to.
+
+**`broken-anchor`** reads the target page's headings (slugged the way
+Docusaurus does, with `github-slugger`, or the explicit `{#id}`) and any
+`id="…"`/`name="…"` attributes. When a hook run edits one page, the script
+also scans every other page that links into it, so renaming a heading that
+other pages point at blocks the edit too. Before 2026-10-28 the script only
+resolved `/docs/…` links, a route the site no longer serves, so no `/craft`
+link had been checked at all.
 
 - **`broken-internal`** is a fast, source-level version of Docusaurus
   `onBrokenLinks`: it flags a `/docs/…` link with no matching published slug

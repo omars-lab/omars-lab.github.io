@@ -124,12 +124,6 @@ list of candidates is the useful part, even if you never write the posts.
 - **It keeps the original private.** No backlink and an invented example mean a reader can't trace
   the general post to the project it came from.
 
-## In my own words
-
-- "maybe one post gets broken into many general patterns" (July 2026)
-- "can we start with a design post for general pattern and move later" (July 2026)
-- "there may be many patterns intertangled" (July 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
