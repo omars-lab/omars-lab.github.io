@@ -1,8 +1,10 @@
-import React, {useId, useMemo, useState} from 'react';
+import React, {useEffect, useId, useMemo, useRef, useState} from 'react';
 import {
   MODELS,
+  TTL_MINUTES,
   type ModelPrice,
   type Ttl,
+  type TurnResult,
   breakEvenReuses,
   pattern,
   simulate,
@@ -11,7 +13,7 @@ import styles from './styles.module.css';
 
 // Three small widgets for the "pick the prompt cache's time limit" technique page:
 //   <ContextSim/>  what sits in the cached prompt, and how it grows turn by turn
-//   <ChatSim/>     a chat you set the pauses for, showing which turns find the cache still there
+//   <ChatSim/>     a chat you click through turn by turn, two terminals side by side, one per time limit
 //   <CostSim/>     sliders for prompt size, turns and pauses, with the cost under each time limit
 // All maths lives in cacheMath.ts. Client state only: no network calls, no tracking.
 
@@ -149,15 +151,100 @@ const PRESETS: {label: string; gaps: number[]}[] = [
   {label: 'Fast back and forth', gaps: [0, 1, 1, 3, 1, 1, 3, 1]},
   {label: 'Coffee and meetings', gaps: [0, 1, 10, 1, 20, 1, 45, 3]},
   {label: 'Two sessions at once', gaps: [0, 10, 10, 20, 10, 10, 20, 10]},
+  // Subagents that take 10, 20 and 120 minutes, each followed by a quick task.
+  {label: 'Waiting on subagents', gaps: [0, 1, 10, 1, 20, 1, 120, 1]},
   {label: 'Back the next day', gaps: [0, 1, 3, 120, 1, 120, 1, 120]},
 ];
+
+const CHAT_START = 22_000;
+const CHAT_PER_TURN = 8_000;
+
+function turnState(t: TurnResult, ttl: Ttl): 'first write' | 'read' | 'expired' {
+  return t.turn === 1 ? 'first write' : t.warm[ttl] ? 'read' : 'expired';
+}
+
+function chipClass(t: TurnResult, ttl: Ttl): string {
+  return t.turn === 1 ? styles.chipFirst : t.warm[ttl] ? styles.chipWarm : styles.chipCold;
+}
+
+/** One time limit's side of the chat, drawn as a terminal: each pause as a break line, each turn
+ * as what the cache did with it, and a status line that shows where things stand. */
+function Terminal({ttl, turns, model, dearer}: {ttl: Ttl; turns: TurnResult[]; model: ModelPrice; dearer: boolean}) {
+  const body = useRef<HTMLDivElement>(null);
+  const now = turns[turns.length - 1];
+  useEffect(() => {
+    if (body.current) body.current.scrollTop = body.current.scrollHeight;
+  }, [turns.length]);
+
+  return (
+    <div className={styles.term} role="group" aria-label={TTL_LABEL[ttl]}>
+      <div className={styles.termBar} aria-hidden="true">
+        <span className={styles.termDots}>
+          <i />
+          <i />
+          <i />
+        </span>
+        <span>{TTL_LABEL[ttl]}</span>
+      </div>
+      <div className={styles.termBody} ref={body}>
+        {turns.map((t) => {
+          const state = turnState(t, ttl);
+          const gone = t.gap > TTL_MINUTES[ttl];
+          return (
+            <React.Fragment key={t.turn}>
+              {t.turn > 1 && (
+                <div className={`${styles.termBreak} ${gone ? styles.termBreakLong : ''}`}>
+                  <span>
+                    ⏲️ {minutes(t.gap)} pause{gone ? ', cache gone' : ''}
+                  </span>
+                </div>
+              )}
+              <div className={`${styles.termTurn} ${t === now ? styles.termNew : ''}`}>
+                <div className={styles.termLine}>
+                  <span>
+                    <span className={styles.termPrompt}>&gt;</span> do task #{t.turn}
+                  </span>
+                  <span className={styles.termPrompt}>{clock(t.elapsed)}</span>
+                </div>
+                <div
+                  className={`${styles.termLine} ${state === 'expired' ? styles.termCold : state === 'read' ? styles.termWarm : styles.termDim}`}>
+                  <span>
+                    ⏺{' '}
+                    {state === 'first write'
+                      ? `writes ${tokens(t.prefix)}`
+                      : state === 'read'
+                        ? `reads ${tokens(t.prefix)} from cache`
+                        : `writes all ${tokens(t.prefix)} again`}
+                  </span>
+                  <span>{money(t.cost[ttl])}</span>
+                </div>
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <div className={styles.termStatus}>
+        <span className={`${styles.chip} ${chipClass(now, ttl)}`}>{turnState(now, ttl)}</span>
+        <span className={styles.termModel}>{model.label}</span>
+        <span className={styles.termSoFar}>
+          <b className={dearer ? styles.termDearer : undefined}>{money(now.running[ttl])}</b>
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function ChatSim() {
   const [gaps, setGaps] = useState(PRESETS[1].gaps);
   const [model, setModel] = useState(MODELS[0]);
-  const result = useMemo(() => simulate({start: 22_000, perTurn: 8_000, gaps}, model), [gaps, model]);
+  const [step, setStep] = useState(1);
+  const result = useMemo(() => simulate({start: CHAT_START, perTurn: CHAT_PER_TURN, gaps}, model), [gaps, model]);
 
   const setGap = (i: number, g: number) => setGaps((prev) => prev.map((v, j) => (j === i ? g : v)));
+  const last = result.turns.length;
+  const shown = result.turns.slice(0, step);
+  const now = shown[shown.length - 1];
+  const soFar = {'5m': now.running['5m'], '1h': now.running['1h']};
 
   return (
     <figure className={styles.widget} aria-labelledby="chat-sim-title">
@@ -171,87 +258,131 @@ export function ChatSim() {
             type="button"
             className={styles.preset}
             aria-pressed={p.gaps.join() === gaps.join()}
-            onClick={() => setGaps(p.gaps)}>
+            onClick={() => {
+              setGaps(p.gaps);
+              setStep(1);
+            }}>
             {p.label}
           </button>
         ))}
       </div>
-      {/* One row per turn, the two time limits side by side, so the running totals can be
-          compared down the page. On a phone the table scrolls inside its own box. */}
-      <div className={styles.tableWrap} tabIndex={0} role="region" aria-labelledby="chat-sim-title">
-        <table className={styles.chatTable}>
-          <thead>
-            <tr>
-              <th rowSpan={2} scope="col">Turn</th>
-              <th rowSpan={2} scope="col">Pause</th>
-              <th rowSpan={2} scope="col">Clock</th>
-              {TTLS.map((ttl) => (
-                <th key={ttl} colSpan={2} scope="colgroup" className={styles.side}>
-                  {TTL_LABEL[ttl]}
-                </th>
+      {/* Click through one turn at a time: the pause, then what each cache did with the turn. */}
+      <div className={styles.stepper}>
+        <button type="button" className={styles.stepBtn} disabled={step <= 1} onClick={() => setStep(step - 1)}>
+          ◀ Back
+        </button>
+        <span className={styles.stepAt} aria-live="polite">
+          Task {step} of {last}
+        </span>
+        <button type="button" className={styles.stepBtn} disabled={step >= last} onClick={() => setStep(step + 1)}>
+          Next ▶
+        </button>
+        {step < last && (
+          <label className={styles.stepGap}>
+            then pause{' '}
+            <select value={gaps[step]} onChange={(e) => setGap(step, Number(e.target.value))} className={styles.select}>
+              {GAP_CHOICES.map((g) => (
+                <option key={g} value={g}>
+                  {minutes(g)}
+                </option>
               ))}
-            </tr>
-            <tr>
-              {TTLS.map((ttl) => (
-                <React.Fragment key={ttl}>
-                  <th scope="col" className={styles.side}>This turn</th>
-                  <th scope="col">So far</th>
-                </React.Fragment>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {result.turns.map((t, i) => {
-              const cheaper: Ttl | null =
-                Math.abs(t.running['5m'] - t.running['1h']) < 0.0005 ? null : t.running['5m'] < t.running['1h'] ? '5m' : '1h';
-              return (
-                <tr key={i}>
-                  <th scope="row">{t.turn}</th>
-                  <td>
-                    {i === 0 ? (
-                      <span className={styles.muted}>first message</span>
-                    ) : (
-                      <select
-                        aria-label={`Pause before turn ${t.turn}`}
-                        value={t.gap}
-                        onChange={(e) => setGap(i, Number(e.target.value))}
-                        className={styles.select}>
-                        {GAP_CHOICES.map((g) => (
-                          <option key={g} value={g}>
-                            {minutes(g)}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </td>
-                  <td className={styles.num}>{clock(t.elapsed)}</td>
-                  {TTLS.map((ttl) => {
-                    const state = i === 0 ? 'first write' : t.warm[ttl] ? 'read' : 'expired';
-                    const cls = i === 0 ? styles.chipFirst : t.warm[ttl] ? styles.chipWarm : styles.chipCold;
-                    return (
-                      <React.Fragment key={ttl}>
-                        <td className={styles.side}>
-                          <span className={`${styles.chip} ${cls}`}>{state}</span>{' '}
-                          <span className={styles.num}>{money(t.cost[ttl])}</span>
-                        </td>
-                        <td className={`${styles.num} ${cheaper === ttl ? styles.cheaper : ''}`}>
-                          {money(t.running[ttl])}
-                        </td>
-                      </React.Fragment>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+            </select>
+          </label>
+        )}
       </div>
-      <Totals total={result.total} saves={result.oneHourSaves} />
+      <div className={styles.terms}>
+        {TTLS.map((ttl) => (
+          <Terminal key={ttl} ttl={ttl} turns={shown} model={model} dearer={TTLS.every((o) => o === ttl || soFar[ttl] > soFar[o])} />
+        ))}
+      </div>
+      {step >= last && (
+        <div className={styles.startOver}>
+          <button type="button" className={styles.stepBtn} onClick={() => setStep(1)}>
+            Start over
+          </button>
+        </div>
+      )}
+      <Totals total={soFar} saves={soFar['5m'] - soFar['1h']} />
+      <details className={styles.details}>
+        <summary>Every turn as a table</summary>
+        {/* One row per turn, the two time limits side by side, so the running totals can be
+            compared down the page. On a phone the table scrolls inside its own box. */}
+        <div className={styles.tableWrap} tabIndex={0} role="region" aria-labelledby="chat-sim-title">
+          <table className={styles.chatTable}>
+            <thead>
+              <tr>
+                <th rowSpan={2} scope="col">Turn</th>
+                <th rowSpan={2} scope="col">Pause</th>
+                <th rowSpan={2} scope="col">Clock</th>
+                {TTLS.map((ttl) => (
+                  <th key={ttl} colSpan={2} scope="colgroup" className={styles.side}>
+                    {TTL_LABEL[ttl]}
+                  </th>
+                ))}
+              </tr>
+              <tr>
+                {TTLS.map((ttl) => (
+                  <React.Fragment key={ttl}>
+                    <th scope="col" className={styles.side}>This turn</th>
+                    <th scope="col">So far</th>
+                  </React.Fragment>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {result.turns.map((t, i) => {
+                const cheaper: Ttl | null =
+                  Math.abs(t.running['5m'] - t.running['1h']) < 0.0005 ? null : t.running['5m'] < t.running['1h'] ? '5m' : '1h';
+                return (
+                  <tr key={i}>
+                    <th scope="row">{t.turn}</th>
+                    <td>
+                      {i === 0 ? (
+                        <span className={styles.muted}>first message</span>
+                      ) : (
+                        <select
+                          aria-label={`Pause before turn ${t.turn}`}
+                          value={t.gap}
+                          onChange={(e) => setGap(i, Number(e.target.value))}
+                          className={styles.select}>
+                          {GAP_CHOICES.map((g) => (
+                            <option key={g} value={g}>
+                              {minutes(g)}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </td>
+                    <td className={styles.num}>{clock(t.elapsed)}</td>
+                    {TTLS.map((ttl) => {
+                      const state = i === 0 ? 'first write' : t.warm[ttl] ? 'read' : 'expired';
+                      const cls = i === 0 ? styles.chipFirst : t.warm[ttl] ? styles.chipWarm : styles.chipCold;
+                      return (
+                        <React.Fragment key={ttl}>
+                          <td className={styles.side}>
+                            <span className={`${styles.chip} ${cls}`}>{state}</span>{' '}
+                            <span className={styles.num}>{money(t.cost[ttl])}</span>
+                          </td>
+                          <td className={`${styles.num} ${cheaper === ttl ? styles.cheaper : ''}`}>
+                            {money(t.running[ttl])}
+                          </td>
+                        </React.Fragment>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </details>
       <ModelPicker value={model} onChange={setModel} />
       <p className={styles.note}>
-        Starts at 22k tokens and adds 8k a turn. Clock is hours and minutes since the first message. "Read" means
-        the cache was still there; "expired" means the whole prompt was written again. The cheaper running total is
-        in bold. Cost of the cached prompt only; output costs the same either way.
+        Starts at 22k tokens and adds 8k a turn. Each Next is one task you give Claude: the pause before it, then
+        what each cache did. The clock on the right is hours and minutes since the first task. "Read" means the cache was still there; "expired"
+        means the whole prompt was written again. The amount at the bottom right of each terminal, and the bars, are the cost so far; the higher terminal amount is in red.
+        Cost of the cached prompt only;
+        output costs the same either way.
       </p>
     </figure>
   );

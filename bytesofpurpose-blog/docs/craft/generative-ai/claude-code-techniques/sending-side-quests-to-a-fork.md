@@ -125,10 +125,6 @@ to 1. The short-links one alone made 32 tool calls and read 26 KB, and returned 
   line. A fresh agent would need the whole background written out.
 - **You keep working.** The fork runs in the background, and you get a notice when it's done.
 
-## In my own words
-
-- "and do in sub agent" (August 2026), tacked onto a request for a side project, mid-session.
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
