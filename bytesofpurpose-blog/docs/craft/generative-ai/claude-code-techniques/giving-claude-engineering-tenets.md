@@ -75,7 +75,7 @@ validator) rather than a sentence.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/giving-claude-engineering-tenets.png" alt="A Claude Code session: I say I care less about Claude being wrong once and more about mechanisms that fix a whole class of mistakes, like giving Claude an engineering tenet, and Claude finds a session where stale numbers in docs kept coming back because each fix patched one instance, not the category" />
+  <img src="/img/claude-code/giving-claude-engineering-tenets.png" alt="A Claude Code session: Claude says it is reframing around moments where it was wrong and I supplied the fix, and I say I care less about Claude being wrong once and more about mechanisms that fix a whole class of mistakes, like giving Claude an engineering tenet, and Claude finds a session where stale numbers in docs kept coming back because each fix patched one instance, not the category" />
 </figure>
 
 This is from the session where I said out loud what I'd been doing for weeks. I asked Claude to
@@ -101,14 +101,15 @@ and the session behind it. The first ones coming up:
   only a choice that's hard to undo is worth a question.
 - [For research that decides what gets built, two independent researchers and then a checker](/craft/generative-ai/claude-code-techniques/two-researchers-then-a-checker).
 - [Commit a checkpoint before Claude tries something new](/craft/generative-ai/claude-code-techniques/committing-a-checkpoint-before-claude-tries-something-new).
-- Give a long-running script logs you can grep, with a line before and after every call that
-  can hang.
-- When a problem forces a change of approach, write the pivot down in the repo.
-- A standing order for working through a backlog, so "continue" means highest value first.
-- Spot-check what OCR mangles with your own eyes.
-- When there's no scripted path, drive the app by hand, with a screenshot before and after every
-  click.
-- Everything a person reads is written in plain words.
+- [Give a long-running script logs you can grep](/craft/generative-ai/claude-code-techniques/giving-long-scripts-logs-you-can-grep),
+  with a line before and after every call that can hang.
+- [When a problem forces a change of approach, write the pivot down in the repo](/craft/generative-ai/claude-code-techniques/writing-the-pivot-down-in-the-repo).
+- [A standing order for working through a backlog](/craft/generative-ai/claude-code-techniques/giving-claude-a-standing-order-for-the-backlog),
+  so "continue" means highest value first.
+- [Spot-check what OCR mangles with your own eyes](/craft/generative-ai/claude-code-techniques/looking-at-the-source-not-the-score).
+- [When there's no scripted path, drive the app by hand](/craft/generative-ai/claude-code-techniques/driving-the-app-by-hand),
+  with a screenshot before and after every click.
+- [Everything a person reads is written in plain words](/craft/generative-ai/claude-code-techniques/saying-what-it-is-not-what-its-called).
 
 ## In my own words
 

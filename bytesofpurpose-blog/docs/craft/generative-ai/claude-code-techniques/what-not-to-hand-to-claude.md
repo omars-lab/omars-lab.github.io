@@ -69,7 +69,7 @@ me" gives me something to pull on. A report that ends with "done" doesn't.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/what-not-to-hand-to-claude.png" alt="A Claude Code session: I say to be careful not to offload your curiosity or your agency to Claude, which is why I run my agents myself. Earlier in the same session, Claude asks whether technique posts should be their own series and recommends that, and I answer in my own words: fold them into the series I already have" />
+  <img src="/img/claude-code/what-not-to-hand-to-claude.png" alt="A Claude Code session: Claude says the Graph view I asked for is built and committed, and I say to be careful not to offload your curiosity or your agency to Claude, which is why I run my agents myself. Earlier in the same session, Claude asks whether technique posts should be their own series and recommends that, and I answer in my own words: fold them into the series I already have" />
 </figure>
 
 The top is me saying it out loud. The bottom is what it looks like in practice. Claude asked whether

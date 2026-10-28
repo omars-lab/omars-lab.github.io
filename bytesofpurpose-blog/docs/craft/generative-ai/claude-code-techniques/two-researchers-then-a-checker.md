@@ -148,7 +148,7 @@ are the record it was built from.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/two-researchers-then-a-checker.png" alt="A Claude Code session: I ask whether we need another visual check against the reference websites, Claude starts two independent researchers, and after a third agent re-opens their sources, Claude reports that it confirmed five reference sites and open-source projects, four of them found by both researchers, with no wrong measurements" />
+  <img src="/img/claude-code/two-researchers-then-a-checker.png" alt="A Claude Code session: Claude says only one test measures the layout and a sidebar won't break it, and I ask whether we need another visual check against the reference websites, Claude starts two independent researchers, and after a third agent re-opens their sources, Claude reports that it confirmed five reference sites and open-source projects, four of them found by both researchers, with no wrong measurements" />
 </figure>
 
 This is from October 2026. I wanted the app where I plan this series to look less like a tidy
