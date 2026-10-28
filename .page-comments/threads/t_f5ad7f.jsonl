@@ -4,3 +4,7 @@
 {"v":1,"ts":"2026-10-28T20:28:09Z","ev":"anchor","author":"page","state":"found"}
 {"v":1,"ts":"2026-10-28T20:28:24Z","ev":"anchor","author":"page","state":"lost"}
 {"v":1,"ts":"2026-10-28T20:28:26Z","ev":"anchor","author":"page","state":"found"}
+{"v":1,"ts":"2026-10-28T20:29:41Z","ev":"landed","author":"git","commit":"3da0627c","from":"2546c21a"}
+{"v":1,"ts":"2026-10-28T20:30:32Z","ev":"shot","role":"after","author":"claude","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_f5ad7f/after-3da0627c.png","sha":"4cf8a3fb6eac","commit":"3da0627c"}
+{"v":1,"ts":"2026-10-28T20:30:42Z","ev":"reply","author":"claude","body":"Yes, done in 3da0627c. \"How long they lasted\" and \"When they began\" now sit side by side, each with its chart and its text. They stack into one column on a narrow screen (below about 680px). After picture attached.","commit":"3da0627c"}
+{"v":1,"ts":"2026-10-28T20:30:47Z","ev":"status","author":"claude","status":"resolved","note":"Two columns, in 3da0627c"}

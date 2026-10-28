@@ -276,19 +276,17 @@ The log format isn't documented, so check it still works after an update. If the
 real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
 
 **Or work out what the other limit would have cost.** The script I used for the numbers above is
-[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253). It needs
-Node 20 and nothing else, reads the logs on the machine you run it on, and prints totals only. If
-your logs ran at 5 minutes (an API key, or subagents), it answers "with 1 hour, you would have
-saved N% of your budget". If they ran at 1 hour, it prices them at 5 minutes:
+[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253), and its
+full code is in the [appendix](#appendix-the-script). It needs Node 20 and nothing else, reads the
+logs on the machine you run it on, and prints totals only. If your logs ran at 5 minutes (an API
+key, or subagents), it answers "with 1 hour, you would have saved N% of your budget". If they ran
+at 1 hour, it prices them at 5 minutes. Download it with the GitHub CLI and run it:
 
 ```bash
+gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
 node cache-ttl-gaps.mjs --root ~/.claude --days 30
 # logs too old to say 5m or 1h: add --ran-at 5m
 ```
-
-<div style={{maxHeight: '32rem', overflowY: 'auto'}}>
-  <Gist id="4fc25fd8209d7b2199821ad84988a253" />
-</div>
 
 **Or ask Claude to do it.** Paste this into a Claude Code session:
 
@@ -300,7 +298,7 @@ Then tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl
 
 ## What it looks like
 
-<figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
+<figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
   <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: look at my session logs under ~/.claude/projects/, study how long I pause and how much goes into the prompt cache, then tell me whether to change promptCacheTtl or subagentPromptCacheTtl, and why" />
 </figure>
 
@@ -343,3 +341,16 @@ with "measure first": it paid at work and made no difference at home.
   5.5, Sonnet 5.5 and Fable 5.1, which read for less.
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
 - This page goes with a post in my "How I Used Claude Today" series on LinkedIn.
+
+## Appendix: the script
+
+The `cache-ttl-gaps.mjs` script from [Set it up](#set-it-up), as published in the
+[gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253). To download it:
+
+```bash
+gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
+```
+
+<div style={{maxHeight: '32rem', overflowY: 'auto'}}>
+  <Gist id="4fc25fd8209d7b2199821ad84988a253" />
+</div>
