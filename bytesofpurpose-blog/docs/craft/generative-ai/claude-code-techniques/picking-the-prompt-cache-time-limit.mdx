@@ -69,8 +69,7 @@ time and puts the pause before each one into one of three groups: up to 5 minute
 and over an hour. Then it works out what the same requests would have cost on the other limit. Only
 totals come out.
 
-I ran it twice: on my personal Macs, where I use a subscription, and on my work Macs, where I use
-API credits.
+I ran it on two sets of sessions: the ones on my subscription, and the ones on API credits.
 
 <Tabs>
 <TabItem value="subscription" label="On a subscription" default>
@@ -208,7 +207,7 @@ quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5
 <Tabs>
 <TabItem value="three" label="Three groups" default>
 
-| Break length | Breaks | Share | Which cache is still warm |
+| Break length | Breaks | Share | Still warm |
 |---|--:|--:|---|
 | Under 5 min | 1,050 | 63% | Both |
 | 5 to 60 min | 426 | 26% | Only the 1-hour one |
@@ -233,6 +232,11 @@ quarter fall **between 5 and 60 minutes**, the only stretch where 1 hour beats 5
 </Tabs>
 
 The middle break was 2.4 minutes. One in four ran past 12.6 minutes, and one in ten past 72.
+
+**Sneak peek:** in a future post I plan to share a small helper that watches my Claude Code
+sessions in iTerm and reminds me about five minutes before a session's 1-hour cache runs out, with
+a button that takes me to that tab. It goes after that last 11%: coming back just before the hour
+instead of just after.
 
 </div>
 <div>
@@ -379,7 +383,7 @@ real share of the total and your prompts are big, try 1 hour for a few days and 
 ## What it looks like
 
 <figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: I want to know how much money I would save, or lose, by changing my prompt cache time limit. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, and tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize its settings around how you take breaks. Claude Code with a prompt typed and ready to send: I want to know how much money I would save, or lose, by changing my prompt cache time limit. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, and tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
 </figure>
 
 That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
