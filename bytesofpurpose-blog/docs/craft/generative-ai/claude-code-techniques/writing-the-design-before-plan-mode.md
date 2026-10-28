@@ -148,7 +148,7 @@ mistake in the design, fix the design doc too.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/writing-the-design-before-plan-mode.png" alt="A Claude Code session: I ask whether blog posts can go on my calendar and have a subagent create a design, then ask for a summary with questions to get decisions. Claude says all three decisions are in the design doc and it is ready for plan mode. After a plan I said no to, I ask it to audit the plan and whether following it would build the design, and Claude finds the plan would silently drop 12 posts off the calendar and that the design doc itself is wrong on that point." />
+  <img src="/img/claude-code/writing-the-design-before-plan-mode.png" alt="A Claude Code session: Claude says a draft reads well and is saved, and I ask whether blog posts can go on my calendar and have a subagent create a design, then ask for a summary with questions to get decisions. Claude says all three decisions are in the design doc and it is ready for plan mode. After Claude finishes a plan I said no to, I ask it to audit the plan and whether following it would build the design, and Claude finds the plan would silently drop 12 posts off the calendar and that the design doc itself is wrong on that point." />
 </figure>
 
 This is from a real session in August. I keep a small dashboard for planning my LinkedIn posts,
