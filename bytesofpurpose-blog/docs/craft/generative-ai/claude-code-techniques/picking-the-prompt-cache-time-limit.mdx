@@ -107,7 +107,7 @@ below cut the same 47 sessions four ways.
 | Meaningful sessions | How many | Share of the cost | With 1 hour |
 |---|--:|--:|---|
 | 10 or more pauses of 5 to 60 minutes | 27 | 91% | 11% cheaper |
-| Fewer than 10 | 20 | 9% | 2% dearer |
+| Fewer than 10 | 20 | 9% | 2% more expensive |
 
 </TabItem>
 <TabItem value="percentiles" label="Percentiles">
@@ -127,6 +127,14 @@ more.
 <TabItem value="steps" label="5-point steps">
 
 Each "or better" column adds that row to every row above it, so it climbs as you read down.
+Green rows are sessions where 1 hour would have saved money; red rows, where it would have cost more.
+
+<style>{`
+  .cache-steps tbody tr td { background: rgba(46, 160, 67, 0.14); }
+  .cache-steps tbody tr:nth-child(n+11) td { background: rgba(218, 54, 51, 0.14); }
+`}</style>
+
+<div className="cache-steps">
 
 | Saved with 1 hour | Sessions | Share | Or better | Of the cost | Or better | $ saved | Or better |
 |---|--:|--:|--:|--:|--:|--:|--:|
@@ -144,6 +152,8 @@ Each "or better" column adds that row to every row above it, so it climbs as you
 | −10% to −5% | 4 | 9% | 87% | 5% | 81% | −$25 | $793 |
 | −15% to −10% | 4 | 9% | 96% | 18% | 99% | −$162 | $630 |
 | −20% to −15% | 2 | 4% | 100% | 1% | 100% | −$12 | $618 |
+
+</div>
 
 One session saved $417 on its own. The sessions that would have cost more gave back $212, so the
 last row's $618 is what a 1-hour cache would have saved across all 47.
@@ -239,7 +249,12 @@ claude -p "hello" --output-format json
 - Subagents, compaction and other helpers: 5 minutes. On a subscription, a few helper requests
   that Anthropic's servers control get 1 hour.
 
-**Change it** in `~/.claude/settings.json` (Claude Code 2.1.242 or later):
+**Change it** (Claude Code 2.1.242 or later) in one of two ways:
+
+<Tabs>
+<TabItem value="settings" label="In settings.json" default>
+
+For every session, add these to `~/.claude/settings.json`:
 
 ```json
 {
@@ -248,8 +263,22 @@ claude -p "hello" --output-format json
 }
 ```
 
-or for one shell with `CLAUDE_CODE_PROMPT_CACHE_TTL=1h` and `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL=5m`.
-`FORCE_PROMPT_CACHING_5M=1` overrides everything. The full order is on the
+</TabItem>
+<TabItem value="env" label="With environment variables">
+
+For one shell, export these before you start `claude`:
+
+```bash
+export CLAUDE_CODE_PROMPT_CACHE_TTL=1h
+export CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL=5m
+```
+
+Put them in your shell profile to keep them.
+
+</TabItem>
+</Tabs>
+
+`FORCE_PROMPT_CACHING_5M=1` overrides both. The full order is on the
 [prompt caching page](https://code.claude.com/docs/en/prompt-caching) and the keys are in the
 [settings reference](https://code.claude.com/docs/en/settings).
 
@@ -257,9 +286,46 @@ or for one shell with `CLAUDE_CODE_PROMPT_CACHE_TTL=1h` and `CLAUDE_CODE_SUBAGEN
 `"cache_control": {"type": "ephemeral", "ttl": "1h"}`. See
 [prompt caching in the API docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
-**Measure your own pauses.** Claude Code keeps each session as a `.jsonl` file under
-`~/.claude/projects/`. This counts the pause before every request, across all your sessions
-(it needs `jq`):
+**Decide whether to switch.** Claude Code keeps each session as a `.jsonl` file under
+`~/.claude/projects/`, so your own pauses are already on disk. Here are three ways to read them;
+pick one.
+
+<Tabs>
+<TabItem value="ask" label="Ask Claude" default>
+
+Paste this into a Claude Code session:
+
+```text
+First read Claude Code's docs on prompt caching and on settings:
+https://code.claude.com/docs/en/prompt-caching and https://code.claude.com/docs/en/settings.
+Then look at my session logs (the .jsonl files under ~/.claude/projects/). Study how I use Claude:
+how long I pause between turns, and how much is written to the prompt cache and read back. Then
+tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl settings, and why.
+```
+
+Reading the docs first means Claude works from the current defaults and setting names, not from
+what it remembers.
+
+</TabItem>
+<TabItem value="script" label="Run the script">
+
+The script I used for the numbers above is
+[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253), and its
+full code is in the [appendix](#appendix-the-script). It needs Node 20 and nothing else, reads the
+logs on the machine you run it on, and prints totals only. If your logs ran at 5 minutes (an API
+key, or subagents), it answers "with 1 hour, you would have saved N% of your budget". If they ran
+at 1 hour, it prices them at 5 minutes. Download it with the GitHub CLI and run it:
+
+```bash
+gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
+node cache-ttl-gaps.mjs --root ~/.claude --days 30
+# logs too old to say 5m or 1h: add --ran-at 5m
+```
+
+</TabItem>
+<TabItem value="jq" label="Count pauses with jq">
+
+This counts the pause before every request, across all your sessions (it needs `jq`):
 
 ```bash
 for f in ~/.claude/projects/*/*.jsonl; do
@@ -275,31 +341,13 @@ done | awk '{ a += $1; b += $2; c += $3 }
 The log format isn't documented, so check it still works after an update. If the middle line is a
 real share of the total and your prompts are big, try 1 hour for a few days and compare `/usage`.
 
-**Or work out what the other limit would have cost.** The script I used for the numbers above is
-[public as a gist](https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253), and its
-full code is in the [appendix](#appendix-the-script). It needs Node 20 and nothing else, reads the
-logs on the machine you run it on, and prints totals only. If your logs ran at 5 minutes (an API
-key, or subagents), it answers "with 1 hour, you would have saved N% of your budget". If they ran
-at 1 hour, it prices them at 5 minutes. Download it with the GitHub CLI and run it:
-
-```bash
-gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs
-node cache-ttl-gaps.mjs --root ~/.claude --days 30
-# logs too old to say 5m or 1h: add --ran-at 5m
-```
-
-**Or ask Claude to do it.** Paste this into a Claude Code session:
-
-```text
-Look at my Claude Code session logs (the .jsonl files under ~/.claude/projects/). Study how I use
-Claude: how long I pause between turns, and how much is written to the prompt cache and read back.
-Then tell me whether I should change my promptCacheTtl or subagentPromptCacheTtl settings, and why.
-```
+</TabItem>
+</Tabs>
 
 ## What it looks like
 
 <figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: look at my session logs under ~/.claude/projects/, study how long I pause and how much goes into the prompt cache, then tell me whether to change promptCacheTtl or subagentPromptCacheTtl, and why" />
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize your settings. Claude Code with a prompt typed and ready to send: first read Claude Code's docs on prompt caching and settings, then look at my session logs under ~/.claude/projects/, study how long I pause and how much goes into the prompt cache, then tell me whether to change promptCacheTtl or subagentPromptCacheTtl, and why" />
 </figure>
 
 That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
