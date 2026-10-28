@@ -89,7 +89,7 @@ separate model agrees the condition holds.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/writing-a-loop-prompt-that-knows-when-to-stop.png" alt="A Claude Code session: I start a loop that reviews the next batch of transcripts, scores each candidate against my taste rubric, logs confirmed ones toward 10, and flags near misses. Claude stops the loop after one pass, not because it is out of work, 82 of 92 sessions still unread, but because the rubric leaves the final cut to me. Later, Claude admits the 82 of 92 figure lived only in the conversation's memory and was not written anywhere in the repo." />
+  <img src="/img/claude-code/writing-a-loop-prompt-that-knows-when-to-stop.png" alt="A Claude Code session: Claude test-runs my taste rubric on two candidates before trusting it to run unattended, then I start a loop that reviews the next batch of transcripts, scores each candidate against my taste rubric, logs confirmed ones toward 10, and flags near misses. Claude stops the loop after one pass, not because it is out of work, 82 of 92 sessions still unread, but because the rubric leaves the final cut to me. Later, Claude admits the 82 of 92 figure lived only in the conversation's memory and was not written anywhere in the repo." />
 </figure>
 
 That's the loop I ran, in the repo behind the app where I plan this series. Claude drafted the prompt from what I
