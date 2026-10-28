@@ -29,7 +29,7 @@
  *   node scripts/validate-em-dash.js --json          # machine-readable findings
  *   node scripts/validate-em-dash.js [paths…]        # restrict to given paths
  *
- * Exit codes: 0 clean · 1 one or more em-dashes found.
+ * Exit codes: 0 clean · 1 one or more em-dashes found · 2 a path argument was not found.
  */
 
 const fs = require('fs');
@@ -75,8 +75,27 @@ function walk(target, acc) {
   }
 }
 
+// A path argument is tried from the current folder first, then from the site folder, so
+// `docs/craft/...` works whether you run from the repo root or from bytesofpurpose-blog.
+// A path found in neither place is an error: before this, a wrong path was skipped
+// silently and the scan reported "no em-dashes" without having read the page.
+function resolveArg(r) {
+  const fromCwd = path.resolve(r);
+  if (fs.existsSync(fromCwd)) return fromCwd;
+  const fromSite = path.resolve(SITE_ROOT, r);
+  if (fs.existsSync(fromSite)) return fromSite;
+  return null;
+}
+
 const files = [];
-for (const r of roots) walk(path.resolve(r), files);
+for (const r of roots) {
+  const target = pathArgs.length ? resolveArg(r) : path.resolve(r);
+  if (target === null) {
+    console.error(`✗ em-dash: path not found: ${r} (tried from ${process.cwd()} and ${SITE_ROOT})`);
+    process.exit(2);
+  }
+  walk(target, files);
+}
 files.sort();
 
 // "--" bypass: does this (code-sanitized, non-rule) line use "--" as a prose dash?
@@ -160,7 +179,7 @@ if (asJson) {
     console.log(`${f.file}:${f.line} [${f.kind}]: ${f.snippet}`);
   }
   if (total === 0) {
-    console.log('✓ em-dash: no em-dashes (—) or "--" bypasses in public-facing content.');
+    console.log(`✓ em-dash: no em-dashes (—) or "--" bypasses in ${files.length} file(s) scanned.`);
   } else {
     console.error(`\n✗ em-dash: ${total} occurrence(s) across ${fileCount} file(s).`);
     console.error('An em-dash (—) or "--" bypass reads as AI voice. Rephrase: comma · colon · period-split · parentheses.');
