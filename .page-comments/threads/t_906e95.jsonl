@@ -4,3 +4,6 @@
 {"v":1,"ts":"2026-10-28T20:27:37Z","ev":"anchor","author":"page","state":"found"}
 {"v":1,"ts":"2026-10-28T20:28:03Z","ev":"anchor","author":"page","state":"lost"}
 {"v":1,"ts":"2026-10-28T20:29:41Z","ev":"landed","author":"git","commit":"3da0627c","from":"2546c21a"}
+{"v":1,"ts":"2026-10-28T20:33:27Z","ev":"shot","role":"after","author":"claude","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_906e95/after-929e0747.png","sha":"e17dbc9dc09a","commit":"929e0747"}
+{"v":1,"ts":"2026-10-28T20:33:33Z","ev":"reply","author":"claude","body":"Redrawn wide (1600x900) and shown up to 760px across, so it reads as a wide terminal now. Blog commit 929e0747; the picture tool got a new landscape size for this (hub commit 90b09d4). After picture is in the thread.","commit":"929e0747"}
+{"v":1,"ts":"2026-10-28T20:33:37Z","ev":"status","author":"claude","status":"resolved","note":"Wide picture in 929e0747"}

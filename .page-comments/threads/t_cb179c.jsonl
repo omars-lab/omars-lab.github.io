@@ -5,3 +5,6 @@
 {"v":1,"ts":"2026-10-28T20:28:24Z","ev":"anchor","author":"page","state":"lost"}
 {"v":1,"ts":"2026-10-28T20:28:26Z","ev":"anchor","author":"page","state":"found"}
 {"v":1,"ts":"2026-10-28T20:29:41Z","ev":"landed","author":"git","commit":"3da0627c","from":"2546c21a"}
+{"v":1,"ts":"2026-10-28T20:33:27Z","ev":"shot","role":"after","author":"claude","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_cb179c/after-929e0747.png","sha":"2e1f28f929c5","commit":"929e0747"}
+{"v":1,"ts":"2026-10-28T20:33:33Z","ev":"reply","author":"claude","body":"The script's code now sits in a new \"Appendix: the script\" section at the bottom, and Set it up links to it. Both places show the download command: gh gist view 4fc25fd8209d7b2199821ad84988a253 --raw --filename cache-ttl-gaps.mjs > cache-ttl-gaps.mjs (tested, it prints the script). Commit 929e0747; after picture is in the thread.","commit":"929e0747"}
+{"v":1,"ts":"2026-10-28T20:33:37Z","ev":"status","author":"claude","status":"resolved","note":"Appendix and download command in 929e0747"}
