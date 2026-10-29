@@ -59,7 +59,9 @@ storybook: ## Start Storybook development server (with optional type-check)
 	# ( cd ${SITEROOT} && yarn typecheck )
 	( cd ${SITEROOT} && yarn storybook )
 
-build-storybook: ## Build Storybook for production
+build-storybook: generate-assets ## Build Storybook for production
+	@# Stories import the gitignored generated data (e.g. Todos/todos-data.json), and `deploy`
+	@# has no npm prebuild hook, so a fresh checkout must generate it first or both fail.
 	( cd ${SITEROOT} && yarn build-storybook )
 
 build-blog-ui: ## Rebuild the @omars-lab/blog-ui package so its dist/ is current before a site build
