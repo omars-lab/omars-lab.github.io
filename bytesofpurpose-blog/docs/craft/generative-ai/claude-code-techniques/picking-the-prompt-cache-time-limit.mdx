@@ -286,6 +286,33 @@ every one of those returns **writes the whole conversation again**. A 1-hour cac
 gap between my work credits and my subscription. But on an API key it's one setting, and my long
 sessions say it pays.
 
+## Words of caution
+
+**Don't change these settings blindly.** The 1-hour cache only pays when your main conversation
+sits idle for 5 to 60 minutes and then picks up again. For many people it doesn't.
+
+- **You answer Claude right away.** If you wait on each reply and answer every question as it
+  comes, your main conversation never sits for 5 minutes. The 5-minute cache is cheaper for you.
+- **You auto-approve everything.** If you skip the permission checks and let Claude run without
+  stopping for you, it rarely waits on you at all. The 5-minute cache is likely cheaper for you too.
+- **The 1-hour cache is for waiting.** Consider it only if your main conversation often waits on
+  you for more than 5 minutes, or waits on subagents that take more than 5 minutes to finish.
+
+Measure first, with the prompt below, and change the setting only if your own logs say so.
+
+## Changing your habits instead
+
+The setting fits the cache to how you work. You can also fit how you work to the cache. From
+cheapest to least cheap:
+
+1. **Never leave a session idle for 5 minutes, and stay on the 5-minute cache.** The cheapest
+   write price, and almost no misses.
+2. **Never leave a session idle for an hour, and use the 1-hour cache.** Coffee breaks and short
+   meetings stay cheap reads, but every write costs more.
+3. **Keep subagents under an hour when the main conversation waits on them.** A subagent that runs
+   longer lets even the 1-hour cache expire, so the main conversation writes everything again when
+   it comes back.
+
 ## Set it up
 
 **Check which limit you're on.** In Claude Code 2.1.251 or later, `/usage` shows a "Prompt cache
@@ -353,15 +380,19 @@ pick one.
 Paste this into a Claude Code session:
 
 ```text
-I want to know how much money I would save, or lose, by changing my prompt cache time limit.
+I want you to analyze how I take breaks and tell me whether my prompt cache time limits are set
+right for them.
 First read Claude Code's docs on prompt caching and on settings:
 https://code.claude.com/docs/en/prompt-caching and https://code.claude.com/docs/en/settings.
 Then read this script, which prices my session logs at both limits:
 https://gist.github.com/omars-lab/4fc25fd8209d7b2199821ad84988a253
 Use it, or the same method, on my session logs (the .jsonl files under ~/.claude/projects/).
-Tell me which limit saves me more money and tokens, for the main conversation and for
-subagents: the share of my spend I would save, and how many tokens I would stop writing to the
-cache a second time. Then tell me whether I should change promptCacheTtl or subagentPromptCacheTtl.
+Look at my breaks: how often I step away and for how long, and whether my usage pattern leans
+toward the 5-minute or the 1-hour cache.
+In the process, tell me which limit saves me more money and tokens, for the main conversation
+and for subagents: the share of my spend I would save, and how many tokens I would stop writing
+to the cache a second time. Then tell me whether I should change promptCacheTtl or
+subagentPromptCacheTtl.
 ```
 
 Reading the docs first means Claude works from the current defaults and setting names, not from
@@ -408,7 +439,7 @@ real share of the total and your prompts are big, try 1 hour for a few days and 
 ## What it looks like
 
 <figure style={{maxWidth: '760px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize its settings around how you take breaks. Claude Code with a prompt typed and ready to send: I want to know how much money I would save, or lose, by changing my prompt cache time limit. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, and tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
+  <img src="/img/claude-code/picking-the-prompt-cache-time-limit-ask.png" alt="Ask Claude to optimize its settings around how you take breaks. Claude Code with a prompt typed and ready to send: I want you to analyze how I take breaks and tell me whether my prompt cache time limits are set right for them. Read the docs on prompt caching and settings, then the gist script that prices session logs at both limits, use it on my logs under ~/.claude/projects/, look at how often and how long I step away, and in the process tell me which limit saves more money and tokens, and whether to change promptCacheTtl or subagentPromptCacheTtl" />
 </figure>
 
 That's the prompt from Set it up, typed and ready to send. I got there the long way: I asked for
