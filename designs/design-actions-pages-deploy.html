@@ -39,9 +39,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&amp;family=Geist:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="/assets/css/styles.d7070a52.css">
-<script src="/assets/js/runtime~main.e3c89705.js" defer="defer"></script>
-<script src="/assets/js/main.9ec612ec.js" defer="defer"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&amp;family=Geist:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="/assets/css/styles.81d86d6d.css">
+<script src="/assets/js/runtime~main.a4638505.js" defer="defer"></script>
+<script src="/assets/js/main.3728e805.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -97,7 +97,7 @@ workflow), and it must target the <code>github-pages</code> environment. GitHub&
 <p>CI on every push is the primary deploy, but I still wanted a one-command manual deploy. Since
 Pages now builds from the workflow (not a branch), &quot;deploy by hand&quot; cannot mean &quot;commit and
 push the build&quot;. Instead, the manual path simply <strong>triggers the same workflow</strong>:</p>
-<div class="language-makefile codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-makefile codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">deploy: validate-config</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">	gh workflow run deploy-pages.yml --ref main</span><br></span></code></pre></div></div>
+<div class="language-makefile codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-makefile codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token target symbol" style="color:hsl(5, 74%, 59%)">deploy</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">:</span><span class="token plain"> validate-config</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">	gh workflow run deploy-pages.yml --ref main</span><br></span></code></pre></div></div>
 <p>One pipeline, two ways to start it (a push, or <code>gh workflow run</code>), and no second code path that
 could behave differently from CI.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="validating-the-config-before-it-runs">Validating the config before it runs<a href="#validating-the-config-before-it-runs" class="hash-link" aria-label="Direct link to Validating the config before it runs" title="Direct link to Validating the config before it runs" translate="no">​</a></h2>
@@ -106,7 +106,7 @@ validates the workflow first, using <a href="https://github.com/rhysd/actionlint
 checker that understands the Actions schema deeply: it type-checks <code>${{ }}</code> expressions,
 verifies action inputs against each action&#x27;s real input list, and flags security issues, well
 beyond a plain YAML parse.</p>
-<div class="language-makefile codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-makefile codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">validate-config:</span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">	actionlint   # lints .github/workflows/ ; deploy depends on this (fail-closed)</span><br></span></code></pre></div></div>
+<div class="language-makefile codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-makefile codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token target symbol" style="color:hsl(5, 74%, 59%)">validate-config</span><span class="token punctuation" style="color:hsl(119, 34%, 47%)">:</span><span class="token plain"></span><br></span><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">	actionlint   </span><span class="token comment" style="color:hsl(230, 4%, 64%)"># lints .github/workflows/ ; deploy depends on this (fail-closed)</span><br></span></code></pre></div></div>
 <p>It earns its place: pointed at a workflow with a misspelled <code>actions/checkout</code> input, it names
 the bad input and prints the full list of valid ones. The deploy target depends on it, so a
 broken config never makes it to a triggered run.</p>

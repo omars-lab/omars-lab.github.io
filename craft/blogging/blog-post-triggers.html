@@ -39,9 +39,9 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&amp;family=Geist:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="/assets/css/styles.d7070a52.css">
-<script src="/assets/js/runtime~main.e3c89705.js" defer="defer"></script>
-<script src="/assets/js/main.9ec612ec.js" defer="defer"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&amp;family=Geist:wght@400;500;600;700&amp;display=swap"><link rel="stylesheet" href="/assets/css/styles.81d86d6d.css">
+<script src="/assets/js/runtime~main.a4638505.js" defer="defer"></script>
+<script src="/assets/js/main.3728e805.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -87,14 +87,14 @@ post. The keys are inert to Docusaurus (unknown frontmatter is ignored) and grep
 <p>This is purely additive, it changes no existing frontmatter and never affects a URL.</p>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="scaffolding-the-post">Scaffolding the post<a href="#scaffolding-the-post" class="hash-link" aria-label="Direct link to Scaffolding the post" title="Direct link to Scaffolding the post" translate="no">​</a></h2>
 <p>Once a doc carries <code>blog_trigger</code>, generate its companion post stub:</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">make generate-blog-stub DOC=docs/path/to/your-doc.md</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token function" style="color:hsl(221, 87%, 60%)">make</span><span class="token plain"> generate-blog-stub </span><span class="token assign-left variable" style="color:hsl(221, 87%, 60%)">DOC</span><span class="token operator" style="color:hsl(221, 87%, 60%)">=</span><span class="token plain">docs/path/to/your-doc.md</span><br></span></code></pre></div></div>
 <p>The generator reads the doc&#x27;s frontmatter and writes a <code>/blog/YYYY-MM-DD-&lt;slug&gt;.md</code> stub
 with the narrative ingress, the <code>&lt;!-- truncate --&gt;</code> fold, a <code>## Takeaways</code> placeholder,
 and the back-link to the doc. It is <strong>read-only on the source doc</strong> (it prints the
 one-line <code>blog_post:</code> / <code>blog_status:</code> edit for you to apply) and <strong>refuses to overwrite</strong>
 an existing post, so it is safe to re-run.</p>
 <p>To see which post-worthy docs still owe a post:</p>
-<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token plain">make blog-pending</span><br></span></code></pre></div></div>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-background-color:hsl(230, 1%, 98%);--prism-color:hsl(230, 8%, 24%)"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="background-color:hsl(230, 1%, 98%);color:hsl(230, 8%, 24%)"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:hsl(230, 8%, 24%)"><span class="token function" style="color:hsl(221, 87%, 60%)">make</span><span class="token plain"> blog-pending</span><br></span></code></pre></div></div>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="see-also">See also<a href="#see-also" class="hash-link" aria-label="Direct link to See also" title="Direct link to See also" translate="no">​</a></h2>
 <ul>
 <li class=""><a class="" href="/craft/blogging/docs-vs-blog-posts">Docs vs Blog Posts</a>, which <em>format</em> a piece of content takes.</li>
