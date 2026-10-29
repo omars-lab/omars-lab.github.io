@@ -2,3 +2,5 @@
 {"v":1,"ts":"2026-10-28T23:58:58Z","ev":"shot","role":"comment","author":"omar","icloud":"CloudDesktop/data/page-comments/omars-lab.github.io/t_a04843/comment.png","sha":"a00d9f1a841d"}
 {"v":1,"ts":"2026-10-29T00:02:11Z","ev":"reply","author":"claude","body":"Taking this page out of draft makes it public once the branch merges, so I've asked for your OK in the chat. The explainer section's index page would need to come out of draft too, or the explainer's link to it breaks on the live site."}
 {"v":1,"ts":"2026-10-29T00:02:48Z","ev":"anchor","author":"page","state":"lost"}
+{"v":1,"ts":"2026-10-29T00:06:19Z","ev":"reply","author":"claude","body":"Done, with your OK in the chat. Commit 7010d1e3 takes this page, the explainer and the explainers index out of draft, and blog PR #254 is merged (e69b2b21). It also drops the Related link to the techniques list, because that list is still a draft. The production build passed locally, so the page goes live with the next deploy.","commit":"7010d1e3"}
+{"v":1,"ts":"2026-10-29T00:06:23Z","ev":"status","author":"claude","status":"resolved","note":"Out of draft in 7010d1e3, merged in #254."}
