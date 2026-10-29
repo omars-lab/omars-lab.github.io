@@ -51,6 +51,10 @@ sending it all again.
   and a cheap read on the 1-hour one. If you pause like that often, the 1-hour cache's higher write
   price pays for itself. If you rarely pause, or your pauses run past an hour, it doesn't.
 
+**You don't have to change how you work.** If you regularly step away from Claude for 10 to 30
+minutes at a time, your 5-minute cache has expired by the time you come back, but a 1-hour cache is
+still there.
+
 For example, on Opus 5.5 a 100,000-token conversation costs $0.50 to write to the 5-minute cache,
 $0.80 to write to the 1-hour cache, and $0.02 to read back from either. Come back after 20 minutes:
 the 5-minute cache has expired and writes it all again for $0.50, while the 1-hour cache reads it
