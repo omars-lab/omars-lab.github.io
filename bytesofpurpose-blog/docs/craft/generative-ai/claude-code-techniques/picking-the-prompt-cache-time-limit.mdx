@@ -36,6 +36,26 @@ task runs, I sit in a meeting, I keep two or three sessions open and hop between
 But I had no idea what my pauses really looked like, or which limit Claude Code was even using for
 me. I was about to change a setting on the strength of a hunch.
 
+## Explained simply
+
+Every message you send Claude Code carries the whole conversation with it. Anthropic keeps a copy
+of that conversation, the prompt cache, so the next message can read it back cheaply instead of
+sending it all again.
+
+- **Writing to the cache has two prices.** A copy kept for 5 minutes costs 1.25 times the normal
+  input price to write. A copy kept for 1 hour costs 2 times.
+- **Reading it back costs the same either way**, and it's cheap: a tenth of the input price or less.
+- **A miss means writing it all again.** Come back after the copy has expired and the whole
+  conversation is written to the cache again, at the write price.
+- **So to cut the cost, cut the misses.** A pause of 5 to 60 minutes is a miss on the 5-minute cache
+  and a cheap read on the 1-hour one. If you pause like that often, the 1-hour cache's higher write
+  price pays for itself. If you rarely pause, or your pauses run past an hour, it doesn't.
+
+For example, on Opus 5.5 a 100,000-token conversation costs $0.50 to write to the 5-minute cache,
+$0.80 to write to the 1-hour cache, and $0.02 to read back from either. Come back after 20 minutes:
+the 5-minute cache has expired and writes it all again for $0.50, while the 1-hour cache reads it
+back for $0.02.
+
 ## What I did about it
 
 I read the docs to find out which limit applies when, then had Claude measure every pause in my own
