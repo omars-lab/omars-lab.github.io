@@ -59,7 +59,9 @@ storybook: ## Start Storybook development server (with optional type-check)
 	# ( cd ${SITEROOT} && yarn typecheck )
 	( cd ${SITEROOT} && yarn storybook )
 
-build-storybook: ## Build Storybook for production
+build-storybook: generate-assets ## Build Storybook for production
+	@# Stories import the gitignored generated data (e.g. Todos/todos-data.json), and `deploy`
+	@# has no npm prebuild hook, so a fresh checkout must generate it first or both fail.
 	( cd ${SITEROOT} && yarn build-storybook )
 
 build-blog-ui: ## Rebuild the @omars-lab/blog-ui package so its dist/ is current before a site build
@@ -361,6 +363,10 @@ deploy: secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub P
 	@# (NOT `source .env` — shell-special chars). Then re-run V5 on the deployed build/ as
 	@# a blocking safety net before the push is trusted. If a premium doc exists and the
 	@# passphrase is empty, ABORT — never ship cleartext premium.
+	@# `yarn deploy` commits the build in a fresh clone of gh-pages, which gets the global
+	@# gitleaks pre-commit hook (since 2026-08-03) but not this repo's .gitleaks.toml, so the
+	@# hook scanned with the defaults and refused the public PostHog key. GITLEAKS_CONFIG
+	@# points it at this repo's settings: the same allowlist, no new entries, still fail-closed.
 	@SP=$$(grep -E '^STATICRYPT_PASSPHRASE=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
 	PK=$$(grep -E '^POSTHOG_KEY=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
 	PH=$$(grep -E '^POSTHOG_HOST=' .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''); \
@@ -372,8 +378,10 @@ deploy: secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub P
 	fi; \
 	if [ -z "$$PK" ]; then echo "⚠️  POSTHOG_KEY empty — analytics will be missing in this deploy."; fi; \
 	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP POSTHOG_KEY=$$PK POSTHOG_HOST=$$PH \
+		GITLEAKS_CONFIG=$(CURDIR)/.gitleaks.toml \
 		USE_SSH=true GIT_USER=omar_eid21@yahoo.com DEPLOYMENT_BRANCH=gh-pages yarn deploy ) \
-	&& ( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP node scripts/verify-premium-encrypted.js ) \
+		|| { echo "🔴 yarn deploy failed (see the error above); the premium check did not run."; exit 2; }; \
+	( cd ${SITEROOT} && STATICRYPT_PASSPHRASE=$$SP node scripts/verify-premium-encrypted.js ) \
 		|| { echo "🔴 post-deploy V5 found a premium leak in the shipped build — investigate immediately."; exit 2; }
 
 fix-frontmatter: ## Fix frontmatter issues using AI
