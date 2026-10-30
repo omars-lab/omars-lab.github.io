@@ -36,7 +36,9 @@ via `make validate-structure` + a warn-only `Write|Edit` hook). The contract:
   `suggest-emoji` skill). A `kind:`-carrying doc gets its emoji at runtime and is exempt.
 - Every sub-folder with docs has a `_category_.json` (no orphan categories). Names are
   **kebab-case** (`_`-prefixed like `_TEMPLATE` exempt). No framing-word/topic-echo folder names
-  (`*-techniques`/`*-craftsmanship`/`definitions` → use a reader-facing topic noun).
+  (`*-techniques`/`*-craftsmanship`/`definitions` → use a reader-facing topic noun). A published
+  folder whose name is itself the topic (`claude-code-techniques`, the series name) is listed in
+  `FRAMING_ALLOW` in `validate-docs-structure.js` rather than renamed, since a rename moves live URLs.
 - **Folder depth ≤ 5** under an instance root. A `terminology/` category sorts **first**; a
   `prompts/` category sorts **last**.
 - **Every doc carries a healthy `description:`** (present, ~50–160 chars, distinct) — it feeds
