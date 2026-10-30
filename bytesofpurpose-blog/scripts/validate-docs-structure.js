@@ -177,6 +177,14 @@ const {DESC_MIN, DESC_MAX, checkDescription: seoCheckDescription} = require('./l
 
 // Folder names that echo a format/framing word instead of a reader topic.
 const FRAMING_RE = /-techniques$|-craftsmanship$|^definitions$/;
+// Published folders that match FRAMING_RE on purpose and must keep their name: renaming
+// one moves every live URL under it. Key = the folder's path from the blog root.
+//   claude-code-techniques: "Claude Code techniques" IS the reader-facing topic (the
+//   series name), not a framing word over some other topic. Its cache time-limit page
+//   is live and the rest of the series ships under the same path.
+const FRAMING_ALLOW = new Set([
+  'docs/craft/generative-ai/claude-code-techniques',
+]);
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const isDoc = (n) => /\.mdx?$/.test(n);
 const isReadme = (n) => /^README\.mdx?$/.test(n);
@@ -438,7 +446,7 @@ function walkDir(dir, depthFromTopic, topicName) {
         add('kebab-case', rel(full), `folder "${e.name}" is not kebab-case`);
       }
       // framing-word / topic-echo folder names
-      if (FRAMING_RE.test(nameNoPrefix)) {
+      if (FRAMING_RE.test(nameNoPrefix) && !FRAMING_ALLOW.has(rel(full))) {
         add('framing-folder', rel(full),
           `folder "${e.name}" is a framing-word/topic-echo name — prefer a reader-facing topic noun`);
       }
