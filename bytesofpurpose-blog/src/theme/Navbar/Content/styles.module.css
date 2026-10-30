@@ -45,6 +45,16 @@
   display: flex;
   flex-wrap: nowrap;
   white-space: nowrap;
+  /* A zero-width, clipped box so the ruler never widens the page. `visibility: hidden` still
+     counts toward the page's scroll width, and the full item list (plus each item's hidden
+     summary popup) ran ~205px past the right edge at 1280px, so every page scrolled sideways.
+     Clipping changes nothing the JS reads: each child keeps its natural width (flex-shrink: 0
+     below), and only the children are measured, never this box. */
+  width: 0;
+  overflow: hidden;
+}
+.measure > * {
+  flex-shrink: 0;
 }
 
 /* The whole overflow apparatus (inline row + More trigger) is desktop-only; below
