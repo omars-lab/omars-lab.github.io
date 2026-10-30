@@ -83,7 +83,11 @@ typecheck: ## Type-check the site with tsc (swizzled theme + components + pages)
 	( cd ${SITEROOT} && yarn typecheck )
 
 validate-links: ## Lint markdown/MDX source for bare/long/tracking/generic links
-	( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) )
+	@# exit 2 == ERROR-tier (fail the gate); exit 1 == warn-only (advisory, pass).
+	@( cd ${SITEROOT} && node scripts/validate-links.js $(DIRS) ); rc=$$?; \
+		if [ $$rc -eq 2 ]; then echo "✗ links: ERROR-tier problems, see above."; exit 1; fi; \
+		if [ $$rc -ne 0 ] && [ $$rc -ne 1 ]; then echo "✗ links: validator crashed (exit $$rc)."; exit 1; fi; \
+		exit 0
 
 validate-noteplan-links: ## Verify every noteplan:// link resolves to a real note (local-only; CI syntax-only)
 	( cd ${SITEROOT} && node scripts/validate-noteplan-links.js )

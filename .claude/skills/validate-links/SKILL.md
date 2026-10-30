@@ -25,7 +25,10 @@ make validate-links DIRS=docs/2-definitions   # scan a subtree
 ( cd bytesofpurpose-blog && node scripts/validate-links.js [paths…] [--json] )
 ```
 
-Exit code is `1` when problems are found (CI-friendly). `--json` emits a
+The script exits `0` when clean, `1` when there are only warnings, `2` when any
+ERROR-tier problem is found, and `3` if it crashes. `make validate-links` passes on
+warnings and fails on errors or a crash (the same handling as `make validate-structure`),
+so it can gate a PR and a chained `make validate-links validate-questions` runs both. `--json` emits a
 machine-readable array; the `--json` count is authoritative (plain output prints
 two lines per problem, so don't count its lines).
 

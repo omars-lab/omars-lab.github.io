@@ -49,7 +49,9 @@
  *   node scripts/validate-links.js --fix [paths…]  # rewrite bare URLs → [label](url)
  *   node scripts/validate-links.js --fix --titles  # …labeling via fetched <title> (network)
  *
- * Exit codes: 0 clean · 1 problems found (scan) · 2 ERROR-tier found (--error-only, for hooks).
+ * Exit codes: 0 clean · 1 WARN-tier only (advisory) · 2 any ERROR-tier finding.
+ * Same contract as validate-docs-structure.js, so `make validate-links` can pass on
+ * warnings and fail only on errors (--error-only also exits 2, for the hook).
  */
 
 const fs = require('fs');
@@ -734,9 +736,12 @@ async function main() {
   }
   if (errorOnly) all = all.filter((p) => p.severity === 'error');
 
+  // 2 when any ERROR-tier finding is present, 1 when only WARN-tier, 0 clean.
+  const exitCode = !all.length ? 0 : all.some((p) => p.severity === 'error') ? 2 : 1;
+
   if (json) {
     console.log(JSON.stringify(all, null, 2));
-    process.exit(all.length ? (errorOnly ? 2 : 1) : 0);
+    process.exit(exitCode);
   }
 
   if (!all.length) {
@@ -753,8 +758,10 @@ async function main() {
     console.log(`      ↳ ${p.suggest}`);
   }
   console.log('\nSummary: ' + Object.entries(byKind).map(([k, n]) => `${k}=${n}`).join('  '));
-  // --error-only exits 2 (hook-block signal); plain scan exits 1.
-  process.exit(errorOnly ? 2 : 1);
+  // ERROR-tier → 2 (fails the gate / blocks the hook); WARN-only → 1 (advisory).
+  process.exit(exitCode);
 }
 
-main();
+// A crash must not look like "warn-only" (exit 1): Node exits 1 on an unhandled
+// rejection, so catch it and exit 3, which `make validate-links` treats as a failure.
+main().catch((e) => { console.error(e); process.exit(3); });
