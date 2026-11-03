@@ -25,7 +25,7 @@ specialist agents: a coder, a tester, a reviewer, each with its own instructions
 the urge. Instead, build a set of Claude skills in your repo that don't overlap. Then, if you want
 to parallelize the work, tell Claude to spawn subagents that use those skills.
 
-A team of agents may build things for you with little guidance, but it comes at three costs:
+A team of agents may build things for you with little guidance, but at a cost, primarily:
 
 - **Money.** Every subagent reads the repo again for itself.
 - **Curiosity.** The work happens out of sight, so you get fewer chances to ask why it went this
