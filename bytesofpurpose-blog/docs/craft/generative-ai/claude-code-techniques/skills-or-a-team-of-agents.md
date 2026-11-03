@@ -29,7 +29,7 @@ A team of agents may build things for you with little guidance, but it comes at 
 
 - **Money.** Every subagent reads the repo again for itself.
 - **Curiosity.** The work happens out of sight, so you get fewer chances to ask why it went this
-  way and not that one.
+  way and not that way.
 - **Understanding.** When it's done, you have no idea how it got built.
 
 The first cost I could measure, so I did.
