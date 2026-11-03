@@ -117,4 +117,4 @@ so that result comes from the tester's report." That's the understanding cost, i
 Keep an eye out for a future post on when I actually craft an agent instead of adding another
 skill.
 
-What questions do you ask yourself when you're making a similar decision?
+Have you created your team of agents? Do you still use it today?
