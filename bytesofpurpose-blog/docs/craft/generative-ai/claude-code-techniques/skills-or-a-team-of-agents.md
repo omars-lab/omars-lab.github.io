@@ -22,8 +22,8 @@ page is for you.
 
 At some point in your AI adoption journey, you've probably had the idea to set up a team of
 specialist agents: a coder, a tester, a reviewer, each with its own instructions. My tip: resist
-the urge. Instead, build a set of Claude skills in your repo that don't overlap, then let Claude
-send out subagents that load those skills when a job needs them.
+the urge. Instead, build a set of Claude skills in your repo that don't overlap. Then, if you want
+to parallelize the work, tell Claude to spawn subagents that use those skills.
 
 A team of agents may build things for you with little guidance, but it comes at three costs:
 
