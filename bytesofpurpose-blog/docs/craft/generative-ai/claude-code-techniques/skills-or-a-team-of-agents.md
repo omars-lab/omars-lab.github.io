@@ -114,4 +114,7 @@ so that result comes from the tester's report." That's the understanding cost, i
 - Three runs a side and one reviewer can't settle quality. The team's better tables are a lead for
   a bigger test, not a verdict.
 
+Keep an eye out for a future post on when I actually craft an agent instead of adding another
+skill.
+
 What questions do you ask yourself when you're making a similar decision?
