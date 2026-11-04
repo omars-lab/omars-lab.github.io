@@ -97,10 +97,6 @@ Some things to know before you read too much into it:
 - **Claude has done the thinking already.** It knows the files, the state and the risks. Asking it
   to write the trade-offs down puts that work where you can see it.
 
-## In my own words
-
-- "tell [Claude] to present options in an exec summary oriented fashion" (October 2026)
-
 ## Related
 
 - [Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask):

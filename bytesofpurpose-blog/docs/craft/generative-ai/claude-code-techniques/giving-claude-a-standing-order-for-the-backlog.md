@@ -118,11 +118,6 @@ the series going.
 - **The guard keeps the ranking honest.** Ranking by effort alone drifts to the cheapest items.
   The second half makes Claude weigh what the goal needs, not only what closes fast.
 
-## In my own words
-
-- "continue in priority order" (August 2026)
-- "continue" (October 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

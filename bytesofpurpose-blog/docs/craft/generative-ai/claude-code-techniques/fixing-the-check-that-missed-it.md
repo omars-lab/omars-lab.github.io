@@ -122,10 +122,6 @@ for a false alarm on a dash inside a link's title the same day.
 - **Proving the check catches it keeps the fix honest.** A sample that must fail is the only way
   to tell a working check from a silent one.
 
-## In my own words
-
-- "did our hook not catch this?" (July 2026)
-
 ## Related
 
 - [A Rubric That Learns From Every Review](/craft/generative-ai/claude-code-techniques/a-rubric-that-learns-from-every-review):

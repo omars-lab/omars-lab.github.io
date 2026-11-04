@@ -133,12 +133,6 @@ and said which.
 - **It's still the same session.** The watcher feeds a session that already knows the code, so a
   comment is a short message to a colleague, not a note to a stranger.
 
-## In my own words
-
-- "adding comment mode to a webpage … where I can drop a comment on any DOM element and there's a
-  monitor in a Claude Code session that's listening for comments and acting on them" (October 2026)
-- "see if we can make a new Graph view in the menu bar for this" (October 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

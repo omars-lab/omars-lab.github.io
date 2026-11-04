@@ -94,10 +94,6 @@ None of this would have shown up until the build hit it.
 - **It's cheaper now than later.** A wrong fact in a plan costs one edit. The same fact found
   halfway through the build costs the work built on it.
 
-## In my own words
-
-- "re-audit plan, websearch to back it up, add links and represent" (August 2026)
-
 ## Related
 
 - [Sending Side-Quests to a Fork](/craft/generative-ai/claude-code-techniques/sending-side-quests-to-a-fork):

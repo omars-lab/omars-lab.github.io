@@ -115,10 +115,6 @@ output and look.
 - **Looking is quick.** A few minutes of reading real pages beats a pipeline that runs for an hour
   on a bug nobody saw.
 
-## In my own words
-
-- "what's the strategy to distinguish ... still not convinced" (August 2026, spelling fixed)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):
