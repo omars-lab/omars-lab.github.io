@@ -13,6 +13,8 @@ questions:
   - Can Claude Code write my commit messages and push my changes without leaking a secret?
 ---
 
+import Gist from 'react-gist';
+
 ## What annoyed me
 
 I keep a lot of small repos on my laptop: scripts, tools, side projects, this blog. Claude Code
@@ -68,6 +70,13 @@ find "$root" -maxdepth 3 -name .git -type d -not -path '*/node_modules/*' | whil
   fi
 done
 ```
+
+If you'd rather have a script that also pushes, `sync-github.sh` is a longer version as a gist. It
+reports the same repos, scans the unpushed commits with gitleaks, and pushes only the ones that
+come back clean. It still never commits, never force-pushes and never creates a branch on GitHub
+unless you pass `--set-upstream`:
+
+<Gist id="ca69a26078f0f3601c2eb97ad9df5385" />
 
 The skill. Save it as `~/.claude/skills/sync-github/SKILL.md` so it works from any folder:
 
