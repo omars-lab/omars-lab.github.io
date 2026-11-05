@@ -1,0 +1,105 @@
+/* RunTimeline: one lane per agent, a bar for when it was working. Theme-aware via Infima vars. */
+
+.runTimeline {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  color: var(--ifm-font-color-base);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+}
+
+.lanes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lane {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.label {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.stats {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.track {
+  position: relative;
+  height: 1.25rem;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 4px;
+  /* Lets a zero-length bar at the very end (left: 100%) still show its min-width. */
+  margin-right: 4px;
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 4px;
+  background: var(--ifm-color-primary);
+  border-radius: 4px;
+}
+
+.total {
+  margin: 0.25rem 0 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (max-width: 600px) {
+  .lane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+}

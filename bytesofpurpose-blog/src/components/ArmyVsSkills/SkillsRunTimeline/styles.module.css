@@ -1,0 +1,100 @@
+/* Run timeline: a quiet card, one lane per agent. Colours come from theme variables only, so light
+   and dark mode both work without extra rules. On a phone the label sits above its track. */
+
+.timeline {
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--radius-lg);
+  background: var(--ifm-background-surface-color);
+  font-size: var(--text-body-md);
+}
+
+.title {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 600;
+  font-size: var(--text-h6);
+  margin-bottom: var(--space-3);
+  color: var(--ifm-heading-color);
+}
+
+.lanes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.lane {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+  overflow-wrap: anywhere;
+}
+
+.stats {
+  font-family: var(--font-mono);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  height: 1.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--ifm-color-emphasis-200);
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--ifm-color-primary);
+}
+
+.empty {
+  margin: 0;
+  color: var(--ifm-color-content-secondary);
+}
+
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-5);
+  margin: var(--space-3) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  font-size: var(--text-body-sm);
+  color: var(--ifm-color-content-secondary);
+}
+
+.totals strong {
+  font-family: var(--font-mono);
+  color: var(--ifm-font-color-base);
+}
+
+@media (max-width: 600px) {
+  .lane {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
