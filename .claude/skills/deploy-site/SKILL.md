@@ -66,7 +66,7 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 
 ## Procedure
 
-Run from the repo root, with Node 20.
+Run from the repo root, from any shell. `make` puts nvm's Node from `.nvmrc` (22) first on PATH by itself, so there is no `nvm use` or PATH prefix to type. `make node-check`, the first step of `deploy` and `deploy-check`, stops with the fix only when that version is not installed.
 
 ```bash
 # 1. Optional: build and check exactly as the deploy would, without pushing.

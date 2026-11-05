@@ -26,8 +26,19 @@
 # - Submodule updates require committing the reference change in parent repo
 # - Use 'git submodule update --remote <submodule>' to update submodules
 
+# Node: every target runs on the Node that .nvmrc names, whatever the shell has.
+# The shell's bare `node` is often v18 on this Mac, and the build then dies deep inside
+# `yarn add` with an "engine node is incompatible" error (2026-11-05 deploy). If nvm has the
+# .nvmrc version installed, its bin goes first on PATH for every recipe; if not, the shell's
+# node is used and `node-check` says what to install.
+NODE_WANT := $(shell tr -dc '0-9' < .nvmrc 2>/dev/null)
+NVM_NODE_BIN := $(lastword $(sort $(wildcard $(HOME)/.nvm/versions/node/v$(NODE_WANT).*/bin)))
+ifneq ($(NVM_NODE_BIN),)
+export PATH := $(NVM_NODE_BIN):$(PATH)
+endif
+
 # All targets that don't create files should be declared as .PHONY
-.PHONY: help install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-assets generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment env-encrypt env-bootstrap env-check env-status env-keys-pull env-keys-push env-keys-status test-env
+.PHONY: help node-check install add init-site check typecheck audit clean start start-prod start-prod-port clear build serve version deploy fix-frontmatter fix-blog-posts upgrade update-prompts enable-submodule-status enable-recursive-push fix-submodule-detached-head commit-submodule-updates push-with-submodules commit push commit-push test-e2e test-e2e-headed test-e2e-ui test-e2e-debug open-e2e-report storybook build-storybook secret-scan install-hooks test-posthog generate-assets generate-blog-stub blog-pending rotate-premium-secret check-node-worker validate-dev-service-token validate-deployment env-encrypt env-bootstrap env-check env-status env-keys-pull env-keys-push env-keys-status test-env
 
 SHELL := /bin/bash
 MAKEFILE_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -227,6 +238,19 @@ validate-dev-service-token: ## Verify the CF Access service token unlocks the Wo
 		exit 2; \
 	fi
 
+node-check: ## Fail-closed: abort unless the node make picked satisfies .nvmrc (prereq of deploy)
+	@# The PATH line at the top of this file already picks nvm's .nvmrc version when it is
+	@# installed. This only fires when it is not, so the deploy stops here with the fix
+	@# instead of failing minutes later inside `yarn add`.
+	@REQ=$$(tr -dc '0-9' < .nvmrc); \
+	CUR=$$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0); \
+	if [ "$$CUR" -lt "$$REQ" ]; then \
+		echo "🔴 ABORT: the blog needs node >= $$REQ (.nvmrc) and nvm has none installed; this shell has node $$CUR."; \
+		echo "   Fix: nvm install $$REQ, then run make again (it picks it up by itself)."; \
+		exit 2; \
+	fi; \
+	echo "✅ node $$(node -v) (.nvmrc wants $$REQ)."
+
 check-node-worker: ## Fail-closed: abort unless the running node satisfies workers/access-gate/.nvmrc
 	@# wrangler 4.94+ HARD-REFUSES to run on node < 22 (it exits before doing anything),
 	@# so any Worker deploy on the wrong node dies with a cryptic mid-command error. This
@@ -354,7 +378,7 @@ install-hooks: ## Enable the local pre-commit secret-scan hook
 	git config core.hooksPath .githooks
 	@echo "✓ pre-commit secret scanning enabled (core.hooksPath=.githooks)"
 
-deploy: secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub Pages: build, check paid pages are locked, then push that build
+deploy: node-check secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub Pages: build, check paid pages are locked, then push that build
 	@# `static/storybook/` is generated and gitignored, and Docusaurus copies static/ as is, so
 	@# build-storybook stays a prerequisite or /storybook/ ships with no bundles.
 	@# The script builds once from cleared caches, checks that build for any paid page's text
@@ -364,7 +388,7 @@ deploy: secret-scan build-blog-ui build-storybook ## Deploy the site to GitHub P
 	@# paid test page unlocked (docs/issues/paid-page-check-ran-after-push.md).
 	bash .claude/skills/deploy-site/scripts/deploy.sh
 
-deploy-check: build-blog-ui build-storybook ## Build exactly as `make deploy` would and check paid pages are locked; pushes nothing
+deploy-check: node-check build-blog-ui build-storybook ## Build exactly as `make deploy` would and check paid pages are locked; pushes nothing
 	bash .claude/skills/deploy-site/scripts/deploy.sh --dry-run
 
 fix-frontmatter: ## Fix frontmatter issues using AI
