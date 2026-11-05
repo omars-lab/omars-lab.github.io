@@ -177,12 +177,6 @@ was decided one sentence earlier, in the thinking.
 - **The loop is small.** One failed eval, one log, one fix, one re-run. Nothing to build but a
   log line and a short script.
 
-## In my own words
-
-- "if you are working on an agent … and you see that evals fail … ask Claude to look into the
-  agent's thinking to see where the [agent] got confused" (October 2026)
-- "this helps establish a minimal loop" (October 2026)
-
 ## Related
 
 - [Letting a Cheaper Model Watch Your Agent](/craft/generative-ai/claude-code-techniques/letting-a-cheaper-model-watch-your-agent):

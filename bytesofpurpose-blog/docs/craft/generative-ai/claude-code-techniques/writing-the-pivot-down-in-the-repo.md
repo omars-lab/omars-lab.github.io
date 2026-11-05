@@ -130,10 +130,6 @@ say is that each file now holds the one fact a new session would most likely get
 - **It answers the question the code raises.** When a new session asks "why not the obvious way?",
   the answer is a file away, not in a conversation that has already gone.
 
-## In my own words
-
-- "track incident as an issue in issues doc in docs/issues/...md" (September 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

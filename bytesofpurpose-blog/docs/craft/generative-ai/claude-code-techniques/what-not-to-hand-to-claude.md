@@ -90,12 +90,6 @@ hand off.
 - **You stay able to explain the work.** Because I started every agent and read every report, I can
   say why the work looks the way it does.
 
-## In my own words
-
-- "be careful not to offload your curiosity your agency" (October 2026)
-- "I prefer managing a fleet of agents myself over just letting a fleet of autonomous agents just do
-  stuff" (October 2026)
-
 ## Related
 
 - [Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask):

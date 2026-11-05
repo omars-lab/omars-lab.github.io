@@ -123,11 +123,6 @@ and it still flags none today.
 - **The check turns a silent failure into a loud one.** A skill that never fires gives no error.
   A script that fails on an empty description does.
 
-## In my own words
-
-- "this is a bug we had, not documentation ... could have easily been resolved reading docs"
-  (August 2026)
-
 ## Related
 
 - [Claude Code skills docs](https://code.claude.com/docs/en/skills): how skills load, and a

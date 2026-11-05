@@ -172,12 +172,6 @@ real session log after you update Claude Code.
 - **The next reminder is cheap.** One more entry with two patterns and a message. Once that's
   easy, writing down every check you keep forgetting stops feeling like overhead.
 
-## In my own words
-
-The second reminder started as one line at the end of a long session:
-
-- "no don't index, but do add a hook that reminds us that it is time to index" (September 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

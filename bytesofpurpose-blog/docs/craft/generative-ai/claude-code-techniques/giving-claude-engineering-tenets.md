@@ -111,13 +111,6 @@ and the session behind it. The first ones coming up:
   with a screenshot before and after every click.
 - [Everything a person reads is written in plain words](/craft/generative-ai/claude-code-techniques/saying-what-it-is-not-what-its-called).
 
-## In my own words
-
-- "a mechanism i proposed doesnt solve 1 mistake but a whole class of mistakes (things like giving
-  claude a paritcular neginering tenant, etc)" (August 2026)
-- "give Claude engineering tenants … that would be the introductory repost and then each tenant
-  would be a follow on post" (October 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

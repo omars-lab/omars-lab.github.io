@@ -156,13 +156,6 @@ Each of those would have been a "done" that wasn't.
   shows the text, but the session log keeps it encrypted. What you can read afterwards is what
   Claude did next.
 
-## In my own words
-
-- "add a post explaining how we have fable setup to advise us on what we do next" (October 2026),
-  asking for this page.
-- "fable can skew experiment results as advisor" (October 2026, typos fixed), when I turned it off
-  for a set of experiments.
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

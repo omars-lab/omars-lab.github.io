@@ -193,11 +193,6 @@ were my own trimming. The three "wrong" runs were flagged both times.
 - **The evals come from real runs.** The "eval" pile is the cases your agent actually stumbled
   on, not the ones you guessed at.
 
-## In my own words
-
-- "if you're maintaining a agent in production … have a cheaper agent kind of dynamically catch
-  issues" (October 2026)
-
 ## Related
 
 - [Reading the Agent's Thinking When Evals Fail](/craft/generative-ai/claude-code-techniques/reading-the-agents-thinking-when-evals-fail):

@@ -114,11 +114,6 @@ brackets that call: when something goes wrong, you know exactly which step did i
   permission prompts and cached settings come back in every app. Writing them down once saves the
   next session the afternoon.
 
-## In my own words
-
-- "we should show how many artifacts … are currently assigned to project / possible warning if
-  ignoring project with assigned artifacts" (August 2026, spelling fixed)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

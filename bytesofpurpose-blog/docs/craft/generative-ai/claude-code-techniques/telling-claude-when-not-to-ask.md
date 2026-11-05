@@ -128,18 +128,6 @@ between. But the questions that disappeared are the ones this rule names.
 - **The assumptions are written down.** "I assumed X" next to the result tells you exactly where
   to look if X was wrong.
 
-## In my own words
-
-I was saying it before I wrote the rule down:
-
-- "commit across both repos as needed" (August 2026)
-
-And I still say it, but now as a short go-ahead rather than a correction:
-
-- "apply it as needed" (October 2026)
-- "reply to it as needed" (October 2026)
-- "iterate on posts as needed" (October 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

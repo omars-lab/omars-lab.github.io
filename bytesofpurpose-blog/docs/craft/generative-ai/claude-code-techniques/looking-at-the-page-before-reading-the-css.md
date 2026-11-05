@@ -105,11 +105,6 @@ The first bug took three failed fixes over about a day. The second took one.
 - **The check is part of the fix.** When Claude looks again after the change, "done" means it saw
   it working, not that the code looks right.
 
-## In my own words
-
-- "still see rendering issue, let's fix" (August 2026)
-- "also still seeing tight text" (August 2026)
-
 ## Related
 
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.

@@ -195,14 +195,6 @@ three prompts say it.
 - **It runs in the background.** The three agents took about 26 minutes, and Claude kept building
   the whole time.
 
-## In my own words
-
-- "did this whole process include review to make sure our hub feels premium? compared to the
-  others" (October 2026)
-- "what did our research show?" (October 2026)
-- "do we need another visual check to look at the reference websites found … does it consider gh
-  repos, etc" (October 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):
