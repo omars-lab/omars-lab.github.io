@@ -11,6 +11,10 @@ import TimelineItem from '@site/src/components/TimeLine/TimeLineItem';
 import BookmarkletButton from '@site/src/components/BookmarkletButton';
 import NotePlanButton from '@site/src/components/NotePlanButton';
 import ExperimentOverview from '@site/src/components/ExperimentOverview';
+import ExperimentDesign from '@site/src/components/ExperimentDesign';
+import ExperimentArms from '@site/src/components/ExperimentArms';
+import PromptText from '@site/src/components/PromptText';
+import ExperimentIterations, {Iteration} from '@site/src/components/ExperimentIterations';
 import PremiumGate from '@site/src/components/PremiumGate';
 import Premium from '@site/src/components/Premium';
 import KanbanBoard from '@site/src/components/KanbanBoard';
@@ -98,6 +102,18 @@ export default {
   BookmarkletButton,
   NotePlanButton,
   ExperimentOverview,
+  // ExperimentDesign: the "How the experiment was set up" card that sits under the header on an
+  // experiment post (question, expectation, models, arms, measures, runs, grading, cost).
+  // make validate-experiment-design checks every experiment post carries one.
+  ExperimentDesign,
+  // ExperimentArms: one tab per arm's paragraph, control first; PromptText: a prompt shown word
+  // for word, wrapped, with a copy button. Experiment posts use these for prompts and arms.
+  ExperimentArms,
+  PromptText,
+  // ExperimentIterations + Iteration: several rounds of one experiment in one post, behind a
+  // dropdown that opens on the newest (?iteration=<id> picks another).
+  ExperimentIterations,
+  Iteration,
   // Premium gating: <PremiumGate> is injected by the rehype-premium-encrypt plugin in
   // place of an encrypted doc body; <Premium> is an author-facing inline wrapper.
   PremiumGate,

@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Secret-leak guard. Two staged-change checks before every commit:
+# Secret-leak guard, plus one content check. Three checks before every commit:
 #   1. gitleaks       — no secret-shaped string enters history
 #   2. check-env-encrypted — no committed .env value is plaintext (dotenvx sidecar)
+#   3. validate-experiment-design — every experiment post has its <ExperimentDesign /> block
 # Enable once with:  git config core.hooksPath .githooks   (or: make install-hooks)
 #
 # Fail-closed, per the repo's secure-by-default tenet: a missing gitleaks blocks
-# the commit rather than waving it through. Bypass one commit (both checks) with:
+# the commit rather than waving it through. Bypass one commit (the two secret checks) with:
 #   GITLEAKS_SKIP=1 git commit ...
 set -euo pipefail
 
@@ -39,6 +40,20 @@ else
     echo "   Encrypt:  make env-encrypt     Verify:  make env-check"
     exit 1
   fi
+fi
+
+# 3 — every experiment post says how the experiment was set up (<ExperimentDesign />).
+# Not a secret scan, so GITLEAKS_SKIP does not skip it. Fail closed: no node, no commit.
+if ! command -v node >/dev/null 2>&1; then
+  echo "❌ COMMIT BLOCKED: node not found, so the experiment-design check cannot run." >&2
+  exit 1
+fi
+echo "🧪 experiment-design: checking every experiment post has its set-up block…"
+if ! node "$REPO_ROOT/bytesofpurpose-blog/scripts/validate-experiment-design.js"; then
+  echo
+  echo "❌ COMMIT BLOCKED: an experiment post is missing its <ExperimentDesign /> block, or the"
+  echo "   block lacks a question, two arms or a measure. Fix it, then:  make validate-experiment-design"
+  exit 1
 fi
 
 # Run whatever hook was here before this one was installed.
