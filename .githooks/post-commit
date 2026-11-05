@@ -1,0 +1,14 @@
+#!/bin/sh
+# After each commit, note which commit took in the uncommitted work a page
+# comment was made on (development-manager's page comments: `restamp` appends
+# one line to that comment's thread file). It never changes the commit and
+# never stops it.
+#
+# This is the tracked copy of the hook enable-page-comments writes into
+# .git/hooks. This repo runs its hooks from .githooks (core.hooksPath), so the
+# .git/hooks copy never runs here.
+top=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -n "$top" ] && [ -x "$top/.page-comments/run" ]; then
+  "$top/.page-comments/run" restamp 2>/dev/null || true
+fi
+exit 0
