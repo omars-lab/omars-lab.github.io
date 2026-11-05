@@ -1,6 +1,6 @@
 ---
 title: 'Asking What Changed Since the Last Session'
-description: 'A session-start hook finds what changed since last time and has Claude ask you about each item before any work: do it now, or not this session.'
+description: 'A session-start hook checks which of your repo''s chores are due (comments, metrics, syncs) and has Claude ask about each: do it now, or not this session.'
 slug: /generative-ai/claude-code-techniques/asking-what-changed-since-the-last-session
 kind: technique
 usefulness: 4 # 1 to 5: how much a typical Claude Code user gets from it; the sidebar follows it
@@ -10,37 +10,37 @@ tags: [claude-code, ai, productivity, hooks, automation]
 image: /img/claude-code/asking-what-changed-since-the-last-session.png
 draft: true
 questions:
-  - How do I get Claude Code to tell me what changed since my last session?
+  - How do I get Claude Code to remind me about my repo's regular housekeeping?
   - How do I make a Claude Code SessionStart hook ask me a question?
   - Should a reminder fire at the start or the end of a Claude Code session?
 ---
 
 ## The problem
 
-Every session starts with things I should know about. New comments came in on a page I'm building.
-Another machine has sessions this one hasn't copied over. An index fell behind. A token expires next
-week. None of it is the work I sat down to do, so none of it is on my mind when I type the first
-line.
+Some repos come with housekeeping. In the one where I draft these posts, comments land on my pages
+while I'm away from the terminal, the usage numbers need refreshing every so often, and sessions from my
+other Mac need copying over. None of it is the work I sat down to do, so none of it is on my mind
+when I type the first line.
 
-For two months I tried to catch one of these at the other end. In the repo where I draft these
-posts, a reminder at the end of each session said the session index was stale. It was right every
+For two months I tried to catch one of these at the other end. In that repo,
+a reminder at the end of each session said the session index was stale. It was right every
 time, and it never got fixed. By the time it showed, the session was done and I was moving on. The
 index fell further and further behind.
 
 ## The technique
 
 Check at the start, and ask there. A **SessionStart hook** runs when a session starts or resumes.
-Whatever it prints goes into Claude's context before your first message. So the hook looks at what
-changed since the last session, and for each thing it finds, it tells Claude to ask you up front
-with the question tool: do it now, or not this session.
+Whatever it prints goes into Claude's context before your first message. So the hook checks the
+repo's housekeeping, and for each chore that's due, it tells Claude to ask you up front with the
+question tool: do it now, or not this session.
 
-Four kinds of check fit here:
+Four kinds of chore fit here:
 
 | Kind | Examples |
 |---|---|
-| **New work to pick up** | Comments waiting for a reply, items in an inbox file, a review someone left |
+| **Work left while you were away** | Comments on your pages waiting for a reply, items in an inbox file, a review someone left |
 | **Things to sync** | Commits on the remote, sessions on another machine |
-| **Things gone stale** | An index or a cache older than a week, a report built from old data |
+| **Things to refresh** | Metrics or a report older than a week, an index behind the files on disk |
 | **Things about to expire** | A login token, a certificate, a trial |
 
 The question matters as much as the check. A line of text at the top of a session is easy to
@@ -50,25 +50,25 @@ question comes back next time.
 
 ## Set it up
 
-Save this as `.claude/hooks/since-last-session.sh` in your project. Each check adds one line to
-`found`. Swap in your own:
+Save this as `.claude/hooks/housekeeping.sh` in your project. Each check adds one line to `due`.
+Swap in your own chores:
 
 ```bash
 #!/usr/bin/env bash
-# SessionStart hook: say what changed since the last session, and have Claude ask about it.
-cd "$CLAUDE_PROJECT_DIR" || { echo "since-last-session: could not open the project"; exit 0; }
-found=()
+# SessionStart hook: check the repo's housekeeping, and have Claude ask about what's due.
+cd "$CLAUDE_PROJECT_DIR" || { echo "housekeeping: could not open the project"; exit 0; }
+due=()
+waiting=$(grep -c '^- ' comments.md 2>/dev/null)
+[ "${waiting:-0}" -gt 0 ] && due+=("Comments left while you were away: $waiting. Answer them?")
+if [ -z "$(find .metrics/last-refresh -mtime -7 2>/dev/null)" ]; then
+  due+=("The metrics are more than a week old. Refresh them with make metrics?")
+fi
 GIT_TERMINAL_PROMPT=0 git fetch -q 2>/dev/null
 behind=$(git rev-list --count HEAD..@{u} 2>/dev/null || echo 0)
-[ "$behind" -gt 0 ] && found+=("Your branch is $behind commits behind the remote. Pull them?")
-waiting=$(grep -c '^- ' inbox.md 2>/dev/null)
-[ "${waiting:-0}" -gt 0 ] && found+=("Items waiting in inbox.md: $waiting. Pick one up?")
-if [ -z "$(find .cache/last-refresh -mtime -7 2>/dev/null)" ]; then
-  found+=("The data cache is more than a week old. Run make refresh?")
-fi
-if [ ${#found[@]} -eq 0 ]; then echo "since-last-session: nothing waiting"; exit 0; fi
-echo "Since the last session:"
-printf -- '- %s\n' "${found[@]}"
+[ "$behind" -gt 0 ] && due+=("Your branch is $behind commits behind the remote. Pull them?")
+if [ ${#due[@]} -eq 0 ]; then echo "housekeeping: nothing due"; exit 0; fi
+echo "Housekeeping due:"
+printf -- '- %s\n' "${due[@]}"
 echo "Before any other work, ask me about these with AskUserQuestion, one question each:"
 echo "do it now, or not this session. Say what each choice costs."
 ```
@@ -82,7 +82,7 @@ Then register it in `.claude/settings.json`:
       {
         "matcher": "startup|resume",
         "hooks": [
-          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/since-last-session.sh\"", "timeout": 20 }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/housekeeping.sh\"", "timeout": 20 }
         ]
       }
     ]
@@ -117,8 +117,8 @@ reminders hadn't managed that.
 
 ## Testing it
 
-I ran the sample hook on seven made-up repos: one with nothing waiting, one for each finding on its
-own, one with no cache stamp yet, one with all three, and one where the project folder is missing. Each printed the lines it
+I ran the sample hook on seven made-up repos: one with nothing due, one for each chore on its
+own, one with no metrics stamp yet, one with all three, and one where the project folder is missing. Each printed the lines it
 should and exited cleanly.
 
 Then I ran it as a real hook in a throwaway session, the way
@@ -140,7 +140,7 @@ silent for weeks before I noticed it was broken:
 - **Its count was too slow.** Once that was fixed, counting what had changed took 66 seconds, and
   the hook's limit was 20. The hook now gives the count 12 seconds and says so when it runs out.
 
-That's why the sample prints "nothing waiting" when it finds nothing, and says when it couldn't
+That's why the sample prints "nothing due" when it finds nothing, and says when it couldn't
 open the project. When you add a check, run the hook once for each way it can end, so you've seen
 every line it can print.
 
@@ -172,7 +172,7 @@ My stale index was a start question sitting in an end reminder. Moving it was th
   so doing it now is cheap.
 - **A question gets an answer.** A notice can be scrolled past. A question with costs on each side
   turns it into a choice, even when the choice is "not now".
-- **It says when it's quiet.** "Nothing waiting" is a result. Silence isn't.
+- **It says when it's quiet.** "Nothing due" is a result. Silence isn't.
 
 ## Related
 
