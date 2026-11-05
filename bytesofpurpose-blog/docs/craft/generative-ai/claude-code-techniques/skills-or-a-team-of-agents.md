@@ -84,6 +84,13 @@ Most of that work is out of sight, too. In one team run, Claude wrote 49 message
 came from subagents. In your terminal, each subagent shows up as a single "Done" line, so you never
 read those 34. The one-agent run wrote 12 messages, and all 12 were in front of you.
 
+Here is what that looks like, on a made-up shop app: the same ask, add a dark mode toggle to the
+settings page, given to both setups. On the left, the lead starts ten specialist subagents at once,
+and all you see of each one is a "finished" line. On the right, one agent loads the skills it needs
+and every step is on screen.
+
+![Two Claude Code terminals side by side, asked to add a dark mode toggle. Left: a lead starts ten specialist subagents, and each shows up only as a one-line "finished" note; it took 4 minutes 12 seconds. Right: one agent loads the designer, frontend, backend, tester and reviewer skills in turn, with each file it wrote and the test run on screen; it took 1 minute 21 seconds.](/img/claude-code/skills-or-a-team-of-agents-side-by-side.png)
+
 ## Was the work better?
 
 Scored one at a time, the two came out about even: 4.2 to 4.4 out of 5 for both. The reviewer said
