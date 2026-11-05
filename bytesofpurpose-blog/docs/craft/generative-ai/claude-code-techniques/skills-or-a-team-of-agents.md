@@ -1,5 +1,5 @@
 ---
-title: 'Skills, or a Team of Agents? I Paid for Both'
+title: 'Skills, or a Team of Agents?'
 description: 'The same work done by one agent loading skills and by a lead handing it to specialist subagents. The team cost 3.2 times as much, took 2.6 times as long, and the work came out about even.'
 slug: /generative-ai/claude-code-techniques/skills-or-a-team-of-agents
 kind: technique
@@ -8,12 +8,14 @@ sidebar_position: 10.4
 authors: [oeid]
 tags: [claude-code, ai, productivity, subagents, skills, experiments]
 image: /img/claude-code/skills-or-a-team-of-agents.png
-draft: true
+draft: false
 questions:
   - Should I set up a team of specialist agents in Claude Code?
   - Are Claude Code subagents more expensive than skills?
   - When is a specialist subagent worth it?
 ---
+
+import ArmyVsSkillsPlayground from '@site/src/components/ArmyVsSkills';
 
 ## The urge
 
@@ -28,12 +30,14 @@ to parallelize the work, tell Claude to spawn subagents that use those skills.
 A team of agents may build things for you with little guidance, but at a cost, primarily:
 
 - **Money.** Every subagent reads the repo again for itself.
+- **Time.** A team generally takes longer: the lead waits on each helper, and each helper starts
+  from scratch.
 - **Curiosity.** The work happens out of sight, so you get fewer chances to ask why it went this
   way and not that way.
 - **Understanding.** You'll have even less of an idea of the decisions Claude is making on your
   behalf.
 
-The first cost I could measure, so I did.
+The first two costs I could measure, so I did.
 
 ## The experiment
 
@@ -76,6 +80,10 @@ Each subagent reads the repo again for itself. In the team runs, 54 to 72 percen
 read went to the subagents, not the lead. The team also thought about five times as much and wrote
 about twice the code.
 
+Most of that work is out of sight, too. In one team run, Claude wrote 49 messages, and 34 of them
+came from subagents. In your terminal, each subagent shows up as a single "Done" line, so you never
+read those 34. The one-agent run wrote 12 messages, and all 12 were in front of you.
+
 ## Was the work better?
 
 Scored one at a time, the two came out about even: 4.2 to 4.4 out of 5 for both. The reviewer said
@@ -106,6 +114,17 @@ skills and does it itself.
 
 Both finished and both tests passed. Look at the lead's last line: "I didn't run the tests myself,
 so that result comes from the tester's report." That's the understanding cost, in its own words.
+
+## Play with what they built
+
+Task B asked both setups for the same thing: a `RunTimeline` component that draws how one run of
+an AI coding session went over time. Below are two of the real results, one from each setup, copied
+in as they wrote them. Both draw the same log, and you can edit it to see how each one copes.
+
+<ArmyVsSkillsPlayground />
+
+The team's version cost $1.86 and took 7.8 minutes. The skills version cost $0.56 and took 2.4
+minutes. Both passed all 8 hidden tests.
 
 ## What I take from it
 
