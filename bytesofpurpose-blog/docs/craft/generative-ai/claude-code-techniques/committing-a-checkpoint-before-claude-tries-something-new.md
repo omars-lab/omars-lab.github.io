@@ -120,13 +120,6 @@ nothing to find it in.
 - **It covers what rewind can't.** Shell commands, other sessions, and last month all show up in
   git.
 
-## In my own words
-
-- "Checkpointing before applying grid layout" (a commit of mine, February 2021)
-- "lets commit our changes, then do the skill" (July 2026)
-- "did we [lose] our changes? are they committed?" (July 2026)
-- "we took over a branch ... lets make sure it didn't [lose] any changes ..." (July 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

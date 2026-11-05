@@ -138,10 +138,6 @@ versions, so run a probe again after you update.
 - **It checks the plan, not only the code.** Here the hooks were fine. The assumption behind them
   was wrong, and the probe found that before a wrong number went into a post.
 
-## In my own words
-
-- "can't you start a non interactive claude session with -p to check / test?" (August 2026)
-
 ## Related
 
 - [Auditing the Plan Before You Build It](/craft/generative-ai/claude-code-techniques/auditing-the-plan-before-you-build-it):

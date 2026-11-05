@@ -96,11 +96,6 @@ back out of the session later.
 - **The record outlives the chat.** Each decision lands in the plan with its reason, so the next
   session starts from it instead of asking again.
 
-## In my own words
-
-- "present options visually in artifact" (August 2026)
-- "also are we updating artifact as we rework and make decisions" (August 2026)
-
 ## Related
 
 - [Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask):

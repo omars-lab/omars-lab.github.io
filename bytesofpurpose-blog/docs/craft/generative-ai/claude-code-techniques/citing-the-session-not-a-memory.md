@@ -108,12 +108,6 @@ rather than leave a quote that didn't support it.
 - **Reading the quote still matters.** A check can prove the words are on the line. Only reading
   them tells you they support the claim.
 
-## In my own words
-
-- "are we logging exactly the transcripts that we built the observation on?" (August 2026)
-- "how did we get this without citation ... did guards not catch this?" (August 2026)
-- "should [we] be using a CLI instead that does validation?" (August 2026)
-
 ## Related
 
 - [Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask):

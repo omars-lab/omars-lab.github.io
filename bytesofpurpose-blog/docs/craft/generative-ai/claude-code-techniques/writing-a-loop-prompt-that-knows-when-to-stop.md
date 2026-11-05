@@ -130,14 +130,6 @@ Never mark a candidate approved.
 - **It stops at your call, not at the end of the pile.** The loop does the reading; the choices
   come back to you in batches you can actually review.
 
-## In my own words
-
-- "see if we need a loop to work backwards from this and iterate until we reach 10 really
-  meaningful techniques" (August 2026)
-- "I want the loop to drive this as we review transcripts and discover new mechanisms" (August
-  2026)
-- "do we have a plan to continue scanning transcripts and consolidating techniques?" (August 2026)
-
 ## Related
 
 - [Telling Claude When to Stop and Ask](/craft/generative-ai/claude-code-techniques/telling-claude-when-to-stop-and-ask):

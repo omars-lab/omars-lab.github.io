@@ -121,14 +121,6 @@ a pass that merged rules different posts had taught separately. That is the file
 - **Each rule names where it came from.** When a rule stops making sense, I can find the post that
   taught it and decide if it still holds.
 
-## In my own words
-
-- "as I provide the skill feedback, we should capture potential generalizations … and add them back
-  to the skill" (July 2026)
-- "there is a set of questions I like to answer per section … our skill should be capturing the set
-  of questions each section should answer" (July 2026)
-- "can we now apply this to another post" (July 2026)
-
 ## Related
 
 - [Saving the Yeses in Claude's Memory](/craft/generative-ai/claude-code-techniques/saving-the-yeses-in-claude-memory):

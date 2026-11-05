@@ -201,14 +201,6 @@ approved the first plan it showed me. The design had already done the arguing.
 - **The doc outlives the session.** The plan file has a random name in a plans folder. The design
   doc sits in the repo, with its decisions, for the next plan and the next person.
 
-## In my own words
-
-- "or spawn sub agent and have it create design" (August 2026)
-- "present exec summary with questions to get decisions using ask question tool" (August 2026)
-- "audit plan, determien gaps, see if it needs to be imporved" (August 2026)
-- "… genreate a design.md, then tell [Claude] to enter plan mode and plan it … then iterate"
-  (October 2026)
-
 ## Related
 
 - [Auditing the Plan Before You Build It](/craft/generative-ai/claude-code-techniques/auditing-the-plan-before-you-build-it):

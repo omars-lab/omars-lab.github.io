@@ -120,12 +120,6 @@ prompt: with its rubric file it ended at 244 lines, nearly three times where it 
 - **State goes in files too.** A count, a list of what's done, a "where I stopped": if it lives
   only in the chat, no prompt can hand it over.
 
-## In my own words
-
-- "i want to capture my personal taste as what makes a meaningful technique and what doesn't as
-  its own skill … and I want the loop to drive this" (August 2026)
-- "do we have a plan to continue scanning transcripts and consolidating techniques?" (August 2026)
-
 ## Related
 
 - [Sending Side-Quests to a Fork](/craft/generative-ai/claude-code-techniques/sending-side-quests-to-a-fork):

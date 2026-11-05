@@ -156,10 +156,6 @@ logs would have shown the wrong folders without anyone asking.
 - **A timeout turns a hang into a line.** One blocked call can't freeze the whole run for an hour;
   it logs, and the run moves on.
 
-## In my own words
-
-- "[are] we monitoring [comments]?" (October 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):

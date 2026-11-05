@@ -173,11 +173,6 @@ That's a loop prompt, which has [its own page](/craft/generative-ai/claude-code-
 - **Your calls stay yours.** Marking which items need you means the new session asks instead of
   quietly deciding.
 
-## In my own words
-
-- "another technique is to do a continuation prompt" (October 2026), adding it to my list of
-  techniques mid-session.
-
 ## Related
 
 - [Writing a Loop Prompt That Knows When to Stop](/craft/generative-ai/claude-code-techniques/writing-a-loop-prompt-that-knows-when-to-stop):

@@ -111,13 +111,6 @@ before I'd said a word.
 - **It sits where it reads as global.** A rule inside a section about one kind of work is read as a
   rule for that work. At the top, it covers every reply.
 
-## In my own words
-
-From the August session, two months before I wrote the rule down (spelling fixed):
-
-- "… unclear ... why is this question important" (August 2026)
-- "what does it mean ... why are you asking it" (August 2026)
-
 ## Related
 
 - [Giving Claude Engineering Tenets](/craft/generative-ai/claude-code-techniques/giving-claude-engineering-tenets):
