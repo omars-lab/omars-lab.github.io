@@ -1,0 +1,17 @@
+/* A prompt is prose: wrap it instead of scrolling sideways. Font, colors and the copy button
+   stay the theme's CodeBlock. */
+.prompt pre,
+.prompt code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.prompt pre {
+  overflow-x: hidden;
+}
+
+/* The theme's lines are block spans; keep them wrapping too. */
+.prompt code > span {
+  white-space: pre-wrap;
+}

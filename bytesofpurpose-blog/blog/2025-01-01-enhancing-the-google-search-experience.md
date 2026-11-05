@@ -13,6 +13,17 @@ priority: medium
 draft: false
 ---
 
+<ExperimentDesign
+  question="What will it take to change what Google says about my sites?"
+  arms={[
+    {id: 'before', label: 'Before', summary: 'Out-of-the-box Docusaurus SEO, with no author or portfolio connection.'},
+    {id: 'after', label: 'After', summary: 'SEO and SGE-focused updates to the blog and the portfolio.'},
+  ]}
+  measures={[
+    {name: "Google's answer", how: 'the results for "What is the bytesofpurpose site about", read before and after the changes.'},
+  ]}
+/>
+
 A proof of concept I ran on my own search presence: an acted-on experiment to see what it takes to
 change what Google says about my sites, with before/after results.
 

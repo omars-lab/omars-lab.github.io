@@ -498,6 +498,12 @@ validate-hubs: ## Check the durable hubs: every kind:hub doc renders a registere
 	@# the HUBS manifest in scripts/generate-hubs-data.js. Owning skill: manage-hubs.
 	( cd ${SITEROOT} && node scripts/validate-hubs.js )
 
+validate-experiment-design: ## Check every experiment post has an <ExperimentDesign /> block (question, 2+ arms, 1+ measure)
+	@# Experiment post = kind experiment-plan / experiment-result (the Experimentation board's rule).
+	@# One `ev=experiment_design_missing post=... msg="..."` line per problem, exit 1 on any.
+	@# Also run by .githooks/pre-commit. Pass DIRS=<file-or-dir> to check other paths.
+	( cd ${SITEROOT} && node scripts/validate-experiment-design.js $(DIRS) )
+
 test-hooks: ## Run every validator hook's --selftest (proves each hook still bites)
 	@# Each validator hook ships a --selftest branch (see .claude/hooks/lib/selftest.sh) that feeds
 	@# itself a planted-bad payload and asserts it blocks/flags, plus a clean payload that passes.
