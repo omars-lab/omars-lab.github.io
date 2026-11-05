@@ -22,14 +22,14 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 2. **`POSTHOG_TEST_MODE` must NEVER be set for a production deploy.** It disables
    PostHog's bot filter (only for e2e). Explicitly `unset` it before building.
 3. **`make deploy` runs `make secret-scan` first** — a leaked secret aborts deploy.
-   It is also **fail-closed for premium** (secure-by-default tenet, see CLAUDE.md):
-   `docusaurus deploy` REBUILDS (it ignores a prebuilt `build/`), so `make deploy` now
-   exports `STATICRYPT_PASSPHRASE` + `POSTHOG_KEY`/`POSTHOG_HOST` from `.env` into that
-   rebuild automatically, **ABORTS** if any `premium: true` doc exists while the
-   passphrase is empty (never ships cleartext premium by omission), and **re-runs V5**
-   on the shipped build as a post-deploy gate. So a bare `make deploy` is safe — you no
-   longer hand-export the passphrase (the manual `export` below is legacy/explicit-build
-   only).
+   Then it runs `scripts/deploy.sh`, which checks paid pages **before** anything is pushed:
+   it counts `premium: true` pages (and stops if the count itself fails, so an error never
+   reads as "no paid pages"), refuses to go on when there are paid pages and no
+   `STATICRYPT_PASSPHRASE`, clears the caches, builds once, runs V5 on that build, and only
+   then pushes that same build with `docusaurus deploy --skip-build`. A failed check means
+   nothing was pushed. (Before 2026-11-05, `docusaurus deploy` built and pushed in one step
+   and V5 ran afterwards, so a stale cache shipped the paid test page unlocked once:
+   `docs/issues/paid-page-check-ran-after-push.md`.)
 3a. **Premium content needs `STATICRYPT_PASSPHRASE` at BUILD time, a CACHE-BUSTED build,
    and a BLOCKING verify gate before publish.** `premium: true` docs are encrypted at
    MDX-compile by `plugins/rehype-premium-encrypt.js`, which reads `STATICRYPT_PASSPHRASE`
@@ -66,40 +66,27 @@ Access bypass app); see the `manage-cloudflare-access` skill if that changes.
 
 ## Procedure
 
-Run from the repo root.
-
-**Run extraction + build + deploy in ONE shell** — env vars set in one Bash call
-don't persist to the next.
+Run from the repo root, with Node 20.
 
 ```bash
-# 1. Load build-time env per-var (NOT `source .env` — see gotcha #1).
-xenv() { grep -E "^$1=" .env | head -1 | cut -d= -f2- | sed 's/[[:space:]]*#.*//' | tr -d ' "'\'''; }
-export POSTHOG_KEY="$(xenv POSTHOG_KEY)"
-export POSTHOG_HOST="$(xenv POSTHOG_HOST)"
-export STATICRYPT_PASSPHRASE="$(xenv STATICRYPT_PASSPHRASE)"   # premium encrypt (gotcha #3a)
-unset POSTHOG_TEST_MODE                      # gotcha #2: never in prod
-# Hard-fail rather than silently ship an analytics-less bundle:
-[ -n "$POSTHOG_KEY" ] || { echo "❌ POSTHOG_KEY empty — aborting"; return 1 2>/dev/null || exit 1; }
-echo "PostHog: enabled (${POSTHOG_KEY:0:8}…), TEST_MODE off"
+# 1. Optional: build and check exactly as the deploy would, without pushing.
+#    Fix any MDX/SSR error or paid-page failure here.
+make deploy-check
 
-# 2. Secret scan (also runs automatically inside `make deploy`).
-make secret-scan
-
-# 3. Cache-busted ENCRYPTED build + V5 gate in one target — the real gate; fix any MDX/SSR
-#    errors before deploying. `make build-premium` clears node_modules/.cache + .docusaurus
-#    (the cache gotcha — see #3a), requires STATICRYPT_PASSPHRASE, builds (premium bodies
-#    encrypted at compile time), then runs the blocking V5 gate. If there is NO premium
-#    content you can use a plain `( cd bytesofpurpose-blog && yarn build )` instead.
-make build-premium \
-  || { echo "❌ build or premium gate failed — aborting deploy"; return 1 2>/dev/null || exit 1; }
-
-# 4. Deploy to GitHub Pages (gh-pages branch).
+# 2. Deploy: secret scan, storybook, then deploy.sh (build, V5 check, push that build).
 make deploy
 ```
 
-`make deploy` already chains the secret scan + `yarn deploy`. The explicit build in
-step 3 lets you catch MDX/SSR errors before publishing (recommended). For a quick
-ship, steps 1+4 in one shell still suffice — just never skip the per-var extraction.
+Don't hand-run `yarn deploy`: without `--skip-build` it builds again and pushes that build
+unchecked. Don't `source .env` either (gotcha #1); the script reads each value on its own
+and never prints it.
+
+## Scripts — when to use each
+
+| Script | What it does | When to reach for it | Command |
+|---|---|---|---|
+| `scripts/deploy.sh` | Reads the build values from `.env` (a worktree falls back to the main checkout's `.env`; values are never printed), counts paid pages (fails closed), clears `.docusaurus`, `build/` and the production webpack caches, builds once, runs V5 on that build, then pushes that build to gh-pages with `--skip-build` | Every deploy, through `make deploy` | `make deploy` |
+| `scripts/deploy.sh --dry-run` | The same up to and including V5, then stops. Pushes nothing | Before a deploy, or after changing anything that touches paid pages | `make deploy-check` |
 
 ## Post-deploy verification
 
