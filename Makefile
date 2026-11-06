@@ -109,6 +109,15 @@ validate-footnotes: ## Verify evidence-footnote permalinks resolve (pinned SHA +
 validate-mdx-imports: ## Catch a Capitalized JSX tag used in .mdx but never imported/registered (a render break drafts hide)
 	( cd ${SITEROOT} && node scripts/validate-mdx-imports.js $(DIRS) --error-only )
 
+validate-image-alt: ## Every image on a page has real alt text (not empty, "image", or its file name). Also a pre-commit step on staged pages
+	( cd ${SITEROOT} && node scripts/validate-image-alt.js $(DIRS) )
+
+validate-image-metadata: ## No committed PNG/JPEG carries hidden data (camera, date, GPS place, text). Also a pre-commit step on staged pictures
+	( cd ${SITEROOT} && node scripts/validate-image-metadata.js )
+
+image-strip: ## Take the hidden data out of a picture in place, pixels unchanged: make image-strip FILE=<path> (no FILE: every committed picture)
+	node ${SITEROOT}/scripts/validate-image-metadata.js --fix $(FILE)
+
 validate-questions: ## Lint the optional `questions:` frontmatter (present → must be a list of items each ending in "?")
 	( cd ${SITEROOT} && node scripts/validate-questions.js $(DIRS) )
 
