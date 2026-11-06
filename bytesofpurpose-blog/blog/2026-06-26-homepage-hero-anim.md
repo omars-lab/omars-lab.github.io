@@ -16,6 +16,22 @@ owner: Omar
 
 <ExperimentOverview />
 
+<ExperimentDesign
+  question="Does a camera-flash rotator or a train-station slide draw more hero card clicks than the scrolling film strip?"
+  expectation="One full-size card at a time (flash or train) will raise card clicks over the strip, because it draws the eye. It could also do the same or worse if the motion reads as a distraction."
+  arms={[
+    {id: 'control', label: 'Scrolling strip', summary: 'All seven cards in a row, auto-scrolling sideways, pausing on hover.'},
+    {id: 'test', label: 'Camera flash', summary: 'One card at a time; a white flash blooms from the arch and the scene switches.'},
+    {id: 'variant_c', label: 'Train station', summary: 'One card at a time; the next scene slides in like a train pulling through, no flash.'},
+  ]}
+  control="control"
+  measures={[
+    {name: 'Card clicks', how: '"hero card clicked" per visitor shown the hero, each treatment against the strip and against each other.'},
+    {name: 'Which card', how: 'the destination of each click, to see whether a treatment shifts which section gets clicked.'},
+  ]}
+  grading="PostHog's experiment significance view, after weeks of traffic split three ways. Not called on a handful of clicks."
+/>
+
 Does the **way the homepage hero cards animate** change how often a visitor clicks into a
 section? All three arms show the **same** seven destination cards with the **same** copy and the
 **same** links; the only thing that varies is the presentation. Three treatments: a seamless

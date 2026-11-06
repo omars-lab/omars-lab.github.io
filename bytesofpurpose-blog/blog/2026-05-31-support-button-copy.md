@@ -16,6 +16,21 @@ owner: Omar
 
 <ExperimentOverview note="re-scoped 2026-06-01 from a copy test to a presentation test; same flag key" />
 
+<ExperimentDesign
+  question="Does a styled button draw more PayPal donate clicks than a plain text link with the same copy?"
+  expectation="The button will raise click-through to the PayPal donate form, because a button is a clearer call to action than inline link text."
+  arms={[
+    {id: 'control', label: 'Link', summary: '"Buy me a $5 coffee ☕" as a plain text link, styled like the other /support channels.'},
+    {id: 'test', label: 'Button', summary: 'The same copy as a styled primary button.'},
+  ]}
+  control="control"
+  measures={[
+    {name: 'Clicks', how: '"support button clicked" on the coffee link or button, tagged with the variant, one step before PayPal.'},
+    {name: 'Readers shown it', how: "PostHog's record each time the page reads the flag, split 50/50 per browser."},
+  ]}
+  grading="PostHog's experiment significance view, on data from 2026-06-01 on (earlier data is the old copy test). Not called on a handful of clicks."
+/>
+
 Does the **presentation** of the coffee CTA, a plain text link vs. a styled button,
 change how often readers click through to PayPal? Both arms show the **same** copy
 ("Buy me a $5 coffee ☕") on the **/support** page; the only thing that varies is whether
