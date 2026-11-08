@@ -8,7 +8,7 @@ sidebar_position: 6.4
 authors: [oeid]
 tags: [claude-code, ai, productivity, sessions]
 image: /img/claude-code/asking-your-sessions-to-coordinate.png
-draft: true
+draft: false
 questions:
   - How do I get one Claude Code session to tell another what it needs to know?
   - Can Claude Code sessions message each other?
@@ -144,7 +144,5 @@ same tool serves both.
 - [Tools reference](https://code.claude.com/docs/en/tools-reference): what ListAgents and
   SendMessage do.
 - [`crossSessionInbound` in the settings reference](https://code.claude.com/docs/en/settings-reference#crosssessioninbound).
-- [Sending Side-Quests to a Fork](/craft/generative-ai/claude-code-techniques/sending-side-quests-to-a-fork):
-  the other way to split work, when the helper should start from your conversation.
 - [Claude Code Techniques](/craft/generative-ai/claude-code-techniques): the other pages in this set.
 - This page goes with a post in my "How I Used Claude Today" series on LinkedIn.
