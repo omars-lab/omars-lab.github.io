@@ -8,7 +8,7 @@ sidebar_position: 6.4
 authors: [oeid]
 tags: [claude-code, ai, productivity, analytics]
 image: /img/claude-code/keep-your-claude-code-session-logs.png
-draft: true
+draft: false
 questions:
   - How long does Claude Code keep my session history?
   - What is inside a Claude Code session log?
@@ -81,9 +81,7 @@ after the conversation was compacted.
 - **Re-read what was decided.** A month later, "why does this check exist?" has an answer in the
   log: the failing test, the reasoning, the exact words you used.
 - **Cite the moment a rule was written.** When a line in your `CLAUDE.md` is questioned, you can
-  point at the session and the line where it came from, instead of a memory of it. The
-  [Citing the Session, Not a Memory](/craft/generative-ai/claude-code-techniques/citing-the-session-not-a-memory)
-  page builds on this.
+  point at the session and the line where it came from, instead of a memory of it.
 - **Measure your own usage.** Each reply records its tokens, so the logs can tell you how long you
   pause between turns, what each session cost and which tools ran. My
   [prompt cache tip](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit)
@@ -161,8 +159,6 @@ For a readable copy, run `/export` inside the session.
 
 ## Related
 
-- [Citing the Session, Not a Memory](/craft/generative-ai/claude-code-techniques/citing-the-session-not-a-memory):
-  point at the exact line of a past session behind a claim.
 - [Tip: Ask Claude to Optimize Your Cache TTL](/craft/generative-ai/claude-code-techniques/picking-the-prompt-cache-time-limit):
   one thing you can measure once your logs are kept.
 - Docs I read for this page:
