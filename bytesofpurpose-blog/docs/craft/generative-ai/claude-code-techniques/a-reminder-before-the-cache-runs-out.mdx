@@ -8,7 +8,7 @@ sidebar_position: 3
 authors: [oeid]
 tags: [claude-code, ai, productivity, cost, macos]
 image: /img/claude-code/cache-reminder-desktop.png
-draft: true
+draft: false
 questions:
   - How do I know when my Claude Code prompt cache is about to expire?
   - Can my Mac remind me to go back to a Claude Code session before its cache runs out?
@@ -17,6 +17,7 @@ questions:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Gist from 'react-gist';
 
 ## What I observed
 
@@ -100,11 +101,23 @@ flowchart LR
 
 ## Set it up
 
-You need a Mac, iTerm2, and Node 20 or newer.
+You need a Mac, iTerm2, and Node 20 or newer. The helper is two files, the script and the dialog it
+shows, and both are [public as a gist](https://gist.github.com/omars-lab/e837c737bf28718412422783f1f30812).
+Install it by downloading the gist or through Homebrew. Both do the same thing; Homebrew also
+gets you updates with `brew upgrade`.
 
-1. **Get the script.** *(Coming soon: the script will be published as a gist, with a one-line
-   download here.)*
-2. **Install it.** This copies the script into `~/.claude/hooks/`, backs up your
+<Tabs groupId="cache-nudge-install">
+<TabItem value="download" label="Download the gist" default>
+
+1. **Get the two files.** Put them in the same folder:
+
+   ```bash
+   mkdir -p ~/cache-nudge && cd ~/cache-nudge
+   curl -fsSLO https://gist.githubusercontent.com/omars-lab/e837c737bf28718412422783f1f30812/raw/cache-nudge.mjs
+   curl -fsSLO https://gist.githubusercontent.com/omars-lab/e837c737bf28718412422783f1f30812/raw/cache-nudge.applescript
+   ```
+
+2. **Install it.** This copies both files into `~/.claude/hooks/`, backs up your
    `~/.claude/settings.json`, adds three hook entries to it, and loads the launch agent:
 
    ```bash
@@ -125,6 +138,54 @@ You need a Mac, iTerm2, and Node 20 or newer.
    ```bash
    node ~/.claude/hooks/claude-cache-nudge.mjs status
    ```
+
+</TabItem>
+<TabItem value="brew" label="Homebrew">
+
+1. **Install it.** Homebrew only runs formulas from taps you trust, so add the tap, then trust
+   this one formula in it:
+
+   ```bash
+   brew tap omars-lab/tap
+   brew trust --formula omars-lab/tap/claude-cache-nudge
+   brew install omars-lab/tap/claude-cache-nudge
+   ```
+
+2. **Add the hooks, then start the check.** Homebrew never edits `~/.claude`, so this step is yours.
+   It backs up your `~/.claude/settings.json` and adds three hook entries that call the
+   `claude-cache-nudge` command. Then `brew services` runs the check every minute:
+
+   ```bash
+   claude-cache-nudge install
+   brew services start claude-cache-nudge
+   ```
+
+   Sessions that are already open pick up the hook only after you restart them.
+3. **Try it once from an iTerm tab.** This lines up a reminder for the tab you're in, so you can see
+   the box and press **Go there**:
+
+   ```bash
+   claude-cache-nudge try --transcript <this session's log>
+   ```
+
+   The first time, macOS asks whether it may control iTerm. Click **Allow**.
+4. **Check it's on** whenever a reminder doesn't show:
+
+   ```bash
+   claude-cache-nudge status
+   ```
+
+With Homebrew, use `claude-cache-nudge` wherever the rest of this page says
+`node ~/.claude/hooks/claude-cache-nudge.mjs`.
+
+</TabItem>
+</Tabs>
+
+Read the script before you run it. The download and Homebrew both install this same file:
+
+<div style={{maxHeight: '32rem', overflowY: 'auto'}}>
+  <Gist id="e837c737bf28718412422783f1f30812" file="cache-nudge.mjs" />
+</div>
 
 ### Add the clock to your status line
 
@@ -173,7 +234,9 @@ Put any of these in `~/.claude/cache-nudge/config.json`:
 | `forgetHours` | `6` | Drop a session's note after this long |
 
 To turn it all off: `node ~/.claude/hooks/claude-cache-nudge.mjs uninstall`. It removes exactly what
-install added and keeps the log and the settings backups.
+install added and keeps the log and the settings backups. With Homebrew, run
+`claude-cache-nudge uninstall`, then `brew services stop claude-cache-nudge` and
+`brew uninstall claude-cache-nudge`.
 
 ## Words of caution
 
