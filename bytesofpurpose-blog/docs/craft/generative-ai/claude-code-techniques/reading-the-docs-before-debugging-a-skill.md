@@ -105,14 +105,13 @@ guide.
 
 ## What the check found
 
-I ran the check over my own plugin collection as it stood before I fixed it. It flagged **15 of 141
-skills**. None of the 15 had a description at all. With nothing else to go on, Claude Code was using
-each one's first line, a bare title like `# Makefile Setup` or `# Knowledge Query`. Two or three
-words is not much to match a request against.
+I ran the check over my own plugin collection as it stood before I fixed it. It flagged every skill
+that had no description at all. With nothing else to go on, Claude Code was using each one's first
+line, a bare title of two or three words. That is not much to match a request against.
 
-Each of the 15 got a description that says what it does and when to use it, and the collection's
-own validator now fails on a missing or short one. After the fix this check flagged none of 147,
-and it still flags none today.
+Each of those skills got a description that says what it does and when to use it, and the
+collection's own validator now fails on a missing or short one. After the fix this check flagged
+none, and it still flags none today.
 
 ## Why it works
 

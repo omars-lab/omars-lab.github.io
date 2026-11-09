@@ -76,12 +76,12 @@ reviews filled in the rest.
 ## What it looks like
 
 <figure style={{maxWidth: '480px', margin: '0 auto 1.5rem'}}>
-  <img src="/img/claude-code/a-rubric-that-learns-from-every-review.png" alt="A Claude Code session: I ask for a skill that captures my feedback and adds it back to the skill so new posts share the guidance, then two days and three audited posts later I ask to apply it to another post, and Claude says each audit both improves the post and teaches the guides" />
+  <img src="/img/claude-code/a-rubric-that-learns-from-every-review.png" alt="A Claude Code prompt being typed: when I push back on a review, write the lesson into the skill's rubric, tagged with the post that taught it, so the next review starts with it. Below it: four posts later, the rubric had grown from 134 lines to 292." />
 </figure>
 
-This is from the session where I built the review skill for the design posts on this blog, in July.
-My first message asked for exactly this: as I give feedback, capture what generalizes and add it
-back to the skill, so the next post starts from it.
+The picture is that ask, retold in my own words. I first made it in July, building the review skill
+for the design posts on this blog. My first message asked for exactly this: as I give feedback,
+capture what generalizes and add it back to the skill, so the next post starts from it.
 
 On the second post I told it that a design post should open with who it's for and what they'll do
 with it, before any of the system. That went into the rubric as a required first section. The
