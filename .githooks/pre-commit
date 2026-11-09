@@ -42,17 +42,37 @@ else
   fi
 fi
 
-# 3 — every experiment post says how the experiment was set up (<ExperimentDesign />).
-# Not a secret scan, so GITLEAKS_SKIP does not skip it. Fail closed: no node, no commit.
+# Steps 3 and 4 are not secret scans, so GITLEAKS_SKIP does not skip them.
+# Fail closed: no node, no commit.
 if ! command -v node >/dev/null 2>&1; then
-  echo "❌ COMMIT BLOCKED: node not found, so the experiment-design check cannot run." >&2
+  echo "❌ COMMIT BLOCKED: node not found, so the experiment-design and picture checks cannot run." >&2
   exit 1
 fi
+SCRIPTS="$REPO_ROOT/bytesofpurpose-blog/scripts"
+
+# 3 — every experiment post says how the experiment was set up (<ExperimentDesign />).
 echo "🧪 experiment-design: checking every experiment post has its set-up block…"
-if ! node "$REPO_ROOT/bytesofpurpose-blog/scripts/validate-experiment-design.js"; then
+if ! node "$SCRIPTS/validate-experiment-design.js"; then
   echo
   echo "❌ COMMIT BLOCKED: an experiment post is missing its <ExperimentDesign /> block, or the"
   echo "   block lacks a question, two arms or a measure. Fix it, then:  make validate-experiment-design"
+  exit 1
+fi
+
+# 4 — pictures: a staged picture must not carry hidden data (camera, date, GPS place),
+# and a staged page's images must have real alt text.
+if ! node "$SCRIPTS/validate-image-metadata.js" --staged; then
+  echo
+  echo "❌ COMMIT BLOCKED: a staged picture carries hidden data. Strip it: make image-strip FILE=<path>, then re-stage."
+  exit 1
+fi
+PAGES=()
+while IFS= read -r -d '' f; do
+  case "$f" in bytesofpurpose-blog/*.md|bytesofpurpose-blog/*.mdx) PAGES+=("$REPO_ROOT/$f") ;; esac
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+if [ "${#PAGES[@]}" -gt 0 ] && ! node "$SCRIPTS/validate-image-alt.js" "${PAGES[@]}"; then
+  echo
+  echo "❌ COMMIT BLOCKED: an image on a staged page has no real alt text. Say what the picture shows."
   exit 1
 fi
 
