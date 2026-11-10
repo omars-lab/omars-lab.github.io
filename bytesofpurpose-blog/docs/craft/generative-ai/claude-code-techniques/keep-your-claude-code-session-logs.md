@@ -23,8 +23,8 @@ Every session you run is saved as a file on your machine. Claude Code deletes th
 after it was last used**, and it does it quietly: no message, the session just stops showing up in
 `/resume`.
 
-I raised that limit early and copy the files to a backup. Today **250 of the 389 sessions on my
-laptop are more than 30 days old**. On the default setting, all 250 would be gone, and so would the
+I raised that limit early and copy the files to a backup. Today **250 of my 389 sessions are more than 30 days
+old**. On the default setting, all 250 would be gone, and so would the
 history behind every number I've worked out about my own Claude Code use.
 
 ## The technique
