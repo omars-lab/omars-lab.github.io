@@ -189,16 +189,56 @@ workaround went away.
 
 ## Try it
 
-{/* TODO before this page goes live: how readers get the plugin (a gist, a small public repo, or this page's code alone). */}
+The plugin is `loop-manager`, in a small public repo,
+[omars-lab/claude-code-plugins](https://github.com/omars-lab/claude-code-plugins). Install it from
+your terminal:
 
-You can start with the two pieces on this page: a `devloop.json` with your check and the files to
-protect, and a `SubagentStop` hook that runs it. Running the loop:
-
-```text
-/development-loop <the issue, in a sentence or two>
+```sh
+claude plugin marketplace add omars-lab/claude-code-plugins
+claude plugin install loop-manager@omars-lab
 ```
 
-or, to work through a queue file one item at a time:
+Inside Claude Code, `/plugin marketplace add omars-lab/claude-code-plugins` and
+`/plugin install loop-manager@omars-lab` do the same.
+
+To watch one run on the sample before pointing it at your own code, copy the sample out of the
+repo and give it a first commit. It needs git, make and Node 18 or newer, and nothing to install:
+
+```sh
+git clone https://github.com/omars-lab/claude-code-plugins
+cp -R claude-code-plugins/plugins/loop-manager/skills/development-loop/sample devloop-sample
+cd devloop-sample
+mv gitignore .gitignore
+git init -q && git add . && git commit -qm "sample start"
+# fails 8 of its 10 tests: the issue isn't fixed yet
+make verify
+claude
+```
+
+Then, in Claude Code:
+
+```text
+/loop-manager:development-loop the issue in ISSUE.md
+```
+
+The loop makes its working copy next to the sample, at `devloop-sample-devloop`, on a
+`devloop/<run>` branch. The sample's `devloop.json` says `"pr": false`, so it prints the branch at
+the end instead of opening a pull request. The goal, the log and the reviewers' findings are in
+`.devloop/<run>/`. To see the result, switch the sample to that branch and run the check yourself:
+
+```sh
+git switch devloop/<run>
+make verify     # all 10 pass
+```
+
+In your own repo, commit a `devloop.json` with your check and the files to protect, add `.devloop/`
+to `.gitignore`, and run:
+
+```text
+/loop-manager:development-loop <the issue, in a sentence or two>
+```
+
+or, to work through `.devloop/queue.md` one item at a time:
 
 ```text
 /loop /loop-manager:development-loop
