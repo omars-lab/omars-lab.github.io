@@ -8,7 +8,6 @@ sidebar_position: 12.8
 authors: [oeid]
 tags: [claude-code, ai, productivity, loops, hooks]
 image: /img/claude-code/letting-your-check-say-when-an-agent-is-done.png
-draft: true
 questions:
   - How do I make a Claude Code agent keep working until my tests pass?
   - What is the difference between /goal and a hook that runs my check?
