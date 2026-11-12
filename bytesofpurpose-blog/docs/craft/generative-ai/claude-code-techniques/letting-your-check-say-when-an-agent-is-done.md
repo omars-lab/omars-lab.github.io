@@ -140,16 +140,17 @@ fiddly rules), and then on one real task from my own backlog.
 
 | Run | Minutes | Cost | "Not yet" rounds | Findings (security / spec / simplicity) | Guidance |
 |---|---|---|---|---|---|
-| Sample 1 | 2.2 | $0.67 | the builder couldn't commit; stopped, not done | not reached | not reached |
+| Sample 1 | 2.2 | $0.67 | couldn't commit | not reached | not reached |
 | Sample 2 | 4.6 | $1.43 | 0 | 0 / 3 / 4 | goal rule |
 | Sample 3 | 4.6 | $1.40 | 0 | 0 / 2 / 4 | tip |
-| Sample 4 (a tip carried over) | 3.8 | $1.31 | 0 | 0 / 1 / 3 | goal rule, climbed from the tip |
-| Sample 5 (seeded to fail once) | 3.9 | $1.43 | 1 | 0 / 3 / 4 | tip |
-| Real task, try 1 | about 1 | $0.69 | stopped by the critic | not reached | not reached |
-| Real task, try 2 | 6.1 | $2.38 | 0 | 1 / 3 / 4 | tip |
+| Sample 4 | 3.8 | $1.31 | 0 | 0 / 1 / 3 | goal rule, climbed |
+| Sample 5 | 3.9 | $1.43 | 1 | 0 / 3 / 4 | tip |
+| Real, try 1 | about 1 | $0.69 | stopped by the critic | not reached | not reached |
+| Real, try 2 | 6.1 | $2.38 | 0 | 1 / 3 / 4 | tip |
 
-Sample 5 is the one labelled "seeded": I told the builder to stop early once, so the "not yet" path
-would show up in a real run. The hook ran the check, sent back the failing output, and the builder
+Sample 1 stopped without finishing, because the builder couldn't commit (more below). Sample 4
+started with sample 3's tip already in place. Sample 5 was seeded: I told the builder to stop early
+once, so the "not yet" path would show up in a real run. The hook ran the check, sent back the failing output, and the builder
 finished 12 seconds later.
 
 The real task was swapping my hub's own copy of a picture checker for the one in a shared plugin.
