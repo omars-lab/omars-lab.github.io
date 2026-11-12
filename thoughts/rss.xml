@@ -19,7 +19,7 @@ events: a thing I might build, a hypothetical I am playing out, a bet I am makin
 came to mind. Not the dated things I actually did (those are <a class="" href="https://blog.bytesofpurpose.com/initiatives">Initiatives</a>), not the
 inputs I keep to shape how I think (those are <a class="" href="https://blog.bytesofpurpose.com/mindset">Mindset</a>), and not the distilled lessons
 that held up over time (those are <a class="" href="https://blog.bytesofpurpose.com/craft">Craft</a>). Just the thoughts, as they occurred.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="a-thought-has-three-ways-to-graduate">A thought has three ways to graduate<a href="https://blog.bytesofpurpose.com/thoughts/about-my-thoughts#a-thought-has-three-ways-to-graduate" class="hash-link" aria-label="Direct link to A thought has three ways to graduate" title="Direct link to A thought has three ways to graduate" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="a-thought-has-three-ways-to-graduate">A thought has three ways to graduate<a href="https://blog.bytesofpurpose.com/thoughts/about-my-thoughts#a-thought-has-three-ways-to-graduate" class="hash-link" aria-label="Direct link to A thought has three ways to graduate" title="Direct link to A thought has three ways to graduate" translate="no">​</a></h2>
 <p>A thought is a candidate, not a commitment. Where it ends up depends on what I do with it:</p>
 <ul>
 <li class="">If I <strong>act on it</strong>, it becomes a dated <a class="" href="https://blog.bytesofpurpose.com/initiatives">Initiative</a>.</li>
@@ -30,7 +30,7 @@ that held up over time (those are <a class="" href="https://blog.bytesofpurpose.
 <em>keeping</em> it because it moves me is <a class="" href="https://blog.bytesofpurpose.com/mindset">Mindset</a>. A question that crossed my mind is a
 Thought; the deliberate <em>set</em> I ask, on purpose, becomes one of my <a class="" href="https://blog.bytesofpurpose.com/questions">Questions</a>. The
 thought is the raw event; the curated thing it becomes is Mindset or Questions.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="the-kinds-of-thought">The kinds of thought<a href="https://blog.bytesofpurpose.com/thoughts/about-my-thoughts#the-kinds-of-thought" class="hash-link" aria-label="Direct link to The kinds of thought" title="Direct link to The kinds of thought" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="the-kinds-of-thought">The kinds of thought<a href="https://blog.bytesofpurpose.com/thoughts/about-my-thoughts#the-kinds-of-thought" class="hash-link" aria-label="Direct link to The kinds of thought" title="Direct link to The kinds of thought" translate="no">​</a></h2>
 <p>Each thought is tagged with its KIND, so you can see at a glance what kind of mental work it is:</p>
 <dl class="legend_unrQ"><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">💡</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Idea</span><span class="legendGloss_QctK">Something I might build or do</span></dd></div><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">🔬</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Research</span><span class="legendGloss_QctK">Something I want to research before deciding</span></dd></div><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">🔮</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Simulation</span><span class="legendGloss_QctK">If X then Y then Z; what if 1, 2, 3?</span></dd></div><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">🎯</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Prediction</span><span class="legendGloss_QctK">A falsifiable bet about the future</span></dd></div><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">🔍</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Critique</span><span class="legendGloss_QctK">What's wrong with X, or how X really works</span></dd></div><div class="legendRow_BUyu"><dt class="legendEmoji_mtjA" aria-hidden="true">📐</dt><dd class="legendText_jFzH"><span class="legendName_OtUr">Design</span><span class="legendGloss_QctK">How X would actually be structured</span></dd></div></dl>
 <p>Browse the posts below, or jump to the <a class="" href="https://blog.bytesofpurpose.com/craft/product-management/ideas">Ideas board</a>.</p>]]></content:encoded>
@@ -47,14 +47,14 @@ thought is the raw event; the curated thing it becomes is Mindset or Questions.<
             <content:encoded><![CDATA[<p>A thought I keep coming back to: <strong>should I build my first NotePlan plugin?</strong> It would help with
 the templates, frontmatter, and emoji-picking I do by hand today. I have not committed to it; these
 are the questions and references I am weighing.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="what-would-the-plugin-do">What would the plugin do?<a href="https://blog.bytesofpurpose.com/thoughts/my-first-noteplan-plugin#what-would-the-plugin-do" class="hash-link" aria-label="Direct link to What would the plugin do?" title="Direct link to What would the plugin do?" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="what-would-the-plugin-do">What would the plugin do?<a href="https://blog.bytesofpurpose.com/thoughts/my-first-noteplan-plugin#what-would-the-plugin-do" class="hash-link" aria-label="Direct link to What would the plugin do?" title="Direct link to What would the plugin do?" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" aria-label="Noteplan add shortcuts for /thisweek in my plugin ... >2025-W12"> <!-- -->Noteplan add shortcuts for /thisweek in my plugin ... &gt;2025-W12</p>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" aria-label="There is tooling to help build proper plugin ... Should I migrate my script over?"> <!-- -->There is tooling to help build proper plugin ...</p>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Should I migrate my script over?"> <!-- -->Should I migrate my script over?</li>
 </ul>
 </li>
@@ -83,7 +83,7 @@ are the questions and references I am weighing.</p>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" aria-label="Make various shortcuts to update front matter .. Make /cancel-plan Make /done-plan"> <!-- -->Make various shortcuts to update front matter ..</p>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Make /cancel-plan"> <!-- -->Make /cancel-plan</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Make /done-plan"> <!-- -->Make /done-plan</li>
 </ul>
@@ -99,7 +99,7 @@ are the questions and references I am weighing.</p>
 </li>
 </ul>
 <h1>--------</h1>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" aria-label="Noteplan is pretty powerful ... can make notes from a command, send to chat gpt to reorganizr a note, etc ..."> <!-- -->Noteplan is pretty powerful ... can make notes from a command, send to chat gpt to reorganizr a note, etc ...</p>
 </li>
@@ -152,35 +152,35 @@ documentation: <a href="https://help.noteplan.co/article/148-run-javascript-code
             <description><![CDATA[A thought I am weighing: should I build my first iOS app, a calendar/dashboard I have wanted to make?]]></description>
             <content:encoded><![CDATA[<p>A thought I keep coming back to: <strong>should I build my first iOS app?</strong> A calendar/dashboard I have
 wanted to make. I have not committed to it; these are the questions and references I am weighing.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="priorities">Priorities<a href="https://blog.bytesofpurpose.com/thoughts/my-first-ios-app#priorities" class="hash-link" aria-label="Direct link to Priorities" title="Direct link to Priorities" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="priorities">Priorities<a href="https://blog.bytesofpurpose.com/thoughts/my-first-ios-app#priorities" class="hash-link" aria-label="Direct link to Priorities" title="Direct link to Priorities" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="">
 <p>I need to make my own ios app</p>
 </li>
 <li class="task-list-item">
 <p><input type="checkbox" disabled="" aria-label="Build my first iPhone app ... appcoda.com: Build Your First App"> <!-- -->Build my first iPhone app ...</p>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="appcoda.com: Build Your First App"> <a href="https://www.appcoda.com/learnswift/build-your-first-app.html" target="_blank" rel="noopener noreferrer" class="">appcoda.com: Build Your First App</a></li>
 </ul>
 </li>
 </ul>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Basic IOS App appcoda.com: Build Your First App"> <!-- -->Basic IOS App<!-- -->
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="appcoda.com: Build Your First App"> <a href="https://www.appcoda.com/learnswift/build-your-first-app.html" target="_blank" rel="noopener noreferrer" class="">appcoda.com: Build Your First App</a></li>
 </ul>
 </li>
 </ul>
 <p>Iphone Calendar Application</p>
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Should I make my own iPhone calendar app / dashboard ..."> <!-- -->Should I make my own iPhone calendar app / dashboard ...</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Should I make a web app for this? GitHub: patchthecode/JTAppleCalendar"> <!-- -->Should I make a web app for this?<!-- -->
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="GitHub: patchthecode/JTAppleCalendar"> <a href="https://github.com/patchthecode/JTAppleCalendar/wiki/Tutorials" target="_blank" rel="noopener noreferrer" class="">GitHub: patchthecode/JTAppleCalendar</a></li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Can I make a simple iPhone app that reads files from dropbox … How do I build a reusable widget …"> <!-- -->Can I make a simple iPhone app that reads files from dropbox …<!-- -->
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="How do I build a reusable widget …"> <!-- -->How do I build a reusable widget …</li>
 </ul>
 </li>
@@ -206,10 +206,10 @@ wanted to make. I have not committed to it; these are the questions and referenc
             <description><![CDATA[A thought I am weighing: should I build my first macOS menu-bar app to show my NotePlan task counts at a glance?]]></description>
             <content:encoded><![CDATA[<p>A thought I keep coming back to: <strong>should I build my first macOS menu-bar app?</strong> One that shows my
 NotePlan task counts at a glance. I have not committed to it; these are the questions I am weighing.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="menu-bar-app">Menu Bar App<a href="https://blog.bytesofpurpose.com/thoughts/my-first-mac-menubar-app#menu-bar-app" class="hash-link" aria-label="Direct link to Menu Bar App" title="Direct link to Menu Bar App" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="menu-bar-app">Menu Bar App<a href="https://blog.bytesofpurpose.com/thoughts/my-first-mac-menubar-app#menu-bar-app" class="hash-link" aria-label="Direct link to Menu Bar App" title="Direct link to Menu Bar App" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="What does it take to make a Mac menu bar app with counts of NotePlan's tasks today ... and a shortcut to open note plan? sarunw.com: How To Create Macos App Without Storyboard sarunw.com: How To Make Macos Menu Bar App fleetingpixels.com: How To Create A Mac Menu Bar App With Nspopover"> <!-- -->What does it take to make a Mac menu bar app with counts of NotePlan's tasks today ... and a shortcut to open note plan?<!-- -->
-<ul class="contains-task-list containsTaskList_kayq">
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="sarunw.com: How To Create Macos App Without Storyboard"> <a href="https://sarunw.com/posts/how-to-create-macos-app-without-storyboard/" target="_blank" rel="noopener noreferrer" class="">sarunw.com: How To Create Macos App Without Storyboard</a></li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="sarunw.com: How To Make Macos Menu Bar App"> <a href="https://sarunw.com/posts/how-to-make-macos-menu-bar-app/" target="_blank" rel="noopener noreferrer" class="">sarunw.com: How To Make Macos Menu Bar App</a></li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="fleetingpixels.com: How To Create A Mac Menu Bar App With Nspopover"> <a href="https://fleetingpixels.com/blog/2020/6/15/how-to-create-a-mac-menu-bar-app-with-nspopover" target="_blank" rel="noopener noreferrer" class="">fleetingpixels.com: How To Create A Mac Menu Bar App With Nspopover</a></li>
@@ -242,15 +242,15 @@ captured thought carries the date I first had it without me typing it.</li>
 </ul>
 <p>That last one is what would make a backlog like this self-dating: the earliest date on an idea
 becomes real data instead of something I reconstruct later.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-smarter-date-helpers#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-smarter-date-helpers#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Rewrite the &quot;today&quot; substituter to be idempotent (non-recursive): expanding an already expanded line is a no-op."> <!-- -->Rewrite the "today" substituter to be idempotent (non-recursive): expanding an already
 expanded line is a no-op.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Add a &quot;next workday&quot; expansion mode (Mon-Fri aware)."> <!-- -->Add a "next workday" expansion mode (Mon-Fri aware).</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Add a &quot;next weekend&quot; date tag."> <!-- -->Add a "next weekend" date tag.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Add a cron job that stamps newly captured ideas with their capture date automatically."> <!-- -->Add a cron job that stamps newly captured ideas with their capture date automatically.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-smarter-date-helpers#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-smarter-date-helpers#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">Re-running the expander never double-expands a line.</li>
 <li class="">New captures get a capture-date tag with no manual step.</li>
@@ -283,8 +283,8 @@ wrapper plus a tally script.</p>
 function name to a local file, with a script that tallies counts. Explicitly OUT of v1: syncing
 across machines, tracking external binaries (only my functions), and any dashboard or
 visualization.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Spike: list every shell function I define (declare -F / parse the dotfiles)."> <!-- -->Spike: list every shell function I define (<code>declare -F</code> / parse the dotfiles).</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Decide the logging mechanism: wrap functions so each invocation appends timestamp,name to a usage log (a DEBUG trap or generated wrappers). Pick one in the spike."> <!-- -->Decide the logging mechanism: wrap functions so each invocation appends <code>timestamp,name</code>
 to a usage log (a <code>DEBUG</code> trap or generated wrappers). Pick one in the spike.</li>
@@ -295,14 +295,14 @@ functions called out.</li>
 dead ones.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="If the wrapper pattern is clean, write it up as a durable scripting technique in /craft."> <!-- -->If the wrapper pattern is clean, write it up as a durable scripting technique in <code>/craft</code>.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">I can produce a sorted "how often each function was used in the last N weeks" report on demand.</li>
 <li class="">After a review window, I retire at least the clearly-never-used functions with confidence.</li>
 <li class="">Done enough when the report exists and I have done one retirement pass; abandon if the logging
 overhead is annoying in daily use or the data does not change any decision.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="open-questions">Open questions<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#open-questions" class="hash-link" aria-label="Direct link to Open questions" title="Direct link to Open questions" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="open-questions">Open questions<a href="https://blog.bytesofpurpose.com/thoughts/idea-track-script-usage#open-questions" class="hash-link" aria-label="Direct link to Open questions" title="Direct link to Open questions" translate="no">​</a></h2>
 <ul>
 <li class="">Trap-based logging vs generated wrappers: which is less intrusive in an interactive shell?
 (Needs the spike.)</li>
@@ -327,13 +327,13 @@ Anything I have flagged as today's work, anywhere in the book, gets pulled into 
 threads I am actively running are visible together instead of buried in their home notes.</p>
 <p>This rides on the same "today"-tag mover the date-tag system already uses; it is a second
 consumer of that signal.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-other-work-streams#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-other-work-streams#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Scan the notes for the &quot;today&quot; tag."> <!-- -->Scan the notes for the "today" tag.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Aggregate the tagged items into a generated &quot;other work streams&quot; file."> <!-- -->Aggregate the tagged items into a generated "other work streams" file.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Regenerate it on the same trigger the today-mover runs on (on note open, not blind cron)."> <!-- -->Regenerate it on the same trigger the today-mover runs on (on note open, not blind cron).</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-other-work-streams#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-other-work-streams#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">One file always reflects every currently-tagged work stream, with no manual upkeep.</li>
 </ul>]]></content:encoded>
@@ -354,13 +354,13 @@ it is manual and lossy. I want it scriptable.</p>
 <p><strong>The idea.</strong> A command-line path to export browser bookmarks from one browser and import them
 into another, so moving between browsers (or keeping two in sync) is a script, not an afternoon
 of clicking.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-bookmark-portability#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-bookmark-portability#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Read/export bookmarks from the source browser's store via the command line."> <!-- -->Read/export bookmarks from the source browser's store via the command line.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Transform to the destination browser's import format."> <!-- -->Transform to the destination browser's import format.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Import into the destination browser."> <!-- -->Import into the destination browser.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-bookmark-portability#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-bookmark-portability#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">A single command moves my bookmarks from one browser to another with nothing lost.</li>
 </ul>]]></content:encoded>
@@ -381,13 +381,13 @@ ones I use most still have long names. Let a tool propose them.</p>
 <p><strong>The idea.</strong> An alias finder that scans all my commands and proposes common two-letter acronym
 aliases. It does the boring part (deriving candidate short names and spotting collisions); I just
 accept or reject.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-alias-finder#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-alias-finder#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Enumerate all my defined commands/functions."> <!-- -->Enumerate all my defined commands/functions.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Generate candidate two-letter acronym aliases for each."> <!-- -->Generate candidate two-letter acronym aliases for each.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Flag collisions and propose a non-conflicting set for me to approve."> <!-- -->Flag collisions and propose a non-conflicting set for me to approve.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-alias-finder#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-alias-finder#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">I get a proposed alias list I can adopt wholesale, with no two aliases clashing.</li>
 </ul>]]></content:encoded>
@@ -414,13 +414,13 @@ same numbers are one look away while I work.</li>
 </ul>
 <p>Both are the same idea (ambient, glanceable metrics) on two displays, so they likely share the
 metric source.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-ambient-metric-displays#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-ambient-metric-displays#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Decide the metric source the two displays read from."> <!-- -->Decide the metric source the two displays read from.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Build the LaMetric app that pushes a personal metric to the device."> <!-- -->Build the LaMetric app that pushes a personal metric to the device.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Build the NotePlan menu-bar app that shows the day's metrics at a glance."> <!-- -->Build the NotePlan menu-bar app that shows the day's metrics at a glance.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-ambient-metric-displays#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-ambient-metric-displays#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">The metric I am tracking is visible at a glance on at least one ambient display, no app to open.</li>
 </ul>]]></content:encoded>
@@ -447,13 +447,13 @@ fast cross-linking is one keystroke instead of one-path-at-a-time.</li>
 <li class=""><strong>Auto headers.</strong> A script to auto-add a VS Code header to a NotePlan calendar file, so jumping
 between the two editors keeps its context.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-fast-cross-linking#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-fast-cross-linking#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Add variable support to glue links and wire glue into iA Writer."> <!-- -->Add variable support to glue links and wire glue into iA Writer.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Build the &quot;copy all locations&quot; helper that feeds every location into the pbcopy script."> <!-- -->Build the "copy all locations" helper that feeds every location into the <code>pbcopy</code> script.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Script the VS Code header auto-insert for NotePlan calendar files."> <!-- -->Script the VS Code header auto-insert for NotePlan calendar files.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-fast-cross-linking#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-fast-cross-linking#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">Linking to another note is one action, not a path hunt.</li>
 <li class="">Locations are copyable in bulk for fast cross-referencing.</li>
@@ -474,17 +474,17 @@ between the two editors keeps its context.</li>
 way to get it short of copying by hand.</p>
 <p><strong>The idea.</strong> A script to extract Instagram metadata via an HTML/CSS selector pipeline: point it
 at a post, declare the selectors for the fields I want, and get structured data out.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Fetch a post's page HTML."> <!-- -->Fetch a post's page HTML.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Define an HTML/CSS selector pipeline for the metadata fields of interest."> <!-- -->Define an HTML/CSS selector pipeline for the metadata fields of interest.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Emit the extracted fields as structured data."> <!-- -->Emit the extracted fields as structured data.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">Given a post, I get its metadata fields as structured output, no manual copying.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="open-questions">Open questions<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#open-questions" class="hash-link" aria-label="Direct link to Open questions" title="Direct link to Open questions" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="open-questions">Open questions<a href="https://blog.bytesofpurpose.com/thoughts/idea-instagram-metadata-scraper#open-questions" class="hash-link" aria-label="Direct link to Open questions" title="Direct link to Open questions" translate="no">​</a></h2>
 <ul>
 <li class="">How resilient is selector-based scraping to Instagram's markup changes, and is there an
 official/API path that is steadier?</li>
@@ -531,14 +531,14 @@ across machines, and move my reusable work scripts over into that package.</li>
 <li class=""><strong>Backed-up tasks.</strong> A scheduled job that makes sure my work tasks are constantly backed up, so
 the task state is never trapped on a single machine.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-portable-scripts#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-portable-scripts#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Package my reusable scripts as a Homebrew formula (tap or local) so brew install sets up a new machine."> <!-- -->Package my reusable scripts as a Homebrew formula (tap or local) so <code>brew install</code> sets up a
 new machine.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Move the reusable work scripts into that package."> <!-- -->Move the reusable work scripts into that package.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Add a scheduled job that continuously backs up my work tasks."> <!-- -->Add a scheduled job that continuously backs up my work tasks.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-portable-scripts#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-portable-scripts#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">A fresh machine gets my full toolset with one <code>brew install</code>.</li>
 <li class="">My work tasks are recoverable from a backup taken without me thinking about it.</li>
@@ -565,8 +565,8 @@ first thing to convert).</p>
 that handles the flags, once in a completion file), parse the command's own bash <code>case</code>
 statement and auto-generate the completion options from it. The command stays the single source
 of truth; completion is derived, never drifts.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-shell-completion-system#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-shell-completion-system#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Define the --options convention: a command run with --options prints its flags, one per line, for the completer to consume."> <!-- -->Define the <code>--options</code> convention: a command run with <code>--options</code> prints its flags, one per
 line, for the completer to consume.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Write the generic completer that calls <cmd> --options and feeds the result to the shell."> <!-- -->Write the generic completer that calls <code>&lt;cmd&gt; --options</code> and feeds the result to the shell.</li>
@@ -575,7 +575,7 @@ block is the only place options are declared.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Convert the AWS-profile switcher to use it (first adopter), then the date helpers and sed-dates."> <!-- -->Convert the AWS-profile switcher to use it (first adopter), then the date helpers and
 <code>sed-dates</code>.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-shell-completion-system#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-shell-completion-system#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">A new command gets working tab-completion by adding nothing but its normal <code>case</code> block.</li>
 <li class="">The AWS switcher, the date helpers, and <code>sed-dates</code> all complete through the one mechanism.</li>
@@ -596,13 +596,13 @@ block is the only place options are declared.</li>
 raw is unreadable; cleaning it up by hand is tedious enough that I usually do not bother.</p>
 <p><strong>The idea.</strong> A script to copy a Slack thread out as clean Markdown: author, message, and
 structure preserved, but rendered as readable prose I can drop straight into a note.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-slack-to-markdown#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-slack-to-markdown#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Pull a thread's messages (API or export) given its link."> <!-- -->Pull a thread's messages (API or export) given its link.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Render them as clean Markdown (attribution + ordering, noise stripped)."> <!-- -->Render them as clean Markdown (attribution + ordering, noise stripped).</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Put the result on the clipboard for a one-step paste into my notes."> <!-- -->Put the result on the clipboard for a one-step paste into my notes.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-slack-to-markdown#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-slack-to-markdown#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">Copying a thread gives me note-ready Markdown with no manual cleanup.</li>
 </ul>]]></content:encoded>
@@ -632,13 +632,13 @@ across the notes before they accumulate.</li>
 the first real task is getting the <code>find</code> mechanic working: passing multiple directories to
 <code>find</code>'s prune option. That prune is the engine both the staleness scan and the link checker
 ride on.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-stale-notes-detector#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="plan">Plan<a href="https://blog.bytesofpurpose.com/thoughts/idea-stale-notes-detector#plan" class="hash-link" aria-label="Direct link to Plan" title="Direct link to Plan" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Get find's multi-directory prune working (pass several dirs to prune in one invocation)."> <!-- -->Get <code>find</code>'s multi-directory prune working (pass several dirs to prune in one invocation).</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Staleness scan: tree + per-area recent-edit counts on a schedule, highlighting stale areas."> <!-- -->Staleness scan: <code>tree</code> + per-area recent-edit counts on a schedule, highlighting stale areas.</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Bad-link detector: scan for broken links across the notes, run regularly."> <!-- -->Bad-link detector: scan for broken links across the notes, run regularly.</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-stale-notes-detector#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="success-criteria">Success criteria<a href="https://blog.bytesofpurpose.com/thoughts/idea-stale-notes-detector#success-criteria" class="hash-link" aria-label="Direct link to Success criteria" title="Direct link to Success criteria" translate="no">​</a></h2>
 <ul>
 <li class="">I get a periodic report of which areas of the book are going stale.</li>
 <li class="">Broken links are caught by the checker, not by me tripping over them.</li>
@@ -657,8 +657,8 @@ ride on.</p>
             <description><![CDATA[A thought I am weighing: should I tinker with browser-automation tools like Automa to script repetitive workflows?]]></description>
             <content:encoded><![CDATA[<p>A thought I keep coming back to: <strong>should I tinker with browser-automation tools like Automa</strong> to
 script the repetitive workflows I do by hand? I have not committed to it; here is what I am weighing.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="browser-automation">Browser Automation<a href="https://blog.bytesofpurpose.com/thoughts/tinker-browser-automation#browser-automation" class="hash-link" aria-label="Direct link to Browser Automation" title="Direct link to Browser Automation" translate="no">​</a></h2>
-<ul class="contains-task-list containsTaskList_kayq">
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="browser-automation">Browser Automation<a href="https://blog.bytesofpurpose.com/thoughts/tinker-browser-automation#browser-automation" class="hash-link" aria-label="Direct link to Browser Automation" title="Direct link to Browser Automation" translate="no">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Automa: youtube.com/watch?v=PmejVpMZxVg&amp;feature=share >2022-01-16 #2022-04-07"> <!-- -->Automa: youtube.com/watch?v=PmejVpMZxVg&amp;feature=share  &gt;2022-01-16 #2022-04-07</li>
 <li class="task-list-item"><input type="checkbox" disabled="" aria-label="Look into: chrome.google.com/webstore/detail/automa/infppggnoaenmfagbfknfkancpbljcca >2022-01-16 #2022-04-07"> <!-- -->Look into: chrome.google.com/webstore/detail/automa/infppggnoaenmfagbfknfkancpbljcca  &gt;2022-01-16 #2022-04-07</li>
 </ul>]]></content:encoded>
@@ -678,12 +678,12 @@ script the repetitive workflows I do by hand? I have not committed to it; here i
             <content:encoded><![CDATA[<p>A research thought: <strong>what should I learn about software</strong> to level up on best practices,
 architecture, and scaling? These are the questions I am gathering, and the resources I want to
 work through, before I dig in.</p>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="best-practices">Best practices<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#best-practices" class="hash-link" aria-label="Direct link to Best practices" title="Direct link to Best practices" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="best-practices">Best practices<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#best-practices" class="hash-link" aria-label="Direct link to Best practices" title="Direct link to Best practices" translate="no">​</a></h2>
 <ul>
 <li class="">What does it take to start a software practice?</li>
 <li class="">What are the general best practices worth internalizing early?</li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="agile-and-craftsmanship">Agile and craftsmanship<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#agile-and-craftsmanship" class="hash-link" aria-label="Direct link to Agile and craftsmanship" title="Direct link to Agile and craftsmanship" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="agile-and-craftsmanship">Agile and craftsmanship<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#agile-and-craftsmanship" class="hash-link" aria-label="Direct link to Agile and craftsmanship" title="Direct link to Agile and craftsmanship" translate="no">​</a></h2>
 <ul>
 <li class="">What can I learn from the agile and craftsmanship movements?</li>
 <li class="">Sources to read:<!-- -->
@@ -693,7 +693,7 @@ work through, before I dig in.</p>
 </ul>
 </li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="architectural-diagrams">Architectural diagrams<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#architectural-diagrams" class="hash-link" aria-label="Direct link to Architectural diagrams" title="Direct link to Architectural diagrams" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="architectural-diagrams">Architectural diagrams<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#architectural-diagrams" class="hash-link" aria-label="Direct link to Architectural diagrams" title="Direct link to Architectural diagrams" translate="no">​</a></h2>
 <p>The biggest open area for me. I want to learn the different kinds of architecture diagrams and
 when to reach for each.</p>
 <ul>
@@ -722,7 +722,7 @@ business benefit from the architecture?</li>
 <li class=""><a href="https://www.archisoup.com/studio-guide/architectural-diagrams" target="_blank" rel="noopener noreferrer" class="">Architectural diagrams (archisoup)</a></li>
 <li class=""><a href="https://www.researchgate.net/figure/Penetration-testing-architecture_fig4_254036014" target="_blank" rel="noopener noreferrer" class="">Penetration testing architecture (ResearchGate)</a></li>
 </ul>
-<h2 class="anchor anchorTargetStickyNavbar_dc13" id="learning-from-others">Learning from others<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#learning-from-others" class="hash-link" aria-label="Direct link to Learning from others" title="Direct link to Learning from others" translate="no">​</a></h2>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="learning-from-others">Learning from others<a href="https://blog.bytesofpurpose.com/thoughts/learning-software#learning-from-others" class="hash-link" aria-label="Direct link to Learning from others" title="Direct link to Learning from others" translate="no">​</a></h2>
 <ul>
 <li class="">What general practices can I learn from blog posts and other engineers?</li>
 <li class="">Books: I want to read more coding books (titles to be picked).</li>
