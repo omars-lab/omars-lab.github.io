@@ -221,8 +221,8 @@ Then, in Claude Code:
 /loop-manager:development-loop the issue in ISSUE.md
 ```
 
-The loop makes its working copy next to the sample, at `devloop-sample-devloop`, on a
-`devloop/<run>` branch. The sample's `devloop.json` says `"pr": false`, so it prints the branch at
+The loop works in its own copy next to the sample, at `devloop-sample-devloop`, and commits to a
+`devloop/<run>` branch that the sample can see too. The sample's `devloop.json` says `"pr": false`, so it prints the branch at
 the end instead of opening a pull request. The goal, the log and the reviewers' findings are in
 `.devloop/<run>/`. To see the result, switch the sample to that branch and run the check yourself:
 
